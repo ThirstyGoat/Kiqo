@@ -10,3 +10,4 @@ Testing git integration with IDE
 Testing git from intellij - James
 This test will be used to test slack integration, because bry says the 500 errors come from the test button itself. Aargh.
 Yay. I think slack integration is working now (albeit with a few workarounds :P)
+Lets see how slack reports merge requests!
