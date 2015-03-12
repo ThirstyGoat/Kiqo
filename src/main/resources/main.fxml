@@ -10,6 +10,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <Menu mnemonicParsing="false" text="New">
+                    <items>
+                        <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
+                  <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>
