@@ -1,8 +1,8 @@
 package seng302.group4;
 
 /**
- * Created by samschofield on 12/03/15.
- * Project class represents a software project
+ * Created by samschofield on 12/03/15. Project class represents a software
+ * project
  */
 public class Project {
     private String shortName;
@@ -12,11 +12,15 @@ public class Project {
 
     /**
      * Create new Project
-     * @param shortName a unique short name for the project
-     * @param longName long name for project
-     * @param saveLocation save location for the project
+     * 
+     * @param shortName
+     *            a unique short name for the project
+     * @param longName
+     *            long name for project
+     * @param saveLocation
+     *            save location for the project
      */
-    public Project(String shortName, String longName, String saveLocation) {
+    public Project(final String shortName, final String longName, final String saveLocation) {
         this.shortName = shortName;
         this.longName = longName;
         this.saveLocation = saveLocation;
@@ -24,75 +28,39 @@ public class Project {
 
     /**
      * Create a new project
-     * @param shortName a unique short name for the project
-     * @param longName long name for project
-     * @param saveLocation save location for the project
-     * @param description description of the project
+     * 
+     * @param shortName
+     *            a unique short name for the project
+     * @param longName
+     *            long name for project
+     * @param saveLocation
+     *            save location for the project
+     * @param description
+     *            description of the project
      */
-    public Project(String shortName, String longName, String saveLocation, String description) {
+    public Project(final String shortName, final String longName, final String saveLocation, final String description) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
         this.saveLocation = saveLocation;
     }
 
-    /**
-     *
-     * @return the short name of project
-     */
-    public String getShortName() {
-        return shortName;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
 
-        Project project = (Project) o;
+        final Project project = (Project) o;
 
-        if (!shortName.equals(project.shortName)) return false;
+        if (!this.shortName.equals(project.shortName)) {
+            return false;
+        }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return shortName.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "shortName='" + shortName + '\'' +
-                ", longName='" + longName + '\'' +
-                ", description='" + description + '\'' +
-                ", saveLocation='" + saveLocation + '\'' +
-                '}';
-    }
-
-    /**
-     *
-     * @param shortName the short name of the project
-     */
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    /**
-     *
-     * @return longName the long name of the project
-     */
-    public String getLongName() {
-        return longName;
-    }
-
-    /**
-     *
-     * @param longName the long name for the project
-     */
-    public void setLongName(String longName) {
-        this.longName = longName;
     }
 
     /**
@@ -100,15 +68,15 @@ public class Project {
      * @return the description of the project
      */
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      *
-     * @param description the description of the project
+     * @return longName the long name of the project
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public String getLongName() {
+        return this.longName;
     }
 
     /**
@@ -116,14 +84,66 @@ public class Project {
      * @return save location of project
      */
     public String getSaveLocation() {
-        return saveLocation;
+        return this.saveLocation;
     }
 
     /**
      *
-     * @param saveLocation save location of project
+     * @return the short name of project
      */
-    public void setSaveLocation(String saveLocation) {
+    public String getShortName() {
+        return this.shortName;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.shortName.hashCode();
+    }
+
+    public void prepareForDestruction() {
+        // FIXME Auto-generated method stub
+        // eg. remove people
+    }
+
+    /**
+     *
+     * @param description
+     *            the description of the project
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    /**
+     *
+     * @param longName
+     *            the long name for the project
+     */
+    public void setLongName(final String longName) {
+        this.longName = longName;
+    }
+
+    /**
+     *
+     * @param saveLocation
+     *            save location of project
+     */
+    public void setSaveLocation(final String saveLocation) {
         this.saveLocation = saveLocation;
+    }
+
+    /**
+     *
+     * @param shortName
+     *            the short name of the project
+     */
+    public void setShortName(final String shortName) {
+        this.shortName = shortName;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
+                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
     }
 }
