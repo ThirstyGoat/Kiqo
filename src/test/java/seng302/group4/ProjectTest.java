@@ -1,9 +1,10 @@
-package seng302.group0;
+package seng302.group4;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import seng302.group4.Project;
 import static org.junit.Assert.*;
 
 public class ProjectTest {
