@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import java.io.File;
+
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
  * project
@@ -10,7 +12,7 @@ public class Project {
     private String shortName;
     private String longName;
     private String description;
-    private String saveLocation;
+    private File saveLocation;
 
     /**
      * Create new Project
@@ -22,7 +24,7 @@ public class Project {
      * @param saveLocation
      *            save location for the project
      */
-    public Project(final String shortName, final String longName, final String saveLocation) {
+    public Project(final String shortName, final String longName, final File saveLocation) {
         this.shortName = shortName;
         this.longName = longName;
         this.saveLocation = saveLocation;
@@ -40,7 +42,7 @@ public class Project {
      * @param description
      *            description of the project
      */
-    public Project(final String shortName, final String longName, final String saveLocation, final String description) {
+    public Project(final String shortName, final String longName, final File saveLocation, final String description) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -85,7 +87,7 @@ public class Project {
      *
      * @return save location of project
      */
-    public String getSaveLocation() {
+    public File getSaveLocation() {
         return this.saveLocation;
     }
 
@@ -130,7 +132,7 @@ public class Project {
      * @param saveLocation
      *            save location of project
      */
-    public void setSaveLocation(final String saveLocation) {
+    public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
     }
 

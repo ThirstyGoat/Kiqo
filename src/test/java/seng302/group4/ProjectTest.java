@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seng302.group4.Project;
+
+import java.io.File;
+
 import static org.junit.Assert.*;
 
 public class ProjectTest {
@@ -13,7 +16,7 @@ public class ProjectTest {
 
     @Before
     public void setUp() throws Exception {
-        project1 = new Project("p1", "project1", "/home/");
+        project1 = new Project("p1", "project1", new File(""));
     }
 
     @After
@@ -28,7 +31,7 @@ public class ProjectTest {
      */
     @Test
     public void testEquals() throws Exception {
-        Project project2 = new Project("p1", "project1", "/home/");
+        Project project2 = new Project("p1", "project1", new File(""));
         assertTrue("Project should be equal", project2.equals(project1));
 
         project2.setLongName("project2");

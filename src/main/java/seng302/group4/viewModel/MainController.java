@@ -1,5 +1,7 @@
 package seng302.group4.viewModel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,8 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import seng302.group4.Project;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +33,7 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem quitMenuItem;
     @FXML
-    private ListView mainListView;
+    private ListView<Project> mainListView;
     @FXML
     private SplitPane mainSplitPane;
     @FXML
@@ -38,12 +43,35 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem saveMenuItem;
 
+    private ObservableList<Project> projects = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setQuitMenuItem();
         setListToggleCheckMenuItem();
         setLayoutProperties();
         setNewProjectMenuItem();
+
+        setMainListView();
+        setOpenMenu();
+    }
+
+    /**
+     * Sets the handler so an open dialog is presented when the user clicks File->Open
+     */
+    private void setOpenMenu() {
+        openMenuItem.setOnAction(event -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.showDialog(primaryStage);
+            // TODO Actually do something with the selected file
+        });
+    }
+
+    /**
+     * Sets the content for the main list view
+     */
+    private void setMainListView() {
+        mainListView.setItems(projects);
     }
 
     /**
@@ -96,18 +124,33 @@ public class MainController implements Initializable {
         Stage stage = new Stage();
         stage.initOwner(primaryStage);
         stage.initModality(Modality.WINDOW_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setResizable(false);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newProject.fxml"));
-        BorderPane root = null;
+        BorderPane root;
         try {
             root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
         NewProjectController newProjectController = loader.getController();
         newProjectController.setStage(stage);
+
+        stage.showAndWait();
+        addProject(newProjectController.getProject());
+    }
+
+    /**
+     * Adds the new project to the observable list so that it is visible in the list view
+     * @param project New Project to be added
+     */
+    private void addProject(Project project) {
+        if (project != null) {
+            projects.add(project);
+        }
     }
 }
