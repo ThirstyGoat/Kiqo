@@ -71,6 +71,7 @@ public class MainController implements Initializable {
         newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
+        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
     }
 
     /**
@@ -140,6 +141,7 @@ public class MainController implements Initializable {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice
         Platform.runLater(() -> {
             Stage stage = new Stage();
+            stage.setTitle("New Project");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
