@@ -1,5 +1,7 @@
 package seng302.group4.undo;
 
+import java.io.File;
+
 import seng302.group4.Project;
 
 /**
@@ -12,7 +14,7 @@ public class CreateProjectCommand extends Command<Project> {
     private final String shortName;
     private final String longName;
     private final String description;
-    private final String saveLocation;
+    private final File saveLocation;
     private Project project = null;
 
     /**
@@ -23,7 +25,7 @@ public class CreateProjectCommand extends Command<Project> {
      * @param longName
      * @param saveLocation
      */
-    public CreateProjectCommand(final String shortName, final String longName, final String saveLocation) {
+    public CreateProjectCommand(final String shortName, final String longName, final File saveLocation) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = null;
@@ -39,7 +41,7 @@ public class CreateProjectCommand extends Command<Project> {
      * @param saveLocation
      * @param description
      */
-    public CreateProjectCommand(final String shortName, final String longName, final String saveLocation, final String description) {
+    public CreateProjectCommand(final String shortName, final String longName, final File saveLocation, final String description) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
