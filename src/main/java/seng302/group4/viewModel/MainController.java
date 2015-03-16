@@ -1,5 +1,6 @@
 package seng302.group4.viewModel;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,6 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
@@ -28,6 +32,7 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
     private double dividerPosition;
+
 
     // FXML Injections
     @FXML
@@ -56,6 +61,16 @@ public class MainController implements Initializable {
 
         setMainListView();
         setOpenMenu();
+        setShortcuts();
+    }
+
+    /**
+     * Sets the shortcuts for the main window
+     */
+    private void setShortcuts() {
+        newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+        openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
     }
 
     /**
@@ -116,32 +131,37 @@ public class MainController implements Initializable {
 
     private void setNewProjectMenuItem() {
         newProjectMenuItem.setOnAction(event -> {
+            System.out.println("Called newProject");
             newProjectDialog();
         });
     }
 
     private void newProjectDialog() {
-        Stage stage = new Stage();
-        stage.initOwner(primaryStage);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
-        stage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newProject.fxml"));
-        BorderPane root;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        NewProjectController newProjectController = loader.getController();
-        newProjectController.setStage(stage);
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newProject.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            NewProjectController newProjectController = loader.getController();
+            newProjectController.setStage(stage);
 
-        stage.showAndWait();
-        addProject(newProjectController.getProject());
+            stage.showAndWait();
+            addProject(newProjectController.getProject());
+        });
+
     }
 
     /**

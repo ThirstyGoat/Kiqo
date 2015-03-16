@@ -1,6 +1,8 @@
 package seng302.group4.undo;
 
-import java.lang.reflect.Field;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Sets the shortName of a Project to newVal.
@@ -8,17 +10,17 @@ import java.lang.reflect.Field;
  * @author amy
  *
  */
-class EditCommand<T extends Object> implements Command<Void> {
+class EditCommand<T extends Object, U extends Object> extends Command<Void> {
     private Object oldVal;
     private final Object newVal;
     private final T subject;
-    private Field field;
+    private PropertyDescriptor propertyDescriptor;
 
-    EditCommand(final T subject, final String fieldName, final Object newVal) {
+    EditCommand(final T subject, final String fieldName, final U newVal) {
         this.subject = subject;
         try {
-            this.field = (this.subject.getClass().getDeclaredField(fieldName));
-        } catch (NoSuchFieldException | SecurityException e) {
+            this.propertyDescriptor = new PropertyDescriptor(fieldName, subject.getClass());
+        } catch (SecurityException | IntrospectionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -28,9 +30,9 @@ class EditCommand<T extends Object> implements Command<Void> {
     @Override
     public Void execute() {
         try {
-            this.oldVal = this.field.get(this.subject);
-            this.field.set(this.subject, this.newVal);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
+            this.oldVal = this.propertyDescriptor.getReadMethod().invoke(this.subject);
+            this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.newVal);
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -38,13 +40,17 @@ class EditCommand<T extends Object> implements Command<Void> {
     }
 
     @Override
+    public String toString() {
+        return "<Edit " + this.subject.getClass() + ": set " + this.propertyDescriptor.getName() + " to " + this.newVal.toString() + ">";
+    }
+
+    @Override
     public void undo() {
         try {
-            this.field.set(this.subject, this.oldVal);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
+            this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.oldVal);
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
-
 }
