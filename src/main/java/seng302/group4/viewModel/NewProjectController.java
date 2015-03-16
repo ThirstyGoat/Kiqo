@@ -54,8 +54,9 @@ public class NewProjectController implements Initializable {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             File selectedDirectory = directoryChooser.showDialog(stage);
             projectLocation = selectedDirectory;
-
-            projectLocationTextField.setText(selectedDirectory.getAbsolutePath());
+            if (selectedDirectory != null) {
+                projectLocationTextField.setText(selectedDirectory.getAbsolutePath());
+            }
         });
     }
 
