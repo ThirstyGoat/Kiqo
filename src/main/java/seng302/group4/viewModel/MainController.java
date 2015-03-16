@@ -2,6 +2,8 @@ package seng302.group4.viewModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -90,9 +92,7 @@ public class MainController implements Initializable {
      * Sets the functionality for the quit menu item
      */
     private void setQuitMenuItem() {
-        quitMenuItem.setOnAction(event -> {
-            primaryStage.close();
-        });
+        quitMenuItem.setOnAction(event -> primaryStage.close());
     }
 
     /**
