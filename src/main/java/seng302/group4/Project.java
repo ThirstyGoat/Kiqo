@@ -1,16 +1,25 @@
 package seng302.group4;
 
+import java.io.Serializable;
+
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
  * project
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Project {
+public class Project implements Serializable {
     private String shortName;
     private String longName;
     private String description;
     private String saveLocation;
+
+    /**
+     * No-arg constructor for JavaBean compliance
+     */
+    public Project() {
+        // Trust the user to set compulsory fields
+    }
 
     /**
      * Create new Project
@@ -43,8 +52,8 @@ public class Project {
     public Project(final String shortName, final String longName, final String saveLocation, final String description) {
         this.shortName = shortName;
         this.longName = longName;
-        this.description = description;
         this.saveLocation = saveLocation;
+        this.description = description;
     }
 
     @Override
@@ -105,6 +114,7 @@ public class Project {
     public void prepareForDestruction() {
         // FIXME Auto-generated method stub
         // eg. remove people
+        System.out.println("Preparing project for destruction");
     }
 
     /**
