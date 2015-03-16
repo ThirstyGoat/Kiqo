@@ -11,7 +11,7 @@ public class UndoManager {
         final Project p = (Project) undoManager.doCommand(cmd);
         System.out.println(p.toString());
         undoManager.undoCommand();
-        final Command<Void> cmd2 = new EditCommand(p, "NEW");
+        final Command<Void> cmd2 = new EditCommand(p, "shortName", "NEW");
         undoManager.doCommand(cmd2);
         System.out.println(p.toString());
     }
@@ -20,7 +20,7 @@ public class UndoManager {
 
     private Object doCommand(final Command command) {
         this.commandStack.push(command);
-        System.out.println(command.toString());
+        System.out.println("Doing " + command.toString());
         return command.execute();
     }
 
@@ -28,6 +28,6 @@ public class UndoManager {
         final Command command = this.commandStack.pop();
         command.undo();
 
-        System.out.println("Undoing" + command.toString());
+        System.out.println("Undoing " + command.toString());
     }
 }

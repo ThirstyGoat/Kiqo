@@ -1,33 +1,50 @@
 package seng302.group4.undo;
 
-import seng302.group4.Project;
+import java.lang.reflect.Field;
 
 /**
- * Sets the shortName of a Project to newval.
+ * Sets the shortName of a Project to newVal.
  *
  * @author amy
  *
  */
-class EditCommand implements Command<Void> {
-    private String oldval;
-    private final String newval;
-    private final Project p;
+class EditCommand<T extends Object> implements Command<Void> {
+    private Object oldVal;
+    private final Object newVal;
+    private final T subject;
+    private Field field;
 
-    EditCommand(final Project project, final String string) {
-        this.p = project;
-        this.newval = string;
+    EditCommand(final T subject, final String fieldName, final Object newVal) {
+        this.subject = subject;
+        try {
+            this.field = (this.subject.getClass().getDeclaredField(fieldName));
+        } catch (NoSuchFieldException | SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        this.newVal = newVal;
     }
 
     @Override
     public Void execute() {
-        this.oldval = this.p.getShortName();
-        this.p.setShortName(this.newval);
+        try {
+            this.oldVal = this.field.get(this.subject);
+            this.field.set(this.subject, this.newVal);
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public void undo() {
-        this.p.setShortName(this.oldval);
+        try {
+            this.field.set(this.subject, this.oldVal);
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

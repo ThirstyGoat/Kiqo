@@ -3,6 +3,8 @@ package seng302.group4;
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
  * project
+ *
+ * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project {
     private String shortName;
@@ -12,7 +14,7 @@ public class Project {
 
     /**
      * Create new Project
-     * 
+     *
      * @param shortName
      *            a unique short name for the project
      * @param longName
@@ -28,7 +30,7 @@ public class Project {
 
     /**
      * Create a new project
-     * 
+     *
      * @param shortName
      *            a unique short name for the project
      * @param longName
