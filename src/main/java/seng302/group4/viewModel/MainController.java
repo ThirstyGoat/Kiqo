@@ -17,6 +17,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 
 import java.io.IOException;
@@ -171,6 +172,12 @@ public class MainController implements Initializable {
     private void addProject(Project project) {
         if (project != null) {
             projects.add(project);
+            try {
+                PersistenceManager.saveProject(project.getSaveLocation(), project);
+            } catch (IOException e) {
+                System.out.println("Could not save project");
+            }
+
         }
     }
 }
