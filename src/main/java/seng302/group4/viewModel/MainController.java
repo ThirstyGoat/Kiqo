@@ -63,7 +63,18 @@ public class MainController implements Initializable {
 
         setMainListView();
         setOpenMenu();
+        setSaveMenu();
         setShortcuts();
+    }
+
+    private void setSaveMenu() {
+        saveMenuItem.setOnAction(event -> {
+            try {
+                PersistenceManager.saveProject(selectedProject.getSaveLocation().getAbsoluteFile(), selectedProject);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -73,6 +84,7 @@ public class MainController implements Initializable {
         newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
+        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
     }
 
     /**
