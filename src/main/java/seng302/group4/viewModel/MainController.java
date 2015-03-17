@@ -5,8 +5,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +19,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 
 import java.io.IOException;
@@ -74,7 +73,6 @@ public class MainController implements Initializable {
         newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
-        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
     }
 
     /**
@@ -124,7 +122,9 @@ public class MainController implements Initializable {
      * Sets the functionality for the quit menu item
      */
     private void setQuitMenuItem() {
-        quitMenuItem.setOnAction(event -> primaryStage.close());
+        quitMenuItem.setOnAction(event -> {
+            primaryStage.close();
+        });
     }
 
     /**
@@ -186,7 +186,6 @@ public class MainController implements Initializable {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             Stage stage = new Stage();
-            stage.setTitle("New Project");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
@@ -217,6 +216,12 @@ public class MainController implements Initializable {
     private void addProject(Project project) {
         if (project != null) {
             projects.add(project);
+            try {
+                PersistenceManager.saveProject(project.getSaveLocation(), project);
+            } catch (IOException e) {
+                System.out.println("Could not save project");
+            }
+
         }
     }
 }

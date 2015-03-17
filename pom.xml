@@ -5,7 +5,7 @@
   <artifactId>your_project_name</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>yAgile Trac</name>
+  <name>your_project_name</name>
   <url>http://csse-s302g4.canterbury.ac.nz</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,11 +17,11 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-  <dependency>
-      <groupId>org.controlsfx</groupId>
-      <artifactId>controlsfx</artifactId>
-      <version>8.20.8</version>
-  </dependency>
+      <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
+          <version>2.3.1</version>
+      </dependency>
   </dependencies>
   <build>
     <plugins>
