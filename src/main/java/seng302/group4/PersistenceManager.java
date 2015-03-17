@@ -33,13 +33,14 @@ public class PersistenceManager {
      * @throws IOException
      */
     public static Project loadProject(File filePath) throws Exception {
-
-        BufferedReader br = new BufferedReader(new FileReader(filePath));
         Project project = null;
-        try {
-            project = gson.fromJson(br, Project.class);
-        } catch (Exception e) {
-            throw e;
+        if(filePath != null) {
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            try {
+                project = gson.fromJson(br, Project.class);
+            } catch (Exception e) {
+                throw e;
+            }
         }
         return project;
     }
