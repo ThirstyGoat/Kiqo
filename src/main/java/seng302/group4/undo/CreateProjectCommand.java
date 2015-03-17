@@ -1,8 +1,8 @@
 package seng302.group4.undo;
 
-import seng302.group4.Project;
-
 import java.io.File;
+
+import seng302.group4.Project;
 
 /**
  * Command to create a project
@@ -19,7 +19,7 @@ public class CreateProjectCommand extends Command<Project> {
 
     /**
      * Constructor for a command that creates a project with the specified
-     * properties (and null description)
+     * properties and an empty description
      *
      * @param shortName
      * @param longName
@@ -64,6 +64,7 @@ public class CreateProjectCommand extends Command<Project> {
 
     @Override
     public void undo() {
+        // FIXME implement properly
         this.project.prepareForDestruction();
     }
 }

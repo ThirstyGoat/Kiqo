@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.io.File;
+
 /**
  * Main controller for the primary view
  */
@@ -112,8 +114,16 @@ public class MainController implements Initializable {
     private void setOpenMenu() {
         openMenuItem.setOnAction(event -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.showDialog(primaryStage);
+            File filePath = directoryChooser.showDialog(primaryStage);
             // TODO Actually do something with the selected file
+            try {
+                Project project = PersistenceManager.loadProject(filePath);
+                projects.add(project);
+                System.out.println(project.toString() + " has been loaded successfully");
+            } catch (Exception e) {
+                System.out.println("Couldnt load project");
+                e.printStackTrace();
+            }
         });
     }
 
