@@ -5,7 +5,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Sets the shortName of a Project to newVal.
+ * Overwrites a field value
  *
  * @author amy
  *
