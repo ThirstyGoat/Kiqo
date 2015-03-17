@@ -201,7 +201,6 @@ public class EditProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        System.out.println("called close");
         cancelButton.setOnAction(event -> stage.close());
     }
 

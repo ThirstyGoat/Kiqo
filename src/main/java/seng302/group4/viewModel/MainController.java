@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.io.File;
+
 /**
  * Main controller for the primary view
  */
@@ -50,6 +52,8 @@ public class MainController implements Initializable {
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
+    @FXML
+    private MenuItem projectDetailsMenuItem;
 
     private ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
@@ -60,11 +64,28 @@ public class MainController implements Initializable {
         setListToggleCheckMenuItem();
         setLayoutProperties();
         setNewProjectMenuItem();
+        setProjectDetailsMenuItem();
 
         setMainListView();
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
+    }
+
+    private void setProjectDetailsMenuItem() {
+        projectDetailsMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                editProjectDialog(selectedProject);
+            } else {
+                // Something went wrong and the button wasn't disabled, alert the user
+                // TODO
+            }
+        });
+    }
+
+    private void refreshList() {
+        mainListView.setItems(null);
+        mainListView.setItems(projects);
     }
 
     private void setSaveMenu() {
@@ -93,8 +114,16 @@ public class MainController implements Initializable {
     private void setOpenMenu() {
         openMenuItem.setOnAction(event -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.showDialog(primaryStage);
+            File filePath = directoryChooser.showDialog(primaryStage);
             // TODO Actually do something with the selected file
+            try {
+                Project project = PersistenceManager.loadProject(filePath);
+                projects.add(project);
+                System.out.println(project.toString() + " has been loaded successfully");
+            } catch (Exception e) {
+                System.out.println("Couldnt load project");
+                e.printStackTrace();
+            }
         });
     }
 
@@ -111,9 +140,20 @@ public class MainController implements Initializable {
         mainListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            selectedProject =  mainListView.getSelectionModel().getSelectedItem();
             if (selectedProject != null) {
                 editProjectDialog(selectedProject);
+            }
+        });
+
+        // Set change listener for mainListView
+        mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = newValue;
+            if (newValue != null) {
+                // Then a project is selected, enable the Project Details MenuItem
+                projectDetailsMenuItem.setDisable(false);
+            } else {
+                // No project selected, disable Project Details MenuItem
+                projectDetailsMenuItem.setDisable(true);
             }
         });
     }
@@ -190,7 +230,7 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
-            // TODO Update list view to reflect change
+            refreshList();
         });
     }
 

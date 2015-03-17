@@ -43,6 +43,11 @@
             <CheckMenuItem mnemonicParsing="false" text="List" fx:id="listToggleCheckMenuItem" />
           </items>
         </Menu>
+        <Menu mnemonicParsing="false" text="Project">
+          <items>
+            <MenuItem disable="true" mnemonicParsing="false" text="Project Details" fx:id="projectDetailsMenuItem" />
+          </items>
+        </Menu>
       </menus>
     </MenuBar>
   </top>
