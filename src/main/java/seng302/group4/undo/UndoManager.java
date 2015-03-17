@@ -3,6 +3,7 @@ package seng302.group4.undo;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+
 public class UndoManager {
     private final Deque<Command> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
 

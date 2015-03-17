@@ -1,6 +1,5 @@
 package seng302.group4;
 
-import java.io.Serializable;
 import java.io.File;
 
 /**
@@ -9,18 +8,11 @@ import java.io.File;
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Project implements Serializable {
+public class Project {
     private String shortName;
     private String longName;
     private String description;
     private File saveLocation;
-
-    /**
-     * No-arg constructor for JavaBean compliance
-     */
-    public Project() {
-        // Trust the user to set compulsory fields
-    }
 
     /**
      * Create new Project
@@ -53,8 +45,8 @@ public class Project implements Serializable {
     public Project(final String shortName, final String longName, final File saveLocation, final String description) {
         this.shortName = shortName;
         this.longName = longName;
-        this.saveLocation = saveLocation;
         this.description = description;
+        this.saveLocation = saveLocation;
     }
 
     @Override
@@ -115,7 +107,6 @@ public class Project implements Serializable {
     public void prepareForDestruction() {
         // FIXME Auto-generated method stub
         // eg. remove people
-        System.out.println("Preparing project for destruction");
     }
 
     /**
