@@ -113,9 +113,7 @@ public class NewProjectController implements Initializable {
      */
     private void setCancelButton() {
         System.out.println("called close");
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
 
