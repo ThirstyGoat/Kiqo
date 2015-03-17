@@ -36,13 +36,22 @@ public class PersistenceManager {
 
     /**
      * Loads the project from the given json file
-     * @param filePath - Path to the project.json file
+     * @param filePath - Path to the project dir
      * @return Project loaded from the project.json file in the project directory
      * @throws IOException
      */
     public static Project loadProject(File filePath) throws FileNotFoundException, Exception {
 
-        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String[] fp = filePath.toString().split("/");
+        String projectName = fp[fp.length - 1];
+
+        File projectFile = new File(filePath + "/" + projectName + ".json");
+
+        if(!projectFile.exists()) {
+            throw new FileNotFoundException();
+        }
+
+        BufferedReader br = new BufferedReader(new FileReader(projectFile));
         Project project = null;
         try {
             project = gson.fromJson(br, Project.class);
@@ -67,7 +76,7 @@ public class PersistenceManager {
             System.out.println("Couldnt save project. try again");
         }
 
-        File projectLocation = new File(f.toString() + "/" + p.getShortName() + "/" + p.getShortName() + ".json");
+        File projectLocation = new File(f.toString() + "/" + p.getShortName());
 
         Project p1 = null;
         try {
@@ -76,6 +85,7 @@ public class PersistenceManager {
         } catch (FileNotFoundException o) {
             System.out.println("Couldnt find project. Try again");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Json file is corrupt");
         }
 
