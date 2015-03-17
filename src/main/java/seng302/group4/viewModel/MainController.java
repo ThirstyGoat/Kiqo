@@ -50,6 +50,8 @@ public class MainController implements Initializable {
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
+    @FXML
+    private MenuItem projectDetailsMenuItem;
 
     private ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
@@ -60,11 +62,28 @@ public class MainController implements Initializable {
         setListToggleCheckMenuItem();
         setLayoutProperties();
         setNewProjectMenuItem();
+        setProjectDetailsMenuItem();
 
         setMainListView();
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
+    }
+
+    private void setProjectDetailsMenuItem() {
+        projectDetailsMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                editProjectDialog(selectedProject);
+            } else {
+                // Something went wrong and the button wasn't disabled, alert the user
+                // TODO
+            }
+        });
+    }
+
+    private void refreshList() {
+        mainListView.setItems(null);
+        mainListView.setItems(projects);
     }
 
     private void setSaveMenu() {
@@ -111,9 +130,20 @@ public class MainController implements Initializable {
         mainListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            selectedProject =  mainListView.getSelectionModel().getSelectedItem();
             if (selectedProject != null) {
                 editProjectDialog(selectedProject);
+            }
+        });
+
+        // Set change listener for mainListView
+        mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = newValue;
+            if (newValue != null) {
+                // Then a project is selected, enable the Project Details MenuItem
+                projectDetailsMenuItem.setDisable(false);
+            } else {
+                // No project selected, disable Project Details MenuItem
+                projectDetailsMenuItem.setDisable(true);
             }
         });
     }
@@ -190,7 +220,7 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
-            // TODO Update list view to reflect change
+            refreshList();
         });
     }
 
