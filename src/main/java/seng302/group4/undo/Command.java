@@ -1,8 +1,12 @@
 package seng302.group4.undo;
 
-public interface Command<T> {
+public abstract class Command<T> {
 
-    T execute();
+    abstract T execute();
 
-    void undo();
+    void redo() {
+        this.execute();
+    }
+
+    abstract void undo();
 }

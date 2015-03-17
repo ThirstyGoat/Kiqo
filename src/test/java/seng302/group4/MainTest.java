@@ -5,15 +5,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple App.
+ * Unit testUndo for simple App.
  */
 public class MainTest
     extends TestCase
 {
     /**
-     * Create the test case
+     * Create the testUndo case
      *
-     * @param testName name of the test case
+     * @param testName name of the testUndo case
      */
     public MainTest(String testName)
     {
