@@ -1,7 +1,5 @@
 package seng302.group4.viewModel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,9 +16,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Created by Bradley, James on 13/03/15.
+ * Created by Bradley on 13/03/15.
  */
-public class NewProjectController implements Initializable {
+public class EditProjectController implements Initializable {
     private Stage stage;
     private File projectLocation;
 
@@ -28,7 +26,7 @@ public class NewProjectController implements Initializable {
     @FXML
     private Button cancelButton;
     @FXML
-    private Button newProjectButton;
+    private Button saveChangesButton;
     @FXML
     private TextField nameTextField;
     @FXML
@@ -50,14 +48,25 @@ public class NewProjectController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setCancelButton();
-        setNewButton();
+        setSaveButton();
         setOpenButton();
-        setShortNameSuggester();
-        setShortNameHandler();
 
         setErrorPopOvers();
     }
 
+    /**
+     * Populates the fields with project data to enable editing
+     * @param project
+     */
+    public void loadProject(Project project) {
+        this.project = project;
+        nameTextField.setText(project.getLongName());
+        shortNameTextField.setText(project.getShortName());
+        projectLocationTextField.setText(project.getSaveLocation().getAbsolutePath());
+        descriptionTextField.setText(project.getDescription());
+
+        projectLocation = project.getSaveLocation();
+    }
 
     /**
      * Sets focus listeners on text fields so PopOvers are hidden upon focus
@@ -88,8 +97,8 @@ public class NewProjectController implements Initializable {
      * Sets the event handler for the New Project Button, performs validation checks and instantiates the new project
      * if applicable
      */
-    private void setNewButton() {
-        newProjectButton.setOnAction(event -> {
+    private void setSaveButton() {
+        saveChangesButton.setOnAction(event -> {
 
             // Hide existing error message if there is one
             errorPopOver.hide();
@@ -97,8 +106,10 @@ public class NewProjectController implements Initializable {
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
 
-                project = new Project(shortNameTextField.getText(), nameTextField.getText(),
-                        projectLocation, descriptionTextField.getText());
+                project.setLongName(nameTextField.getText());
+                project.setShortName(shortNameTextField.getText());
+                project.setSaveLocation(projectLocation);
+                project.setDescription(descriptionTextField.getText());
 
                 // Close the new project dialog (this window)
                 stage.close();
@@ -167,31 +178,6 @@ public class NewProjectController implements Initializable {
         return true;
     }
 
-    /**
-     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
-     * up to a certain number of characters
-     */
-    private void setShortNameHandler() {
-        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(newValue, nameTextField.getText().substring(0,
-                    Math.min(nameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                shortNameModified = true;
-            }
-        });
-    }
-
-    /**
-     * Sets up the listener for changes in the long name, so that the short name can be populated with a suggestion
-     */
-    private void setShortNameSuggester() {
-        // Listen for changes in the long name, and populate the short name character by character up to specified characters
-        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
-            if (!shortNameModified) {
-                shortNameTextField.setText(suggestedShortName);
-            }
-        });
-    }
 
     /**
      * Sets the open dialog functionality including getting the path chosen by the user.

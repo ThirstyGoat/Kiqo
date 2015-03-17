@@ -1,6 +1,8 @@
 package seng302.group4.viewModel;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,6 +53,7 @@ public class MainController implements Initializable {
     private MenuItem saveMenuItem;
 
     private ObservableList<Project> projects = FXCollections.observableArrayList();
+    private Project selectedProject;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,6 +93,19 @@ public class MainController implements Initializable {
      */
     private void setMainListView() {
         mainListView.setItems(projects);
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem editContextMenu = new MenuItem("Edit Project");
+        contextMenu.getItems().add(editContextMenu);
+
+        mainListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> {
+            selectedProject =  mainListView.getSelectionModel().getSelectedItem();
+            if (selectedProject != null) {
+                editProjectDialog(selectedProject);
+            }
+        });
     }
 
     /**
@@ -137,8 +153,37 @@ public class MainController implements Initializable {
         });
     }
 
+    private void editProjectDialog(Project project) {
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.setTitle("Edit Project");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editProject.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            EditProjectController editProjectController = loader.getController();
+            editProjectController.setStage(stage);
+            editProjectController.loadProject(project);
+
+            stage.showAndWait();
+            // TODO Update list view to reflect change
+        });
+    }
+
     private void newProjectDialog() {
-        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             Stage stage = new Stage();
             stage.setTitle("New Project");
@@ -163,7 +208,6 @@ public class MainController implements Initializable {
             stage.showAndWait();
             addProject(newProjectController.getProject());
         });
-
     }
 
     /**
