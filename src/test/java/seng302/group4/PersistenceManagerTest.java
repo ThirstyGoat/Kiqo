@@ -3,6 +3,7 @@ package seng302.group4;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 
@@ -37,4 +38,12 @@ public class PersistenceManagerTest {
         assertTrue(loadedProject.equals(project));
     }
 
+    @Rule public ExpectedException thrown=ExpectedException.none();
+    @Test
+    public void bFileNotFoundLoad() throws Exception {
+        thrown.expect( Exception.class );
+
+        Project p = PersistenceManager.loadProject(new File("a/non/existent/file/path"));
+
+    }
 }
