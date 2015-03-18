@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateProjectCommand;
 import seng302.group4.undo.UndoManager;
 
@@ -106,6 +107,9 @@ public class MainController implements Initializable {
                 redoMenuItem.setText("Redo " + undoManager.getRedoType());
             } else {
                 redoMenuItem.setText("Redo");
+                if (undoManager.canUndoProperty.get()) {
+                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
+                }
             }
         });
     }
@@ -273,10 +277,31 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
+            if (editProjectController.valid) {
+                Command c = new Command() {
+                    CompoundCommand cc = editProjectController.command;
 
-            //undoManager.doCommand(editProjectController.command);
+                    @Override
+                    public Object execute() {
+                        // Add to mainListView
+                        return cc.execute();
+                    }
 
-            refreshList();
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        cc.undo();
+                        refreshList();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return "Edit Project";
+                    }
+                };
+                undoManager.doCommand(c);
+                refreshList();
+            }
         });
     }
 

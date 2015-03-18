@@ -112,20 +112,20 @@ public class EditProjectController implements Initializable {
             if (checkName() && checkShortName() && checkSaveLocation()) {
                 valid = true;
 
-                EditCommand<String, String> longNameChange = new EditCommand<>(
-                        project.getLongName(), "longName", longNameTextField.getText()
+                EditCommand<Project, String> longNameChange = new EditCommand<>(
+                        project, "longName", longNameTextField.getText()
                 );
 
-                EditCommand<String, String> shortNameChange = new EditCommand<>(
-                        project.getShortName(), "shortName", shortNameTextField.getText()
+                EditCommand<Project, String> shortNameChange = new EditCommand<>(
+                        project, "shortName" , shortNameTextField.getText()
                 );
 
-                EditCommand<File, File> saveLocationChange = new EditCommand<>(
-                        project.getSaveLocation(), "saveLocation", projectLocation
+                EditCommand<Project, File> saveLocationChange = new EditCommand<>(
+                        project, "saveLocation", projectLocation
                 );
 
-                EditCommand<String, String> descriptionChange = new EditCommand<>(
-                        project.getDescription(), "description", descriptionTextField.getText()
+                EditCommand<Project, String> descriptionChange = new EditCommand<>(
+                        project, "description", descriptionTextField.getText()
                 );
 
                 ArrayList<EditCommand> changes = new ArrayList<>();
@@ -147,24 +147,24 @@ public class EditProjectController implements Initializable {
      * @return Whether or not the save location is valid/readable/writable
      */
     private boolean checkSaveLocation() {
-        if (projectLocation == null) {
+        if (this.projectLocation == null) {
             // Then the user hasn't selected a project directory, alert them!
-            errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-        // Check read/write access
-        if (!projectLocation.canRead()) {
+        // Confirm read/write access
+        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
+        if (!equalPermissionsFile.canRead()) {
             // Then we can't read from the directory, what's the point!
-            errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-
-        if (!projectLocation.canWrite()) {
+        if (!equalPermissionsFile.canWrite()) {
             // Then we can't write to the directory
-            errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
 
