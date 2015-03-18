@@ -1,6 +1,7 @@
 package seng302.group4;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
@@ -8,11 +9,18 @@ import java.io.File;
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Project {
+public class Project implements Serializable {
     private String shortName;
     private String longName;
     private String description;
     private File saveLocation;
+
+    /**
+     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
+     */
+    public Project() {
+
+    }
 
     /**
      * Create new Project
