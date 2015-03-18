@@ -13,7 +13,6 @@ public class Person {
     private String emailAddress;
     private Integer phoneNumber;
     private String department;
-    private File saveLocation;
 
     /* TODO
      * Save person to project
@@ -25,6 +24,16 @@ public class Person {
      * View menu > show people
      */
 
+    /**
+     * Create new Person
+     * @param shortName a unique short name for the person
+     * @param longName a long/full name for the person
+     * @param description a description for the person
+     * @param userID a userID for the person
+     * @param emailAddress a email address for the person
+     * @param phoneNumber a phone number for the person
+     * @param department a department the person works in
+     */
     public Person(String shortName, String longName, String description, String userID, String emailAddress,
                   Integer phoneNumber, String department) {
         this.shortName = shortName;
@@ -36,8 +45,11 @@ public class Person {
         this.department = department;
     }
 
-
-
+    /**
+     * To string method for a person. 
+     * Will return the fields that are not set to null
+     * @return
+     */
     @Override
     public String toString() {
         String str = "Person{"  + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName;
