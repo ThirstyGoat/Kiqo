@@ -21,7 +21,7 @@ public class PersistenceManager {
      * @param project - the project to be saved
      */
     public static void saveProject(File filePath, Project project) throws IOException {
-        Writer writer = new FileWriter(filePath + "/" + project.getShortName() + ".json");
+        Writer writer = new FileWriter(filePath);
         gson.toJson(project, writer);
         writer.close();
     }
