@@ -1,70 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
-  <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.2846410684474123" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-      <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-          <children>
-            <VBox prefHeight="369.0" prefWidth="114.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                 <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
-                 <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
-                        <ListView fx:id="peopleListView" layoutX="10.0" layoutY="26.0" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-          </children>
-        </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-          <children>
-            <TextArea prefHeight="369.0" prefWidth="424.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-          </children>
-        </AnchorPane>
-      </items>
-    </SplitPane>
-  </center>
-  <top>
-    <MenuBar useSystemMenuBar="true" BorderPane.alignment="CENTER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <Menu mnemonicParsing="false" text="New">
-              <items>
-                <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
-                        <MenuItem fx:id="newPersonMenuItem" disable="true" mnemonicParsing="false" text="Person" />
-              </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
-            <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-              <items>
-                <MenuItem fx:id="undoMenuItem" disable="true" mnemonicParsing="false" text="Undo" />
-                  <MenuItem fx:id="redoMenuItem" disable="true" mnemonicParsing="false" text="Redo" />
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <Menu mnemonicParsing="false" text="New">
+                    <items>
+                        <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
+                    </items>
+                  </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="editProjectMenuItem" disable="true" mnemonicParsing="false" text="Project" />
-                  <MenuItem fx:id="editPersonMenuItem" disable="true" mnemonicParsing="false" text="Person" />
-              </items>
+                  <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
+                  <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <CheckMenuItem fx:id="listToggleCheckMenuItem" mnemonicParsing="false" text="List" />
+               </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="View">
-          <items>
-            <CheckMenuItem fx:id="listToggleCheckMenuItem" mnemonicParsing="false" text="List" />
-                  <CheckMenuItem fx:id="listShowPeopleMenuItem" mnemonicParsing="false" text="People" />
-                  <CheckMenuItem fx:id="listShowProjectMenuItem" mnemonicParsing="false" text="Project" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Project">
-          <items>
-            <MenuItem fx:id="projectDetailsMenuItem" disable="true" mnemonicParsing="false" text="Project Details" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-  </top>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <SplitPane fx:id="mainSplitPane" dividerPositions="0.2842809364548495" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+               		<VBox  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  >
+		                <Label text="Project" />
+		                <ListView fx:id="mainListView" VBox.vgrow="ALWAYS" layoutX="-43.0" layoutY="85.0" prefHeight="369.0" prefWidth="114.0" />
+		            </VBox>
+               	  </children>
+          </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TextArea layoutX="112.0" layoutY="77.0" prefHeight="369.0" prefWidth="424.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </center>
 </BorderPane>
