@@ -1,0 +1,146 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Project4 User Guide 
+%
+% Important note:
+% Chapter heading images should have a 2:1 width:height ratio,
+% e.g. 920px width and 460px height.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
+
+\usepackage[top=3cm,bottom=3cm,left=3.2cm,right=3.2cm,headsep=10pt,letterpaper]{geometry} % Page margins
+
+\usepackage{xcolor} % Required for specifying colors by name
+\definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
+
+\usepackage{booktabs}
+
+% Font Settings
+\usepackage{avant} % Use the Avantgarde font for headings
+%\usepackage{times} % Use the Times font for headings
+\usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
+
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+
+\usepackage{menukeys}
+
+% Bibliography
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+\addbibresource{bibliography.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
+
+\input{structure} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begingroup
+\thispagestyle{empty}
+\center{\includegraphics[scale=0.25]{badgecolour}} % Thirsty Goat Badge 
+%\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{esahubble}}} % Image background
+\centering
+\vspace*{5cm}
+\par\normalfont\fontsize{35}{35}\sffamily\selectfont
+\textbf{Project4}\\
+{\LARGE Project4 tagline here}\par % Book title
+\vspace*{1cm}
+{\Huge User Guide}\par % Author name
+\endgroup
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\thispagestyle{empty}
+\tableofcontents % Print the table of contents itself
+
+%----------------------------------------------------------------------------------------
+%	CHAPTER 1
+%----------------------------------------------------------------------------------------
+
+\chapter{Introduction}
+\thispagestyle{empty}
+
+\section{Parts of the Main Window}
+The main Project4 workspace is show in figure~\ref{fig:mainwindow}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.32]{mainwindow}
+  \caption{The main Project4 window.\label{fig:mainwindow}}
+\end{figure}
+
+By default, the main window is split into two panes.
+On the left is the list pane.
+On the right is a simple text field.
+To display or hide the list pane, choose \menu{View > List}.
+Alternatively, use the keys \keys{\ctrl + L}.\footnote{On Mac,
+use the command key \keys{\cmd} in place of \keys{\ctrl}.}
+
+\section{Creating a New Project}
+\begin{itemize}
+  \item From the menu bar, use \menu{File > New > Project}.
+  \item Use the keyboard shortcut \keys{\ctrl + N}.
+\end{itemize}
+You will then be prompted to enter the details of the new project.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.32]{newproject}
+  \caption{The new project window.\label{newproject}}
+\end{figure}
+
+\section{Opening an Existing Project}
+\textbf{Note:} Only one project can be open at a time.
+\begin{itemize}
+  \item From the menu bar, use \menu{File > Open}.
+  \item Use the keyboard shortcut \keys{\ctrl + O}.
+\end{itemize}
+
+\section{Saving a Project}
+\begin{itemize}
+  \item From the menu bar, use \menu{File > Save}.
+  \item Use the keyboard shortcut \keys{\ctrl + S}.
+\end{itemize}
+
+\section{Closing Project4}
+  \begin{itemize}
+    \item \menu{File > Quit}.
+  \end{itemize}
+
+\appendix
+\chapter{Appendix}
+
+\section{Keyboard Shortcuts}
+
+\textbf{Note:} On Mac the command key \keys{\cmd} should be used
+  in place of \keys{\ctrl}.
+
+\begin{table}[h]
+  \renewcommand{\arraystretch}{1.5} % Increase space between rows
+  \centering
+  \begin{tabular}{lc}
+    \toprule
+    Action & Shortcut \\
+    \midrule
+    Hide/Show List Pane  &  \keys{\ctrl + L} \\ 
+    Create New Project & \keys{\ctrl + N} \\
+    Open Project & \keys{\ctrl + O} \\ 
+    Save Project & \keys{\ctrl + S} \\
+    \bottomrule
+  \end{tabular}
+  \caption{List of Keyboard Shortcuts}
+  \label{tab:shortcuts}
+\end{table}
+
+\end{document}
