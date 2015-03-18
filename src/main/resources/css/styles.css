@@ -1,6 +1,5 @@
 .title {
 	-fx-font-weight: bold;
 	-fx-font-size: 24px;
-	-fx-alignment: center_left;
-	-fx-padding: 0 0 0 3px;
+	-fx-alignment: center;
 }
