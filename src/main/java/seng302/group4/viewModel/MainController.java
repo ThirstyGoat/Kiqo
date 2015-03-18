@@ -117,8 +117,9 @@ public class MainController implements Initializable {
             // TODO Actually do something with the selected file
             try {
                 Project project = PersistenceManager.loadProject(filePath);
-                projects.add(project);
-                System.out.println(project.toString() + " has been loaded successfully");
+                if(project != null) {
+                    projects.add(project);
+                }
             } catch (Exception e) {
                 System.out.println("Couldnt load project");
                 e.printStackTrace();
