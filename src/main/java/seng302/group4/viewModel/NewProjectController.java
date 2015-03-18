@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Project;
@@ -22,7 +23,10 @@ import java.util.ResourceBundle;
  */
 public class NewProjectController implements Initializable {
     private Stage stage;
-    private File projectLocation;
+    public String longName;
+    public String shortName;
+    public File projectLocation;
+    public String description;
 
     // FXML Injections
     @FXML
@@ -46,6 +50,8 @@ public class NewProjectController implements Initializable {
     private Project project;
 
     private PopOver errorPopOver = new PopOver();
+
+    public boolean valid = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,9 +102,12 @@ public class NewProjectController implements Initializable {
 
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
+                // Set project properties
+                longName = nameTextField.getText();
+                shortName = shortNameTextField.getText();
+                description = descriptionTextField.getText();
 
-                project = new Project(shortNameTextField.getText(), nameTextField.getText(),
-                        projectLocation, descriptionTextField.getText());
+                this.valid = true;
 
                 // Close the new project dialog (this window)
                 stage.close();
@@ -111,24 +120,24 @@ public class NewProjectController implements Initializable {
      * @return Whether or not the save location is valid/readable/writable
      */
     private boolean checkSaveLocation() {
-        if (projectLocation == null) {
+        if (this.projectLocation == null) {
             // Then the user hasn't selected a project directory, alert them!
-            errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-        // Check read/write access
-        if (!projectLocation.canRead()) {
+        // Confirm read/write access
+        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
+        if (!equalPermissionsFile.canRead()) {
             // Then we can't read from the directory, what's the point!
-            errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-
-        if (!projectLocation.canWrite()) {
+        if (!equalPermissionsFile.canWrite()) {
             // Then we can't write to the directory
-            errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
 
@@ -197,13 +206,23 @@ public class NewProjectController implements Initializable {
      * Sets the open dialog functionality including getting the path chosen by the user.
      */
     private void setOpenButton() {
-        openButton.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File selectedDirectory = directoryChooser.showDialog(stage);
-            projectLocation = selectedDirectory;
-            if (selectedDirectory != null) {
-                projectLocationTextField.setText(selectedDirectory.getAbsolutePath());
+        final String EXTENSION = ".json";
+        this.openButton.setOnAction(event -> {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+            File selectedFile = fileChooser.showSaveDialog(this.stage);
+            if (selectedFile != null) {
+                // ensure file has .json extension
+                final String selectedFilename = selectedFile.getName();
+                if (!selectedFilename.endsWith(EXTENSION)) {
+                    // append extension
+                    selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
+                }
+                // store selected file
+                this.projectLocationTextField.setText(selectedFile.getAbsolutePath());
+                this.projectLocation = selectedFile;
             }
+
         });
     }
 
@@ -215,11 +234,6 @@ public class NewProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        System.out.println("called close");
         cancelButton.setOnAction(event -> stage.close());
-    }
-
-    public Project getProject() {
-        return project;
     }
 }

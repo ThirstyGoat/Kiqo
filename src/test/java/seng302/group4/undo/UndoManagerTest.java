@@ -35,6 +35,11 @@ public class UndoManagerTest {
         public void undo() {
             this.done = false;
         }
+
+        @Override
+        public String getType() {
+            return "";
+        }
     }
 
     /**

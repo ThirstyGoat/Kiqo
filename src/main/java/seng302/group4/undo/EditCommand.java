@@ -12,7 +12,7 @@ import seng302.group4.exceptions.FieldNotFoundException;
  * @author amy
  *
  */
-class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
+public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
     private Object oldVal;
     private final Object newVal;
     private final ModelObjectType subject;
@@ -28,7 +28,7 @@ class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
      * @throws FieldNotFoundException
      *             if subject does not have a field named fieldName
      */
-    EditCommand(final ModelObjectType subject, final String fieldName, final FieldType newVal) throws FieldNotFoundException {
+    public EditCommand(final ModelObjectType subject, final String fieldName, final FieldType newVal) throws FieldNotFoundException {
         this.subject = subject;
         try {
             this.propertyDescriptor = new PropertyDescriptor(fieldName, subject.getClass());
@@ -69,5 +69,10 @@ class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getType() {
+        return "Edit";
     }
 }

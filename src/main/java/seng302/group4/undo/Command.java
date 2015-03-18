@@ -31,4 +31,6 @@ public abstract class Command<T> {
      * Undoes the command.
      */
     public abstract void undo();
+
+    public abstract String getType();
 }
