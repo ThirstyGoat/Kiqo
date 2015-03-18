@@ -138,8 +138,11 @@ public class MainController implements Initializable {
     }
 
     private void refreshList() {
+        Project tmp = selectedProject;
         mainListView.setItems(null);
         mainListView.setItems(projects);
+        mainListView.getSelectionModel().select(null);
+        mainListView.getSelectionModel().select(tmp);
     }
 
     private void setSaveMenu() {

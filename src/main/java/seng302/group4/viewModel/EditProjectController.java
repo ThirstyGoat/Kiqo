@@ -5,7 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Project;
@@ -15,6 +15,7 @@ import seng302.group4.undo.EditCommand;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -110,14 +111,14 @@ public class EditProjectController implements Initializable {
 
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
-                valid = true;
+                valid = checkChanged();
 
                 EditCommand<Project, String> longNameChange = new EditCommand<>(
                         project, "longName", longNameTextField.getText()
                 );
 
                 EditCommand<Project, String> shortNameChange = new EditCommand<>(
-                        project, "shortName" , shortNameTextField.getText()
+                        project, "shortName", shortNameTextField.getText()
                 );
 
                 EditCommand<Project, File> saveLocationChange = new EditCommand<>(
@@ -140,6 +141,17 @@ public class EditProjectController implements Initializable {
                 stage.close();
             }
         });
+    }
+
+    /**
+     * Returns a boolean whether or not the project's details changed.
+     * @return Whether or not the project's details have been changed
+     */
+    private boolean checkChanged() {
+        return (!longNameTextField.getText().equals(project.getLongName()) ||
+                !shortNameTextField.getText().equals(project.getShortName()) ||
+                projectLocation != project.getSaveLocation() ||
+                !descriptionTextField.getText().equals(project.getDescription()));
     }
 
     /**
@@ -208,13 +220,23 @@ public class EditProjectController implements Initializable {
      * Sets the open dialog functionality including getting the path chosen by the user.
      */
     private void setOpenButton() {
-        openButton.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File selectedDirectory = directoryChooser.showDialog(stage);
-            projectLocation = selectedDirectory;
-            if (selectedDirectory != null) {
-                projectLocationTextField.setText(selectedDirectory.getAbsolutePath());
+        final String EXTENSION = ".json";
+        this.openButton.setOnAction(event -> {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+            File selectedFile = fileChooser.showSaveDialog(this.stage);
+            if (selectedFile != null) {
+                // ensure file has .json extension
+                final String selectedFilename = selectedFile.getName();
+                if (!selectedFilename.endsWith(EXTENSION)) {
+                    // append extension
+                    selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
+                }
+                // store selected file
+                this.projectLocationTextField.setText(selectedFile.getAbsolutePath());
+                this.projectLocation = selectedFile;
             }
+
         });
     }
 
