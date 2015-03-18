@@ -67,4 +67,13 @@ public class CreateProjectCommand extends Command<Project> {
         // FIXME implement properly
         this.project.prepareForDestruction();
     }
+
+    public Project getProject() {
+        return this.project;
+    }
+
+    public String getType() {
+        return "Create Project";
+    }
+
 }

@@ -5,13 +5,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Project;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.EditCommand;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -28,7 +31,7 @@ public class EditProjectController implements Initializable {
     @FXML
     private Button saveChangesButton;
     @FXML
-    private TextField nameTextField;
+    private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
     @FXML
@@ -45,6 +48,9 @@ public class EditProjectController implements Initializable {
 
     private PopOver errorPopOver = new PopOver();
 
+    public boolean valid = false;
+    public CompoundCommand command;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setCancelButton();
@@ -52,6 +58,13 @@ public class EditProjectController implements Initializable {
         setOpenButton();
 
         setErrorPopOvers();
+        setSaveLocationListener();
+    }
+
+    private void setSaveLocationListener() {
+        projectLocationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            projectLocation = new File(newValue);
+        });
     }
 
     /**
@@ -60,7 +73,7 @@ public class EditProjectController implements Initializable {
      */
     public void loadProject(Project project) {
         this.project = project;
-        nameTextField.setText(project.getLongName());
+        longNameTextField.setText(project.getLongName());
         shortNameTextField.setText(project.getShortName());
         projectLocationTextField.setText(project.getSaveLocation().getAbsolutePath());
         descriptionTextField.setText(project.getDescription());
@@ -76,7 +89,7 @@ public class EditProjectController implements Initializable {
         errorPopOver.setDetachable(false);
 
         // Set handlers so that popovers are hidden on field focus
-        nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 errorPopOver.hide();
             }
@@ -105,11 +118,31 @@ public class EditProjectController implements Initializable {
 
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
+                valid = checkChanged();
 
-                project.setLongName(nameTextField.getText());
-                project.setShortName(shortNameTextField.getText());
-                project.setSaveLocation(projectLocation);
-                project.setDescription(descriptionTextField.getText());
+                EditCommand<Project, String> longNameChange = new EditCommand<>(
+                        project, "longName", longNameTextField.getText()
+                );
+
+                EditCommand<Project, String> shortNameChange = new EditCommand<>(
+                        project, "shortName", shortNameTextField.getText()
+                );
+
+                EditCommand<Project, File> saveLocationChange = new EditCommand<>(
+                        project, "saveLocation", projectLocation
+                );
+
+                EditCommand<Project, String> descriptionChange = new EditCommand<>(
+                        project, "description", descriptionTextField.getText()
+                );
+
+                ArrayList<EditCommand> changes = new ArrayList<>();
+                changes.add(longNameChange);
+                changes.add(shortNameChange);
+                changes.add(saveLocationChange);
+                changes.add(descriptionChange);
+
+                command = new CompoundCommand(changes);
 
                 // Close the new project dialog (this window)
                 stage.close();
@@ -118,28 +151,39 @@ public class EditProjectController implements Initializable {
     }
 
     /**
+     * Returns a boolean whether or not the project's details changed.
+     * @return Whether or not the project's details have been changed
+     */
+    private boolean checkChanged() {
+        return (!longNameTextField.getText().equals(project.getLongName()) ||
+                !shortNameTextField.getText().equals(project.getShortName()) ||
+                projectLocation != project.getSaveLocation() ||
+                !descriptionTextField.getText().equals(project.getDescription()));
+    }
+
+    /**
      * Checks to make sure that the save location has been set, and it is writable by the user
      * @return Whether or not the save location is valid/readable/writable
      */
     private boolean checkSaveLocation() {
-        if (projectLocation == null) {
+        if (this.projectLocation == null) {
             // Then the user hasn't selected a project directory, alert them!
-            errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-        // Check read/write access
-        if (!projectLocation.canRead()) {
+        // Confirm read/write access
+        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
+        if (!equalPermissionsFile.canRead()) {
             // Then we can't read from the directory, what's the point!
-            errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
-
-        if (!projectLocation.canWrite()) {
+        if (!equalPermissionsFile.canWrite()) {
             // Then we can't write to the directory
-            errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            errorPopOver.show(projectLocationTextField);
+            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
+            this.errorPopOver.show(this.projectLocationTextField);
             return false;
         }
 
@@ -170,9 +214,9 @@ public class EditProjectController implements Initializable {
      * @return Whether or not the long name is valid
      */
     private boolean checkName() {
-        if (nameTextField.getText().length() == 0) {
+        if (longNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(nameTextField);
+            errorPopOver.show(longNameTextField);
             return false;
         }
         return true;
@@ -183,13 +227,23 @@ public class EditProjectController implements Initializable {
      * Sets the open dialog functionality including getting the path chosen by the user.
      */
     private void setOpenButton() {
-        openButton.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File selectedDirectory = directoryChooser.showDialog(stage);
-            projectLocation = selectedDirectory;
-            if (selectedDirectory != null) {
-                projectLocationTextField.setText(selectedDirectory.getAbsolutePath());
+        final String EXTENSION = ".json";
+        this.openButton.setOnAction(event -> {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+            File selectedFile = fileChooser.showSaveDialog(this.stage);
+            if (selectedFile != null) {
+                // ensure file has .json extension
+                final String selectedFilename = selectedFile.getName();
+                if (!selectedFilename.endsWith(EXTENSION)) {
+                    // append extension
+                    selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
+                }
+                // store selected file
+                this.projectLocationTextField.setText(selectedFile.getAbsolutePath());
+                this.projectLocation = selectedFile;
             }
+
         });
     }
 

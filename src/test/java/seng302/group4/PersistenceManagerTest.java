@@ -30,11 +30,11 @@ public class PersistenceManagerTest {
      */
     @Test
     public void aBestCase() throws Exception {
-        project = new Project("p", "Project", testFolder.getRoot());
+        project = new Project("p", "Project", testFolder.newFile("test.json"));
         PersistenceManager.saveProject(project.getSaveLocation(), project);
-        assertTrue(new File(project.getSaveLocation() + "/" + project.getShortName() + ".json").exists());
+        assertTrue(new File(project.getSaveLocation() + "").exists());
 
-        Project loadedProject = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/p.json"));
+        Project loadedProject = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/test.json"));
         assertTrue(loadedProject.equals(project));
     }
 
