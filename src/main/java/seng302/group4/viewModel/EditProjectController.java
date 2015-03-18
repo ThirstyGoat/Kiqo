@@ -9,10 +9,12 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Project;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.EditCommand;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Objects;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -28,7 +30,7 @@ public class EditProjectController implements Initializable {
     @FXML
     private Button saveChangesButton;
     @FXML
-    private TextField nameTextField;
+    private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
     @FXML
@@ -45,6 +47,9 @@ public class EditProjectController implements Initializable {
 
     private PopOver errorPopOver = new PopOver();
 
+    public boolean valid = false;
+    public CompoundCommand command;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setCancelButton();
@@ -60,7 +65,7 @@ public class EditProjectController implements Initializable {
      */
     public void loadProject(Project project) {
         this.project = project;
-        nameTextField.setText(project.getLongName());
+        longNameTextField.setText(project.getLongName());
         shortNameTextField.setText(project.getShortName());
         projectLocationTextField.setText(project.getSaveLocation().getAbsolutePath());
         descriptionTextField.setText(project.getDescription());
@@ -76,7 +81,7 @@ public class EditProjectController implements Initializable {
         errorPopOver.setDetachable(false);
 
         // Set handlers so that popovers are hidden on field focus
-        nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 errorPopOver.hide();
             }
@@ -105,11 +110,31 @@ public class EditProjectController implements Initializable {
 
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
+                valid = true;
 
-                project.setLongName(nameTextField.getText());
-                project.setShortName(shortNameTextField.getText());
-                project.setSaveLocation(projectLocation);
-                project.setDescription(descriptionTextField.getText());
+                EditCommand<String, String> longNameChange = new EditCommand<>(
+                        project.getLongName(), "longName", longNameTextField.getText()
+                );
+
+                EditCommand<String, String> shortNameChange = new EditCommand<>(
+                        project.getShortName(), "shortName", shortNameTextField.getText()
+                );
+
+                EditCommand<File, File> saveLocationChange = new EditCommand<>(
+                        project.getSaveLocation(), "saveLocation", projectLocation
+                );
+
+                EditCommand<String, String> descriptionChange = new EditCommand<>(
+                        project.getDescription(), "description", descriptionTextField.getText()
+                );
+
+                ArrayList<EditCommand> changes = new ArrayList<>();
+                changes.add(longNameChange);
+                changes.add(shortNameChange);
+                changes.add(saveLocationChange);
+                changes.add(descriptionChange);
+
+                command = new CompoundCommand(changes);
 
                 // Close the new project dialog (this window)
                 stage.close();
@@ -170,9 +195,9 @@ public class EditProjectController implements Initializable {
      * @return Whether or not the long name is valid
      */
     private boolean checkName() {
-        if (nameTextField.getText().length() == 0) {
+        if (longNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(nameTextField);
+            errorPopOver.show(longNameTextField);
             return false;
         }
         return true;

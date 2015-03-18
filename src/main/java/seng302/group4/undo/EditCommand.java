@@ -4,52 +4,35 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
-import seng302.group4.exceptions.FieldNotFoundException;
-
 /**
  * Overwrites a field value
  *
  * @author amy
  *
  */
-class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
+public class EditCommand<T extends Object, U extends Object> extends Command<Void> {
     private Object oldVal;
     private final Object newVal;
-    private final ModelObjectType subject;
+    private final T subject;
     private PropertyDescriptor propertyDescriptor;
 
-    /**
-     * @param subject
-     *            model object where the field belongs
-     * @param fieldName
-     *            name of the field
-     * @param newVal
-     *            class of the field
-     * @throws FieldNotFoundException
-     *             if subject does not have a field named fieldName
-     */
-    EditCommand(final ModelObjectType subject, final String fieldName, final FieldType newVal) throws FieldNotFoundException {
+    public EditCommand(final T subject, final String fieldName, final U newVal) {
         this.subject = subject;
         try {
             this.propertyDescriptor = new PropertyDescriptor(fieldName, subject.getClass());
-        } catch (final IntrospectionException e) {
-            throw new FieldNotFoundException(fieldName, e);
+        } catch (SecurityException | IntrospectionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         this.newVal = newVal;
     }
 
-    /**
-     * Sets the value of the subject's field named fieldName with newVal, using
-     * the field's setter.
-     *
-     * @see seng302.group4.undo.Command#execute()
-     */
     @Override
     public Void execute() {
         try {
             this.oldVal = this.propertyDescriptor.getReadMethod().invoke(this.subject);
             this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.newVal);
-        } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -69,5 +52,9 @@ class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public String getType() {
+        return "Edit";
     }
 }
