@@ -112,6 +112,18 @@ public class MainController implements Initializable {
                 }
             }
         });
+
+        undoManager.shouldUpdateMenuProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                if (undoManager.canUndoProperty.get()) {
+                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
+                }
+                if (undoManager.canRedoProperty.get()) {
+                    redoMenuItem.setText("Redo " + undoManager.getRedoType());
+                }
+                undoManager.shouldUpdateMenuProperty.set(false);
+            }
+        });
     }
 
     private void setProjectDetailsMenuItem() {

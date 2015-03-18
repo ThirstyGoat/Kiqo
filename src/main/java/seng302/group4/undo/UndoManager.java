@@ -16,6 +16,8 @@ public class UndoManager {
     public SimpleBooleanProperty canUndoProperty = new SimpleBooleanProperty(false);
     public SimpleBooleanProperty canRedoProperty = new SimpleBooleanProperty(false);
 
+    public SimpleBooleanProperty shouldUpdateMenuProperty = new SimpleBooleanProperty(false);
+
     /**
      * Executes the command and adds it to the undo stack.
      *
@@ -28,6 +30,7 @@ public class UndoManager {
         this.redoStack.clear();
         canUndoProperty.set(true);
         canRedoProperty.set(false);
+        shouldUpdateMenuProperty.set(true);
         System.out.println("Doing " + command.toString());
         return command.execute();
     }
@@ -41,7 +44,7 @@ public class UndoManager {
         this.undoStack.push(command);
         canUndoProperty.set(true);
         canRedoProperty.set(redoStack.size() > 0);
-
+        shouldUpdateMenuProperty.set(true);
         System.out.println("Redoing " + command.toString());
     }
 
@@ -55,7 +58,7 @@ public class UndoManager {
         this.redoStack.push(command);
         canRedoProperty.set(true);
         canUndoProperty.set(undoStack.size() > 0);
-
+        shouldUpdateMenuProperty.set(true);
         System.out.println("Undoing " + command.toString());
     }
 
