@@ -1,6 +1,8 @@
 package seng302.group4;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
@@ -13,6 +15,7 @@ public class Project {
     private String longName;
     private String description;
     private File saveLocation;
+    private ArrayList<Person> people = new ArrayList<Person>();
 
     /**
      * Create new Project
@@ -47,6 +50,22 @@ public class Project {
         this.longName = longName;
         this.description = description;
         this.saveLocation = saveLocation;
+    }
+
+    /**
+     *
+     * @param person - person to add to people list in project
+     */
+    public void addPerson(Person person) {
+        people.add(person);
+    }
+
+    /**
+     *
+     * @return arraylist of people in project
+     */
+    public ArrayList<Person> getPeople() {
+        return people;
     }
 
     @Override
