@@ -62,8 +62,14 @@ public class NewProjectController implements Initializable {
         setShortNameHandler();
 
         setErrorPopOvers();
+        setSaveLocationListener();
     }
 
+    private void setSaveLocationListener() {
+        projectLocationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            projectLocation = new File(newValue);
+        });
+    }
 
     /**
      * Sets focus listeners on text fields so PopOvers are hidden upon focus

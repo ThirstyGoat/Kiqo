@@ -58,6 +58,13 @@ public class EditProjectController implements Initializable {
         setOpenButton();
 
         setErrorPopOvers();
+        setSaveLocationListener();
+    }
+
+    private void setSaveLocationListener() {
+        projectLocationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            projectLocation = new File(newValue);
+        });
     }
 
     /**
