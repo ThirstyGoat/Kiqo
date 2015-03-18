@@ -15,10 +15,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 
@@ -113,8 +110,10 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         openMenuItem.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File filePath = directoryChooser.showDialog(primaryStage);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            File filePath = fileChooser.showOpenDialog(primaryStage);
+
             // TODO Actually do something with the selected file
             try {
                 Project project = PersistenceManager.loadProject(filePath);
