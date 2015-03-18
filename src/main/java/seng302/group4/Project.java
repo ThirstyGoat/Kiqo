@@ -3,6 +3,7 @@ package seng302.group4;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
@@ -10,12 +11,19 @@ import java.util.ArrayList;
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Project {
+public class Project implements Serializable {
     private String shortName;
     private String longName;
     private String description;
     private File saveLocation;
     private ArrayList<Person> people = new ArrayList<Person>();
+
+    /**
+     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
+     */
+    public Project() {
+
+    }
 
     /**
      * Create new Project

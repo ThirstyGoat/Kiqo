@@ -15,10 +15,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 
@@ -52,6 +49,8 @@ public class MainController implements Initializable {
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
+    @FXML
+    private MenuItem projectDetailsMenuItem;
 
     private ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
@@ -62,11 +61,28 @@ public class MainController implements Initializable {
         setListToggleCheckMenuItem();
         setLayoutProperties();
         setNewProjectMenuItem();
+        setProjectDetailsMenuItem();
 
         setMainListView();
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
+    }
+
+    private void setProjectDetailsMenuItem() {
+        projectDetailsMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                editProjectDialog(selectedProject);
+            } else {
+                // Something went wrong and the button wasn't disabled, alert the user
+                // TODO
+            }
+        });
+    }
+
+    private void refreshList() {
+        mainListView.setItems(null);
+        mainListView.setItems(projects);
     }
 
     private void setSaveMenu() {
@@ -94,13 +110,16 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         openMenuItem.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File filePath = directoryChooser.showDialog(primaryStage);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            File filePath = fileChooser.showOpenDialog(primaryStage);
+
             // TODO Actually do something with the selected file
             try {
                 Project project = PersistenceManager.loadProject(filePath);
-                projects.add(project);
-                System.out.println(project.toString() + " has been loaded successfully");
+                if(project != null) {
+                    projects.add(project);
+                }
             } catch (Exception e) {
                 System.out.println("Couldnt load project");
                 e.printStackTrace();
@@ -121,9 +140,20 @@ public class MainController implements Initializable {
         mainListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            selectedProject =  mainListView.getSelectionModel().getSelectedItem();
             if (selectedProject != null) {
                 editProjectDialog(selectedProject);
+            }
+        });
+
+        // Set change listener for mainListView
+        mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = newValue;
+            if (newValue != null) {
+                // Then a project is selected, enable the Project Details MenuItem
+                projectDetailsMenuItem.setDisable(false);
+            } else {
+                // No project selected, disable Project Details MenuItem
+                projectDetailsMenuItem.setDisable(true);
             }
         });
     }
@@ -200,7 +230,7 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
-            // TODO Update list view to reflect change
+            refreshList();
         });
     }
 
