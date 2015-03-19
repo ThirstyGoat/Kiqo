@@ -1,5 +1,11 @@
 package seng302.group4.viewModel;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -8,13 +14,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
-import seng302.group4.Project;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import org.controlsfx.control.PopOver;
+
+import seng302.group4.Project;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -38,6 +41,8 @@ public class NewProjectController implements Initializable {
     @FXML
     private Label projectLocationLabel;
     @FXML
+    private Tooltip projectLocationTooltip;
+    @FXML
     private Button openButton;
     @FXML
     private TextField descriptionTextField;
@@ -47,19 +52,30 @@ public class NewProjectController implements Initializable {
 
     private Project project;
 
-    private PopOver errorPopOver = new PopOver();
+    private final PopOver errorPopOver = new PopOver();
 
     public boolean valid = false;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setCancelButton();
-        setNewButton();
-        setOpenButton();
-        setShortNameSuggester();
-        setShortNameHandler();
+    public void initialize(final URL location, final ResourceBundle resources) {
+        this.setCancelButton();
+        this.setNewButton();
+        this.setOpenButton();
+        this.setShortNameSuggester();
+        this.setShortNameHandler();
 
-        setErrorPopOvers();
+        this.setErrorPopOvers();
+
+        // disconnect tooltip if blank
+        if (this.projectLocationTooltip.getText().isEmpty()) {
+            this.projectLocationLabel.setTooltip(null);
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                NewProjectController.this.longNameTextField.requestFocus();
+            }
+        });
     }
 
     /**
@@ -67,48 +83,50 @@ public class NewProjectController implements Initializable {
      */
     private void setErrorPopOvers() {
         // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
+        this.errorPopOver.setDetachable(false);
 
         // Set handlers so that popovers are hidden on field focus
-        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        this.longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                errorPopOver.hide();
+                this.errorPopOver.hide();
             }
         });
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        this.shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                errorPopOver.hide();
+                this.errorPopOver.hide();
             }
         });
     }
 
     /**
-     * Sets the event handler for the New Project Button, performs validation checks and instantiates the new project
-     * if applicable
+     * Sets the event handler for the New Project Button, performs validation
+     * checks and instantiates the new project if applicable
      */
     private void setNewButton() {
-        newProjectButton.setOnAction(event -> {
+        this.newProjectButton.setOnAction(event -> {
 
             // Hide existing error message if there is one
-            errorPopOver.hide();
+                this.errorPopOver.hide();
 
-            // Perform validity checks and create project
-            if (checkName() && checkShortName() && checkSaveLocation()) {
-                // Set project properties
-                longName = longNameTextField.getText();
-                shortName = shortNameTextField.getText();
-                description = descriptionTextField.getText();
+                // Perform validity checks and create project
+                if (this.checkName() && this.checkShortName() && this.checkSaveLocation()) {
+                    // Set project properties
+                    this.longName = this.longNameTextField.getText();
+                    this.shortName = this.shortNameTextField.getText();
+                    this.description = this.descriptionTextField.getText();
 
-                this.valid = true;
+                    this.valid = true;
 
-                // Close the new project dialog (this window)
-                stage.close();
-            }
-        });
+                    // Close the new project dialog (this window)
+                    this.stage.close();
+                }
+            });
     }
 
     /**
-     * Checks to make sure that the save location has been set, and it is writable by the user
+     * Checks to make sure that the save location has been set, and it is
+     * writable by the user
+     *
      * @return Whether or not the save location is valid/readable/writable
      */
     private boolean checkSaveLocation() {
@@ -138,64 +156,73 @@ public class NewProjectController implements Initializable {
 
     /**
      * Checks to make sure the short name is valid
+     *
      * @return Whether or not the short name is valid
      */
     private boolean checkShortName() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
+        if (this.shortNameTextField.getText().length() == 0) {
+            this.errorPopOver.setContentNode(new Label("Short name must not be empty"));
+            this.errorPopOver.show(this.shortNameTextField);
             return false;
         }
-//        TODO Check for uniqueness
-//        if (!UNIQUE CHECKER) {
-//            shortNamePopOver.setContentNode(new Label("Short name must be unique"));
-//            shortNamePopOver.show(shortNameTextField);
-//            shortNameTextField.requestFocus();
-//        }
+        // TODO Check for uniqueness
+        // if (!UNIQUE CHECKER) {
+        // shortNamePopOver.setContentNode(new
+        // Label("Short name must be unique"));
+        // shortNamePopOver.show(shortNameTextField);
+        // shortNameTextField.requestFocus();
+        // }
         return true;
     }
 
     /**
      * Checks to make sure the long name is valid
+     *
      * @return Whether or not the long name is valid
      */
     private boolean checkName() {
-        if (longNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(longNameTextField);
+        if (this.longNameTextField.getText().length() == 0) {
+            this.errorPopOver.setContentNode(new Label("Name must not be empty"));
+            this.errorPopOver.show(this.longNameTextField);
             return false;
         }
         return true;
     }
 
     /**
-     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
-     * up to a certain number of characters
+     * Sets the listener on the nameTextField so that the shortNameTextField is
+     * populated in real time up to a certain number of characters
      */
     private void setShortNameHandler() {
-        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
-                    Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                shortNameModified = true;
-            }
-        });
+        this.shortNameTextField.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (!Objects.equals(
+                            newValue,
+                            this.longNameTextField.getText().substring(0,
+                                    Math.min(this.longNameTextField.getText().length(), this.SHORT_NAME_SUGGESTED_LENGTH)))) {
+                        this.shortNameModified = true;
+                    }
+                });
     }
 
     /**
-     * Sets up the listener for changes in the long name, so that the short name can be populated with a suggestion
+     * Sets up the listener for changes in the long name, so that the short name
+     * can be populated with a suggestion
      */
     private void setShortNameSuggester() {
-        // Listen for changes in the long name, and populate the short name character by character up to specified characters
-        longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
-            if (!shortNameModified) {
-                shortNameTextField.setText(suggestedShortName);
+        // Listen for changes in the long name, and populate the short name
+        // character by character up to specified characters
+        this.longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            final String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), this.SHORT_NAME_SUGGESTED_LENGTH));
+            if (!this.shortNameModified) {
+                this.shortNameTextField.setText(suggestedShortName);
             }
         });
     }
 
     /**
-     * Sets the open dialog functionality including getting the path chosen by the user.
+     * Sets the open dialog functionality including getting the path chosen by
+     * the user.
      */
     private void setOpenButton() {
         final String EXTENSION = ".json";
@@ -204,8 +231,6 @@ public class NewProjectController implements Initializable {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
             File selectedFile = fileChooser.showSaveDialog(this.stage);
             if (selectedFile != null) {
-                Tooltip tooltip = new Tooltip(selectedFile.getAbsolutePath());
-                projectLocationLabel.setTooltip(tooltip);
                 // ensure file has .json extension
                 final String selectedFilename = selectedFile.getName();
                 if (!selectedFilename.endsWith(EXTENSION)) {
@@ -214,13 +239,14 @@ public class NewProjectController implements Initializable {
                 }
                 // store selected file
                 this.projectLocationLabel.setText(selectedFile.getAbsolutePath());
+                this.projectLocationLabel.setTooltip(this.projectLocationTooltip);
                 this.projectLocation = selectedFile;
             }
 
         });
     }
 
-    public void setStage(Stage stage) {
+    public void setStage(final Stage stage) {
         this.stage = stage;
     }
 
@@ -228,6 +254,6 @@ public class NewProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        cancelButton.setOnAction(event -> stage.close());
+        this.cancelButton.setOnAction(event -> this.stage.close());
     }
 }
