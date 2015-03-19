@@ -48,7 +48,7 @@ public class Person {
     /**
      * To string method for a person. 
      * Will return the fields that are not set to null
-     * @return
+     * @return the string representation of a Person object
      */
     @Override
     public String toString() {

@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.*;
 import org.controlsfx.control.NotificationPane;
 import seng302.group4.PersistenceManager;
+import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
@@ -53,6 +54,8 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem newProjectMenuItem;
     @FXML
+    private MenuItem newPersonMenuItem;
+    @FXML
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
@@ -76,7 +79,7 @@ public class MainController implements Initializable {
         setNewProjectMenuItem();
         setProjectDetailsMenuItem();
         setUndoHandlers();
-
+        setNewPersonMenuItem();
         setMainListView();
         setOpenMenu();
         setSaveMenu();
@@ -165,6 +168,7 @@ public class MainController implements Initializable {
      */
     private void setShortcuts() {
         newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+        newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
@@ -186,7 +190,9 @@ public class MainController implements Initializable {
 //            File filePath = fileChooser.showDialog(primaryStage);
             File filePath = fileChooser.showOpenDialog(primaryStage);
 
-            if (filePath == null) { return; }
+            if (filePath == null) {
+                return;
+            }
             // TODO Actually do something with the selected file
             try {
                 Project project = PersistenceManager.loadProject(filePath);
@@ -273,6 +279,12 @@ public class MainController implements Initializable {
     private void setNewProjectMenuItem() {
         newProjectMenuItem.setOnAction(event -> {
             newProjectDialog();
+        });
+    }
+
+    private void setNewPersonMenuItem() {
+        newPersonMenuItem.setOnAction(event -> {
+            newPersonDialog();
         });
     }
 
@@ -383,6 +395,36 @@ public class MainController implements Initializable {
         });
     }
 
+    private void newPersonDialog() {
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newPerson.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            NewPersonController newPersonController = loader.getController();
+            newPersonController.setStage(stage);
+
+
+            stage.showAndWait();
+            Person person = newPersonController.getPerson();
+            System.out.println("From inside MC " + person.toString());
+            selectedProject.addPerson(person);
+            System.out.println("From project array " + selectedProject.getPeople());
+        });
+    }
 
 
     /**
