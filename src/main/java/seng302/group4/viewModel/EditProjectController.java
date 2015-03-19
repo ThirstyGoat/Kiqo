@@ -29,13 +29,13 @@ public class EditProjectController implements Initializable {
     @FXML
     private Button cancelButton;
     @FXML
-    private Button saveChangesButton;
+    private Button editProjectButton;
     @FXML
     private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
     @FXML
-    private TextField projectLocationTextField;
+    private Label projectLocationLabel;
     @FXML
     private Button openButton;
     @FXML
@@ -58,13 +58,6 @@ public class EditProjectController implements Initializable {
         setOpenButton();
 
         setErrorPopOvers();
-        setSaveLocationListener();
-    }
-
-    private void setSaveLocationListener() {
-        projectLocationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            projectLocation = new File(newValue);
-        });
     }
 
     /**
@@ -75,7 +68,7 @@ public class EditProjectController implements Initializable {
         this.project = project;
         longNameTextField.setText(project.getLongName());
         shortNameTextField.setText(project.getShortName());
-        projectLocationTextField.setText(project.getSaveLocation().getAbsolutePath());
+        projectLocationLabel.setText(project.getSaveLocation().getAbsolutePath());
         descriptionTextField.setText(project.getDescription());
 
         projectLocation = project.getSaveLocation();
@@ -99,11 +92,6 @@ public class EditProjectController implements Initializable {
                 errorPopOver.hide();
             }
         });
-        projectLocationTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
     }
 
     /**
@@ -111,7 +99,7 @@ public class EditProjectController implements Initializable {
      * if applicable
      */
     private void setSaveButton() {
-        saveChangesButton.setOnAction(event -> {
+        editProjectButton.setOnAction(event -> {
 
             // Hide existing error message if there is one
             errorPopOver.hide();
@@ -169,7 +157,7 @@ public class EditProjectController implements Initializable {
         if (this.projectLocation == null) {
             // Then the user hasn't selected a project directory, alert them!
             this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
         // Confirm read/write access
@@ -177,13 +165,13 @@ public class EditProjectController implements Initializable {
         if (!equalPermissionsFile.canRead()) {
             // Then we can't read from the directory, what's the point!
             this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
         if (!equalPermissionsFile.canWrite()) {
             // Then we can't write to the directory
             this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
 
@@ -240,7 +228,7 @@ public class EditProjectController implements Initializable {
                     selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
                 }
                 // store selected file
-                this.projectLocationTextField.setText(selectedFile.getAbsolutePath());
+                this.projectLocationLabel.setText(selectedFile.getAbsolutePath());
                 this.projectLocation = selectedFile;
             }
 
