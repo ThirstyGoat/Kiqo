@@ -9,29 +9,29 @@ import java.util.ArrayList;
  *
  */
 public class CompoundCommand extends Command<Void> {
-    private ArrayList<EditCommand> commands = new ArrayList<>();
+    private ArrayList<Command<?>> commands = new ArrayList<>();
 
-    public CompoundCommand(final ArrayList<EditCommand> commands) {
-        this.commands = commands;
-
+    public CompoundCommand(final ArrayList<Command<?>> changes) {
+        this.commands = changes;
     }
 
     @Override
     public Void execute() {
-        commands.forEach(seng302.group4.undo.EditCommand::execute);
+        this.commands.forEach(seng302.group4.undo.Command::execute);
         return null;
     }
 
     @Override
     public String toString() {
-        return commands.size() + " changes";
+        return this.commands.size() + " changes";
     }
 
     @Override
     public void undo() {
-        commands.forEach(seng302.group4.undo.EditCommand::undo);
+        this.commands.forEach(seng302.group4.undo.Command::undo);
     }
 
+    @Override
     public String getType() {
         return "Compound Command";
     }

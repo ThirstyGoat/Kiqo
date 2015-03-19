@@ -102,8 +102,8 @@ public class MainController implements Initializable {
         this.undoMenuItem.setOnAction(event -> {
             this.undoManager.undoCommand();
             // Update status bar to show that there are unsaved changes.
-            this.statusBar.setText("You have unsaved changes.");
-        });
+                this.statusBar.setText("You have unsaved changes.");
+            });
 
         this.redoMenuItem.setOnAction(event -> this.undoManager.redoCommand());
 
@@ -197,24 +197,24 @@ public class MainController implements Initializable {
     private void setOpenMenu() {
         this.openMenuItem.setOnAction(event -> {
             // DirectoryChooser directoryChooser = new DirectoryChooser();
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-            // File filePath = fileChooser.showDialog(primaryStage);
-            final File filePath = fileChooser.showOpenDialog(this.primaryStage);
+                final FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+                // File filePath = fileChooser.showDialog(primaryStage);
+                final File filePath = fileChooser.showOpenDialog(this.primaryStage);
 
-            if (filePath == null) {
-                return;
-            }
-            // TODO Actually do something with the selected file
-            try {
-                final Project project = PersistenceManager.loadProject(filePath);
-                this.projects.add(project);
-                System.out.println(project.toString() + " has been loaded successfully");
-            } catch (final Exception e) {
-                System.out.println("Couldnt load project");
-                e.printStackTrace();
-            }
-        });
+                if (filePath == null) {
+                    return;
+                }
+                // TODO Actually do something with the selected file
+                try {
+                    final Project project = PersistenceManager.loadProject(filePath);
+                    this.projects.add(project);
+                    System.out.println(project.toString() + " has been loaded successfully");
+                } catch (final Exception e) {
+                    System.out.println("Couldn't load project");
+                    e.printStackTrace();
+                }
+            });
     }
 
     /**
@@ -321,21 +321,25 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
-            if (editProjectController.valid) {
-                final Command c = new Command() {
-                    CompoundCommand cc = editProjectController.command;
+            if (editProjectController.isValid()) {
+                final Command<Void> c = new Command<Void>() {
+                    private final CompoundCommand cc = editProjectController.getCommand();
 
                     @Override
-                    public Object execute() {
-                        // Add to mainListView
-                        return this.cc.execute();
+                    public Void execute() {
+                        this.cc.execute();
+
+                        try {
+                            PersistenceManager.saveProject(project.getSaveLocation(), project);
+                        } catch (final IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
                     }
 
                     @Override
                     public void undo() {
-                        // Remove from mainListView
                         this.cc.undo();
-                        MainController.this.refreshList();
                     }
 
                     @Override
@@ -373,14 +377,12 @@ public class MainController implements Initializable {
             newProjectController.setStage(stage);
 
             stage.showAndWait();
-            if (newProjectController.valid) {
-                final Command c = new Command() {
-                    CreateProjectCommand cpc = new CreateProjectCommand(newProjectController.formController.shortName,
-                            newProjectController.formController.longName, newProjectController.formController.projectLocation,
-                            newProjectController.formController.description);
+            if (newProjectController.isValid()) {
+                final Command<Project> c = new Command<Project>() {
+                    private final CreateProjectCommand cpc = newProjectController.getCommand();
 
                     @Override
-                    public Object execute() {
+                    public Project execute() {
                         // Add to mainListView
                         final Project project = this.cpc.execute();
                         MainController.this.addProject(project);
@@ -401,6 +403,7 @@ public class MainController implements Initializable {
                 };
 
                 this.undoManager.doCommand(c);
+                this.refreshList();
             }
         });
     }

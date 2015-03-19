@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import seng302.group4.Project;
+import seng302.group4.undo.CreateProjectCommand;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -15,7 +16,7 @@ import seng302.group4.Project;
 public class NewProjectController implements Initializable {
     private Stage stage;
     private Project project;
-    public boolean valid = false;
+    private boolean valid = false;
 
     // FXML Injections
     @FXML
@@ -23,7 +24,9 @@ public class NewProjectController implements Initializable {
     @FXML
     private Button newProjectButton;
     @FXML
-    public ProjectFormController formController;
+    private ProjectFormController formController;
+
+    private CreateProjectCommand command;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -38,9 +41,11 @@ public class NewProjectController implements Initializable {
     private void setNewButton() {
         this.newProjectButton.setOnAction(event -> {
             this.formController.validate();
-            if (this.formController.valid) {
-                // Close the new project dialog (this window)
+            if (this.formController.isValid()) {
+                this.command = new CreateProjectCommand(this.formController.shortName, this.formController.longName,
+                        this.formController.projectLocation, this.formController.description);
                 this.valid = true;
+                // Close the new project dialog (this window)
                 this.stage.close();
             }
         });
@@ -55,5 +60,26 @@ public class NewProjectController implements Initializable {
      */
     private void setCancelButton() {
         this.cancelButton.setOnAction(event -> this.stage.close());
+    }
+
+    /**
+     * @return the formController
+     */
+    public ProjectFormController getFormController() {
+        return this.formController;
+    }
+
+    /**
+     * @return the command
+     */
+    public CreateProjectCommand getCommand() {
+        return this.command;
+    }
+
+    /**
+     * @return validity of all fields
+     */
+    public boolean isValid() {
+        return this.valid;
     }
 }
