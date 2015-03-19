@@ -10,8 +10,9 @@
           <children>
             <VBox prefHeight="369.0" prefWidth="114.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                 <Label alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+                 <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
                  <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+                        <ListView fx:id="peopleListView" layoutX="10.0" layoutY="26.0" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
           </children>
@@ -51,6 +52,8 @@
         <Menu mnemonicParsing="false" text="View">
           <items>
             <CheckMenuItem fx:id="listToggleCheckMenuItem" mnemonicParsing="false" text="List" />
+                  <CheckMenuItem fx:id="listShowPeopleMenuItem" mnemonicParsing="false" text="People" />
+                  <CheckMenuItem fx:id="listShowProjectMenuItem" mnemonicParsing="false" text="Project" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Project">
