@@ -1,12 +1,8 @@
 package seng302.group4.viewModel;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,6 +46,8 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Project> mainListView;
     @FXML
+    private ListView<Person> peopleListView;
+    @FXML
     private SplitPane mainSplitPane;
     @FXML
     private MenuItem newProjectMenuItem;
@@ -65,9 +63,16 @@ public class MainController implements Initializable {
     private MenuItem undoMenuItem;
     @FXML
     private MenuItem redoMenuItem;
+    @FXML
+    private CheckMenuItem listShowProjectMenuItem;
+    @FXML
+    private CheckMenuItem listShowPeopleMenuItem;
+    @FXML
+    private Label listLabel;
 
-    private ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
+    private ObservableList<Project> projects = FXCollections.observableArrayList();
+    private ObservableList<Person> people = FXCollections.observableArrayList();
 
     private UndoManager undoManager = new UndoManager();
 
@@ -84,6 +89,47 @@ public class MainController implements Initializable {
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
+        showProjectListView();
+        showPeopleListView();
+    }
+
+
+    private void showProjectListView() {
+        listShowProjectMenuItem.setSelected(true);
+        listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                listLabel.setText("Project");
+                listShowPeopleMenuItem.setSelected(false);
+
+                peopleListView.setVisible(false);
+                peopleListView.setManaged(false);
+
+                mainListView.setVisible(true);
+                mainListView.setManaged(true);
+
+            }
+        });
+    }
+
+    private void showPeopleListView() {
+        peopleListView.setManaged(false);
+        listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                listLabel.setText("People");
+                listShowProjectMenuItem.setSelected(false);
+
+                peopleListView.setVisible(true);
+                peopleListView.setManaged(true);
+
+                mainListView.setVisible(false);
+                mainListView.setManaged(false);
+
+                if(selectedProject != null) {
+                    people.setAll(selectedProject.getPeople());
+                }
+                peopleListView.setItems(people);
+            }
+        });
     }
 
     private void setUndoHandlers() {
