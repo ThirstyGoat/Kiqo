@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
   <center>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.2846410684474123" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -33,7 +35,7 @@
             <Menu mnemonicParsing="false" text="New">
               <items>
                 <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
-                        <MenuItem fx:id="newPersonMenuItem" mnemonicParsing="false" text="Person" disable="true" />
+                        <MenuItem fx:id="newPersonMenuItem" disable="true" mnemonicParsing="false" text="Person" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />

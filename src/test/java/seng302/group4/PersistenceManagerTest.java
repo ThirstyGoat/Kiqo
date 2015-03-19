@@ -38,6 +38,9 @@ public class PersistenceManagerTest {
         assertTrue(loadedProject.equals(project));
     }
 
+    /**
+     * Tests that an exception is thrown when a invalid file path is given to load a project from
+     */
     @Rule public ExpectedException thrown=ExpectedException.none();
     @Test
     public void bFileNotFoundLoad() throws Exception {
