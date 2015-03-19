@@ -1,5 +1,10 @@
 package seng302.group4.viewModel;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,13 +15,10 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.controlsfx.control.PopOver;
-import seng302.group4.Project;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import org.controlsfx.control.PopOver;
+
+import seng302.group4.Project;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -44,9 +46,11 @@ public class ProjectFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private boolean shortNameModified = false;
 
+    private Project project;
+
     private final PopOver errorPopOver = new PopOver();
 
-    private boolean valid = false;
+    public boolean valid = false;
     private Window stage;
 
     @Override
@@ -58,27 +62,15 @@ public class ProjectFormController implements Initializable {
         this.setErrorPopOvers();
 
         // disconnect tooltip if blank
-        this.updateTooltip();
-
+        if (this.projectLocationTooltip.getText().isEmpty()) {
+            this.projectLocationLabel.setTooltip(null);
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 ProjectFormController.this.longNameTextField.requestFocus();
             }
         });
-    }
-
-    public void loadProject(final Project project) {
-        this.longNameTextField.setText(project.getLongName());
-        this.shortNameTextField.setText(project.getShortName());
-        this.descriptionTextField.setText(project.getDescription());
-
-        // also sets tooltip text
-        this.projectLocation = project.getSaveLocation();
-        this.projectLocationLabel.setText(project.getSaveLocation().getPath());
-
-        // disconnect tooltip if blank
-        this.updateTooltip();
     }
 
     /**
@@ -234,27 +226,15 @@ public class ProjectFormController implements Initializable {
                     selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
                 }
                 // store selected file
-                this.projectLocationLabel.setText(selectedFile.getPath());
-                this.projectLocation = selectedFile.getAbsoluteFile();
-                this.updateTooltip();
+                this.projectLocationLabel.setText(selectedFile.getAbsolutePath());
+                this.projectLocationLabel.setTooltip(this.projectLocationTooltip);
+                this.projectLocation = selectedFile;
             }
 
         });
     }
 
-    /**
-     * Attaches or detaches the tooltip for saveLocation based on whether the
-     * tooltip would be empty.
-     */
-    private void updateTooltip() {
-        this.projectLocationLabel.setTooltip(this.projectLocationTooltip.getText().isEmpty() ? null : this.projectLocationTooltip);
-    }
-
     public void setStage(final Stage stage) {
         this.stage = stage;
-    }
-
-    public boolean isValid() {
-        return this.valid;
     }
 }
