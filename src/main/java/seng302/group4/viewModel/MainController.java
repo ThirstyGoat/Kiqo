@@ -1,12 +1,8 @@
 package seng302.group4.viewModel;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,7 +13,10 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.control.NotificationPane;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
@@ -27,11 +26,10 @@ import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateProjectCommand;
 import seng302.group4.undo.UndoManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import java.io.File;
 
 /**
  * Main controller for the primary view
@@ -228,9 +226,11 @@ public class MainController implements Initializable {
             selectedProject = newValue;
             if (newValue != null) {
                 // Then a project is selected, enable the Project Details MenuItem
+                newPersonMenuItem.setDisable(false);
                 projectDetailsMenuItem.setDisable(false);
             } else {
                 // No project selected, disable Project Details MenuItem
+                newPersonMenuItem.setDisable(true);
                 projectDetailsMenuItem.setDisable(true);
             }
         });
@@ -284,7 +284,9 @@ public class MainController implements Initializable {
 
     private void setNewPersonMenuItem() {
         newPersonMenuItem.setOnAction(event -> {
-            newPersonDialog();
+            if (selectedProject != null) {
+                newPersonDialog();
+            }
         });
     }
 
@@ -416,13 +418,14 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
+            newPersonController.setProject(selectedProject);
 
 
             stage.showAndWait();
             Person person = newPersonController.getPerson();
-            System.out.println("From inside MC " + person.toString());
-            selectedProject.addPerson(person);
-            System.out.println("From project array " + selectedProject.getPeople());
+            if (person != null && selectedProject != null) {
+                selectedProject.addPerson(person);
+            }
         });
     }
 

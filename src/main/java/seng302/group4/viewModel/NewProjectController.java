@@ -1,13 +1,10 @@
 package seng302.group4.viewModel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -149,6 +146,7 @@ public class NewProjectController implements Initializable {
             return false;
         }
 //        TODO Check for uniqueness
+//        Planned for future sprints as not needed when only one project is available at a time
 //        if (!UNIQUE CHECKER) {
 //            shortNamePopOver.setContentNode(new Label("Short name must be unique"));
 //            shortNamePopOver.show(shortNameTextField);

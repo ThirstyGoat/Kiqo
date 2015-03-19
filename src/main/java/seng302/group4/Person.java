@@ -1,8 +1,7 @@
 package seng302.group4;
 
-import java.io.File;
-
 /**
+ * Model class for Person.
  * Created by james on 17/03/15.
  */
 public class Person {
@@ -11,14 +10,11 @@ public class Person {
     private String description;
     private String userID;
     private String emailAddress;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String department;
 
     /* TODO
-     * Save person to project
-     * Check short names != null
      * Check short names == unique
-     * Menu has a Save item which saves people information with project data
      * Create / edit person dialog has save button to save person in project directory
      * Open project > opens all people
      * View menu > show people
@@ -35,7 +31,7 @@ public class Person {
      * @param department a department the person works in
      */
     public Person(String shortName, String longName, String description, String userID, String emailAddress,
-                  Integer phoneNumber, String department) {
+                  String phoneNumber, String department) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -59,15 +55,13 @@ public class Person {
                 str += '\'' + ", userID='" + userID;
             } if (emailAddress != null) {
                 str += '\'' + ", emailAddress='" + emailAddress;
-            } if (getPhoneNumber() != null) {
+            } if (phoneNumber != null) {
                 str += '\'' + ", phoneNumber='" + phoneNumber;
             } if (department != null) {
                 str += '\'' + ", department='" + department;
             }
         return str + '\'' + '}';
     }
-
-
 
     public String getShortName() {
         return shortName;
@@ -89,12 +83,11 @@ public class Person {
         return emailAddress;
     }
 
-    public Integer getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
     public String getDepartment() {
         return department;
     }
-
 }
