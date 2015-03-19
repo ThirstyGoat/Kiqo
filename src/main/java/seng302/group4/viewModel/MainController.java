@@ -202,7 +202,7 @@ public class MainController implements Initializable {
     private void setSaveMenu() {
         saveMenuItem.setOnAction(event -> {
             try {
-                PersistenceManager.saveProject(selectedProject.getSaveLocation().getAbsoluteFile(), selectedProject);
+                PersistenceManager.saveProject(selectedProject.getSaveLocation(), selectedProject);
             } catch (IOException e) {
                 e.printStackTrace();
             }
