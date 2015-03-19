@@ -208,7 +208,7 @@ public class MainController implements Initializable {
                 // TODO Actually do something with the selected file
                 try {
                     final Project project = PersistenceManager.loadProject(filePath);
-                    this.projects.add(project);
+                    addProject(project);
                     System.out.println(project.toString() + " has been loaded successfully");
                 } catch (final Exception e) {
                     System.out.println("Couldn't load project");
@@ -419,9 +419,10 @@ public class MainController implements Initializable {
         if (project != null) {
             // Update View Accordingly
             this.projects.add(project);
+            mainListView.getSelectionModel().select(project);
             // Attempt to write file to disk
             try {
-                PersistenceManager.saveProject(project.getSaveLocation().getAbsoluteFile(), project);
+                PersistenceManager.saveProject(project.getSaveLocation(), project);
             } catch (final IOException e) {
                 e.printStackTrace();
             }
