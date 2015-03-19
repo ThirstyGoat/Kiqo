@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.NewProjectController">
-   <bottom>
-      <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-            <Button fx:id="newProjectButton" defaultButton="true" mnemonicParsing="false" text="New Project" />
-         </children>
-         <padding>
-            <Insets right="35.0" />
-         </padding>
-      </HBox>
-   </bottom>
-   <center>
-      <GridPane vgap="10.0" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <padding>
-            <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-         </padding>
-         <children>
-            <Label text="Name:" />
-            <Label text="Short Name:" GridPane.rowIndex="1" />
-            <Label text="Description:" GridPane.rowIndex="3" />
-            <Label text="Project Location:" GridPane.rowIndex="2" />
-            <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
-            <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-               <children>
-                  <Button fx:id="openButton" mnemonicParsing="false" text="Open" />
-                  <Label fx:id="projectLocationLabel" maxWidth="280.0" textOverrun="LEADING_WORD_ELLIPSIS" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         </children>
-      </GridPane>
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.NewProjectController">
+  <bottom>
+    <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+      <children>
+        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
+        <Button fx:id="newProjectButton" defaultButton="true" mnemonicParsing="false" text="New Project" />
+      </children>
+      <padding>
+        <Insets right="35.0" />
+      </padding>
+    </HBox>
+  </bottom>
+  <center>
+    <GridPane vgap="10.0" BorderPane.alignment="CENTER">
+      <children>
+        <Label text="Name:" />
+        <Label text="Short Name:" GridPane.rowIndex="1" />
+        <Label text="Description:" GridPane.rowIndex="3" />
+        <Label text="Project Location:" GridPane.rowIndex="2" />
+        <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
+        <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+          <children>
+            <Button fx:id="openButton" mnemonicParsing="false" text="Open" />
+            <Label fx:id="projectLocationLabel" maxWidth="280.0" textOverrun="LEADING_WORD_ELLIPSIS" HBox.hgrow="ALWAYS">
+              <tooltip>
+                <Tooltip fx:id="projectLocationTooltip" text="${projectLocationLabel.text}"/>
+              </tooltip>
+            </Label>
+          </children>
+        </HBox>
+        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
+      </columnConstraints>
+      <padding>
+        <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+      </padding>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+  </center>
 </BorderPane>
