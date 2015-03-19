@@ -21,7 +21,7 @@ public class PersistenceManager {
      * @param project - the project to be saved
      */
     public static void saveProject(File filePath, Project project) throws IOException {
-        Writer writer = new FileWriter(filePath + "/" + project.getShortName() + ".json");
+        Writer writer = new FileWriter(filePath);
         gson.toJson(project, writer);
         writer.close();
     }
@@ -33,13 +33,14 @@ public class PersistenceManager {
      * @throws IOException
      */
     public static Project loadProject(File filePath) throws Exception {
-
-        BufferedReader br = new BufferedReader(new FileReader(filePath));
         Project project = null;
-        try {
-            project = gson.fromJson(br, Project.class);
-        } catch (Exception e) {
-            throw e;
+        if(filePath != null) {
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            try {
+                project = gson.fromJson(br, Project.class);
+            } catch (Exception e) {
+                throw e;
+            }
         }
         return project;
     }
