@@ -17,10 +17,8 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
+import org.controlsfx.control.NotificationPane;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
@@ -86,7 +84,14 @@ public class MainController implements Initializable {
     }
 
     private void setUndoHandlers() {
-        undoMenuItem.setOnAction(event -> undoManager.undoCommand());
+        undoMenuItem.setOnAction(event -> {
+            undoManager.undoCommand();
+            // Alert user that they have unsaved changes.
+            NotificationPane notification = new NotificationPane();
+            notification.setShowFromTop(true);
+            notification.setText("Note: You have unsaved changes.");
+            notification.show();
+        });
 
         redoMenuItem.setOnAction(event -> undoManager.redoCommand());
 
@@ -175,8 +180,12 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         openMenuItem.setOnAction(event -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            File filePath = directoryChooser.showDialog(primaryStage);
+//            DirectoryChooser directoryChooser = new DirectoryChooser();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+//            File filePath = fileChooser.showDialog(primaryStage);
+            File filePath = fileChooser.showOpenDialog(primaryStage);
+
             if (filePath == null) { return; }
             // TODO Actually do something with the selected file
             try {
@@ -382,7 +391,14 @@ public class MainController implements Initializable {
      */
     private void addProject(Project project) {
         if (project != null) {
+            // Update View Accordingly
             projects.add(project);
+            // Attempt to write file to disk
+            try {
+                PersistenceManager.saveProject(project.getSaveLocation().getAbsoluteFile(), project);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

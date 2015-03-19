@@ -34,11 +34,11 @@ public class NewProjectController implements Initializable {
     @FXML
     private Button newProjectButton;
     @FXML
-    private TextField nameTextField;
+    private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
     @FXML
-    private TextField projectLocationTextField;
+    private Label projectLocationLabel;
     @FXML
     private Button openButton;
     @FXML
@@ -62,13 +62,6 @@ public class NewProjectController implements Initializable {
         setShortNameHandler();
 
         setErrorPopOvers();
-        setSaveLocationListener();
-    }
-
-    private void setSaveLocationListener() {
-        projectLocationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            projectLocation = new File(newValue);
-        });
     }
 
     /**
@@ -79,17 +72,12 @@ public class NewProjectController implements Initializable {
         errorPopOver.setDetachable(false);
 
         // Set handlers so that popovers are hidden on field focus
-        nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 errorPopOver.hide();
             }
         });
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
-        projectLocationTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 errorPopOver.hide();
             }
@@ -109,7 +97,7 @@ public class NewProjectController implements Initializable {
             // Perform validity checks and create project
             if (checkName() && checkShortName() && checkSaveLocation()) {
                 // Set project properties
-                longName = nameTextField.getText();
+                longName = longNameTextField.getText();
                 shortName = shortNameTextField.getText();
                 description = descriptionTextField.getText();
 
@@ -129,7 +117,7 @@ public class NewProjectController implements Initializable {
         if (this.projectLocation == null) {
             // Then the user hasn't selected a project directory, alert them!
             this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
         // Confirm read/write access
@@ -137,13 +125,13 @@ public class NewProjectController implements Initializable {
         if (!equalPermissionsFile.canRead()) {
             // Then we can't read from the directory, what's the point!
             this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
         if (!equalPermissionsFile.canWrite()) {
             // Then we can't write to the directory
             this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            this.errorPopOver.show(this.projectLocationTextField);
+            this.errorPopOver.show(this.projectLocationLabel);
             return false;
         }
 
@@ -174,9 +162,9 @@ public class NewProjectController implements Initializable {
      * @return Whether or not the long name is valid
      */
     private boolean checkName() {
-        if (nameTextField.getText().length() == 0) {
+        if (longNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(nameTextField);
+            errorPopOver.show(longNameTextField);
             return false;
         }
         return true;
@@ -188,8 +176,8 @@ public class NewProjectController implements Initializable {
      */
     private void setShortNameHandler() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(newValue, nameTextField.getText().substring(0,
-                    Math.min(nameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
+            if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
+                    Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
                 shortNameModified = true;
             }
         });
@@ -200,7 +188,7 @@ public class NewProjectController implements Initializable {
      */
     private void setShortNameSuggester() {
         // Listen for changes in the long name, and populate the short name character by character up to specified characters
-        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+        longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
             if (!shortNameModified) {
                 shortNameTextField.setText(suggestedShortName);
@@ -225,7 +213,7 @@ public class NewProjectController implements Initializable {
                     selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
                 }
                 // store selected file
-                this.projectLocationTextField.setText(selectedFile.getAbsolutePath());
+                this.projectLocationLabel.setText(selectedFile.getAbsolutePath());
                 this.projectLocation = selectedFile;
             }
 
