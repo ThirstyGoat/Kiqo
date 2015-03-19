@@ -1,13 +1,11 @@
 package seng302.group4.viewModel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -206,6 +204,8 @@ public class NewProjectController implements Initializable {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
             File selectedFile = fileChooser.showSaveDialog(this.stage);
             if (selectedFile != null) {
+                Tooltip tooltip = new Tooltip(selectedFile.getAbsolutePath());
+                projectLocationLabel.setTooltip(tooltip);
                 // ensure file has .json extension
                 final String selectedFilename = selectedFile.getName();
                 if (!selectedFilename.endsWith(EXTENSION)) {

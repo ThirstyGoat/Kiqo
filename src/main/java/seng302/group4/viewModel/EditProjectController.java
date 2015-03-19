@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -221,6 +222,8 @@ public class EditProjectController implements Initializable {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
             File selectedFile = fileChooser.showSaveDialog(this.stage);
             if (selectedFile != null) {
+                Tooltip tooltip = new Tooltip(selectedFile.getAbsolutePath());
+                projectLocationLabel.setTooltip(tooltip);
                 // ensure file has .json extension
                 final String selectedFilename = selectedFile.getName();
                 if (!selectedFilename.endsWith(EXTENSION)) {
@@ -231,7 +234,6 @@ public class EditProjectController implements Initializable {
                 this.projectLocationLabel.setText(selectedFile.getAbsolutePath());
                 this.projectLocation = selectedFile;
             }
-
         });
     }
 

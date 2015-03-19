@@ -4,15 +4,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane stylesheets="css/styles.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MainController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
   <center>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.2846410684474123" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
           <children>
-            <VBox AnchorPane.bottomAnchor="0.0" prefHeight="369.0" prefWidth="114.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <Label styleClass="title" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
-              <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+            <VBox prefHeight="369.0" prefWidth="114.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                 <Label alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+                 <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+               </children>
             </VBox>
           </children>
         </AnchorPane>

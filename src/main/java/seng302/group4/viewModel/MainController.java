@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.*;
 import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.StatusBar;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
@@ -42,6 +43,8 @@ public class MainController implements Initializable {
 
 
     // FXML Injections
+    @FXML
+    private BorderPane mainBorderPane;
     @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
@@ -68,6 +71,9 @@ public class MainController implements Initializable {
 
     private UndoManager undoManager = new UndoManager();
 
+    private StatusBar statusBar = new StatusBar();
+    final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setQuitMenuItem();
@@ -81,16 +87,20 @@ public class MainController implements Initializable {
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
+
+        setStatusBar();
+    }
+
+    private void setStatusBar() {
+        mainBorderPane.setBottom(statusBar);
+        statusBar.setText(ALL_CHANGES_SAVED_TEXT);
     }
 
     private void setUndoHandlers() {
         undoMenuItem.setOnAction(event -> {
             undoManager.undoCommand();
-            // Alert user that they have unsaved changes.
-            NotificationPane notification = new NotificationPane();
-            notification.setShowFromTop(true);
-            notification.setText("Note: You have unsaved changes.");
-            notification.show();
+            // Update status bar to show that there are unsaved changes.
+            statusBar.setText("You have unsaved changes.");
         });
 
         redoMenuItem.setOnAction(event -> undoManager.redoCommand());
@@ -115,6 +125,7 @@ public class MainController implements Initializable {
                 if (undoManager.canUndoProperty.get()) {
                     undoMenuItem.setText("Undo " + undoManager.getUndoType());
                 }
+                statusBar.setText(ALL_CHANGES_SAVED_TEXT);
             }
         });
 
@@ -156,7 +167,9 @@ public class MainController implements Initializable {
                 PersistenceManager.saveProject(selectedProject.getSaveLocation().getAbsoluteFile(), selectedProject);
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
+            statusBar.setText(ALL_CHANGES_SAVED_TEXT);
         });
     }
 
