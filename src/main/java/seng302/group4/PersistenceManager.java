@@ -1,14 +1,15 @@
 package seng302.group4;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import seng302.group4.exceptions.InvalidJSONException;
-import seng302.group4.exceptions.InvalidPersonException;
-import seng302.group4.exceptions.InvalidProjectException;
-
-import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -34,22 +35,23 @@ public class PersistenceManager {
     }
 
     /**
-     * Loads a project from a json file and checks it for validity
-     * @param filePath - The filepath to load the project from
-     * @return The project that was loaded
-     * @throws FileNotFoundException if file path can not be read by the buffered reader
-     * @throws InvalidPersonException if one of the people in the project is invalid
-     * @throws InvalidJSONException if th json file is corrupt
+     * Loads the project from the given json file
+     *
+     * @param filePath
+     *            - Path to the project.json
+     * @return Project loaded from the project.json file in the project
+     *         directory
+     * @throws IOException
      */
-    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidProjectException, InvalidPersonException, JsonSyntaxException {
+    public static Project loadProject(final File filePath) throws Exception {
         Project project = null;
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-            project = PersistenceManager.gson.fromJson(br, Project.class);
-            Validity.checkPeople(project.getPeople());
-            Validity.checkProject(project);
-
+            try {
+                project = PersistenceManager.gson.fromJson(br, Project.class);
+            } catch (final Exception e) {
+                throw e;
+            }
         }
         return project;
     }
