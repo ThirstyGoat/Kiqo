@@ -70,11 +70,11 @@ public class MainController implements Initializable {
 
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
-
     private final UndoManager undoManager = new UndoManager();
-
     private final StatusBar statusBar = new StatusBar();
+
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -93,17 +93,23 @@ public class MainController implements Initializable {
         this.setStatusBar();
     }
 
+    /**
+     * Adds the status bar at the bottom of the application
+     */
     private void setStatusBar() {
         this.mainBorderPane.setBottom(this.statusBar);
         this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
     }
 
+    /**
+     * Set the undo/redo item handlers, and also set their state depending on the undoManager.
+     */
     private void setUndoHandlers() {
         this.undoMenuItem.setOnAction(event -> {
             this.undoManager.undoCommand();
             // Update status bar to show that there are unsaved changes.
-                this.statusBar.setText("You have unsaved changes.");
-            });
+            this.statusBar.setText(UNSAVED_CHANGES_TEXT);
+        });
 
         this.redoMenuItem.setOnAction(event -> this.undoManager.redoCommand());
 
@@ -156,6 +162,9 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Forces a redraw of the list view
+     */
     private void refreshList() {
         final Project tmp = this.selectedProject;
         this.mainListView.setItems(null);
@@ -187,7 +196,8 @@ public class MainController implements Initializable {
 
         // Undo/redo
         this.undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
-        this.redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
+        this.redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
+                KeyCombination.SHIFT_DOWN));
     }
 
     /**
@@ -196,21 +206,22 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         this.openMenuItem.setOnAction(event -> {
-            // DirectoryChooser directoryChooser = new DirectoryChooser();
                 final FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-                // File filePath = fileChooser.showDialog(primaryStage);
                 final File filePath = fileChooser.showOpenDialog(this.primaryStage);
 
+                // Don't do anything if they press cancel/X
                 if (filePath == null) {
                     return;
                 }
-                // TODO Actually do something with the selected file
+
+                // Attempt to open the selected project
                 try {
                     final Project project = PersistenceManager.loadProject(filePath);
                     addProject(project);
                     System.out.println(project.toString() + " has been loaded successfully");
                 } catch (final Exception e) {
+                    // TODO Alert user that couldn't be loaded
                     System.out.println("Couldn't load project");
                     e.printStackTrace();
                 }
@@ -239,12 +250,17 @@ public class MainController implements Initializable {
         this.mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.selectedProject = newValue;
             if (newValue != null) {
-                // Then a project is selected, enable the Project Details
-                // MenuItem
+                // Then a project is selected, enable the Project Details, and saveMenuItem
                 this.projectDetailsMenuItem.setDisable(false);
+                this.saveMenuItem.setDisable(false);
+                this.openMenuItem.setDisable(true);
+                this.newProjectMenuItem.setDisable(true);
             } else {
-                // No project selected, disable Project Details MenuItem
+                // No project selected, disable Project Details MenuItem, and saveMenuItem
                 this.projectDetailsMenuItem.setDisable(true);
+                this.saveMenuItem.setDisable(true);
+                this.openMenuItem.setDisable(false);
+                this.newProjectMenuItem.setDisable(false);
             }
         });
     }
@@ -285,14 +301,11 @@ public class MainController implements Initializable {
                 this.dividerPosition = this.mainSplitPane.getDividerPositions()[0];
                 this.mainSplitPane.getItems().remove(this.listAnchorPane);
             }
-
         });
     }
 
     private void setNewProjectMenuItem() {
-        this.newProjectMenuItem.setOnAction(event -> {
-            this.newProjectDialog();
-        });
+        this.newProjectMenuItem.setOnAction(event -> this.newProjectDialog());
     }
 
     private void editProjectDialog(final Project project) {
@@ -402,7 +415,9 @@ public class MainController implements Initializable {
                     }
                 };
 
-                this.undoManager.doCommand(c);
+                //this.undoManager.doCommand(c);
+                // We don't do the command, since it is not meant to be undoable at this stage
+                c.execute();
                 this.refreshList();
             }
         });
@@ -419,6 +434,7 @@ public class MainController implements Initializable {
         if (project != null) {
             // Update View Accordingly
             this.projects.add(project);
+            // Select added project in the ListView
             mainListView.getSelectionModel().select(project);
             // Attempt to write file to disk
             try {
