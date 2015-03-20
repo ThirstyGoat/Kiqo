@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -43,6 +44,16 @@ public class PersistenceManager {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
             try {
                 project = PersistenceManager.gson.fromJson(br, Project.class);
+                ArrayList people = new ArrayList(project.getPeople());
+                if (people.size() > 0) {
+                    for (int i=0; i < people.size(); i+=1){
+                        if(!(Validity.checkPersonValidity((Person)people.get(i), people.subList(i,people.size()-1)))) {
+                            throw new Exception();
+                        }
+
+
+                    }
+                }
             } catch (final Exception e) {
                 throw e;
             }
