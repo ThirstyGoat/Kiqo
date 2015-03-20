@@ -365,9 +365,9 @@ public class MainController implements Initializable {
             editProjectController.loadProject(project);
 
             stage.showAndWait();
-            if (editProjectController.valid) {
+            if (editProjectController.isValid()) {
                 Command c = new Command() {
-                    CompoundCommand cc = editProjectController.command;
+                    CompoundCommand cc = editProjectController.getCommand();
 
                     @Override
                     public Object execute() {
@@ -416,11 +416,9 @@ public class MainController implements Initializable {
             newProjectController.setStage(stage);
 
             stage.showAndWait();
-            if (newProjectController.valid) {
+            if (newProjectController.isValid()) {
                 Command c = new Command() {
-                    CreateProjectCommand cpc =  new CreateProjectCommand(
-                            newProjectController.shortName, newProjectController.longName,
-                            newProjectController.projectLocation, newProjectController.description);
+                    CreateProjectCommand cpc = newProjectController.getCommand();
                     @Override
                     public Object execute() {
                         // Add to mainListView
