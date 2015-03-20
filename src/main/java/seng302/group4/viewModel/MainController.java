@@ -21,12 +21,15 @@ import org.controlsfx.control.NotificationPane;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.exceptions.InvalidJSONException;
+import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateProjectCommand;
 import seng302.group4.undo.UndoManager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -252,9 +255,15 @@ public class MainController implements Initializable {
                 Project project = PersistenceManager.loadProject(filePath);
                 projects.add(project);
                 System.out.println(project.toString() + " has been loaded successfully");
-            } catch (Exception e) {
-                System.out.println("Couldnt load project");
-                e.printStackTrace();
+            } catch (InvalidJSONException e) {
+                System.out.println("JSON file invalid");
+//                e.printStackTrace();
+            } catch (InvalidPersonException e) {
+                System.out.println("Person invalid");
+//                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+//                e.printStackTrace();
             }
         });
     }
