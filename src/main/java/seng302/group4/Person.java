@@ -75,19 +75,14 @@ public class Person {
      */
     @Override
     public String toString() {
-        String str = "Person{"  + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName;
-            if (description != null) {
-                str += '\'' + ", description='" + description;
-            } if (userID != null) {
-                str += '\'' + ", userID='" + userID;
-            } if (emailAddress != null) {
-                str += '\'' + ", emailAddress='" + emailAddress;
-            } if (phoneNumber != null) {
-                str += '\'' + ", phoneNumber='" + phoneNumber;
-            } if (department != null) {
-                str += '\'' + ", department='" + department;
-            }
-        return str + '\'' + '}';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Person{shortName='" + this.shortName + "\', longName='" + this.longName + "\'");
+        stringBuilder.append(", description='" + description + "\'");
+        stringBuilder.append(", userID='" + userID + "\'");
+        stringBuilder.append(", emailAddress='" + emailAddress + "\'");
+        stringBuilder.append(", phoneNumber='" + phoneNumber + "\'");
+        stringBuilder.append(", department='" + department + "\'}");
+        return stringBuilder.toString();
     }
 
     public String getShortName() {
