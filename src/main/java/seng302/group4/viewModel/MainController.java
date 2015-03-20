@@ -29,6 +29,8 @@ import javafx.stage.StageStyle;
 
 import org.controlsfx.control.StatusBar;
 
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialogs;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
@@ -176,7 +178,7 @@ public class MainController implements Initializable {
     private void setSaveMenu() {
         this.saveMenuItem.setOnAction(event -> {
             try {
-                PersistenceManager.saveProject(this.selectedProject.getSaveLocation().getAbsoluteFile(), this.selectedProject);
+                PersistenceManager.saveProject(this.selectedProject.getSaveLocation(), this.selectedProject);
             } catch (final IOException e) {
                 e.printStackTrace();
                 return;
@@ -206,6 +208,16 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         this.openMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                Dialogs.create()
+                        .owner(primaryStage)
+                        .title("Error")
+                        .message("Currently, only one project at a time is supported in this version.")
+                        .showWarning();
+                return;
+            }
+
+
                 final FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
                 final File filePath = fileChooser.showOpenDialog(this.primaryStage);
@@ -253,13 +265,11 @@ public class MainController implements Initializable {
                 // Then a project is selected, enable the Project Details, and saveMenuItem
                 this.projectDetailsMenuItem.setDisable(false);
                 this.saveMenuItem.setDisable(false);
-                this.openMenuItem.setDisable(true);
                 this.newProjectMenuItem.setDisable(true);
             } else {
                 // No project selected, disable Project Details MenuItem, and saveMenuItem
                 this.projectDetailsMenuItem.setDisable(true);
                 this.saveMenuItem.setDisable(true);
-                this.openMenuItem.setDisable(false);
                 this.newProjectMenuItem.setDisable(false);
             }
         });
