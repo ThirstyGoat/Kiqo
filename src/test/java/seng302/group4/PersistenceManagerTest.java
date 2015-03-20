@@ -18,8 +18,6 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PersistenceManagerTest {
 
-    Project project = null;
-
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
@@ -30,7 +28,7 @@ public class PersistenceManagerTest {
      */
     @Test
     public void aBestCase() throws Exception {
-        project = new Project("p", "Project", testFolder.newFile("test.json"));
+        Project project = new Project("p", "Project", testFolder.newFile("test.json"));
         PersistenceManager.saveProject(project.getSaveLocation(), project);
         assertTrue(new File(project.getSaveLocation() + "").exists());
 
@@ -48,5 +46,21 @@ public class PersistenceManagerTest {
 
         Project p = PersistenceManager.loadProject(new File("a/non/existent/file/path"));
 
+    }
+
+    /**
+     * Tests that people are saved with the project and can be loaded correctly
+     */
+    @Test
+    public void testSavePerson() throws Exception {
+        Person person = new Person("a", "a", "a", "a", "a", "a" ,"a");
+        Project project = new Project("p", "Project", testFolder.newFile("test.json"));
+
+        project.addPerson(person);
+
+        PersistenceManager.saveProject(project.getSaveLocation(), project);
+        Project loadedProject = PersistenceManager.loadProject(project.getSaveLocation());
+
+        assertTrue(loadedProject.getPeople().contains(person));
     }
 }

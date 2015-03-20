@@ -20,6 +20,32 @@ public class Person {
      * View menu > show people
      */
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (department != null ? !department.equals(person.department) : person.department != null) return false;
+        if (description != null ? !description.equals(person.description) : person.description != null) return false;
+        if (emailAddress != null ? !emailAddress.equals(person.emailAddress) : person.emailAddress != null)
+            return false;
+        if (!longName.equals(person.longName)) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(person.phoneNumber) : person.phoneNumber != null) return false;
+        if (!shortName.equals(person.shortName)) return false;
+        if (userID != null ? !userID.equals(person.userID) : person.userID != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = shortName.hashCode();
+        result = 31 * result + longName.hashCode();
+        return result;
+    }
+
     /**
      * Create new Person
      * @param shortName a unique short name for the person
@@ -35,6 +61,7 @@ public class Person {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
+
         this.userID = userID;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;

@@ -96,6 +96,9 @@ public class MainController implements Initializable {
     }
 
 
+    /**
+     * Shows the Project list view and hides the people list view
+     */
     private void showProjectListView() {
         listShowProjectMenuItem.setSelected(true);
         listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -113,6 +116,9 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Shows the people list view and hides the project list view
+     */
     private void showPeopleListView() {
         peopleListView.setManaged(false);
         listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
