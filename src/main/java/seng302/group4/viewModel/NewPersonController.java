@@ -74,7 +74,7 @@ public class NewPersonController implements Initializable {
             }
         });
     }
-    
+
     /**
      * Returns the Person object created by the dialog box
      * @return the Person created by the dialog box
