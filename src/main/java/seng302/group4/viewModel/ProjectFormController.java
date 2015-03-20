@@ -223,25 +223,29 @@ public class ProjectFormController implements Initializable {
      * the user.
      */
     private void setOpenButton() {
+
         final String EXTENSION = ".json";
         this.openButton.setOnAction(event -> {
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
-            File selectedFile = fileChooser.showSaveDialog(this.stage);
-            if (selectedFile != null) {
-                // ensure file has .json extension
-                final String selectedFilename = selectedFile.getName();
-                if (!selectedFilename.endsWith(EXTENSION)) {
-                    // append extension
-                    selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
-                }
-                // store selected file
-                this.projectLocationLabel.setText(selectedFile.getPath());
-                this.projectLocation = selectedFile.getAbsoluteFile();
-                this.updateTooltip();
-            }
+            // Hide existing error message if there is one
+                this.errorPopOver.hide();
 
-        });
+                final FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+                File selectedFile = fileChooser.showSaveDialog(this.stage);
+                if (selectedFile != null) {
+                    // ensure file has .json extension
+                    final String selectedFilename = selectedFile.getName();
+                    if (!selectedFilename.endsWith(EXTENSION)) {
+                        // append extension
+                        selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
+                    }
+                    // store selected file
+                    this.projectLocationLabel.setText(selectedFile.getPath());
+                    this.projectLocation = selectedFile.getAbsoluteFile();
+                    this.updateTooltip();
+                }
+
+            });
     }
 
     /**
