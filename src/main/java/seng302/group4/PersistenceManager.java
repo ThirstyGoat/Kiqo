@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import seng302.group4.exceptions.InvalidJSONException;
 import seng302.group4.exceptions.InvalidPersonException;
+import seng302.group4.exceptions.InvalidProjectException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class PersistenceManager {
      * @throws InvalidPersonException if one of the people in the project is invalid
      * @throws InvalidJSONException if th json file is corrupt
      */
-    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidPersonException, InvalidJSONException {
+    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidProjectException, InvalidPersonException, InvalidJSONException {
         Project project = null;
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -47,7 +48,8 @@ public class PersistenceManager {
             try {
                 project = PersistenceManager.gson.fromJson(br, Project.class);
                 checkPeople(project.getPeople());
-            } catch (InvalidPersonException p) {
+                Validity.checkProject(project);
+            } catch (InvalidPersonException | InvalidProjectException p) {
                 throw p;
             } catch (Exception e) {
                 throw new InvalidJSONException(filePath);

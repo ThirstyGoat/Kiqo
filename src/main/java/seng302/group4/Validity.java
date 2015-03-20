@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import seng302.group4.exceptions.InvalidProjectException;
+
 import java.util.List;
 
 /**
@@ -12,6 +14,19 @@ public class Validity {
                return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * Checks all the required fields in project to make sure they are non-null
+     * @param project
+     * @return
+     */
+    public static boolean checkProject(Project project) throws InvalidProjectException{
+        if (project.getShortName() == null || project.getLongName() == null || project.getSaveLocation() == null) {
+            throw new InvalidProjectException(project);
+        }
+
         return true;
     }
 }

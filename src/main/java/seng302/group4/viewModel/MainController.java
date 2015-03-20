@@ -23,6 +23,7 @@ import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidJSONException;
 import seng302.group4.exceptions.InvalidPersonException;
+import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateProjectCommand;
@@ -135,7 +136,7 @@ public class MainController implements Initializable {
                 mainListView.setVisible(false);
                 mainListView.setManaged(false);
 
-                if(selectedProject != null) {
+                if (selectedProject != null) {
                     people.setAll(selectedProject.getPeople());
                 }
                 peopleListView.setItems(people);
@@ -255,7 +256,7 @@ public class MainController implements Initializable {
                 Project project = PersistenceManager.loadProject(filePath);
                 projects.add(project);
                 System.out.println(project.toString() + " has been loaded successfully");
-            } catch (InvalidJSONException e) {
+            } catch (InvalidJSONException | InvalidProjectException e) {
                 System.out.println("JSON file invalid");
 //                e.printStackTrace();
             } catch (InvalidPersonException e) {
