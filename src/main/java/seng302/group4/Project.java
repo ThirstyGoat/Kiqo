@@ -155,7 +155,8 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
-                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
+        return this.shortName;
+//        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
+//                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
     }
 }

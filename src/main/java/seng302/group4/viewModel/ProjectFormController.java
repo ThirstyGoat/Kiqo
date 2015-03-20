@@ -29,6 +29,12 @@ public class ProjectFormController implements Initializable {
     public File projectLocation;
     public String description;
 
+    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private boolean shortNameModified = false;
+    private final PopOver errorPopOver = new PopOver();
+    private boolean valid = false;
+    private Window stage;
+
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -43,14 +49,6 @@ public class ProjectFormController implements Initializable {
     @FXML
     private TextField descriptionTextField;
 
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private boolean shortNameModified = false;
-
-    private final PopOver errorPopOver = new PopOver();
-
-    private boolean valid = false;
-    private Window stage;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.setOpenButton();
@@ -62,12 +60,7 @@ public class ProjectFormController implements Initializable {
         // disconnect tooltip if blank
         this.updateTooltip();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                ProjectFormController.this.longNameTextField.requestFocus();
-            }
-        });
+        Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
     }
 
     public void loadProject(final Project project) {
@@ -231,8 +224,17 @@ public class ProjectFormController implements Initializable {
 
                 final FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+
+                if (this.projectLocation != null) {
+                    // Then this is an edit dialog, we need to make sure that
+                    // the
+                    // user opens to the project directory
+                    fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
+                }
+
                 File selectedFile = fileChooser.showSaveDialog(this.stage);
                 if (selectedFile != null) {
+
                     // ensure file has .json extension
                     final String selectedFilename = selectedFile.getName();
                     if (!selectedFilename.endsWith(EXTENSION)) {
@@ -244,7 +246,6 @@ public class ProjectFormController implements Initializable {
                     this.projectLocation = selectedFile.getAbsoluteFile();
                     this.updateTooltip();
                 }
-
             });
     }
 
