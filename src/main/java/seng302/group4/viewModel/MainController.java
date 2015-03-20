@@ -232,10 +232,13 @@ public class MainController implements Initializable {
                     final Project project = PersistenceManager.loadProject(filePath);
                     addProject(project);
                     System.out.println(project.toString() + " has been loaded successfully");
-                } catch (final Exception e) {
-                    // TODO Alert user that couldn't be loaded
-                    System.out.println("Couldn't load project");
-                    e.printStackTrace();
+                } catch (Exception e) {
+
+                    Dialogs.create()
+                            .owner(primaryStage)
+                            .title("Couldn't load project")
+                            .message("Your project could not be loaded. It may be corrupt or in an outdated format.")
+                            .showError();
                 }
             });
     }
