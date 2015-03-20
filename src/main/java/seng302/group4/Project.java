@@ -176,5 +176,7 @@ public class Project implements Serializable {
     public String toString() {
         return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
                 + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
+//        return shortName;
     }
+
 }
