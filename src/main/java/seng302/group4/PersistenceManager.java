@@ -2,6 +2,9 @@ package seng302.group4;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import seng302.group4.exceptions.InvalidJSONException;
+import seng302.group4.exceptions.InvalidPersonException;
+import seng302.group4.exceptions.InvalidProjectException;
 
 import java.io.*;
 
@@ -29,35 +32,47 @@ public class PersistenceManager {
     }
 
     /**
-     * Loads the project from the given json file
-     *
-     * @param filePath
-     *            - Path to the project.json
-     * @return Project loaded from the project.json file in the project
-     *         directory
-     * @throws IOException
+     * Loads a project from a json file and checks it for validity
+     * @param filePath - The filepath to load the project from
+     * @return The project that was loaded
+     * @throws FileNotFoundException if file path can not be read by the buffered reader
+     * @throws InvalidPersonException if one of the people in the project is invalid
+     * @throws InvalidJSONException if th json file is corrupt
      */
-    public static Project loadProject(final File filePath) throws Exception {
+    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidProjectException, InvalidPersonException, InvalidJSONException {
         Project project = null;
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
+
             try {
                 project = PersistenceManager.gson.fromJson(br, Project.class);
-//                ArrayList people = new ArrayList(project.getPeople());
-//                if (people.size() > 0) {
-//                    for (int i=0; i < people.size(); i+=1){
-//                        if(!(Validity.checkPersonValidity((Person)people.get(i), people.subList(i,people.size()-1)))) {
-//                            throw new Exception();
-//                        }
-//
-//
-//                    }
-//                }
-            } catch (final Exception e) {
-                throw e;
+                checkPeople(project.getPeople());
+                Validity.checkProject(project);
+            } catch (InvalidPersonException | InvalidProjectException p) {
+                throw p;
+            } catch (Exception e) {
+                throw new InvalidJSONException(filePath);
             }
         }
         return project;
+    }
+
+    /**
+     * Check that all the people in the People list are valid
+     * @param people
+     * @return
+     * @throws Exception
+     */
+    private static void checkPeople(ArrayList<Person> people) throws InvalidPersonException {
+        if (people.size() > 0) {
+            for (int i=0; i < people.size(); i+=1){
+                System.out.println(people.subList(i, people.size()));
+
+                if(!(Validity.checkPersonValidity(people.get(i), people.subList(i + 1, people.size())))) {
+                    throw new InvalidPersonException(people.get(i));
+                }
+            }
+        }
     }
 
     /**
