@@ -66,6 +66,10 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem redoMenuItem;
     @FXML
+    private MenuItem editProjectnMenuItem; //TODO <-----
+    @FXML
+    private MenuItem editPersonMenuItem;
+    @FXML
     private CheckMenuItem listShowProjectMenuItem;
     @FXML
     private CheckMenuItem listShowPeopleMenuItem;
@@ -73,6 +77,7 @@ public class MainController implements Initializable {
     private Label listLabel;
 
     private Project selectedProject;
+    private Person selectedPerson;
     private ObservableList<Project> projects = FXCollections.observableArrayList();
     private ObservableList<Person> people = FXCollections.observableArrayList();
 
@@ -85,14 +90,24 @@ public class MainController implements Initializable {
         setLayoutProperties();
         setNewProjectMenuItem();
         setProjectDetailsMenuItem();
+        setEditPersonMenuItem();
         setUndoHandlers();
         setNewPersonMenuItem();
         setMainListView();
+        setPeopleListView();
         setOpenMenu();
         setSaveMenu();
         setShortcuts();
         showProjectListView();
         showPeopleListView();
+    }
+
+    private void setEditPersonMenuItem() {
+        editPersonMenuItem.setOnAction(event -> {
+            if (selectedPerson != null) {
+                editPersonDialog(selectedPerson);
+            }
+        });
     }
 
 
@@ -132,7 +147,7 @@ public class MainController implements Initializable {
                 mainListView.setVisible(false);
                 mainListView.setManaged(false);
 
-                if(selectedProject != null) {
+                if (selectedProject != null) {
                     people.setAll(selectedProject.getPeople());
                 }
                 peopleListView.setItems(people);
@@ -201,10 +216,15 @@ public class MainController implements Initializable {
 
     private void refreshList() {
         Project tmp = selectedProject;
+        Person tempPerson = selectedPerson;
         mainListView.setItems(null);
         mainListView.setItems(projects);
         mainListView.getSelectionModel().select(null);
         mainListView.getSelectionModel().select(tmp);
+        peopleListView.setItems(null);
+        peopleListView.setItems(people);
+        peopleListView.getSelectionModel().select(null);
+        peopleListView.getSelectionModel().select(tempPerson);
     }
 
     private void setSaveMenu() {
@@ -288,6 +308,33 @@ public class MainController implements Initializable {
                 // No project selected, disable Project Details MenuItem
                 newPersonMenuItem.setDisable(true);
                 projectDetailsMenuItem.setDisable(true);
+            }
+        });
+    }
+
+    /**
+     * Sets the content for the main list view
+     */
+    private void setPeopleListView() {
+        peopleListView.setItems(people);
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem editContextMenu = new MenuItem("Edit Person");
+        contextMenu.getItems().add(editContextMenu);
+
+        peopleListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> {
+            if (selectedProject != null) {
+                editPersonDialog(selectedPerson);
+            }
+        });
+
+        // Set change listener for mainListView
+        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                editPersonMenuItem.setDisable(false);
+                selectedPerson = newValue;
             }
         });
     }
@@ -451,6 +498,36 @@ public class MainController implements Initializable {
         });
     }
 
+    private void editPersonDialog(Person person) {
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.setTitle("Edit Project");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editPerson.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            EditPersonController editPersonController = loader.getController();
+            editPersonController.setStage(stage);
+            editPersonController.setProject(selectedProject);
+            editPersonController.loadPerson(person);
+
+            stage.showAndWait();
+            refreshList();
+        });
+    }
+
     private void newPersonDialog() {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
@@ -478,8 +555,10 @@ public class MainController implements Initializable {
             stage.showAndWait();
             Person person = newPersonController.getPerson();
             if (person != null && selectedProject != null) {
-                selectedProject.addPerson(person);
+                selectedProject.addPerson(person); // add to project
+                people.add(person); // add to person list
             }
+            refreshList();
         });
     }
 

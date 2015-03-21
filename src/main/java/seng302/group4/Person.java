@@ -13,12 +13,6 @@ public class Person {
     private String phoneNumber;
     private String department;
 
-    /* TODO
-     * Check short names == unique
-     * Create / edit person dialog has save button to save person in project directory
-     * Open project > opens all people
-     * View menu > show people
-     */
 
     @Override
     public boolean equals(Object o) {
@@ -111,5 +105,33 @@ public class Person {
 
     public String getDepartment() {
         return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLongName(String longName) {
+        this.longName = longName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 }

@@ -18,13 +18,13 @@ import java.util.ResourceBundle;
  * Created by james on 20/03/15.
  */
 public class PersonFormController implements Initializable {
-    public String shortName;
-    public String longName;
-    public String description;
-    public String userID;
-    public String emailAddress;
-    public String phoneNumber;
-    public String department;
+    private String shortName;
+    private String longName;
+    private String description;
+    private String userID;
+    private String emailAddress;
+    private String phoneNumber;
+    private String department;
     private boolean valid = false;
 
 
@@ -60,8 +60,19 @@ public class PersonFormController implements Initializable {
         Platform.runLater(() -> PersonFormController.this.longNameTextField.requestFocus());
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+
+    /**
+     * Sets the TextFields displayed in the dialog to the Person that will be edited.
+     * @param person the Person that is loaded
+     */
+    public void loadPerson(final Person person) {
+        longNameTextField.setText(person.getLongName());
+        shortNameTextField.setText(person.getShortName());
+        descriptionTextField.setText(person.getDescription());
+        userIDTextField.setText(person.getUserID());
+        emailTextField.setText(person.getEmailAddress());
+        phoneTextField.setText(person.getPhoneNumber());
+        departmentTextField.setText(person.getDepartment());
     }
 
     /**
@@ -80,33 +91,8 @@ public class PersonFormController implements Initializable {
             emailAddress = emailTextField.getText();
             phoneNumber = phoneTextField.getText();
             department = departmentTextField.getText();
-
             valid = true;
         }
-    }
-
-    /**
-     * Sets focus listeners on text fields so PopOvers are hidden upon focus
-     */
-    private void setErrorPopOvers() {
-        // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
-
-        // Set handlers so that popovers are hidden on field focus
-        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     /**
@@ -119,6 +105,7 @@ public class PersonFormController implements Initializable {
             errorPopOver.show(shortNameTextField);
             return false;
         }
+        // check for uniqueness inside the project
         for (Person person : project.getPeople()) {
             if (shortNameTextField.getText().equals(person.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
@@ -170,6 +157,11 @@ public class PersonFormController implements Initializable {
 
 
 
+
+
+
+    // ------- is this used?? -----------
+
     /**
      * Creates a Person that has any ignored fields from the dialog set to null
      * @return a Person object created by the new Person dialog
@@ -199,6 +191,12 @@ public class PersonFormController implements Initializable {
                 phoneNumber, department);
     }
 
+    // ----------------------------------
+
+
+
+
+
     /**
      * Returns the Person object created by the dialog box
      * @return the Person created by the dialog box
@@ -207,7 +205,63 @@ public class PersonFormController implements Initializable {
         return person;
     }
 
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getLongName() {
+        return longName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
     public boolean isValid() {
         return valid;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Sets focus listeners on text fields so PopOvers are hidden upon focus
+     */
+    private void setErrorPopOvers() {
+        // Set PopOvers as not detachable so we don't have floating PopOvers
+        errorPopOver.setDetachable(false);
+
+        // Set handlers so that popovers are hidden on field focus
+        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                errorPopOver.hide();
+            }
+        });
+        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                errorPopOver.hide();
+            }
+        });
     }
 }

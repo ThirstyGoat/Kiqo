@@ -27,25 +27,13 @@ public class NewPersonController implements Initializable {
     @FXML
     private PersonFormController formController;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setNewPersonButton();
         setCancelButton();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                setProject();
-            }
-        });
-    }
-
-    private void setProject() {
-        formController.setProject(project);
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
+        Platform.runLater(() -> setProjectForFormController());
     }
 
     /**
@@ -57,19 +45,17 @@ public class NewPersonController implements Initializable {
         });
     }
 
-    //String userID, String emailAddress,
-//    String phoneNumber, String department
     /**
      * Sets the New Person button for new Person dialog
      */
     private void setNewPersonButton() {
         newPersonButton.setOnAction(event -> {
-//            setProject();
+            // check to see that shortname and longname are populated and shortname is unique within the project
             formController.validate();
             if (formController.isValid()) {
-                person = new Person(formController.shortName, formController.longName, formController.description,
-                        formController.userID, formController.emailAddress, formController.phoneNumber,
-                        formController.department);
+                person = new Person(formController.getShortName(), formController.getLongName(),
+                        formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
+                        formController.getPhoneNumber(), formController.getDepartment());
                 stage.close();
             }
         });
@@ -79,7 +65,7 @@ public class NewPersonController implements Initializable {
      * Returns the Person object created by the dialog box
      * @return the Person created by the dialog box
      */
-    Person getPerson() {
+    public Person getPerson() {
         return person;
     }
 
@@ -89,5 +75,13 @@ public class NewPersonController implements Initializable {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    private void setProjectForFormController() {
+        formController.setProject(project);
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
