@@ -30,7 +30,10 @@ import javafx.stage.StageStyle;
 import org.controlsfx.control.StatusBar;
 
 import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+
+import javafx.stage.WindowEvent;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
@@ -94,6 +97,32 @@ public class MainController implements Initializable {
 
         this.setStatusBar();
     }
+
+    /**
+     * Set save prompt when to handle request to close application
+     */
+     public void setClosePrompt() {
+        primaryStage.setOnCloseRequest(event -> {
+            if (undoManager.canRedoProperty.get()) {
+                Action response = Dialogs.create()
+                    .owner(primaryStage)
+                    .title("Save Project")
+                    .masthead("The project can be saved before exiting.")
+                    .message("Would you like to save the project?")
+                    .showConfirm();
+                if (response == Dialog.ACTION_YES) {
+                    try {
+                        PersistenceManager.saveProject(this.selectedProject.getSaveLocation(),
+                                                       this.selectedProject);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (response == Dialog.ACTION_CANCEL) {
+                        event.consume();
+                }
+            }
+        });
+     }
 
     /**
      * Adds the status bar at the bottom of the application
@@ -295,7 +324,10 @@ public class MainController implements Initializable {
      */
     private void setQuitMenuItem() {
         this.quitMenuItem.setOnAction(event -> {
-            this.primaryStage.close();
+            primaryStage.fireEvent(new WindowEvent(
+                primaryStage,
+                WindowEvent.WINDOW_CLOSE_REQUEST
+            ));
         });
     }
 
