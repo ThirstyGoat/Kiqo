@@ -2,6 +2,7 @@ package seng302.group4;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import seng302.group4.exceptions.InvalidJSONException;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
@@ -40,40 +41,17 @@ public class PersistenceManager {
      * @throws InvalidPersonException if one of the people in the project is invalid
      * @throws InvalidJSONException if th json file is corrupt
      */
-    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidProjectException, InvalidPersonException, InvalidJSONException {
+    public static Project loadProject(final File filePath) throws FileNotFoundException, InvalidProjectException, InvalidPersonException, JsonSyntaxException {
         Project project = null;
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
 
-            try {
-                project = PersistenceManager.gson.fromJson(br, Project.class);
-                checkPeople(project.getPeople());
-                Validity.checkProject(project);
-            } catch (InvalidPersonException | InvalidProjectException p) {
-                throw p;
-            } catch (Exception e) {
-                throw new InvalidJSONException(filePath);
-            }
+            project = PersistenceManager.gson.fromJson(br, Project.class);
+            Validity.checkPeople(project.getPeople());
+            Validity.checkProject(project);
+
         }
         return project;
-    }
-
-    /**
-     * Check that all the people in the People list are valid
-     * @param people
-     * @return
-     * @throws Exception
-     */
-    private static void checkPeople(ArrayList<Person> people) throws InvalidPersonException {
-        if (people.size() > 0) {
-            for (int i=0; i < people.size(); i+=1){
-                System.out.println(people.subList(i, people.size()));
-
-                if(!(Validity.checkPersonValidity(people.get(i), people.subList(i + 1, people.size())))) {
-                    throw new InvalidPersonException(people.get(i));
-                }
-            }
-        }
     }
 
     /**

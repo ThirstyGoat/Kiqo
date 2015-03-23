@@ -1,5 +1,6 @@
 package seng302.group4.viewModel;
 
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -279,7 +280,7 @@ public class MainController implements Initializable {
                 Project project = PersistenceManager.loadProject(filePath);
                 projects.add(project);
                 System.out.println(project.toString() + " has been loaded successfully");
-            } catch (InvalidJSONException | InvalidProjectException e) {
+            } catch (JsonSyntaxException | InvalidProjectException e) {
                 System.out.println("JSON file invalid");
 //                e.printStackTrace();
             } catch (InvalidPersonException e) {
