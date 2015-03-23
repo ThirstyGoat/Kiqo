@@ -296,6 +296,12 @@ public class MainController implements Initializable {
         // Set change listener for mainListView
         this.mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.selectedProject = newValue;
+
+            // Update status bar to show current save status of selected project
+            // Probably not the best way to do this, but it's the simplest
+            changesSaved.set(!changesSaved.get());
+            changesSaved.set(!changesSaved.get());
+
             if (newValue != null) {
                 // Then a project is selected, enable the Project Details, and
                 // saveMenuItem
