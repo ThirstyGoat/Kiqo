@@ -395,11 +395,9 @@ public class MainController implements Initializable {
 
                     @Override
                     public Void execute() {
-                        this.cc.execute();
-                        saveProject(project);
-                    public Object execute() {
                         // Add to mainListView
                         cc.execute();
+                        saveProject(project);
                         refreshList();
                         return null;
                     }
