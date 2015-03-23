@@ -561,7 +561,7 @@ public class MainController implements Initializable {
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
 
-
+            // random comment
             stage.showAndWait();
             Person person = newPersonController.getPerson();
             if (person != null && selectedProject != null) {
