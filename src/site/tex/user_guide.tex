@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Project4 User Guide 
+%  Kiqo User Guide 
 %
 % Important note:
 % Chapter heading images should have a 2:1 width:height ratio,
@@ -51,8 +51,8 @@
 \centering
 \vspace*{5cm}
 \par\normalfont\fontsize{35}{35}\sffamily\selectfont
-\textbf{Project4}\\
-{\LARGE Project4 tagline here}\par % Book title
+\textbf{Kiqo}\\
+{\LARGE Kiqo tagline here}\par % Book title
 \vspace*{1cm}
 {\Huge User Guide}\par % Author name
 \endgroup
@@ -72,12 +72,12 @@
 \thispagestyle{empty}
 
 \section{Parts of the Main Window}
-The main Project4 workspace is show in figure~\ref{fig:mainwindow}.
+The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
 
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.32]{mainwindow}
-  \caption{The main Project4 window.\label{fig:mainwindow}}
+  \caption{The main Kiqo window.\label{fig:mainwindow}}
 \end{figure}
 
 By default, the main window is split into two panes.
@@ -87,9 +87,10 @@ To display or hide the list pane, choose \menu{View > List}.
 Alternatively, use the keys \keys{\ctrl + L}.\footnote{On Mac,
 use the command key \keys{\cmd} in place of \keys{\ctrl}.}
 
-\section{Creating a New Project}
+\section{Quick Start}
+\subsection{Creating a New Project}
 \begin{itemize}
-  \item From the menu bar, use \menu{File > New > Project}.
+  \item From the menu bar, use \menu{File > New... > Project}.
   \item Use the keyboard shortcut \keys{\ctrl + N}.
 \end{itemize}
 You will then be prompted to enter the details of the new project.
@@ -100,55 +101,28 @@ You will then be prompted to enter the details of the new project.
   \caption{The new project window.\label{newproject}}
 \end{figure}
 
-\section{Opening an Existing Project}
-\textbf{Note:} Only one project can be open at a time.
+\subsection{Editing a Project}
 \begin{itemize}
-  \item From the menu bar, use \menu{File > Open}.
-  \item Use the keyboard shortcut \keys{\ctrl + O}.
+  \item Right-click on the Project in the list pane and select Edit Project from the context menu.
 \end{itemize}
 
-\section{Saving a Project}
+\subsection{Saving a Project}
 \begin{itemize}
   \item From the menu bar, use \menu{File > Save}.
   \item Use the keyboard shortcut \keys{\ctrl + S}.
 \end{itemize}
 
-\section{Closing Project4}
-  \begin{itemize}
-    \item \menu{File > Quit}.
-  \end{itemize}
-  
-\section{Creating a New Person}
-\begin{itemize}
-    \item From the menu bar, use \menu{File > New > Person}.
-    \item Use the keyboard shortcut \keys{\ctrl + P}.
-\end{itemize}
-You will then be prompted to enter the details of the new person. 
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=0.32]{newperson}
-  \caption{The new person window.\label{newperson}}
-\end{figure}
-
-\section{Change to People List View}
-\begin{itemize}
-    \item From the menu bar, use \menu{View > People}.
-\end{itemize}
-
-\section{Edit a Persons Information} 
-\begin{itemize}
-    \item Change to the people list view.
-    \item Select a person.
-    \item From the menu bar, use \menu{Edit > Person}.
-    \item Or right click on the person \menu{Edit}.
-    \item Update the persons details.
-\end{itemize}
-
-\section{Save a Person}
-People who are added to a project are automatically saved when the project is saved
-
-
+\subsection{Undo/Redo}
+All commands except Create Project can be undone.
+\begin{itemise}
+  \item From the menu bar, use \menu{Edit > Undo}.
+  \item Use the keyboard shortcut \keys{\ctrl + Z}.
+\end{itemise}
+After you undo command/s, you are able to redo them in the reverse order.
+\begin{itemise}
+  \item From the menu bar, use \menu{Edit > Redo}.
+  \item Use the keyboard shortcut \keys{\ctrl + \shift + Z}.
+\end{itemise}
 
 \appendix
 \chapter{Appendix}
@@ -169,7 +143,8 @@ People who are added to a project are automatically saved when the project is sa
     Create New Project & \keys{\ctrl + N} \\
     Open Project & \keys{\ctrl + O} \\ 
     Save Project & \keys{\ctrl + S} \\
-    New Person & \keys{\cntr + P} \\
+    Undo & \keys{\ctrl + Z} \\
+    Redo & \keys{\ctrl + \shift + Z} \\
     \bottomrule
   \end{tabular}
   \caption{List of Keyboard Shortcuts}
