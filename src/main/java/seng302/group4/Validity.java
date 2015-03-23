@@ -1,7 +1,9 @@
 package seng302.group4;
 
+import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +17,22 @@ public class Validity {
             }
         }
         return true;
+    }
+
+    /**
+     * Check that all the people in the People list are valid
+     * @param people
+     * @return
+     * @throws Exception
+     */
+    public static void checkPeople(ArrayList<Person> people) throws InvalidPersonException {
+        if (people.size() > 0) {
+            for (int i=0; i < people.size(); i+=1){
+                if(!(Validity.checkPersonValidity(people.get(i), people.subList(i + 1, people.size())))) {
+                    throw new InvalidPersonException(people.get(i));
+                }
+            }
+        }
     }
 
     /**

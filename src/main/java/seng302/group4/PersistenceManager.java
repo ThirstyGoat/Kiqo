@@ -47,7 +47,7 @@ public class PersistenceManager {
 
             try {
                 project = PersistenceManager.gson.fromJson(br, Project.class);
-                checkPeople(project.getPeople());
+                Validity.checkPeople(project.getPeople());
                 Validity.checkProject(project);
             } catch (InvalidPersonException | InvalidProjectException p) {
                 throw p;
@@ -56,24 +56,6 @@ public class PersistenceManager {
             }
         }
         return project;
-    }
-
-    /**
-     * Check that all the people in the People list are valid
-     * @param people
-     * @return
-     * @throws Exception
-     */
-    private static void checkPeople(ArrayList<Person> people) throws InvalidPersonException {
-        if (people.size() > 0) {
-            for (int i=0; i < people.size(); i+=1){
-                System.out.println(people.subList(i, people.size()));
-
-                if(!(Validity.checkPersonValidity(people.get(i), people.subList(i + 1, people.size())))) {
-                    throw new InvalidPersonException(people.get(i));
-                }
-            }
-        }
     }
 
     /**
