@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -76,10 +79,12 @@ public class MainController implements Initializable {
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private Project selectedProject;
     private final UndoManager undoManager = new UndoManager();
-    private final StatusBar statusBar = new StatusBar();
 
+    private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+
+    private SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -103,12 +108,12 @@ public class MainController implements Initializable {
      */
      public void setClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
-            if (undoManager.canRedoProperty.get()) {
+            if (!changesSaved.get()) {
                 Action response = Dialogs.create()
                     .owner(primaryStage)
                     .title("Save Project")
-                    .masthead("The project can be saved before exiting.")
-                    .message("Would you like to save the project?")
+                    .masthead("You have unsaved changes.")
+                    .message("Would you like to save the changes you have made to the project?")
                     .showConfirm();
                 if (response == Dialog.ACTION_YES) {
                     try {
@@ -125,11 +130,22 @@ public class MainController implements Initializable {
      }
 
     /**
-     * Adds the status bar at the bottom of the application
+     * Set up the status bar for the application and monitor for changes in the save state
      */
     private void setStatusBar() {
+        // Add the status bar to the bottom of the window
         this.mainBorderPane.setBottom(this.statusBar);
-        this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
+
+        // Set up listener for save status
+        changesSaved.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // If changes are saved, then update message to reflect that
+                statusBar.setText(ALL_CHANGES_SAVED_TEXT);
+            } else {
+                // Then there are unsaved changes, update status message
+                statusBar.setText(UNSAVED_CHANGES_TEXT);
+            }
+        });
     }
 
     /**
@@ -137,12 +153,22 @@ public class MainController implements Initializable {
      */
     private void setUndoHandlers() {
         this.undoMenuItem.setOnAction(event -> {
-            this.undoManager.undoCommand();
-            // Update status bar to show that there are unsaved changes.
-            this.statusBar.setText(UNSAVED_CHANGES_TEXT);
+            undoManager.undoCommand();
+
+            // If the changes are already saved, and we undo something, then the changes are now not saved
+            if (changesSaved.get()) {
+                changesSaved.set(false);
+            }
         });
 
-        this.redoMenuItem.setOnAction(event -> this.undoManager.redoCommand());
+        this.redoMenuItem.setOnAction(event -> {
+            this.undoManager.redoCommand();
+
+            // If changes are already saved, and we redo something, then changes are now not saved
+            if (changesSaved.get()) {
+                changesSaved.set(false);
+            }
+        });
 
         this.undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
             this.undoMenuItem.setDisable(!newValue);
@@ -164,7 +190,6 @@ public class MainController implements Initializable {
                 if (this.undoManager.canUndoProperty.get()) {
                     this.undoMenuItem.setText("Undo " + this.undoManager.getUndoType());
                 }
-                this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
             }
         });
 
@@ -185,10 +210,6 @@ public class MainController implements Initializable {
         this.projectDetailsMenuItem.setOnAction(event -> {
             if (this.selectedProject != null) {
                 this.editProjectDialog(this.selectedProject);
-            } else {
-                // Something went wrong and the button wasn't disabled, alert
-                // the user
-                // TODO
             }
         });
     }
@@ -212,7 +233,7 @@ public class MainController implements Initializable {
                 e.printStackTrace();
                 return;
             }
-            this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
+            changesSaved.set(true);
         });
     }
 
@@ -323,12 +344,12 @@ public class MainController implements Initializable {
      * Sets the functionality for the quit menu item
      */
     private void setQuitMenuItem() {
-        this.quitMenuItem.setOnAction(event -> {
-            primaryStage.fireEvent(new WindowEvent(
+        // We could just call primaryStage.close(), but that is a force close,
+        // and then we can't prompt for saving changes
+        this.quitMenuItem.setOnAction(event -> primaryStage.fireEvent(new WindowEvent(
                 primaryStage,
                 WindowEvent.WINDOW_CLOSE_REQUEST
-            ));
-        });
+        )));
     }
 
     /**

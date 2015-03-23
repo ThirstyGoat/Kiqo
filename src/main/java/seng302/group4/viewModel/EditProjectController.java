@@ -97,6 +97,7 @@ public class EditProjectController implements Initializable {
 
     public void setStage(final Stage stage) {
         this.stage = stage;
+        formController.setStage(stage);
     }
 
     private void setCancelButton() {
