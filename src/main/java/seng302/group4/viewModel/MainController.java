@@ -116,12 +116,7 @@ public class MainController implements Initializable {
                     .message("Would you like to save the changes you have made to the project?")
                     .showConfirm();
                 if (response == Dialog.ACTION_YES) {
-                    try {
-                        PersistenceManager.saveProject(this.selectedProject.getSaveLocation(),
-                                                       this.selectedProject);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    saveProject(selectedProject);
                 } else if (response == Dialog.ACTION_CANCEL) {
                         event.consume();
                 }
@@ -227,13 +222,7 @@ public class MainController implements Initializable {
 
     private void setSaveMenu() {
         this.saveMenuItem.setOnAction(event -> {
-            try {
-                PersistenceManager.saveProject(this.selectedProject.getSaveLocation(), this.selectedProject);
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            changesSaved.set(true);
+            saveProject(selectedProject);
         });
     }
 
@@ -407,12 +396,7 @@ public class MainController implements Initializable {
                     @Override
                     public Void execute() {
                         this.cc.execute();
-
-                        try {
-                            PersistenceManager.saveProject(project.getSaveLocation(), project);
-                        } catch (final IOException e) {
-                            e.printStackTrace();
-                        }
+                        saveProject(project);
                         return null;
                     }
 
@@ -430,6 +414,20 @@ public class MainController implements Initializable {
                 this.refreshList();
             }
         });
+    }
+
+    /**
+     * Saves the project to disk and marks project as saved.
+     * @param project Project to be saved.
+     */
+    private void saveProject(Project project) {
+        try {
+            PersistenceManager.saveProject(project.getSaveLocation(), project);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        changesSaved.set(true);
     }
 
     private void newProjectDialog() {
@@ -502,12 +500,8 @@ public class MainController implements Initializable {
             this.projects.add(project);
             // Select added project in the ListView
             mainListView.getSelectionModel().select(project);
-            // Attempt to write file to disk
-            try {
-                PersistenceManager.saveProject(project.getSaveLocation(), project);
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
+
+            saveProject(project);
         }
     }
 }
