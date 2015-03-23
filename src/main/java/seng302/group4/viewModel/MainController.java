@@ -433,8 +433,9 @@ public class MainController implements Initializable {
                     @Override
                     public Object execute() {
                         // Add to mainListView
+                        cc.execute();
                         refreshList();
-                        return cc.execute();
+                        return null;
                     }
 
                     @Override
@@ -544,8 +545,9 @@ public class MainController implements Initializable {
                     @Override
                     public Object execute() {
                         // Add to mainListView
+                        cc.execute();
                         refreshList();
-                        return cc.execute();
+                        return null;
                     }
 
                     @Override
