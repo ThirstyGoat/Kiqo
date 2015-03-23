@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>seng302.group4</groupId>
-  <artifactId>your_project_name</artifactId>
+  <artifactId>Kiqo</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>your_project_name</name>
+  <version>1.0</version>
+  <name>Kiqo</name>
   <url>http://csse-s302g4.canterbury.ac.nz</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
