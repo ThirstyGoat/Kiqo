@@ -89,16 +89,46 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.15</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>6.4.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <configLocation>src/site/checkstyle/google_checks.xml</configLocation>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.14</version>
+        <version>2.15</version>
         <configuration>
-          <configLocation>src/site/checkstyle/checkstyle.xml</configLocation>
+          <configLocation>src/site/checkstyle/google_checks.xml</configLocation>
         </configuration>
         <reportSets>
           <reportSet>
