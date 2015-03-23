@@ -390,19 +390,23 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
-                final Command<Void> c = new Command<Void>() {
-                    private final CompoundCommand cc = editProjectController.getCommand();
+                Command c = new Command() {
+                    CompoundCommand cc = editProjectController.getCommand();
 
                     @Override
                     public Void execute() {
-                        this.cc.execute();
+                        // Add to mainListView
+                        cc.execute();
                         saveProject(project);
+                        refreshList();
                         return null;
                     }
 
                     @Override
                     public void undo() {
-                        this.cc.undo();
+                        // Remove from mainListView
+                        cc.undo();
+                        refreshList();
                     }
 
                     @Override
@@ -410,8 +414,8 @@ public class MainController implements Initializable {
                         return "Edit Project";
                     }
                 };
-                this.undoManager.doCommand(c);
-                this.refreshList();
+                undoManager.doCommand(c);
+                refreshList();
             }
         });
     }
