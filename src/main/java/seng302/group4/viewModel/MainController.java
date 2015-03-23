@@ -121,13 +121,16 @@ public class MainController implements Initializable {
             if (newValue) {
                 listLabel.setText("Project");
                 listShowPeopleMenuItem.setSelected(false);
+                selectedPerson = null;
+                editPersonMenuItem.setDisable(true);
 
                 peopleListView.setVisible(false);
                 peopleListView.setManaged(false);
 
                 mainListView.setVisible(true);
                 mainListView.setManaged(true);
-
+            } else {
+                listShowPeopleMenuItem.setSelected(true);
             }
         });
     }
@@ -138,7 +141,7 @@ public class MainController implements Initializable {
     private void showPeopleListView() {
         peopleListView.setManaged(false);
         listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (newValue && selectedProject != null) {
                 listLabel.setText("People");
                 listShowProjectMenuItem.setSelected(false);
 
@@ -152,6 +155,8 @@ public class MainController implements Initializable {
                     people.setAll(selectedProject.getPeople());
                 }
                 peopleListView.setItems(people);
+            } else {
+                listShowProjectMenuItem.setSelected(true);
             }
         });
     }
