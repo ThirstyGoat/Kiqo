@@ -7,8 +7,6 @@ import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,14 +27,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import org.controlsfx.control.StatusBar;
-
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
-import javafx.stage.WindowEvent;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
@@ -84,7 +81,7 @@ public class MainController implements Initializable {
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
 
-    private SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -106,62 +103,63 @@ public class MainController implements Initializable {
     /**
      * Set save prompt when to handle request to close application
      */
-     public void setClosePrompt() {
-        primaryStage.setOnCloseRequest(event -> {
-            if (!changesSaved.get()) {
-                Action response = Dialogs.create()
-                    .owner(primaryStage)
-                    .title("Save Project")
-                    .masthead("You have unsaved changes.")
-                    .message("Would you like to save the changes you have made to the project?")
-                    .showConfirm();
+    public void setClosePrompt() {
+        this.primaryStage.setOnCloseRequest(event -> {
+            if (!this.changesSaved.get()) {
+                final Action response = Dialogs.create().owner(this.primaryStage).title("Save Project")
+                        .masthead("You have unsaved changes.").message("Would you like to save the changes you have made to the project?")
+                        .showConfirm();
                 if (response == Dialog.ACTION_YES) {
-                    saveProject(selectedProject);
+                    this.saveProject(this.selectedProject);
                 } else if (response == Dialog.ACTION_CANCEL) {
-                        event.consume();
+                    event.consume();
                 }
             }
         });
-     }
+    }
 
     /**
-     * Set up the status bar for the application and monitor for changes in the save state
+     * Set up the status bar for the application and monitor for changes in the
+     * save state
      */
     private void setStatusBar() {
         // Add the status bar to the bottom of the window
         this.mainBorderPane.setBottom(this.statusBar);
 
         // Set up listener for save status
-        changesSaved.addListener((observable, oldValue, newValue) -> {
+        this.changesSaved.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
-                statusBar.setText(ALL_CHANGES_SAVED_TEXT);
+                this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
             } else {
                 // Then there are unsaved changes, update status message
-                statusBar.setText(UNSAVED_CHANGES_TEXT);
+                this.statusBar.setText(this.UNSAVED_CHANGES_TEXT);
             }
         });
     }
 
     /**
-     * Set the undo/redo item handlers, and also set their state depending on the undoManager.
+     * Set the undo/redo item handlers, and also set their state depending on
+     * the undoManager.
      */
     private void setUndoHandlers() {
         this.undoMenuItem.setOnAction(event -> {
-            undoManager.undoCommand();
+            this.undoManager.undoCommand();
 
-            // If the changes are already saved, and we undo something, then the changes are now not saved
-            if (changesSaved.get()) {
-                changesSaved.set(false);
+            // If the changes are already saved, and we undo something, then the
+            // changes are now not saved
+            if (this.changesSaved.get()) {
+                this.changesSaved.set(false);
             }
         });
 
         this.redoMenuItem.setOnAction(event -> {
             this.undoManager.redoCommand();
 
-            // If changes are already saved, and we redo something, then changes are now not saved
-            if (changesSaved.get()) {
-                changesSaved.set(false);
+            // If changes are already saved, and we redo something, then changes
+            // are now not saved
+            if (this.changesSaved.get()) {
+                this.changesSaved.set(false);
             }
         });
 
@@ -222,7 +220,7 @@ public class MainController implements Initializable {
 
     private void setSaveMenu() {
         this.saveMenuItem.setOnAction(event -> {
-            saveProject(selectedProject);
+            this.saveProject(this.selectedProject);
         });
     }
 
@@ -237,8 +235,7 @@ public class MainController implements Initializable {
 
         // Undo/redo
         this.undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
-        this.redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
-                KeyCombination.SHIFT_DOWN));
+        this.redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
     }
 
     /**
@@ -247,37 +244,33 @@ public class MainController implements Initializable {
      */
     private void setOpenMenu() {
         this.openMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                Dialogs.create()
-                        .owner(primaryStage)
-                        .title("Error")
-                        .message("Currently, only one project at a time is supported in this version.")
-                        .showWarning();
+            if (this.selectedProject != null) {
+                Dialogs.create().owner(this.primaryStage).title("Error")
+                        .message("Currently, only one project at a time is supported in this version.").showWarning();
                 return;
             }
 
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            final File filePath = fileChooser.showOpenDialog(this.primaryStage);
 
-                final FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-                final File filePath = fileChooser.showOpenDialog(this.primaryStage);
-
-                // Don't do anything if they press cancel/X
+            // Don't do anything if they press cancel/X
                 if (filePath == null) {
                     return;
                 }
 
                 // Attempt to open the selected project
+                Project project = null;
                 try {
-                    final Project project = PersistenceManager.loadProject(filePath);
-                    addProject(project);
+                    project = PersistenceManager.loadProject(filePath);
+                } catch (final Exception e) {
+                    Dialogs.create().owner(this.primaryStage).title("Couldn't load project")
+                            .message("Your project could not be loaded. It may be corrupt or in an outdated format.").showError();
+                }
+                if (project != null) {
+                    project.setSaveLocation(filePath);
+                    this.addProject(project);
                     System.out.println(project.toString() + " has been loaded successfully");
-                } catch (Exception e) {
-
-                    Dialogs.create()
-                            .owner(primaryStage)
-                            .title("Couldn't load project")
-                            .message("Your project could not be loaded. It may be corrupt or in an outdated format.")
-                            .showError();
                 }
             });
     }
@@ -304,12 +297,14 @@ public class MainController implements Initializable {
         this.mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.selectedProject = newValue;
             if (newValue != null) {
-                // Then a project is selected, enable the Project Details, and saveMenuItem
+                // Then a project is selected, enable the Project Details, and
+                // saveMenuItem
                 this.projectDetailsMenuItem.setDisable(false);
                 this.saveMenuItem.setDisable(false);
                 this.newProjectMenuItem.setDisable(true);
             } else {
-                // No project selected, disable Project Details MenuItem, and saveMenuItem
+                // No project selected, disable Project Details MenuItem, and
+                // saveMenuItem
                 this.projectDetailsMenuItem.setDisable(true);
                 this.saveMenuItem.setDisable(true);
                 this.newProjectMenuItem.setDisable(false);
@@ -335,10 +330,8 @@ public class MainController implements Initializable {
     private void setQuitMenuItem() {
         // We could just call primaryStage.close(), but that is a force close,
         // and then we can't prompt for saving changes
-        this.quitMenuItem.setOnAction(event -> primaryStage.fireEvent(new WindowEvent(
-                primaryStage,
-                WindowEvent.WINDOW_CLOSE_REQUEST
-        )));
+        this.quitMenuItem.setOnAction(event -> this.primaryStage.fireEvent(new WindowEvent(this.primaryStage,
+                WindowEvent.WINDOW_CLOSE_REQUEST)));
     }
 
     /**
@@ -390,23 +383,23 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
-                Command c = new Command() {
+                final Command c = new Command() {
                     CompoundCommand cc = editProjectController.getCommand();
 
                     @Override
                     public Void execute() {
                         // Add to mainListView
-                        cc.execute();
-                        saveProject(project);
-                        refreshList();
+                        this.cc.execute();
+                        MainController.this.saveProject(project);
+                        MainController.this.refreshList();
                         return null;
                     }
 
                     @Override
                     public void undo() {
                         // Remove from mainListView
-                        cc.undo();
-                        refreshList();
+                        this.cc.undo();
+                        MainController.this.refreshList();
                     }
 
                     @Override
@@ -414,24 +407,26 @@ public class MainController implements Initializable {
                         return "Edit Project";
                     }
                 };
-                undoManager.doCommand(c);
-                refreshList();
+                this.undoManager.doCommand(c);
+                this.refreshList();
             }
         });
     }
 
     /**
      * Saves the project to disk and marks project as saved.
-     * @param project Project to be saved.
+     *
+     * @param project
+     *            Project to be saved.
      */
-    private void saveProject(Project project) {
+    private void saveProject(final Project project) {
         try {
             PersistenceManager.saveProject(project.getSaveLocation(), project);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return;
         }
-        changesSaved.set(true);
+        this.changesSaved.set(true);
     }
 
     private void newProjectDialog() {
@@ -483,8 +478,9 @@ public class MainController implements Initializable {
                     }
                 };
 
-                //this.undoManager.doCommand(c);
-                // We don't do the command, since it is not meant to be undoable at this stage
+                // this.undoManager.doCommand(c);
+                // We don't do the command, since it is not meant to be undoable
+                // at this stage
                 c.execute();
                 this.refreshList();
             }
@@ -503,9 +499,9 @@ public class MainController implements Initializable {
             // Update View Accordingly
             this.projects.add(project);
             // Select added project in the ListView
-            mainListView.getSelectionModel().select(project);
+            this.mainListView.getSelectionModel().select(project);
 
-            saveProject(project);
+            this.saveProject(project);
         }
     }
 }
