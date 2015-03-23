@@ -4,16 +4,15 @@ import java.io.File;
 import java.io.Serializable;
 
 /**
- * Created by samschofield on 12/03/15. Project class represents a software
- * project
+ * Represents a software project.
  *
- * Generic getter/setter from http://stackoverflow.com/a/28673716
+ * Created by samschofield on 12/03/15.
  */
 public class Project implements Serializable {
     private String shortName;
     private String longName;
     private String description;
-    private File saveLocation;
+    private transient File saveLocation;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -156,7 +155,9 @@ public class Project implements Serializable {
     @Override
     public String toString() {
         return this.shortName;
-//        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
-//                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
+        // return "Project{" + "shortName='" + this.shortName + '\'' +
+        // ", longName='" + this.longName + '\'' + ", description='"
+        // + this.description + '\'' + ", saveLocation='" + this.saveLocation +
+        // '\'' + '}';
     }
 }
