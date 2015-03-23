@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.undo.CreatePersonCommand;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 public class NewPersonController implements Initializable {
     private Stage stage;
     private Person person;
-
+    private boolean valid = false;
     private Project project;
     // FXML Injections
     @FXML
@@ -26,6 +27,9 @@ public class NewPersonController implements Initializable {
     private Button newPersonButton;
     @FXML
     private PersonFormController formController;
+
+    private CreatePersonCommand command;
+
 
 
     @Override
@@ -53,9 +57,10 @@ public class NewPersonController implements Initializable {
             // check to see that shortname and longname are populated and shortname is unique within the project
             formController.validate();
             if (formController.isValid()) {
-                person = new Person(formController.getShortName(), formController.getLongName(),
+                command = new CreatePersonCommand(formController.getShortName(), formController.getLongName(),
                         formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
                         formController.getPhoneNumber(), formController.getDepartment());
+                valid = true;
                 stage.close();
             }
         });
@@ -77,11 +82,22 @@ public class NewPersonController implements Initializable {
         this.project = project;
     }
 
+    public CreatePersonCommand getCommand() {
+        return command;
+    }
+
     private void setProjectForFormController() {
         formController.setProject(project);
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    /**
+     * @return validity of all fields
+     */
+    public boolean isValid() {
+        return valid;
     }
 }

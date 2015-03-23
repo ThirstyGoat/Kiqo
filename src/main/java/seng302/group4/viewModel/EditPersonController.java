@@ -7,8 +7,12 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.EditCommand;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -19,6 +23,7 @@ public class EditPersonController implements Initializable {
     private Project project;
     private Person person;
     private boolean valid = false;
+    private CompoundCommand command;
     // FXML Injections
     @FXML
     private Button cancelButton;
@@ -56,27 +61,36 @@ public class EditPersonController implements Initializable {
             // check to see that shortname and longname fields are populated and shortname is unique within the project
             formController.validate();
             if (formController.isValid()) {
+
+                final ArrayList<Command<?>> changes = new ArrayList<>();
+
+
+
                 if (!formController.getShortName().equals(person.getShortName())) {
-                    person.setShortName(formController.getShortName());
+                    changes.add(new EditCommand<>(person, "shortName", formController.getShortName()));
                 }
                 if (!formController.getLongName().equals(person.getLongName())) {
-                    person.setLongName(formController.getLongName());
+                    changes.add(new EditCommand<>(person, "longName", formController.getLongName()));
                 }
                 if (!formController.getDescription().equals(person.getDescription())) {
-                    person.setDescription(formController.getDescription());
+                    changes.add(new EditCommand<>(person, "description", formController.getDescription()));
                 }
                 if (!formController.getUserID().equals(person.getUserID())) {
-                    person.setUserID(formController.getUserID());
+                    changes.add(new EditCommand<>(person, "userID", formController.getUserID()));
                 }
                 if (!formController.getEmailAddress().equals(person.getEmailAddress())) {
-                    person.setEmailAddress(formController.getEmailAddress());
+                    changes.add(new EditCommand<>(person, "emailAddress", formController.getEmailAddress()));
                 }
                 if (!formController.getPhoneNumber().equals(person.getPhoneNumber())) {
-                    person.setPhoneNumber(formController.getPhoneNumber());
+                    changes.add(new EditCommand<>(person, "phoneNumber", formController.getPhoneNumber()));
                 }
                 if (!formController.getDepartment().equals(person.getDepartment())) {
-                    person.setDepartment(formController.getDepartment());
+                    changes.add(new EditCommand<>(person, "department", formController.getDepartment()));
                 }
+
+                valid = !changes.isEmpty();
+
+                command = new CompoundCommand(changes);
                 // Close the new project dialog (this window)
                 this.stage.close();
             }
@@ -85,6 +99,14 @@ public class EditPersonController implements Initializable {
 
     public Project getProject() {
         return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public CompoundCommand getCommand() {
+        return command;
     }
 
     /**
@@ -100,10 +122,6 @@ public class EditPersonController implements Initializable {
 
     private void setCancelButton() {
         this.cancelButton.setOnAction(event -> this.stage.close());
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     private void setProjectForFormController() {

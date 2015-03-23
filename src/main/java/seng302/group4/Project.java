@@ -1,9 +1,8 @@
 package seng302.group4;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 12/03/15. Project class represents a software
@@ -104,45 +103,19 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return longName the long name of the project
-     */
-    public String getLongName() {
-        return this.longName;
-    }
-
-    /**
-     *
-     * @return save location of project
-     */
-    public File getSaveLocation() {
-        return this.saveLocation;
-    }
-
-    /**
-     *
-     * @return the short name of project
-     */
-    public String getShortName() {
-        return this.shortName;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.shortName.hashCode();
-    }
-
-    public void prepareForDestruction() {
-        // FIXME Auto-generated method stub
-        // eg. remove people
-    }
-
-    /**
-     *
      * @param description
      *            the description of the project
      */
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    /**
+     *
+     * @return longName the long name of the project
+     */
+    public String getLongName() {
+        return this.longName;
     }
 
     /**
@@ -156,11 +129,27 @@ public class Project implements Serializable {
 
     /**
      *
+     * @return save location of project
+     */
+    public File getSaveLocation() {
+        return this.saveLocation;
+    }
+
+    /**
+     *
      * @param saveLocation
      *            save location of project
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
+    }
+
+    /**
+     *
+     * @return the short name of project
+     */
+    public String getShortName() {
+        return this.shortName;
     }
 
     /**
@@ -173,10 +162,24 @@ public class Project implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return this.shortName.hashCode();
+    }
+
+    public void prepareForDestruction() {
+        // FIXME Auto-generated method stub
+        // eg. remove people
+    }
+
+    @Override
     public String toString() {
         return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
                 + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
 //        return shortName;
+    }
+
+    public void removePerson(Person person) {
+        people.remove(person);
     }
 
 }

@@ -24,10 +24,7 @@ import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidJSONException;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -225,6 +222,7 @@ public class MainController implements Initializable {
         mainListView.setItems(projects);
         mainListView.getSelectionModel().select(null);
         mainListView.getSelectionModel().select(tmp);
+
         peopleListView.setItems(null);
         peopleListView.setItems(people);
         peopleListView.getSelectionModel().select(null);
@@ -435,6 +433,7 @@ public class MainController implements Initializable {
                     @Override
                     public Object execute() {
                         // Add to mainListView
+                        refreshList();
                         return cc.execute();
                     }
 
@@ -505,6 +504,7 @@ public class MainController implements Initializable {
 
                 undoManager.doCommand(c);
             }
+            refreshList();
         });
     }
 
@@ -533,7 +533,37 @@ public class MainController implements Initializable {
             editPersonController.setProject(selectedProject);
             editPersonController.loadPerson(person);
 
+
+
             stage.showAndWait();
+
+            if (editPersonController.isValid()) {
+                Command c = new Command() {
+                    CompoundCommand cc = editPersonController.getCommand();
+
+                    @Override
+                    public Object execute() {
+                        // Add to mainListView
+                        refreshList();
+                        return cc.execute();
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        cc.undo();
+                        refreshList();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return "Edit Person";
+                    }
+                };
+                undoManager.doCommand(c);
+                refreshList();
+            }
+
             refreshList();
         });
     }
@@ -561,12 +591,36 @@ public class MainController implements Initializable {
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
 
-            // random comment
+
             stage.showAndWait();
-            Person person = newPersonController.getPerson();
-            if (person != null && selectedProject != null) {
-                selectedProject.addPerson(person); // add to project
-                people.add(person); // add to person list
+            if (newPersonController.isValid()) {
+                Command c = new Command() {
+                    CreatePersonCommand cpc = newPersonController.getCommand();
+
+                    @Override
+                    public Object execute() {
+                        // Add to mainListView
+                        Person person = cpc.execute();
+                        selectedProject.addPerson(person);
+                        people.add(person);
+                        return person;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        people.remove(cpc.getPerson());
+                        selectedProject.removePerson(cpc.getPerson());
+                        cpc.undo();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return cpc.getType();
+                    }
+                };
+
+                undoManager.doCommand(c);
             }
             refreshList();
         });
