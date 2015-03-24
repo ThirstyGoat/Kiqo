@@ -12,6 +12,35 @@ public class Skill {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Skill skill = (Skill) o;
+
+        if (description != null ? !description.equals(skill.description)
+                                : skill.description != null) {
+            return false;
+        }
+        if (!shortName.equals(skill.shortName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = shortName.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
+
     public String getShortName() {
         return shortName;
     }
