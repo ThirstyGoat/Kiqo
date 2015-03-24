@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import seng302.group4.Person;
 import seng302.group4.Project;
@@ -64,9 +65,13 @@ public class EditPersonController implements Initializable {
 
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
-
-
                 if (!formController.getShortName().equals(person.getShortName())) {
+                    for (Person p : project.getPeople()) {
+                        if (formController.getShortName().equals(p.getShortName())) {
+                            formController.warnShortnameNotUnique();
+                            return;
+                        }
+                    }
                     changes.add(new EditCommand<>(person, "shortName", formController.getShortName()));
                 }
                 if (!formController.getLongName().equals(person.getLongName())) {

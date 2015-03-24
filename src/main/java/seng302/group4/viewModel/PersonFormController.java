@@ -1,5 +1,6 @@
 package seng302.group4.viewModel;
 
+import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -106,13 +107,9 @@ public class PersonFormController implements Initializable {
             return false;
         }
         // check for uniqueness inside the project
-        for (Person person : project.getPeople()) {
-            if (shortNameTextField.getText().equals(person.getShortName())) {
-                errorPopOver.setContentNode(new Label("Short name must be unique"));
-                errorPopOver.show(shortNameTextField);
-                return false;
-            }
-        }
+
+        // >>>>>>>>>>>>>>>> 
+
         return true;
     }
 
@@ -263,5 +260,11 @@ public class PersonFormController implements Initializable {
                 errorPopOver.hide();
             }
         });
+    }
+
+
+    public void warnShortnameNotUnique() {
+        errorPopOver.setContentNode(new Label("Short name must be unique"));
+        errorPopOver.show(shortNameTextField);
     }
 }
