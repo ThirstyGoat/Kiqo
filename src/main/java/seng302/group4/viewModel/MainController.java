@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.*;
 import javafx.util.Callback;
+import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -349,7 +350,7 @@ public class MainController implements Initializable {
             }
             if (project != null) {
                 project.setSaveLocation(filePath);
-                projects.add(project);
+                addProject(project);
                 System.out.println(project.toString() + " has been loaded successfully");
             }
         });

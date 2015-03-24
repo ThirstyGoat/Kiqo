@@ -2,11 +2,15 @@ package seng302.group4.viewModel;
 
 import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Person;
 import seng302.group4.Project;
@@ -52,6 +56,8 @@ public class PersonFormController implements Initializable {
     private TextField phoneTextField;
     @FXML
     private TextField departmentTextField;
+    @FXML
+    private ListSelectionView<String> skillsSelectionView;
 
 
     @Override
@@ -59,7 +65,22 @@ public class PersonFormController implements Initializable {
         setShortNameSuggester();
         setShortNameHandler();
         setErrorPopOvers();
-        Platform.runLater(() -> PersonFormController.this.longNameTextField.requestFocus());
+        Platform.runLater(longNameTextField::requestFocus);
+
+        setSkills();
+    }
+
+    /**
+     * Sets the skills list data and formatting
+     */
+    private void setSkills() {
+        ObservableList<String> skillsList = FXCollections.observableArrayList("Java", "Python", "PHP", "Scrum Pro");
+        skillsSelectionView.setSourceItems(skillsList);
+
+        skillsSelectionView.setSourceHeader(new Label("Skills Available:"));
+        skillsSelectionView.setTargetHeader(new Label("Skills Selected:"));
+
+        skillsSelectionView.setPadding(new Insets(0, 0, 0, 0));
     }
 
 
