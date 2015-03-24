@@ -33,6 +33,7 @@ public class PersonFormController implements Initializable {
     private Person person;
     private PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
     private Project project;
@@ -132,9 +133,15 @@ public class PersonFormController implements Initializable {
      */
     private void setShortNameHandler() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Auto populate short name text field
             if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
                     Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
                 shortNameModified = true;
+            }
+
+            // Restrict length of short name text field
+            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
             }
         });
     }

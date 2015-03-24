@@ -42,6 +42,7 @@ public class ProjectFormController implements Initializable {
     private TextField descriptionTextField;
 
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
     private final PopOver errorPopOver = new PopOver();
@@ -187,11 +188,15 @@ public class ProjectFormController implements Initializable {
     private void setShortNameHandler() {
         this.shortNameTextField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (!Objects.equals(
-                            newValue,
-                            this.longNameTextField.getText().substring(0,
-                                    Math.min(this.longNameTextField.getText().length(), this.SHORT_NAME_SUGGESTED_LENGTH)))) {
+                    // Set up short name suggester
+                    if (!Objects.equals(newValue, longNameTextField.getText().substring(0, Math.min(
+                            this.longNameTextField.getText().length(), this.SHORT_NAME_SUGGESTED_LENGTH)))) {
                         this.shortNameModified = true;
+                    }
+
+                    // Restrict length of short name text field
+                    if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
+                        shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
                     }
                 });
     }
