@@ -1,11 +1,11 @@
 package seng302.group4.viewModel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +14,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -25,6 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
@@ -36,9 +43,13 @@ import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.UndoManager;
 
-import java.io.FileNotFoundException;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -89,8 +100,8 @@ public class MainController implements Initializable {
     private Project selectedProject;
     private final UndoManager undoManager = new UndoManager();
     private Person selectedPerson;
-    private ObservableList<Project> projects = FXCollections.observableArrayList();
-    private ObservableList<Person> people = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final ObservableList<Person> people = FXCollections.observableArrayList();
 
     private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
@@ -99,53 +110,52 @@ public class MainController implements Initializable {
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setQuitMenuItem();
-        setListToggleCheckMenuItem();
-        setLayoutProperties();
-        setNewProjectMenuItem();
-        setProjectDetailsMenuItem();
-        setEditPersonMenuItem();
-        setUndoHandlers();
-        setNewPersonMenuItem();
-        setMainListView();
-        setPeopleListView();
-        setOpenMenu();
-        setSaveMenu();
-        setShortcuts();
-        showProjectListView();
-        showPeopleListView();
-        setStatusBar();
+    public void initialize(final URL location, final ResourceBundle resources) {
+        this.setQuitMenuItem();
+        this.setListToggleCheckMenuItem();
+        this.setLayoutProperties();
+        this.setNewProjectMenuItem();
+        this.setProjectDetailsMenuItem();
+        this.setEditPersonMenuItem();
+        this.setUndoHandlers();
+        this.setNewPersonMenuItem();
+        this.setMainListView();
+        this.setPeopleListView();
+        this.setOpenMenu();
+        this.setSaveMenu();
+        this.setShortcuts();
+        this.showProjectListView();
+        this.showPeopleListView();
+        this.setStatusBar();
     }
 
     private void setEditPersonMenuItem() {
-        editPersonMenuItem.setOnAction(event -> {
-            if (selectedPerson != null) {
-                editPersonDialog(selectedPerson);
+        this.editPersonMenuItem.setOnAction(event -> {
+            if (this.selectedPerson != null) {
+                this.editPersonDialog(this.selectedPerson);
             }
         });
     }
-
 
     /**
      * Shows the Project list view and hides the people list view
      */
     private void showProjectListView() {
-        listShowProjectMenuItem.setSelected(true);
-        listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        this.listShowProjectMenuItem.setSelected(true);
+        this.listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                listLabel.setText("Project");
-                listShowPeopleMenuItem.setSelected(false);
-                selectedPerson = null;
-                editPersonMenuItem.setDisable(true);
+                this.listLabel.setText("Project");
+                this.listShowPeopleMenuItem.setSelected(false);
+                this.selectedPerson = null;
+                this.editPersonMenuItem.setDisable(true);
 
-                peopleListView.setVisible(false);
-                peopleListView.setManaged(false);
+                this.peopleListView.setVisible(false);
+                this.peopleListView.setManaged(false);
 
-                mainListView.setVisible(true);
-                mainListView.setManaged(true);
+                this.mainListView.setVisible(true);
+                this.mainListView.setManaged(true);
             } else {
-                listShowPeopleMenuItem.setSelected(true);
+                this.listShowPeopleMenuItem.setSelected(true);
             }
         });
     }
@@ -154,24 +164,24 @@ public class MainController implements Initializable {
      * Shows the people list view and hides the project list view
      */
     private void showPeopleListView() {
-        peopleListView.setManaged(false);
-        listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue && selectedProject != null) {
-                listLabel.setText("People");
-                listShowProjectMenuItem.setSelected(false);
+        this.peopleListView.setManaged(false);
+        this.listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue && this.selectedProject != null) {
+                this.listLabel.setText("People");
+                this.listShowProjectMenuItem.setSelected(false);
 
-                peopleListView.setVisible(true);
-                peopleListView.setManaged(true);
+                this.peopleListView.setVisible(true);
+                this.peopleListView.setManaged(true);
 
-                mainListView.setVisible(false);
-                mainListView.setManaged(false);
+                this.mainListView.setVisible(false);
+                this.mainListView.setManaged(false);
 
-                if (selectedProject != null) {
-                    people.setAll(selectedProject.getPeople());
+                if (this.selectedProject != null) {
+                    this.people.setAll(this.selectedProject.getPeople());
                 }
-                peopleListView.setItems(people);
+                this.peopleListView.setItems(this.people);
             } else {
-                listShowProjectMenuItem.setSelected(true);
+                this.listShowProjectMenuItem.setSelected(true);
             }
         });
     }
@@ -224,52 +234,52 @@ public class MainController implements Initializable {
 
             // If the changes are already saved, and we undo something, then the
             // changes are now not saved
-            if (this.changesSaved.get()) {
-                this.changesSaved.set(false);
-            }
-        });
+                if (this.changesSaved.get()) {
+                    this.changesSaved.set(false);
+                }
+            });
 
-        redoMenuItem.setOnAction(event -> {
-            undoManager.redoCommand();
+        this.redoMenuItem.setOnAction(event -> {
+            this.undoManager.redoCommand();
             // If changes are already saved, and we redo something, then changes
             // are now not saved
-            if (this.changesSaved.get()) {
-                this.changesSaved.set(false);
-            }
-        });
+                if (this.changesSaved.get()) {
+                    this.changesSaved.set(false);
+                }
+            });
 
         this.undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
             this.undoMenuItem.setDisable(!newValue);
             if (newValue) {
                 // Update text to say (eg. Undo 'Create Project')
-                undoMenuItem.setText("Undo " + undoManager.getUndoType());
+                this.undoMenuItem.setText("Undo " + this.undoManager.getUndoType());
             } else {
-                undoMenuItem.setText("Undo");
+                this.undoMenuItem.setText("Undo");
             }
         });
 
-        undoManager.canRedoProperty.addListener((observable, oldValue, newValue) -> {
-            redoMenuItem.setDisable(!newValue);
+        this.undoManager.canRedoProperty.addListener((observable, oldValue, newValue) -> {
+            this.redoMenuItem.setDisable(!newValue);
             if (newValue) {
                 // Update text to say (eg. Redo 'Create Project');
-                redoMenuItem.setText("Redo " + undoManager.getRedoType());
+                this.redoMenuItem.setText("Redo " + this.undoManager.getRedoType());
             } else {
-                redoMenuItem.setText("Redo");
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
+                this.redoMenuItem.setText("Redo");
+                if (this.undoManager.canUndoProperty.get()) {
+                    this.undoMenuItem.setText("Undo " + this.undoManager.getUndoType());
                 }
             }
         });
 
-        undoManager.shouldUpdateMenuProperty.addListener((observable, oldValue, newValue) -> {
+        this.undoManager.shouldUpdateMenuProperty.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
+                if (this.undoManager.canUndoProperty.get()) {
+                    this.undoMenuItem.setText("Undo " + this.undoManager.getUndoType());
                 }
-                if (undoManager.canRedoProperty.get()) {
-                    redoMenuItem.setText("Redo " + undoManager.getRedoType());
+                if (this.undoManager.canRedoProperty.get()) {
+                    this.redoMenuItem.setText("Redo " + this.undoManager.getRedoType());
                 }
-                undoManager.shouldUpdateMenuProperty.set(false);
+                this.undoManager.shouldUpdateMenuProperty.set(false);
             }
         });
     }
@@ -286,17 +296,17 @@ public class MainController implements Initializable {
      * Forces a redraw of the list view
      */
     private void refreshList() {
-        Project tmp = selectedProject;
-        Person tempPerson = selectedPerson;
-        mainListView.setItems(null);
-        mainListView.setItems(projects);
-        mainListView.getSelectionModel().select(null);
-        mainListView.getSelectionModel().select(tmp);
+        final Project tmp = this.selectedProject;
+        final Person tempPerson = this.selectedPerson;
+        this.mainListView.setItems(null);
+        this.mainListView.setItems(this.projects);
+        this.mainListView.getSelectionModel().select(null);
+        this.mainListView.getSelectionModel().select(tmp);
 
-        peopleListView.setItems(null);
-        peopleListView.setItems(people);
-        peopleListView.getSelectionModel().select(null);
-        peopleListView.getSelectionModel().select(tempPerson);
+        this.peopleListView.setItems(null);
+        this.peopleListView.setItems(this.people);
+        this.peopleListView.getSelectionModel().select(null);
+        this.peopleListView.getSelectionModel().select(tempPerson);
     }
 
     private void setSaveMenu() {
@@ -309,16 +319,15 @@ public class MainController implements Initializable {
      * Sets the shortcuts for the main window
      */
     private void setShortcuts() {
-        newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
-        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-        openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
-        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+        this.newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+        this.newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+        this.saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+        this.openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
+        this.listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
         // Undo/redo
-        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
-        redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
-                KeyCombination.SHIFT_DOWN));
+        this.undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
+        this.redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
     }
 
     /**
@@ -329,7 +338,7 @@ public class MainController implements Initializable {
         this.openMenuItem.setOnAction(event -> {
             if (this.selectedProject != null) {
                 Dialogs.create().owner(this.primaryStage).title("Error")
-                        .message("Currently, only one project at a time is supported in this version.").showWarning();
+                .message("Currently, only one project at a time is supported in this version.").showWarning();
                 return;
             }
 
@@ -341,42 +350,57 @@ public class MainController implements Initializable {
                 return;
             }
             // TODO Actually do something with the selected file
-            Project project = null;
-            try {
-                project = PersistenceManager.loadProject(filePath);
-            } catch (JsonSyntaxException | InvalidProjectException e) {
-                System.out.println("JSON file invalid");
-                e.printStackTrace();
-            } catch (InvalidPersonException e) {
-                System.out.println("Person invalid");
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                System.out.println("file not found");
-                e.printStackTrace();
-            }
-            if (project != null) {
-                project.setSaveLocation(filePath);
-                projects.add(project);
-                System.out.println(project.toString() + " has been loaded successfully");
-            }
-        });
+                Project project = null;
+                try {
+                    project = PersistenceManager.loadProject(filePath);
+                } catch (JsonSyntaxException | InvalidProjectException e) {
+                    System.out.println("JSON file invalid");
+                    e.printStackTrace();
+                } catch (final InvalidPersonException e) {
+                    System.out.println("Person invalid");
+                    e.printStackTrace();
+                } catch (final FileNotFoundException e) {
+                    System.out.println("file not found");
+                    e.printStackTrace();
+                }
+                if (project != null) {
+                    project.setSaveLocation(filePath);
+                    this.projects.add(project);
+                    System.out.println(project.toString() + " has been loaded successfully");
+                }
+            });
     }
 
     /**
      * Sets the content for the main list view
      */
     private void setMainListView() {
-        mainListView.setItems(projects);
+        // derived from example at
+        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
+        this.mainListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
+            @Override
+            public ListCell<Project> call(final ListView<Project> arg0) {
+                return new ListCell<Project>() {
+                    @Override
+                    protected void updateItem(final Project project, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(project, empty);
+                        this.setText(empty ? "" : project.getShortName());
+                    }
+                };
+            }
+        });
+        this.mainListView.setItems(this.projects);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem editContextMenu = new MenuItem("Edit Project");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Project");
         contextMenu.getItems().add(editContextMenu);
 
-        mainListView.setContextMenu(contextMenu);
+        this.mainListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            if (selectedProject != null) {
-                editProjectDialog(selectedProject);
+            if (this.selectedProject != null) {
+                this.editProjectDialog(this.selectedProject);
             }
         });
 
@@ -386,15 +410,16 @@ public class MainController implements Initializable {
 
             // Update status bar to show current save status of selected project
             // Probably not the best way to do this, but it's the simplest
-            changesSaved.set(!changesSaved.get());
-            changesSaved.set(!changesSaved.get());
+            this.changesSaved.set(!this.changesSaved.get());
+            this.changesSaved.set(!this.changesSaved.get());
 
             if (newValue != null) {
-                // Then a project is selected, enable the Project Details MenuItem
-                projectDetailsMenuItem.setDisable(false);
+                // Then a project is selected, enable the Project Details
+                // MenuItem
+                this.projectDetailsMenuItem.setDisable(false);
             } else {
                 // No project selected, disable Project Details MenuItem
-                projectDetailsMenuItem.setDisable(true);
+                this.projectDetailsMenuItem.setDisable(true);
             }
         });
     }
@@ -403,25 +428,38 @@ public class MainController implements Initializable {
      * Sets the content for the main list view
      */
     private void setPeopleListView() {
-        peopleListView.setItems(people);
+        this.peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
+            @Override
+            public ListCell<Person> call(final ListView<Person> arg0) {
+                return new ListCell<Person>() {
+                    @Override
+                    protected void updateItem(final Person person, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(person, empty);
+                        this.setText(empty ? "" : person.getShortName());
+                    }
+                };
+            }
+        });
+        this.peopleListView.setItems(this.people);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem editContextMenu = new MenuItem("Edit Person");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Person");
         contextMenu.getItems().add(editContextMenu);
 
-        peopleListView.setContextMenu(contextMenu);
+        this.peopleListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            if (selectedProject != null) {
-                editPersonDialog(selectedPerson);
+            if (this.selectedProject != null) {
+                this.editPersonDialog(this.selectedPerson);
             }
         });
 
         // Set change listener for mainListView
-        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        this.peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                editPersonMenuItem.setDisable(false);
-                selectedPerson = newValue;
+                this.editPersonMenuItem.setDisable(false);
+                this.selectedPerson = newValue;
             }
         });
     }
@@ -430,7 +468,7 @@ public class MainController implements Initializable {
      * Sets layout specific properties
      */
     private void setLayoutProperties() {
-        listAnchorPane = (AnchorPane) mainSplitPane.getItems().get(0);
+        this.listAnchorPane = (AnchorPane) this.mainSplitPane.getItems().get(0);
 
     }
 
@@ -452,40 +490,41 @@ public class MainController implements Initializable {
      * Sets the functionality for the toggle list view menu item
      */
     private void setListToggleCheckMenuItem() {
-        listToggleCheckMenuItem.setSelected(true);
-        listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        this.listToggleCheckMenuItem.setSelected(true);
+        this.listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // shows the list view
-                mainSplitPane.getItems().add(0, listAnchorPane);
-                mainSplitPane.setDividerPosition(0, dividerPosition);
+                this.mainSplitPane.getItems().add(0, this.listAnchorPane);
+                this.mainSplitPane.setDividerPosition(0, this.dividerPosition);
             } else {
                 // hides the list view
-                dividerPosition = mainSplitPane.getDividerPositions()[0];
-                mainSplitPane.getItems().remove(listAnchorPane);
+                this.dividerPosition = this.mainSplitPane.getDividerPositions()[0];
+                this.mainSplitPane.getItems().remove(this.listAnchorPane);
             }
         });
     }
 
     private void setNewProjectMenuItem() {
-        newProjectMenuItem.setOnAction(event -> {
-            newProjectDialog();
+        this.newProjectMenuItem.setOnAction(event -> {
+            this.newProjectDialog();
         });
     }
 
     private void setNewPersonMenuItem() {
-        newPersonMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                newPersonDialog();
+        this.newPersonMenuItem.setOnAction(event -> {
+            if (this.selectedProject != null) {
+                this.newPersonDialog();
             }
         });
     }
 
-    private void editProjectDialog(Project project) {
-        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+    private void editProjectDialog(final Project project) {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.setTitle("Edit Project");
-            stage.initOwner(primaryStage);
+            stage.initOwner(this.primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -521,8 +560,8 @@ public class MainController implements Initializable {
                     @Override
                     public void undo() {
                         // Remove from mainListView
-                        cc.undo();
-                        refreshList();
+                        this.cc.undo();
+                        MainController.this.refreshList();
                     }
 
                     @Override
@@ -530,8 +569,8 @@ public class MainController implements Initializable {
                         return "Edit Project";
                     }
                 };
-                undoManager.doCommand(c);
-                refreshList();
+                this.undoManager.doCommand(c);
+                this.refreshList();
             }
         });
     }
@@ -583,21 +622,21 @@ public class MainController implements Initializable {
                     @Override
                     public Project execute() {
                         // Add to mainListView
-                        Project project = cpc.execute();
-                        addProject(project);
+                        final Project project = this.cpc.execute();
+                        MainController.this.addProject(project);
                         return project;
                     }
 
                     @Override
                     public void undo() {
                         // Remove from mainListView
-                        projects.remove(cpc.getProject());
-                        cpc.undo();
+                        MainController.this.projects.remove(this.cpc.getProject());
+                        this.cpc.undo();
                     }
 
                     @Override
                     public String getType() {
-                        return cpc.getType();
+                        return this.cpc.getType();
                     }
                 };
 
@@ -610,52 +649,51 @@ public class MainController implements Initializable {
         });
     }
 
-    private void editPersonDialog(Person person) {
-        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+    private void editPersonDialog(final Person person) {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
-            Stage stage = new Stage();
+            final Stage stage = new Stage();
             stage.setTitle("Edit Project");
-            stage.initOwner(primaryStage);
+            stage.initOwner(this.primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
-            FXMLLoader loader = new FXMLLoader();
+            final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editPerson.fxml"));
             BorderPane root;
             try {
                 root = loader.load();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return;
             }
-            Scene scene = new Scene(root);
+            final Scene scene = new Scene(root);
             stage.setScene(scene);
-            EditPersonController editPersonController = loader.getController();
+            final EditPersonController editPersonController = loader.getController();
             editPersonController.setStage(stage);
-            editPersonController.setProject(selectedProject);
+            editPersonController.setProject(this.selectedProject);
             editPersonController.loadPerson(person);
-
-
 
             stage.showAndWait();
 
             if (editPersonController.isValid()) {
-                Command c = new Command() {
+                final Command c = new Command() {
                     CompoundCommand cc = editPersonController.getCommand();
 
                     @Override
                     public Object execute() {
                         // Add to mainListView
-                        cc.execute();
-                        refreshList();
+                        this.cc.execute();
+                        MainController.this.refreshList();
                         return null;
                     }
 
                     @Override
                     public void undo() {
                         // Remove from mainListView
-                        cc.undo();
-                        refreshList();
+                        this.cc.undo();
+                        MainController.this.refreshList();
                     }
 
                     @Override
@@ -663,76 +701,78 @@ public class MainController implements Initializable {
                         return "Edit Person";
                     }
                 };
-                undoManager.doCommand(c);
-                refreshList();
+                this.undoManager.doCommand(c);
+                this.refreshList();
             }
 
-            refreshList();
+            this.refreshList();
         });
     }
 
     private void newPersonDialog() {
-        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
-            Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            final Stage stage = new Stage();
+            stage.initOwner(this.primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
-            FXMLLoader loader = new FXMLLoader();
+            final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newPerson.fxml"));
             BorderPane root;
             try {
                 root = loader.load();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return;
             }
-            Scene scene = new Scene(root);
+            final Scene scene = new Scene(root);
             stage.setScene(scene);
-            NewPersonController newPersonController = loader.getController();
+            final NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
-            newPersonController.setProject(selectedProject);
-
+            newPersonController.setProject(this.selectedProject);
 
             stage.showAndWait();
             if (newPersonController.isValid()) {
-                Command c = new Command() {
+                final Command c = new Command() {
                     CreatePersonCommand cpc = newPersonController.getCommand();
 
                     @Override
                     public Object execute() {
                         // Add to mainListView
-                        Person person = cpc.execute();
-                        selectedProject.addPerson(person);
-                        people.add(person);
+                        final Person person = this.cpc.execute();
+                        MainController.this.selectedProject.addPerson(person);
+                        MainController.this.people.add(person);
                         return person;
                     }
 
                     @Override
                     public void undo() {
                         // Remove from mainListView
-                        people.remove(cpc.getPerson());
-                        selectedProject.removePerson(cpc.getPerson());
-                        cpc.undo();
+                        MainController.this.people.remove(this.cpc.getPerson());
+                        MainController.this.selectedProject.removePerson(this.cpc.getPerson());
+                        this.cpc.undo();
                     }
 
                     @Override
                     public String getType() {
-                        return cpc.getType();
+                        return this.cpc.getType();
                     }
                 };
 
-                undoManager.doCommand(c);
+                this.undoManager.doCommand(c);
             }
-            refreshList();
+            this.refreshList();
         });
     }
 
-
     /**
-     * Adds the new project to the observable list so that it is visible in the list view
-     * @param project New Project to be added
+     * Adds the new project to the observable list so that it is visible in the
+     * list view
+     *
+     * @param project
+     *            New Project to be added
      */
     private void addProject(final Project project) {
         if (project != null) {
