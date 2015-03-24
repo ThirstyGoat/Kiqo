@@ -64,8 +64,6 @@ public class EditPersonController implements Initializable {
 
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
-
-
                 if (!formController.getShortName().equals(person.getShortName())) {
                     changes.add(new EditCommand<>(person, "shortName", formController.getShortName()));
                 }
