@@ -15,7 +15,7 @@ public class Project implements Serializable {
     private String longName;
     private String description;
     private transient File saveLocation;
-    private ArrayList<Person> people = new ArrayList<Person>();
+    private final ArrayList<Person> people = new ArrayList<Person>();
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -61,10 +61,11 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param person - person to add to people list in project
+     * @param person
+     *            - person to add to people list in project
      */
-    public void addPerson(Person person) {
-        people.add(person);
+    public void addPerson(final Person person) {
+        this.people.add(person);
     }
 
     /**
@@ -72,7 +73,7 @@ public class Project implements Serializable {
      * @return arraylist of people in project
      */
     public ArrayList<Person> getPeople() {
-        return people;
+        return this.people;
     }
 
     @Override
@@ -173,13 +174,12 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return this.shortName;
-//        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
-//                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
+        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
+                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
     }
 
-    public void removePerson(Person person) {
-        people.remove(person);
+    public void removePerson(final Person person) {
+        this.people.remove(person);
     }
 
 }
