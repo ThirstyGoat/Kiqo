@@ -775,6 +775,9 @@ public class MainController implements Initializable {
             people.add(person);
             // Select added person in the listView
             peopleListView.getSelectionModel().select(person);
+
+            listShowPeopleMenuItem.selectedProperty().setValue(true);
+
             // Save the project
             saveProject(selectedProject);
         }
