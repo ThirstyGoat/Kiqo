@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.ListSelectionView?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.PersonFormController" vgap="10.0">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
@@ -36,5 +37,6 @@
         <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <TextField fx:id="phoneTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <ListSelectionView fx:id="skillsSelectionView" GridPane.rowIndex="7" GridPane.columnSpan="2" />
     </children>
 </GridPane>
