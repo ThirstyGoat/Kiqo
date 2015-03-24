@@ -126,7 +126,6 @@ public class MainController implements Initializable {
         });
     }
 
-
     /**
      * Shows the Project list view and hides the people list view
      */
@@ -390,11 +389,19 @@ public class MainController implements Initializable {
             changesSaved.set(!changesSaved.get());
 
             if (newValue != null) {
-                // Then a project is selected, enable the Project Details MenuItem
-                projectDetailsMenuItem.setDisable(false);
+                newPersonMenuItem.setDisable(false);
+                // Then a project is selected, enable the Project Details, and
+                // saveMenuItem
+                this.projectDetailsMenuItem.setDisable(false);
+                this.saveMenuItem.setDisable(false);
+                this.newProjectMenuItem.setDisable(true);
             } else {
-                // No project selected, disable Project Details MenuItem
-                projectDetailsMenuItem.setDisable(true);
+                newPersonMenuItem.setDisable(true);
+                // No project selected, disable Project Details MenuItem, and
+                // saveMenuItem
+                this.projectDetailsMenuItem.setDisable(true);
+                this.saveMenuItem.setDisable(true);
+                this.newProjectMenuItem.setDisable(false);
             }
         });
     }
@@ -705,7 +712,7 @@ public class MainController implements Initializable {
                         // Add to mainListView
                         Person person = cpc.execute();
                         selectedProject.addPerson(person);
-                        people.add(person);
+                        addPersonToList(person);
                         return person;
                     }
 
@@ -729,6 +736,17 @@ public class MainController implements Initializable {
         });
     }
 
+    private void addPersonToList(Person person) {
+        if (person != null) {
+            // Update view accordingly
+            people.add(person);
+            // Select added person in the listView
+            peopleListView.getSelectionModel().select(person);
+            // Save the project
+            saveProject(selectedProject);
+        }
+    }
+
 
     /**
      * Adds the new project to the observable list so that it is visible in the list view
@@ -737,11 +755,11 @@ public class MainController implements Initializable {
     private void addProject(final Project project) {
         if (project != null) {
             // Update View Accordingly
-            this.projects.add(project);
+            projects.add(project);
             // Select added project in the ListView
-            this.mainListView.getSelectionModel().select(project);
-
-            this.saveProject(project);
+            mainListView.getSelectionModel().select(project);
+            // Save the project
+            saveProject(project);
         }
     }
 }
