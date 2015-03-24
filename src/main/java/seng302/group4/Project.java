@@ -16,6 +16,7 @@ public class Project implements Serializable {
     private String description;
     private transient File saveLocation;
     private final ArrayList<Person> people = new ArrayList<Person>();
+    private final ArrayList<Skill> skills = new ArrayList<Skill>();
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -70,10 +71,26 @@ public class Project implements Serializable {
 
     /**
      *
+     * @param skill skill to add to skill list in project
+     */
+    public void addSkill(final Skill skill) {
+        skills.add(skill);
+    }
+
+    /**
+     *
      * @return arraylist of people in project
      */
     public ArrayList<Person> getPeople() {
         return this.people;
+    }
+
+    /**
+     *
+     * @return arraylist of skills in project
+     */
+    public ArrayList<Skill> getSkills() {
+        return skills;
     }
 
     @Override
