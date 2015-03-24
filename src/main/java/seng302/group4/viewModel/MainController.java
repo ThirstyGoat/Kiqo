@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -75,6 +77,8 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem editPersonMenuItem;
     @FXML
+    private MenuItem newSkillMenuItem;
+    @FXML
     private CheckMenuItem listShowProjectMenuItem;
     @FXML
     private CheckMenuItem listShowPeopleMenuItem;
@@ -111,6 +115,16 @@ public class MainController implements Initializable {
         showProjectListView();
         showPeopleListView();
         setStatusBar();
+        setSkillMenuItem();
+    }
+
+    /**
+     * Sets the action for the skill menu item
+     */
+    private void setSkillMenuItem() {
+        newSkillMenuItem.setOnAction(event -> {
+            newSkillDialog();
+        });
     }
 
     private void setEditPersonMenuItem() {
@@ -589,6 +603,33 @@ public class MainController implements Initializable {
             return;
         }
         this.changesSaved.set(true);
+    }
+
+    private void newSkillDialog() {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(this.primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newSkill.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final NewSkillController newSkillController = loader.getController();
+            newSkillController.setStage(stage);
+
+            stage.showAndWait();
+        });
     }
 
     private void newProjectDialog() {

@@ -44,6 +44,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
                 <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
