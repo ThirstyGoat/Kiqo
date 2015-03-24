@@ -10,6 +10,8 @@ import java.io.Writer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -41,17 +43,15 @@ public class PersistenceManager {
      *            - Path to the project.json
      * @return Project loaded from the project.json file in the project
      *         directory
-     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws JsonIOException
+     * @throws JsonSyntaxException
      */
-    public static Project loadProject(final File filePath) throws Exception {
+    public static Project loadProject(final File filePath) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
         Project project = null;
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
-            try {
-                project = PersistenceManager.gson.fromJson(br, Project.class);
-            } catch (final Exception e) {
-                throw e;
-            }
+            project = PersistenceManager.gson.fromJson(br, Project.class);
         }
         return project;
     }
@@ -63,17 +63,19 @@ public class PersistenceManager {
      * @param args
      */
     public static void main(final String args[]) {
-        final File f = new File("/Users/samschofield/Documents/Uni/2ndPro/seng302/SaveLocation/");
-        final Project p = new Project("p", "project", f);
+        final File f = new File("/home/amy/Desktop/asdfg.json");
+        final Project p = new Project("p", "project", f, "descr");
         try {
             PersistenceManager.saveProject(p.getSaveLocation(), p);
             System.out.println("saved project at: " + p.getSaveLocation());
             ;
         } catch (final IOException o) {
+            o.printStackTrace();
             System.out.println("Couldnt save project. try again");
         }
 
-        final File projectLocation = new File(f.toString() + "/" + p.getShortName() + ".json");
+        // final File projectLocation = new File(f.toString());
+        final File projectLocation = new File("/home/amy/Desktop/uh-oh.json");
         System.out.println(projectLocation.toString());
 
         Project p1 = null;
@@ -81,6 +83,7 @@ public class PersistenceManager {
             p1 = PersistenceManager.loadProject(projectLocation);
             System.out.println(p1.equals(p));
         } catch (final FileNotFoundException o) {
+            o.printStackTrace();
             System.out.println("Couldnt find project. Try again");
         } catch (final Exception e) {
             e.printStackTrace();

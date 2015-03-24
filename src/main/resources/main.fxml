@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.2846410684474123" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+    <SplitPane fx:id="mainSplitPane" dividerPositions="0.2739420935412027" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
           <children>
-            <VBox prefHeight="369.0" prefWidth="114.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                 <Label alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
-                 <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
-               </children>
+            <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <children>
+                <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                  <font>
+                    <Font name="System Bold" size="18.0" />
+                  </font>
+                  <VBox.margin>
+                    <Insets left="10.0" right="10.0" top="10.0" />
+                  </VBox.margin>
+                </Label>
+                <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+                <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
+              </children>
             </VBox>
           </children>
+          <padding>
+            <Insets />
+          </padding>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-          <children>
-            <TextArea prefHeight="369.0" prefWidth="424.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-          </children>
-        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
       </items>
     </SplitPane>
   </center>
@@ -33,30 +42,36 @@
           <items>
             <Menu mnemonicParsing="false" text="New">
               <items>
-                <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
+                <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
+                <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
               </items>
             </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
-            <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
           </items>
         </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-              <items>
-                <MenuItem fx:id="undoMenuItem" disable="true" mnemonicParsing="false" text="Undo" />
-                  <MenuItem fx:id="redoMenuItem" disable="true" mnemonicParsing="false" text="Redo" />
-              </items>
-            </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem disable="true" mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
+          </items>
+        </Menu>
         <Menu mnemonicParsing="false" text="View">
           <items>
-            <CheckMenuItem fx:id="listToggleCheckMenuItem" mnemonicParsing="false" text="List" />
+            <CheckMenuItem mnemonicParsing="false" text="List" fx:id="listToggleCheckMenuItem" />
+            <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPeopleMenuItem" />
+            <CheckMenuItem mnemonicParsing="false" text="Project" fx:id="listShowProjectMenuItem" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Project">
           <items>
-            <MenuItem fx:id="projectDetailsMenuItem" disable="true" mnemonicParsing="false" text="Project Details" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Project Details" fx:id="projectDetailsMenuItem" />
           </items>
         </Menu>
       </menus>
