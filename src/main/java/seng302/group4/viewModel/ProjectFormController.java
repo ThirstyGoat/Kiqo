@@ -15,9 +15,7 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
 import org.controlsfx.control.PopOver;
-
 import seng302.group4.Project;
 
 /**
@@ -62,12 +60,7 @@ public class ProjectFormController implements Initializable {
         // disconnect tooltip if blank
         this.updateTooltip();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                ProjectFormController.this.longNameTextField.requestFocus();
-            }
-        });
+        Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
     }
 
     public void loadProject(final Project project) {
@@ -223,7 +216,6 @@ public class ProjectFormController implements Initializable {
      * the user.
      */
     private void setOpenButton() {
-
         final String EXTENSION = ".json";
         this.openButton.setOnAction(event -> {
             // Hide existing error message if there is one
@@ -231,6 +223,14 @@ public class ProjectFormController implements Initializable {
 
                 final FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+
+                if (this.projectLocation != null) {
+                    // Then this is an edit dialog, we need to make sure that
+                    // the
+                    // user opens to the project directory
+                    fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
+                }
+
                 File selectedFile = fileChooser.showSaveDialog(this.stage);
                 if (selectedFile != null) {
                     // ensure file has .json extension
@@ -244,8 +244,7 @@ public class ProjectFormController implements Initializable {
                     this.projectLocation = selectedFile.getAbsoluteFile();
                     this.updateTooltip();
                 }
-
-            });
+        });
     }
 
     /**

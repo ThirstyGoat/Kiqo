@@ -1,5 +1,6 @@
 package seng302.group4.viewModel;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -7,11 +8,16 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 13/03/15.
@@ -56,6 +62,7 @@ public class EditProjectController implements Initializable {
         this.editProjectButton.setOnAction(event -> {
             this.formController.validate();
             if (this.formController.isValid()) {
+                valid = true;
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
                 if (!this.formController.longName.equals(this.project.getLongName())) {
@@ -71,36 +78,35 @@ public class EditProjectController implements Initializable {
                     changes.add(new EditCommand<>(this.project, "description", this.formController.description));
                 }
 
-                this.valid = !changes.isEmpty();
-                // TODO possibly no changes, create command anyway?
-                this.command = new CompoundCommand(changes);
+                command = new CompoundCommand(changes);
 
                 // Close the new project dialog (this window)
-                this.stage.close();
+                stage.close();
             }
         });
     }
 
-    /**
-     * @return the valid
-     */
-    public boolean isValid() {
-        return this.valid;
-    }
-
-    /**
-     * @return the command
-     */
-    public CompoundCommand getCommand() {
-        return this.command;
-    }
-
-    public void setStage(final Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
         formController.setStage(stage);
     }
 
+    /**
+     * Sets the cancel button functionality
+     */
     private void setCancelButton() {
-        this.cancelButton.setOnAction(event -> this.stage.close());
+        cancelButton.setOnAction(event -> stage.close());
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public CompoundCommand getCommand() {
+        return this.command;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 }

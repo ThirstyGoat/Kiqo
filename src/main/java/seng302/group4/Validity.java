@@ -41,7 +41,7 @@ public class Validity {
      * @return
      */
     public static boolean checkProject(Project project) throws InvalidProjectException{
-        if (project.getShortName() == null || project.getLongName() == null || project.getSaveLocation() == null) {
+        if (project.getShortName() == null || project.getLongName() == null) {
             throw new InvalidProjectException(project);
         }
 

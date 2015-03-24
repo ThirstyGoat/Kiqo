@@ -2,17 +2,20 @@ package seng302.group4;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
- * Represents a software project.
+ * Created by samschofield on 12/03/15. Project class represents a software
+ * project
  *
- * Created by samschofield on 12/03/15.
+ * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
     private String shortName;
     private String longName;
     private String description;
     private transient File saveLocation;
+    private ArrayList<Person> people = new ArrayList<Person>();
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -54,6 +57,22 @@ public class Project implements Serializable {
         this.longName = longName;
         this.description = description;
         this.saveLocation = saveLocation;
+    }
+
+    /**
+     *
+     * @param person - person to add to people list in project
+     */
+    public void addPerson(Person person) {
+        people.add(person);
+    }
+
+    /**
+     *
+     * @return arraylist of people in project
+     */
+    public ArrayList<Person> getPeople() {
+        return people;
     }
 
     @Override
@@ -106,16 +125,6 @@ public class Project implements Serializable {
         return this.shortName;
     }
 
-    @Override
-    public int hashCode() {
-        return this.shortName.hashCode();
-    }
-
-    public void prepareForDestruction() {
-        // FIXME Auto-generated method stub
-        // eg. remove people
-    }
-
     /**
      *
      * @param description
@@ -153,11 +162,24 @@ public class Project implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return this.shortName.hashCode();
+    }
+
+    public void prepareForDestruction() {
+        // FIXME Auto-generated method stub
+        // eg. remove people
+    }
+
+    @Override
     public String toString() {
         return this.shortName;
-        // return "Project{" + "shortName='" + this.shortName + '\'' +
-        // ", longName='" + this.longName + '\'' + ", description='"
-        // + this.description + '\'' + ", saveLocation='" + this.saveLocation +
-        // '\'' + '}';
+//        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
+//                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
     }
+
+    public void removePerson(Person person) {
+        people.remove(person);
+    }
+
 }
