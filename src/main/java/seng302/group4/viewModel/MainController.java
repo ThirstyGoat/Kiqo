@@ -1,10 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,18 +15,12 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-
+import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
@@ -39,7 +28,11 @@ import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -410,15 +403,12 @@ public class MainController implements Initializable {
                 // saveMenuItem
                 this.projectDetailsMenuItem.setDisable(false);
                 this.saveMenuItem.setDisable(false);
-                this.newProjectMenuItem.setDisable(true);
             } else {
                 newPersonMenuItem.setDisable(true);
                 // No project selected, disable Project Details MenuItem, and
                 // saveMenuItem
                 this.projectDetailsMenuItem.setDisable(true);
                 this.saveMenuItem.setDisable(true);
-                this.newProjectMenuItem.setDisable(false);
-
                 // Then a project is selected, enable the Project Details
                 // MenuItem
                 this.projectDetailsMenuItem.setDisable(false);
@@ -508,7 +498,15 @@ public class MainController implements Initializable {
 
     private void setNewProjectMenuItem() {
         newProjectMenuItem.setOnAction(event -> {
-            newProjectDialog();
+            if (this.selectedProject != null) {
+                Dialogs.create().owner(this.primaryStage).title("Error")
+                        .message("Currently, only one project at a time is supported in this version.").showWarning();
+                return;
+            } else {
+                newProjectDialog();
+            }
+
+
         });
     }
 
