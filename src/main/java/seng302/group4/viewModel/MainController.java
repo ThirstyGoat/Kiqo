@@ -685,6 +685,7 @@ public class MainController implements Initializable {
                     public Object execute() {
                         // Add to mainListView
                         cc.execute();
+                        MainController.this.saveProject(selectedProject);
                         refreshList();
                         return null;
                     }
