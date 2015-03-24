@@ -57,6 +57,12 @@ public class NewPersonController implements Initializable {
             // check to see that shortname and longname are populated and shortname is unique within the project
             formController.validate();
             if (formController.isValid()) {
+                for (Person p : project.getPeople()) {
+                    if (formController.getShortName().equals(p.getShortName())) {
+                        formController.warnShortnameNotUnique();
+                        return;
+                    }
+                }
                 command = new CreatePersonCommand(formController.getShortName(), formController.getLongName(),
                         formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
                         formController.getPhoneNumber(), formController.getDepartment());

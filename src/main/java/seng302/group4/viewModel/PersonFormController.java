@@ -270,6 +270,9 @@ public class PersonFormController implements Initializable {
     }
 
 
+    /**
+     * Warms if the short name of a person is not unique
+     */
     public void warnShortnameNotUnique() {
         errorPopOver.setContentNode(new Label("Short name must be unique"));
         errorPopOver.show(shortNameTextField);

@@ -9,7 +9,7 @@
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="newPersonButton" defaultButton="true" mnemonicParsing="false" text="New Person" />
+                <Button fx:id="newPersonButton" defaultButton="true" mnemonicParsing="false" text="Save Person" />
             </children>
             <padding>
                 <Insets right="35.0" />
