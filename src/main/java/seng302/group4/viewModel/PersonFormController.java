@@ -70,6 +70,9 @@ public class PersonFormController implements Initializable {
         setSkills();
     }
 
+    /**
+     * Sets the skills list data and formatting
+     */
     private void setSkills() {
         ObservableList<String> skillsList = FXCollections.observableArrayList("Java", "Python", "PHP", "Scrum Pro");
         skillsSelectionView.setSourceItems(skillsList);
