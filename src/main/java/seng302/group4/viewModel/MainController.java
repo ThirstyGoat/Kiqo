@@ -652,7 +652,7 @@ public class MainController implements Initializable {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             Stage stage = new Stage();
-            stage.setTitle("Edit Project");
+            stage.setTitle("Edit Person");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
@@ -714,6 +714,7 @@ public class MainController implements Initializable {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             Stage stage = new Stage();
+            stage.setTitle("New Person");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
