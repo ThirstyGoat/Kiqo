@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -365,7 +366,22 @@ public class MainController implements Initializable {
      * Sets the content for the main list view
      */
     private void setMainListView() {
-        mainListView.setItems(projects);
+        // derived from example at
+        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
+        this.mainListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
+            @Override
+            public ListCell<Project> call(final ListView<Project> arg0) {
+                return new ListCell<Project>() {
+                    @Override
+                    protected void updateItem(final Project project, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(project, empty);
+                        this.setText(empty ? "" : project.getShortName());
+                    }
+                };
+            }
+        });
+        this.mainListView.setItems(this.projects);
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editContextMenu = new MenuItem("Edit Project");
@@ -402,6 +418,10 @@ public class MainController implements Initializable {
                 this.projectDetailsMenuItem.setDisable(true);
                 this.saveMenuItem.setDisable(true);
                 this.newProjectMenuItem.setDisable(false);
+
+                // Then a project is selected, enable the Project Details
+                // MenuItem
+                this.projectDetailsMenuItem.setDisable(false);
             }
         });
     }
@@ -410,7 +430,20 @@ public class MainController implements Initializable {
      * Sets the content for the main list view
      */
     private void setPeopleListView() {
-        peopleListView.setItems(people);
+        this.peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
+            @Override
+            public ListCell<Person> call(final ListView<Person> arg0) {
+                return new ListCell<Person>() {
+                    @Override
+                    protected void updateItem(final Person person, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(person, empty);
+                        this.setText(empty ? "" : person.getShortName());
+                    }
+                };
+            }
+        });
+        this.peopleListView.setItems(this.people);
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editContextMenu = new MenuItem("Edit Person");
