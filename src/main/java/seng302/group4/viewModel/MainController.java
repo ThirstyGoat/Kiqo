@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -65,6 +66,8 @@ public class MainController implements Initializable {
     @FXML
     private SplitPane mainSplitPane;
     @FXML
+    private Button editButton;
+    @FXML
     private Label listLabel;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
@@ -111,6 +114,7 @@ public class MainController implements Initializable {
         initialiseProjectListView();
         initialisePeopleListView();
         addStatusBar();
+        addEditButtonListener();
         menuBarController.setListenersOnUndoManager(undoManager);
     }
 
@@ -263,6 +267,14 @@ public class MainController implements Initializable {
         });
     }
 
+    private void addEditButtonListener() {
+        editButton.setOnAction(event -> {
+            // Since editX does nothing unless there is an X selected...
+                editProject();
+                editPerson();
+            });
+    }
+
     private void addPersonToList(Person person) {
         if (person != null) {
             // Update view accordingly
@@ -270,8 +282,8 @@ public class MainController implements Initializable {
 
             // Select added person in the listView
             peopleListView.getSelectionModel().select(person);
+            menuBarController.updateAfterPersonListSelected(true);
             switchToPersonList();
-            menuBarController.updateAfterPersonListSelected();
 
             // Save the project
             saveProject();
@@ -288,6 +300,8 @@ public class MainController implements Initializable {
             projects.add(project);
             // Select added project in the ListView
             projectListView.getSelectionModel().select(project);
+            // enable menuitem
+            menuBarController.enableNewPerson();
             saveProject();
         }
     }
@@ -502,9 +516,7 @@ public class MainController implements Initializable {
         peopleListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> {
-            if (selectedProject != null) {
-                editPersonDialog(selectedPerson);
-            }
+            editPerson();
         });
 
         // Set change listener for projectListView
@@ -632,7 +644,6 @@ public class MainController implements Initializable {
                 // We don't do the command, since it is not meant to be undoable
                 // at this stage
                 c.execute();
-                refreshList();
             }
         });
     }
