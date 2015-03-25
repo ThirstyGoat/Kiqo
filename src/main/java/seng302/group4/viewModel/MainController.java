@@ -97,7 +97,7 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private DetailsPaneController detailsPaneController;
+    private ProjectDetailsPaneController projectDetailsPaneController;
 
     private Project selectedProject;
     private final UndoManager undoManager = new UndoManager();
@@ -432,7 +432,7 @@ public class MainController implements Initializable {
                 // MenuItem
                 projectDetailsMenuItem.setDisable(false);
             }
-            detailsPaneController.showProject(selectedProject);
+                projectDetailsPaneController.showDetails(selectedProject);
         });
     }
 

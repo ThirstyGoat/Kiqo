@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.DetailsPaneController">
+<GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
   <children>
     <Label text="Name:" />
     <Label text="Short Name:" GridPane.rowIndex="1" />
@@ -34,6 +34,6 @@
     <RowConstraints minHeight="10.0" vgrow="NEVER" />
     <RowConstraints minHeight="10.0" vgrow="NEVER" />
     <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
