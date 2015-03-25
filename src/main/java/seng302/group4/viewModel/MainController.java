@@ -14,16 +14,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -63,41 +59,17 @@ public class MainController implements Initializable {
     @FXML
     private BorderPane mainBorderPane;
     @FXML
-    private CheckMenuItem listToggleCheckMenuItem;
-    @FXML
-    private MenuItem quitMenuItem;
-    @FXML
-    private ListView<Project> mainListView;
+    private ListView<Project> projectListView;
     @FXML
     private ListView<Person> peopleListView;
     @FXML
     private SplitPane mainSplitPane;
     @FXML
-    private MenuItem newProjectMenuItem;
-    @FXML
-    private MenuItem newPersonMenuItem;
-    @FXML
-    private MenuItem openMenuItem;
-    @FXML
-    private MenuItem saveMenuItem;
-    @FXML
-    private MenuItem projectDetailsMenuItem;
-    @FXML
-    private MenuItem undoMenuItem;
-    @FXML
-    private MenuItem redoMenuItem;
-    @FXML
-    private MenuItem editProjectMenuItem;
-    @FXML
-    private MenuItem editPersonMenuItem;
-    @FXML
-    private CheckMenuItem listShowProjectMenuItem;
-    @FXML
-    private CheckMenuItem listShowPeopleMenuItem;
-    @FXML
     private Label listLabel;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
+    @FXML
+    private MenuBarController menuBarController;
 
     private Project selectedProject;
     private final UndoManager undoManager = new UndoManager();
@@ -111,94 +83,179 @@ public class MainController implements Initializable {
 
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
+    public void editPerson() {
+        if (selectedPerson != null) {
+            editPersonDialog(selectedPerson);
+        }
+    }
+
+    public void editProject() {
+        if (selectedProject != null) {
+            editProjectDialog(selectedProject);
+        }
+    }
+
+    /**
+     * Exits the application after prompting to save unsaved changes.
+     *
+     * We could just call primaryStage.close(), but that is a force close, and
+     * then we can't prompt for saving changes
+     */
+    public void exit() {
+        primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setQuitMenuItem();
-        setListToggleCheckMenuItem();
         setLayoutProperties();
-        setNewProjectMenuItem();
-        setProjectDetailsMenuItem();
-        setEditPersonMenuItem();
-        setUndoHandlers();
-        setNewPersonMenuItem();
-        setMainListView();
-        setPeopleListView();
-        setOpenMenu();
-        setSaveMenu();
-        setShortcuts();
-        showProjectListView();
-        showPeopleListView();
-        setStatusBar();
+        initialiseProjectListView();
+        initialisePeopleListView();
+        addStatusBar();
+        menuBarController.setListenersOnUndoManager(undoManager);
     }
 
-    private void setEditPersonMenuItem() {
-        editPersonMenuItem.setOnAction(event -> {
-            if (selectedPerson != null) {
-                editPersonDialog(selectedPerson);
-            }
-        });
+    public void newPerson() {
+        if (selectedProject != null) {
+            newPersonDialog();
+        }
+    }
+
+    public void newProject() {
+        if (selectedProject != null) {
+            Dialogs.create().owner(primaryStage).title("Error")
+            .message("Currently, only one project at a time is supported in this version.").showWarning();
+            return;
+        } else {
+            newProjectDialog();
+        }
+    }
+
+    public void openProject() {
+        if (selectedProject != null) {
+            Dialogs.create().owner(primaryStage).title("Error")
+            .message("Currently, only one project at a time is supported in this version.").showWarning();
+            return;
+        }
+
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+        final File filePath = fileChooser.showOpenDialog(primaryStage);
+
+        if (filePath == null) {
+            return;
+        }
+        // TODO Actually do something with the selected file
+        Project project = null;
+        try {
+            project = PersistenceManager.loadProject(filePath);
+        } catch (JsonSyntaxException | InvalidProjectException e) {
+            System.out.println("JSON file invalid");
+            e.printStackTrace();
+        } catch (final InvalidPersonException e) {
+            System.out.println("Person invalid");
+            e.printStackTrace();
+        } catch (final FileNotFoundException e) {
+            System.out.println("file not found");
+            e.printStackTrace();
+        }
+        if (project != null) {
+            project.setSaveLocation(filePath);
+            addProject(project);
+            System.out.println(project.toString() + " has been loaded successfully");
+        }
     }
 
     /**
-     * Shows the Project list view and hides the people list view
+     * Saves the project to disk and marks project as saved.
      */
-    private void showProjectListView() {
-        listShowProjectMenuItem.setSelected(true);
-        listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listLabel.setText("Project");
-                listShowPeopleMenuItem.setSelected(false);
-                selectedPerson = null;
-                editPersonMenuItem.setDisable(true);
-
-                peopleListView.setVisible(false);
-                peopleListView.setManaged(false);
-
-                mainListView.setVisible(true);
-                mainListView.setManaged(true);
-            } else {
-                listShowPeopleMenuItem.setSelected(true);
-            }
-        });
+    public void saveProject() {
+        final Project project = selectedProject;
+        try {
+            PersistenceManager.saveProject(project.getSaveLocation(), project);
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        changesSaved.set(true);
     }
 
-    /**
-     * Shows the people list view and hides the project list view
-     */
-    private void showPeopleListView() {
+    public void setListVisible(boolean visible) {
+        if (visible) {
+            // shows the list view
+            mainSplitPane.getItems().add(0, listAnchorPane);
+            mainSplitPane.setDividerPosition(0, dividerPosition);
+        } else {
+            // hides the list view
+            dividerPosition = mainSplitPane.getDividerPositions()[0];
+            mainSplitPane.getItems().remove(listAnchorPane);
+        }
+    }
+
+    public void setPrimaryStage(final Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        addClosePrompt();
+        menuBarController.setMainController(this);
+    }
+
+    public void switchToPersonList() {
+        listLabel.setText("People");
+
+        peopleListView.setVisible(true);
+        peopleListView.setManaged(true);
+
+        projectListView.setVisible(false);
+        projectListView.setManaged(false);
+
+        if (selectedProject != null) {
+            people.setAll(selectedProject.getPeople());
+        }
+        peopleListView.setItems(people);
+    }
+
+    public void switchToProjectList() {
+        listLabel.setText("Project");
+        selectedPerson = null;
+        menuBarController.updateAfterProjectSelected(false);
+        menuBarController.updateAfterPersonSelected(false);
+
+        peopleListView.setVisible(false);
         peopleListView.setManaged(false);
-        listShowPeopleMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue && selectedProject != null) {
-                listLabel.setText("People");
-                listShowProjectMenuItem.setSelected(false);
 
-                peopleListView.setVisible(true);
-                peopleListView.setManaged(true);
+        projectListView.setVisible(true);
+        projectListView.setManaged(true);
+    }
 
-                mainListView.setVisible(false);
-                mainListView.setManaged(false);
+    // //////////////////////////////////////////////////////
+    public void undo() {
+        undoManager.undoCommand();
+        // If the changes are already saved, and we undo something, then the
+        // changes are now not saved
+        if (changesSaved.get()) {
+            changesSaved.set(false);
+        }
+    }
 
-                if (selectedProject != null) {
-                    people.setAll(selectedProject.getPeople());
-                }
-                peopleListView.setItems(people);
-            } else {
-                listShowProjectMenuItem.setSelected(true);
-            }
-        });
+
+    public void redo() {
+        undoManager.redoCommand();
+        // If the changes are already saved, and we redo something, then the
+        // changes are now not saved
+        if (changesSaved.get()) {
+            changesSaved.set(false);
+        }
     }
 
     /**
      * Set save prompt when to handle request to close application
      */
-    public void setClosePrompt() {
+    private void addClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
             if (!changesSaved.get()) {
                 final Action response = Dialogs.create().owner(primaryStage).title("Save Project")
                         .masthead("You have unsaved changes.").message("Would you like to save the changes you have made to the project?")
                         .showConfirm();
                 if (response == Dialog.ACTION_YES) {
-                    saveProject(selectedProject);
+                    saveProject();
                 } else if (response == Dialog.ACTION_CANCEL) {
                     event.consume();
                 }
@@ -206,11 +263,40 @@ public class MainController implements Initializable {
         });
     }
 
+    private void addPersonToList(Person person) {
+        if (person != null) {
+            // Update view accordingly
+            people.add(person);
+
+            // Select added person in the listView
+            peopleListView.getSelectionModel().select(person);
+            switchToPersonList();
+            menuBarController.updateAfterPersonListSelected();
+
+            // Save the project
+            saveProject();
+        }
+    }
+
+    /**
+     * Adds the new project to the observable list so that it is visible in the list view
+     * @param project New Project to be added
+     */
+    private void addProject(final Project project) {
+        if (project != null) {
+            // Update View Accordingly
+            projects.add(project);
+            // Select added project in the ListView
+            projectListView.getSelectionModel().select(project);
+            saveProject();
+        }
+    }
+
     /**
      * Set up the status bar for the application and monitor for changes in the
      * save state
      */
-    private void setStatusBar() {
+    private void addStatusBar() {
         // Add the status bar to the bottom of the window
         mainBorderPane.setBottom(statusBar);
 
@@ -222,448 +308,6 @@ public class MainController implements Initializable {
             } else {
                 // Then there are unsaved changes, update status message
                 statusBar.setText(UNSAVED_CHANGES_TEXT);
-            }
-        });
-    }
-
-    /**
-     * Set the undo/redo item handlers, and also set their state depending on
-     * the undoManager.
-     */
-    private void setUndoHandlers() {
-        undoMenuItem.setOnAction(event -> {
-            undoManager.undoCommand();
-
-            // If the changes are already saved, and we undo something, then the
-            // changes are now not saved
-            if (changesSaved.get()) {
-                changesSaved.set(false);
-            }
-        });
-
-        redoMenuItem.setOnAction(event -> {
-            undoManager.redoCommand();
-            // If changes are already saved, and we redo something, then changes
-            // are now not saved
-            if (changesSaved.get()) {
-                changesSaved.set(false);
-            }
-        });
-
-        undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
-            undoMenuItem.setDisable(!newValue);
-            if (newValue) {
-                // Update text to say (eg. Undo 'Create Project')
-                undoMenuItem.setText("Undo " + undoManager.getUndoType());
-            } else {
-                undoMenuItem.setText("Undo");
-            }
-        });
-
-        undoManager.canRedoProperty.addListener((observable, oldValue, newValue) -> {
-            redoMenuItem.setDisable(!newValue);
-            if (newValue) {
-                // Update text to say (eg. Redo 'Create Project');
-                redoMenuItem.setText("Redo " + undoManager.getRedoType());
-            } else {
-                redoMenuItem.setText("Redo");
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
-                }
-            }
-        });
-
-        undoManager.shouldUpdateMenuProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
-                }
-                if (undoManager.canRedoProperty.get()) {
-                    redoMenuItem.setText("Redo " + undoManager.getRedoType());
-                }
-                undoManager.shouldUpdateMenuProperty.set(false);
-            }
-        });
-    }
-
-    private void setProjectDetailsMenuItem() {
-        projectDetailsMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                editProjectDialog(selectedProject);
-            }
-        });
-    }
-
-    /**
-     * Forces a redraw of the list view
-     */
-    private void refreshList() {
-        final Project tmp = selectedProject;
-        final Person tempPerson = selectedPerson;
-        mainListView.setItems(null);
-        mainListView.setItems(projects);
-        mainListView.getSelectionModel().select(null);
-        mainListView.getSelectionModel().select(tmp);
-
-        peopleListView.setItems(null);
-        peopleListView.setItems(people);
-        peopleListView.getSelectionModel().select(null);
-        peopleListView.getSelectionModel().select(tempPerson);
-    }
-
-    private void setSaveMenu() {
-        saveMenuItem.setOnAction(event -> {
-            saveProject(selectedProject);
-        });
-    }
-
-    /**
-     * Sets the shortcuts for the main window
-     */
-    private void setShortcuts() {
-        newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
-        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-        openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
-        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
-
-        // Undo/redo
-        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
-        redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
-                KeyCombination.SHIFT_DOWN));
-    }
-
-    /**
-     * Sets the handler so an open dialog is presented when the user clicks
-     * File->Open
-     */
-    private void setOpenMenu() {
-        openMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                Dialogs.create().owner(primaryStage).title("Error")
-                .message("Currently, only one project at a time is supported in this version.").showWarning();
-                return;
-            }
-
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-            final File filePath = fileChooser.showOpenDialog(primaryStage);
-
-            if (filePath == null) {
-                return;
-            }
-            // TODO Actually do something with the selected file
-            Project project = null;
-            try {
-                project = PersistenceManager.loadProject(filePath);
-            } catch (JsonSyntaxException | InvalidProjectException e) {
-                System.out.println("JSON file invalid");
-                e.printStackTrace();
-            } catch (final InvalidPersonException e) {
-                System.out.println("Person invalid");
-                e.printStackTrace();
-            } catch (final FileNotFoundException e) {
-                System.out.println("file not found");
-                e.printStackTrace();
-            }
-            if (project != null) {
-                project.setSaveLocation(filePath);
-                projects.add(project);
-                System.out.println(project.toString() + " has been loaded successfully");
-            }
-        });
-    }
-
-    /**
-     * Sets the content for the main list view
-     */
-    private void setMainListView() {
-        // derived from example at
-        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
-        mainListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
-            @Override
-            public ListCell<Project> call(final ListView<Project> arg0) {
-                return new ListCell<Project>() {
-                    @Override
-                    protected void updateItem(final Project project, final boolean empty) {
-                        // calling super here is very important
-                        super.updateItem(project, empty);
-                        setText(empty ? "" : project.getShortName());
-                    }
-                };
-            }
-        });
-        mainListView.setItems(projects);
-
-        final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem editContextMenu = new MenuItem("Edit Project");
-        contextMenu.getItems().add(editContextMenu);
-
-        mainListView.setContextMenu(contextMenu);
-
-        editContextMenu.setOnAction(event -> {
-            if (selectedProject != null) {
-                editProjectDialog(selectedProject);
-            }
-        });
-
-        // Set change listener for mainListView
-        mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedProject = newValue;
-
-            // Update status bar to show current save status of selected project
-            // Probably not the best way to do this, but it's the simplest
-            changesSaved.set(!changesSaved.get());
-            changesSaved.set(!changesSaved.get());
-
-            if (newValue != null) {
-                newPersonMenuItem.setDisable(false);
-                // Then a project is selected, enable the Project Details, and
-                // saveMenuItem
-                projectDetailsMenuItem.setDisable(false);
-                saveMenuItem.setDisable(false);
-            } else {
-                newPersonMenuItem.setDisable(true);
-                // No project selected, disable Project Details MenuItem, and
-                // saveMenuItem
-                projectDetailsMenuItem.setDisable(true);
-                saveMenuItem.setDisable(true);
-                // Then a project is selected, enable the Project Details
-                // MenuItem
-                projectDetailsMenuItem.setDisable(false);
-            }
-                projectDetailsPaneController.showDetails(selectedProject);
-        });
-    }
-
-    /**
-     * Sets the content for the main list view
-     */
-    private void setPeopleListView() {
-        peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
-            @Override
-            public ListCell<Person> call(final ListView<Person> arg0) {
-                return new ListCell<Person>() {
-                    @Override
-                    protected void updateItem(final Person person, final boolean empty) {
-                        // calling super here is very important
-                        super.updateItem(person, empty);
-                        setText(empty ? "" : person.getShortName());
-                    }
-                };
-            }
-        });
-        peopleListView.setItems(people);
-
-        final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem editContextMenu = new MenuItem("Edit Person");
-        contextMenu.getItems().add(editContextMenu);
-
-        peopleListView.setContextMenu(contextMenu);
-
-        editContextMenu.setOnAction(event -> {
-            if (selectedProject != null) {
-                editPersonDialog(selectedPerson);
-            }
-        });
-
-        // Set change listener for mainListView
-        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                editPersonMenuItem.setDisable(false);
-                selectedPerson = newValue;
-            }
-        });
-    }
-
-    /**
-     * Sets layout specific properties
-     */
-    private void setLayoutProperties() {
-        listAnchorPane = (AnchorPane) mainSplitPane.getItems().get(0);
-
-    }
-
-    public void setPrimaryStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
-    /**
-     * Sets the functionality for the quit menu item
-     */
-    private void setQuitMenuItem() {
-        // We could just call primaryStage.close(), but that is a force close,
-        // and then we can't prompt for saving changes
-        quitMenuItem.setOnAction(event -> primaryStage.fireEvent(new WindowEvent(primaryStage,
-                WindowEvent.WINDOW_CLOSE_REQUEST)));
-    }
-
-    /**
-     * Sets the functionality for the toggle list view menu item
-     */
-    private void setListToggleCheckMenuItem() {
-        listToggleCheckMenuItem.setSelected(true);
-        listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // shows the list view
-                mainSplitPane.getItems().add(0, listAnchorPane);
-                mainSplitPane.setDividerPosition(0, dividerPosition);
-            } else {
-                // hides the list view
-                dividerPosition = mainSplitPane.getDividerPositions()[0];
-                mainSplitPane.getItems().remove(listAnchorPane);
-            }
-        });
-    }
-
-    private void setNewProjectMenuItem() {
-        newProjectMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                Dialogs.create().owner(primaryStage).title("Error")
-                .message("Currently, only one project at a time is supported in this version.").showWarning();
-                return;
-            } else {
-                newProjectDialog();
-            }
-
-
-        });
-    }
-
-    private void setNewPersonMenuItem() {
-        newPersonMenuItem.setOnAction(event -> {
-            if (selectedProject != null) {
-                newPersonDialog();
-            }
-        });
-    }
-
-    private void editProjectDialog(Project project) {
-        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("Edit Project");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editProject.fxml"));
-            BorderPane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final EditProjectController editProjectController = loader.getController();
-            editProjectController.setStage(stage);
-            editProjectController.loadProject(project);
-
-            stage.showAndWait();
-            if (editProjectController.isValid()) {
-                final Command c = new Command() {
-                    CompoundCommand cc = editProjectController.getCommand();
-
-                    @Override
-                    public Void execute() {
-                        // Add to mainListView
-                        cc.execute();
-                        MainController.this.saveProject(project);
-                        MainController.this.refreshList();
-                        return null;
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from mainListView
-                        cc.undo();
-                        refreshList();
-                    }
-
-                    @Override
-                    public String getType() {
-                        return "Edit Project";
-                    }
-                };
-                undoManager.doCommand(c);
-                refreshList();
-            }
-        });
-    }
-
-    /**
-     * Saves the project to disk and marks project as saved.
-     *
-     * @param project
-     *            Project to be saved.
-     */
-    private void saveProject(final Project project) {
-        try {
-            PersistenceManager.saveProject(project.getSaveLocation(), project);
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        changesSaved.set(true);
-    }
-
-    private void newProjectDialog() {
-        // Needed to wrap the dialog box in runLater due to the dialog box
-        // occasionally opening twice (known FX issue)
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newProject.fxml"));
-            BorderPane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final NewProjectController newProjectController = loader.getController();
-            newProjectController.setStage(stage);
-
-            stage.showAndWait();
-            if (newProjectController.isValid()) {
-                final Command<Project> c = new Command<Project>() {
-                    private final CreateProjectCommand cpc = newProjectController.getCommand();
-
-                    @Override
-                    public Project execute() {
-                        // Add to mainListView
-                        final Project project = cpc.execute();
-                        addProject(project);
-                        return project;
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from mainListView
-                        projects.remove(cpc.getProject());
-                        cpc.undo();
-                    }
-
-                    @Override
-                    public String getType() {
-                        return cpc.getType();
-                    }
-                };
-
-                // this.undoManager.doCommand(c);
-                // We don't do the command, since it is not meant to be undoable
-                // at this stage
-                c.execute();
-                refreshList();
             }
         });
     }
@@ -703,23 +347,23 @@ public class MainController implements Initializable {
 
                     @Override
                     public Object execute() {
-                        // Add to mainListView
+                        // Add to projectListView
                         cc.execute();
-                        MainController.this.saveProject(selectedProject);
+                        MainController.this.saveProject();
                         refreshList();
                         return null;
                     }
 
                     @Override
-                    public void undo() {
-                        // Remove from mainListView
-                        cc.undo();
-                        refreshList();
+                    public String getType() {
+                        return "Edit Person";
                     }
 
                     @Override
-                    public String getType() {
-                        return "Edit Person";
+                    public void undo() {
+                        // Remove from projectListView
+                        cc.undo();
+                        refreshList();
                     }
                 };
                 undoManager.doCommand(c);
@@ -727,6 +371,153 @@ public class MainController implements Initializable {
             }
 
             refreshList();
+        });
+    }
+
+    private void editProjectDialog(Project project) {
+        // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Edit Project");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editProject.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final EditProjectController editProjectController = loader.getController();
+            editProjectController.setStage(stage);
+            editProjectController.loadProject(project);
+
+            stage.showAndWait();
+            if (editProjectController.isValid()) {
+                final Command c = new Command() {
+                    CompoundCommand cc = editProjectController.getCommand();
+
+                    @Override
+                    public Void execute() {
+                        // Add to projectListView
+                        cc.execute();
+                        MainController.this.saveProject();
+                        MainController.this.refreshList();
+                        return null;
+                    }
+
+                    @Override
+                    public String getType() {
+                        return "Edit Project";
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from projectListView
+                        cc.undo();
+                        refreshList();
+                    }
+                };
+                undoManager.doCommand(c);
+                refreshList();
+            }
+        });
+    }
+
+    /**
+     * Sets the content for the main list view
+     */
+    private void initialiseProjectListView() {
+        // derived from example at
+        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
+        projectListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
+            @Override
+            public ListCell<Project> call(final ListView<Project> arg0) {
+                return new ListCell<Project>() {
+                    @Override
+                    protected void updateItem(final Project project, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(project, empty);
+                        setText(empty ? "" : project.getShortName());
+                    }
+                };
+            }
+        });
+        projectListView.setItems(projects);
+
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Project");
+        contextMenu.getItems().add(editContextMenu);
+
+        projectListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> {
+            editProject();
+        });
+
+        // Set change listener for projectListView
+        projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = newValue;
+
+            // Update status bar to show current save status of selected project
+            // Probably not the best way to do this, but it's the simplest
+            changesSaved.set(!changesSaved.get());
+            changesSaved.set(!changesSaved.get());
+
+                menuBarController.updateAfterProjectSelected(selectedProject != null);
+
+            projectDetailsPaneController.showDetails(selectedProject);
+        });
+    }
+
+    /**
+     * Sets the content for the main list view
+     */
+    private void initialisePeopleListView() {
+        peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
+            @Override
+            public ListCell<Person> call(final ListView<Person> arg0) {
+                return new ListCell<Person>() {
+                    @Override
+                    protected void updateItem(final Person person, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(person, empty);
+                        setText(empty ? "" : person.getShortName());
+                    }
+                };
+            }
+        });
+        peopleListView.setItems(people);
+
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Person");
+        contextMenu.getItems().add(editContextMenu);
+
+        peopleListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> {
+            if (selectedProject != null) {
+                editPersonDialog(selectedPerson);
+            }
+        });
+
+        // Set change listener for projectListView
+        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedPerson = newValue;
+
+            // Update status bar to show current save status of selected
+            // project
+            // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
+
+                menuBarController.updateAfterPersonSelected(selectedPerson != null);
         });
     }
 
@@ -754,7 +545,6 @@ public class MainController implements Initializable {
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
 
-
             stage.showAndWait();
             if (newPersonController.isValid()) {
                 final Command c = new Command() {
@@ -762,7 +552,7 @@ public class MainController implements Initializable {
 
                     @Override
                     public Object execute() {
-                        // Add to mainListView
+                        // Add to projectListView
                         final Person person = cpc.execute();
                         selectedProject.addPerson(person);
                         addPersonToList(person);
@@ -770,16 +560,16 @@ public class MainController implements Initializable {
                     }
 
                     @Override
-                    public void undo() {
-                        // Remove from mainListView
-                        people.remove(cpc.getPerson());
-                        selectedProject.removePerson(cpc.getPerson());
-                        cpc.undo();
+                    public String getType() {
+                        return cpc.getType();
                     }
 
                     @Override
-                    public String getType() {
-                        return cpc.getType();
+                    public void undo() {
+                        // Remove from projectListView
+                        people.remove(cpc.getPerson());
+                        selectedProject.removePerson(cpc.getPerson());
+                        cpc.undo();
                     }
                 };
 
@@ -789,33 +579,85 @@ public class MainController implements Initializable {
         });
     }
 
-    private void addPersonToList(Person person) {
-        if (person != null) {
-            // Update view accordingly
-            people.add(person);
-            // Select added person in the listView
-            peopleListView.getSelectionModel().select(person);
+    private void newProjectDialog() {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newProject.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final NewProjectController newProjectController = loader.getController();
+            newProjectController.setStage(stage);
 
-            listShowPeopleMenuItem.selectedProperty().setValue(true);
+            stage.showAndWait();
+            if (newProjectController.isValid()) {
+                final Command<Project> c = new Command<Project>() {
+                    private final CreateProjectCommand cpc = newProjectController.getCommand();
 
-            // Save the project
-            saveProject(selectedProject);
-        }
+                    @Override
+                    public Project execute() {
+                        // Add to projectListView
+                        final Project project = cpc.execute();
+                        addProject(project);
+                        return project;
+                    }
+
+                    @Override
+                    public String getType() {
+                        return cpc.getType();
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from projectListView
+                        projects.remove(cpc.getProject());
+                        cpc.undo();
+                    }
+                };
+
+                // this.undoManager.doCommand(c);
+                // We don't do the command, since it is not meant to be undoable
+                // at this stage
+                c.execute();
+                refreshList();
+            }
+        });
     }
 
+    /**
+     * Forces a redraw of the list view
+     */
+    private void refreshList() {
+        final Project tmp = selectedProject;
+        final Person tempPerson = selectedPerson;
+        projectListView.setItems(null);
+        projectListView.setItems(projects);
+        projectListView.getSelectionModel().select(null);
+        projectListView.getSelectionModel().select(tmp);
+
+        peopleListView.setItems(null);
+        peopleListView.setItems(people);
+        peopleListView.getSelectionModel().select(null);
+        peopleListView.getSelectionModel().select(tempPerson);
+    }
 
     /**
-     * Adds the new project to the observable list so that it is visible in the list view
-     * @param project New Project to be added
+     * Sets layout specific properties
      */
-    private void addProject(final Project project) {
-        if (project != null) {
-            // Update View Accordingly
-            projects.add(project);
-            // Select added project in the ListView
-            mainListView.getSelectionModel().select(project);
-            // Save the project
-            saveProject(project);
-        }
+    private void setLayoutProperties() {
+        listAnchorPane = (AnchorPane) mainSplitPane.getItems().get(0);
     }
 }

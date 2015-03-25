@@ -16,20 +16,20 @@ public class Main extends Application {
     private MainController mainController;
 
     public static void main( String[] args ) {
-        launch(args);
+        Application.launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        FXMLLoader loader = new FXMLLoader();
+        final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
-        Scene scene = new Scene(root);
+        final Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
-        mainController.setClosePrompt();
+
     }
 }

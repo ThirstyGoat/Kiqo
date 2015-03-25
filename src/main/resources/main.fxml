@@ -16,7 +16,7 @@
           <children>
             <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                <Label fx:id="listLabel" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
                   <font>
                     <Font name="System Bold" size="18.0" />
                   </font>
@@ -24,8 +24,8 @@
                     <Insets left="10.0" right="10.0" top="10.0" />
                   </VBox.margin>
                 </Label>
-                <ListView fx:id="mainListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
-                <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
+                <ListView fx:id="projectListView" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+                <ListView fx:id="peopleListView" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
               </children>
             </VBox>
           </children>
@@ -50,45 +50,6 @@
     </SplitPane>
   </center>
   <top>
-    <MenuBar useSystemMenuBar="true" BorderPane.alignment="CENTER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <Menu mnemonicParsing="false" text="New">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
-                <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
-              </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="View">
-          <items>
-            <CheckMenuItem mnemonicParsing="false" text="List" fx:id="listToggleCheckMenuItem" />
-            <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPeopleMenuItem" />
-            <CheckMenuItem mnemonicParsing="false" text="Project" fx:id="listShowProjectMenuItem" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Project">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="Project Details" fx:id="projectDetailsMenuItem" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
+    <fx:include fx:id="menuBar" source="menubar.fxml" />
   </top>
 </BorderPane>

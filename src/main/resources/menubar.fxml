@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<MenuBar useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MenuBarController">
+  <menus>
+    <Menu mnemonicParsing="false" text="File">
+      <items>
+        <Menu mnemonicParsing="false" text="New">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
+          </items>
+        </Menu>
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Save" disable="true" fx:id="saveMenuItem" />
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Edit">
+      <items>
+        <MenuItem disable="true" mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
+        <MenuItem disable="true" mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem disable="true" mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
+        <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="View">
+      <items>
+        <CheckMenuItem mnemonicParsing="false" text="List" selected="true" fx:id="listToggleCheckMenuItem" />
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <CheckMenuItem mnemonicParsing="false" text="Project" disable="true" selected="true" fx:id="listShowProjectMenuItem" />
+      	<CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
+      </items>
+    </Menu>
+  </menus>
+</MenuBar>
