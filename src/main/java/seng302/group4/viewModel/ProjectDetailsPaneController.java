@@ -12,7 +12,7 @@ import seng302.group4.Project;
 /**
  * Created by Carina on 25/03/2015.
  */
-public class ProjectDetailsPaneController implements DetailsController<Project> {
+public class ProjectDetailsPaneController implements DetailsPaneController<Project> {
     @FXML
     private Label shortNameLabel;
     @FXML
