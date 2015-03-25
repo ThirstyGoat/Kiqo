@@ -27,6 +27,7 @@ import org.controlsfx.dialog.Dialogs;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.Skill;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
@@ -629,7 +630,43 @@ public class MainController implements Initializable {
             newSkillController.setStage(stage);
 
             stage.showAndWait();
+            if (newSkillController.isValid()) {
+                final Command<Skill> c = new Command<Skill>() {
+                    private final CreateSkillCommand cpc = newSkillController.getCommand();
+
+                    @Override
+                    public Skill execute() {
+                        // Add to mainListView
+                        Skill skill = cpc.execute();
+                        addSkillToProject(skill);
+                        return skill;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        removeSkillFromProject(cpc.getSkill());
+                        cpc.undo();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return cpc.getType();
+                    }
+                };
+
+                undoManager.doCommand(c);
+            }
         });
+    }
+
+    private void removeSkillFromProject(Skill skill) {
+        selectedProject.getSkills().remove(skill);
+    }
+
+    private void addSkillToProject(Skill skill) {
+        selectedProject.addSkill(skill);
+        saveProject(selectedProject);
     }
 
     private void newProjectDialog() {
