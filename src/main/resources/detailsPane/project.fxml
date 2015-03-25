@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.DetailsPaneController">
-    <children>
-        <Label text="Name:" />
-        <Label text="Short Name:" GridPane.rowIndex="1" />
-        <Label text="Description:" GridPane.rowIndex="3" />
-        <Label text="Project Location:" GridPane.rowIndex="2" />
-        <Label fx:id="longNameLabel" GridPane.columnIndex="1" />
-        <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label fx:id="projectLocationLabel" maxWidth="280.0" textOverrun="LEADING_WORD_ELLIPSIS" HBox.hgrow="ALWAYS">
-            <tooltip>
-                <Tooltip fx:id="projectLocationTooltip" text="${projectLocationLabel.text}"/>
-            </tooltip>
-        </Label>
-        <Label fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-    </children>
-    <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
-    </columnConstraints>
-    <padding>
-        <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-    </padding>
-    <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    </rowConstraints>
-</GridPane>
 
+<GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.DetailsPaneController">
+  <children>
+    <Label text="Name:" />
+    <Label text="Short Name:" GridPane.rowIndex="1" />
+    <Label text="Description:" GridPane.rowIndex="3" />
+    <Label text="Project Location:" GridPane.rowIndex="2" />
+    <Label fx:id="longNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Label fx:id="projectLocationLabel" textOverrun="LEADING_WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <tooltip>
+        <Tooltip text="${projectLocationLabel.text}" fx:id="projectLocationTooltip" />
+      </tooltip>
+    </Label>
+    <Label fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+  </columnConstraints>
+  <padding>
+    <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+  </padding>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+</GridPane>

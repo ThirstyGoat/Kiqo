@@ -1,6 +1,11 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -9,30 +14,42 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.UndoManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -79,12 +96,14 @@ public class MainController implements Initializable {
     private CheckMenuItem listShowPeopleMenuItem;
     @FXML
     private Label listLabel;
+    @FXML
+    private DetailsPaneController detailsPaneController;
 
     private Project selectedProject;
     private final UndoManager undoManager = new UndoManager();
     private Person selectedPerson;
-    private ObservableList<Project> projects = FXCollections.observableArrayList();
-    private ObservableList<Person> people = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final ObservableList<Person> people = FXCollections.observableArrayList();
 
     private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
@@ -173,13 +192,13 @@ public class MainController implements Initializable {
      * Set save prompt when to handle request to close application
      */
     public void setClosePrompt() {
-        this.primaryStage.setOnCloseRequest(event -> {
-            if (!this.changesSaved.get()) {
-                final Action response = Dialogs.create().owner(this.primaryStage).title("Save Project")
+        primaryStage.setOnCloseRequest(event -> {
+            if (!changesSaved.get()) {
+                final Action response = Dialogs.create().owner(primaryStage).title("Save Project")
                         .masthead("You have unsaved changes.").message("Would you like to save the changes you have made to the project?")
                         .showConfirm();
                 if (response == Dialog.ACTION_YES) {
-                    this.saveProject(this.selectedProject);
+                    saveProject(selectedProject);
                 } else if (response == Dialog.ACTION_CANCEL) {
                     event.consume();
                 }
@@ -193,16 +212,16 @@ public class MainController implements Initializable {
      */
     private void setStatusBar() {
         // Add the status bar to the bottom of the window
-        this.mainBorderPane.setBottom(this.statusBar);
+        mainBorderPane.setBottom(statusBar);
 
         // Set up listener for save status
-        this.changesSaved.addListener((observable, oldValue, newValue) -> {
+        changesSaved.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
-                this.statusBar.setText(this.ALL_CHANGES_SAVED_TEXT);
+                statusBar.setText(ALL_CHANGES_SAVED_TEXT);
             } else {
                 // Then there are unsaved changes, update status message
-                this.statusBar.setText(this.UNSAVED_CHANGES_TEXT);
+                statusBar.setText(UNSAVED_CHANGES_TEXT);
             }
         });
     }
@@ -212,13 +231,13 @@ public class MainController implements Initializable {
      * the undoManager.
      */
     private void setUndoHandlers() {
-        this.undoMenuItem.setOnAction(event -> {
-            this.undoManager.undoCommand();
+        undoMenuItem.setOnAction(event -> {
+            undoManager.undoCommand();
 
             // If the changes are already saved, and we undo something, then the
             // changes are now not saved
-            if (this.changesSaved.get()) {
-                this.changesSaved.set(false);
+            if (changesSaved.get()) {
+                changesSaved.set(false);
             }
         });
 
@@ -226,13 +245,13 @@ public class MainController implements Initializable {
             undoManager.redoCommand();
             // If changes are already saved, and we redo something, then changes
             // are now not saved
-            if (this.changesSaved.get()) {
-                this.changesSaved.set(false);
+            if (changesSaved.get()) {
+                changesSaved.set(false);
             }
         });
 
-        this.undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
-            this.undoMenuItem.setDisable(!newValue);
+        undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
+            undoMenuItem.setDisable(!newValue);
             if (newValue) {
                 // Update text to say (eg. Undo 'Create Project')
                 undoMenuItem.setText("Undo " + undoManager.getUndoType());
@@ -268,9 +287,9 @@ public class MainController implements Initializable {
     }
 
     private void setProjectDetailsMenuItem() {
-        this.projectDetailsMenuItem.setOnAction(event -> {
-            if (this.selectedProject != null) {
-                this.editProjectDialog(this.selectedProject);
+        projectDetailsMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                editProjectDialog(selectedProject);
             }
         });
     }
@@ -279,8 +298,8 @@ public class MainController implements Initializable {
      * Forces a redraw of the list view
      */
     private void refreshList() {
-        Project tmp = selectedProject;
-        Person tempPerson = selectedPerson;
+        final Project tmp = selectedProject;
+        final Person tempPerson = selectedPerson;
         mainListView.setItems(null);
         mainListView.setItems(projects);
         mainListView.getSelectionModel().select(null);
@@ -293,8 +312,8 @@ public class MainController implements Initializable {
     }
 
     private void setSaveMenu() {
-        this.saveMenuItem.setOnAction(event -> {
-            this.saveProject(this.selectedProject);
+        saveMenuItem.setOnAction(event -> {
+            saveProject(selectedProject);
         });
     }
 
@@ -319,16 +338,16 @@ public class MainController implements Initializable {
      * File->Open
      */
     private void setOpenMenu() {
-        this.openMenuItem.setOnAction(event -> {
-            if (this.selectedProject != null) {
-                Dialogs.create().owner(this.primaryStage).title("Error")
-                        .message("Currently, only one project at a time is supported in this version.").showWarning();
+        openMenuItem.setOnAction(event -> {
+            if (selectedProject != null) {
+                Dialogs.create().owner(primaryStage).title("Error")
+                .message("Currently, only one project at a time is supported in this version.").showWarning();
                 return;
             }
 
             final FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-            final File filePath = fileChooser.showOpenDialog(this.primaryStage);
+            final File filePath = fileChooser.showOpenDialog(primaryStage);
 
             if (filePath == null) {
                 return;
@@ -340,10 +359,10 @@ public class MainController implements Initializable {
             } catch (JsonSyntaxException | InvalidProjectException e) {
                 System.out.println("JSON file invalid");
                 e.printStackTrace();
-            } catch (InvalidPersonException e) {
+            } catch (final InvalidPersonException e) {
                 System.out.println("Person invalid");
                 e.printStackTrace();
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 System.out.println("file not found");
                 e.printStackTrace();
             }
@@ -361,7 +380,7 @@ public class MainController implements Initializable {
     private void setMainListView() {
         // derived from example at
         // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
-        this.mainListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
+        mainListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
             @Override
             public ListCell<Project> call(final ListView<Project> arg0) {
                 return new ListCell<Project>() {
@@ -369,15 +388,15 @@ public class MainController implements Initializable {
                     protected void updateItem(final Project project, final boolean empty) {
                         // calling super here is very important
                         super.updateItem(project, empty);
-                        this.setText(empty ? "" : project.getShortName());
+                        setText(empty ? "" : project.getShortName());
                     }
                 };
             }
         });
-        this.mainListView.setItems(this.projects);
+        mainListView.setItems(projects);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem editContextMenu = new MenuItem("Edit Project");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Project");
         contextMenu.getItems().add(editContextMenu);
 
         mainListView.setContextMenu(contextMenu);
@@ -389,8 +408,8 @@ public class MainController implements Initializable {
         });
 
         // Set change listener for mainListView
-        this.mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            this.selectedProject = newValue;
+        mainListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = newValue;
 
             // Update status bar to show current save status of selected project
             // Probably not the best way to do this, but it's the simplest
@@ -401,18 +420,19 @@ public class MainController implements Initializable {
                 newPersonMenuItem.setDisable(false);
                 // Then a project is selected, enable the Project Details, and
                 // saveMenuItem
-                this.projectDetailsMenuItem.setDisable(false);
-                this.saveMenuItem.setDisable(false);
+                projectDetailsMenuItem.setDisable(false);
+                saveMenuItem.setDisable(false);
             } else {
                 newPersonMenuItem.setDisable(true);
                 // No project selected, disable Project Details MenuItem, and
                 // saveMenuItem
-                this.projectDetailsMenuItem.setDisable(true);
-                this.saveMenuItem.setDisable(true);
+                projectDetailsMenuItem.setDisable(true);
+                saveMenuItem.setDisable(true);
                 // Then a project is selected, enable the Project Details
                 // MenuItem
-                this.projectDetailsMenuItem.setDisable(false);
+                projectDetailsMenuItem.setDisable(false);
             }
+            detailsPaneController.showProject(selectedProject);
         });
     }
 
@@ -420,7 +440,7 @@ public class MainController implements Initializable {
      * Sets the content for the main list view
      */
     private void setPeopleListView() {
-        this.peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
+        peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
             @Override
             public ListCell<Person> call(final ListView<Person> arg0) {
                 return new ListCell<Person>() {
@@ -428,15 +448,15 @@ public class MainController implements Initializable {
                     protected void updateItem(final Person person, final boolean empty) {
                         // calling super here is very important
                         super.updateItem(person, empty);
-                        this.setText(empty ? "" : person.getShortName());
+                        setText(empty ? "" : person.getShortName());
                     }
                 };
             }
         });
-        this.peopleListView.setItems(this.people);
+        peopleListView.setItems(people);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem editContextMenu = new MenuItem("Edit Person");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Person");
         contextMenu.getItems().add(editContextMenu);
 
         peopleListView.setContextMenu(contextMenu);
@@ -474,7 +494,7 @@ public class MainController implements Initializable {
     private void setQuitMenuItem() {
         // We could just call primaryStage.close(), but that is a force close,
         // and then we can't prompt for saving changes
-        this.quitMenuItem.setOnAction(event -> this.primaryStage.fireEvent(new WindowEvent(this.primaryStage,
+        quitMenuItem.setOnAction(event -> primaryStage.fireEvent(new WindowEvent(primaryStage,
                 WindowEvent.WINDOW_CLOSE_REQUEST)));
     }
 
@@ -498,9 +518,9 @@ public class MainController implements Initializable {
 
     private void setNewProjectMenuItem() {
         newProjectMenuItem.setOnAction(event -> {
-            if (this.selectedProject != null) {
-                Dialogs.create().owner(this.primaryStage).title("Error")
-                        .message("Currently, only one project at a time is supported in this version.").showWarning();
+            if (selectedProject != null) {
+                Dialogs.create().owner(primaryStage).title("Error")
+                .message("Currently, only one project at a time is supported in this version.").showWarning();
                 return;
             } else {
                 newProjectDialog();
@@ -550,7 +570,7 @@ public class MainController implements Initializable {
                     @Override
                     public Void execute() {
                         // Add to mainListView
-                        this.cc.execute();
+                        cc.execute();
                         MainController.this.saveProject(project);
                         MainController.this.refreshList();
                         return null;
@@ -587,7 +607,7 @@ public class MainController implements Initializable {
             e.printStackTrace();
             return;
         }
-        this.changesSaved.set(true);
+        changesSaved.set(true);
     }
 
     private void newProjectDialog() {
@@ -595,7 +615,7 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(this.primaryStage);
+            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -621,7 +641,7 @@ public class MainController implements Initializable {
                     @Override
                     public Project execute() {
                         // Add to mainListView
-                        Project project = cpc.execute();
+                        final Project project = cpc.execute();
                         addProject(project);
                         return project;
                     }
@@ -643,7 +663,7 @@ public class MainController implements Initializable {
                 // We don't do the command, since it is not meant to be undoable
                 // at this stage
                 c.execute();
-                this.refreshList();
+                refreshList();
             }
         });
     }
@@ -651,24 +671,24 @@ public class MainController implements Initializable {
     private void editPersonDialog(Person person) {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
-            Stage stage = new Stage();
+            final Stage stage = new Stage();
             stage.setTitle("Edit Person");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
-            FXMLLoader loader = new FXMLLoader();
+            final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editPerson.fxml"));
             BorderPane root;
             try {
                 root = loader.load();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return;
             }
-            Scene scene = new Scene(root);
+            final Scene scene = new Scene(root);
             stage.setScene(scene);
-            EditPersonController editPersonController = loader.getController();
+            final EditPersonController editPersonController = loader.getController();
             editPersonController.setStage(stage);
             editPersonController.setProject(selectedProject);
             editPersonController.loadPerson(person);
@@ -678,7 +698,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
 
             if (editPersonController.isValid()) {
-                Command c = new Command() {
+                final Command c = new Command() {
                     CompoundCommand cc = editPersonController.getCommand();
 
                     @Override
@@ -713,37 +733,37 @@ public class MainController implements Initializable {
     private void newPersonDialog() {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
-            Stage stage = new Stage();
+            final Stage stage = new Stage();
             stage.setTitle("New Person");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
-            FXMLLoader loader = new FXMLLoader();
+            final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newPerson.fxml"));
             BorderPane root;
             try {
                 root = loader.load();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return;
             }
-            Scene scene = new Scene(root);
+            final Scene scene = new Scene(root);
             stage.setScene(scene);
-            NewPersonController newPersonController = loader.getController();
+            final NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
 
 
             stage.showAndWait();
             if (newPersonController.isValid()) {
-                Command c = new Command() {
+                final Command c = new Command() {
                     CreatePersonCommand cpc = newPersonController.getCommand();
 
                     @Override
                     public Object execute() {
                         // Add to mainListView
-                        Person person = cpc.execute();
+                        final Person person = cpc.execute();
                         selectedProject.addPerson(person);
                         addPersonToList(person);
                         return person;
