@@ -5,8 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +17,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.*;
 import javafx.util.Callback;
-import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -80,6 +77,8 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem newSkillMenuItem;
     @FXML
+    private MenuItem editSkillMenuItem;
+    @FXML
     private CheckMenuItem listShowProjectMenuItem;
     @FXML
     private CheckMenuItem listShowPeopleMenuItem;
@@ -87,8 +86,9 @@ public class MainController implements Initializable {
     private Label listLabel;
 
     private Project selectedProject;
-    private final UndoManager undoManager = new UndoManager();
     private Person selectedPerson;
+    private Skill selectedSkill;
+    private final UndoManager undoManager = new UndoManager();
     private ObservableList<Project> projects = FXCollections.observableArrayList();
     private ObservableList<Person> people = FXCollections.observableArrayList();
 
@@ -125,6 +125,10 @@ public class MainController implements Initializable {
     private void setSkillMenuItem() {
         newSkillMenuItem.setOnAction(event -> {
             newSkillDialog();
+        });
+
+        editSkillMenuItem.setOnAction(event -> {
+            editSkillDialog(selectedSkill);
         });
     }
 
@@ -417,17 +421,19 @@ public class MainController implements Initializable {
                 newPersonMenuItem.setDisable(false);
                 // Then a project is selected, enable the Project Details, and
                 // saveMenuItem
-                this.projectDetailsMenuItem.setDisable(false);
-                this.saveMenuItem.setDisable(false);
+                projectDetailsMenuItem.setDisable(false);
+                saveMenuItem.setDisable(false);
+                newSkillMenuItem.setDisable(false);
             } else {
                 newPersonMenuItem.setDisable(true);
                 // No project selected, disable Project Details MenuItem, and
                 // saveMenuItem
-                this.projectDetailsMenuItem.setDisable(true);
-                this.saveMenuItem.setDisable(true);
+                projectDetailsMenuItem.setDisable(true);
+                saveMenuItem.setDisable(true);
                 // Then a project is selected, enable the Project Details
                 // MenuItem
-                this.projectDetailsMenuItem.setDisable(false);
+                projectDetailsMenuItem.setDisable(false);
+                newSkillMenuItem.setDisable(true);
             }
         });
     }
@@ -606,6 +612,60 @@ public class MainController implements Initializable {
         this.changesSaved.set(true);
     }
 
+    private void editSkillDialog(Skill skill) {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(this.primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editSkill.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final EditSkillController editSkillController = loader.getController();
+            editSkillController.setStage(stage);
+
+            stage.showAndWait();
+            if (editSkillController.isValid()) {
+                final Command<Skill> c = new Command<Skill>() {
+                    CompoundCommand cc = editSkillController.getCommand();
+
+                    @Override
+                    public Skill execute() {
+                        // Add to mainListView
+                        cc.execute();
+                        refreshList();
+                        return null;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        cc.undo();
+                        refreshList();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return "Edit Skill";
+                    }
+                };
+
+                undoManager.doCommand(c);
+            }
+        });
+    }
+
     private void newSkillDialog() {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
@@ -722,7 +782,7 @@ public class MainController implements Initializable {
                 // We don't do the command, since it is not meant to be undoable
                 // at this stage
                 c.execute();
-                this.refreshList();
+                refreshList();
             }
         });
     }
@@ -752,8 +812,6 @@ public class MainController implements Initializable {
             editPersonController.setProject(selectedProject);
             editPersonController.loadPerson(person);
 
-
-
             stage.showAndWait();
 
             if (editPersonController.isValid()) {
@@ -764,7 +822,7 @@ public class MainController implements Initializable {
                     public Object execute() {
                         // Add to mainListView
                         cc.execute();
-                        MainController.this.saveProject(selectedProject);
+                        saveProject(selectedProject);
                         refreshList();
                         return null;
                     }
@@ -782,10 +840,7 @@ public class MainController implements Initializable {
                     }
                 };
                 undoManager.doCommand(c);
-                refreshList();
             }
-
-            refreshList();
         });
     }
 
