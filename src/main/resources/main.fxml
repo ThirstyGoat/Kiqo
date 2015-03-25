@@ -35,8 +35,16 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0">
           <children>
-            <fx:include fx:id="projectDetailsPane" source="detailsPane/project.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="projectDetailsPane" source="detailsPane/project.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <padding>
+                <Insets />
+              </padding>
+            </fx:include>
+            <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
           </children>
+          <padding>
+            <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+          </padding>
         </AnchorPane>
       </items>
     </SplitPane>

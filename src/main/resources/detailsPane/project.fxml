@@ -20,10 +20,10 @@
       </tooltip>
     </Label>
     <Label fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+    
   </children>
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+    <ColumnConstraints hgrow="NEVER" />
     <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
   </columnConstraints>
   <padding>

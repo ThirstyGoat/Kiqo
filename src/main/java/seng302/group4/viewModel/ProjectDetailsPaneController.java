@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import seng302.group4.Project;
@@ -23,8 +22,6 @@ public class ProjectDetailsPaneController implements DetailsPaneController<Proje
     private Tooltip projectLocationTooltip;
     @FXML
     private Label descriptionLabel;
-    @FXML
-    private Button editButton;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
