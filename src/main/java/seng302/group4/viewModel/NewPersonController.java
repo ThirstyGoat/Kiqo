@@ -35,6 +35,7 @@ public class NewPersonController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setNewPersonButton();
         setCancelButton();
+        formController.setShortNameSuggester();
 
         Platform.runLater(() -> setProjectForFormController());
     }
