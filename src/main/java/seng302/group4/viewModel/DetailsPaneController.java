@@ -3,8 +3,10 @@ package seng302.group4.viewModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -57,16 +59,36 @@ public class DetailsPaneController implements Initializable {
 
     private void showProjectDetailsPane(Project project) {
         projectDetailsPaneController.showDetails(project);
-        detailsPane.getChildren().setAll(projectDetailsPane);
+
+        final ObservableList<Node> children = detailsPane.getChildren();
+        if (!children.contains(projectDetailsPane)) {
+            children.add(projectDetailsPane);
+        }
+        children.remove(personDetailsPane);
+
+        addEditButton();
         editButton.setOnAction(event -> mainController.editProject());
     }
 
     private void showPersonDetailsPane(Person person) {
         personDetailsPaneController.showDetails(person);
-        detailsPane.getChildren().setAll(personDetailsPane);
+
+        final ObservableList<Node> children = detailsPane.getChildren();
+        if (!children.contains(personDetailsPane)) {
+            children.add(personDetailsPane);
+        }
+        children.remove(projectDetailsPane);
+
+        addEditButton();
         editButton.setOnAction(event -> mainController.editPerson());
     }
 
+    private void addEditButton() {
+        final ObservableList<Node> children = detailsPane.getChildren();
+        if (!children.contains(editButton)) {
+            children.add(editButton);
+        }
+    }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
