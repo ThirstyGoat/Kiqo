@@ -47,6 +47,12 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Person> peopleListView;
     @FXML
+    private Tab projectTab;
+    @FXML
+    private Tab peopleTab;
+    @FXML
+    private TabPane tabViewPane;
+    @FXML
     private SplitPane mainSplitPane;
     @FXML
     private Label listLabel;
@@ -92,10 +98,22 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setLayoutProperties();
+
         initialiseProjectListView();
         initialisePeopleListView();
+        initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
+    }
+
+    private void initialiseTabs() {
+        tabViewPane.getSelectionModel().getSelectedItem().setOnSelectionChanged(event -> {
+            switchToPersonList();
+
+            if(projectTab.isSelected()) {
+                switchToProjectList();
+            }
+        });
     }
 
     public void newPerson() {
@@ -147,6 +165,7 @@ public class MainController implements Initializable {
             addProject(project);
             System.out.println(project.toString() + " has been loaded successfully");
         }
+        tabViewPane.getSelectionModel().select(projectTab);
     }
 
     /**
@@ -185,15 +204,16 @@ public class MainController implements Initializable {
     public void switchToPersonList() {
         listLabel.setText("People");
 
-        peopleListView.setVisible(true);
-        peopleListView.setManaged(true);
+//        peopleListView.setVisible(true);
+//        peopleListView.setManaged(true);
 
-        projectListView.setVisible(false);
-        projectListView.setManaged(false);
+//        projectListView.setVisible(false);
+//        projectListView.setManaged(false);
 
         if (selectedProject != null) {
             people.setAll(selectedProject.getPeople());
         }
+        peopleListView.getSelectionModel().selectFirst();
         peopleListView.setItems(people);
     }
 
@@ -203,11 +223,11 @@ public class MainController implements Initializable {
         menuBarController.updateAfterProjectSelected(false);
         menuBarController.updateAfterPersonSelected(false);
 
-        peopleListView.setVisible(false);
-        peopleListView.setManaged(false);
+//        peopleListView.setVisible(false);
+//        peopleListView.setManaged(false);
 
-        projectListView.setVisible(true);
-        projectListView.setManaged(true);
+//        projectListView.setVisible(true);
+//        projectListView.setManaged(true);
     }
 
     // //////////////////////////////////////////////////////
@@ -436,7 +456,6 @@ public class MainController implements Initializable {
             }
         });
         projectListView.setItems(projects);
-
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Project");
         contextMenu.getItems().add(editContextMenu);
@@ -446,6 +465,8 @@ public class MainController implements Initializable {
         editContextMenu.setOnAction(event -> {
             editProject();
         });
+
+
 
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -559,6 +580,7 @@ public class MainController implements Initializable {
 
                 undoManager.doCommand(c);
             }
+
             refreshList();
         });
     }
