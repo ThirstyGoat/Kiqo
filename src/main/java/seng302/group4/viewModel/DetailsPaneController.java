@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -8,9 +11,13 @@ import javafx.scene.layout.GridPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+/**
+ * Switches between detail panes depending on type of content shown.
+ *
+ * @see http://stackoverflow.com/a/16179194
+ * @author amy
+ *
+ */
 public class DetailsPaneController implements Initializable {
     @FXML
     private AnchorPane detailsPane;
@@ -36,7 +43,6 @@ public class DetailsPaneController implements Initializable {
         if (objectForDisplay == null) {
             clear();
         } else {
-            System.out.println(objectForDisplay.getClass());
             if (objectForDisplay instanceof Project) {
                 showProjectDetailsPane((Project)objectForDisplay);
             } else if (objectForDisplay instanceof Person) {
@@ -46,31 +52,18 @@ public class DetailsPaneController implements Initializable {
     }
 
     private void clear() {
-        projectDetailsPane.setVisible(false);
-//        projectDetailsPane.setManaged(false);
-        personDetailsPane.setVisible(false);
-//        personDetailsPane.setManaged(false);
+        detailsPane.getChildren().clear();
     }
 
     private void showProjectDetailsPane(Project project) {
-        System.out.println("ShowProjectDetails");
         projectDetailsPaneController.showDetails(project);
-        personDetailsPane.setVisible(false);
-//        personDetailsPane.setManaged(false);
-        projectDetailsPane.setVisible(true);
-//        projectDetailsPane.setManaged(true);
-
+        detailsPane.getChildren().setAll(projectDetailsPane);
         editButton.setOnAction(event -> mainController.editProject());
     }
 
     private void showPersonDetailsPane(Person person) {
-        System.out.println("showPersonDetails");
         personDetailsPaneController.showDetails(person);
-        projectDetailsPane.setVisible(false);
-//        projectDetailsPane.setManaged(false);
-        personDetailsPane.setVisible(true);
-//        personDetailsPane.setManaged(true);
-
+        detailsPane.getChildren().setAll(personDetailsPane);
         editButton.setOnAction(event -> mainController.editPerson());
     }
 
