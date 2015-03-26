@@ -1,6 +1,5 @@
 package seng302.group4.viewModel;
 
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,15 +7,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
+import seng302.group4.customNodes.GoatListSelectionView;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -33,6 +34,7 @@ public class PersonFormController implements Initializable {
     private String emailAddress;
     private String phoneNumber;
     private String department;
+    private ArrayList<Skill> skills = new ArrayList<>();
     private boolean valid = false;
 
     private Stage stage;
@@ -42,7 +44,6 @@ public class PersonFormController implements Initializable {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
-    private ObservableList<Skill> skills = FXCollections.observableArrayList();
 
     private Project project;
     // FXML Injections
@@ -61,7 +62,7 @@ public class PersonFormController implements Initializable {
     @FXML
     private TextField departmentTextField;
     @FXML
-    private ListSelectionView<Skill> skillsSelectionView;
+    private GoatListSelectionView<Skill> skillsSelectionView;
 
 
     @Override
@@ -75,14 +76,44 @@ public class PersonFormController implements Initializable {
     /**
      * Sets the skills list data and formatting
      */
-    private void setSkills() {
-        ObservableList<Skill> skillsList = FXCollections.observableArrayList(project.getSkills());
-        skillsSelectionView.setSourceItems(skillsList);
-
+    private void setUpSkillsList() {
         skillsSelectionView.setSourceHeader(new Label("Skills Available:"));
         skillsSelectionView.setTargetHeader(new Label("Skills Selected:"));
 
         skillsSelectionView.setPadding(new Insets(0, 0, 0, 0));
+
+        // Set the custom cell factory for the skills lists
+        // Thank GoatListSelectionView for this fabulous method
+        skillsSelectionView.setCellFactory(view -> {
+            ListCell<Skill> cell = new ListCell<Skill>() {
+                @Override
+                public void updateItem(Skill item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    setText(item.getShortName());
+                }
+            };
+            return cell;
+        });
+
+
+
+        setSkills();
+    }
+
+    public void setSkills() {
+        ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
+        // Removes all skills that the current person has, from the list of all the possible skills
+        // So you should never have the same skill on either side
+        for (Skill skill : project.getSkills()) {
+            if (!skills.contains(skill)) {
+                sourceSkills.add(skill);
+            }
+        }
+
+        ObservableList<Skill> targetSkills = FXCollections.observableArrayList(skills);
+        skillsSelectionView.sourceListView.setItems(sourceSkills);
+        skillsSelectionView.targetListView.setItems(targetSkills);
     }
 
 
@@ -98,6 +129,11 @@ public class PersonFormController implements Initializable {
         emailTextField.setText(person.getEmailAddress());
         phoneTextField.setText(person.getPhoneNumber());
         departmentTextField.setText(person.getDepartment());
+
+        // Load existing skills into skill list
+        skills = person.getSkills();
+        setSkills();
+
     }
 
     /**
@@ -116,6 +152,11 @@ public class PersonFormController implements Initializable {
             emailAddress = emailTextField.getText();
             phoneNumber = phoneTextField.getText();
             department = departmentTextField.getText();
+
+            // This could be a feral way of doing this - Bradley
+            skills = new ArrayList<>();
+            skills.addAll(skillsSelectionView.targetListView.getItems().stream().collect(Collectors.toList()));
+
             valid = true;
         }
     }
@@ -183,10 +224,6 @@ public class PersonFormController implements Initializable {
     }
 
 
-
-
-
-
     // ------- is this used?? -----------
 
     /**
@@ -215,14 +252,10 @@ public class PersonFormController implements Initializable {
             department = departmentTextField.getText();
         }
         return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
-                phoneNumber, department);
+                phoneNumber, department, skills);
     }
 
     // ----------------------------------
-
-
-
-
 
     /**
      * Returns the Person object created by the dialog box
@@ -260,6 +293,10 @@ public class PersonFormController implements Initializable {
         return department;
     }
 
+    public ArrayList<Skill> getSkills() {
+        return skills;
+    }
+
     public boolean isValid() {
         return valid;
     }
@@ -270,7 +307,7 @@ public class PersonFormController implements Initializable {
 
     public void setProject(Project project) {
         this.project = project;
-        setSkills();
+        setUpSkillsList();
     }
 
     /**

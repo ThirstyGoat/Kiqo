@@ -65,7 +65,7 @@ public class NewPersonController implements Initializable {
                 }
                 command = new CreatePersonCommand(formController.getShortName(), formController.getLongName(),
                         formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
-                        formController.getPhoneNumber(), formController.getDepartment());
+                        formController.getPhoneNumber(), formController.getDepartment(), formController.getSkills());
                 valid = true;
                 stage.close();
             }

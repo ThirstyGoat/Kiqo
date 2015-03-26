@@ -38,8 +38,6 @@ public class EditPersonController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.setCancelButton();
         this.setSaveButton();
-
-        Platform.runLater(() -> setProjectForFormController());
     }
 
 
@@ -92,6 +90,9 @@ public class EditPersonController implements Initializable {
                 if (!formController.getDepartment().equals(person.getDepartment())) {
                     changes.add(new EditCommand<>(person, "department", formController.getDepartment()));
                 }
+                if (!formController.getSkills().equals(person.getSkills())) {
+                    changes.add(new EditCommand<>(person, "skills", formController.getSkills()));
+                }
 
                 valid = !changes.isEmpty();
 
@@ -129,7 +130,7 @@ public class EditPersonController implements Initializable {
         this.cancelButton.setOnAction(event -> this.stage.close());
     }
 
-    private void setProjectForFormController() {
+    public void setProjectForFormController() {
         formController.setProject(project);
     }
 }

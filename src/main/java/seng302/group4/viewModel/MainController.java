@@ -398,9 +398,8 @@ public class MainController implements Initializable {
             final EditPersonController editPersonController = loader.getController();
             editPersonController.setStage(stage);
             editPersonController.setProject(selectedProject);
+            editPersonController.setProjectForFormController();
             editPersonController.loadPerson(person);
-
-
 
             stage.showAndWait();
 

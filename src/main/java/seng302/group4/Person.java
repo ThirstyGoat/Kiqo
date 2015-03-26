@@ -54,7 +54,7 @@ public class Person {
      * @param department a department the person works in
      */
     public Person(String shortName, String longName, String description, String userID, String emailAddress,
-                  String phoneNumber, String department) {
+                  String phoneNumber, String department, ArrayList<Skill> skills) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -63,6 +63,7 @@ public class Person {
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.department = department;
+        this.skills = skills;
     }
 
     /**
@@ -114,6 +115,10 @@ public class Person {
         return skills;
     }
 
+    public void setSkills(ArrayList<Skill> skills) {
+        this.skills = skills;
+    }
+
     public void setDepartment(String department) {
         this.department = department;
     }
@@ -140,9 +145,5 @@ public class Person {
 
     public void setShortName(String shortName) {
         this.shortName = shortName;
-    }
-
-    public void addSkill(Skill skill) {
-        skills.add(skill);
     }
 }
