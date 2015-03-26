@@ -10,24 +10,24 @@
         <Menu mnemonicParsing="false" text="New">
           <items>
             <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
             <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
           </items>
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
-        <MenuItem disable="true" mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="Edit">
       <items>
-        <MenuItem disable="true" mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
-        <MenuItem disable="true" mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem disable="true" mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
-        <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
         <MenuItem mnemonicParsing="false" text="Skill" />
       </items>
     </Menu>
@@ -35,7 +35,7 @@
       <items>
         <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <CheckMenuItem disable="true" mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
+        <CheckMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
         <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
       </items>
     </Menu>
