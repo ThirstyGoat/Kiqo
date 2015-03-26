@@ -14,10 +14,13 @@ import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.Skill;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by james on 20/03/15.
@@ -32,13 +35,14 @@ public class PersonFormController implements Initializable {
     private String department;
     private boolean valid = false;
 
-
     private Stage stage;
     private Person person;
     private PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
+
+    private ObservableList<Skill> skills = FXCollections.observableArrayList();
 
     private Project project;
     // FXML Injections
@@ -57,7 +61,7 @@ public class PersonFormController implements Initializable {
     @FXML
     private TextField departmentTextField;
     @FXML
-    private ListSelectionView<String> skillsSelectionView;
+    private ListSelectionView<Skill> skillsSelectionView;
 
 
     @Override
@@ -66,15 +70,13 @@ public class PersonFormController implements Initializable {
         setShortNameHandler();
         setErrorPopOvers();
         Platform.runLater(longNameTextField::requestFocus);
-
-        setSkills();
     }
 
     /**
      * Sets the skills list data and formatting
      */
     private void setSkills() {
-        ObservableList<String> skillsList = FXCollections.observableArrayList("Java", "Python", "PHP", "Scrum Pro");
+        ObservableList<Skill> skillsList = FXCollections.observableArrayList(project.getSkills());
         skillsSelectionView.setSourceItems(skillsList);
 
         skillsSelectionView.setSourceHeader(new Label("Skills Available:"));
@@ -268,6 +270,7 @@ public class PersonFormController implements Initializable {
 
     public void setProject(Project project) {
         this.project = project;
+        setSkills();
     }
 
     /**

@@ -37,13 +37,10 @@ import org.controlsfx.dialog.Dialogs;
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.Skill;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -83,6 +80,12 @@ public class MainController implements Initializable {
 
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
+    public void editSkill() {
+        if (selectedProject != null) {
+            editSkillDialog(null); // TODO Actually have a selected skill
+        }
+    }
+
     public void editPerson() {
         if (selectedPerson != null) {
             editPersonDialog(selectedPerson);
@@ -112,6 +115,12 @@ public class MainController implements Initializable {
         initialisePeopleListView();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
+    }
+
+    public void newSkill() {
+        if (selectedProject != null) {
+            newSkillDialog();
+        }
     }
 
     public void newPerson() {
@@ -308,6 +317,60 @@ public class MainController implements Initializable {
             } else {
                 // Then there are unsaved changes, update status message
                 statusBar.setText(UNSAVED_CHANGES_TEXT);
+            }
+        });
+    }
+
+    private void editSkillDialog(Skill skill) {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(this.primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editSkill.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final EditSkillController editSkillController = loader.getController();
+            editSkillController.setStage(stage);
+
+            stage.showAndWait();
+            if (editSkillController.isValid()) {
+                final Command<Skill> c = new Command<Skill>() {
+                    CompoundCommand cc = editSkillController.getCommand();
+
+                    @Override
+                    public Skill execute() {
+                        // Add to mainListView
+                        cc.execute();
+                        refreshList();
+                        return null;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        cc.undo();
+                        refreshList();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return "Edit Skill";
+                    }
+                };
+
+                undoManager.doCommand(c);
             }
         });
     }
@@ -521,6 +584,60 @@ public class MainController implements Initializable {
         });
     }
 
+    private void newSkillDialog() {
+        // Needed to wrap the dialog box in runLater due to the dialog box
+        // occasionally opening twice (known FX issue)
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(this.primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newSkill.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final NewSkillController newSkillController = loader.getController();
+            newSkillController.setStage(stage);
+
+            stage.showAndWait();
+            if (newSkillController.isValid()) {
+                final Command<Skill> c = new Command<Skill>() {
+                    private final CreateSkillCommand cpc = newSkillController.getCommand();
+
+                    @Override
+                    public Skill execute() {
+                        // Add to mainListView
+                        Skill skill = cpc.execute();
+                        addSkillToProject(skill);
+                        return skill;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // Remove from mainListView
+                        removeSkillFromProject(cpc.getSkill());
+                        cpc.undo();
+                    }
+
+                    @Override
+                    public String getType() {
+                        return cpc.getType();
+                    }
+                };
+
+                undoManager.doCommand(c);
+            }
+        });
+    }
+
     private void newPersonDialog() {
         // Needed to wrap the dialog box in runLater due to the dialog box occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
@@ -635,6 +752,15 @@ public class MainController implements Initializable {
                 refreshList();
             }
         });
+    }
+
+    private void removeSkillFromProject(Skill skill) {
+        selectedProject.getSkills().remove(skill);
+    }
+
+    private void addSkillToProject(Skill skill) {
+        selectedProject.addSkill(skill);
+        saveProject();
     }
 
     /**

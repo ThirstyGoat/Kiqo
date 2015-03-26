@@ -11,11 +11,12 @@
           <items>
             <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
             <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
           </items>
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Save" disable="true" fx:id="saveMenuItem" />
+        <MenuItem disable="true" mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
       </items>
@@ -27,14 +28,15 @@
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem disable="true" mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
         <MenuItem disable="true" mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Skill" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">
       <items>
-        <CheckMenuItem mnemonicParsing="false" text="List" selected="true" fx:id="listToggleCheckMenuItem" />
+        <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <CheckMenuItem mnemonicParsing="false" text="Project" disable="true" selected="true" fx:id="listShowProjectMenuItem" />
-      	<CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
+        <CheckMenuItem disable="true" mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
+        <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
       </items>
     </Menu>
   </menus>

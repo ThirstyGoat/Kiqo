@@ -18,6 +18,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newPersonMenuItem;
     @FXML
+    private MenuItem newSkillMenuItem;
+    @FXML
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
@@ -29,6 +31,8 @@ public class MenuBarController implements Initializable {
     private MenuItem editProjectMenuItem;
     @FXML
     private MenuItem editPersonMenuItem;
+    @FXML
+    private MenuItem editSkillMenuItem;
     @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
@@ -52,28 +56,15 @@ public class MenuBarController implements Initializable {
     }
 
     private void addMenuItemHandlers() {
-        newProjectMenuItem.setOnAction(event -> {
-            mainController.newProject();
-        });
-        newPersonMenuItem.setOnAction(event -> {
-            mainController.newPerson();
-        });
-        openMenuItem.setOnAction(event -> {
-            mainController.openProject();
-        });
-        saveMenuItem.setOnAction(event -> {
-            mainController.saveProject();
-        });
-        quitMenuItem.setOnAction(event -> {
-            mainController.exit();
-        });
+        newProjectMenuItem.setOnAction(event -> mainController.newProject());
+        newPersonMenuItem.setOnAction(event -> mainController.newPerson());
+        newSkillMenuItem.setOnAction(event -> mainController.newSkill());
+        openMenuItem.setOnAction(event -> mainController.openProject());
+        saveMenuItem.setOnAction(event -> mainController.saveProject());
+        quitMenuItem.setOnAction(event -> mainController.exit());
 
-        editProjectMenuItem.setOnAction(event -> {
-            mainController.editProject();
-        });
-        editPersonMenuItem.setOnAction(event -> {
-            mainController.editPerson();
-        });
+        editProjectMenuItem.setOnAction(event -> mainController.editProject());
+        editPersonMenuItem.setOnAction(event -> mainController.editPerson());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
