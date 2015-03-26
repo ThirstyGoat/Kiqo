@@ -28,7 +28,7 @@
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
         <MenuItem mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Skill" />
+        <MenuItem mnemonicParsing="false" text="Skill" fx:id="editSkillMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">

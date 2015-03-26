@@ -57,13 +57,14 @@ public class MenuBarController implements Initializable {
      */
     private void setMenuButtons() {
         newPersonMenuItem.setDisable(true);
+        newSkillMenuItem.setDisable(true);
         saveMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editProjectMenuItem.setDisable(true);
         editPersonMenuItem.setDisable(true);
+        editSkillMenuItem.setDisable(true);
         listShowProjectMenuItem.setDisable(true);
-        listShowPersonMenuItem.setDisable(true);
     }
 
     public void setMainController(MainController mainController) {
@@ -122,6 +123,7 @@ public class MenuBarController implements Initializable {
     private void addKeyboardShortcuts() {
         newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+        newSkillMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
@@ -171,6 +173,7 @@ public class MenuBarController implements Initializable {
     public void updateAfterProjectSelected(boolean selected) {
         updateAfterPersonSelected(false);
         newPersonMenuItem.setDisable(!selected);
+        newSkillMenuItem.setDisable(!selected);
         editProjectMenuItem.setDisable(!selected);
         saveMenuItem.setDisable(!selected);
     }
