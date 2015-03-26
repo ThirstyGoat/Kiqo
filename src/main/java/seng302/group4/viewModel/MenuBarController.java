@@ -45,6 +45,20 @@ public class MenuBarController implements Initializable {
         addMenuItemHandlers();
         addUndoHandlers();
         addKeyboardShortcuts();
+        setMenuButtons();
+    }
+
+    /**
+     * Disables menu buttons which should not be usable when application is initially started.
+     */
+    private void setMenuButtons() {
+        newPersonMenuItem.setDisable(true);
+        saveMenuItem.setDisable(true);
+        undoMenuItem.setDisable(true);
+        redoMenuItem.setDisable(true);
+        editProjectMenuItem.setDisable(true);
+        editPersonMenuItem.setDisable(true);
+        listShowProjectMenuItem.setDisable(true);
     }
 
     public void setMainController(MainController mainController) {
