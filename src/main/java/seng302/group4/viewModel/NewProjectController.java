@@ -32,6 +32,7 @@ public class NewProjectController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.setCancelButton();
         this.setNewButton();
+        formController.setShortNameSuggester();
     }
 
     /**

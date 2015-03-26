@@ -53,7 +53,6 @@ public class ProjectFormController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.setOpenButton();
-        this.setShortNameSuggester();
         this.setShortNameHandler();
 
         this.setErrorPopOvers();
@@ -205,7 +204,7 @@ public class ProjectFormController implements Initializable {
      * Sets up the listener for changes in the long name, so that the short name
      * can be populated with a suggestion
      */
-    private void setShortNameSuggester() {
+    public void setShortNameSuggester() {
         // Listen for changes in the long name, and populate the short name
         // character by character up to specified characters
         this.longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -234,6 +233,9 @@ public class ProjectFormController implements Initializable {
                     // the
                     // user opens to the project directory
                     fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
+                    fileChooser.setInitialFileName(this.projectLocation.getName());
+                } else {
+                    fileChooser.setInitialFileName(shortNameTextField.getText());
                 }
 
                 File selectedFile = fileChooser.showSaveDialog(this.stage);

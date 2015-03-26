@@ -1,6 +1,5 @@
 package seng302.group4.viewModel;
 
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,7 +54,6 @@ public class PersonFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setShortNameSuggester();
         setShortNameHandler();
         setErrorPopOvers();
         Platform.runLater(() -> PersonFormController.this.longNameTextField.requestFocus());
@@ -148,7 +146,7 @@ public class PersonFormController implements Initializable {
     /**
      * Sets up the listener for changes in the long name, so that the short name can be populated with a suggestion
      */
-    private void setShortNameSuggester() {
+    public void setShortNameSuggester() {
         // Listen for changes in the long name, and populate the short name character by character up to specified characters
         longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
