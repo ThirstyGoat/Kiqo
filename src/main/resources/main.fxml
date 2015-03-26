@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
-
 <BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MainController">
   <center>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.2739420935412027" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -16,7 +14,7 @@
           <children>
             <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label fx:id="listLabel" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
+                <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
                   <font>
                     <Font name="System Bold" size="18.0" />
                   </font>
@@ -24,8 +22,8 @@
                     <Insets left="10.0" right="10.0" top="10.0" />
                   </VBox.margin>
                 </Label>
-                <ListView fx:id="projectListView" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
-                <ListView fx:id="peopleListView" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
+                <ListView fx:id="projectListView" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+                <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
               </children>
             </VBox>
           </children>
@@ -35,12 +33,7 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0">
           <children>
-            <fx:include fx:id="projectDetailsPane" source="detailsPane/project.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <padding>
-                <Insets />
-              </padding>
-            </fx:include>
-            <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <fx:include fx:id="projectDetailsPane" source="detailsPane/project.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
           </children>
           <padding>
             <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />

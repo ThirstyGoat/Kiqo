@@ -1,11 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -14,39 +9,27 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -65,8 +48,6 @@ public class MainController implements Initializable {
     private ListView<Person> peopleListView;
     @FXML
     private SplitPane mainSplitPane;
-    @FXML
-    private Button editButton;
     @FXML
     private Label listLabel;
     @FXML
@@ -114,7 +95,6 @@ public class MainController implements Initializable {
         initialiseProjectListView();
         initialisePeopleListView();
         addStatusBar();
-        addEditButtonListener();
         menuBarController.setListenersOnUndoManager(undoManager);
     }
 
@@ -199,6 +179,7 @@ public class MainController implements Initializable {
         this.primaryStage = primaryStage;
         addClosePrompt();
         menuBarController.setMainController(this);
+        projectDetailsPaneController.setMainController(this);
     }
 
     public void switchToPersonList() {
@@ -265,14 +246,6 @@ public class MainController implements Initializable {
                 }
             }
         });
-    }
-
-    private void addEditButtonListener() {
-        editButton.setOnAction(event -> {
-            // Since editX does nothing unless there is an X selected...
-                editProject();
-                editPerson();
-            });
     }
 
     private void addPersonToList(Person person) {
@@ -350,7 +323,6 @@ public class MainController implements Initializable {
             editPersonController.setStage(stage);
             editPersonController.setProject(selectedProject);
             editPersonController.loadPerson(person);
-
 
 
             stage.showAndWait();
@@ -484,7 +456,7 @@ public class MainController implements Initializable {
             changesSaved.set(!changesSaved.get());
             changesSaved.set(!changesSaved.get());
 
-                menuBarController.updateAfterProjectSelected(selectedProject != null);
+            menuBarController.updateAfterProjectSelected(selectedProject != null);
 
             projectDetailsPaneController.showDetails(selectedProject);
         });
@@ -526,10 +498,10 @@ public class MainController implements Initializable {
             // Update status bar to show current save status of selected
             // project
             // Probably not the best way to do this, but it's the simplest
-                changesSaved.set(!changesSaved.get());
-                changesSaved.set(!changesSaved.get());
+            changesSaved.set(!changesSaved.get());
+            changesSaved.set(!changesSaved.get());
 
-                menuBarController.updateAfterPersonSelected(selectedPerson != null);
+            menuBarController.updateAfterPersonSelected(selectedPerson != null);
         });
     }
 

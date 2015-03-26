@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
   <children>
     <Label text="Name:" />
@@ -20,7 +17,7 @@
       </tooltip>
     </Label>
     <Label fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    
+      <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
   </children>
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" />
