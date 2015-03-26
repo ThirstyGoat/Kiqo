@@ -30,7 +30,6 @@ public class PersonFormController implements Initializable {
 
 
     private Stage stage;
-    private Person person;
     private PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
@@ -193,20 +192,6 @@ public class PersonFormController implements Initializable {
         }
         return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
                 phoneNumber, department);
-    }
-
-    // ----------------------------------
-
-
-
-
-
-    /**
-     * Returns the Person object created by the dialog box
-     * @return the Person created by the dialog box
-     */
-    Person getPerson() {
-        return person;
     }
 
     public String getShortName() {
