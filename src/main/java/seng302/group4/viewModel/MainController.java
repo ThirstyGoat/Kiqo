@@ -1,6 +1,11 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -9,28 +14,41 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.UndoManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -106,11 +124,26 @@ public class MainController implements Initializable {
     }
 
     private void initialiseTabs() {
-        tabViewPane.getSelectionModel().getSelectedItem().setOnSelectionChanged(event -> {
-            switchToPersonList();
+        tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == projectTab) {
+                projectListView.getSelectionModel().select(null);
+                if (selectedProject != null) {
+                    projectListView.getSelectionModel().select(selectedProject);
+                } else {
+                    projectListView.getSelectionModel().selectFirst();
+                }
 
-            if (projectTab.isSelected()) {
-                switchToProjectList();
+                menuBarController.updateAfterProjectListSelected(true);
+            } else if (newValue == peopleTab) {
+                if (selectedProject != null) {
+                    people.setAll(selectedProject.getPeople());
+                } else {
+                    people.clear();
+                }
+                peopleListView.getSelectionModel().select(null);
+                peopleListView.getSelectionModel().selectFirst();
+
+                menuBarController.updateAfterPersonListSelected(true);
             }
         });
     }
@@ -162,7 +195,7 @@ public class MainController implements Initializable {
         if (project != null) {
             project.setSaveLocation(filePath);
             addProject(project);
-            System.out.println(project.toString() + " has been loaded successfully");
+            System.out.println(project.getShortName() + " has been loaded successfully");
         }
         tabViewPane.getSelectionModel().select(projectTab);
     }
@@ -201,21 +234,11 @@ public class MainController implements Initializable {
     }
 
     public void switchToPersonList() {
-        listLabel.setText("People");
-
-        if (selectedProject != null) {
-            people.setAll(selectedProject.getPeople());
-        }
-        peopleListView.getSelectionModel().selectFirst();
-        peopleListView.setItems(people);
+        tabViewPane.getSelectionModel().select(peopleTab);
     }
 
     public void switchToProjectList() {
-        listLabel.setText("Project");
-        projectListView.getSelectionModel().selectFirst();
-        peopleListView.getSelectionModel().select(null);
-        menuBarController.updateAfterProjectSelected(false);
-        menuBarController.updateAfterPersonSelected(false);
+        tabViewPane.getSelectionModel().select(projectTab);
     }
 
     public void undo() {
@@ -263,6 +286,7 @@ public class MainController implements Initializable {
             people.add(person);
 
             // Select added person in the listView
+            peopleListView.getSelectionModel().select(null);
             peopleListView.getSelectionModel().select(person);
             menuBarController.updateAfterPersonListSelected(true);
             switchToPersonList();
@@ -281,6 +305,7 @@ public class MainController implements Initializable {
             // Update View Accordingly
             projects.add(project);
             // Select added project in the ListView
+            projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(project);
             // enable menuitem
             menuBarController.enableNewPerson();
@@ -455,20 +480,22 @@ public class MainController implements Initializable {
             editProject();
         });
 
-
-
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedProject = newValue;
+            if (newValue != null) {
+                selectedProject = newValue;
 
-            // Update status bar to show current save status of selected project
-            // Probably not the best way to do this, but it's the simplest
-            changesSaved.set(!changesSaved.get());
-            changesSaved.set(!changesSaved.get());
+                // Update status bar to show current save status of selected
+                // project
+                // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
 
-            menuBarController.updateAfterProjectSelected(selectedProject != null);
+                menuBarController.updateAfterProjectSelected(selectedProject != null);
+                listLabel.setText((selectedProject != null) ? selectedProject.getShortName() : null);
 
-            detailsPaneController.showDetailsPane(selectedProject);
+                detailsPaneController.showDetailsPane(selectedProject);
+            }
         });
     }
 
@@ -503,17 +530,19 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedPerson = newValue;
+            if (newValue != null) {
+                selectedPerson = newValue;
 
-            // Update status bar to show current save status of selected
-            // project
-            // Probably not the best way to do this, but it's the simplest
-            changesSaved.set(!changesSaved.get());
-            changesSaved.set(!changesSaved.get());
+                // Update status bar to show current save status of selected
+                // project
+                // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
 
-            menuBarController.updateAfterPersonSelected(selectedPerson != null);
+                    menuBarController.updateAfterPersonSelected(newValue != null);
 
-            detailsPaneController.showDetailsPane(selectedPerson);
+                    detailsPaneController.showDetailsPane(newValue);
+            }
         });
     }
 
@@ -637,17 +666,18 @@ public class MainController implements Initializable {
      * Forces a redraw of the list view
      */
     private void refreshList() {
-        final Project tmp = selectedProject;
         final Person tempPerson = selectedPerson;
-        projectListView.setItems(null);
-        projectListView.setItems(projects);
-        projectListView.getSelectionModel().select(null);
-        projectListView.getSelectionModel().select(tmp);
-
         peopleListView.setItems(null);
         peopleListView.setItems(people);
-        peopleListView.getSelectionModel().select(null);
-        peopleListView.getSelectionModel().select(tempPerson);
+        // peopleListView.getSelectionModel().select(null);
+        peopleListView.getSelectionModel().select(selectedPerson);
+
+        final Project tmpProject = selectedProject;
+        projectListView.setItems(null);
+        projectListView.setItems(projects);
+        // projectListView.getSelectionModel().select(null);
+        projectListView.getSelectionModel().select(selectedProject);
+
     }
 
     /**

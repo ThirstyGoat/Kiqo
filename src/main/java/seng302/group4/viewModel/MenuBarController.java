@@ -195,6 +195,10 @@ public class MenuBarController implements Initializable {
         editPersonMenuItem.setDisable(!selected);
     }
 
+    public void updateAfterProjectListSelected(boolean selected) {
+        listShowProjectMenuItem.selectedProperty().set(selected);
+    }
+
     public void updateAfterPersonListSelected(boolean selected) {
         listShowPersonMenuItem.selectedProperty().set(selected);
     }
@@ -202,4 +206,5 @@ public class MenuBarController implements Initializable {
     public void enableNewPerson() {
         newPersonMenuItem.setDisable(false);
     }
+
 }
