@@ -369,7 +369,7 @@ public class MainController implements Initializable {
                     public Object execute() {
                         // Add to projectListView
                         cc.execute();
-                        MainController.this.saveProject();
+                        saveProject();
                         refreshList();
                         return null;
                     }
@@ -387,10 +387,7 @@ public class MainController implements Initializable {
                     }
                 };
                 undoManager.doCommand(c);
-                refreshList();
             }
-
-            refreshList();
         });
     }
 
@@ -427,8 +424,8 @@ public class MainController implements Initializable {
                     public Void execute() {
                         // Add to projectListView
                         cc.execute();
-                        MainController.this.saveProject();
-                        MainController.this.refreshList();
+                        saveProject();
+                        refreshList();
                         return null;
                     }
 
@@ -445,7 +442,6 @@ public class MainController implements Initializable {
                     }
                 };
                 undoManager.doCommand(c);
-                refreshList();
             }
         });
     }
@@ -597,11 +593,8 @@ public class MainController implements Initializable {
                         cpc.undo();
                     }
                 };
-
                 undoManager.doCommand(c);
             }
-
-            refreshList();
         });
     }
 
@@ -663,21 +656,22 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Forces a redraw of the list view
+     * Forces a redraw of the list view (and the detailsPane)
      */
     private void refreshList() {
-        final Person tempPerson = selectedPerson;
-        peopleListView.setItems(null);
-        peopleListView.setItems(people);
-        // peopleListView.getSelectionModel().select(null);
-        peopleListView.getSelectionModel().select(selectedPerson);
-
-        final Project tmpProject = selectedProject;
-        projectListView.setItems(null);
-        projectListView.setItems(projects);
-        // projectListView.getSelectionModel().select(null);
-        projectListView.getSelectionModel().select(selectedProject);
-
+        if (projectTab.isSelected()) {
+            final Project tmpProject = selectedProject;
+            projectListView.setItems(null);
+            projectListView.setItems(projects);
+            projectListView.getSelectionModel().select(null);
+            projectListView.getSelectionModel().select(selectedProject);
+        } else if (peopleTab.isSelected()) {
+            final Person tempPerson = selectedPerson;
+            peopleListView.setItems(null);
+            peopleListView.setItems(people);
+            peopleListView.getSelectionModel().select(null);
+            peopleListView.getSelectionModel().select(selectedPerson);
+        }
     }
 
     /**
