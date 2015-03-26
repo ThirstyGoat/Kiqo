@@ -201,4 +201,8 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setDisable(false);
     }
 
+    public void enableNewSkill() {
+        newSkillMenuItem.setDisable(false);
+    }
+
 }

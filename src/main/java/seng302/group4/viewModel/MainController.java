@@ -319,6 +319,7 @@ public class MainController implements Initializable {
             projectListView.getSelectionModel().select(project);
             // enable menuitem
             menuBarController.enableNewPerson();
+            menuBarController.enableNewSkill();
             saveProject();
         }
     }
