@@ -38,7 +38,6 @@ public class PersonFormController implements Initializable {
     private boolean valid = false;
 
     private Stage stage;
-    private Person person;
     private PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
@@ -67,7 +66,6 @@ public class PersonFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setShortNameSuggester();
         setShortNameHandler();
         setErrorPopOvers();
         Platform.runLater(longNameTextField::requestFocus);
@@ -213,7 +211,7 @@ public class PersonFormController implements Initializable {
     /**
      * Sets up the listener for changes in the long name, so that the short name can be populated with a suggestion
      */
-    private void setShortNameSuggester() {
+    public void setShortNameSuggester() {
         // Listen for changes in the long name, and populate the short name character by character up to specified characters
         longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
@@ -252,17 +250,7 @@ public class PersonFormController implements Initializable {
             department = departmentTextField.getText();
         }
         return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
-                phoneNumber, department, skills);
-    }
-
-    // ----------------------------------
-
-    /**
-     * Returns the Person object created by the dialog box
-     * @return the Person created by the dialog box
-     */
-    Person getPerson() {
-        return person;
+                phoneNumber, department);
     }
 
     public String getShortName() {

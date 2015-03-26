@@ -1,17 +1,18 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import seng302.group4.Project;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * Created by Carina on 25/03/2015.
  */
-public class ProjectDetailsPaneController implements DetailsPaneController<Project> {
+public class ProjectDetailsPaneController implements Initializable {
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -29,7 +30,6 @@ public class ProjectDetailsPaneController implements DetailsPaneController<Proje
         updateTooltip();
     }
 
-    @Override
     public void showDetails(final Project project) {
         if (project != null) {
             shortNameLabel.setText(project.getShortName());
@@ -44,7 +44,7 @@ public class ProjectDetailsPaneController implements DetailsPaneController<Proje
         }
         updateTooltip();
     }
-
+    
     /**
      * Attaches or detaches the tooltip for projectLocation based on whether the
      * tooltip would be empty.

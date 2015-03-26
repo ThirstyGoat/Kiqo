@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
  */
 public class NewPersonController implements Initializable {
     private Stage stage;
-    private Person person;
     private boolean valid = false;
     private Project project;
     // FXML Injections
@@ -36,6 +35,7 @@ public class NewPersonController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setNewPersonButton();
         setCancelButton();
+        formController.setShortNameSuggester();
 
         Platform.runLater(() -> setProjectForFormController());
     }
@@ -70,14 +70,6 @@ public class NewPersonController implements Initializable {
                 stage.close();
             }
         });
-    }
-
-    /**
-     * Returns the Person object created by the dialog box
-     * @return the Person created by the dialog box
-     */
-    public Person getPerson() {
-        return person;
     }
 
     public Project getProject() {

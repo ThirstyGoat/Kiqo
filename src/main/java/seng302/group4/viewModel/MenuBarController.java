@@ -88,16 +88,18 @@ public class MenuBarController implements Initializable {
         listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 listShowPersonMenuItem.setSelected(false);
+                listShowPersonMenuItem.setDisable(false);
+
                 mainController.switchToProjectList();
                 listShowProjectMenuItem.setDisable(true);
-                listShowPersonMenuItem.setDisable(false);
             }
         });
         listShowPersonMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 listShowProjectMenuItem.setSelected(false);
-                mainController.switchToPersonList();
                 listShowProjectMenuItem.setDisable(false);
+
+                mainController.switchToPersonList();
                 listShowPersonMenuItem.setDisable(true);
             }
         });
@@ -171,19 +173,32 @@ public class MenuBarController implements Initializable {
     }
 
     public void updateAfterProjectSelected(boolean selected) {
-        updateAfterPersonSelected(false);
-        newPersonMenuItem.setDisable(!selected);
-        newSkillMenuItem.setDisable(!selected);
+        // disable things
+        editPersonMenuItem.setDisable(selected);
+
+        // enable things
         editProjectMenuItem.setDisable(!selected);
         saveMenuItem.setDisable(!selected);
     }
 
     public void updateAfterPersonSelected(boolean selected) {
-        editPersonMenuItem.setDisable(!selected);
+        // disable things
         editProjectMenuItem.setDisable(selected);
+
+        // enable things
+        editPersonMenuItem.setDisable(!selected);
     }
 
-    public void updateAfterPersonListSelected() {
-        listShowPersonMenuItem.selectedProperty().set(true);
+    public void updateAfterProjectListSelected(boolean selected) {
+        listShowProjectMenuItem.selectedProperty().set(selected);
     }
+
+    public void updateAfterPersonListSelected(boolean selected) {
+        listShowPersonMenuItem.selectedProperty().set(selected);
+    }
+
+    public void enableNewPerson() {
+        newPersonMenuItem.setDisable(false);
+    }
+
 }
