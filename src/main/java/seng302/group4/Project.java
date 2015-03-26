@@ -65,7 +65,7 @@ public class Project implements Serializable {
      *            - person to add to people list in project
      */
     public void addPerson(final Person person) {
-        this.people.add(person);
+        people.add(person);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Project implements Serializable {
      * @return arraylist of people in project
      */
     public ArrayList<Person> getPeople() {
-        return this.people;
+        return people;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Project implements Serializable {
 
         final Project project = (Project) o;
 
-        if (!this.shortName.equals(project.shortName)) {
+        if (!shortName.equals(project.shortName)) {
             return false;
         }
 
@@ -99,7 +99,7 @@ public class Project implements Serializable {
      * @return the description of the project
      */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
@@ -107,7 +107,7 @@ public class Project implements Serializable {
      * @return longName the long name of the project
      */
     public String getLongName() {
-        return this.longName;
+        return longName;
     }
 
     /**
@@ -115,7 +115,7 @@ public class Project implements Serializable {
      * @return save location of project
      */
     public File getSaveLocation() {
-        return this.saveLocation;
+        return saveLocation;
     }
 
     /**
@@ -123,7 +123,7 @@ public class Project implements Serializable {
      * @return the short name of project
      */
     public String getShortName() {
-        return this.shortName;
+        return shortName;
     }
 
     /**
@@ -164,7 +164,7 @@ public class Project implements Serializable {
 
     @Override
     public int hashCode() {
-        return this.shortName.hashCode();
+        return shortName.hashCode();
     }
 
     public void prepareForDestruction() {
@@ -174,13 +174,12 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return this.shortName;
-//        return "Project{" + "shortName='" + this.shortName + '\'' + ", longName='" + this.longName + '\'' + ", description='"
-//                + this.description + '\'' + ", saveLocation='" + this.saveLocation + '\'' + '}';
+        return "Project{" + "shortName='" + shortName + '\'' + ", longName='" + longName + '\'' + ", description='" + description + '\''
+                + ", saveLocation='" + saveLocation + '\'' + '}';
     }
 
     public void removePerson(final Person person) {
-        this.people.remove(person);
+        people.remove(person);
     }
 
 }
