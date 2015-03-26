@@ -250,7 +250,7 @@ public class PersonFormController implements Initializable {
             department = departmentTextField.getText();
         }
         return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
-                phoneNumber, department);
+                phoneNumber, department, skills);
     }
 
     public String getShortName() {

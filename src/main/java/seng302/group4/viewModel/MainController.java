@@ -87,11 +87,6 @@ public class MainController implements Initializable {
     private Project selectedProject;
     private Person selectedPerson;
 
-    private final StatusBar statusBar = new StatusBar();
-    final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     public void editSkill() {
         if (selectedProject != null) {
