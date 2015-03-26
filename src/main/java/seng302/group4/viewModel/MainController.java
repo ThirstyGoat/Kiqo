@@ -660,7 +660,7 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
-                //detailsPaneController.showDetailsPane(newValue);
+                detailsPaneController.showDetailsPane(newValue);
             }
         });
     }

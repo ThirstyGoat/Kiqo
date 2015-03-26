@@ -29,7 +29,7 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private GridPane personDetailsPane;
     @FXML
-    private GridPane skillDetailPane;
+    private GridPane skillDetailsPane;
     @FXML
     private Button editButton;
     @FXML
@@ -71,8 +71,8 @@ public class DetailsPaneController implements Initializable {
         skillDetailsPaneController.showDetails(skill);
 
         final ObservableList<Node> children = detailsPane.getChildren();
-        if (!children.contains(skillDetailPane)) {
-            children.add(skillDetailPane);
+        if (!children.contains(skillDetailsPane)) {
+            children.add(skillDetailsPane);
         }
         children.remove(projectDetailsPane);
         children.remove(personDetailsPane);
@@ -89,7 +89,7 @@ public class DetailsPaneController implements Initializable {
             children.add(projectDetailsPane);
         }
         children.remove(personDetailsPane);
-        children.remove(skillDetailPane);
+        children.remove(skillDetailsPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editProject());
@@ -103,7 +103,7 @@ public class DetailsPaneController implements Initializable {
             children.add(personDetailsPane);
         }
         children.remove(projectDetailsPane);
-        children.remove(skillDetailPane);
+        children.remove(skillDetailsPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editPerson());

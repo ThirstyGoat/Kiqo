@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="skillDetailPane" hgap="10.0" prefHeight="329.0" prefWidth="381.0" vgap="15.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.PersonDetailsPaneController">
+<GridPane fx:id="skillDetailsPane" hgap="10.0" prefHeight="329.0" prefWidth="381.0" vgap="15.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.SkillDetailsPaneController">
   <children>
       <Label text="Short name:" />
       <Label text="Description:" GridPane.rowIndex="1" />
