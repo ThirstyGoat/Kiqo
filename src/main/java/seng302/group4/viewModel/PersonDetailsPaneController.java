@@ -1,6 +1,7 @@
 package seng302.group4.viewModel;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import seng302.group4.Person;
 
@@ -10,7 +11,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Carina on 25/03/2015.
  */
-public class PersonDetailsPaneController implements DetailsPaneController<Person> {
+public class PersonDetailsPaneController implements Initializable {
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -31,7 +32,6 @@ public class PersonDetailsPaneController implements DetailsPaneController<Person
 
     }
 
-    @Override
     public void showDetails(final Person person) {
         if (person != null) {
             shortNameLabel.setText(person.getShortName());

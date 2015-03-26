@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.MainController">
   <center>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.2739420935412027" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <items>
@@ -43,6 +43,7 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0">
           <children>
+            <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
             <fx:include fx:id="projectDetailsPane" source="detailsPane/project.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
           </children>
           <padding>

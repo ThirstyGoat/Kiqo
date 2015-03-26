@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
@@ -35,10 +36,16 @@ import java.util.ResourceBundle;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
+    private final UndoManager undoManager = new UndoManager();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final ObservableList<Person> people = FXCollections.observableArrayList();
+    private final StatusBar statusBar = new StatusBar();
+    final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
     private double dividerPosition;
-
     // FXML Injections
     @FXML
     private BorderPane mainBorderPane;
@@ -57,21 +64,13 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private ProjectDetailsPaneController projectDetailsPaneController;
+    private Pane detailsPane;
+    @FXML
+    private DetailsPaneController detailsPaneController;
     @FXML
     private MenuBarController menuBarController;
-
     private Project selectedProject;
-    private final UndoManager undoManager = new UndoManager();
     private Person selectedPerson;
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final ObservableList<Person> people = FXCollections.observableArrayList();
-
-    private final StatusBar statusBar = new StatusBar();
-    final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     public void editPerson() {
         if (selectedPerson != null) {
@@ -110,7 +109,7 @@ public class MainController implements Initializable {
         tabViewPane.getSelectionModel().getSelectedItem().setOnSelectionChanged(event -> {
             switchToPersonList();
 
-            if(projectTab.isSelected()) {
+            if (projectTab.isSelected()) {
                 switchToProjectList();
             }
         });
@@ -198,17 +197,11 @@ public class MainController implements Initializable {
         this.primaryStage = primaryStage;
         addClosePrompt();
         menuBarController.setMainController(this);
-        projectDetailsPaneController.setMainController(this);
+        detailsPaneController.setMainController(this);
     }
 
     public void switchToPersonList() {
         listLabel.setText("People");
-
-//        peopleListView.setVisible(true);
-//        peopleListView.setManaged(true);
-
-//        projectListView.setVisible(false);
-//        projectListView.setManaged(false);
 
         if (selectedProject != null) {
             people.setAll(selectedProject.getPeople());
@@ -219,18 +212,12 @@ public class MainController implements Initializable {
 
     public void switchToProjectList() {
         listLabel.setText("Project");
-        selectedPerson = null;
+        projectListView.getSelectionModel().selectFirst();
+        peopleListView.getSelectionModel().select(null);
         menuBarController.updateAfterProjectSelected(false);
         menuBarController.updateAfterPersonSelected(false);
-
-//        peopleListView.setVisible(false);
-//        peopleListView.setManaged(false);
-
-//        projectListView.setVisible(true);
-//        projectListView.setManaged(true);
     }
 
-    // //////////////////////////////////////////////////////
     public void undo() {
         undoManager.undoCommand();
         // If the changes are already saved, and we undo something, then the
@@ -267,6 +254,8 @@ public class MainController implements Initializable {
             }
         });
     }
+
+
 
     private void addPersonToList(Person person) {
         if (person != null) {
@@ -479,7 +468,7 @@ public class MainController implements Initializable {
 
             menuBarController.updateAfterProjectSelected(selectedProject != null);
 
-            projectDetailsPaneController.showDetails(selectedProject);
+            detailsPaneController.showDetailsPane(selectedProject);
         });
     }
 
@@ -523,6 +512,8 @@ public class MainController implements Initializable {
             changesSaved.set(!changesSaved.get());
 
             menuBarController.updateAfterPersonSelected(selectedPerson != null);
+
+            detailsPaneController.showDetailsPane(selectedPerson);
         });
     }
 
