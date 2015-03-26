@@ -123,6 +123,10 @@ public class MainController implements Initializable {
     private void initialiseTabs() {
         tabViewPane.getSelectionModel().getSelectedItem().setOnSelectionChanged(event -> {
             switchToPersonList();
+
+            if(projectTab.isSelected()) {
+                switchToProjectList();
+            }
         });
     }
 
@@ -223,7 +227,6 @@ public class MainController implements Initializable {
             people.setAll(selectedProject.getPeople());
         }
         peopleListView.getSelectionModel().selectFirst();
-        System.out.println(selectedPerson);
         peopleListView.setItems(people);
     }
 
