@@ -14,13 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -63,6 +57,12 @@ public class MainController implements Initializable {
     private ListView<Project> projectListView;
     @FXML
     private ListView<Person> peopleListView;
+    @FXML
+    private Tab projectTab;
+    @FXML
+    private Tab peopleTab;
+    @FXML
+    private TabPane tabViewPane;
     @FXML
     private SplitPane mainSplitPane;
     @FXML
@@ -111,11 +111,19 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setLayoutProperties();
+
         initialiseProjectListView();
         initialisePeopleListView();
+        initialiseTabs();
         addStatusBar();
         addEditButtonListener();
         menuBarController.setListenersOnUndoManager(undoManager);
+    }
+
+    private void initialiseTabs() {
+        tabViewPane.getSelectionModel().getSelectedItem().setOnSelectionChanged(event -> {
+            switchToPersonList();
+        });
     }
 
     public void newPerson() {
@@ -167,6 +175,7 @@ public class MainController implements Initializable {
             addProject(project);
             System.out.println(project.toString() + " has been loaded successfully");
         }
+        tabViewPane.getSelectionModel().select(projectTab);
     }
 
     /**
@@ -204,15 +213,17 @@ public class MainController implements Initializable {
     public void switchToPersonList() {
         listLabel.setText("People");
 
-        peopleListView.setVisible(true);
-        peopleListView.setManaged(true);
+//        peopleListView.setVisible(true);
+//        peopleListView.setManaged(true);
 
-        projectListView.setVisible(false);
-        projectListView.setManaged(false);
+//        projectListView.setVisible(false);
+//        projectListView.setManaged(false);
 
         if (selectedProject != null) {
             people.setAll(selectedProject.getPeople());
         }
+        peopleListView.getSelectionModel().selectFirst();
+        System.out.println(selectedPerson);
         peopleListView.setItems(people);
     }
 
@@ -222,11 +233,11 @@ public class MainController implements Initializable {
         menuBarController.updateAfterProjectSelected(false);
         menuBarController.updateAfterPersonSelected(false);
 
-        peopleListView.setVisible(false);
-        peopleListView.setManaged(false);
+//        peopleListView.setVisible(false);
+//        peopleListView.setManaged(false);
 
-        projectListView.setVisible(true);
-        projectListView.setManaged(true);
+//        projectListView.setVisible(true);
+//        projectListView.setManaged(true);
     }
 
     // //////////////////////////////////////////////////////
@@ -464,7 +475,6 @@ public class MainController implements Initializable {
             }
         });
         projectListView.setItems(projects);
-
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Project");
         contextMenu.getItems().add(editContextMenu);
@@ -474,6 +484,8 @@ public class MainController implements Initializable {
         editContextMenu.setOnAction(event -> {
             editProject();
         });
+
+
 
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -587,6 +599,7 @@ public class MainController implements Initializable {
 
                 undoManager.doCommand(c);
             }
+
             refreshList();
         });
     }
