@@ -54,6 +54,7 @@ public class MainController implements Initializable {
     private final UndoManager undoManager = new UndoManager();
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private final ObservableList<Person> people = FXCollections.observableArrayList();
+    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
     private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
@@ -69,9 +70,13 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Person> peopleListView;
     @FXML
+    private ListView<Skill> skillsListView;
+    @FXML
     private Tab projectTab;
     @FXML
     private Tab peopleTab;
+    @FXML
+    private Tab skillsTab;
     @FXML
     private TabPane tabViewPane;
     @FXML
@@ -86,11 +91,12 @@ public class MainController implements Initializable {
     private MenuBarController menuBarController;
     private Project selectedProject;
     private Person selectedPerson;
+    private Skill selectedSkill;
 
 
     public void editSkill() {
-        if (selectedProject != null) {
-            editSkillDialog(null); // TODO Actually have a selected skill
+        if (selectedSkill != null) {
+            editSkillDialog(selectedSkill);
         }
     }
 
@@ -122,6 +128,7 @@ public class MainController implements Initializable {
 
         initialiseProjectListView();
         initialisePeopleListView();
+        initialiseSkillsListView();
         initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
@@ -148,6 +155,13 @@ public class MainController implements Initializable {
                 peopleListView.getSelectionModel().selectFirst();
 
                 menuBarController.updateAfterPersonListSelected(true);
+            } else if (newValue == skillsTab) {
+                if (selectedProject != null) {
+                    skills.setAll(selectedProject.getSkills());
+                    skillsListView.getSelectionModel().selectFirst();
+                } else {
+                    skills.clear();
+                }
             }
         });
     }
@@ -366,6 +380,9 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final EditSkillController editSkillController = loader.getController();
             editSkillController.setStage(stage);
+            editSkillController.loadSkill(skill);
+            editSkillController.setProject(selectedProject);
+            editSkillController.setProjectForFormController();
 
             stage.showAndWait();
             if (editSkillController.isValid()) {
@@ -538,9 +555,7 @@ public class MainController implements Initializable {
 
         projectListView.setContextMenu(contextMenu);
 
-        editContextMenu.setOnAction(event -> {
-            editProject();
-        });
+        editContextMenu.setOnAction(event -> editProject());
 
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -562,7 +577,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Sets the content for the main list view
+     * Sets the content for the projects list view
      */
     private void initialisePeopleListView() {
         peopleListView.setCellFactory(new Callback<ListView<Person>, ListCell<Person>>() {
@@ -586,9 +601,7 @@ public class MainController implements Initializable {
 
         peopleListView.setContextMenu(contextMenu);
 
-        editContextMenu.setOnAction(event -> {
-            editPerson();
-        });
+        editContextMenu.setOnAction(event -> editPerson());
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -601,9 +614,53 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
-                menuBarController.updateAfterPersonSelected(newValue != null);
+                menuBarController.updateAfterPersonSelected(true);
 
                 detailsPaneController.showDetailsPane(newValue);
+            }
+        });
+    }
+
+    /**
+     * Sets the content for the skills list view
+     */
+    private void initialiseSkillsListView() {
+        skillsListView.setCellFactory(new Callback<ListView<Skill>, ListCell<Skill>>() {
+            @Override
+            public ListCell<Skill> call(final ListView<Skill> arg0) {
+                return new ListCell<Skill>() {
+                    @Override
+                    protected void updateItem(final Skill skill, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(skill, empty);
+                        setText(empty ? "" : skill.getShortName());
+                    }
+                };
+            }
+        });
+
+        skillsListView.setItems(skills);
+
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Skill");
+        contextMenu.getItems().add(editContextMenu);
+
+        skillsListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> editSkill());
+
+        // Set change listener for projectListView
+        skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                selectedSkill = newValue;
+
+                // Update status bar to show current save status of selected
+                // project
+                // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
+
+                //detailsPaneController.showDetailsPane(newValue);
             }
         });
     }
@@ -800,6 +857,11 @@ public class MainController implements Initializable {
             peopleListView.setItems(people);
             peopleListView.getSelectionModel().select(null);
             peopleListView.getSelectionModel().select(selectedPerson);
+        } else if (skillsTab.isSelected()) {
+            skillsListView.setItems(null);
+            skillsListView.setItems(skills);
+            skillsListView.getSelectionModel().select(null);
+            skillsListView.getSelectionModel().select(selectedSkill);
         }
     }
 

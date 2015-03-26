@@ -80,7 +80,7 @@ public class EditSkillController implements Initializable {
         this.project = project;
     }
 
-    public void setSkill(Skill skill) {
+    public void loadSkill(Skill skill) {
         this.skill = skill;
     }
 
@@ -103,7 +103,8 @@ public class EditSkillController implements Initializable {
         this.cancelButton.setOnAction(event -> this.stage.close());
     }
 
-    private void setProjectForFormController() {
+    public void setProjectForFormController() {
         formController.setProject(project);
+        formController.loadSkill(skill);
     }
 }
