@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
+import seng302.group4.Skill;
 
 /**
  * Switches between detail panes depending on type of content shown.
@@ -28,11 +29,16 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private GridPane personDetailsPane;
     @FXML
+    private GridPane skillDetailPane;
+    @FXML
     private Button editButton;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
+    @FXML
+    private SkillDetailsPaneController skillDetailsPaneController;
+
     private MainController mainController;
 
     @Override
@@ -49,12 +55,30 @@ public class DetailsPaneController implements Initializable {
                 showProjectDetailsPane((Project)objectForDisplay);
             } else if (objectForDisplay instanceof Person) {
                 showPersonDetailsPane((Person)objectForDisplay);
+            } else if (objectForDisplay instanceof Skill) {
+                showSkillDetailPane((Skill)objectForDisplay);
             }
         }
     }
 
+
+
     private void clear() {
         detailsPane.getChildren().clear();
+    }
+
+    private void showSkillDetailPane(Skill skill) {
+        skillDetailsPaneController.showDetails(skill);
+
+        final ObservableList<Node> children = detailsPane.getChildren();
+        if (!children.contains(skillDetailPane)) {
+            children.add(skillDetailPane);
+        }
+        children.remove(projectDetailsPane);
+        children.remove(personDetailsPane);
+
+        addEditButton();
+        editButton.setOnAction(event -> mainController.editSkill());
     }
 
     private void showProjectDetailsPane(Project project) {
@@ -65,6 +89,7 @@ public class DetailsPaneController implements Initializable {
             children.add(projectDetailsPane);
         }
         children.remove(personDetailsPane);
+        children.remove(skillDetailPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editProject());
@@ -78,6 +103,7 @@ public class DetailsPaneController implements Initializable {
             children.add(personDetailsPane);
         }
         children.remove(projectDetailsPane);
+        children.remove(skillDetailPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editPerson());
