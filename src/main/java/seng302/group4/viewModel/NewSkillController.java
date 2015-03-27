@@ -57,6 +57,12 @@ public class NewSkillController implements Initializable {
             // check to see that shortname
             formController.validate();
             if (formController.isValid()) {
+                for (Skill s : project.getSkills()) {
+                    if (formController.getShortName().equals(s.getShortName())) {
+                        formController.warnShortnameNotUnique();
+                        return;
+                    }
+                }
 
                 command = new CreateSkillCommand(formController.getShortName(), formController.getDescription());
 

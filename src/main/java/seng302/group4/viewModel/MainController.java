@@ -146,21 +146,21 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
-                if (selectedProject != null) {
-                    people.setAll(selectedProject.getPeople());
+                // Select the first person, if no person is selected already
+                if (selectedPerson == null) {
+                    peopleListView.getSelectionModel().select(null);
+                    peopleListView.getSelectionModel().selectFirst();
                 } else {
-                    people.clear();
+                    peopleListView.getSelectionModel().select(selectedPerson);
                 }
-                peopleListView.getSelectionModel().select(null);
-                peopleListView.getSelectionModel().selectFirst();
 
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
-                if (selectedProject != null) {
-                    skills.setAll(selectedProject.getSkills());
+                if (selectedSkill == null) {
+                    skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().selectFirst();
                 } else {
-                    skills.clear();
+                    skillsListView.getSelectionModel().select(selectedSkill);
                 }
             }
         });
@@ -562,8 +562,11 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 selectedProject = newValue;
 
-                // Update status bar to show current save status of selected
-                // project
+                // Set observable list of people and skills corresponding to this new project
+                people.setAll(selectedProject.getPeople());
+                skills.setAll(selectedProject.getSkills());
+
+                // Update status bar to show current save status of selected project
                 // Probably not the best way to do this, but it's the simplest
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
@@ -687,6 +690,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final NewSkillController newSkillController = loader.getController();
             newSkillController.setStage(stage);
+            newSkillController.setProject(selectedProject);
 
             stage.showAndWait();
             if (newSkillController.isValid()) {
@@ -838,6 +842,9 @@ public class MainController implements Initializable {
 
     private void addSkillToProject(Skill skill) {
         selectedProject.addSkill(skill);
+        // Update listView and select newly added skill
+        skills.add(skill);
+        skillsListView.getSelectionModel().select(skill);
         saveProject();
     }
 
@@ -846,13 +853,11 @@ public class MainController implements Initializable {
      */
     private void refreshList() {
         if (projectTab.isSelected()) {
-            final Project tmpProject = selectedProject;
             projectListView.setItems(null);
             projectListView.setItems(projects);
             projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(selectedProject);
         } else if (peopleTab.isSelected()) {
-            final Person tempPerson = selectedPerson;
             peopleListView.setItems(null);
             peopleListView.setItems(people);
             peopleListView.getSelectionModel().select(null);
