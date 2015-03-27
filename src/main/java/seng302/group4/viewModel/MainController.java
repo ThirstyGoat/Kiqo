@@ -24,6 +24,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -88,7 +89,7 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private AnchorPane detailsPane;
+    private Pane detailsPane;
     @FXML
     private DetailsPaneController detailsPaneController;
     @FXML
