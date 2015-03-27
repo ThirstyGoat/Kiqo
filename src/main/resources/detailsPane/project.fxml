@@ -41,6 +41,5 @@
     <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
     <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="-1.0" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="10.0" minHeight="0.0" prefHeight="0.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
