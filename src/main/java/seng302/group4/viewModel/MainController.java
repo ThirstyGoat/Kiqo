@@ -43,7 +43,12 @@ import seng302.group4.Project;
 import seng302.group4.Skill;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.UndoManager;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -84,7 +89,7 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private AnchorPane detailsPane;
+    private Pane detailsPane;
     @FXML
     private DetailsPaneController detailsPaneController;
     @FXML
@@ -144,7 +149,7 @@ public class MainController implements Initializable {
                 } else {
                     projectListView.getSelectionModel().selectFirst();
                 }
-
+                detailsPaneController.showDetailsPane(projectListView.getSelectionModel().getSelectedItem());
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
                 // Select the first person, if no person is selected already
@@ -155,7 +160,7 @@ public class MainController implements Initializable {
                     peopleListView.getSelectionModel().select(null);
                     peopleListView.getSelectionModel().select(selectedPerson);
                 }
-
+                detailsPaneController.showDetailsPane(peopleListView.getSelectionModel().getSelectedItem());
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
                 if (selectedSkill == null) {
@@ -165,6 +170,7 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
+                detailsPaneController.showDetailsPane(skillsListView.getSelectionModel().getSelectedItem());
             }
         });
     }
@@ -370,7 +376,7 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(this.primaryStage);
+            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -566,6 +572,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedProject = newValue;
 
@@ -580,8 +587,6 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterProjectSelected(selectedProject != null);
                 listLabel.setText((selectedProject != null) ? selectedProject.getShortName() : null);
-
-                detailsPaneController.showDetailsPane(selectedProject);
             }
         });
     }
@@ -615,6 +620,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedPerson = newValue;
 
@@ -625,8 +631,6 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
 
                 menuBarController.updateAfterPersonSelected(true);
-
-                detailsPaneController.showDetailsPane(selectedPerson);
             }
         });
     }
@@ -661,6 +665,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedSkill = newValue;
 
@@ -672,7 +677,6 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterSkillSelected(true);
 
-                detailsPaneController.showDetailsPane(selectedSkill);
             }
         });
     }
@@ -682,7 +686,7 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(this.primaryStage);
+            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -709,7 +713,7 @@ public class MainController implements Initializable {
                     @Override
                     public Skill execute() {
                         // Add to mainListView
-                        Skill skill = cpc.execute();
+                        final Skill skill = cpc.execute();
                         addSkillToProject(skill);
                         return skill;
                     }
