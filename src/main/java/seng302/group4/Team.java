@@ -9,7 +9,10 @@ import java.util.ArrayList;
 public class Team implements Serializable {
     private String shortName;
     private String description;
+    private Person productOwner;
+    private Person scrumMaster;
     private ArrayList<Person> teamMembers;
+    private ArrayList<Person> devTeam = new ArrayList<>();
 
     public Team(String shortName, String description, ArrayList<Person> teamMembers) {
         this.shortName = shortName;
@@ -25,14 +28,6 @@ public class Team implements Serializable {
         this.shortName = shortName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public ArrayList<Person> getTeamMembers() {
         return teamMembers;
     }
@@ -41,4 +36,35 @@ public class Team implements Serializable {
         this.teamMembers = teamMembers;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Person getProductOwner() {
+        return productOwner;
+    }
+
+    public void setProductOwner(Person productOwner) {
+        this.productOwner = productOwner;
+    }
+
+    public Person getScrumMaster() {
+        return scrumMaster;
+    }
+
+    public void setScrumMaster(Person scrumMaster) {
+        this.scrumMaster = scrumMaster;
+    }
+
+    public ArrayList<Person> getDevTeam() {
+        return devTeam;
+    }
+
+    public void add(Person person) {
+         devTeam.add(person);
+    }
 }
