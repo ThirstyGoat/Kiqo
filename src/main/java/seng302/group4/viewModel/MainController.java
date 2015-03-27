@@ -1,6 +1,11 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -9,29 +14,43 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+
 import seng302.group4.PersistenceManager;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.UndoManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -390,6 +409,7 @@ public class MainController implements Initializable {
                     public Skill execute() {
                         // Add to mainListView
                         cc.execute();
+                        saveProject();
                         refreshList();
                         return null;
                     }
