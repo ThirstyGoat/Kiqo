@@ -22,13 +22,14 @@ public class TeamDetailsPaneController implements Initializable {
             shortNameLabel.setText(team.getShortName());
             descriptionLabel.setText(team.getDescription());
             String teamMembersString = "";
-
-            for( int i = 0; i < team.getTeamMembers().size(); i++) {
+        if (team.getTeamMembers().size() > 0) {
+            for (int i = 0; i < team.getTeamMembers().size(); i++) {
                 teamMembersString += team.getTeamMembers().get(i).getShortName();
-                if (i != team.getTeamMembers().size()-1) {
+                if (i != team.getTeamMembers().size() - 1) {
                     teamMembersString += ", ";
                 }
             }
+        }
             teamMembersLabel.setText(teamMembersString);
         } else {
             shortNameLabel.setText(null);
