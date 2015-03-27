@@ -379,8 +379,13 @@ public class MainController implements Initializable {
             projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(project);
 
+            // enable menu itmes
+            menuBarController.enableNewTeam();
+            menuBarController.enableNewPerson();
+            menuBarController.enableNewSkill();
+
             switchToProjectList();
-            // menuBarController.updateAfterProjectListSelected(true);
+            menuBarController.updateAfterProjectListSelected(true);
             saveProject();
         }
     }
