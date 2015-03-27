@@ -61,8 +61,6 @@ public class TeamFormController implements Initializable {
 
     private ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
-    private ArrayList<RadioButton> devRadioButtons = new ArrayList<>();
-    private ArrayList<RadioButton> otherRadioButtons = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -145,6 +143,18 @@ public class TeamFormController implements Initializable {
                 changes.add(new EditCommand<>(team, "teamMembers", teamMembers));
             }
 
+            if (productOwner != team.getProductOwner()) {
+                changes.add(new EditCommand<>(team, "productOwner", productOwner));
+            }
+
+            if (scrumMaster != team.getScrumMaster()) {
+                changes.add(new EditCommand<>(team, "scrumMaster", scrumMaster));
+            }
+
+            if (!(devTeam.containsAll(team.getDevTeam()) && team.getDevTeam().containsAll(devTeam))) {
+                changes.add(new EditCommand<>(team, "devTeam", devTeam));
+            }
+
             valid = !changes.isEmpty();
             command = new CompoundCommand(changes);
         }
@@ -212,31 +222,46 @@ public class TeamFormController implements Initializable {
                         radioDev.setToggleGroup(radioGroup);
                         radioOther.setToggleGroup(radioGroup);
 
+                        // Select appropriate RadioButton
+                        if (team.getProductOwner() == person) {
+                            radioPo.setSelected(true);
+                            productOwner = person;
+                        } else if (team.getScrumMaster() == person) {
+                            radioSm.setSelected(true);
+                            scrumMaster = person;
+                        } else if (team.getDevTeam() != null && team.getDevTeam().contains(person)) {
+                            radioDev.setSelected(true);
+                            devTeam.add(person);
+                        } else {
+                            radioOther.setSelected(true);
+                            devTeam.remove(person);
+                            if (productOwner == person) {
+                                productOwner = null;
+                            }
+                            if (scrumMaster == person) {
+                                scrumMaster = null;
+                            }
+                        }
+
 //                        // Set colors
 //                        radioSm.setStyle("-fx-mark-color: blue");
-
-                        radioOther.setSelected(true);
 
                         hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
 
                         setupRadioPoListener(radioPo, radioOther, person);
                         setupRadioSmListener(radioSm, radioOther, person);
                         setupRadioDevListener(radioDev, person);
-                        setupRadioOtherListener(radioOther, person);
 
                         setGraphic(borderPane);
 
                     } else {
+                        setGraphic(null);
                         setText(null);
                     }
                 }
             };
             return cell;
         });
-    }
-
-    private void setupRadioOtherListener(RadioButton radioOther, Person person) {
-
     }
 
     private void setupRadioDevListener(RadioButton radioDev, Person person) {
