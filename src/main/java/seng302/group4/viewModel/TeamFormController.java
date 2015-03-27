@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -55,6 +58,12 @@ public class TeamFormController implements Initializable {
     private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final PopOver errorPopOver = new PopOver();
+
+    private ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
+    private ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
+    private ArrayList<RadioButton> devRadioButtons = new ArrayList<>();
+    private ArrayList<RadioButton> otherRadioButtons = new ArrayList<>();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
@@ -186,8 +195,11 @@ public class TeamFormController implements Initializable {
                     super.updateItem(person, empty);
                     if (person != null) {
 
+                        BorderPane borderPane = new BorderPane();
                         HBox hbox = new HBox();
+                        borderPane.setRight(hbox);
                         Label label = new Label(person.getShortName());
+                        borderPane.setLeft(label);
 
                         ToggleGroup radioGroup = new ToggleGroup();
                         RadioButton radioPo = new RadioButton();
@@ -199,9 +211,19 @@ public class TeamFormController implements Initializable {
                         radioDev.setToggleGroup(radioGroup);
                         radioOther.setToggleGroup(radioGroup);
 
-                        hbox.getChildren().addAll(label, radioPo, radioSm, radioDev, radioOther);
+//                        // Set colors
+//                        radioSm.setStyle("-fx-mark-color: blue");
 
-                        setGraphic(hbox);
+                        radioOther.setSelected(true);
+
+                        hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
+
+                        setupRadioPoListener(radioPo, radioOther, person);
+                        setupRadioSmListener(radioSm, radioOther, person);
+                        setupRadioDevListener(radioDev, person);
+                        setupRadioOtherListener(radioOther, person);
+
+                        setGraphic(borderPane);
 
                     } else {
                         setText(null);
@@ -209,6 +231,46 @@ public class TeamFormController implements Initializable {
                 }
             };
             return cell;
+        });
+    }
+
+    private void setupRadioOtherListener(RadioButton radioOther, Person person) {
+
+    }
+
+    private void setupRadioDevListener(RadioButton radioDev, Person person) {
+
+    }
+
+    private void setupRadioSmListener(RadioButton radioSm, RadioButton radioOther, Person person) {
+        smRadioButtons.add(radioSm);
+
+        radioSm.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // If selected
+                scrumMaster = person;
+                smRadioButtons.stream().filter(rb -> rb != radioSm).forEach(rb -> rb.setSelected(false));
+            } else {
+                if (radioSm.getToggleGroup().getSelectedToggle() == null) {
+                    radioOther.setSelected(true);
+                }
+            }
+        });
+    }
+
+    private void setupRadioPoListener(RadioButton radioPo, RadioButton radioOther, Person person) {
+        poRadioButtons.add(radioPo);
+
+        radioPo.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // If selected
+                productOwner = person;
+                poRadioButtons.stream().filter(rb -> rb != radioPo).forEach(rb -> rb.setSelected(false));
+            } else {
+                if (radioPo.getToggleGroup().getSelectedToggle() == null) {
+                    radioOther.setSelected(true);
+                }
+            }
         });
     }
 
