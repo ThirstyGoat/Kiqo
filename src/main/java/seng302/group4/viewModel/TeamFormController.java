@@ -1,13 +1,24 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.control.PopOver;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
@@ -16,10 +27,6 @@ import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateTeamCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Created by james on 27/03/15.
@@ -44,14 +51,16 @@ public class TeamFormController implements Initializable {
     private Command command;
     private boolean valid = false;
 
-    private ObservableList<Person> targetPeople = FXCollections.observableArrayList();
-    private PopOver errorPopOver = new PopOver();
+    private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
+    private final PopOver errorPopOver = new PopOver();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setListSelectionViewSettings();
         setTextFieldListener();
+
+        Platform.runLater(shortNameTextField::requestFocus);
     }
 
     private void setTextFieldListener() {
@@ -93,7 +102,7 @@ public class TeamFormController implements Initializable {
                 return true;
             }
         }
-        for (Team t : project.getTeams()) {
+        for (final Team t : project.getTeams()) {
             if (shortNameTextField.getText().equals(t.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
                 errorPopOver.show(shortNameTextField);
@@ -106,7 +115,7 @@ public class TeamFormController implements Initializable {
     }
 
     private void setCommand() {
-        ArrayList<Person> teamMembers = new ArrayList<>();
+        final ArrayList<Person> teamMembers = new ArrayList<>();
         teamMembers.addAll(targetPeople);
         if (team == null) {
             // create command
@@ -153,7 +162,7 @@ public class TeamFormController implements Initializable {
 
     private void setCellFactory(ListView<Person> listView) {
         listView.setCellFactory(view -> {
-            ListCell<Person> cell = new ListCell<Person>() {
+            final ListCell<Person> cell = new ListCell<Person>() {
                 @Override
                 public void updateItem(Person person, boolean empty) {
                     super.updateItem(person, empty);
@@ -169,7 +178,7 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
-        ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+        final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
 
         project.getPeople().stream().filter(person -> !sourcePeople.contains(person)).forEach(sourcePeople::add);
 

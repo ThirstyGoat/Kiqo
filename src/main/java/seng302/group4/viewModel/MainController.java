@@ -1,6 +1,11 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -9,26 +14,45 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-import seng302.group4.*;
+
+import seng302.group4.PersistenceManager;
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Skill;
+import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.CreateTeamCommand;
+import seng302.group4.undo.UndoManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -282,6 +306,10 @@ public class MainController implements Initializable {
         tabViewPane.getSelectionModel().select(peopleTab);
     }
 
+    public void switchToTeamList() {
+        tabViewPane.getSelectionModel().select(teamsTab);
+    }
+
     public void switchToProjectList() {
         tabViewPane.getSelectionModel().select(projectTab);
     }
@@ -323,8 +351,6 @@ public class MainController implements Initializable {
         });
     }
 
-
-
     private void addPersonToList(Person person) {
         if (person != null) {
             // Update view accordingly
@@ -333,8 +359,8 @@ public class MainController implements Initializable {
             // Select added person in the listView
             peopleListView.getSelectionModel().select(null);
             peopleListView.getSelectionModel().select(person);
-            menuBarController.updateAfterPersonListSelected(true);
             switchToPersonList();
+            menuBarController.updateAfterPersonListSelected(true);
 
             // Save the project
             saveProject();
@@ -352,9 +378,9 @@ public class MainController implements Initializable {
             // Select added project in the ListView
             projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(project);
-            // enable menuitem
-            menuBarController.enableNewPerson();
-            menuBarController.enableNewSkill();
+
+            switchToProjectList();
+            // menuBarController.updateAfterProjectListSelected(true);
             saveProject();
         }
     }
@@ -363,6 +389,14 @@ public class MainController implements Initializable {
         if (team != null) {
             selectedProject.addTeam(team);
             teams.add(team);
+
+            // Select added team in the listView
+            teamsListView.getSelectionModel().select(null);
+            teamsListView.getSelectionModel().select(team);
+
+            switchToTeamList();
+            menuBarController.updateAfterTeamListSelected(true);
+
             saveProject();
         }
     }
@@ -873,7 +907,7 @@ public class MainController implements Initializable {
             }
             final Scene scene = new Scene(root);
             stage.setScene(scene);
-            TeamFormController teamFormController = loader.getController();
+            final TeamFormController teamFormController = loader.getController();
             teamFormController.setStage(stage);
             teamFormController.setProject(selectedProject);
             teamFormController.setTeam(team);
@@ -897,7 +931,7 @@ public class MainController implements Initializable {
                         @Override
                         public void undo() {
                             teams.remove(ctc.getTeam());
-                            for (Person person : ctc.getTeam().getTeamMembers()) {
+                            for (final Person person : ctc.getTeam().getTeamMembers()) {
                                 person.setTeam(null);
                                 refreshList();
                             }
