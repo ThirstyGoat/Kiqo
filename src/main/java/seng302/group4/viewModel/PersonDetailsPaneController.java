@@ -1,6 +1,5 @@
 package seng302.group4.viewModel;
 
-import com.sun.deploy.util.StringUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -61,11 +60,14 @@ public class PersonDetailsPaneController implements Initializable {
     }
 
     public String getSkillsString(Person person) {
-        ArrayList<String> skillsStrings = new ArrayList<>();
-        for (Skill skill : person.getSkills()) {
-            skillsStrings.add(skill.toString());
-        }
+        String toReturn = "";
 
-        return StringUtils.join(skillsStrings, ", ");
+        for (int i = 0; i < person.getSkills().size(); i++) {
+            toReturn += person.getSkills().get(i);
+            if (i != person.getSkills().size() - 1) {
+                toReturn += ", ";
+            }
+        }
+        return toReturn;
     }
 }
