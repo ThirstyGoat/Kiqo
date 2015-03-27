@@ -152,6 +152,7 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
                 detailsPaneController.showDetailsPane(skillsListView.getSelectionModel().getSelectedItem());
+                menuBarController.updateAfterSkillListSelected(true);
             }
         });
     }
@@ -844,6 +845,7 @@ public class MainController implements Initializable {
         // Update listView and select newly added skill
         skills.add(skill);
         skillsListView.getSelectionModel().select(skill);
+        menuBarController.updateAfterSkillSelected(true);
         switchToSkillList();
         saveProject();
     }
