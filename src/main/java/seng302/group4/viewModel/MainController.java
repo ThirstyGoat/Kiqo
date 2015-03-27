@@ -19,6 +19,12 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import seng302.group4.*;
+
+import seng302.group4.PersistenceManager;
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Skill;
+import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
@@ -37,6 +43,7 @@ public class MainController implements Initializable {
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private final ObservableList<Person> people = FXCollections.observableArrayList();
     private final ObservableList<Skill> skills = FXCollections.observableArrayList();
+    private final ObservableList<Team> teams = FXCollections.observableArrayList();
     private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
@@ -54,11 +61,15 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Skill> skillsListView;
     @FXML
+    private ListView<Team> teamsListView;
+    @FXML
     private Tab projectTab;
     @FXML
     private Tab peopleTab;
     @FXML
     private Tab skillsTab;
+    @FXML
+    private Tab teamsTab;
     @FXML
     private TabPane tabViewPane;
     @FXML
@@ -72,10 +83,9 @@ public class MainController implements Initializable {
     @FXML
     private MenuBarController menuBarController;
     private Project selectedProject;
-    private Team selectedTeam;
     private Person selectedPerson;
     private Skill selectedSkill;
-
+    private Team selectedTeam;
 
     public void editSkill() {
         if (selectedSkill != null) {
@@ -118,6 +128,7 @@ public class MainController implements Initializable {
         initialiseProjectListView();
         initialisePeopleListView();
         initialiseSkillsListView();
+        initialiseTeamsListView();
         initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
@@ -153,6 +164,15 @@ public class MainController implements Initializable {
                 } else {
                     skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().select(selectedSkill);
+                }
+            } else if (newValue == teamsTab) {
+                System.out.println(teams);
+                if (selectedTeam == null) {
+                    teamsListView.getSelectionModel().select(null);
+                    teamsListView.getSelectionModel().selectFirst();
+                } else {
+                    teamsListView.getSelectionModel().select(null);
+                    teamsListView.getSelectionModel().select(selectedTeam);
                 }
             }
         });
@@ -575,6 +595,7 @@ public class MainController implements Initializable {
                 // Set observable list of people and skills corresponding to this new project
                 people.setAll(selectedProject.getPeople());
                 skills.setAll(selectedProject.getSkills());
+                teams.setAll(selectedProject.getTeams());
 
                 // Update status bar to show current save status of selected project
                 // Probably not the best way to do this, but it's the simplest
@@ -676,6 +697,49 @@ public class MainController implements Initializable {
                 menuBarController.updateAfterSkillSelected(true);
 
                 detailsPaneController.showDetailsPane(selectedSkill);
+            }
+        });
+    }
+
+    private void initialiseTeamsListView() {
+        teamsListView.setCellFactory(new Callback<ListView<Team>, ListCell<Team>>() {
+            @Override
+            public ListCell<Team> call(final ListView<Team> arg0) {
+                return new ListCell<Team>() {
+                    @Override
+                    protected void updateItem(final Team team, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(team, empty);
+                        setText(empty ? "" : team.getShortName());
+                    }
+                };
+            }
+        });
+
+        teamsListView.setItems(teams);
+
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Team");
+        contextMenu.getItems().add(editContextMenu);
+
+        teamsListView.setContextMenu(contextMenu);
+
+        editContextMenu.setOnAction(event -> editTeam());
+
+        // Set change listener for projectListView
+        teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                selectedTeam = newValue;
+
+                // Update status bar to show current save status of selected
+                // project
+                // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
+
+//                menuBarController.updateAfterTeamSelected(true);
+
+                detailsPaneController.showDetailsPane(selectedTeam);
             }
         });
     }
@@ -824,6 +888,7 @@ public class MainController implements Initializable {
                     public Team execute() {
                         final Team team = ctc.execute();
                         addTeam(team);
+                        refreshList();
                         return team;
                     }
 
@@ -832,6 +897,7 @@ public class MainController implements Initializable {
                         // TODO Remove from list
                         for (Person person : ctc.getTeam().getTeamMembers()) {
                             person.setTeam(null);
+                            refreshList();
                         }
                         // TODO Refactoring into method(s)
                     }
@@ -937,6 +1003,11 @@ public class MainController implements Initializable {
             skillsListView.setItems(skills);
             skillsListView.getSelectionModel().select(null);
             skillsListView.getSelectionModel().select(selectedSkill);
+        } else if (teamsTab.isSelected()) {
+            teamsListView.setItems(null);
+            teamsListView.setItems(teams);
+            teamsListView.getSelectionModel().select(null);
+            teamsListView.getSelectionModel().select(selectedTeam);
         }
     }
 

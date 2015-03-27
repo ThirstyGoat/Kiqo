@@ -38,7 +38,12 @@
                     </Tab>
                     <Tab fx:id="skillsTab" closable="false" text="Skills">
                       <content>
-                        <ListView id="peopleListView" fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
+                        <ListView id="skillsListView" fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
+                      </content>
+                    </Tab>
+                    <Tab fx:id="teamsTab" closable="false" text="Teams">
+                      <content>
+                        <ListView id="teamsListView" fx:id="teamsListView" prefHeight="0.0" prefWidth="0.0" />
                       </content>
                     </Tab>
                   </tabs>
