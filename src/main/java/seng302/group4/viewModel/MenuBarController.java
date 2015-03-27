@@ -234,6 +234,10 @@ public class MenuBarController implements Initializable {
         listShowProjectMenuItem.selectedProperty().set(selected);
     }
 
+    public void updateAfterTeamListSelected(boolean selected) {
+//        listShowTeamMenuItem.selectedProperty().set(selected);
+    }
+
     public void updateAfterPersonListSelected(boolean selected) {
         listShowPersonMenuItem.selectedProperty().set(selected);
     }

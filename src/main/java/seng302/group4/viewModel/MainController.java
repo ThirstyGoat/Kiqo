@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
@@ -21,12 +22,7 @@ import org.controlsfx.dialog.Dialogs;
 import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -164,6 +160,8 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
+                detailsPaneController.showDetailsPane(skillsListView.getSelectionModel().getSelectedItem());
+                menuBarController.updateAfterSkillListSelected(true);
             } else if (newValue == teamsTab) {
                 if (selectedTeam == null) {
                     teamsListView.getSelectionModel().select(null);
@@ -172,8 +170,8 @@ public class MainController implements Initializable {
                     teamsListView.getSelectionModel().select(null);
                     teamsListView.getSelectionModel().select(selectedTeam);
                 }
-                detailsPaneController.showDetailsPane(skillsListView.getSelectionModel().getSelectedItem());
-                menuBarController.updateAfterSkillListSelected(true);
+                detailsPaneController.showDetailsPane(teamsListView.getSelectionModel().getSelectedItem());
+                menuBarController.updateAfterTeamListSelected(true);
             }
         });
     }
