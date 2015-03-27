@@ -18,6 +18,7 @@
 \usepackage{xcolor} % Required for specifying colors by name
 \definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
 
+\usepackage{float}
 \usepackage{booktabs}
 
 % Font Settings
@@ -80,6 +81,7 @@ The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
   \caption{The main Kiqo window.\label{fig:mainwindow}}
 \end{figure}
 
+\pagebreak
 By default, the main window is split into two panes.
 On the left is the list pane.
 On the right is a simple text field.
@@ -123,6 +125,32 @@ After you undo command/s, you are able to redo them in the reverse order.
   \item From the menu bar, use \menu{Edit > Redo}.
   \item Use the keyboard shortcut \keys{\ctrl + \shift + Z}.
 \end{itemize}
+
+\pagebreak
+
+\subsection{List View}
+There are two ways of changing the view to show relevant information.
+\begin{itemize}
+  \item From the menu bar, use \menu{View > Project} or \menu{View > Person}.
+  \item From clicking the selection tabs shown in figure 1.3
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{listView}
+  \caption{The list view.\label{listView}}
+\end{figure}
+
+\subsection{Details Pane}
+\begin{itemize}
+  \item Selecting a item from the list (Person, Project etc) displays the details about that item in the details pane.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{detailsPane}
+  \caption{The details pane.\label{detailsPane}}
+\end{figure}
 
 \appendix
 \chapter{Appendix}
