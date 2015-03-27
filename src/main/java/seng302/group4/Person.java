@@ -14,7 +14,7 @@ public class Person {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private ArrayList<Skill> skills;
+    private ArrayList<Skill> skills = new ArrayList<Skill>();
 
 
     @Override
