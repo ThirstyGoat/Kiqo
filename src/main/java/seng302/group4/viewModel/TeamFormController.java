@@ -157,7 +157,7 @@ public class TeamFormController implements Initializable {
         // Thank GoatListSelectionView for this fabulous method
 
         setCellFactory(peopleListSelectionView.getSourceListView());
-        setCellFactory(peopleListSelectionView.getTargetListView());
+        setTargetPeopleCellFactory(peopleListSelectionView.getTargetListView());
     }
 
     private void setCellFactory(ListView<Person> listView) {
@@ -168,6 +168,26 @@ public class TeamFormController implements Initializable {
                     super.updateItem(person, empty);
                     if (person != null) {
                         setText(person.getShortName());
+                    } else {
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+        });
+    }
+
+    private void setTargetPeopleCellFactory(ListView<Person> listView) {
+        listView.setCellFactory(view -> {
+            final ListCell<Person> cell = new ListCell<Person>() {
+                @Override
+                public void updateItem(Person person, boolean empty) {
+                    super.updateItem(person, empty);
+                    if (person != null) {
+
+                        setText(person.getShortName());
+
+
                     } else {
                         setText(null);
                     }
