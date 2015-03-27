@@ -26,7 +26,7 @@ public class TeamDetailsPaneController implements Initializable {
             String teamMembersString = "";
             for(Person p : team.getTeamMembers()) {
                 teamMembersString += p.getShortName();
-                teamMembersString += "\n";
+                teamMembersString += ", ";
             }
             teamMembersLabel.setText(teamMembersString);
         } else {
