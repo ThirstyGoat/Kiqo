@@ -11,12 +11,13 @@ import java.util.ArrayList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
+    private final ArrayList<Person> people = new ArrayList<Person>();
+    private final ArrayList<Skill> skills = new ArrayList<Skill>();
+    private final ArrayList<Team> teams = new ArrayList<Team>();
     private String shortName;
     private String longName;
     private String description;
     private transient File saveLocation;
-    private final ArrayList<Person> people = new ArrayList<Person>();
-    private final ArrayList<Skill> skills = new ArrayList<Skill>();
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -121,35 +122,19 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return longName the long name of the project
-     */
-    public String getLongName() {
-        return longName;
-    }
-
-    /**
-     *
-     * @return save location of project
-     */
-    public File getSaveLocation() {
-        return saveLocation;
-    }
-
-    /**
-     *
-     * @return the short name of project
-     */
-    public String getShortName() {
-        return shortName;
-    }
-
-    /**
-     *
      * @param description
      *            the description of the project
      */
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    /**
+     *
+     * @return longName the long name of the project
+     */
+    public String getLongName() {
+        return longName;
     }
 
     /**
@@ -163,6 +148,14 @@ public class Project implements Serializable {
 
     /**
      *
+     * @return save location of project
+     */
+    public File getSaveLocation() {
+        return saveLocation;
+    }
+
+    /**
+     *
      * @param saveLocation
      *            save location of project
      */
@@ -172,11 +165,35 @@ public class Project implements Serializable {
 
     /**
      *
+     * @return the short name of project
+     */
+    public String getShortName() {
+        return shortName;
+    }
+
+    /**
+     *
      * @param shortName
      *            the short name of the project
      */
     public void setShortName(final String shortName) {
         this.shortName = shortName;
+    }
+
+    /**
+     *
+     * @return the array list of teams
+     */
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
+    /**
+     *
+     * @param team the team to be added to the project
+     */
+    public void addTeam(Team team) {
+        this.teams.add(team);
     }
 
     @Override

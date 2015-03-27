@@ -14,8 +14,33 @@ public class Person {
     private String emailAddress;
     private String phoneNumber;
     private String department;
+    private Team team = null;
     private ArrayList<Skill> skills = new ArrayList<Skill>();
 
+
+
+    /**
+     * Create new Person
+     * @param shortName a unique short name for the person
+     * @param longName a long/full name for the person
+     * @param description a description for the person
+     * @param userID a userID for the person
+     * @param emailAddress a email address for the person
+     * @param phoneNumber a phone number for the person
+     * @param department a department the person works in
+     */
+    public Person(String shortName, String longName, String description, String userID, String emailAddress,
+                  String phoneNumber, String department, ArrayList<Skill> skills) {
+        this.shortName = shortName;
+        this.longName = longName;
+        this.description = description;
+
+        this.userID = userID;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
+        this.department = department;
+        this.skills = skills;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -44,29 +69,6 @@ public class Person {
     }
 
     /**
-     * Create new Person
-     * @param shortName a unique short name for the person
-     * @param longName a long/full name for the person
-     * @param description a description for the person
-     * @param userID a userID for the person
-     * @param emailAddress a email address for the person
-     * @param phoneNumber a phone number for the person
-     * @param department a department the person works in
-     */
-    public Person(String shortName, String longName, String description, String userID, String emailAddress,
-                  String phoneNumber, String department, ArrayList<Skill> skills) {
-        this.shortName = shortName;
-        this.longName = longName;
-        this.description = description;
-
-        this.userID = userID;
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.department = department;
-        this.skills = skills;
-    }
-
-    /**
      * To string method for a person. 
      * Will return the fields that are not set to null
      * @return the string representation of a Person object
@@ -87,28 +89,64 @@ public class Person {
         return shortName;
     }
 
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
     public String getLongName() {
         return longName;
+    }
+
+    public void setLongName(String longName) {
+        this.longName = longName;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getUserID() {
         return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getEmailAddress() {
         return emailAddress;
     }
 
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getDepartment() {
         return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public ArrayList<Skill> getSkills() {
@@ -117,33 +155,5 @@ public class Person {
 
     public void setSkills(ArrayList<Skill> skills) {
         this.skills = skills;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setLongName(String longName) {
-        this.longName = longName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 }
