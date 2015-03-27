@@ -19,12 +19,6 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import seng302.group4.*;
-
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
@@ -166,7 +160,6 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
             } else if (newValue == teamsTab) {
-                System.out.println(teams);
                 if (selectedTeam == null) {
                     teamsListView.getSelectionModel().select(null);
                     teamsListView.getSelectionModel().selectFirst();
@@ -362,8 +355,8 @@ public class MainController implements Initializable {
 
     private void addTeam(final Team team) {
         if (team != null) {
-            // TODO Update view
             selectedProject.addTeam(team);
+            teams.add(team);
             saveProject();
         }
     }
@@ -429,7 +422,6 @@ public class MainController implements Initializable {
 
                     @Override
                     public void undo() {
-                        // Remove from mainListView
                         cc.undo();
                         refreshList();
                     }
@@ -880,34 +872,62 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (teamFormController.isValid()) {
-                // Create the command and do it
-                Command<Team> c = new Command<Team>() {
-                    private final CreateTeamCommand ctc = teamFormController.getCommand();
+                Command c;
+                if (team == null) {
+                    // creating
+                    // Create the command and do it
+                    c = new Command<Team>() {
+                        private final CreateTeamCommand ctc = (CreateTeamCommand) teamFormController.getCommand();
 
-                    @Override
-                    public Team execute() {
-                        final Team team = ctc.execute();
-                        addTeam(team);
-                        refreshList();
-                        return team;
-                    }
+                        @Override
+                        public Team execute() {
+                            final Team team = ctc.execute();
+                            addTeam(team);
+                            return team;
+                        }
 
-                    @Override
-                    public void undo() {
-                        // TODO Remove from list
-                        for (Person person : ctc.getTeam().getTeamMembers()) {
-                            person.setTeam(null);
+                        @Override
+                        public void undo() {
+                            teams.remove(ctc.getTeam());
+                            for (Person person : ctc.getTeam().getTeamMembers()) {
+                                person.setTeam(null);
+                                refreshList();
+                            }
+                        }
+
+                        @Override
+                        public String getType() {
+                            return ctc.getType();
+                        }
+                    };
+                } else {
+                    // editing
+                    // Create the command and do it
+                    c = new Command<Team>() {
+                        private final CompoundCommand cc = (CompoundCommand) teamFormController.getCommand();
+
+                        @Override
+                        public Team execute() {
+                            System.out.println(cc);
+                            cc.execute();
+                            saveProject();
+                            refreshList();
+                            return null;
+                        }
+
+                        @Override
+                        public String getType() {
+                            return "Edit Team";
+                        }
+
+                        @Override
+                        public void undo() {
+                            // Remove from projectListView
+                            cc.undo();
                             refreshList();
                         }
-                        // TODO Refactoring into method(s)
-                    }
-
-                    @Override
-                    public String getType() {
-                        return ctc.getType();
-                    }
-                };
-
+                    };
+                }
                 undoManager.doCommand(c);
             }
 
@@ -973,6 +993,7 @@ public class MainController implements Initializable {
 
     private void removeSkillFromProject(Skill skill) {
         selectedProject.getSkills().remove(skill);
+        skills.remove(skill);
     }
 
     private void addSkillToProject(Skill skill) {

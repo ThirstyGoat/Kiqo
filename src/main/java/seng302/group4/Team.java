@@ -39,6 +39,10 @@ public class Team implements Serializable {
         return teamMembers;
     }
 
+    public void setTeamMembers(ArrayList<Person> teamMembers) {
+        this.teamMembers = teamMembers;
+    }
+
     public void setTeamAffiliations() {
         for (Person person : teamMembers) {
             person.setTeam(this);

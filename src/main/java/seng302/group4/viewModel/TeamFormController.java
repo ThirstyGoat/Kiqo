@@ -12,7 +12,10 @@ import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
 import seng302.group4.customNodes.GoatListSelectionView;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateTeamCommand;
+import seng302.group4.undo.EditCommand;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class TeamFormController implements Initializable {
     private Stage stage;
     private Project project;
     private Team team;
-    private CreateTeamCommand command;
+    private Command command;
     private boolean valid = false;
 
     private ObservableList<Person> targetPeople = FXCollections.observableArrayList();
@@ -85,8 +88,8 @@ public class TeamFormController implements Initializable {
             // we're editing
             if (shortNameTextField.getText().equals(team.getShortName())) {
                 // then that's fine
-                setCommand();
                 valid = true;
+                setCommand();
                 return true;
             }
         }
@@ -97,22 +100,41 @@ public class TeamFormController implements Initializable {
                 return false;
             }
         }
-        setCommand();
         valid = true;
+        setCommand();
         return true;
     }
 
     private void setCommand() {
         ArrayList<Person> teamMembers = new ArrayList<>();
         teamMembers.addAll(targetPeople);
-        command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers);
+        if (team == null) {
+            // create command
+            command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers);
+        } else {
+            // edit command
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+
+            if (!shortNameTextField.getText().equals(team.getShortName())) {
+                changes.add(new EditCommand<>(team, "shortName", shortNameTextField.getText()));
+            }
+            if (!descriptionTextField.getText().equals(team.getDescription())) {
+                changes.add(new EditCommand<>(team, "description", descriptionTextField.getText()));
+            }
+            if (!(teamMembers.containsAll(team.getTeamMembers()) && team.getTeamMembers().containsAll(teamMembers))) {
+                changes.add(new EditCommand<>(team, "teamMembers", teamMembers));
+            }
+
+            valid = !changes.isEmpty();
+            command = new CompoundCommand(changes);
+        }
     }
 
     public boolean isValid() {
         return valid;
     }
 
-    public CreateTeamCommand getCommand() {
+    public Command getCommand() {
         return command;
     }
 
