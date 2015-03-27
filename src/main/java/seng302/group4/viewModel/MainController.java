@@ -217,7 +217,8 @@ public class MainController implements Initializable {
             project = PersistenceManager.loadProject(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             System.out.println("JSON file invalid");
-            e.printStackTrace();
+            Dialogs.create().owner(primaryStage).title("Error")
+                    .message("JSON file invalid").showWarning();
         } catch (final InvalidPersonException e) {
             System.out.println("Person invalid");
             e.printStackTrace();
