@@ -40,6 +40,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listShowPersonMenuItem;
     @FXML
+    private CheckMenuItem listShowSkillMenuItem;
+    @FXML
     private MenuItem quitMenuItem;
 
     private MainController mainController;
@@ -64,7 +66,9 @@ public class MenuBarController implements Initializable {
         editProjectMenuItem.setDisable(true);
         editPersonMenuItem.setDisable(true);
         editSkillMenuItem.setDisable(true);
+        // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
+        listShowProjectMenuItem.setSelected(true);
     }
 
     public void setMainController(MainController mainController) {
@@ -90,6 +94,8 @@ public class MenuBarController implements Initializable {
             if (newValue) {
                 listShowPersonMenuItem.setSelected(false);
                 listShowPersonMenuItem.setDisable(false);
+                listShowSkillMenuItem.setSelected(false);
+                listShowSkillMenuItem.setDisable(false);
 
                 mainController.switchToProjectList();
                 listShowProjectMenuItem.setDisable(true);
@@ -99,9 +105,23 @@ public class MenuBarController implements Initializable {
             if (newValue) {
                 listShowProjectMenuItem.setSelected(false);
                 listShowProjectMenuItem.setDisable(false);
+                listShowSkillMenuItem.setSelected(false);
+                listShowSkillMenuItem.setDisable(false);
 
                 mainController.switchToPersonList();
                 listShowPersonMenuItem.setDisable(true);
+                listShowPersonMenuItem.setSelected(true);
+            }
+        });
+        listShowSkillMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                listShowProjectMenuItem.setSelected(false);
+                listShowProjectMenuItem.setDisable(false);
+                listShowPersonMenuItem.setSelected(false);
+                listShowPersonMenuItem.setDisable(false);
+
+                mainController.switchToSkillList();
+                listShowSkillMenuItem.setDisable(true);
             }
         });
     }
@@ -207,6 +227,10 @@ public class MenuBarController implements Initializable {
 
     public void updateAfterPersonListSelected(boolean selected) {
         listShowPersonMenuItem.selectedProperty().set(selected);
+    }
+
+    public void updateAfterSkillListSelected(boolean selected) {
+        listShowSkillMenuItem.selectedProperty().set(selected);
     }
 
     public void enableNewPerson() {
