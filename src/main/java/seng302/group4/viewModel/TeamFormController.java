@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import org.controlsfx.control.PopOver;
 
+import javafx.util.Duration;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
@@ -81,7 +82,7 @@ public class TeamFormController implements Initializable {
         });
 
         cancelButton.setOnAction(event -> {
-            errorPopOver.hide();
+            errorPopOver.hide(Duration.millis(0));
             stage.close();
         });
     }
