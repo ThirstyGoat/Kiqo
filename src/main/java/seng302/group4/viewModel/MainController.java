@@ -774,7 +774,7 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
-//                menuBarController.updateAfterTeamSelected(true);
+                menuBarController.updateAfterTeamSelected(true);
 
                 detailsPaneController.showDetailsPane(selectedTeam);
             }

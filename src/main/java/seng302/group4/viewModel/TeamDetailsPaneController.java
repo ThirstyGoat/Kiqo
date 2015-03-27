@@ -3,8 +3,6 @@ package seng302.group4.viewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import seng302.group4.Person;
-import seng302.group4.Skill;
 import seng302.group4.Team;
 
 import java.net.URL;
@@ -24,10 +22,12 @@ public class TeamDetailsPaneController implements Initializable {
             shortNameLabel.setText(team.getShortName());
             descriptionLabel.setText(team.getDescription());
             String teamMembersString = "";
-            for(Person p : team.getTeamMembers()) {
-                teamMembersString += p.getShortName();
-                teamMembersString += "\n";
+
+            for( int i = 0; i < team.getTeamMembers().size()-1; i++) {
+                teamMembersString += team.getTeamMembers().get(i).getShortName();
+                teamMembersString += ", ";
             }
+            teamMembersString += team.getTeamMembers().get(team.getTeamMembers().size()-1).getShortName();
             teamMembersLabel.setText(teamMembersString);
         } else {
             shortNameLabel.setText(null);
