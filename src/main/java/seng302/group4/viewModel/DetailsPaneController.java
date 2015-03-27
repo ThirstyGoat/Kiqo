@@ -48,7 +48,6 @@ public class DetailsPaneController implements Initializable {
 
 
     public void showDetailsPane(Object objectForDisplay) {
-        System.out.println(objectForDisplay != null ? objectForDisplay.toString() : "none");
         if (objectForDisplay == null) {
             clear();
         } else {
@@ -61,8 +60,6 @@ public class DetailsPaneController implements Initializable {
             }
         }
     }
-
-
 
     private void clear() {
         detailsPane.getChildren().clear();
