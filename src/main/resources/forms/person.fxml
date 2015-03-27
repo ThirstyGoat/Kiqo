@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <?import seng302.group4.customNodes.GoatListSelectionView?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.PersonFormController" vgap="10.0">
+<GridPane vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.PersonFormController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
@@ -18,6 +21,8 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints />
+      <RowConstraints />
     </rowConstraints>
     <padding>
         <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
@@ -26,18 +31,18 @@
         <Label text="Name:*" />
         <Label text="Short Name:*" GridPane.rowIndex="1" />
         <Label text="User ID:" GridPane.rowIndex="3" />
-        <Label text="Description:" GridPane.rowIndex="2" />
+        <Label text="Description:" GridPane.rowIndex="6" />
         <Label text="Email:" GridPane.rowIndex="4" />
         <Label text="Phone:" GridPane.rowIndex="5" />
-        <Label text="Department:" GridPane.rowIndex="6" />
-        <Label text="* Indicates required field." GridPane.rowIndex="8" textFill="grey"/>
+        <Label text="Department:" GridPane.rowIndex="2" />
+        <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="8" />
         <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
         <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <TextField fx:id="userIDTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <TextField fx:id="phoneTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-        <GoatListSelectionView fx:id="skillsSelectionView" GridPane.rowIndex="7" GridPane.columnSpan="2" />
+        <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <GoatListSelectionView fx:id="skillsSelectionView" GridPane.columnSpan="2" GridPane.rowIndex="7" />
     </children>
 </GridPane>
