@@ -139,6 +139,7 @@ public class MainController implements Initializable {
             if (newValue == projectTab) {
                 projectListView.getSelectionModel().select(null);
                 if (selectedProject != null) {
+                    projectListView.getSelectionModel().select(null);
                     projectListView.getSelectionModel().select(selectedProject);
                 } else {
                     projectListView.getSelectionModel().selectFirst();
@@ -151,6 +152,7 @@ public class MainController implements Initializable {
                     peopleListView.getSelectionModel().select(null);
                     peopleListView.getSelectionModel().selectFirst();
                 } else {
+                    peopleListView.getSelectionModel().select(null);
                     peopleListView.getSelectionModel().select(selectedPerson);
                 }
 
@@ -160,6 +162,7 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().selectFirst();
                 } else {
+                    skillsListView.getSelectionModel().select(null);
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
             }
@@ -623,7 +626,7 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterPersonSelected(true);
 
-                detailsPaneController.showDetailsPane(newValue);
+                detailsPaneController.showDetailsPane(selectedPerson);
             }
         });
     }
@@ -667,7 +670,7 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
-                detailsPaneController.showDetailsPane(newValue);
+                detailsPaneController.showDetailsPane(selectedSkill);
             }
         });
     }
