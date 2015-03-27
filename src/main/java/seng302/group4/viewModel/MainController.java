@@ -766,8 +766,8 @@ public class MainController implements Initializable {
         // Set change listener for projectListView
         teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                selectedTeam = newValue;
 
+                selectedTeam = newValue;
                 // Update status bar to show current save status of selected
                 // project
                 // Probably not the best way to do this, but it's the simplest

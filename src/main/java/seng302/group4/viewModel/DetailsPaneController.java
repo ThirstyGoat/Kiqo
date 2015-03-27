@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
+import seng302.group4.Team;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,6 +34,8 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private GridPane skillDetailsPane;
     @FXML
+    private GridPane teamDetailsPane;
+    @FXML
     private Button editButton;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
@@ -40,6 +43,8 @@ public class DetailsPaneController implements Initializable {
     private PersonDetailsPaneController personDetailsPaneController;
     @FXML
     private SkillDetailsPaneController skillDetailsPaneController;
+    @FXML
+    private TeamDetailsPaneController teamDetailsPaneController;
 
     private MainController mainController;
 
@@ -59,9 +64,12 @@ public class DetailsPaneController implements Initializable {
                 showPersonDetailsPane((Person)objectForDisplay);
             } else if (objectForDisplay instanceof Skill) {
                 showSkillDetailPane((Skill)objectForDisplay);
+            } else if (objectForDisplay instanceof Team) {
+                showTeamDetailPane((Team)objectForDisplay);
             }
         }
     }
+
 
     private void clear() {
         stackPane.getChildren().clear();
@@ -77,6 +85,7 @@ public class DetailsPaneController implements Initializable {
         }
         children.remove(projectDetailsPane);
         children.remove(personDetailsPane);
+        children.remove(teamDetailsPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editSkill());
@@ -91,6 +100,7 @@ public class DetailsPaneController implements Initializable {
         }
         children.remove(personDetailsPane);
         children.remove(skillDetailsPane);
+        children.remove(teamDetailsPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editProject());
@@ -105,9 +115,25 @@ public class DetailsPaneController implements Initializable {
         }
         children.remove(projectDetailsPane);
         children.remove(skillDetailsPane);
+        children.remove(teamDetailsPane);
 
         addEditButton();
         editButton.setOnAction(event -> mainController.editPerson());
+    }
+
+    private void showTeamDetailPane(Team team) {
+        teamDetailsPaneController.showDetails(team);
+
+        final ObservableList<Node> children = stackPane.getChildren();
+        if (!children.contains(teamDetailsPane)) {
+            children.add(teamDetailsPane);
+        }
+        children.remove(projectDetailsPane);
+        children.remove(skillDetailsPane);
+        children.remove(personDetailsPane);
+
+        addEditButton();
+        editButton.setOnAction(event -> mainController.editTeam());
     }
 
     private void addEditButton() {
