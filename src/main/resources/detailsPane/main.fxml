@@ -11,8 +11,8 @@
     <StackPane fx:id="stackPane">
       <children>
         <fx:include fx:id="projectDetailsPane" source="project.fxml" />
-        <fx:include fx:id="personDetailsPane" source="person.fxml" maxHeight="1.7976931348623157E308" />
-        <fx:include fx:id="skillDetailsPane" source="skill.fxml" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" />
+        <fx:include fx:id="personDetailsPane" source="person.fxml" />
+        <fx:include fx:id="skillDetailsPane" source="skill.fxml" />
       </children>
     </StackPane>
   </center>
