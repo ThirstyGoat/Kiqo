@@ -257,6 +257,10 @@ public class MainController implements Initializable {
         detailsPaneController.setMainController(this);
     }
 
+    public void switchToSkillList() {
+        tabViewPane.getSelectionModel().select(skillsTab);
+    }
+
     public void switchToPersonList() {
         tabViewPane.getSelectionModel().select(peopleTab);
     }
@@ -845,6 +849,7 @@ public class MainController implements Initializable {
         // Update listView and select newly added skill
         skills.add(skill);
         skillsListView.getSelectionModel().select(skill);
+        switchToSkillList();
         saveProject();
     }
 

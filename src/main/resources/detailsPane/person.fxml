@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10.0" prefHeight="329.0" prefWidth="381.0" vgap="15.0"
-          xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.PersonDetailsPaneController">
+<?import javafx.scene.text.*?>
+
+<GridPane hgap="10.0" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefWidth="468.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.PersonDetailsPaneController">
   <children>
-    <Label text="Name:" />
-      <Label text="Short name:" GridPane.rowIndex="1" />
-      <Label text="User ID:" GridPane.rowIndex="2" />
-      <Label text="Phone:" GridPane.rowIndex="4" />
-      <Label text="Email:" GridPane.rowIndex="3" />
-      <Label text="Department:" GridPane.rowIndex="5" />
-      <Label text="Description:" GridPane.rowIndex="6" />
-      <Label fx:id="longNameLabel" GridPane.columnIndex="1" />
-      <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label fx:id="userIDLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label fx:id="departmentLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+    <Label text="Name:" wrapText="true">
+      <font>
+        <Font name="System Bold" size="13.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label font="$x1" text="Short name:" GridPane.rowIndex="1" />
+    <Label font="$x1" text="User ID:" GridPane.rowIndex="2" />
+    <Label font="$x1" text="Phone:" GridPane.rowIndex="4" />
+    <Label font="$x1" text="Email:" GridPane.rowIndex="3" />
+    <Label font="$x1" minWidth="67.0" text="Department:" GridPane.rowIndex="5" />
+    <Label alignment="TOP_LEFT" contentDisplay="LEFT" font="$x1" text="Description:" wrapText="true" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+    <Label fx:id="longNameLabel" GridPane.columnIndex="1" />
+    <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Label fx:id="userIDLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+    <Label fx:id="departmentLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+    <ScrollPane id="ScrollPane" fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent;&#10;" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.vgrow="ALWAYS">
+      <content>
+        <Label fx:id="descriptionLabel" text="" wrapText="true" />
+      </content>
+    </ScrollPane>
+    <Label font="$x1" text="Skills:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+    <Label fx:id="skillsLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="6" />
   </children>
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
     <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
   </columnConstraints>
   <padding>
     <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
   </padding>
   <rowConstraints>
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
     <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="-1.0" minHeight="10.0" prefHeight="-1.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
