@@ -10,11 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import org.controlsfx.control.PopOver;
@@ -50,6 +48,9 @@ public class TeamFormController implements Initializable {
     private Team team;
     private Command command;
     private boolean valid = false;
+    private Person scrumMaster;
+    private Person productOwner;
+    private ArrayList<Person> devTeam;
 
     private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
@@ -185,8 +186,22 @@ public class TeamFormController implements Initializable {
                     super.updateItem(person, empty);
                     if (person != null) {
 
-                        setText(person.getShortName());
+                        HBox hbox = new HBox();
+                        Label label = new Label(person.getShortName());
 
+                        ToggleGroup radioGroup = new ToggleGroup();
+                        RadioButton radioPo = new RadioButton();
+                        RadioButton radioSm = new RadioButton();
+                        RadioButton radioDev = new RadioButton();
+                        RadioButton radioOther = new RadioButton();
+                        radioPo.setToggleGroup(radioGroup);
+                        radioSm.setToggleGroup(radioGroup);
+                        radioDev.setToggleGroup(radioGroup);
+                        radioOther.setToggleGroup(radioGroup);
+
+                        hbox.getChildren().addAll(label, radioPo, radioSm, radioDev, radioOther);
+
+                        setGraphic(hbox);
 
                     } else {
                         setText(null);
