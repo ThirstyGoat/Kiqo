@@ -53,7 +53,7 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private ArrayList<Person> devTeam;
+    private ArrayList<Person> devTeam = new ArrayList<>();
 
     private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
@@ -129,7 +129,8 @@ public class TeamFormController implements Initializable {
         teamMembers.addAll(targetPeople);
         if (team == null) {
             // create command
-            command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers);
+            command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers,
+                    productOwner, scrumMaster, devTeam);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -239,7 +240,13 @@ public class TeamFormController implements Initializable {
     }
 
     private void setupRadioDevListener(RadioButton radioDev, Person person) {
-
+        radioDev.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                devTeam.add(person);
+            } else {
+                devTeam.remove(person);
+            }
+        });
     }
 
     private void setupRadioSmListener(RadioButton radioSm, RadioButton radioOther, Person person) {

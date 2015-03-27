@@ -12,12 +12,24 @@ public class Team implements Serializable {
     private Person productOwner;
     private Person scrumMaster;
     private ArrayList<Person> teamMembers;
-    private ArrayList<Person> devTeam = new ArrayList<>();
+    private ArrayList<Person> devTeam;
 
     public Team(String shortName, String description, ArrayList<Person> teamMembers) {
         this.shortName = shortName;
         this.description = description;
         this.teamMembers = teamMembers;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "shortName='" + shortName + '\'' +
+                ", description='" + description + '\'' +
+                ", productOwner=" + productOwner +
+                ", scrumMaster=" + scrumMaster +
+                ", teamMembers=" + teamMembers +
+                ", devTeam=" + devTeam +
+                '}';
     }
 
     public String getShortName() {
@@ -64,7 +76,7 @@ public class Team implements Serializable {
         return devTeam;
     }
 
-    public void add(Person person) {
-         devTeam.add(person);
+    public void setDevTeam(ArrayList<Person> devTeam) {
+         this.devTeam = devTeam;
     }
 }
