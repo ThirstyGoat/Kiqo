@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="10.0" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefWidth="468.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.PersonDetailsPaneController">
+<GridPane hgap="10.0" maxHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.PersonDetailsPaneController">
   <children>
     <Label text="Name:" wrapText="true">
       <font>

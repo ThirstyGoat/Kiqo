@@ -84,7 +84,7 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private Pane detailsPane;
+    private AnchorPane detailsPane;
     @FXML
     private DetailsPaneController detailsPaneController;
     @FXML
