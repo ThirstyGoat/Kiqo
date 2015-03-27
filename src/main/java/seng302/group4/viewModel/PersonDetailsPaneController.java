@@ -46,7 +46,7 @@ public class PersonDetailsPaneController implements Initializable {
             emailLabel.setText(person.getEmailAddress());
             phoneLabel.setText(person.getPhoneNumber());
             departmentLabel.setText(person.getDepartment());
-            skillsLabel.setText(getSkillsString(person));
+            skillsLabel.setText(formatSkillsString(person.getSkills()));
             descriptionLabel.setText(person.getDescription());
         } else {
             shortNameLabel.setText(null);
@@ -60,9 +60,9 @@ public class PersonDetailsPaneController implements Initializable {
         }
     }
 
-    public String getSkillsString(Person person) {
+    public String formatSkillsString(ArrayList<Skill> skills) {
         ArrayList<String> skillsStrings = new ArrayList<>();
-        for (Skill skill : person.getSkills()) {
+        for (Skill skill : skills) {
             skillsStrings.add(skill.toString());
         }
 
