@@ -670,6 +670,8 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
+                menuBarController.updateAfterSkillSelected(true);
+
                 detailsPaneController.showDetailsPane(selectedSkill);
             }
         });
