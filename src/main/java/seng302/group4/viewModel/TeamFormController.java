@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -179,6 +180,29 @@ public class TeamFormController implements Initializable {
 
         setCellFactory(peopleListSelectionView.getSourceListView());
         setTargetPeopleCellFactory(peopleListSelectionView.getTargetListView());
+
+        // Set change listener on target list view
+        targetPeople.addListener(new ListChangeListener<Person>() {
+            @Override
+            public void onChanged(Change<? extends Person> c) {
+                c.next();
+                for (Person person : c.getRemoved()) {
+                    // Remove person from role of PO/SM/DevTeam if applicable
+                    if (productOwner == person) {
+                        productOwner = null;
+                        System.out.println("removing " + person + " from po role");
+                    } else if (scrumMaster == person) {
+                        scrumMaster = null;
+                        System.out.println("removing " + person + " from sm role");
+                    } else if (devTeam.contains(person)) {
+                        devTeam.remove(person);
+                        System.out.println("removing " + person + " from devteam role");
+                    }
+                }
+            }
+        });
+
+
     }
 
     private void setCellFactory(ListView<Person> listView) {
@@ -222,25 +246,23 @@ public class TeamFormController implements Initializable {
                         radioDev.setToggleGroup(radioGroup);
                         radioOther.setToggleGroup(radioGroup);
 
+                        // Hide PO/SM Radio Buttons if the person doesn't have the skill
+                        if (!person.getSkills().contains(project.getPoSkill())) {
+                            radioPo.setDisable(true);
+                        }
+                        if (!person.getSkills().contains(project.getSmSkill())) {
+                            radioSm.setDisable(true);
+                        }
+
                         // Select appropriate RadioButton
-                        if (team.getProductOwner() == person) {
+                        if (person == productOwner) {
                             radioPo.setSelected(true);
-                            productOwner = person;
-                        } else if (team.getScrumMaster() == person) {
+                        } else if (person == scrumMaster) {
                             radioSm.setSelected(true);
-                            scrumMaster = person;
-                        } else if (team.getDevTeam() != null && team.getDevTeam().contains(person)) {
+                        } else if (devTeam != null && devTeam.contains(person)) {
                             radioDev.setSelected(true);
-                            devTeam.add(person);
                         } else {
                             radioOther.setSelected(true);
-                            devTeam.remove(person);
-                            if (productOwner == person) {
-                                productOwner = null;
-                            }
-                            if (scrumMaster == person) {
-                                scrumMaster = null;
-                            }
                         }
 
 //                        // Set colors
@@ -268,8 +290,11 @@ public class TeamFormController implements Initializable {
         radioDev.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 devTeam.add(person);
+                System.out.println("Assigned " + person.getShortName() + " to Dev Role");
             } else {
                 devTeam.remove(person);
+                System.out.println("Removed " + person.getShortName() + " from Dev Role");
+
             }
         });
     }
@@ -282,9 +307,13 @@ public class TeamFormController implements Initializable {
                 // If selected
                 scrumMaster = person;
                 smRadioButtons.stream().filter(rb -> rb != radioSm).forEach(rb -> rb.setSelected(false));
+                System.out.println("Assigned " + person.getShortName() + " to SM Role");
             } else {
                 if (radioSm.getToggleGroup().getSelectedToggle() == null) {
                     radioOther.setSelected(true);
+                }
+                if (scrumMaster == person) {
+                    scrumMaster = null;
                 }
             }
         });
@@ -298,9 +327,13 @@ public class TeamFormController implements Initializable {
                 // If selected
                 productOwner = person;
                 poRadioButtons.stream().filter(rb -> rb != radioPo).forEach(rb -> rb.setSelected(false));
+                System.out.println("Assigned " + person.getShortName() + " to PO Role");
             } else {
                 if (radioPo.getToggleGroup().getSelectedToggle() == null) {
                     radioOther.setSelected(true);
+                }
+                if (productOwner == person) {
+                    productOwner = null;
                 }
             }
         });
@@ -353,6 +386,10 @@ public class TeamFormController implements Initializable {
             shortNameTextField.setText(team.getShortName());
             descriptionTextField.setText(team.getDescription());
             targetPeople.addAll(team.getTeamMembers());
+
+            productOwner = team.getProductOwner();
+            scrumMaster = team.getScrumMaster();
+            devTeam = team.getDevTeam();
         }
 
     }

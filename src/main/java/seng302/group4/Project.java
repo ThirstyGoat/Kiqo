@@ -19,12 +19,23 @@ public class Project implements Serializable {
     private String description;
     private transient File saveLocation;
 
+    private Skill poSkill = new Skill("PO", "Product Owner");
+    private Skill smSkill = new Skill("SM", "Scrum Master");
+
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Project() {
-        skills.add(new Skill("PO", "Product Owner"));
-        skills.add(new Skill("SM", "Scrum Master"));
+        skills.add(poSkill);
+        skills.add(smSkill);
+    }
+
+    public Skill getPoSkill() {
+        return poSkill;
+    }
+
+    public Skill getSmSkill() {
+        return smSkill;
     }
 
     /**
