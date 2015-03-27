@@ -38,7 +38,7 @@ public class PersonFormController implements Initializable {
     private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
     private Stage stage;
-    private PopOver errorPopOver = new PopOver();
+    public PopOver errorPopOver = new PopOver();
     private boolean shortNameModified = false;
 
 

@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import seng302.group4.Project;
 import seng302.group4.undo.CreateProjectCommand;
 
@@ -61,7 +62,10 @@ public class NewProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        this.cancelButton.setOnAction(event -> this.stage.close());
+        this.cancelButton.setOnAction(event -> {
+            formController.errorPopOver.hide(Duration.millis(0));
+            this.stage.close();
+        });
     }
 
     /**

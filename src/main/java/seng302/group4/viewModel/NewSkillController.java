@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 import seng302.group4.undo.CreateSkillCommand;
@@ -45,6 +46,7 @@ public class NewSkillController implements Initializable {
      */
     private void setCancelButton() {
         cancelButton.setOnAction(event -> {
+            formController.errorPopOver.hide(Duration.millis(0));
             stage.close();
         });
     }

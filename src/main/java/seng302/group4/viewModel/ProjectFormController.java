@@ -45,7 +45,7 @@ public class ProjectFormController implements Initializable {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
-    private final PopOver errorPopOver = new PopOver();
+    public final PopOver errorPopOver = new PopOver();
 
     private boolean valid = false;
     private Window stage;
