@@ -81,6 +81,7 @@ public class MenuBarController implements Initializable {
 
         editProjectMenuItem.setOnAction(event -> mainController.editProject());
         editPersonMenuItem.setOnAction(event -> mainController.editPerson());
+        editSkillMenuItem.setOnAction(event-> mainController.editSkill());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
@@ -175,6 +176,7 @@ public class MenuBarController implements Initializable {
     public void updateAfterProjectSelected(boolean selected) {
         // disable things
         editPersonMenuItem.setDisable(selected);
+        editSkillMenuItem.setDisable(selected);
 
         // enable things
         editProjectMenuItem.setDisable(!selected);
@@ -184,9 +186,19 @@ public class MenuBarController implements Initializable {
     public void updateAfterPersonSelected(boolean selected) {
         // disable things
         editProjectMenuItem.setDisable(selected);
+        editSkillMenuItem.setDisable(selected);
 
         // enable things
         editPersonMenuItem.setDisable(!selected);
+    }
+
+    public void updateAfterSkillSelected(boolean selected) {
+        // disable things
+        editProjectMenuItem.setDisable(selected);
+        editPersonMenuItem.setDisable(selected);
+
+        // enable things
+        editSkillMenuItem.setDisable(!selected);
     }
 
     public void updateAfterProjectListSelected(boolean selected) {
