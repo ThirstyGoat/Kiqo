@@ -135,10 +135,11 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
-                if (selectedProject != null) {
+                if (selectedProject != null && !(selectedProject.getPeople().isEmpty())) {
                     people.setAll(selectedProject.getPeople());
                 } else {
                     people.clear();
+                    detailsPaneController.showDetailsPane(null);
                 }
                 peopleListView.getSelectionModel().select(null);
                 peopleListView.getSelectionModel().selectFirst();
@@ -537,7 +538,7 @@ public class MainController implements Initializable {
 
                     menuBarController.updateAfterPersonSelected(newValue != null);
 
-                    detailsPaneController.showDetailsPane(newValue);
+                    detailsPaneController.showDetailsPane(selectedPerson);
             }
         });
     }
