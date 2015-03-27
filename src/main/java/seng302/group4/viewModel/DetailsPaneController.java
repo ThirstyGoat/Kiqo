@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
@@ -49,6 +48,7 @@ public class DetailsPaneController implements Initializable {
 
 
     public void showDetailsPane(Object objectForDisplay) {
+        System.out.println(objectForDisplay != null ? objectForDisplay.toString() : "none");
         if (objectForDisplay == null) {
             clear();
         } else {
