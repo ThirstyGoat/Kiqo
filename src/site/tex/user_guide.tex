@@ -143,13 +143,28 @@ There are two ways of changing the view to show relevant information.
 
 \subsection{Details Pane}
 \begin{itemize}
-  \item Selecting a item from the list (Person, Project etc) displays the details about that item in the details pane.
+  \item Selecting an item from the list (Person, Project etc) displays the details about that item in the details pane.
 \end{itemize}
 
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.32]{detailsPane}
   \caption{The details pane.\label{detailsPane}}
+\end{figure}
+
+\pagebreak
+
+\subsection{Skills Register}
+\begin{itemize}
+  \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the first skill is shown in the details pane, unless another skill in the list is selected. 
+  \item Go to the skills selection pane in edit or create person and click the > arrow to add one skill to a person or >> to add all existing skills.
+  \item In the skills selection pane  click the < arrow to remove one skill or << to remove all assigned skills. 
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{skillsSelectionPane}
+  \caption{The skills selection pane.\label{skillsSelectionPane}}
 \end{figure}
 
 \appendix
@@ -173,6 +188,7 @@ There are two ways of changing the view to show relevant information.
     Save Project & \keys{\ctrl + S} \\
     Undo & \keys{\ctrl + Z} \\
     Redo & \keys{\ctrl + \shift + Z} \\
+    Create New Skill & \keys{\ctrl + K} \\
     \bottomrule
   \end{tabular}
   \caption{List of Keyboard Shortcuts}
