@@ -127,7 +127,6 @@ public class PersonFormController implements Initializable {
         // Load existing skills into skill list
         targetSkills.setAll(person.getSkills());
         setUpSkillsListSelectionView();
-
     }
 
     /**

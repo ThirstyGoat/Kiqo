@@ -759,6 +759,7 @@ public class MainController implements Initializable {
             final NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
+            newPersonController.setProjectForFormController();
 
             stage.showAndWait();
             if (newPersonController.isValid()) {
