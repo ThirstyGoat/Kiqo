@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
@@ -95,7 +96,10 @@ public class EditProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        cancelButton.setOnAction(event -> stage.close());
+        cancelButton.setOnAction(event -> {
+            formController.errorPopOver.hide(Duration.millis(0));
+            stage.close();
+        });
     }
 
     public Project getProject() {
