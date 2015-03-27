@@ -932,7 +932,6 @@ public class MainController implements Initializable {
                         public void undo() {
                             teams.remove(ctc.getTeam());
                             for (final Person person : ctc.getTeam().getTeamMembers()) {
-                                person.setTeam(null);
                                 refreshList();
                             }
                         }

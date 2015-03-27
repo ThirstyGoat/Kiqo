@@ -51,9 +51,9 @@ public class TeamFormController implements Initializable {
     private Command command;
     private boolean valid = false;
 
+    private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final PopOver errorPopOver = new PopOver();
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
@@ -178,9 +178,24 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
+<<<<<<< HEAD
         final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+=======
+        final ArrayList<Person> allPeople = new ArrayList<>();
+        // Populate allPeople with all people in the project
+        for (final Person person : project.getPeople()) {
+            allPeople.add(person);
+        }
+        // Remove people from allPeople who are currently in a team
+        for (final Team team : project.getTeams()) {
+            for (final Person person : team.getTeamMembers()) {
+                allPeople.remove(person);
+            }
+        }
+>>>>>>> branch 'feature/team' of ssh://git@eng-git.canterbury.ac.nz/seng302-2015/project-4.git
 
-        project.getPeople().stream().filter(person -> !sourcePeople.contains(person)).forEach(sourcePeople::add);
+        // So we are left with ArrayList<Person> allPeople which contains only people who aren't in a team
+        sourcePeople.setAll(allPeople);
 
         peopleListSelectionView.getSourceListView().setItems(sourcePeople);
         peopleListSelectionView.getTargetListView().setItems(targetPeople);

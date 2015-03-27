@@ -14,7 +14,6 @@ public class Person {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private Team team = null;
     private ArrayList<Skill> skills = new ArrayList<Skill>();
 
 
@@ -139,14 +138,6 @@ public class Person {
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
     }
 
     public ArrayList<Skill> getSkills() {
