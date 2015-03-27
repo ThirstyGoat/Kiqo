@@ -1,30 +1,31 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * Switches between detail panes depending on type of content shown.
  *
- * @see http://stackoverflow.com/a/16179194
  * @author amy
  *
  */
 public class DetailsPaneController implements Initializable {
     @FXML
-    private AnchorPane detailsPane;
+    private BorderPane detailsPane;
+    @FXML
+    private StackPane stackPane;
     @FXML
     private GridPane projectDetailsPane;
     @FXML
@@ -62,16 +63,15 @@ public class DetailsPaneController implements Initializable {
         }
     }
 
-
-
     private void clear() {
-        detailsPane.getChildren().clear();
+        stackPane.getChildren().clear();
+        detailsPane.getChildren().remove(editButton);
     }
 
     private void showSkillDetailPane(Skill skill) {
         skillDetailsPaneController.showDetails(skill);
 
-        final ObservableList<Node> children = detailsPane.getChildren();
+        final ObservableList<Node> children = stackPane.getChildren();
         if (!children.contains(skillDetailsPane)) {
             children.add(skillDetailsPane);
         }
@@ -85,7 +85,7 @@ public class DetailsPaneController implements Initializable {
     private void showProjectDetailsPane(Project project) {
         projectDetailsPaneController.showDetails(project);
 
-        final ObservableList<Node> children = detailsPane.getChildren();
+        final ObservableList<Node> children = stackPane.getChildren();
         if (!children.contains(projectDetailsPane)) {
             children.add(projectDetailsPane);
         }
@@ -99,7 +99,7 @@ public class DetailsPaneController implements Initializable {
     private void showPersonDetailsPane(Person person) {
         personDetailsPaneController.showDetails(person);
 
-        final ObservableList<Node> children = detailsPane.getChildren();
+        final ObservableList<Node> children = stackPane.getChildren();
         if (!children.contains(personDetailsPane)) {
             children.add(personDetailsPane);
         }
@@ -113,7 +113,7 @@ public class DetailsPaneController implements Initializable {
     private void addEditButton() {
         final ObservableList<Node> children = detailsPane.getChildren();
         if (!children.contains(editButton)) {
-            children.add(editButton);
+            detailsPane.setBottom(editButton);
         }
     }
 

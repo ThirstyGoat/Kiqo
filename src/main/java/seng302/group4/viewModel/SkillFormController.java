@@ -30,9 +30,13 @@ public class SkillFormController implements Initializable {
 
     private Stage stage;
     private PopOver errorPopOver = new PopOver();
+    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private boolean shortNameModified = false;
 
     private Project project;
+
+
     // FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -43,6 +47,7 @@ public class SkillFormController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setErrorPopOvers();
+        setShortNameHandler();
         Platform.runLater(shortNameTextField::requestFocus);
     }
 
@@ -68,6 +73,25 @@ public class SkillFormController implements Initializable {
             description = descriptionTextField.getText();
             valid = true;
         }
+    }
+
+    /**
+     * Sets the listener on the shortName field so that the shortName is populated in real time
+     * up to a certain number of characters
+     */
+    private void setShortNameHandler() {
+        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Auto populate short name text field
+            if (!Objects.equals(newValue, shortNameTextField.getText().substring(0,
+                    Math.min(shortNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
+                shortNameModified = true;
+            }
+
+            // Restrict length of short name text field
+            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            }
+        });
     }
 
     /**

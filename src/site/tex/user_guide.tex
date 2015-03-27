@@ -18,6 +18,7 @@
 \usepackage{xcolor} % Required for specifying colors by name
 \definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
 
+\usepackage{float}
 \usepackage{booktabs}
 
 % Font Settings
@@ -61,7 +62,7 @@
 %	TABLE OF CONTENTS
 %----------------------------------------------------------------------------------------
 
-\thispagestyle{empty}
+%\thispagestyle{empty}
 \tableofcontents % Print the table of contents itself
 
 %----------------------------------------------------------------------------------------
@@ -69,7 +70,7 @@
 %----------------------------------------------------------------------------------------
 
 \chapter{Introduction}
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
 \section{Parts of the Main Window}
 The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
@@ -80,6 +81,7 @@ The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
   \caption{The main Kiqo window.\label{fig:mainwindow}}
 \end{figure}
 
+\pagebreak
 By default, the main window is split into two panes.
 On the left is the list pane.
 On the right is a simple text field.
@@ -112,6 +114,9 @@ You will then be prompted to enter the details of the new project.
   \item Use the keyboard shortcut \keys{\ctrl + S}.
 \end{itemize}
 
+\subsection{People}
+A person can be created, saved and edited in the same way as a project
+
 \subsection{Undo/Redo}
 All commands except Create Project can be undone.
 \begin{itemize}
@@ -123,6 +128,47 @@ After you undo command/s, you are able to redo them in the reverse order.
   \item From the menu bar, use \menu{Edit > Redo}.
   \item Use the keyboard shortcut \keys{\ctrl + \shift + Z}.
 \end{itemize}
+
+\pagebreak
+
+\subsection{List View}
+There are two ways of changing the view to show relevant information.
+\begin{itemize}
+  \item From the menu bar, use \menu{View > Project} or \menu{View > Person}.
+  \item From clicking the selection tabs shown in figure 1.3
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{listView}
+  \caption{The list view.\label{listView}}
+\end{figure}
+
+\subsection{Details Pane}
+\begin{itemize}
+  \item Selecting an item from the list (Person, Project etc) displays the details about that item in the details pane.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{detailsPane}
+  \caption{The details pane.\label{detailsPane}}
+\end{figure}
+
+\pagebreak
+
+\subsection{Skills Register}
+\begin{itemize}
+  \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the first skill is shown in the details pane, unless another skill in the list is selected. 
+  \item Go to the skills selection pane in edit or create person and click the > arrow to add one skill to a person or >> to add all existing skills.
+  \item In the skills selection pane  click the < arrow to remove one skill or << to remove all assigned skills. 
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{skillsSelectionPane}
+  \caption{The skills selection pane.\label{skillsSelectionPane}}
+\end{figure}
 
 \appendix
 \chapter{Appendix}
@@ -145,6 +191,7 @@ After you undo command/s, you are able to redo them in the reverse order.
     Save Project & \keys{\ctrl + S} \\
     Undo & \keys{\ctrl + Z} \\
     Redo & \keys{\ctrl + \shift + Z} \\
+    Create New Skill & \keys{\ctrl + K} \\
     \bottomrule
   \end{tabular}
   \caption{List of Keyboard Shortcuts}

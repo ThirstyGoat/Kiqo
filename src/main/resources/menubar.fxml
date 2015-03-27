@@ -38,6 +38,7 @@
         <CheckMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
         <CheckMenuItem mnemonicParsing="false" text="Team" fx:id="listShowTeamMenuItem" />
         <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
+        <CheckMenuItem mnemonicParsing="false" text="Skills" fx:id="listShowSkillMenuItem" />
       </items>
     </Menu>
   </menus>

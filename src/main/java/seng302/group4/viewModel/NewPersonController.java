@@ -84,8 +84,9 @@ public class NewPersonController implements Initializable {
         return command;
     }
 
-    private void setProjectForFormController() {
+    public void setProjectForFormController() {
         formController.setProject(project);
+        formController.setUpSkillsListSelectionView();
     }
 
     public void setStage(Stage stage) {

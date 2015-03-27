@@ -21,7 +21,12 @@ import org.controlsfx.dialog.Dialogs;
 import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.UndoManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,7 +76,7 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
-    private AnchorPane detailsPane;
+    private Pane detailsPane;
     @FXML
     private DetailsPaneController detailsPaneController;
     @FXML
@@ -138,7 +143,7 @@ public class MainController implements Initializable {
                 } else {
                     projectListView.getSelectionModel().selectFirst();
                 }
-
+                detailsPaneController.showDetailsPane(projectListView.getSelectionModel().getSelectedItem());
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
                 // Select the first person, if no person is selected already
@@ -149,7 +154,7 @@ public class MainController implements Initializable {
                     peopleListView.getSelectionModel().select(null);
                     peopleListView.getSelectionModel().select(selectedPerson);
                 }
-
+                detailsPaneController.showDetailsPane(peopleListView.getSelectionModel().getSelectedItem());
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
                 if (selectedSkill == null) {
@@ -167,6 +172,8 @@ public class MainController implements Initializable {
                     teamsListView.getSelectionModel().select(null);
                     teamsListView.getSelectionModel().select(selectedTeam);
                 }
+                detailsPaneController.showDetailsPane(skillsListView.getSelectionModel().getSelectedItem());
+                menuBarController.updateAfterSkillListSelected(true);
             }
         });
     }
@@ -219,7 +226,8 @@ public class MainController implements Initializable {
             project = PersistenceManager.loadProject(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             System.out.println("JSON file invalid");
-            e.printStackTrace();
+            Dialogs.create().owner(primaryStage).title("Error")
+                    .message("JSON file invalid").showWarning();
         } catch (final InvalidPersonException e) {
             System.out.println("Person invalid");
             e.printStackTrace();
@@ -386,7 +394,8 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(this.primaryStage);
+            stage.setTitle("Edit Skill");
+            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -416,6 +425,7 @@ public class MainController implements Initializable {
                     public Skill execute() {
                         // Add to mainListView
                         cc.execute();
+                        saveProject();
                         refreshList();
                         return null;
                     }
@@ -581,6 +591,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedProject = newValue;
 
@@ -596,8 +607,6 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterProjectSelected(selectedProject != null);
                 listLabel.setText((selectedProject != null) ? selectedProject.getShortName() : null);
-
-                detailsPaneController.showDetailsPane(selectedProject);
             }
         });
     }
@@ -631,6 +640,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedPerson = newValue;
 
@@ -641,8 +651,6 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
 
                 menuBarController.updateAfterPersonSelected(true);
-
-                detailsPaneController.showDetailsPane(selectedPerson);
             }
         });
     }
@@ -677,6 +685,7 @@ public class MainController implements Initializable {
 
         // Set change listener for projectListView
         skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            detailsPaneController.showDetailsPane(newValue);
             if (newValue != null) {
                 selectedSkill = newValue;
 
@@ -688,7 +697,6 @@ public class MainController implements Initializable {
 
                 menuBarController.updateAfterSkillSelected(true);
 
-                detailsPaneController.showDetailsPane(selectedSkill);
             }
         });
     }
@@ -741,7 +749,8 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(this.primaryStage);
+            stage.setTitle("New Skill");
+            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
@@ -768,7 +777,7 @@ public class MainController implements Initializable {
                     @Override
                     public Skill execute() {
                         // Add to mainListView
-                        Skill skill = cpc.execute();
+                        final Skill skill = cpc.execute();
                         addSkillToProject(skill);
                         return skill;
                     }
@@ -814,6 +823,7 @@ public class MainController implements Initializable {
             final NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
             newPersonController.setProject(selectedProject);
+            newPersonController.setProjectForFormController();
 
             stage.showAndWait();
             if (newPersonController.isValid()) {
@@ -939,6 +949,7 @@ public class MainController implements Initializable {
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
             final Stage stage = new Stage();
+            stage.setTitle("New Project");
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
@@ -1001,6 +1012,7 @@ public class MainController implements Initializable {
         // Update listView and select newly added skill
         skills.add(skill);
         skillsListView.getSelectionModel().select(skill);
+        menuBarController.updateAfterSkillSelected(true);
         switchToSkillList();
         saveProject();
     }
