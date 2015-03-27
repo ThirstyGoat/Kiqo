@@ -23,11 +23,12 @@ public class TeamDetailsPaneController implements Initializable {
             descriptionLabel.setText(team.getDescription());
             String teamMembersString = "";
 
-            for( int i = 0; i < team.getTeamMembers().size()-1; i++) {
+            for( int i = 0; i < team.getTeamMembers().size(); i++) {
                 teamMembersString += team.getTeamMembers().get(i).getShortName();
-                teamMembersString += ", ";
+                if (i != team.getTeamMembers().size()-1) {
+                    teamMembersString += ", ";
+                }
             }
-            teamMembersString += team.getTeamMembers().get(team.getTeamMembers().size()-1).getShortName();
             teamMembersLabel.setText(teamMembersString);
         } else {
             shortNameLabel.setText(null);
