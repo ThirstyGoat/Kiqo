@@ -18,7 +18,6 @@ import seng302.group4.customNodes.GoatListSelectionView;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -34,7 +33,8 @@ public class PersonFormController implements Initializable {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private ArrayList<Skill> skills = new ArrayList<>();
+    ArrayList<Skill> skills = new ArrayList<Skill>();
+    private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
 
     private Stage stage;
@@ -93,23 +93,19 @@ public class PersonFormController implements Initializable {
             };
             return cell;
         });
-
-
-
-        setSkills();
     }
 
-    public void setSkills() {
+    public void setUpSkillsListSelectionView() {
         ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
         // Removes all skills that the current person has, from the list of all the possible skills
         // So you should never have the same skill on either side
+
         for (Skill skill : project.getSkills()) {
-            if (!skills.contains(skill)) {
+            if (!targetSkills.contains(skill)) {
                 sourceSkills.add(skill);
             }
         }
 
-        ObservableList<Skill> targetSkills = FXCollections.observableArrayList(skills);
         skillsSelectionView.sourceListView.setItems(sourceSkills);
         skillsSelectionView.targetListView.setItems(targetSkills);
     }
@@ -129,8 +125,8 @@ public class PersonFormController implements Initializable {
         departmentTextField.setText(person.getDepartment());
 
         // Load existing skills into skill list
-        skills = person.getSkills();
-        setSkills();
+        targetSkills.setAll(person.getSkills());
+        setUpSkillsListSelectionView();
 
     }
 
@@ -151,9 +147,8 @@ public class PersonFormController implements Initializable {
             phoneNumber = phoneTextField.getText();
             department = departmentTextField.getText();
 
-            // This could be a feral way of doing this - Bradley
-            skills = new ArrayList<>();
-            skills.addAll(skillsSelectionView.targetListView.getItems().stream().collect(Collectors.toList()));
+            skills.clear();
+            skills.addAll(targetSkills);
 
             valid = true;
         }
@@ -250,7 +245,7 @@ public class PersonFormController implements Initializable {
             department = departmentTextField.getText();
         }
         return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
-                phoneNumber, department, skills);
+                phoneNumber, department, getSkills());
     }
 
     public String getShortName() {
