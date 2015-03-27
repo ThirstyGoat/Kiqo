@@ -1,11 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -14,38 +9,25 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
+import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -90,6 +72,7 @@ public class MainController implements Initializable {
     @FXML
     private MenuBarController menuBarController;
     private Project selectedProject;
+    private Team selectedTeam;
     private Person selectedPerson;
     private Skill selectedSkill;
 
@@ -103,6 +86,12 @@ public class MainController implements Initializable {
     public void editPerson() {
         if (selectedPerson != null) {
             editPersonDialog(selectedPerson);
+        }
+    }
+
+    public void editTeam() {
+        if (selectedTeam != null) {
+            teamDialog(selectedTeam);
         }
     }
 
@@ -178,6 +167,12 @@ public class MainController implements Initializable {
     public void newPerson() {
         if (selectedProject != null) {
             newPersonDialog();
+        }
+    }
+
+    public void newTeam() {
+        if (selectedProject != null) {
+            teamDialog(null);
         }
     }
 
@@ -341,6 +336,14 @@ public class MainController implements Initializable {
             // enable menuitem
             menuBarController.enableNewPerson();
             menuBarController.enableNewSkill();
+            saveProject();
+        }
+    }
+
+    private void addTeam(final Team team) {
+        if (team != null) {
+            // TODO Update view
+            selectedProject.addTeam(team);
             saveProject();
         }
     }
@@ -785,6 +788,63 @@ public class MainController implements Initializable {
                 };
                 undoManager.doCommand(c);
             }
+        });
+    }
+
+    private void teamDialog(Team team) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/team.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            TeamFormController teamFormController = loader.getController();
+            teamFormController.setStage(stage);
+            teamFormController.setProject(selectedProject);
+            teamFormController.setTeam(team);
+
+            stage.showAndWait();
+            if (teamFormController.isValid()) {
+                // Create the command and do it
+                Command<Team> c = new Command<Team>() {
+                    private final CreateTeamCommand ctc = teamFormController.getCommand();
+
+                    @Override
+                    public Team execute() {
+                        final Team team = ctc.execute();
+                        addTeam(team);
+                        return team;
+                    }
+
+                    @Override
+                    public void undo() {
+                        // TODO Remove from list
+                        for (Person person : ctc.getTeam().getTeamMembers()) {
+                            person.setTeam(null);
+                        }
+                        // TODO Refactoring into method(s)
+                    }
+
+                    @Override
+                    public String getType() {
+                        return ctc.getType();
+                    }
+                };
+
+                undoManager.doCommand(c);
+            }
+
         });
     }
 

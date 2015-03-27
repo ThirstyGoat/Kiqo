@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
-    private final ArrayList<Person> people = new ArrayList<Person>();
-    private final ArrayList<Skill> skills = new ArrayList<Skill>();
-    private final ArrayList<Team> teams = new ArrayList<Team>();
+    private final ArrayList<Person> people = new ArrayList<>();
+    private final ArrayList<Skill> skills = new ArrayList<>();
+    private final ArrayList<Team> teams = new ArrayList<>();
     private String shortName;
     private String longName;
     private String description;

@@ -1,8 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
@@ -12,9 +9,14 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import seng302.group4.undo.UndoManager;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newProjectMenuItem;
+    @FXML
+    private MenuItem newTeamMenuItem;
     @FXML
     private MenuItem newPersonMenuItem;
     @FXML
@@ -29,6 +31,8 @@ public class MenuBarController implements Initializable {
     private MenuItem redoMenuItem;
     @FXML
     private MenuItem editProjectMenuItem;
+    @FXML
+    private MenuItem editTeamMenuItem;
     @FXML
     private MenuItem editPersonMenuItem;
     @FXML
@@ -56,12 +60,14 @@ public class MenuBarController implements Initializable {
      * Disables menu buttons which should not be usable when application is initially started.
      */
     private void setMenuButtons() {
+        //TODO newTeamMenuItem.setDisable(true);
         newPersonMenuItem.setDisable(true);
         newSkillMenuItem.setDisable(true);
         saveMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editProjectMenuItem.setDisable(true);
+        //TODO editTeamMenuItem.setDisable(true);
         editPersonMenuItem.setDisable(true);
         editSkillMenuItem.setDisable(true);
         listShowProjectMenuItem.setDisable(true);
@@ -73,6 +79,7 @@ public class MenuBarController implements Initializable {
 
     private void addMenuItemHandlers() {
         newProjectMenuItem.setOnAction(event -> mainController.newProject());
+        newTeamMenuItem.setOnAction(event -> mainController.newTeam());
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         openMenuItem.setOnAction(event -> mainController.openProject());
@@ -80,6 +87,7 @@ public class MenuBarController implements Initializable {
         quitMenuItem.setOnAction(event -> mainController.exit());
 
         editProjectMenuItem.setOnAction(event -> mainController.editProject());
+        editTeamMenuItem.setOnAction(event -> mainController.editTeam());
         editPersonMenuItem.setOnAction(event -> mainController.editPerson());
         editSkillMenuItem.setOnAction(event-> mainController.editSkill());
 

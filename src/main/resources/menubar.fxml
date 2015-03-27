@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-
-<MenuBar useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MenuBarController">
+<MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="File">
       <items>
         <Menu mnemonicParsing="false" text="New">
           <items>
             <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Team" fx:id="newTeamMenuItem" />
             <MenuItem mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
             <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
           </items>
@@ -26,7 +26,8 @@
         <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
+          <MenuItem mnemonicParsing="false" text="Team" fx:id="editTeamMenuItem" />
+          <MenuItem mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
         <MenuItem mnemonicParsing="false" text="Skill" fx:id="editSkillMenuItem" />
       </items>
     </Menu>
@@ -35,6 +36,7 @@
         <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <CheckMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
+        <CheckMenuItem mnemonicParsing="false" text="Team" fx:id="listShowTeamMenuItem" />
         <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
       </items>
     </Menu>

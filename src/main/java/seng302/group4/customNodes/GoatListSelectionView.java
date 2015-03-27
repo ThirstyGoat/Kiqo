@@ -5,7 +5,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Skin;
 import javafx.util.Callback;
 import org.controlsfx.control.ListSelectionView;
 
@@ -15,8 +14,10 @@ import org.controlsfx.control.ListSelectionView;
  * This class allows a custom cell factory which is great.
  */
 public class GoatListSelectionView<T> extends ListSelectionView<T> {
-    public ListView<T> sourceListView;
-    public ListView<T> targetListView;
+    private ListView<T> sourceListView;
+    private ListView<T> targetListView;
+    // --- Cell Factory
+    private ObjectProperty<Callback<ListView<T>, ListCell<T>>> cellFactory;
 
     public GoatListSelectionView() {
         super();
@@ -30,9 +31,20 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
         setSkin(skin);
     }
 
-    // --- Cell Factory
-    private ObjectProperty<Callback<ListView<T>, ListCell<T>>> cellFactory;
+    public ListView<T> getSourceListView() {
+        return sourceListView;
+    }
 
+    public ListView<T> getTargetListView() {
+        return targetListView;
+    }
+
+    /**
+     * Returns the current cell factory.
+     */
+    public final Callback<ListView<T>, ListCell<T>> getCellFactory() {
+        return cellFactory == null ? null : cellFactory.get();
+    }
 
     /**
      * Sets a new cell factory to use by both list views. This forces all old
@@ -41,13 +53,6 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
      */
     public final void setCellFactory(Callback<ListView<T>, ListCell<T>> value) {
         cellFactoryProperty().set(value);
-    }
-
-    /**
-     * Returns the current cell factory.
-     */
-    public final Callback<ListView<T>, ListCell<T>> getCellFactory() {
-        return cellFactory == null ? null : cellFactory.get();
     }
 
     /**

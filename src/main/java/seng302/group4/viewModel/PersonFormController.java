@@ -20,12 +20,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * Created by james on 20/03/15.
  */
 public class PersonFormController implements Initializable {
+    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private final int SHORT_NAME_MAX_LENGTH = 20;
+    ArrayList<Skill> skills = new ArrayList<Skill>();
     private String shortName;
     private String longName;
     private String description;
@@ -33,14 +35,10 @@ public class PersonFormController implements Initializable {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    ArrayList<Skill> skills = new ArrayList<Skill>();
     private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
-
     private Stage stage;
     private PopOver errorPopOver = new PopOver();
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
 
@@ -106,8 +104,8 @@ public class PersonFormController implements Initializable {
             }
         }
 
-        skillsSelectionView.sourceListView.setItems(sourceSkills);
-        skillsSelectionView.targetListView.setItems(targetSkills);
+        skillsSelectionView.getSourceListView().setItems(sourceSkills);
+        skillsSelectionView.getTargetListView().setItems(targetSkills);
     }
 
 

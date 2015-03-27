@@ -1,24 +1,16 @@
 package seng302.group4;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.*;
+
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
  */
 public class PersistenceManager {
-
-    private static Gson gson = new GsonBuilder().create();
 
     /**
      * Saves the given Project to the given filepath as project_shortname.json
@@ -30,8 +22,18 @@ public class PersistenceManager {
      *            - the project to be saved
      */
     public static void saveProject(final File filePath, final Project project) throws IOException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        // Turn me on baby - gsonBuilder.setPrettyPrinting();
+        new GraphAdapterBuilder()
+                .addType(Project.class)
+                .addType(Team.class)
+                .addType(Person.class)
+                .addType(Skill.class)
+                .registerOn(gsonBuilder);
+
+        Gson gson = gsonBuilder.create();
         final Writer writer = new FileWriter(filePath);
-        PersistenceManager.gson.toJson(project, writer);
+        gson.toJson(project, writer);
         writer.close();
         System.out.println("Saved project.");
     }
@@ -49,9 +51,17 @@ public class PersistenceManager {
      */
     public static Project loadProject(final File filePath) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
         Project project = null;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        new GraphAdapterBuilder()
+                .addType(Project.class)
+                .addType(Team.class)
+                .addType(Person.class)
+                .addType(Skill.class)
+                .registerOn(gsonBuilder);
+        Gson gson = gsonBuilder.create();
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
-            project = PersistenceManager.gson.fromJson(br, Project.class);
+            project = gson.fromJson(br, Project.class);
         }
         return project;
     }

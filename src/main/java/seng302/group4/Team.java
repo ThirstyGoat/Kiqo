@@ -9,11 +9,14 @@ import java.util.ArrayList;
 public class Team implements Serializable {
     private String shortName;
     private String description;
-    private ArrayList<Person> teamMembers = new ArrayList<Person>();
+    private ArrayList<Person> teamMembers;
 
-    public Team(String shortName, String description) {
+    public Team(String shortName, String description, ArrayList<Person> teamMembers) {
         this.shortName = shortName;
         this.description = description;
+        this.teamMembers = teamMembers;
+
+        setTeamAffiliations();
     }
 
     public String getShortName() {
@@ -36,8 +39,9 @@ public class Team implements Serializable {
         return teamMembers;
     }
 
-    public void setTeamMembers(Person person) {
-        person.setTeam(this);
-        this.teamMembers.add(person);
+    public void setTeamAffiliations() {
+        for (Person person : teamMembers) {
+            person.setTeam(this);
+        }
     }
 }
