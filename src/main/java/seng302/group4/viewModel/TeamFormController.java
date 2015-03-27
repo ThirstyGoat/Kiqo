@@ -178,9 +178,8 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
-<<<<<<< HEAD
         final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
-=======
+
         final ArrayList<Person> allPeople = new ArrayList<>();
         // Populate allPeople with all people in the project
         for (final Person person : project.getPeople()) {
@@ -192,7 +191,6 @@ public class TeamFormController implements Initializable {
                 allPeople.remove(person);
             }
         }
->>>>>>> branch 'feature/team' of ssh://git@eng-git.canterbury.ac.nz/seng302-2015/project-4.git
 
         // So we are left with ArrayList<Person> allPeople which contains only people who aren't in a team
         sourcePeople.setAll(allPeople);
