@@ -23,7 +23,8 @@ public class Project implements Serializable {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Project() {
-
+        skills.add(new Skill("PO", "Product Owner"));
+        skills.add(new Skill("SM", "Scrum Master"));
     }
 
     /**
@@ -37,6 +38,7 @@ public class Project implements Serializable {
      *            save location for the project
      */
     public Project(final String shortName, final String longName, final File saveLocation) {
+        this();
         this.shortName = shortName;
         this.longName = longName;
         this.saveLocation = saveLocation;
@@ -55,6 +57,7 @@ public class Project implements Serializable {
      *            description of the project
      */
     public Project(final String shortName, final String longName, final File saveLocation, final String description) {
+        this();
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -193,7 +196,7 @@ public class Project implements Serializable {
      * @param team the team to be added to the project
      */
     public void addTeam(Team team) {
-        this.teams.add(team);
+        teams.add(team);
     }
 
     @Override
