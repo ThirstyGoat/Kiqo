@@ -1,6 +1,9 @@
 package seng302.group4.undo;
 
 import seng302.group4.Person;
+import seng302.group4.Skill;
+
+import java.util.ArrayList;
 
 /**
  * Command to create a project
@@ -16,6 +19,7 @@ public class CreatePersonCommand extends Command<Person> {
     private final String emailAddress;
     private final String phoneNumber;
     private final String department;
+    private final ArrayList<Skill> skills;
 
     private Person person = null;
 
@@ -30,7 +34,7 @@ public class CreatePersonCommand extends Command<Person> {
      * @param department
      */
     public CreatePersonCommand(final String shortName, final String longName, final String description, final String userID,
-                               final String emailAddress, final String phoneNumber, final String department                               ) {
+                               final String emailAddress, final String phoneNumber, final String department, final ArrayList<Skill> skills) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -38,12 +42,13 @@ public class CreatePersonCommand extends Command<Person> {
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.department = department;
+        this.skills = skills;
     }
 
     @Override
     public Person execute() {
         if (person == null) {
-            person = new Person(shortName, longName, description, userID, emailAddress, phoneNumber, department);
+            person = new Person(shortName, longName, description, userID, emailAddress, phoneNumber, department, skills);
         }
         return person;
     }

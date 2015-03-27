@@ -4,8 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import seng302.group4.Person;
+import seng302.group4.Skill;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -25,7 +27,10 @@ public class PersonDetailsPaneController implements Initializable {
     @FXML
     private Label departmentLabel;
     @FXML
+    private Label skillsLabel;
+    @FXML
     private Label descriptionLabel;
+    private Object skillsString;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -40,6 +45,7 @@ public class PersonDetailsPaneController implements Initializable {
             emailLabel.setText(person.getEmailAddress());
             phoneLabel.setText(person.getPhoneNumber());
             departmentLabel.setText(person.getDepartment());
+            skillsLabel.setText(formatSkillsString(person.getSkills()));
             descriptionLabel.setText(person.getDescription());
         } else {
             shortNameLabel.setText(null);
@@ -48,7 +54,20 @@ public class PersonDetailsPaneController implements Initializable {
             emailLabel.setText(null);
             phoneLabel.setText(null);
             departmentLabel.setText(null);
+            skillsLabel.setText(null);
             descriptionLabel.setText(null);
         }
+    }
+
+    public String formatSkillsString(ArrayList<Skill> skills) {
+        String toReturn = "";
+        
+        for (int i = 0; i < skills.size(); i++) {
+            toReturn += skills.get(i);
+            if (i != skills.size() - 1) {
+                toReturn += ", ";
+            }
+        }
+        return toReturn;
     }
 }

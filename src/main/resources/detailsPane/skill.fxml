@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.SkillDetailsPaneController">
+  <children>
+    <Label text="Name:" wrapText="true">
+      <font>
+        <Font name="System Bold" size="13.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label fx:id="shortNameLabel" GridPane.columnIndex="1" />
+    <Label alignment="TOP_LEFT" font="$x1" text="Description:" wrapText="true" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+    <ScrollPane id="ScrollPane" fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-1.0" pannable="false" prefHeight="200.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent;&#10;" vbarPolicy="AS_NEEDED" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <content>
+        <Label fx:id="descriptionLabel" text="" wrapText="true" />
+      </content>
+    </ScrollPane>
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+  </columnConstraints>
+  <padding>
+    <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+  </padding>
+  <rowConstraints>
+    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="-1.0" vgrow="ALWAYS" />
+  </rowConstraints>
+</GridPane>

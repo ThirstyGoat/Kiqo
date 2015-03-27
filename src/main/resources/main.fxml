@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.MainController">
+
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.MainController">
   <center>
     <SplitPane fx:id="mainSplitPane" dividerPositions="0.2739420935412027" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <items>
@@ -12,7 +16,7 @@
           <children>
             <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
                   <font>
                     <Font name="System Bold" size="18.0" />
                   </font>
@@ -20,20 +24,25 @@
                     <Insets left="10.0" right="10.0" top="10.0" />
                   </VBox.margin>
                 </Label>
-                        <TabPane fx:id="tabViewPane">
-                           <tabs>
-                              <Tab fx:id="projectTab" closable="false" text="Project">
-                                 <content>
-                            		<ListView fx:id="projectListView" editable="true" prefHeight="459.0" prefWidth="242.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS" />
-                                 </content>
-                              </Tab>
-                              <Tab fx:id="peopleTab" closable="false" text="People">
-                                 <content>
-                                    <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS" />
-                                 </content>
-                              </Tab>
-                           </tabs>
-                        </TabPane>
+                <TabPane fx:id="tabViewPane">
+                  <tabs>
+                    <Tab fx:id="projectTab" closable="false" text="Project">
+                      <content>
+                        <ListView fx:id="projectListView" editable="true" prefHeight="459.0" prefWidth="242.0" />
+                      </content>
+                    </Tab>
+                    <Tab fx:id="peopleTab" closable="false" text="People">
+                      <content>
+                        <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" />
+                      </content>
+                    </Tab>
+                    <Tab fx:id="skillsTab" closable="false" text="Skills">
+                      <content>
+                        <ListView id="peopleListView" fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
+                      </content>
+                    </Tab>
+                  </tabs>
+                </TabPane>
               </children>
             </VBox>
           </children>
@@ -41,9 +50,9 @@
             <Insets />
           </padding>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0">
+        <AnchorPane>
           <children>
-            <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
           <padding>
             <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />

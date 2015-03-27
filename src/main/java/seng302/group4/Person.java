@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import java.util.ArrayList;
+
 /**
  * Model class for Person.
  * Created by james on 17/03/15.
@@ -12,6 +14,7 @@ public class Person {
     private String emailAddress;
     private String phoneNumber;
     private String department;
+    private ArrayList<Skill> skills = new ArrayList<Skill>();
 
 
     @Override
@@ -51,7 +54,7 @@ public class Person {
      * @param department a department the person works in
      */
     public Person(String shortName, String longName, String description, String userID, String emailAddress,
-                  String phoneNumber, String department) {
+                  String phoneNumber, String department, ArrayList<Skill> skills) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -60,6 +63,7 @@ public class Person {
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.department = department;
+        this.skills = skills;
     }
 
     /**
@@ -105,6 +109,14 @@ public class Person {
 
     public String getDepartment() {
         return department;
+    }
+
+    public ArrayList<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(ArrayList<Skill> skills) {
+        this.skills = skills;
     }
 
     public void setDepartment(String department) {
