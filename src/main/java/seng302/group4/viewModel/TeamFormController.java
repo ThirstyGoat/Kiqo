@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
@@ -41,26 +42,61 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
 
     private ObservableList<Person> targetPeople = FXCollections.observableArrayList();
+    private PopOver errorPopOver = new PopOver();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setListSelectionViewSettings();
+        setTextFieldListener();
+    }
+
+    private void setTextFieldListener() {
+        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // then focus is on this text field
+                errorPopOver.hide();
+            }
+        });
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
+                errorPopOver.hide();
                 stage.close();
             }
         });
 
-        cancelButton.setOnAction(event -> stage.close());
+        cancelButton.setOnAction(event -> {
+            errorPopOver.hide();
+            stage.close();
+        });
     }
 
     private boolean validate() {
-        // TODO Add validation for short name uniqueness
+        if (shortNameTextField.getText().length() == 0) {
+            errorPopOver.setContentNode(new Label("Short name must not be empty"));
+            errorPopOver.show(shortNameTextField);
+            return false;
+        }
 
+        if (team != null) {
+            // we're editing
+            if (shortNameTextField.getText().equals(team.getShortName())) {
+                // then that's fine
+                setCommand();
+                valid = true;
+                return true;
+            }
+        }
+        for (Team t : project.getTeams()) {
+            if (shortNameTextField.getText().equals(t.getShortName())) {
+                errorPopOver.setContentNode(new Label("Short name must be unique"));
+                errorPopOver.show(shortNameTextField);
+                return false;
+            }
+        }
         setCommand();
         valid = true;
         return true;
@@ -125,7 +161,7 @@ public class TeamFormController implements Initializable {
     }
 
     /**
-     * Sets the team to be edited and populates fields if applicable
+     * Sets the team to be edited and populates fie lds if applicable
      * @param team Team to be edited
      */
     public void setTeam(Team team) {
