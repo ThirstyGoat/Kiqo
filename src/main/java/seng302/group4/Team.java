@@ -15,8 +15,6 @@ public class Team implements Serializable {
         this.shortName = shortName;
         this.description = description;
         this.teamMembers = teamMembers;
-
-        setTeamAffiliations();
     }
 
     public String getShortName() {
@@ -43,9 +41,4 @@ public class Team implements Serializable {
         this.teamMembers = teamMembers;
     }
 
-    public void setTeamAffiliations() {
-        for (Person person : teamMembers) {
-            person.setTeam(this);
-        }
-    }
 }

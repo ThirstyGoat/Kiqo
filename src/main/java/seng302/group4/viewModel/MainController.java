@@ -897,10 +897,6 @@ public class MainController implements Initializable {
                         @Override
                         public void undo() {
                             teams.remove(ctc.getTeam());
-                            for (Person person : ctc.getTeam().getTeamMembers()) {
-                                person.setTeam(null);
-                                refreshList();
-                            }
                         }
 
                         @Override
