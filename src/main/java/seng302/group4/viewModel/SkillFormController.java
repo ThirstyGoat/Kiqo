@@ -29,7 +29,7 @@ public class SkillFormController implements Initializable {
 
 
     private Stage stage;
-    private PopOver errorPopOver = new PopOver();
+    public PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
