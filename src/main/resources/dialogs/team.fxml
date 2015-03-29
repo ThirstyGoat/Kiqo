@@ -34,10 +34,12 @@
           <children>
               <Label text="Short Name:*" />
               <Label text="Description:" GridPane.rowIndex="1" />
-              <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="3" />
               <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
               <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
               <GoatListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="2" GridPane.columnSpan="2" />
+              <Label text="Radio Button Order: PO, SM, Dev Team, Other" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+              <Label text="If Radio Button disabled, then the Person doesn't have the required skill (PO/SM)" GridPane.rowIndex="4" GridPane.columnSpan="2" GridPane.columnIndex="0" />
+              <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="5" />
           </children>
       </GridPane>
   </center>
