@@ -73,6 +73,7 @@ public class DetailsPaneController implements Initializable {
         for (Node node : stackPane.getChildren()) {
             node.setVisible(false);
         }
+        editButton.setVisible(false);
     }
 
     private void showSkillDetailPane(Skill skill) {
