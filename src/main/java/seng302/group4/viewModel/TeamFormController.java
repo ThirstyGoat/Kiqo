@@ -3,6 +3,7 @@ package seng302.group4.viewModel;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -315,6 +316,7 @@ public class TeamFormController implements Initializable {
                 }
                 if (scrumMaster == person) {
                     scrumMaster = null;
+                    System.out.println("Removed " + person.getShortName() + " from SM Role");
                 }
             }
         });
@@ -335,6 +337,7 @@ public class TeamFormController implements Initializable {
                 }
                 if (productOwner == person) {
                     productOwner = null;
+                    System.out.println("Removed " + person.getShortName() + " from PO Role");
                 }
             }
         });
@@ -390,7 +393,7 @@ public class TeamFormController implements Initializable {
 
             productOwner = team.getProductOwner();
             scrumMaster = team.getScrumMaster();
-            devTeam = team.getDevTeam();
+            devTeam.addAll(team.getDevTeam().stream().collect(Collectors.toList()));
         }
 
     }

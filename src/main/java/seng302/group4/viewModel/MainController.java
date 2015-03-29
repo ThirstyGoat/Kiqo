@@ -954,9 +954,10 @@ public class MainController implements Initializable {
 
                         @Override
                         public Team execute() {
-                            System.out.println(cc);
                             cc.execute();
                             saveProject();
+                            // Update detail pane
+
                             refreshList();
                             return null;
                         }

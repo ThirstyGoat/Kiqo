@@ -3,9 +3,11 @@ package seng302.group4.viewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import seng302.group4.Person;
 import seng302.group4.Team;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
@@ -15,27 +17,55 @@ public class TeamDetailsPaneController implements Initializable {
     private Label descriptionLabel;
     @FXML
     private Label teamMembersLabel;
+    @FXML
+    private Label poLabel;
+    @FXML
+    private Label smLabel;
+    @FXML
+    private Label devTeamLabel;
 
 
     public void showDetails(final Team team) {
         if (team != null) {
             shortNameLabel.setText(team.getShortName());
             descriptionLabel.setText(team.getDescription());
-            String teamMembersString = "";
-        if (team.getTeamMembers().size() > 0) {
-            for (int i = 0; i < team.getTeamMembers().size(); i++) {
-                teamMembersString += team.getTeamMembers().get(i).getShortName();
-                if (i != team.getTeamMembers().size() - 1) {
-                    teamMembersString += ", ";
-                }
+            teamMembersLabel.setText(commaSeparatedValues(team.getTeamMembers()));
+            if (team.getProductOwner() != null) {
+                poLabel.setText(team.getProductOwner().getShortName());
+            } else {
+                poLabel.setText("");
             }
-        }
-            teamMembersLabel.setText(teamMembersString);
+            if (team.getScrumMaster() != null) {
+                smLabel.setText(team.getScrumMaster().getShortName());
+            } else {
+                smLabel.setText("");
+            }
+            if (team.getDevTeam() != null) {
+                devTeamLabel.setText(commaSeparatedValues(team.getDevTeam()));
+            } else {
+                devTeamLabel.setText("");
+            }
         } else {
             shortNameLabel.setText(null);
             descriptionLabel.setText(null);
             teamMembersLabel.setText(null);
         }
+        System.out.println(team);
+    }
+
+    private String commaSeparatedValues(ArrayList<Person> list) {
+        String concatenatedString = "";
+
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                concatenatedString += list.get(i).getShortName();
+                if (i != list.size() - 1) {
+                    concatenatedString += ", ";
+                }
+            }
+        }
+
+        return concatenatedString;
     }
 
     @Override

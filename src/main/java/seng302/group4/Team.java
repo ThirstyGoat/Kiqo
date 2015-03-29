@@ -2,6 +2,7 @@ package seng302.group4;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 27/03/15.
@@ -12,7 +13,7 @@ public class Team implements Serializable {
     private Person productOwner;
     private Person scrumMaster;
     private ArrayList<Person> teamMembers;
-    private ArrayList<Person> devTeam;
+    private ArrayList<Person> devTeam = new ArrayList<>();
 
     public Team(String shortName, String description, ArrayList<Person> teamMembers) {
         this.shortName = shortName;
@@ -77,6 +78,7 @@ public class Team implements Serializable {
     }
 
     public void setDevTeam(ArrayList<Person> devTeam) {
-         this.devTeam = devTeam;
+        this.devTeam.clear();
+        this.devTeam.addAll(devTeam.stream().collect(Collectors.toList()));
     }
 }

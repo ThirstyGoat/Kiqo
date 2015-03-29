@@ -16,18 +16,24 @@
         <Font name="System Bold" size="13.0" fx:id="x1" />
       </font>
     </Label>
-    <Label alignment="TOP_LEFT" font="$x1" minWidth="67.0" text="Team Members:" wrapText="true" GridPane.rowIndex="1" />
+    <Label alignment="TOP_LEFT" font="$x1" minWidth="67.0" text="All Team Members:" wrapText="true" GridPane.rowIndex="1" GridPane.valignment="TOP" />
     <Label alignment="TOP_LEFT" contentDisplay="LEFT" font="$x1" text="Description:" wrapText="true" GridPane.rowIndex="2" />
     <Label fx:id="shortNameLabel" GridPane.columnIndex="1" />
-    <Label fx:id="teamMembersLabel" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" text="The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. The quick brown fox jumps over the. " wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
+    <Label fx:id="teamMembersLabel" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
     <ScrollPane id="ScrollPane" fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent;&#10;" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
       <content>
-        <Label fx:id="descriptionLabel" alignment="BOTTOM_LEFT" text="jjjjjjjjjjjj" wrapText="true">
+        <Label fx:id="descriptionLabel" alignment="BOTTOM_LEFT" wrapText="true">
                <padding>
                   <Insets top="10.0" />
                </padding></Label>
       </content>
     </ScrollPane>
+      <Label alignment="TOP_LEFT" contentDisplay="LEFT" font="$x1" text="Product Owner:" wrapText="true" GridPane.rowIndex="3" />
+      <Label alignment="TOP_LEFT" contentDisplay="LEFT" font="$x1" text="Development Team:" wrapText="true" GridPane.rowIndex="5" />
+      <Label fx:id="poLabel" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label fx:id="devTeamLabel" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label alignment="TOP_LEFT" contentDisplay="LEFT" font="$x1" text="Scrum Master:" wrapText="true" GridPane.rowIndex="4" />
+      <Label fx:id="smLabel" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
   </children>
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
@@ -40,5 +46,8 @@
     <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" />
     <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
