@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.util.*?>
 <?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.text.Font?>
 
-<GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
   <children>
-    <Label text="Name:" wrapText="true">
-      <font>
-        <Font name="System Bold" size="13.0" fx:id="x1" />
-      </font>
-    </Label>
-    <Label font="$x1" text="Short Name:" GridPane.rowIndex="1" />
-    <Label alignment="TOP_LEFT" font="$x1" text="Description:" wrapText="true" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-    <Label font="$x1" minWidth="88.0" text="Project Location:" GridPane.rowIndex="2" />
-    <Label fx:id="longNameLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-    <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <Label fx:id="projectLocationLabel" textOverrun="LEADING_WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="2">
-      <tooltip>
-        <Tooltip text="${projectLocationLabel.text}" fx:id="projectLocationTooltip" />
-      </tooltip>
-    </Label>
-    <ScrollPane id="ScrollPane" fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-1.0" pannable="false" prefHeight="200.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent;&#10;" vbarPolicy="AS_NEEDED" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+    <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
-        <Label fx:id="descriptionLabel" text="" wrapText="true" />
+        <GridPane mouseTransparent="false" vgap="10.0">
+          <children>
+            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
+              <font>
+                <Font name="System Bold" size="12.0" fx:id="x1" />
+              </font>
+            </Label>
+            <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Project Location:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+            <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
+            <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="projectLocationLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+        </GridPane>
       </content>
     </ScrollPane>
   </children>
-  <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-  </columnConstraints>
-  <padding>
-    <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-  </padding>
-  <rowConstraints>
-    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="-1.0" vgrow="ALWAYS" />
-  </rowConstraints>
-</GridPane>
+</AnchorPane>

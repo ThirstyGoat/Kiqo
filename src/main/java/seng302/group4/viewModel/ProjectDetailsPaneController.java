@@ -27,7 +27,7 @@ public class ProjectDetailsPaneController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         // disconnect tooltip if blank
-        updateTooltip();
+        //updateTooltip();
     }
 
     public void showDetails(final Project project) {
@@ -42,7 +42,7 @@ public class ProjectDetailsPaneController implements Initializable {
             projectLocationLabel.setText(null);
             descriptionLabel.setText(null);
         }
-        updateTooltip();
+//        updateTooltip();
     }
     
     /**

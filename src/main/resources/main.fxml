@@ -9,9 +9,6 @@
   <center>
     <SplitPane minHeight="-Infinity" fx:id="mainSplitPane" dividerPositions="0.3151447661469933" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <AnchorPane minHeight="0.0" minWidth="280.0" maxWidth="500.0" prefWidth="280.0">
-        <padding>
-          <Insets />
-        </padding>
         <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
           <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
             <font>
@@ -37,12 +34,12 @@
           </TabPane>
         </VBox>
       </AnchorPane>
-      <AnchorPane minWidth="500" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <AnchorPane>
+          <!-- this goes above if problems in the next few minutes 29/3/15 - bradley
+          minWidth="500" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+          -->
         <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0"
                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-        <padding>
-          <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-        </padding>
       </AnchorPane>
     </SplitPane>
   </center>

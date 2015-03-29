@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
@@ -28,13 +26,13 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private StackPane stackPane;
     @FXML
-    private GridPane projectDetailsPane;
+    private AnchorPane projectDetailsPane;
     @FXML
-    private GridPane personDetailsPane;
+    private AnchorPane personDetailsPane;
     @FXML
-    private GridPane skillDetailsPane;
+    private AnchorPane skillDetailsPane;
     @FXML
-    private GridPane teamDetailsPane;
+    private AnchorPane teamDetailsPane;
     @FXML
     private Button editButton;
     @FXML
@@ -72,75 +70,61 @@ public class DetailsPaneController implements Initializable {
 
 
     private void clear() {
-        stackPane.getChildren().clear();
-        detailsPane.getChildren().remove(editButton);
+        for (Node node : stackPane.getChildren()) {
+            node.setVisible(false);
+        }
     }
 
     private void showSkillDetailPane(Skill skill) {
         skillDetailsPaneController.showDetails(skill);
 
-        final ObservableList<Node> children = stackPane.getChildren();
-        if (!children.contains(skillDetailsPane)) {
-            children.add(skillDetailsPane);
-        }
-        children.remove(projectDetailsPane);
-        children.remove(personDetailsPane);
-        children.remove(teamDetailsPane);
+        skillDetailsPane.setVisible(true);
+        projectDetailsPane.setVisible(false);
+        personDetailsPane.setVisible(false);
+        teamDetailsPane.setVisible(false);
 
-        addEditButton();
+        showEditButton();
         editButton.setOnAction(event -> mainController.editSkill());
     }
 
     private void showProjectDetailsPane(Project project) {
         projectDetailsPaneController.showDetails(project);
 
-        final ObservableList<Node> children = stackPane.getChildren();
-        if (!children.contains(projectDetailsPane)) {
-            children.add(projectDetailsPane);
-        }
-        children.remove(personDetailsPane);
-        children.remove(skillDetailsPane);
-        children.remove(teamDetailsPane);
+        skillDetailsPane.setVisible(false);
+        projectDetailsPane.setVisible(true);
+        personDetailsPane.setVisible(false);
+        teamDetailsPane.setVisible(false);
 
-        addEditButton();
+        showEditButton();
         editButton.setOnAction(event -> mainController.editProject());
     }
 
     private void showPersonDetailsPane(Person person) {
         personDetailsPaneController.showDetails(person);
 
-        final ObservableList<Node> children = stackPane.getChildren();
-        if (!children.contains(personDetailsPane)) {
-            children.add(personDetailsPane);
-        }
-        children.remove(projectDetailsPane);
-        children.remove(skillDetailsPane);
-        children.remove(teamDetailsPane);
+        skillDetailsPane.setVisible(false);
+        projectDetailsPane.setVisible(false);
+        personDetailsPane.setVisible(true);
+        teamDetailsPane.setVisible(false);
 
-        addEditButton();
+        showEditButton();
         editButton.setOnAction(event -> mainController.editPerson());
     }
 
     private void showTeamDetailPane(Team team) {
         teamDetailsPaneController.showDetails(team);
 
-        final ObservableList<Node> children = stackPane.getChildren();
-        if (!children.contains(teamDetailsPane)) {
-            children.add(teamDetailsPane);
-        }
-        children.remove(projectDetailsPane);
-        children.remove(skillDetailsPane);
-        children.remove(personDetailsPane);
+        skillDetailsPane.setVisible(false);
+        projectDetailsPane.setVisible(false);
+        personDetailsPane.setVisible(false);
+        teamDetailsPane.setVisible(true);
 
-        addEditButton();
+        showEditButton();
         editButton.setOnAction(event -> mainController.editTeam());
     }
 
-    private void addEditButton() {
-        final ObservableList<Node> children = detailsPane.getChildren();
-        if (!children.contains(editButton)) {
-            detailsPane.setBottom(editButton);
-        }
+    private void showEditButton() {
+        editButton.setVisible(true);
     }
 
     public void setMainController(MainController mainController) {
