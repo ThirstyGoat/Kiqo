@@ -2,7 +2,6 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -13,14 +12,23 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import org.controlsfx.control.PopOver;
 
-import javafx.util.Duration;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
@@ -54,15 +62,15 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private ArrayList<Person> devTeam = new ArrayList<>();
+    private final ArrayList<Person> devTeam = new ArrayList<>();
     private final int SHORT_NAME_MAX_LENGTH = 20;
 
     private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final PopOver errorPopOver = new PopOver();
 
-    private ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
-    private ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
+    private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
+    private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -185,7 +193,9 @@ public class TeamFormController implements Initializable {
 
     private void setListSelectionViewSettings() {
         peopleListSelectionView.setSourceHeader(new Label("People Available:"));
-        peopleListSelectionView.setTargetHeader(new Label("People Selected:"));
+        final BorderPane targetHeader = new BorderPane();
+        targetHeader.setLeft(new Label("People Selected:"));
+        peopleListSelectionView.setTargetHeader(targetHeader);
 
         peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 
@@ -198,7 +208,7 @@ public class TeamFormController implements Initializable {
         // Set change listener on target list view
         targetPeople.addListener((ListChangeListener<Person>) c -> {
             c.next();
-            for (Person person : c.getRemoved()) {
+            for (final Person person : c.getRemoved()) {
                 // Remove person from role of PO/SM/DevTeam if applicable
                 if (productOwner == person) {
                     productOwner = null;
@@ -237,23 +247,37 @@ public class TeamFormController implements Initializable {
                 super.updateItem(person, empty);
                 if (person != null) {
 
-                    BorderPane borderPane = new BorderPane();
-                    HBox hbox = new HBox();
+                    final BorderPane borderPane = new BorderPane();
+                    final HBox hbox = new HBox();
                     borderPane.setRight(hbox);
-                    Label label = new Label(person.getShortName());
+                    final Label label = new Label(person.getShortName());
                     borderPane.setLeft(label);
 
-                    ToggleGroup radioGroup = new ToggleGroup();
-                    RadioButton radioPo = new RadioButton();
-                    RadioButton radioSm = new RadioButton();
-                    RadioButton radioDev = new RadioButton();
-                    RadioButton radioOther = new RadioButton();
+                    final ToggleGroup radioGroup = new ToggleGroup();
+                    final RadioButton radioPo = new RadioButton();
+                    final RadioButton radioSm = new RadioButton();
+                    final RadioButton radioDev = new RadioButton();
+                    final RadioButton radioOther = new RadioButton();
                     radioPo.setToggleGroup(radioGroup);
                     radioSm.setToggleGroup(radioGroup);
                     radioDev.setToggleGroup(radioGroup);
                     radioOther.setToggleGroup(radioGroup);
+                    radioPo.setStyle("-fx-mark-color: blue;");
+                    radioSm.setStyle("-fx-mark-color: red;");
+                    radioDev.setStyle("-fx-mark-color: green;");
 
-                    // Hide PO/SM Radio Buttons if the person doesn't have the skill
+                    final Text poText = new Text(project.getPoSkill().getShortName().substring(0, 2));
+                    poText.setFill(Color.BLUE);
+                    final Text smText = new Text(project.getSmSkill().getShortName().substring(0, 2));
+                    smText.setFill(Color.RED);
+                    final Text devText = new Text("Dev");
+                    devText.setFill(Color.GREEN);
+                    final Text otherText = new Text("Other");
+                    final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
+                    ((BorderPane) peopleListSelectionView.getTargetHeader()).setRight(legend);
+
+                    // Disable PO/SM Radio Buttons if the person doesn't have
+                    // the skill
                     if (!person.getSkills().contains(project.getPoSkill())) {
                         radioPo.setDisable(true);
                     }

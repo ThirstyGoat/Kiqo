@@ -17,10 +17,10 @@
     </HBox>
   </bottom>
   <center>
-      <GridPane>
+      <GridPane vgap="10.0" >
           <columnConstraints>
-              <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
-              <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="183.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="347.0" />
           </columnConstraints>
           <rowConstraints>
               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -36,10 +36,9 @@
               <Label text="Description:" GridPane.rowIndex="1" />
               <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
               <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <GoatListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="2" GridPane.columnSpan="2" />
-              <Label text="Radio Button Order: PO, SM, Dev Team, Other" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-              <Label text="If Radio Button disabled, then the Person doesn't have the required skill (PO/SM)" GridPane.rowIndex="4" GridPane.columnSpan="2" GridPane.columnIndex="0" />
-              <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="5" />
+              <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="2" />
+              <GoatListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
+              <Label text="If a role is disabled, the Person lacks the necessary skill for that role." GridPane.rowIndex="5" GridPane.columnSpan="2" GridPane.columnIndex="0" />
           </children>
       </GridPane>
   </center>
