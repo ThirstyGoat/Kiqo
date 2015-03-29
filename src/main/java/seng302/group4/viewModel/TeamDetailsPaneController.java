@@ -50,7 +50,6 @@ public class TeamDetailsPaneController implements Initializable {
             descriptionLabel.setText(null);
             teamMembersLabel.setText(null);
         }
-        System.out.println(team);
     }
 
     private String commaSeparatedValues(ArrayList<Person> list) {

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
-<GridPane hgap="10.0" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
+
+<GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.ProjectDetailsPaneController">
   <children>
     <Label text="Name:" wrapText="true">
       <font>
@@ -14,7 +18,7 @@
     <Label font="$x1" text="Short Name:" GridPane.rowIndex="1" />
     <Label alignment="TOP_LEFT" font="$x1" text="Description:" wrapText="true" GridPane.rowIndex="3" GridPane.valignment="TOP" />
     <Label font="$x1" minWidth="88.0" text="Project Location:" GridPane.rowIndex="2" />
-    <Label fx:id="longNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <Label fx:id="longNameLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <Label fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     <Label fx:id="projectLocationLabel" textOverrun="LEADING_WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="2">
       <tooltip>
