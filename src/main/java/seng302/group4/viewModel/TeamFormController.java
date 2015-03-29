@@ -75,7 +75,6 @@ public class TeamFormController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setListSelectionViewSettings();
         setTextFieldListener();
         setShortNameLengthRestrictor();
 
@@ -191,13 +190,24 @@ public class TeamFormController implements Initializable {
         return command;
     }
 
-    private void setListSelectionViewSettings() {
+    public void setListSelectionViewSettings() {
         peopleListSelectionView.setSourceHeader(new Label("People Available:"));
         final BorderPane targetHeader = new BorderPane();
         targetHeader.setLeft(new Label("People Selected:"));
-        peopleListSelectionView.setTargetHeader(targetHeader);
 
         peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
+
+        final Text poText = new Text(project.getPoSkill().getShortName().substring(0, 2));
+        poText.setFill(Color.BLUE);
+        final Text smText = new Text(project.getSmSkill().getShortName().substring(0, 2));
+        smText.setFill(Color.RED);
+        final Text devText = new Text("Dev");
+        devText.setFill(Color.GREEN);
+        final Text otherText = new Text("Other");
+        final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
+
+        targetHeader.setRight(legend);
+        peopleListSelectionView.setTargetHeader(targetHeader);
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
@@ -265,16 +275,6 @@ public class TeamFormController implements Initializable {
                     radioPo.setStyle("-fx-mark-color: blue;");
                     radioSm.setStyle("-fx-mark-color: red;");
                     radioDev.setStyle("-fx-mark-color: green;");
-
-                    final Text poText = new Text(project.getPoSkill().getShortName().substring(0, 2));
-                    poText.setFill(Color.BLUE);
-                    final Text smText = new Text(project.getSmSkill().getShortName().substring(0, 2));
-                    smText.setFill(Color.RED);
-                    final Text devText = new Text("Dev");
-                    devText.setFill(Color.GREEN);
-                    final Text otherText = new Text("Other");
-                    final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
-                    ((BorderPane) peopleListSelectionView.getTargetHeader()).setRight(legend);
 
                     // Disable PO/SM Radio Buttons if the person doesn't have
                     // the skill

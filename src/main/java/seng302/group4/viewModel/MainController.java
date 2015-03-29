@@ -916,6 +916,7 @@ public class MainController implements Initializable {
             teamFormController.setStage(stage);
             teamFormController.setProject(selectedProject);
             teamFormController.setTeam(team);
+            teamFormController.setListSelectionViewSettings();
 
             stage.showAndWait();
             if (teamFormController.isValid()) {

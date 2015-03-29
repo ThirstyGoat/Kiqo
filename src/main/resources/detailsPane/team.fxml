@@ -15,8 +15,8 @@
                 <Font name="System Bold" size="12.0" fx:id="x1" />
               </font>
             </Label>
-            <Label font="$x1" text="All Team Members:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Label font="$x1" text="All Team Members:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Product Owner:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label font="$x1" text="Scrum Master:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
             <Label font="$x1" text="Development Team:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />

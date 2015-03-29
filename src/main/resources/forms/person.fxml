@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -38,11 +36,11 @@
         <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="8" />
         <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
         <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <TextField fx:id="userIDTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <TextField fx:id="phoneTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <GoatListSelectionView fx:id="skillsSelectionView" GridPane.columnSpan="2" GridPane.rowIndex="7" />
     </children>
 </GridPane>
