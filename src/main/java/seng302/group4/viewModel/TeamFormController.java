@@ -2,19 +2,17 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -57,6 +55,7 @@ public class TeamFormController implements Initializable {
     private Person scrumMaster;
     private Person productOwner;
     private ArrayList<Person> devTeam = new ArrayList<>();
+    private final int SHORT_NAME_MAX_LENGTH = 20;
 
     private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
@@ -70,8 +69,21 @@ public class TeamFormController implements Initializable {
         setButtonHandlers();
         setListSelectionViewSettings();
         setTextFieldListener();
+        setShortNameLengthRestrictor();
 
         Platform.runLater(shortNameTextField::requestFocus);
+    }
+
+    /**
+     * Sets up a listener on the name field of team to restrict it to the predefined maximum length
+     */
+    private void setShortNameLengthRestrictor() {
+        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Restrict length of short name text field
+            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            }
+        });
     }
 
     private void setTextFieldListener() {
@@ -184,22 +196,19 @@ public class TeamFormController implements Initializable {
         setTargetPeopleCellFactory(peopleListSelectionView.getTargetListView());
 
         // Set change listener on target list view
-        targetPeople.addListener(new ListChangeListener<Person>() {
-            @Override
-            public void onChanged(Change<? extends Person> c) {
-                c.next();
-                for (Person person : c.getRemoved()) {
-                    // Remove person from role of PO/SM/DevTeam if applicable
-                    if (productOwner == person) {
-                        productOwner = null;
-                        System.out.println("removing " + person + " from po role");
-                    } else if (scrumMaster == person) {
-                        scrumMaster = null;
-                        System.out.println("removing " + person + " from sm role");
-                    } else if (devTeam.contains(person)) {
-                        devTeam.remove(person);
-                        System.out.println("removing " + person + " from devteam role");
-                    }
+        targetPeople.addListener((ListChangeListener<Person>) c -> {
+            c.next();
+            for (Person person : c.getRemoved()) {
+                // Remove person from role of PO/SM/DevTeam if applicable
+                if (productOwner == person) {
+                    productOwner = null;
+                    System.out.println("removing " + person + " from po role");
+                } else if (scrumMaster == person) {
+                    scrumMaster = null;
+                    System.out.println("removing " + person + " from sm role");
+                } else if (devTeam.contains(person)) {
+                    devTeam.remove(person);
+                    System.out.println("removing " + person + " from devteam role");
                 }
             }
         });
@@ -208,83 +217,77 @@ public class TeamFormController implements Initializable {
     }
 
     private void setCellFactory(ListView<Person> listView) {
-        listView.setCellFactory(view -> {
-            final ListCell<Person> cell = new ListCell<Person>() {
-                @Override
-                public void updateItem(Person person, boolean empty) {
-                    super.updateItem(person, empty);
-                    if (person != null) {
-                        setText(person.getShortName());
-                    } else {
-                        setText(null);
-                    }
+        listView.setCellFactory(view -> new ListCell<Person>() {
+            @Override
+            public void updateItem(Person person, boolean empty) {
+                super.updateItem(person, empty);
+                if (person != null) {
+                    setText(person.getShortName());
+                } else {
+                    setText(null);
                 }
-            };
-            return cell;
+            }
         });
     }
 
     private void setTargetPeopleCellFactory(ListView<Person> listView) {
-        listView.setCellFactory(view -> {
-            final ListCell<Person> cell = new ListCell<Person>() {
-                @Override
-                public void updateItem(Person person, boolean empty) {
-                    super.updateItem(person, empty);
-                    if (person != null) {
+        listView.setCellFactory(view -> new ListCell<Person>() {
+            @Override
+            public void updateItem(Person person, boolean empty) {
+                super.updateItem(person, empty);
+                if (person != null) {
 
-                        BorderPane borderPane = new BorderPane();
-                        HBox hbox = new HBox();
-                        borderPane.setRight(hbox);
-                        Label label = new Label(person.getShortName());
-                        borderPane.setLeft(label);
+                    BorderPane borderPane = new BorderPane();
+                    HBox hbox = new HBox();
+                    borderPane.setRight(hbox);
+                    Label label = new Label(person.getShortName());
+                    borderPane.setLeft(label);
 
-                        ToggleGroup radioGroup = new ToggleGroup();
-                        RadioButton radioPo = new RadioButton();
-                        RadioButton radioSm = new RadioButton();
-                        RadioButton radioDev = new RadioButton();
-                        RadioButton radioOther = new RadioButton();
-                        radioPo.setToggleGroup(radioGroup);
-                        radioSm.setToggleGroup(radioGroup);
-                        radioDev.setToggleGroup(radioGroup);
-                        radioOther.setToggleGroup(radioGroup);
+                    ToggleGroup radioGroup = new ToggleGroup();
+                    RadioButton radioPo = new RadioButton();
+                    RadioButton radioSm = new RadioButton();
+                    RadioButton radioDev = new RadioButton();
+                    RadioButton radioOther = new RadioButton();
+                    radioPo.setToggleGroup(radioGroup);
+                    radioSm.setToggleGroup(radioGroup);
+                    radioDev.setToggleGroup(radioGroup);
+                    radioOther.setToggleGroup(radioGroup);
 
-                        // Hide PO/SM Radio Buttons if the person doesn't have the skill
-                        if (!person.getSkills().contains(project.getPoSkill())) {
-                            radioPo.setDisable(true);
-                        }
-                        if (!person.getSkills().contains(project.getSmSkill())) {
-                            radioSm.setDisable(true);
-                        }
+                    // Hide PO/SM Radio Buttons if the person doesn't have the skill
+                    if (!person.getSkills().contains(project.getPoSkill())) {
+                        radioPo.setDisable(true);
+                    }
+                    if (!person.getSkills().contains(project.getSmSkill())) {
+                        radioSm.setDisable(true);
+                    }
 
-                        // Select appropriate RadioButton
-                        if (person == productOwner) {
-                            radioPo.setSelected(true);
-                        } else if (person == scrumMaster) {
-                            radioSm.setSelected(true);
-                        } else if (devTeam != null && devTeam.contains(person)) {
-                            radioDev.setSelected(true);
-                        } else {
-                            radioOther.setSelected(true);
-                        }
+                    // Select appropriate RadioButton
+                    if (person == productOwner) {
+                        radioPo.setSelected(true);
+                    } else if (person == scrumMaster) {
+                        radioSm.setSelected(true);
+                    } else if (devTeam != null && devTeam.contains(person)) {
+                        radioDev.setSelected(true);
+                    } else {
+                        radioOther.setSelected(true);
+                    }
 
 //                        // Set colors
 //                        radioSm.setStyle("-fx-mark-color: blue");
 
-                        hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
+                    hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
 
-                        setupRadioPoListener(radioPo, radioOther, person);
-                        setupRadioSmListener(radioSm, radioOther, person);
-                        setupRadioDevListener(radioDev, person);
+                    setupRadioPoListener(radioPo, radioOther, person);
+                    setupRadioSmListener(radioSm, radioOther, person);
+                    setupRadioDevListener(radioDev, person);
 
-                        setGraphic(borderPane);
+                    setGraphic(borderPane);
 
-                    } else {
-                        setGraphic(null);
-                        setText(null);
-                    }
+                } else {
+                    setGraphic(null);
+                    setText(null);
                 }
-            };
-            return cell;
+            }
         });
     }
 
@@ -348,14 +351,10 @@ public class TeamFormController implements Initializable {
 
         final ArrayList<Person> allPeople = new ArrayList<>();
         // Populate allPeople with all people in the project
-        for (final Person person : project.getPeople()) {
-            allPeople.add(person);
-        }
+        allPeople.addAll(project.getPeople().stream().collect(Collectors.toList()));
         // Remove people from allPeople who are currently in a team
         for (final Team team : project.getTeams()) {
-            for (final Person person : team.getTeamMembers()) {
-                allPeople.remove(person);
-            }
+            team.getTeamMembers().forEach(allPeople::remove);
         }
 
         // So we are left with ArrayList<Person> allPeople which contains only people who aren't in a team
