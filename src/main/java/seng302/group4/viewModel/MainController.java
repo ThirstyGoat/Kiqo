@@ -1,11 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -14,45 +9,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.CreateTeamCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -226,6 +202,39 @@ public class MainController implements Initializable {
         } else {
             newProjectDialog();
         }
+    }
+
+    public void dragAndDrop(File filePath) {
+        if (selectedProject != null) {
+            Dialogs.create().owner(primaryStage).title("Error")
+                    .message("Currently, only one project at a time is supported in this version.").showWarning();
+            return;
+        }
+
+        if (filePath == null) {
+            return;
+        }
+        // TODO Actually do something with the selected file
+        Project project = null;
+        try {
+            project = PersistenceManager.loadProject(filePath);
+        } catch (JsonSyntaxException | InvalidProjectException e) {
+            System.out.println("JSON file invalid");
+            Dialogs.create().owner(primaryStage).title("Error")
+                    .message("JSON file invalid").showWarning();
+        } catch (final InvalidPersonException e) {
+            System.out.println("Person invalid");
+            e.printStackTrace();
+        } catch (final FileNotFoundException e) {
+            System.out.println("file not found");
+            e.printStackTrace();
+        }
+        if (project != null) {
+            project.setSaveLocation(filePath);
+            addProject(project);
+            System.out.println(project.getShortName() + " has been loaded successfully");
+        }
+        tabViewPane.getSelectionModel().select(projectTab);
     }
 
     public void openProject() {

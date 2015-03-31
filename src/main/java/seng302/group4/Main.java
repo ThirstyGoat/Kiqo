@@ -1,11 +1,17 @@
 package seng302.group4;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import seng302.group4.viewModel.MainController;
+
+import java.io.File;
 
 /**
  * Main entry point for application
@@ -26,6 +32,37 @@ public class Main extends Application {
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
         final Scene scene = new Scene(root);
+
+
+        scene.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasFiles()) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                } else {
+                    event.consume();
+                }
+            }
+        });
+
+
+        scene.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                for(File file : db.getFiles()) {
+                    mainController.dragAndDrop(file);
+                }
+//                File file = db.getFiles().get(0);
+//                mainController.dragAndDrop(file);
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
         mainController = loader.getController();

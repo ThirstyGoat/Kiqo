@@ -1,11 +1,12 @@
 package seng302.group4.viewModel;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
@@ -49,6 +50,7 @@ public class DetailsPaneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         clear();
+
     }
 
 
