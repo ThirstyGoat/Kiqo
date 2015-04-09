@@ -9,7 +9,7 @@
     <Label text="Name:*" />
     <Label text="Short Name:*" GridPane.rowIndex="1" />
     <Label text="Description:" GridPane.rowIndex="3" />
-    <Label text="Project Location:" GridPane.rowIndex="2" />
+    <Label text="Project Location:*" GridPane.rowIndex="2" />
     <Label text="* Indicates required field." GridPane.rowIndex="4" textFill="grey" />
     <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
     <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
