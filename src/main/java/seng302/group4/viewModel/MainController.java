@@ -23,11 +23,13 @@ import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
 import seng302.group4.undo.*;
+import seng302.group4.utils.Utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -81,6 +83,27 @@ public class MainController implements Initializable {
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
+
+    public void deleteSkill() {
+        if (selectedSkill != null) {
+            DeleteSkillCommand command = new DeleteSkillCommand(selectedSkill, selectedProject);
+
+            String deleteMessage = "There are no people with this skill.";
+            if (command.getPeopleWithSkill().size() > 0) {
+                deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+                deleteMessage += Utilities.concatenatePeopleList(command.getPeopleWithSkill(), 5);
+            }
+            String[] buttons = {"Delete Skill", "Cancel"};
+            String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
+                    "Are you sure you want to delete the skill " + selectedSkill.getShortName() + "?",
+                    deleteMessage, buttons);
+
+            if (result.equals("Delete Skill")) {
+                undoManager.doCommand(command);
+                // TODO Somehow refresh Skills list when delete
+            }
+        }
+    }
 
     public void editSkill() {
         if (selectedSkill != null) {
@@ -723,11 +746,14 @@ public class MainController implements Initializable {
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Skill");
+        final MenuItem deleteContextMenu = new MenuItem("Delete Skill");
         contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
 
         skillsListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> editSkill());
+        deleteContextMenu.setOnAction(event -> deleteSkill());
 
         // Set change listener for projectListView
         skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -735,14 +761,10 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 selectedSkill = newValue;
 
-                // Update status bar to show current save status of selected
-                // project
-                // Probably not the best way to do this, but it's the simplest
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
                 menuBarController.updateAfterSkillSelected(true);
-
             }
         });
     }
