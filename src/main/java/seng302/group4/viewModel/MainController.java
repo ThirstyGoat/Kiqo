@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
@@ -113,6 +114,38 @@ public class MainController implements Initializable {
 
             if (result.equals("Delete Skill")) {
                 undoManager.doCommand(command);
+            }
+        }
+    }
+
+    public void deleteTeam() {
+        if (selectedTeam != null) {
+            // TODO Command stuff relating to DeleteTeamCommand
+
+            VBox node = new VBox();
+            node.setSpacing(10);
+
+            CheckBox checkbox;
+
+            if (true /* team has people in it */) {
+                checkbox = new CheckBox("Also delete the people belonging to this team");
+                node.getChildren().add(new Label("This team has people in it."));
+                node.getChildren().add(checkbox);
+            } else {
+                node.getChildren().add(new Label("This team has nobody in it."));
+            }
+
+            String[] buttons = {"Delete Team", "Cancel"};
+            String result = GoatDialog.createCustomNodeDialog(primaryStage, "Test", "Heading", node, buttons);
+
+            boolean deletePeople = (checkbox != null) ? checkbox.selectedProperty().getValue() : false;
+
+            if (result.equals("Delete Team")) {
+                // Then delete the team
+                // The result of whether or not to delete the team members can be fetched by deletePeople boolean
+                // command.setDeleteMembers(deletePeople)
+                System.out.println("Delete people as well? " + deletePeople);
+                //undoManager.doCommand(command);
             }
         }
     }
@@ -691,11 +724,14 @@ public class MainController implements Initializable {
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Team");
+        final MenuItem deleteContextMenu = new MenuItem("Delete Team");
         contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
 
         teamsListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> editTeam());
+        deleteContextMenu.setOnAction(event -> deleteTeam());
 
         // Set change listener for projectListView
         teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

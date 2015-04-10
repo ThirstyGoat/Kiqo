@@ -2,6 +2,7 @@ package seng302.group4;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +20,7 @@ public final class GoatDialog {
     private static Label header;
     private static Label message;
     private static HBox hBox;
+    private static VBox vBox;
 
     /**
      * Creates a dialog box and returns the name of the button the user clicked on.
@@ -62,26 +64,68 @@ public final class GoatDialog {
     }
 
     /**
+     * Creates a dialog box and returns the name of the button the user clicked on.
+     *
+     * @param owner Stage that owns this dialog
+     * @param title Title to appear for the window
+     * @param headerText Header text shown in the dialog (Larger than message)
+     * @param customNode Custom node to be displayed in the
+     * @param buttons String array of button labels
+     * @return Button name that was clicked on
+     */
+    public static String createCustomNodeDialog(final Stage owner, final String title, final String headerText,
+                                                 final Node customNode, final String[] buttons) {
+        final String[] selectedProperty = new String[1];
+        selectedProperty[0] = "-1";
+        setup(owner);
+        GoatDialog.header.setText(headerText);
+        GoatDialog.message.setVisible(false);
+        GoatDialog.message.setManaged(false);
+
+        VBox.setMargin(customNode, new Insets(10, 0, 10, 0));
+
+        vBox.getChildren().add(customNode);
+
+        final int buttonSpacing = 10;
+        int i = 0;
+        for (final String button : buttons) {
+            final Button newButton = new Button(button);
+            if (i == 0) {
+                newButton.setDefaultButton(true);
+            }
+            GoatDialog.hBox.getChildren().add(newButton);
+            HBox.setMargin(newButton, new Insets(0, 0, 0, buttonSpacing));
+
+            newButton.setOnAction(e -> {
+                selectedProperty[0] = button;
+                GoatDialog.stage.close();
+            });
+            i++;
+        }
+
+        GoatDialog.stage.setTitle(title);
+        GoatDialog.stage.showAndWait();
+
+        return selectedProperty[0];
+    }
+
+    /**
      * Sets up the structure and properties of nodes in the window.
      * @param owner Stage that owns this dialog
      */
     public static void setup(final Stage owner) {
         final int fontSize = 16;
         final Insets vBoxPadding = new Insets(15, 20, 5, 20);
-        final Insets vBoxMargin = new Insets(10, 0, 0, 0);
+        final Insets vBoxMargin = new Insets(10, 0, 10, 0);
         final Insets hBoxPadding = new Insets(0, 20, 0, 20);
-        final int prefRowHeight1 = 100;
         final int prefRowHeight2 = 50;
-
-        final int width = 500;
-        final int height = 150;
 
         GoatDialog.stage = new Stage();
         StackPane stackPane = new StackPane();
         GridPane gridPane = new GridPane();
         GoatDialog.header = new Label();
         GoatDialog.message = new Label();
-        VBox vBox = new VBox();
+        vBox = new VBox();
         GoatDialog.hBox = new HBox();
         RowConstraints rowConstraints1 = new RowConstraints();
         RowConstraints rowConstraints2 = new RowConstraints();
@@ -94,9 +138,8 @@ public final class GoatDialog {
         vBox.setPadding(vBoxPadding);
         VBox.setMargin(GoatDialog.message, vBoxMargin);
         GoatDialog.hBox.setAlignment(Pos.CENTER_RIGHT);
-        GoatDialog.hBox.setStyle("-fx-background-color: #ddd");
+        GoatDialog.hBox.setStyle("-fx-background-color: #eee");
         GoatDialog.hBox.setPadding(hBoxPadding);
-        rowConstraints1.setPrefHeight(prefRowHeight1);
         rowConstraints2.setPrefHeight(prefRowHeight2);
         rowConstraints1.setVgrow(Priority.ALWAYS);
         rowConstraints2.setVgrow(Priority.ALWAYS);
@@ -106,9 +149,8 @@ public final class GoatDialog {
         gridPane.add(vBox, 0, 0);
         gridPane.add(GoatDialog.hBox, 0, 1);
         stackPane.getChildren().add(gridPane);
-        stackPane.setPrefWidth(width);
-        stackPane.setPrefHeight(height);
-        GoatDialog.stage.setScene(new Scene(stackPane, width, height));
+        stackPane.setPrefWidth(500);
+        GoatDialog.stage.setScene(new Scene(stackPane));
         GoatDialog.stage.setResizable(false);
         GoatDialog.stage.initStyle(StageStyle.DECORATED);
         GoatDialog.stage.initOwner(owner);
