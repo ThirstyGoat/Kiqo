@@ -13,9 +13,9 @@ import java.util.ArrayList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
-    private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
+    public ArrayList<Person> people = new ArrayList<>();
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
@@ -76,22 +76,6 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param person Person to add to people list in project
-     */
-    public void addPerson(final Person person) {
-        peopleObservable.add(person);
-    }
-
-    /**
-     *
-     * @param skill Skill to add to skill list in project
-     */
-    public void addSkill(final Skill skill) {
-        skillsObservable.add(skill);
-    }
-
-    /**
-     *
      * @return ObservableList of people in project
      */
     public ObservableList<Person> getPeople() {
@@ -126,7 +110,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return the description of the project
+     * @return Description of the project
      */
     public String getDescription() {
         return description;
@@ -142,7 +126,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return longName the long name of the project
+     * @return longName Long name of the project
      */
     public String getLongName() {
         return longName;
@@ -150,8 +134,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param longName
-     *            the long name for the project
+     * @param longName Long name for the project
      */
     public void setLongName(final String longName) {
         this.longName = longName;
@@ -167,8 +150,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param saveLocation
-     *            save location of project
+     * @param saveLocation Save location of project
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
@@ -176,7 +158,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return the short name of project
+     * @return Short name of project
      */
     public String getShortName() {
         return shortName;
@@ -184,8 +166,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param shortName
-     *            the short name of the project
+     * @param shortName Short name of the project
      */
     public void setShortName(final String shortName) {
         this.shortName = shortName;
@@ -197,14 +178,6 @@ public class Project implements Serializable {
      */
     public ObservableList<Team> getTeams() {
         return teamsObservable;
-    }
-
-    /**
-     *
-     * @param team Team to be added to the project
-     */
-    public void addTeam(Team team) {
-        teamsObservable.add(team);
     }
 
     @Override
@@ -225,6 +198,12 @@ public class Project implements Serializable {
 
     public void removePerson(final Person person) {
         peopleObservable.remove(person);
+    }
+
+    public void setObservableLists() {
+        peopleObservable = FXCollections.observableList(people);
+        skillsObservable = FXCollections.observableList(skills);
+        teamsObservable = FXCollections.observableList(teams);
     }
 
 }

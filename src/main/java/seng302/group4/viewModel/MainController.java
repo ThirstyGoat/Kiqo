@@ -126,7 +126,10 @@ public class MainController implements Initializable {
 
             if (true /* team has people in it */) {
                 checkbox = new CheckBox("Also delete the people belonging to this team");
-                node.getChildren().add(new Label("This team has people in it."));
+                String deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+                deleteMessage += Utilities.concatenatePeopleList(selectedTeam.getTeamMembers(), 5);
+                node.getChildren().add(new Label(deleteMessage));
+
                 node.getChildren().add(checkbox);
             } else {
                 node.getChildren().add(new Label("This team has nobody in it."));
@@ -143,6 +146,22 @@ public class MainController implements Initializable {
                 // command.setDeleteMembers(deletePeople)
                 System.out.println("Delete people as well? " + deletePeople);
                 //undoManager.doCommand(command);
+            }
+        }
+    }
+
+    public void deletePerson() {
+        if (selectedPerson != null) {
+            // DeletePersonCommand command = new DeletePersonCommand(selectedPerson, selectedProject);
+
+            String[] buttons = {"Delete Person", "Cancel"};
+            String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Person",
+                    "Are you sure?",
+                    "Are you sure you want to delete the person: " + selectedPerson.getShortName() + "?", buttons);
+
+            if (result.equals("Delete Person")) {
+                // Then do the command to delete the person
+                // undoManager.doCommand(command);
             }
         }
     }
@@ -647,11 +666,14 @@ public class MainController implements Initializable {
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Person");
+        final MenuItem deleteContextMenu = new MenuItem("Delete Person");
         contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
 
         peopleListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> editPerson());
+        deleteContextMenu.setOnAction(event -> deletePerson());
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
