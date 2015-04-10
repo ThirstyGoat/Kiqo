@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,7 +31,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -38,9 +39,6 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     private final UndoManager undoManager = new UndoManager();
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final ObservableList<Person> people = FXCollections.observableArrayList();
-    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
-    private final ObservableList<Team> teams = FXCollections.observableArrayList();
     private final StatusBar statusBar = new StatusBar();
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
@@ -84,6 +82,21 @@ public class MainController implements Initializable {
     private Skill selectedSkill;
     private Team selectedTeam;
 
+    /**
+     * Triggers an update of a specific object in a list view, so that updateItem is called and the
+     * cell is recreated with current data (ie. if the short name changes in this case).
+     * @param newValue Object in the list that has changed
+     * @param listView ListView that object belongs to
+     * @param <T> Type of the object
+     */
+    public static <T> void triggerListUpdate(T newValue, ListView<T> listView) {
+        int i = listView.getItems().indexOf(newValue);
+        EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
+        Event event = new ListView.EditEvent<>(listView, type, newValue, i);
+        listView.fireEvent(event);
+        listView.getSelectionModel().select(newValue);
+    }
+
     public void deleteSkill() {
         if (selectedSkill != null) {
             DeleteSkillCommand command = new DeleteSkillCommand(selectedSkill, selectedProject);
@@ -100,7 +113,6 @@ public class MainController implements Initializable {
 
             if (result.equals("Delete Skill")) {
                 undoManager.doCommand(command);
-                // TODO Somehow refresh Skills list when delete
             }
         }
     }
@@ -220,11 +232,10 @@ public class MainController implements Initializable {
     public void newProject() {
         if (selectedProject != null) {
             Dialogs.create().owner(primaryStage).title("Error")
-            .message("Currently, only one project at a time is supported in this version.").showWarning();
+                    .message("Currently, only one project at a time is supported in this version.").showWarning();
             return;
-        } else {
-            newProjectDialog();
         }
+        newProjectDialog();
     }
 
     public void dragAndDrop(File filePath) {
@@ -237,7 +248,6 @@ public class MainController implements Initializable {
         if (filePath == null) {
             return;
         }
-        // TODO Actually do something with the selected file
         Project project = null;
         try {
             project = PersistenceManager.loadProject(filePath);
@@ -274,7 +284,6 @@ public class MainController implements Initializable {
         if (filePath == null) {
             return;
         }
-        // TODO Actually do something with the selected file
         Project project = null;
         try {
             project = PersistenceManager.loadProject(filePath);
@@ -383,22 +392,6 @@ public class MainController implements Initializable {
         });
     }
 
-    private void addPersonToList(Person person) {
-        if (person != null) {
-            // Update view accordingly
-            people.add(person);
-
-            // Select added person in the listView
-            peopleListView.getSelectionModel().select(null);
-            peopleListView.getSelectionModel().select(person);
-            switchToPersonList();
-            menuBarController.updateAfterPersonListSelected(true);
-
-            // Save the project
-            saveProject();
-        }
-    }
-
     /**
      * Adds the new project to the observable list so that it is visible in the list view
      * @param project New Project to be added
@@ -411,29 +404,13 @@ public class MainController implements Initializable {
             projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(project);
 
-            // enable menu itmes
+            // enable menu items
             menuBarController.enableNewTeam();
             menuBarController.enableNewPerson();
             menuBarController.enableNewSkill();
 
             switchToProjectList();
             menuBarController.updateAfterProjectListSelected(true);
-            saveProject();
-        }
-    }
-
-    private void addTeam(final Team team) {
-        if (team != null) {
-            selectedProject.addTeam(team);
-            teams.add(team);
-
-            // Select added team in the listView
-            teamsListView.getSelectionModel().select(null);
-            teamsListView.getSelectionModel().select(team);
-
-            switchToTeamList();
-            menuBarController.updateAfterTeamListSelected(true);
-
             saveProject();
         }
     }
@@ -487,31 +464,10 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editSkillController.isValid()) {
-                final Command<Skill> c = new Command<Skill>() {
-                    CompoundCommand cc = editSkillController.getCommand();
-
-                    @Override
-                    public Skill execute() {
-                        // Add to mainListView
-                        cc.execute();
-                        saveProject();
-                        refreshList();
-                        return null;
-                    }
-
-                    @Override
-                    public void undo() {
-                        cc.undo();
-                        refreshList();
-                    }
-
-                    @Override
-                    public String getType() {
-                        return "Edit Skill";
-                    }
-                };
-
-                undoManager.doCommand(c);
+                CompoundCommand command = editSkillController.getCommand();
+                command.setType("Edit Skill");
+                command.setRefreshParameters(skill, skillsListView);
+                undoManager.doCommand(command);
             }
         });
     }
@@ -546,31 +502,10 @@ public class MainController implements Initializable {
             stage.showAndWait();
 
             if (editPersonController.isValid()) {
-                final Command c = new Command() {
-                    CompoundCommand cc = editPersonController.getCommand();
-
-                    @Override
-                    public Object execute() {
-                        // Add to projectListView
-                        cc.execute();
-                        saveProject();
-                        refreshList();
-                        return null;
-                    }
-
-                    @Override
-                    public String getType() {
-                        return "Edit Person";
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from projectListView
-                        cc.undo();
-                        refreshList();
-                    }
-                };
-                undoManager.doCommand(c);
+                CompoundCommand command = editPersonController.getCommand();
+                command.setType("Edit Person");
+                command.setRefreshParameters(person, peopleListView);
+                undoManager.doCommand(command);
             }
         });
     }
@@ -601,31 +536,10 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
-                final Command c = new Command() {
-                    CompoundCommand cc = editProjectController.getCommand();
-
-                    @Override
-                    public Void execute() {
-                        // Add to projectListView
-                        cc.execute();
-                        saveProject();
-                        refreshList();
-                        return null;
-                    }
-
-                    @Override
-                    public String getType() {
-                        return "Edit Project";
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from projectListView
-                        cc.undo();
-                        refreshList();
-                    }
-                };
-                undoManager.doCommand(c);
+                CompoundCommand command = editProjectController.getCommand();
+                command.setType("Edit Project");
+                command.setRefreshParameters(project, projectListView);
+                undoManager.doCommand(command);
             }
         });
     }
@@ -664,10 +578,10 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 selectedProject = newValue;
 
-                // Set observable list of people and skills corresponding to this new project
-                people.setAll(selectedProject.getPeople());
-                skills.setAll(selectedProject.getSkills());
-                teams.setAll(selectedProject.getTeams());
+                // Set observable list of people, skills and teams corresponding to this new project
+                peopleListView.setItems(selectedProject.getPeople());
+                skillsListView.setItems(selectedProject.getSkills());
+                teamsListView.setItems(selectedProject.getTeams());
 
                 // Update status bar to show current save status of selected project
                 // Probably not the best way to do this, but it's the simplest
@@ -697,7 +611,6 @@ public class MainController implements Initializable {
                 };
             }
         });
-        peopleListView.setItems(people);
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Person");
@@ -728,21 +641,13 @@ public class MainController implements Initializable {
      * Sets the content for the skills list view
      */
     private void initialiseSkillsListView() {
-        skillsListView.setCellFactory(new Callback<ListView<Skill>, ListCell<Skill>>() {
+        skillsListView.setCellFactory(view -> new ListCell<Skill>() {
             @Override
-            public ListCell<Skill> call(final ListView<Skill> arg0) {
-                return new ListCell<Skill>() {
-                    @Override
-                    protected void updateItem(final Skill skill, final boolean empty) {
-                        // calling super here is very important
-                        super.updateItem(skill, empty);
-                        setText(empty ? "" : skill.getShortName());
-                    }
-                };
+            public void updateItem(Skill skill, boolean empty) {
+                super.updateItem(skill, empty);
+                setText(empty ? null : skill.getShortName());
             }
         });
-
-        skillsListView.setItems(skills);
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Skill");
@@ -783,8 +688,6 @@ public class MainController implements Initializable {
                 };
             }
         });
-
-        teamsListView.setItems(teams);
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Team");
@@ -839,31 +742,8 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (newSkillController.isValid()) {
-                final Command<Skill> c = new Command<Skill>() {
-                    private final CreateSkillCommand cpc = newSkillController.getCommand();
-
-                    @Override
-                    public Skill execute() {
-                        // Add to mainListView
-                        final Skill skill = cpc.execute();
-                        addSkillToProject(skill);
-                        return skill;
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from mainListView
-                        removeSkillFromProject(cpc.getSkill());
-                        cpc.undo();
-                    }
-
-                    @Override
-                    public String getType() {
-                        return cpc.getType();
-                    }
-                };
-
-                undoManager.doCommand(c);
+                CreateSkillCommand command = newSkillController.getCommand();
+                undoManager.doCommand(command);
             }
         });
     }
@@ -895,32 +775,8 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (newPersonController.isValid()) {
-                final Command c = new Command() {
-                    CreatePersonCommand cpc = newPersonController.getCommand();
-
-                    @Override
-                    public Object execute() {
-                        // Add to projectListView
-                        final Person person = cpc.execute();
-                        selectedProject.addPerson(person);
-                        addPersonToList(person);
-                        return person;
-                    }
-
-                    @Override
-                    public String getType() {
-                        return cpc.getType();
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from projectListView
-                        people.remove(cpc.getPerson());
-                        selectedProject.removePerson(cpc.getPerson());
-                        cpc.undo();
-                    }
-                };
-                undoManager.doCommand(c);
+                CreatePersonCommand command = newPersonController.getCommand();
+                undoManager.doCommand(command);
             }
         });
     }
@@ -951,63 +807,19 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (teamFormController.isValid()) {
-                Command c;
                 if (team == null) {
                     // creating
                     // Create the command and do it
-                    c = new Command<Team>() {
-                        private final CreateTeamCommand ctc = (CreateTeamCommand) teamFormController.getCommand();
-
-                        @Override
-                        public Team execute() {
-                            final Team team = ctc.execute();
-                            addTeam(team);
-                            return team;
-                        }
-
-                        @Override
-                        public void undo() {
-                            teams.remove(ctc.getTeam());
-                            for (final Person person : ctc.getTeam().getTeamMembers()) {
-                                refreshList();
-                            }
-                        }
-
-                        @Override
-                        public String getType() {
-                            return ctc.getType();
-                        }
-                    };
+                    CreateTeamCommand command = (CreateTeamCommand) teamFormController.getCommand();
+                    undoManager.doCommand(command);
                 } else {
                     // editing
-                    // Create the command and do it
-                    c = new Command<Team>() {
-                        private final CompoundCommand cc = (CompoundCommand) teamFormController.getCommand();
 
-                        @Override
-                        public Team execute() {
-                            cc.execute();
-                            saveProject();
-                            // Update detail pane
-
-                            refreshList();
-                            return null;
-                        }
-
-                        @Override
-                        public String getType() {
-                            return "Edit Team";
-                        }
-
-                        @Override
-                        public void undo() {
-                            // Remove from projectListView
-                            cc.undo();
-                            refreshList();
-                        }
-                    };
+                    CompoundCommand command = (CompoundCommand) teamFormController.getCommand();
+                    command.setType("Edit Team");
+                    command.setRefreshParameters(team, teamsListView);
+                    undoManager.doCommand(command);
                 }
-                undoManager.doCommand(c);
             }
 
         });
@@ -1039,78 +851,11 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (newProjectController.isValid()) {
-                final Command<Project> c = new Command<Project>() {
-                    private final CreateProjectCommand cpc = newProjectController.getCommand();
-
-                    @Override
-                    public Project execute() {
-                        // Add to projectListView
-                        final Project project = cpc.execute();
-                        addProject(project);
-                        return project;
-                    }
-
-                    @Override
-                    public String getType() {
-                        return cpc.getType();
-                    }
-
-                    @Override
-                    public void undo() {
-                        // Remove from projectListView
-                        projects.remove(cpc.getProject());
-                        cpc.undo();
-                    }
-                };
-
-                // this.undoManager.doCommand(c);
-                // We don't do the command, since it is not meant to be undoable
-                // at this stage
-                c.execute();
+                // TODO This will need work when we add support for multiple projects
+                CreateProjectCommand command = newProjectController.getCommand();
+                addProject(command.execute());
             }
         });
-    }
-
-    private void removeSkillFromProject(Skill skill) {
-        selectedProject.getSkills().remove(skill);
-        skills.remove(skill);
-    }
-
-    private void addSkillToProject(Skill skill) {
-        selectedProject.addSkill(skill);
-        // Update listView and select newly added skill
-        skills.add(skill);
-        skillsListView.getSelectionModel().select(skill);
-        menuBarController.updateAfterSkillSelected(true);
-        switchToSkillList();
-        saveProject();
-    }
-
-    /**
-     * Forces a redraw of the list view (and the detailsPane)
-     */
-    private void refreshList() {
-        if (projectTab.isSelected()) {
-            projectListView.setItems(null);
-            projectListView.setItems(projects);
-            projectListView.getSelectionModel().select(null);
-            projectListView.getSelectionModel().select(selectedProject);
-        } else if (peopleTab.isSelected()) {
-            peopleListView.setItems(null);
-            peopleListView.setItems(people);
-            peopleListView.getSelectionModel().select(null);
-            peopleListView.getSelectionModel().select(selectedPerson);
-        } else if (skillsTab.isSelected()) {
-            skillsListView.setItems(null);
-            skillsListView.setItems(skills);
-            skillsListView.getSelectionModel().select(null);
-            skillsListView.getSelectionModel().select(selectedSkill);
-        } else if (teamsTab.isSelected()) {
-            teamsListView.setItems(null);
-            teamsListView.setItems(teams);
-            teamsListView.getSelectionModel().select(null);
-            teamsListView.getSelectionModel().select(selectedTeam);
-        }
     }
 
     /**

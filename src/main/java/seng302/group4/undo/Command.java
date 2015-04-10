@@ -33,4 +33,13 @@ public abstract class Command<T> {
     public abstract void undo();
 
     public abstract String getType();
+
+    public void callbackMethod(Function function) {
+        function.call();
+    }
+
+    @FunctionalInterface
+    public interface Function {
+        void call();
+    }
 }

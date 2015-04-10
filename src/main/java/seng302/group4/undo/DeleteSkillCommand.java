@@ -5,6 +5,7 @@ import seng302.group4.Project;
 import seng302.group4.Skill;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DeleteSkillCommand extends Command<Skill> {
@@ -12,6 +13,7 @@ public class DeleteSkillCommand extends Command<Skill> {
     private Project project;
     private Skill skill;
     private ArrayList<Person> peopleWithSkill = new ArrayList<>();
+    private Function callbackFunction;
 
     /**
      * @param skill Skill to be deleted
@@ -44,6 +46,7 @@ public class DeleteSkillCommand extends Command<Skill> {
             person.getSkills().remove(skill);
         }
         project.getSkills().remove(skill);
+//        callbackFunction.call();
         return skill;
     }
 
@@ -70,4 +73,7 @@ public class DeleteSkillCommand extends Command<Skill> {
         return "Delete Skill";
     }
 
+    public void callback(final Function function) {
+        callbackFunction = function;
+    }
 }

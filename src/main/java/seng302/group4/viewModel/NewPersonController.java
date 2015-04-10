@@ -38,7 +38,7 @@ public class NewPersonController implements Initializable {
         setCancelButton();
         formController.setShortNameSuggester();
 
-        Platform.runLater(() -> setProjectForFormController());
+        Platform.runLater(this::setProjectForFormController);
     }
 
     /**
@@ -65,9 +65,10 @@ public class NewPersonController implements Initializable {
                         return;
                     }
                 }
-                command = new CreatePersonCommand(formController.getShortName(), formController.getLongName(),
+                Person person = new Person(formController.getShortName(), formController.getLongName(),
                         formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
                         formController.getPhoneNumber(), formController.getDepartment(), formController.getSkills());
+                command = new CreatePersonCommand(person, project);
                 valid = true;
                 stage.close();
             }

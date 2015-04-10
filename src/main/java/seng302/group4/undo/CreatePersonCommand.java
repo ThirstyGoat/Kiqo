@@ -1,6 +1,7 @@
 package seng302.group4.undo;
 
 import seng302.group4.Person;
+import seng302.group4.Project;
 import seng302.group4.Skill;
 
 import java.util.ArrayList;
@@ -8,59 +9,39 @@ import java.util.ArrayList;
 /**
  * Command to create a project
  *
- * @author amy
+ * @author amy, Edited by Bradley 10/4/15
  *
  */
 public class CreatePersonCommand extends Command<Person> {
-    private final String shortName;
-    private final String longName;
-    private final String description;
-    private final String userID;
-    private final String emailAddress;
-    private final String phoneNumber;
-    private final String department;
-    private final ArrayList<Skill> skills;
 
-    private Person person = null;
+    private Person person;
+    private Project project;
 
     /**
      *
-     * @param shortName
-     * @param longName
-     * @param description
-     * @param userID
-     * @param emailAddress
-     * @param phoneNumber
-     * @param department
+     * @param person Person to be added to a project
+     * @param project Project for which person is to be added to
      */
-    public CreatePersonCommand(final String shortName, final String longName, final String description, final String userID,
-                               final String emailAddress, final String phoneNumber, final String department, final ArrayList<Skill> skills) {
-        this.shortName = shortName;
-        this.longName = longName;
-        this.description = description;
-        this.userID = userID;
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.department = department;
-        this.skills = skills;
+    public CreatePersonCommand(final Person person, final Project project) {
+        this.person = person;
+        this.project = project;
     }
 
     @Override
     public Person execute() {
-        if (person == null) {
-            person = new Person(shortName, longName, description, userID, emailAddress, phoneNumber, department, skills);
-        }
+        project.getPeople().add(person);
         return person;
     }
 
     @Override
     public void undo() {
-
+        // Goodbye person
+        project.getPeople().remove(person);
     }
 
     @Override
     public String toString() {
-        return "<Create Person: \"" + shortName + "\">";
+        return "<Create Person: \"" + person.getShortName() + "\">";
     }
 
     public Person getPerson() {

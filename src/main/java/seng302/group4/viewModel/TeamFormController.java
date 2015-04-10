@@ -43,6 +43,13 @@ import seng302.group4.undo.EditCommand;
  */
 public class TeamFormController implements Initializable {
 
+    private final ArrayList<Person> devTeam = new ArrayList<>();
+    private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+    private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
+    private final PopOver errorPopOver = new PopOver();
+    private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
+    private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
     // Begin FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -54,7 +61,6 @@ public class TeamFormController implements Initializable {
     private Button okButton;
     @FXML
     private Button cancelButton;
-
     private Stage stage;
     private Project project;
     private Team team;
@@ -62,15 +68,6 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private final ArrayList<Person> devTeam = new ArrayList<>();
-    private final int SHORT_NAME_MAX_LENGTH = 20;
-
-    private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
-    private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
-    private final PopOver errorPopOver = new PopOver();
-
-    private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
-    private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -150,7 +147,7 @@ public class TeamFormController implements Initializable {
         if (team == null) {
             // create command
             command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers,
-                    productOwner, scrumMaster, devTeam);
+                    productOwner, scrumMaster, devTeam, project);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();

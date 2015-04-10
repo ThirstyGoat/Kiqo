@@ -1,12 +1,14 @@
 package seng302.group4;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by samschofield on 12/03/15. Project class represents a software
- * project
+ * Project class represents a software project
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
@@ -14,6 +16,10 @@ public class Project implements Serializable {
     private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
+    private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
+    private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
+    private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
+
     private String shortName;
     private String longName;
     private String description;
@@ -30,23 +36,12 @@ public class Project implements Serializable {
         skills.add(smSkill);
     }
 
-    public Skill getPoSkill() {
-        return poSkill;
-    }
-
-    public Skill getSmSkill() {
-        return smSkill;
-    }
-
     /**
      * Create new Project
      *
-     * @param shortName
-     *            a unique short name for the project
-     * @param longName
-     *            long name for project
-     * @param saveLocation
-     *            save location for the project
+     * @param shortName a unique short name for the project
+     * @param longName long name for project
+     * @param saveLocation save location for the project
      */
     public Project(final String shortName, final String longName, final File saveLocation) {
         this();
@@ -58,14 +53,10 @@ public class Project implements Serializable {
     /**
      * Create a new project
      *
-     * @param shortName
-     *            a unique short name for the project
-     * @param longName
-     *            long name for project
-     * @param saveLocation
-     *            save location for the project
-     * @param description
-     *            description of the project
+     * @param shortName a unique short name for the project
+     * @param longName long name for project
+     * @param saveLocation save location for the project
+     * @param description description of the project
      */
     public Project(final String shortName, final String longName, final File saveLocation, final String description) {
         this();
@@ -75,37 +66,44 @@ public class Project implements Serializable {
         this.saveLocation = saveLocation;
     }
 
+    public Skill getPoSkill() {
+        return poSkill;
+    }
+
+    public Skill getSmSkill() {
+        return smSkill;
+    }
+
     /**
      *
-     * @param person
-     *            - person to add to people list in project
+     * @param person Person to add to people list in project
      */
     public void addPerson(final Person person) {
-        people.add(person);
+        peopleObservable.add(person);
     }
 
     /**
      *
-     * @param skill skill to add to skill list in project
+     * @param skill Skill to add to skill list in project
      */
     public void addSkill(final Skill skill) {
-        skills.add(skill);
+        skillsObservable.add(skill);
     }
 
     /**
      *
-     * @return arraylist of people in project
+     * @return ObservableList of people in project
      */
-    public ArrayList<Person> getPeople() {
-        return people;
+    public ObservableList<Person> getPeople() {
+        return peopleObservable;
     }
 
     /**
      *
-     * @return arraylist of skills in project
+     * @return ObservableList of skills in project
      */
-    public ArrayList<Skill> getSkills() {
-        return skills;
+    public ObservableList<Skill> getSkills() {
+        return skillsObservable;
     }
 
     @Override
@@ -136,8 +134,7 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param description
-     *            the description of the project
+     * @param description Description of the project
      */
     public void setDescription(final String description) {
         this.description = description;
@@ -196,18 +193,18 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return the array list of teams
+     * @return ObservableList of teams
      */
-    public ArrayList<Team> getTeams() {
-        return teams;
+    public ObservableList<Team> getTeams() {
+        return teamsObservable;
     }
 
     /**
      *
-     * @param team the team to be added to the project
+     * @param team Team to be added to the project
      */
     public void addTeam(Team team) {
-        teams.add(team);
+        teamsObservable.add(team);
     }
 
     @Override
@@ -227,7 +224,7 @@ public class Project implements Serializable {
     }
 
     public void removePerson(final Person person) {
-        people.remove(person);
+        peopleObservable.remove(person);
     }
 
 }
