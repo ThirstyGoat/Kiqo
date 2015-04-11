@@ -4,3 +4,7 @@
 	-fx-alignment: center_left;
 	-fx-padding: 0 0 0 3px;
 }
+
+.tab-header-area {
+	visibility: hidden;
+}

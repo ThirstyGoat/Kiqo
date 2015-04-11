@@ -22,7 +22,7 @@
                        <Insets left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                    </Label>
-                   <TabPane fx:id="tabViewPane">
+                   <TabPane fx:id="tabViewPane" stylesheets="@css/styles.css">
                       <tabs>
                         <Tab fx:id="projectTab" closable="false" text="Project">
                            <content>
