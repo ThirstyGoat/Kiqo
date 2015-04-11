@@ -16,9 +16,11 @@ public class Project implements Serializable {
     private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
+    private final ArrayList<Release> releases = new ArrayList<>();
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
+    private  transient ObservableList<Release> releaseObservable = FXCollections.observableList(releases);
 
     private String shortName;
     private String longName;
@@ -76,18 +78,26 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param person Person to add to people list in project
+     * @return ObservableList of releases in project
      */
-    public void addPerson(final Person person) {
-        peopleObservable.add(person);
+    public ObservableList<Release> getRelease() {
+        return releaseObservable;
     }
 
     /**
      *
-     * @param skill Skill to add to skill list in project
+     * @param release Release to add to the list of releases in Project
      */
-    public void addSkill(final Skill skill) {
-        skillsObservable.add(skill);
+    public void addRelease(final Release release) {
+        releaseObservable.add(release);
+    }
+
+    /**
+     *
+     * @param release Release to remove from the list of releases in Project
+     */
+    public void removeRelease(final Release release) {
+        releaseObservable.remove(release);
     }
 
     /**
@@ -100,28 +110,50 @@ public class Project implements Serializable {
 
     /**
      *
+     * @param person Person to add to people list in project
+     */
+    public void addPerson(final Person person) {
+        peopleObservable.add(person);
+    }
+
+    /**
+     *
+     * @param person Person to remove from list of people in project
+     */
+    public void removePerson(final Person person) {
+        peopleObservable.remove(person);
+    }
+
+    /**
+     *
      * @return ObservableList of skills in project
      */
     public ObservableList<Skill> getSkills() {
         return skillsObservable;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
+    /**
+     *
+     * @param skill Skill to add to skill list in project
+     */
+    public void addSkill(final Skill skill) {
+        skillsObservable.add(skill);
+    }
 
-        final Project project = (Project) o;
+    /**
+     *
+     * @return ObservableList of teams
+     */
+    public ObservableList<Team> getTeams() {
+        return teamsObservable;
+    }
 
-        if (!shortName.equals(project.shortName)) {
-            return false;
-        }
-
-        return true;
+    /**
+     *
+     * @param team Team to be added to the project
+     */
+    public void addTeam(Team team) {
+        teamsObservable.add(team);
     }
 
     /**
@@ -191,22 +223,6 @@ public class Project implements Serializable {
         this.shortName = shortName;
     }
 
-    /**
-     *
-     * @return ObservableList of teams
-     */
-    public ObservableList<Team> getTeams() {
-        return teamsObservable;
-    }
-
-    /**
-     *
-     * @param team Team to be added to the project
-     */
-    public void addTeam(Team team) {
-        teamsObservable.add(team);
-    }
-
     @Override
     public int hashCode() {
         return shortName.hashCode();
@@ -223,8 +239,22 @@ public class Project implements Serializable {
                 + ", saveLocation='" + saveLocation + '\'' + '}';
     }
 
-    public void removePerson(final Person person) {
-        peopleObservable.remove(person);
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Project project = (Project) o;
+
+        if (!shortName.equals(project.shortName)) {
+            return false;
+        }
+
+        return true;
     }
 
 }
