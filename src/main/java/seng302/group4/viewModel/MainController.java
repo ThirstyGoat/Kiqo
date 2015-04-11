@@ -541,7 +541,7 @@ public class MainController implements Initializable {
             if (editSkillController.isValid()) {
                 final CompoundCommand command = editSkillController.getCommand();
                 command.setType("Edit Skill");
-                command.setRefreshParameters(skill, skillsListView);
+                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 undoManager.doCommand(command);
             }
         });
@@ -579,7 +579,7 @@ public class MainController implements Initializable {
             if (editPersonController.isValid()) {
                 final CompoundCommand command = editPersonController.getCommand();
                 command.setType("Edit Person");
-                command.setRefreshParameters(person, peopleListView);
+                command.setRefreshParameters(person, peopleListView, detailsPaneController);
                 undoManager.doCommand(command);
             }
         });
@@ -614,7 +614,7 @@ public class MainController implements Initializable {
             if (editProjectController.isValid()) {
                 final CompoundCommand command = editProjectController.getCommand();
                 command.setType("Edit Project");
-                command.setRefreshParameters(project, projectListView);
+                command.setRefreshParameters(project, projectListView, detailsPaneController);
                 undoManager.doCommand(command);
             }
         });
@@ -862,7 +862,7 @@ public class MainController implements Initializable {
 
                     final CompoundCommand command = (CompoundCommand) teamFormController.getCommand();
                     command.setType("Edit Team");
-                    command.setRefreshParameters(team, teamsListView);
+                    command.setRefreshParameters(team, teamsListView, detailsPaneController);
                     undoManager.doCommand(command);
                 }
             }

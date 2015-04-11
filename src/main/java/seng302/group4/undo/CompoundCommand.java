@@ -1,10 +1,10 @@
 package seng302.group4.undo;
 
-import javafx.scene.control.ListView;
-import seng302.group4.Skill;
-import seng302.group4.viewModel.MainController;
-
 import java.util.ArrayList;
+
+import javafx.scene.control.ListView;
+import seng302.group4.viewModel.DetailsPaneController;
+import seng302.group4.viewModel.MainController;
 
 /**
  * Overwrites a field value
@@ -17,35 +17,35 @@ public class CompoundCommand extends Command<Void> {
     private String type = "Compound Command";
     private ListView listView;
     private Object object;
+    private DetailsPaneController detailsPaneController;
 
     public CompoundCommand(final ArrayList<Command<?>> changes) {
-        this.commands = changes;
+        commands = changes;
     }
 
     @Override
     public Void execute() {
-        this.commands.forEach(seng302.group4.undo.Command::execute);
+        commands.forEach(seng302.group4.undo.Command::execute);
+        refreshView();
+        return null;
+    }
 
-        // Refresh listview
+    private void refreshView() {
         if (object != null && listView != null) {
             MainController.triggerListUpdate(object, listView);
         }
-        return null;
+        detailsPaneController.showDetailsPane(object);
     }
 
     @Override
     public String toString() {
-        return this.commands.size() + " changes";
+        return commands.size() + " changes";
     }
 
     @Override
     public void undo() {
-        this.commands.forEach(seng302.group4.undo.Command::undo);
-
-        // Refresh listview
-        if (object != null && listView != null) {
-            MainController.triggerListUpdate(object, listView);
-        }
+        commands.forEach(seng302.group4.undo.Command::undo);
+        refreshView();
     }
 
     @Override
@@ -57,8 +57,9 @@ public class CompoundCommand extends Command<Void> {
         this.type  = type;
     }
 
-    public void setRefreshParameters(Object object, ListView listView) {
+    public <T> void setRefreshParameters(T object, ListView<T> listView, DetailsPaneController detailsPaneController) {
         this.listView = listView;
         this.object = object;
+        this.detailsPaneController = detailsPaneController;
     }
 }
