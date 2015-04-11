@@ -26,6 +26,7 @@
         <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">

@@ -32,6 +32,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem editMenuItem;
     @FXML
+    private MenuItem deleteMenuItem;
+    @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
     private CheckMenuItem listShowProjectMenuItem;
@@ -65,6 +67,7 @@ public class MenuBarController implements Initializable {
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editMenuItem.setDisable(true);
+        deleteMenuItem.setDisable(true);
 
         // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
@@ -85,6 +88,7 @@ public class MenuBarController implements Initializable {
         quitMenuItem.setOnAction(event -> mainController.exit());
 
         editMenuItem.setOnAction(event -> mainController.editObject());
+        deleteMenuItem.setOnAction(event -> mainController.deleteObject());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
@@ -219,12 +223,14 @@ public class MenuBarController implements Initializable {
         });
     }
 
-    public void setSaveEnabled(boolean enabled) {
+    public void updateAfterProjectSelected(boolean enabled) {
         saveMenuItem.setDisable(!enabled);
+        deleteMenuItem.setDisable(enabled);
     }
 
-    public void setEditEnabled(boolean enabled) {
+    public void updateAfterAnyObjectSelected(boolean enabled) {
         editMenuItem.setDisable(!enabled);
+        deleteMenuItem.setDisable(!enabled);
     }
 
     public void updateAfterProjectListSelected(boolean selected) {

@@ -260,7 +260,7 @@ public class MainController implements Initializable {
             public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
                 System.out.println("Focus changed to " + newValue);
                 detailsPaneController.showDetailsPane(newValue);
-                menuBarController.setEditEnabled(newValue != null);
+                menuBarController.updateAfterAnyObjectSelected(newValue != null);
             }
         });
     }
@@ -652,7 +652,6 @@ public class MainController implements Initializable {
 
         // Set change listener
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            menuBarController.setSaveEnabled(newValue != null);
             if (newValue != null) {
                 selectedProject = newValue;
                 focusedObjectProperty.set(newValue);
@@ -671,6 +670,9 @@ public class MainController implements Initializable {
 
                 listLabel.setText(newValue.getShortName());
             }
+            // do this after updating focusedObject, to undo the "enable delete"
+            // effect
+            menuBarController.updateAfterProjectSelected(newValue != null);
         });
     }
 
