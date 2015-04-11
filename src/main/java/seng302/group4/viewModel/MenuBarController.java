@@ -48,6 +48,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listShowSkillMenuItem;
     @FXML
+    private CheckMenuItem listShowReleaseMenuItem;
+    @FXML
     private MenuItem quitMenuItem;
 
     private MainController mainController;
@@ -109,6 +111,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
+                listShowReleaseMenuItem.setSelected(false);
+                listShowReleaseMenuItem.setDisable(false);
 
                 mainController.switchToProjectList();
                 listShowProjectMenuItem.setDisable(true);
@@ -122,6 +126,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
+                listShowReleaseMenuItem.setSelected(false);
+                listShowReleaseMenuItem.setDisable(false);
 
                 mainController.switchToTeamList();
                 listShowTeamMenuItem.setDisable(true);
@@ -136,6 +142,8 @@ public class MenuBarController implements Initializable {
                 listShowTeamMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
+                listShowReleaseMenuItem.setSelected(false);
+                listShowReleaseMenuItem.setDisable(false);
 
                 mainController.switchToPersonList();
                 listShowPersonMenuItem.setDisable(true);
@@ -150,9 +158,26 @@ public class MenuBarController implements Initializable {
                 listShowTeamMenuItem.setDisable(false);
                 listShowPersonMenuItem.setSelected(false);
                 listShowPersonMenuItem.setDisable(false);
+                listShowReleaseMenuItem.setSelected(false);
+                listShowReleaseMenuItem.setDisable(false);
 
                 mainController.switchToSkillList();
                 listShowSkillMenuItem.setDisable(true);
+            }
+        });
+        listShowReleaseMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                listShowProjectMenuItem.setSelected(false);
+                listShowProjectMenuItem.setDisable(false);
+                listShowTeamMenuItem.setSelected(false);
+                listShowTeamMenuItem.setDisable(false);
+                listShowPersonMenuItem.setSelected(false);
+                listShowPersonMenuItem.setDisable(false);
+                listShowSkillMenuItem.setSelected(false);
+                listShowSkillMenuItem.setDisable(false);
+
+                mainController.switchToReleaseList();
+                listShowReleaseMenuItem.setDisable(true);
             }
         });
     }
@@ -186,12 +211,12 @@ public class MenuBarController implements Initializable {
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
         // Undo/redo
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
         redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
-                                                           KeyCombination.SHIFT_DOWN));
+                KeyCombination.SHIFT_DOWN));
     }
 
     public void setListenersOnUndoManager(UndoManager undoManager) {
@@ -286,6 +311,10 @@ public class MenuBarController implements Initializable {
 
     public void updateAfterSkillListSelected(boolean selected) {
         listShowSkillMenuItem.selectedProperty().set(selected);
+    }
+
+    public void updateAfterReleasesListSelected(boolean selected) {
+        listShowReleaseMenuItem.selectedProperty().set(selected);
     }
 
     public void enableNewTeam() {

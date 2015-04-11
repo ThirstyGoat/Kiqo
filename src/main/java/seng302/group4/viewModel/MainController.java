@@ -270,7 +270,7 @@ public class MainController implements Initializable {
                     releasesListView.getSelectionModel().select(selectedRelease);
                 }
 //                detailsPaneController.showDetailsPane(teamsListView.getSelectionModel().getSelectedItem());
-//                menuBarController.updateAfterReleasesListSelected(true);
+                menuBarController.updateAfterReleasesListSelected(true);
             }
         });
     }
