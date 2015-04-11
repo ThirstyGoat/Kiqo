@@ -13,12 +13,14 @@ import java.util.ArrayList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
+    private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
-    public ArrayList<Person> people = new ArrayList<>();
+    private final ArrayList<Release> releases = new ArrayList<>();
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
+    private transient ObservableList<Release> releaseObservable = FXCollections.observableList(releases);
 
     private String shortName;
     private String longName;
@@ -72,6 +74,30 @@ public class Project implements Serializable {
 
     public Skill getSmSkill() {
         return smSkill;
+    }
+
+    /**
+     *
+     * @return ObservableList of releases in project
+     */
+    public ObservableList<Release> getRelease() {
+        return releaseObservable;
+    }
+
+    /**
+     *
+     * @param release Release to add to the list of releases in Project
+     */
+    public void addRelease(final Release release) {
+        releaseObservable.add(release);
+    }
+
+    /**
+     *
+     * @param release Release to remove from the list of releases in Project
+     */
+    public void removeRelease(final Release release) {
+        releaseObservable.remove(release);
     }
 
     /**
