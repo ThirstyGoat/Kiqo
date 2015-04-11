@@ -36,11 +36,17 @@ public class DeleteTeamCommand extends Command<Team> {
 
     @Override
     public Team execute() {
+        // Set team members' team field to null
+        for (Person person : team.getTeamMembers()) {
+            person.setTeam(null);
+        }
+
         // if setDeleteMembers was called, delete each team member
         for (Person person : teamMembers) {
             System.out.println("Deleting: " + person.getShortName());
             project.getPeople().remove(person);
         }
+
         // delete the team
         project.getTeams().remove(team);
         return team;
@@ -48,6 +54,11 @@ public class DeleteTeamCommand extends Command<Team> {
 
     @Override
     public void undo() {
+        // Set team members team field to this team
+        for (Person person : team.getTeamMembers()) {
+            person.setTeam(team);
+        }
+
         for (Person person : teamMembers) {
             System.out.println("Undoing deletion of: " + person.getShortName());
             project.getPeople().add(person);
