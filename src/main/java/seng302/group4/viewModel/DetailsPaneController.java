@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,9 +14,6 @@ import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 import seng302.group4.Team;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * Switches between detail panes depending on type of content shown.
@@ -51,6 +51,7 @@ public class DetailsPaneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         clear();
 
+        editButton.setOnAction(event -> mainController.editObject());
     }
 
 
@@ -72,7 +73,7 @@ public class DetailsPaneController implements Initializable {
 
 
     private void clear() {
-        for (Node node : stackPane.getChildren()) {
+        for (final Node node : stackPane.getChildren()) {
             node.setVisible(false);
         }
         editButton.setVisible(false);
@@ -87,7 +88,6 @@ public class DetailsPaneController implements Initializable {
         teamDetailsPane.setVisible(false);
 
         showEditButton();
-        editButton.setOnAction(event -> mainController.editSkill());
     }
 
     private void showProjectDetailsPane(Project project) {
@@ -99,7 +99,6 @@ public class DetailsPaneController implements Initializable {
         teamDetailsPane.setVisible(false);
 
         showEditButton();
-        editButton.setOnAction(event -> mainController.editProject());
     }
 
     private void showPersonDetailsPane(Person person) {
@@ -111,7 +110,6 @@ public class DetailsPaneController implements Initializable {
         teamDetailsPane.setVisible(false);
 
         showEditButton();
-        editButton.setOnAction(event -> mainController.editPerson());
     }
 
     private void showTeamDetailPane(Team team) {
@@ -123,7 +121,6 @@ public class DetailsPaneController implements Initializable {
         teamDetailsPane.setVisible(true);
 
         showEditButton();
-        editButton.setOnAction(event -> mainController.editTeam());
     }
 
     private void showEditButton() {
