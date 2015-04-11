@@ -117,35 +117,40 @@ public class MainController implements Initializable {
 
     public void deleteTeam() {
         if (selectedTeam != null) {
-            // TODO Command stuff relating to DeleteTeamCommand
+            DeleteTeamCommand command = new DeleteTeamCommand(selectedTeam, selectedProject);
 
             VBox node = new VBox();
             node.setSpacing(10);
 
             CheckBox checkbox;
 
-            if (true /* team has people in it */) {
+            // selectedTeam.getTeamMembers().size() > 0
+            if (selectedTeam.getTeamMembers().size() > 0) {
                 checkbox = new CheckBox("Also delete the people belonging to this team");
-                String deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+                String deleteMessage = "Current team members:\n";
                 deleteMessage += Utilities.concatenatePeopleList(selectedTeam.getTeamMembers(), 5);
                 node.getChildren().add(new Label(deleteMessage));
-
                 node.getChildren().add(checkbox);
             } else {
                 node.getChildren().add(new Label("This team has nobody in it."));
+                checkbox = null;
             }
 
             String[] buttons = {"Delete Team", "Cancel"};
-            String result = GoatDialog.createCustomNodeDialog(primaryStage, "Test", "Heading", node, buttons);
+            String result = GoatDialog.createCustomNodeDialog(primaryStage,
+                    "Test", "Team: " + selectedTeam.getShortName(), node, buttons);
 
+//            change this because its hasnt been init yet
             boolean deletePeople = (checkbox != null) ? checkbox.selectedProperty().getValue() : false;
 
             if (result.equals("Delete Team")) {
                 // Then delete the team
                 // The result of whether or not to delete the team members can be fetched by deletePeople boolean
-                // command.setDeleteMembers(deletePeople)
+                if (deletePeople) {
+                    command.setDeleteMembers();
+                }
                 System.out.println("Delete people as well? " + deletePeople);
-                //undoManager.doCommand(command);
+                undoManager.doCommand(command);
             }
         }
     }
@@ -287,49 +292,22 @@ public class MainController implements Initializable {
         newProjectDialog();
     }
 
-    public void dragAndDrop(File filePath) {
+    public void openProject(File draggedFilePath) {
+        final File filePath;
+
         if (selectedProject != null) {
             GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
                     "Only one project at a time is supported in this version.");
             return;
         }
 
-        if (filePath == null) {
-            return;
+        if (draggedFilePath == null) {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            filePath = fileChooser.showOpenDialog(primaryStage);
+        } else {
+            filePath = draggedFilePath;
         }
-        Project project = null;
-        try {
-            project = PersistenceManager.loadProject(filePath);
-        } catch (JsonSyntaxException | InvalidProjectException e) {
-            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.",
-                    "The JSON file you supplied is invalid.");
-        } catch (final InvalidPersonException e) {
-            GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.",
-                    "An invalid person was found.");
-            e.printStackTrace();
-        } catch (final FileNotFoundException e) {
-            GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.",
-                    "Somehow, the file you tried to open was not found.");
-            e.printStackTrace();
-        }
-        if (project != null) {
-            project.setSaveLocation(filePath);
-            addProject(project);
-            System.out.println(project.getShortName() + " has been loaded successfully");
-        }
-        tabViewPane.getSelectionModel().select(projectTab);
-    }
-
-    public void openProject() {
-        if (selectedProject != null) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
-                    "Only one project at a time is supported in this version.");
-            return;
-        }
-
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-        final File filePath = fileChooser.showOpenDialog(primaryStage);
 
         if (filePath == null) {
             return;
