@@ -16,12 +16,13 @@ public class PersistenceManager {
      * Saves the given Project to the given filepath as project_shortname.json
      * FILE PATH MUST BE VALID
      *
-     * @param filePath
-     *            - the path to the location where the project is to be saved
-     * @param project
-     *            - the project to be saved
+     * @param filePath Path to the location where the project is to be saved
+     * @param project Project to be saved
      */
     public static void saveProject(final File filePath, final Project project) throws IOException {
+//        System.out.println(project);
+//        System.out.println(project.people);
+//        System.out.println(project.getPeople());
         GsonBuilder gsonBuilder = new GsonBuilder();
         // Turn me on baby - gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
@@ -62,6 +63,7 @@ public class PersistenceManager {
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
             project = gson.fromJson(br, Project.class);
+            project.setObservableLists();
         }
         return project;
     }

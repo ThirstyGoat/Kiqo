@@ -13,14 +13,12 @@ import java.util.ArrayList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Project implements Serializable {
-    private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
-    private final ArrayList<Release> releases = new ArrayList<>();
+    public ArrayList<Person> people = new ArrayList<>();
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
-    private  transient ObservableList<Release> releaseObservable = FXCollections.observableList(releases);
 
     private String shortName;
     private String longName;
@@ -78,30 +76,6 @@ public class Project implements Serializable {
 
     /**
      *
-     * @return ObservableList of releases in project
-     */
-    public ObservableList<Release> getRelease() {
-        return releaseObservable;
-    }
-
-    /**
-     *
-     * @param release Release to add to the list of releases in Project
-     */
-    public void addRelease(final Release release) {
-        releaseObservable.add(release);
-    }
-
-    /**
-     *
-     * @param release Release to remove from the list of releases in Project
-     */
-    public void removeRelease(final Release release) {
-        releaseObservable.remove(release);
-    }
-
-    /**
-     *
      * @return ObservableList of people in project
      */
     public ObservableList<Person> getPeople() {
@@ -110,133 +84,10 @@ public class Project implements Serializable {
 
     /**
      *
-     * @param person Person to add to people list in project
-     */
-    public void addPerson(final Person person) {
-        peopleObservable.add(person);
-    }
-
-    /**
-     *
-     * @param person Person to remove from list of people in project
-     */
-    public void removePerson(final Person person) {
-        peopleObservable.remove(person);
-    }
-
-    /**
-     *
      * @return ObservableList of skills in project
      */
     public ObservableList<Skill> getSkills() {
         return skillsObservable;
-    }
-
-    /**
-     *
-     * @param skill Skill to add to skill list in project
-     */
-    public void addSkill(final Skill skill) {
-        skillsObservable.add(skill);
-    }
-
-    /**
-     *
-     * @return ObservableList of teams
-     */
-    public ObservableList<Team> getTeams() {
-        return teamsObservable;
-    }
-
-    /**
-     *
-     * @param team Team to be added to the project
-     */
-    public void addTeam(Team team) {
-        teamsObservable.add(team);
-    }
-
-    /**
-     *
-     * @return the description of the project
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     *
-     * @param description Description of the project
-     */
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    /**
-     *
-     * @return longName the long name of the project
-     */
-    public String getLongName() {
-        return longName;
-    }
-
-    /**
-     *
-     * @param longName
-     *            the long name for the project
-     */
-    public void setLongName(final String longName) {
-        this.longName = longName;
-    }
-
-    /**
-     *
-     * @return save location of project
-     */
-    public File getSaveLocation() {
-        return saveLocation;
-    }
-
-    /**
-     *
-     * @param saveLocation
-     *            save location of project
-     */
-    public void setSaveLocation(final File saveLocation) {
-        this.saveLocation = saveLocation;
-    }
-
-    /**
-     *
-     * @return the short name of project
-     */
-    public String getShortName() {
-        return shortName;
-    }
-
-    /**
-     *
-     * @param shortName
-     *            the short name of the project
-     */
-    public void setShortName(final String shortName) {
-        this.shortName = shortName;
-    }
-
-    @Override
-    public int hashCode() {
-        return shortName.hashCode();
-    }
-
-    public void prepareForDestruction() {
-        // FIXME Auto-generated method stub
-        // eg. remove people
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" + "shortName='" + shortName + '\'' + ", longName='" + longName + '\'' + ", description='" + description + '\''
-                + ", saveLocation='" + saveLocation + '\'' + '}';
     }
 
     @Override
@@ -255,6 +106,104 @@ public class Project implements Serializable {
         }
 
         return true;
+    }
+
+    /**
+     *
+     * @return Description of the project
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     *
+     * @param description Description of the project
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    /**
+     *
+     * @return longName Long name of the project
+     */
+    public String getLongName() {
+        return longName;
+    }
+
+    /**
+     *
+     * @param longName Long name for the project
+     */
+    public void setLongName(final String longName) {
+        this.longName = longName;
+    }
+
+    /**
+     *
+     * @return save location of project
+     */
+    public File getSaveLocation() {
+        return saveLocation;
+    }
+
+    /**
+     *
+     * @param saveLocation Save location of project
+     */
+    public void setSaveLocation(final File saveLocation) {
+        this.saveLocation = saveLocation;
+    }
+
+    /**
+     *
+     * @return Short name of project
+     */
+    public String getShortName() {
+        return shortName;
+    }
+
+    /**
+     *
+     * @param shortName Short name of the project
+     */
+    public void setShortName(final String shortName) {
+        this.shortName = shortName;
+    }
+
+    /**
+     *
+     * @return ObservableList of teams
+     */
+    public ObservableList<Team> getTeams() {
+        return teamsObservable;
+    }
+
+    @Override
+    public int hashCode() {
+        return shortName.hashCode();
+    }
+
+    public void prepareForDestruction() {
+        // FIXME Auto-generated method stub
+        // eg. remove people
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" + "shortName='" + shortName + '\'' + ", longName='" + longName + '\'' + ", description='" + description + '\''
+                + ", saveLocation='" + saveLocation + '\'' + '}';
+    }
+
+    public void removePerson(final Person person) {
+        peopleObservable.remove(person);
+    }
+
+    public void setObservableLists() {
+        peopleObservable = FXCollections.observableList(people);
+        skillsObservable = FXCollections.observableList(skills);
+        teamsObservable = FXCollections.observableList(teams);
     }
 
 }

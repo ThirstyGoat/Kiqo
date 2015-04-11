@@ -32,14 +32,14 @@ public class DeleteSkillCommandTest {
         Person person3 = new Person("", "", "", "", "", "", "", new ArrayList<>());
 
         // Add people to project
-        project.addPerson(person1);
-        project.addPerson(person2);
-        project.addPerson(person3);
+        project.getPeople().add(person1);
+        project.getPeople().add(person2);
+        project.getPeople().add(person3);
 
         // Add skills to project
-        project.addSkill(skill1);
-        project.addSkill(skill2);
-        project.addSkill(skill3);
+        project.getSkills().add(skill1);
+        project.getSkills().add(skill2);
+        project.getSkills().add(skill3);
 
     }
 
@@ -48,7 +48,7 @@ public class DeleteSkillCommandTest {
         setUp();
 
         Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.addSkill(unusedSkill);
+        project.getSkills().add(unusedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
 
@@ -61,7 +61,7 @@ public class DeleteSkillCommandTest {
         setUp();
 
         Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.addSkill(unusedSkill);
+        project.getSkills().add(unusedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
 
@@ -76,7 +76,7 @@ public class DeleteSkillCommandTest {
         setUp();
         Skill usedSkill = new Skill("", "");
         project.getPeople().get(0).getSkills().add(usedSkill);
-        project.addSkill(usedSkill);
+        project.getSkills().add(usedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
 
@@ -93,7 +93,7 @@ public class DeleteSkillCommandTest {
         setUp();
         Skill usedSkill = new Skill("", "");
         project.getPeople().get(0).getSkills().add(usedSkill);
-        project.addSkill(usedSkill);
+        project.getSkills().add(usedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
 
@@ -106,7 +106,7 @@ public class DeleteSkillCommandTest {
         setUp();
         Skill usedSkill = new Skill("", "");
         project.getPeople().get(0).getSkills().add(usedSkill);
-        project.addSkill(usedSkill);
+        project.getSkills().add(usedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
 
@@ -132,7 +132,7 @@ public class DeleteSkillCommandTest {
         setUp();
         Skill usedSkill = new Skill("", "");
         project.getPeople().get(0).getSkills().add(usedSkill);
-        project.addSkill(usedSkill);
+        project.getSkills().add(usedSkill);
 
         DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
 

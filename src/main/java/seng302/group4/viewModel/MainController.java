@@ -19,9 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
 import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
@@ -134,7 +131,10 @@ public class MainController implements Initializable {
 
             if (true /* team has people in it */) {
                 checkbox = new CheckBox("Also delete the people belonging to this team");
-                node.getChildren().add(new Label("This team has people in it."));
+                String deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+                deleteMessage += Utilities.concatenatePeopleList(selectedTeam.getTeamMembers(), 5);
+                node.getChildren().add(new Label(deleteMessage));
+
                 node.getChildren().add(checkbox);
             } else {
                 node.getChildren().add(new Label("This team has nobody in it."));
@@ -151,6 +151,22 @@ public class MainController implements Initializable {
                 // command.setDeleteMembers(deletePeople)
                 System.out.println("Delete people as well? " + deletePeople);
                 //undoManager.doCommand(command);
+            }
+        }
+    }
+
+    public void deletePerson() {
+        if (selectedPerson != null) {
+            // DeletePersonCommand command = new DeletePersonCommand(selectedPerson, selectedProject);
+
+            String[] buttons = {"Delete Person", "Cancel"};
+            String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Person",
+                    "Are you sure?",
+                    "Are you sure you want to delete the person: " + selectedPerson.getShortName() + "?", buttons);
+
+            if (result.equals("Delete Person")) {
+                // Then do the command to delete the person
+                // undoManager.doCommand(command);
             }
         }
     }
@@ -279,8 +295,8 @@ public class MainController implements Initializable {
 
     public void newProject() {
         if (selectedProject != null) {
-            Dialogs.create().owner(primaryStage).title("Error")
-                    .message("Currently, only one project at a time is supported in this version.").showWarning();
+            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
+                    "Only one project at a time is supported in this version.");
             return;
         }
         newProjectDialog();
@@ -288,8 +304,8 @@ public class MainController implements Initializable {
 
     public void dragAndDrop(File filePath) {
         if (selectedProject != null) {
-            Dialogs.create().owner(primaryStage).title("Error")
-                    .message("Currently, only one project at a time is supported in this version.").showWarning();
+            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
+                    "Only one project at a time is supported in this version.");
             return;
         }
 
@@ -300,14 +316,15 @@ public class MainController implements Initializable {
         try {
             project = PersistenceManager.loadProject(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
-            System.out.println("JSON file invalid");
-            Dialogs.create().owner(primaryStage).title("Error")
-                    .message("JSON file invalid").showWarning();
+            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.",
+                    "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
-            System.out.println("Person invalid");
+            GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.",
+                    "An invalid person was found.");
             e.printStackTrace();
         } catch (final FileNotFoundException e) {
-            System.out.println("file not found");
+            GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.",
+                    "Somehow, the file you tried to open was not found.");
             e.printStackTrace();
         }
         if (project != null) {
@@ -320,8 +337,8 @@ public class MainController implements Initializable {
 
     public void openProject() {
         if (selectedProject != null) {
-            Dialogs.create().owner(primaryStage).title("Error")
-            .message("Currently, only one project at a time is supported in this version.").showWarning();
+            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
+                    "Only one project at a time is supported in this version.");
             return;
         }
 
@@ -336,14 +353,15 @@ public class MainController implements Initializable {
         try {
             project = PersistenceManager.loadProject(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
-            System.out.println("JSON file invalid");
-            Dialogs.create().owner(primaryStage).title("Error")
-                    .message("JSON file invalid").showWarning();
+            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.",
+                    "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
-            System.out.println("Person invalid");
+            GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.",
+                    "An invalid person was found.");
             e.printStackTrace();
         } catch (final FileNotFoundException e) {
-            System.out.println("file not found");
+            GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.",
+                    "Somehow, the file you tried to open was not found.");
             e.printStackTrace();
         }
         if (project != null) {
@@ -432,12 +450,13 @@ public class MainController implements Initializable {
     private void addClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
             if (!changesSaved.get()) {
-                final Action response = Dialogs.create().owner(primaryStage).title("Save Project")
-                        .masthead("You have unsaved changes.").message("Would you like to save the changes you have made to the project?")
-                        .showConfirm();
-                if (response == Dialog.ACTION_YES) {
+                final String[] options = {"Save changes", "Discard changes", "Cancel"};
+                final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project",
+                        "You have unsaved changes.", "Would you like to save the changes you have made to the project?",
+                        options);
+                if (response.equals("Save changes")) {
                     saveProject();
-                } else if (response == Dialog.ACTION_CANCEL) {
+                } else if (response.equals("Cancel")) {
                     event.consume();
                 }
             }
@@ -666,11 +685,14 @@ public class MainController implements Initializable {
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit Person");
+        final MenuItem deleteContextMenu = new MenuItem("Delete Person");
         contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
 
         peopleListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> editPerson());
+        deleteContextMenu.setOnAction(event -> deletePerson());
 
         // Set change listener for projectListView
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
