@@ -32,13 +32,12 @@
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
             <children>
-                <Label text="Short Name:*" />
+                <Label text="ID:*" />
                 <Label text="Release Date:" GridPane.rowIndex="1" />
                 <Label text="Description:" GridPane.rowIndex="2" />
-                <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
+                <TextField fx:id="IDTextField" GridPane.columnIndex="1" />
                 <TextField fx:id="releaseDateTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label text="* Indicates required field." textFill="grey" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </center>

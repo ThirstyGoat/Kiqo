@@ -213,6 +213,7 @@ public class MainController implements Initializable {
         initialisePeopleListView();
         initialiseSkillsListView();
         initialiseTeamsListView();
+        initialiseReleaseListView();
         initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
@@ -290,6 +291,12 @@ public class MainController implements Initializable {
     public void newTeam() {
         if (selectedProject != null) {
             teamDialog(null);
+        }
+    }
+
+    public void newRelease() {
+        if (selectedProject != null) {
+            releaseDialog(null);
         }
     }
 
@@ -479,6 +486,7 @@ public class MainController implements Initializable {
             menuBarController.enableNewTeam();
             menuBarController.enableNewPerson();
             menuBarController.enableNewSkill();
+            menuBarController.enableNewRelease();
 
             switchToProjectList();
             menuBarController.updateAfterProjectListSelected(true);
@@ -792,6 +800,50 @@ public class MainController implements Initializable {
         });
     }
 
+    public void initialiseReleaseListView() {
+        releasesListView.setCellFactory(new Callback<ListView<Release>, ListCell<Release>>() {
+            @Override
+            public ListCell<Release> call(final ListView<Release> arg0) {
+                return new ListCell<Release>() {
+                    @Override
+                    protected void updateItem(final Release release, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(release, empty);
+                        setText(empty ? "" : release.getId());
+                    }
+                };
+            }
+        });
+
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit Release");
+        final MenuItem deleteContextMenu = new MenuItem("Delete Release");
+        contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
+
+        teamsListView.setContextMenu(contextMenu);
+
+//        editContextMenu.setOnAction(event -> editRelease());
+//        deleteContextMenu.setOnAction(event -> deleteRelease());
+
+        // Set change listener for releaseListView
+        releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+
+                selectedRelease = newValue;
+                // Update status bar to show current save status of selected
+                // project
+                // Probably not the best way to do this, but it's the simplest
+                changesSaved.set(!changesSaved.get());
+                changesSaved.set(!changesSaved.get());
+
+                menuBarController.updateAfterReleasesListSelected(true);
+
+                detailsPaneController.showDetailsPane(selectedRelease);
+            }
+        });
+    }
+
     private void newSkillDialog() {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
@@ -900,6 +952,46 @@ public class MainController implements Initializable {
             }
 
         });
+    }
+
+    public void releaseDialog(Release release) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/release.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final ReleaseFormController releaseFormController = loader.getController();
+            releaseFormController.setStage(stage);
+            releaseFormController.setProject(selectedProject);
+            releaseFormController.setRelease(release);
+
+            stage.showAndWait();
+            if (releaseFormController.isValid()) {
+                if (release == null) {
+                    CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
+                    undoManager.doCommand(command);
+                } else {
+                    CompoundCommand command = (CompoundCommand) releaseFormController.getCommand();
+                    command.setType("Edit Release");
+                    command.setRefreshParameters(release, releasesListView);
+                    undoManager.doCommand(command);
+                }
+            }
+
+        });
+
     }
 
     private void newProjectDialog() {

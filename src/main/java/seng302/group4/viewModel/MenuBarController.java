@@ -22,6 +22,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newSkillMenuItem;
     @FXML
+    private MenuItem newReleaseMenuItem;
+    @FXML
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
@@ -69,6 +71,7 @@ public class MenuBarController implements Initializable {
         newTeamMenuItem.setDisable(true);
         newPersonMenuItem.setDisable(true);
         newSkillMenuItem.setDisable(true);
+        newReleaseMenuItem.setDisable(true);
         saveMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
@@ -91,6 +94,7 @@ public class MenuBarController implements Initializable {
         newTeamMenuItem.setOnAction(event -> mainController.newTeam());
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
+        newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         openMenuItem.setOnAction(event -> mainController.openProject());
         saveMenuItem.setOnAction(event -> mainController.saveProject());
         quitMenuItem.setOnAction(event -> mainController.exit());
@@ -201,7 +205,9 @@ public class MenuBarController implements Initializable {
      */
     private void addKeyboardShortcuts() {
         newProjectMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+        newReleaseMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         newTeamMenuItem.setAccelerator(
             new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
         newPersonMenuItem.setAccelerator(
@@ -329,4 +335,7 @@ public class MenuBarController implements Initializable {
         newSkillMenuItem.setDisable(false);
     }
 
+    public void enableNewRelease() {
+        newReleaseMenuItem.setDisable(false);
+    }
 }

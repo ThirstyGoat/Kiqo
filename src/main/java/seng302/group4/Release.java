@@ -1,7 +1,5 @@
 package seng302.group4;
 
-import java.util.Date;
-
 /**
  * Created by leroy on 10/04/15.
  */
@@ -9,9 +7,9 @@ public class Release {
     private Project project;
     private String id;
     private String description;
-    private Date date;
+    private String date;  //change back to date
 
-    public Release(String id, String description, Date date, Project project) {
+    public Release(String id, String date, String description, Project project) {
         this.id = id;
         this.description = description;
         this.date = date;
@@ -61,11 +59,11 @@ public class Release {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
