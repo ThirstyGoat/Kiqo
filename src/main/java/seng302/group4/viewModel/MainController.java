@@ -55,6 +55,7 @@ import seng302.group4.undo.CreateProjectCommand;
 import seng302.group4.undo.CreateSkillCommand;
 import seng302.group4.undo.CreateTeamCommand;
 import seng302.group4.undo.DeleteSkillCommand;
+import seng302.group4.undo.DeleteTeamCommand;
 import seng302.group4.undo.UndoManager;
 import seng302.group4.utils.Utilities;
 
@@ -111,16 +112,11 @@ public class MainController implements Initializable {
     private Team selectedTeam;
 
     /**
-     * Triggers an update of a specific object in a list view, so that
-     * updateItem is called and the cell is recreated with current data (ie. if
-     * the short name changes in this case).
-     *
-     * @param newValue
-     *            Object in the list that has changed
-     * @param listView
-     *            ListView that object belongs to
-     * @param <T>
-     *            Type of the object
+     * Triggers an update of a specific object in a list view, so that updateItem is called and the
+     * cell is recreated with current data (ie. if the short name changes in this case).
+     * @param newValue Object in the list that has changed
+     * @param listView ListView that object belongs to
+     * @param <T> Type of the object
      */
     public static <T> void triggerListUpdate(T newValue, ListView<T> listView) {
         final int i = listView.getItems().indexOf(newValue);
@@ -148,36 +144,39 @@ public class MainController implements Initializable {
     }
 
     private void deleteTeam(Team team) {
-        // TODO Command stuff relating to DeleteTeamCommand
+        final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedProject);
 
         final VBox node = new VBox();
         node.setSpacing(10);
 
         CheckBox checkbox;
 
-        if (true /* team has people in it */) {
+        if (team.getTeamMembers().size() > 0) {
             checkbox = new CheckBox("Also delete the people belonging to this team");
-            String deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+            String deleteMessage = "Current team members:\n";
             deleteMessage += Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
-
             node.getChildren().add(checkbox);
         } else {
             node.getChildren().add(new Label("This team has nobody in it."));
+            checkbox = null;
         }
 
         final String[] buttons = { "Delete Team", "Cancel" };
-        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Test", "Heading", node, buttons);
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Test", "Team: " + team.getShortName(), node, buttons);
 
+        // change this because its hasnt been init yet
         final boolean deletePeople = (checkbox != null) ? checkbox.selectedProperty().getValue() : false;
 
         if (result.equals("Delete Team")) {
             // Then delete the team
-            // The result of whether or not to delete the team members can
-            // be fetched by deletePeople boolean
-            // command.setDeleteMembers(deletePeople)
+            // The result of whether or not to delete the team members can be
+            // fetched by deletePeople boolean
+            if (deletePeople) {
+                command.setDeleteMembers();
+            }
             System.out.println("Delete people as well? " + deletePeople);
-            // undoManager.doCommand(command);
+            undoManager.doCommand(command);
         }
     }
 
@@ -254,7 +253,6 @@ public class MainController implements Initializable {
         initialiseTeamsListView(contextMenu);
 
         initialiseTabs();
-
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
         focusedObjectProperty.addListener(new ChangeListener<Object>() {
@@ -311,8 +309,6 @@ public class MainController implements Initializable {
                 }
                 if (teamsListView.getItems().isEmpty()) {
                     focusedObjectProperty.set(null);
-                } else {
-
                 }
                 menuBarController.updateAfterTeamListSelected(true);
             }
@@ -346,46 +342,22 @@ public class MainController implements Initializable {
         newProjectDialog();
     }
 
-    public void dragAndDrop(File filePath) {
+    public void openProject(File draggedFilePath) {
+        File filePath;
+
         if (selectedProject != null) {
             GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
                     "Only one project at a time is supported in this version.");
             return;
         }
 
-        if (filePath == null) {
-            return;
+        if (draggedFilePath == null) {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            filePath = fileChooser.showOpenDialog(primaryStage);
+        } else {
+            filePath = draggedFilePath;
         }
-        Project project = null;
-        try {
-            project = PersistenceManager.loadProject(filePath);
-        } catch (JsonSyntaxException | InvalidProjectException e) {
-            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
-        } catch (final InvalidPersonException e) {
-            GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
-            e.printStackTrace();
-        } catch (final FileNotFoundException e) {
-            GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
-            e.printStackTrace();
-        }
-        if (project != null) {
-            project.setSaveLocation(filePath);
-            addProject(project);
-            System.out.println(project.getShortName() + " has been loaded successfully");
-        }
-        tabViewPane.getSelectionModel().select(projectTab);
-    }
-
-    public void openProject() {
-        if (selectedProject != null) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
-                    "Only one project at a time is supported in this version.");
-            return;
-        }
-
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-        final File filePath = fileChooser.showOpenDialog(primaryStage);
 
         if (filePath == null) {
             return;
@@ -496,11 +468,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Adds the new project to the observable list so that it is visible in the
-     * list view
-     *
-     * @param project
-     *            New Project to be added
+     * Adds the new project to the observable list so that it is visible in the list view
+     * @param project New Project to be added
      */
     private void addProject(final Project project) {
         if (project != null) {
@@ -932,8 +901,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (newProjectController.isValid()) {
-                // TODO This will need work when we add support for multiple
-                // projects
+                // TODO This will need work when we add support for multiple projects
                 final CreateProjectCommand command = newProjectController.getCommand();
                 addProject(command.execute());
             }
