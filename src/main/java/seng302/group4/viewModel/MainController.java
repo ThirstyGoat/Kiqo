@@ -199,7 +199,8 @@ public class MainController implements Initializable {
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
-            // TODO deleteProject((Project) focusedObject);
+            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
+                    "Deleting a project is not supported in this version.");
         } else if (focusedObject instanceof Person) {
             deletePerson((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
@@ -238,8 +239,6 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setLayoutProperties();
 
-        // project uses its own context menu with disabled "Delete"
-        initialiseProjectListView();
         // the other tabs all share a context menu
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit");
@@ -248,6 +247,8 @@ public class MainController implements Initializable {
         contextMenu.getItems().add(deleteContextMenu);
         editContextMenu.setOnAction(event -> editObject());
         deleteContextMenu.setOnAction(event -> deleteObject());
+
+        initialiseProjectListView(contextMenu);
         initialisePeopleListView(contextMenu);
         initialiseSkillsListView(contextMenu);
         initialiseTeamsListView(contextMenu);
@@ -622,7 +623,7 @@ public class MainController implements Initializable {
     /**
      * Sets the content for the main list view
      */
-    private void initialiseProjectListView() {
+    private void initialiseProjectListView(ContextMenu contextMenu) {
         // derived from example at
         // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
         projectListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
@@ -640,14 +641,6 @@ public class MainController implements Initializable {
         });
         projectListView.setItems(projects);
 
-        final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem editContextMenu = new MenuItem("Edit");
-        final MenuItem deleteContextMenu = new MenuItem("Delete");
-        contextMenu.getItems().add(editContextMenu);
-        contextMenu.getItems().add(deleteContextMenu);
-        editContextMenu.setOnAction(event -> editObject());
-        deleteContextMenu.setOnAction(event -> deleteObject());
-        deleteContextMenu.setDisable(true);
         projectListView.setContextMenu(contextMenu);
 
         // Set change listener

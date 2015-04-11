@@ -225,7 +225,6 @@ public class MenuBarController implements Initializable {
 
     public void updateAfterProjectSelected(boolean enabled) {
         saveMenuItem.setDisable(!enabled);
-        deleteMenuItem.setDisable(enabled);
     }
 
     public void updateAfterAnyObjectSelected(boolean enabled) {
