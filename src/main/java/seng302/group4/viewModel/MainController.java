@@ -59,6 +59,8 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Team> teamsListView;
     @FXML
+    private ListView<Release> releasesListView;
+    @FXML
     private Tab projectTab;
     @FXML
     private Tab peopleTab;
@@ -66,6 +68,8 @@ public class MainController implements Initializable {
     private Tab skillsTab;
     @FXML
     private Tab teamsTab;
+    @FXML
+    private Tab releasesTab;
     @FXML
     private TabPane tabViewPane;
     @FXML
@@ -82,6 +86,7 @@ public class MainController implements Initializable {
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
+    private Release selectedRelease;
 
     /**
      * Triggers an update of a specific object in a list view, so that updateItem is called and the
@@ -240,6 +245,16 @@ public class MainController implements Initializable {
                 }
                 detailsPaneController.showDetailsPane(teamsListView.getSelectionModel().getSelectedItem());
                 menuBarController.updateAfterTeamListSelected(true);
+            } else if (newValue == releasesTab) {
+                if (selectedRelease == null) {
+                    releasesListView.getSelectionModel().select(null);
+                    releasesListView.getSelectionModel().selectFirst();
+                } else {
+                    releasesListView.getSelectionModel().select(null);
+                    releasesListView.getSelectionModel().select(selectedRelease);
+                }
+//                detailsPaneController.showDetailsPane(teamsListView.getSelectionModel().getSelectedItem());
+//                menuBarController.updateAfterReleasesListSelected(true);
             }
         });
     }
@@ -386,6 +401,10 @@ public class MainController implements Initializable {
 
     public void switchToProjectList() {
         tabViewPane.getSelectionModel().select(projectTab);
+    }
+
+    public void switchToReleaseList() {
+        tabViewPane.getSelectionModel().select(releasesTab);
     }
 
     public void undo() {
