@@ -50,6 +50,11 @@ public class CreateTeamCommand extends Command<Team> {
             team.setDevTeam(devTeam);
         }
 
+        // Assign this team to all the people in the team
+        for (Person person : team.getTeamMembers()) {
+            person.setTeam(team);
+        }
+
         // Add team to project
         project.getTeams().add(team);
         return team;
@@ -59,6 +64,11 @@ public class CreateTeamCommand extends Command<Team> {
     public void undo() {
         // Goodbye team
         project.getTeams().remove(team);
+
+        // Remove this team from all the people within it
+        for (Person person : team.getTeamMembers()) {
+            person.setTeam(null);
+        }
     }
 
     @Override

@@ -174,6 +174,28 @@ public class TeamFormController implements Initializable {
                 changes.add(new EditCommand<>(team, "devTeam", devTeam));
             }
 
+            // We need to find out who left the team and set their team to null
+            // We also need to find out who entered the team, and set their team to this team
+            // Old Team = team.getTeamMembers();
+            // New Team = teamMembers
+            // New Members = New Team - Old Team
+            // Old Members = Old Team - New Team
+
+            ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
+            newMembers.removeAll(team.getTeamMembers());
+            ArrayList<Person> oldMembers = new ArrayList<>(team.getTeamMembers());
+            oldMembers.removeAll(teamMembers);
+
+            // Loop through all the new members and add a command to set their team
+            // Set the person's team field to this team
+            changes.addAll(newMembers.stream().map(person -> new EditCommand<>(person, "team", team))
+                    .collect(Collectors.toList()));
+
+            // Loop through all the old members and add a command to remove their team
+            // Set the person's team field to null, since they're no longer in the team
+            changes.addAll(oldMembers.stream().map(person -> new EditCommand<>(person, "team", null))
+                    .collect(Collectors.toList()));
+
             valid = !changes.isEmpty();
             command = new CompoundCommand(changes);
         }

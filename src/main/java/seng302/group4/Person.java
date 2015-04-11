@@ -14,9 +14,8 @@ public class Person {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private ArrayList<Skill> skills = new ArrayList<Skill>();
-
-
+    private ArrayList<Skill> skills;
+    private Team team;
 
     /**
      * Create new Person
@@ -80,7 +79,8 @@ public class Person {
         stringBuilder.append(", userID='" + userID + "\'");
         stringBuilder.append(", emailAddress='" + emailAddress + "\'");
         stringBuilder.append(", phoneNumber='" + phoneNumber + "\'");
-        stringBuilder.append(", department='" + department + "\'}");
+        stringBuilder.append(", department='" + department + "\'");
+        stringBuilder.append(", team='" + ((team == null) ? "null" : team.getShortName()) + "'}");
         return stringBuilder.toString();
     }
 
@@ -146,5 +146,13 @@ public class Person {
 
     public void setSkills(ArrayList<Skill> skills) {
         this.skills = skills;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
