@@ -49,14 +49,7 @@ import seng302.group4.Skill;
 import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.CreateTeamCommand;
-import seng302.group4.undo.DeleteSkillCommand;
-import seng302.group4.undo.DeleteTeamCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 import seng302.group4.utils.Utilities;
 
 import com.google.gson.JsonSyntaxException;
@@ -181,16 +174,14 @@ public class MainController implements Initializable {
     }
 
     private void deletePerson(Person person) {
-        // DeletePersonCommand command = new
-        // DeletePersonCommand(selectedPerson, selectedProject);
+        DeletePersonCommand command = new DeletePersonCommand(selectedPerson, selectedProject);
 
         final String[] buttons = { "Delete Person", "Cancel" };
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Person", "Are you sure?",
                 "Are you sure you want to delete the person: " + person.getShortName() + "?", buttons);
 
         if (result.equals("Delete Person")) {
-            // Then do the command to delete the person
-            // undoManager.doCommand(command);
+            undoManager.doCommand(command);
         }
     }
 
@@ -846,8 +837,8 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final TeamFormController teamFormController = loader.getController();
             teamFormController.setStage(stage);
-            teamFormController.setProject(selectedProject);
             teamFormController.setTeam(team);
+            teamFormController.setProject(selectedProject);
             teamFormController.setListSelectionViewSettings();
 
             stage.showAndWait();

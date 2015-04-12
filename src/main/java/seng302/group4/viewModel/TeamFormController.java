@@ -316,9 +316,6 @@ public class TeamFormController implements Initializable {
                         radioOther.setSelected(true);
                     }
 
-//                        // Set colors
-//                        radioSm.setStyle("-fx-mark-color: blue");
-
                     hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
 
                     setupRadioPoListener(radioPo, radioOther, person);
@@ -391,7 +388,7 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
-        // all people observablelist = project.getPeople();
+        // all people observableList = project.getPeople();
         ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
         sourcePeople.addAll(project.getPeople());
 
@@ -404,7 +401,13 @@ public class TeamFormController implements Initializable {
             // Note that this shouldn't actually be possible since undo/redo should be disabled
             sourcePeople.removeAll(c.getRemoved());
             targetPeople.removeAll(c.getRemoved());
-            sourcePeople.addAll(c.getAddedSubList());
+            for (Person person : c.getAddedSubList()) {
+                if (person.getTeam() == team) {
+                    targetPeople.add(person);
+                } else {
+                    sourcePeople.add(person);
+                }
+            }
         });
 
         peopleListSelectionView.getSourceListView().setItems(sourcePeople);
