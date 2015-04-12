@@ -2,6 +2,7 @@ package seng302.group4.viewModel;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +28,7 @@ import java.util.ResourceBundle;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    public PopOver errorPopOver = new PopOver();
     ArrayList<Skill> skills = new ArrayList<Skill>();
     private String shortName;
     private String longName;
@@ -38,7 +40,6 @@ public class PersonFormController implements Initializable {
     private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
     private Stage stage;
-    public PopOver errorPopOver = new PopOver();
     private boolean shortNameModified = false;
 
 
@@ -95,14 +96,20 @@ public class PersonFormController implements Initializable {
 
     public void setUpSkillsListSelectionView() {
         ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
-        // Removes all skills that the current person has, from the list of all the possible skills
-        // So you should never have the same skill on either side
 
-        for (Skill skill : project.getSkills()) {
-            if (!targetSkills.contains(skill)) {
-                sourceSkills.add(skill);
-            }
-        }
+        sourceSkills.addAll(project.getSkills());
+
+        // Remove all skills from sourceSkills that are currently in targetSkills
+        sourceSkills.removeAll(targetSkills);
+
+        project.getSkills().addListener((ListChangeListener<Skill>) c -> {
+            c.next();
+            // We remove skills from the sourceSkills that were removed from the project.
+            // Note that this shouldn't actually be possible since undo/redo should be disabled
+            sourceSkills.removeAll(c.getRemoved());
+            targetSkills.removeAll(c.getRemoved());
+            sourceSkills.addAll(c.getAddedSubList());
+        });
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
         skillsSelectionView.getTargetListView().setItems(targetSkills);

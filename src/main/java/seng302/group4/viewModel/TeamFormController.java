@@ -2,6 +2,7 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -390,18 +391,21 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
-        final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+        // all people observablelist = project.getPeople();
+        ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+        sourcePeople.addAll(project.getPeople());
 
-        final ArrayList<Person> allPeople = new ArrayList<>();
-        // Populate allPeople with all people in the project
-        allPeople.addAll(project.getPeople().stream().collect(Collectors.toList()));
-        // Remove people from allPeople who are currently in a team
-        for (final Team team : project.getTeams()) {
-            team.getTeamMembers().forEach(allPeople::remove);
-        }
+        // Remove all people from sourcePeople that are currently in a team
+        project.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
 
-        // So we are left with ArrayList<Person> allPeople which contains only people who aren't in a team
-        sourcePeople.setAll(allPeople);
+        project.getPeople().addListener((ListChangeListener<Person>) c -> {
+            c.next();
+            // We remove people from the sourcePeople that were removed from the project.
+            // Note that this shouldn't actually be possible since undo/redo should be disabled
+            sourcePeople.removeAll(c.getRemoved());
+            targetPeople.removeAll(c.getRemoved());
+            sourcePeople.addAll(c.getAddedSubList());
+        });
 
         peopleListSelectionView.getSourceListView().setItems(sourcePeople);
         peopleListSelectionView.getTargetListView().setItems(targetPeople);
