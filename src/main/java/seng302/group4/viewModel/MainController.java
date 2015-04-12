@@ -844,7 +844,8 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
 
-                menuBarController.updateAfterReleasesListSelected(true);
+                menuBarController.updateAfterReleaseSelected(true);
+//                menuBarController.updateAfterReleasesListSelected(true);
 
                 detailsPaneController.showDetailsPane(selectedRelease);
             }

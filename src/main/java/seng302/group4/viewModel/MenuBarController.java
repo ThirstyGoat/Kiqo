@@ -40,6 +40,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem editSkillMenuItem;
     @FXML
+    private MenuItem editReleaseMenuItem;
+    @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
     private CheckMenuItem listShowProjectMenuItem;
@@ -79,6 +81,7 @@ public class MenuBarController implements Initializable {
         editTeamMenuItem.setDisable(true);
         editPersonMenuItem.setDisable(true);
         editSkillMenuItem.setDisable(true);
+        editReleaseMenuItem.setDisable(true);
 
         // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
@@ -103,6 +106,7 @@ public class MenuBarController implements Initializable {
         editTeamMenuItem.setOnAction(event -> mainController.editTeam());
         editPersonMenuItem.setOnAction(event -> mainController.editPerson());
         editSkillMenuItem.setOnAction(event-> mainController.editSkill());
+        editReleaseMenuItem.setOnAction(event-> mainController.editRelease());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
@@ -267,6 +271,7 @@ public class MenuBarController implements Initializable {
         editTeamMenuItem.setDisable(selected);
         editPersonMenuItem.setDisable(selected);
         editSkillMenuItem.setDisable(selected);
+        editReleaseMenuItem.setDisable(selected);
 
         // enable things
         editProjectMenuItem.setDisable(!selected);
@@ -278,6 +283,7 @@ public class MenuBarController implements Initializable {
         editProjectMenuItem.setDisable(selected);
         editPersonMenuItem.setDisable(selected);
         editSkillMenuItem.setDisable(selected);
+        editReleaseMenuItem.setDisable(selected);
 
         // enable things
         editTeamMenuItem.setDisable(!selected);
@@ -288,19 +294,33 @@ public class MenuBarController implements Initializable {
         editProjectMenuItem.setDisable(selected);
         editTeamMenuItem.setDisable(selected);
         editSkillMenuItem.setDisable(selected);
+        editReleaseMenuItem.setDisable(selected);
 
         // enable things
         editPersonMenuItem.setDisable(!selected);
     }
+
 
     public void updateAfterSkillSelected(boolean selected) {
         // disable things
         editProjectMenuItem.setDisable(selected);
         editTeamMenuItem.setDisable(selected);
         editPersonMenuItem.setDisable(selected);
+        editReleaseMenuItem.setDisable(selected);
 
         // enable things
         editSkillMenuItem.setDisable(!selected);
+    }
+
+    public void updateAfterReleaseSelected(boolean selected) {
+        // disable things
+        editProjectMenuItem.setDisable(selected);
+        editTeamMenuItem.setDisable(selected);
+        editPersonMenuItem.setDisable(selected);
+        editSkillMenuItem.setDisable(selected);
+
+        // enable things
+        editReleaseMenuItem.setDisable(!selected);
     }
 
     public void updateAfterProjectListSelected(boolean selected) {
