@@ -195,6 +195,12 @@ public class MainController implements Initializable {
         }
     }
 
+    public void editRelease() {
+        if(selectedRelease != null) {
+            releaseDialog(selectedRelease);
+        }
+    }
+
     /**
      * Exits the application after prompting to save unsaved changes.
      *
@@ -822,9 +828,9 @@ public class MainController implements Initializable {
         contextMenu.getItems().add(editContextMenu);
         contextMenu.getItems().add(deleteContextMenu);
 
-        teamsListView.setContextMenu(contextMenu);
+        releasesListView.setContextMenu(contextMenu);
 
-//        editContextMenu.setOnAction(event -> editRelease());
+        editContextMenu.setOnAction(event -> editRelease());
 //        deleteContextMenu.setOnAction(event -> deleteRelease());
 
         // Set change listener for releaseListView
