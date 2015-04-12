@@ -24,7 +24,8 @@ public class PersistenceManager {
 //        System.out.println(project.people);
 //        System.out.println(project.getPeople());
         GsonBuilder gsonBuilder = new GsonBuilder();
-        // Turn me on baby - gsonBuilder.setPrettyPrinting();
+        // Turn me on baby -
+        gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
                 .addType(Project.class)
                 .addType(Team.class)

@@ -230,6 +230,7 @@ public class Project implements Serializable {
         peopleObservable = FXCollections.observableList(people);
         skillsObservable = FXCollections.observableList(skills);
         teamsObservable = FXCollections.observableList(teams);
+        releaseObservable = FXCollections.observableList(releases);
     }
 
 }
