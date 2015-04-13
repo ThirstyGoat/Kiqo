@@ -64,7 +64,7 @@ public class MainController implements Initializable {
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-    private final SimpleObjectProperty<Object> focusedObjectProperty = new SimpleObjectProperty<Object>();
+    private final SimpleObjectProperty<Object> focusedObjectProperty = new SimpleObjectProperty<>();
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
     private double dividerPosition;
