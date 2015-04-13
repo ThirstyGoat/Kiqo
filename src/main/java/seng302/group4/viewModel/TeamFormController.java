@@ -306,11 +306,12 @@ public class TeamFormController implements Initializable {
                     }
 
                     // Select appropriate RadioButton
-                    if (person == productOwner) {
+                    if (productOwner == person || (team != null && team.getProductOwner() == person)) {
                         radioPo.setSelected(true);
-                    } else if (person == scrumMaster) {
+                    } else if (scrumMaster == person || (team != null && team.getScrumMaster() == person)) {
                         radioSm.setSelected(true);
-                    } else if (devTeam != null && devTeam.contains(person)) {
+                    } else if ((devTeam != null && devTeam.contains(person)) ||
+                            (team != null && team.getDevTeam() != null && team.getDevTeam().contains(person))) {
                         radioDev.setSelected(true);
                     } else {
                         radioOther.setSelected(true);
