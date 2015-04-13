@@ -7,10 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +32,8 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private AnchorPane teamDetailsPane;
     @FXML
+    private AnchorPane releaseDetailsPane;
+    @FXML
     private Button editButton;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
@@ -44,6 +43,8 @@ public class DetailsPaneController implements Initializable {
     private SkillDetailsPaneController skillDetailsPaneController;
     @FXML
     private TeamDetailsPaneController teamDetailsPaneController;
+    @FXML
+    private ReleaseDetailsPaneController releaseDetailsPaneController;
 
     private MainController mainController;
 
@@ -66,9 +67,12 @@ public class DetailsPaneController implements Initializable {
                 showSkillDetailPane((Skill)objectForDisplay);
             } else if (objectForDisplay instanceof Team) {
                 showTeamDetailPane((Team)objectForDisplay);
+            } else if (objectForDisplay instanceof Release) {
+                showReleaseDetailPane((Release) objectForDisplay);
             }
         }
     }
+
 
 
     private void clear() {
@@ -85,6 +89,7 @@ public class DetailsPaneController implements Initializable {
         projectDetailsPane.setVisible(false);
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
+        releaseDetailsPane.setVisible(false);
 
         showEditButton();
         editButton.setOnAction(event -> mainController.editSkill());
@@ -97,6 +102,7 @@ public class DetailsPaneController implements Initializable {
         projectDetailsPane.setVisible(true);
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
+        releaseDetailsPane.setVisible(false);
 
         showEditButton();
         editButton.setOnAction(event -> mainController.editProject());
@@ -109,6 +115,7 @@ public class DetailsPaneController implements Initializable {
         projectDetailsPane.setVisible(false);
         personDetailsPane.setVisible(true);
         teamDetailsPane.setVisible(false);
+        releaseDetailsPane.setVisible(false);
 
         showEditButton();
         editButton.setOnAction(event -> mainController.editPerson());
@@ -121,9 +128,24 @@ public class DetailsPaneController implements Initializable {
         projectDetailsPane.setVisible(false);
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(true);
+        releaseDetailsPane.setVisible(false);
+
 
         showEditButton();
         editButton.setOnAction(event -> mainController.editTeam());
+    }
+
+    private void showReleaseDetailPane(Release release) {
+        releaseDetailsPaneController.showDetails(release);
+
+        skillDetailsPane.setVisible(false);
+        projectDetailsPane.setVisible(false);
+        personDetailsPane.setVisible(false);
+        teamDetailsPane.setVisible(false);
+        releaseDetailsPane.setVisible(true);
+
+        showEditButton();
+        editButton.setOnAction(event -> mainController.editRelease());
     }
 
     private void showEditButton() {
