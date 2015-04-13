@@ -171,6 +171,22 @@ public class MainController implements Initializable {
         }
     }
 
+    public void deleteRelease() {
+        if (selectedRelease != null) {
+            DeleteReleaseCommand command = new DeleteReleaseCommand(selectedRelease, selectedProject);
+
+            String[] buttons = {"Delete Release", "Cancel"};
+            String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Release",
+                    "Are you sure you want to delete the release " + selectedRelease.getId() + "?",
+                    "sometext", buttons);
+
+            if (result.equals("Delete Release")) {
+                undoManager.doCommand(command);
+            }
+        }
+    }
+
+
     public void editSkill() {
         if (selectedSkill != null) {
             editSkillDialog(selectedSkill);
@@ -831,7 +847,7 @@ public class MainController implements Initializable {
         releasesListView.setContextMenu(contextMenu);
 
         editContextMenu.setOnAction(event -> editRelease());
-//        deleteContextMenu.setOnAction(event -> deleteRelease());
+        deleteContextMenu.setOnAction(event -> deleteRelease());
 
         // Set change listener for releaseListView
         releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
