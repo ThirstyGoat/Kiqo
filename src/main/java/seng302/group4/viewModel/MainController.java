@@ -126,19 +126,22 @@ public class MainController implements Initializable {
 
         if (team.getTeamMembers().size() > 0) {
             checkbox = new CheckBox("Also delete the people belonging to this team");
-            String deleteMessage = "Current team members:\n";
+            String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
+                    "?\nCurrent team members:\n";
             deleteMessage += Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             node.getChildren().add(checkbox);
         } else {
-            node.getChildren().add(new Label("This team has nobody in it."));
+            String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
+                    "?\nThis team has nobody in it.";
+            node.getChildren().add(new Label(deleteMessage));
             checkbox = null;
         }
 
         final String[] buttons = { "Delete Team", "Cancel" };
-        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Test", "Team: " + team.getShortName(), node, buttons);
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Team", "Are you sure?", node, buttons);
 
-        // change this because its hasnt been init yet
+        // change this because its hasn't been init yet
         final boolean deletePeople = (checkbox != null) ? checkbox.selectedProperty().getValue() : false;
 
         if (result.equals("Delete Team")) {
@@ -148,7 +151,6 @@ public class MainController implements Initializable {
             if (deletePeople) {
                 command.setDeleteMembers();
             }
-            System.out.println("Delete people as well? " + deletePeople);
             undoManager.doCommand(command);
         }
     }
@@ -159,17 +161,17 @@ public class MainController implements Initializable {
         final VBox node = new VBox();
         node.setSpacing(10);
 
-
+        String deleteMessage = "Are you sure you want to remove the person: " + person.getShortName() + "?";
         if (person.getTeam() != null) {
-            String deleteMessage = "This will remove " + person.getShortName() + " from team ";
+            deleteMessage += "\nThis will remove " + person.getShortName() + " from team ";
             deleteMessage += person.getTeam().getShortName() + ".";
-            node.getChildren().add(new Label(deleteMessage));
         }
+        node.getChildren().add(new Label(deleteMessage));
 
-        final String[] buttons = { "Delete Person", "Cancel" };
+        final String[] buttons = {"Delete Person", "Cancel"};
 
         final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Person",
-                "Are you sure you want to delete? ", node, buttons);
+                "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
             undoManager.doCommand(command);

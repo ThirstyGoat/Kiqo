@@ -37,6 +37,8 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private Button editButton;
     @FXML
+    private Button deleteButton;
+    @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
@@ -52,6 +54,7 @@ public class DetailsPaneController implements Initializable {
         clear();
 
         editButton.setOnAction(event -> mainController.editObject());
+        deleteButton.setOnAction(event -> mainController.deleteObject());
     }
 
 
@@ -77,6 +80,7 @@ public class DetailsPaneController implements Initializable {
             node.setVisible(false);
         }
         editButton.setVisible(false);
+        deleteButton.setVisible(false);
     }
 
     private void showSkillDetailPane(Skill skill) {
@@ -87,7 +91,7 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
+        showOptionButtons();
     }
 
     private void showProjectDetailsPane(Project project) {
@@ -98,7 +102,7 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
+        showOptionButtons();
     }
 
     private void showPersonDetailsPane(Person person) {
@@ -109,7 +113,7 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(true);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
+        showOptionButtons();
     }
 
     private void showTeamDetailPane(Team team) {
@@ -120,11 +124,12 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(true);
 
-        showEditButton();
+        showOptionButtons();
     }
 
-    private void showEditButton() {
+    private void showOptionButtons() {
         editButton.setVisible(true);
+        deleteButton.setVisible(true);
     }
 
     public void setMainController(MainController mainController) {
