@@ -3,7 +3,7 @@ package seng302.group4.undo;
 import org.junit.Test;
 import seng302.group4.Person;
 import seng302.group4.Project;
-import seng302.group4.Skill;
+import seng302.group4.Team;
 
 import java.util.ArrayList;
 
@@ -13,152 +13,176 @@ import java.util.ArrayList;
 public class DeletePersonCommandTest {
 
     private Project project;
+    private Team team;
 
     public void setUp() {
         project = new Project();
-
-        // Create skills
-        Skill skill1 = new Skill("Skill1", "Skill1 description");
-        Skill skill2 = new Skill("Skill2", "Skill2 description");
-        Skill skill3 = new Skill("Skill3", "Skill3 description");
-
-        // Create people
-        Person person1 = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        ArrayList<Skill> skillSet = new ArrayList<>();
-        skillSet.add(skill1);
-        skillSet.add(skill2);
-        skillSet.add(skill3);
-        Person person2 = new Person("", "", "", "", "", "", "", skillSet);
-        Person person3 = new Person("", "", "", "", "", "", "", new ArrayList<>());
-
-        // Add people to project
-        project.getPeople().add(person1);
-        project.getPeople().add(person2);
-        project.getPeople().add(person3);
-
-        // Add skills to project
-        project.getSkills().add(skill1);
-        project.getSkills().add(skill2);
-        project.getSkills().add(skill3);
+        team = new Team("", "", new ArrayList<>());
 
     }
 
     @Test
-    public void deleteUnusedSkill_Success() {
+    public void deletePerson_PersonRemovedFromProject() {
         setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
 
-        Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.getSkills().add(unusedSkill);
-
-        DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
-
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
         command.execute();
-        assert !project.getSkills().contains(unusedSkill);
+
+        assert !project.getPeople().contains(person);
     }
 
     @Test
-    public void undoDeleteUnusedSkill_Success() {
+    public void deletePerson_PersonRemovedFromTeam() {
         setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
 
-        Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.getSkills().add(unusedSkill);
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
 
-        DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
-
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
         command.execute();
+
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
+    }
+
+    @Test
+    public void deletePersonWithPORole_PersonRemovedFromTeamAndPORole() {
+        setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
+
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
+        team.setProductOwner(person);
+
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
+        command.execute();
+
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
+        assert team.getProductOwner() != person;
+    }
+
+    @Test
+    public void deletePersonWithDevRole_PersonRemovedFromTeamAndDevRole() {
+        setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
+
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
+        team.getDevTeam().add(person);
+
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
+        command.execute();
+
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
+        assert !team.getDevTeam().contains(person);
+    }
+
+    @Test
+    public void undoDeletePerson_PersonAddedBackToProject() {
+        setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
+
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
+        command.execute();
+
+        assert !project.getPeople().contains(person);
+
         command.undo();
 
-        assert project.getSkills().contains(unusedSkill);
+        assert project.getPeople().contains(person);
     }
 
     @Test
-    public void deleteUsedSkill_Success() {
+    public void undoDeletePersonInTeam_PersonAddedBackToTeam() {
         setUp();
-        Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
 
-        DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
 
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
         command.execute();
 
-        assert !project.getSkills().contains(usedSkill);
-        for (Person person : project.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
-    }
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
 
-    @Test
-    public void checkDeleteSkill() {
-        setUp();
-        Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
-
-        DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
-
-        assert command.getPeopleWithSkill().contains(project.getPeople().get(0));
-        assert command.getPeopleWithSkill().size() == 1;
-    }
-
-    @Test
-    public void undoDeleteUsedSkill_Success() {
-        setUp();
-        Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
-
-        DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
-
-        // Remove the skill from people with it, and the project
-        command.execute();
-
-        // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (Person person : project.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
-
-        // Undo the action
         command.undo();
 
-        // Check to make sure that the person now has the skill
-        assert project.getSkills().contains(usedSkill);
-        assert project.getPeople().get(0).getSkills().contains(usedSkill);
+        assert project.getPeople().contains(person);
+        assert team.getTeamMembers().contains(person);
     }
 
     @Test
-    public void redoDeleteUsedSkill_Success() {
+    public void undoDeletePersonInTeamWithPORole_PersonAddedBackToTeamWithRole() {
         setUp();
-        Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
 
-        DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
+        team.setProductOwner(person);
 
-        // Remove the skill from people with it, and the project
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
         command.execute();
 
-        // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (Person person : project.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
+        assert team.getProductOwner() != person;
 
-        // Undo the action
         command.undo();
 
-        // Check to make sure that the person now has the skill
-        assert project.getSkills().contains(usedSkill);
-        assert project.getPeople().get(0).getSkills().contains(usedSkill);
+        assert project.getPeople().contains(person);
+        assert team.getTeamMembers().contains(person);
+        assert team.getProductOwner() == person;
+    }
 
-        // Redo the action
-        command.redo();
+    @Test
+    public void undoDeletePersonInTeamWithDevRole_PersonAddedBackToTeamWithDevRole() {
+        setUp();
+        // Create new person
+        Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
+        project.getPeople().add(person);
 
-        // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (Person person : project.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
+        team.getTeamMembers().add(person);
+        person.setTeam(team);
+        team.getDevTeam().add(person);
+
+        // Create command
+        DeletePersonCommand command = new DeletePersonCommand(person, project);
+        command.execute();
+
+        assert !project.getPeople().contains(person);
+        assert !team.getTeamMembers().contains(person);
+        assert !team.getDevTeam().contains(person);
+
+        command.undo();
+
+        assert project.getPeople().contains(person);
+        assert team.getTeamMembers().contains(person);
+        assert team.getDevTeam().contains(person);
     }
 }

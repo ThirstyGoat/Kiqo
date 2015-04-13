@@ -848,7 +848,6 @@ public class MainController implements Initializable {
                     undoManager.doCommand(command);
                 }
             }
-
         });
     }
 
