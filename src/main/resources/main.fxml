@@ -8,7 +8,7 @@
 
 <BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.3151447661469933" minHeight="-Infinity" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+    <SplitPane fx:id="mainSplitPane" dividerPositions="0.3418708240534521" minHeight="-Infinity" prefHeight="160.0" prefWidth="220.0" BorderPane.alignment="CENTER">
        <items>
          <AnchorPane maxWidth="500.0" minHeight="0.0" minWidth="280.0" prefWidth="280.0">
             <children>
@@ -22,7 +22,7 @@
                        <Insets left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                    </Label>
-                   <TabPane fx:id="tabViewPane" stylesheets="@css/styles.css">
+                   <TabPane fx:id="tabViewPane">
                       <tabs>
                         <Tab fx:id="projectTab" closable="false" text="Project">
                            <content>
@@ -44,7 +44,7 @@
                              <ListView fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
                            </content>
                         </Tab>
-                              <Tab fx:id="releasesTab" closable="false" text="Rel..">
+                              <Tab fx:id="releasesTab" closable="false" text="Release">
                                  <content>
                                     <ListView fx:id="releasesListView" prefHeight="0.0" prefWidth="0.0" />
                                  </content>
