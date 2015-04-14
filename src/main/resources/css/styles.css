@@ -5,21 +5,21 @@
 	-fx-padding: 0 0 0 3px;
 }
 
-.tab-header-area {
-	visibility: hidden;
-	-fx-padding: 0 0 0 0px;
-}
+/*.tab-header-area {*/
+	/*visibility: hidden;*/
+	/*-fx-padding: 0 0 0 0px;*/
+/*}*/
 
-.headers-region {
-	visibility: hidden;
-	-fx-padding: 0 0 0 0px;
-}
+/*.headers-region {*/
+	/*visibility: hidden;*/
+	/*-fx-padding: 0 0 0 0px;*/
+/*}*/
 
-.tab {
-	-fx-padding: 0 0 0 0px;
-	-fx-font-size: 1px;
-	-fx-tab-max-height: 5px;
-}
+/*.tab {*/
+	/*-fx-padding: 0 0 0 0px;*/
+	/*-fx-font-size: 1px;*/
+	/*-fx-tab-max-height: 5px;*/
+/*}*/
 
 
 
