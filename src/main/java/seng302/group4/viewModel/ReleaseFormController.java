@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,9 +33,9 @@ public class ReleaseFormController implements Initializable {
 
     // Begin FXML Injections
     @FXML
-    private TextField IDTextField;
+    private TextField shortNameTextField;
     @FXML
-    private TextField releaseDateTextField;
+    private DatePicker releaseDatePicker;
     @FXML
     private TextField descriptionTextField;
     @FXML
@@ -52,7 +53,7 @@ public class ReleaseFormController implements Initializable {
         setTextFieldListener();
 //        setShortNameLengthRestrictor();  // need to discuss if we are going with ID, or shortname or both
 
-        Platform.runLater(IDTextField::requestFocus);
+        Platform.runLater(shortNameTextField::requestFocus);
     }
 
     private void setShortNameLengthRestrictor() {
@@ -60,7 +61,7 @@ public class ReleaseFormController implements Initializable {
     }
 
     private void setTextFieldListener() {
-        IDTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 errorPopOver.hide();
             }
@@ -101,16 +102,16 @@ public class ReleaseFormController implements Initializable {
     public void setCommand() {
         if (release == null) {
             // new release command
-            command = new CreateReleaseCommand(IDTextField.getText(), releaseDateTextField.getText(),
+            command = new CreateReleaseCommand(shortNameTextField.getText(), releaseDatePicker.getValue(),
                     descriptionTextField.getText(), project);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!IDTextField.getText().equals(release.getId())) {
-                changes.add(new EditCommand<>(release, "id", IDTextField.getText()));
+            if (!shortNameTextField.getText().equals(release.getShortName())) {
+                changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }
-            if (!releaseDateTextField.getText().equals(release.getDate())) {
-                changes.add(new EditCommand<>(release, "date", releaseDateTextField.getText()));
+            if (!releaseDatePicker.getValue().equals(release.getDate())) {
+                changes.add(new EditCommand<>(release, "date", releaseDatePicker.getValue()));
             }
             if (!descriptionTextField.getText().equals(release.getDescription())) {
                 changes.add(new EditCommand<>(release, "description", descriptionTextField.getText()));
@@ -143,8 +144,8 @@ public class ReleaseFormController implements Initializable {
             stage.setTitle("Edit Release");
             okButton.setText("Save");
 
-            IDTextField.setText(release.getId());
-            releaseDateTextField.setText(release.getDate().toString()); // may need fixing
+            shortNameTextField.setText(release.getShortName());
+            releaseDatePicker.setValue(release.getDate());
             descriptionTextField.setText(release.getDescription());
         }
     }

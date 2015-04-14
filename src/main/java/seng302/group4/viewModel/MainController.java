@@ -177,8 +177,8 @@ public class MainController implements Initializable {
 
             String[] buttons = {"Delete Release", "Cancel"};
             String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Release",
-                    "Are you sure you want to delete the release " + selectedRelease.getId() + "?",
-                    "sometext", buttons);
+                    "Are you sure you want to delete the release " + selectedRelease.getShortName() + "?",
+                    "", buttons);
 
             if (result.equals("Delete Release")) {
                 undoManager.doCommand(command);
@@ -832,7 +832,7 @@ public class MainController implements Initializable {
                     protected void updateItem(final Release release, final boolean empty) {
                         // calling super here is very important
                         super.updateItem(release, empty);
-                        setText(empty ? "" : release.getId());
+                        setText(empty ? "" : release.getShortName());
                     }
                 };
             }

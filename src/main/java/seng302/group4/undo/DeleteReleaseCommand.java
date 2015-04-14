@@ -32,7 +32,7 @@ public class DeleteReleaseCommand extends Command<Release> {
 
     @Override
     public String toString() {
-        return "<Delete Release: \"" + release.getId() + "\">";
+        return "<Delete Release: \"" + release.getShortName() + "\">";
     }
 
     public Release getSkill() {

@@ -1,16 +1,19 @@
 package seng302.group4;
 
+import java.time.LocalDate;
+
+
 /**
  * Created by leroy on 10/04/15.
  */
 public class Release {
     private Project project;
-    private String id;
+    private String shortName;
     private String description;
-    private String date;  //change back to date
+    private LocalDate date;  //change back to date
 
-    public Release(String id, String date, String description, Project project) {
-        this.id = id;
+    public Release(String shortName, LocalDate date, String description, Project project) {
+        this.shortName = shortName;
         this.description = description;
         this.date = date;
         this.project = project;
@@ -27,12 +30,12 @@ public class Release {
 
         Release release = (Release) o;
 
-        return id.equals(release.id);
+        return shortName.equals(release.shortName);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return shortName.hashCode();
     }
 
     public Project getProject() {
@@ -43,12 +46,12 @@ public class Release {
         this.project = project;
     }
 
-    public String getId() {
-        return id;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public String getDescription() {
@@ -59,15 +62,15 @@ public class Release {
         this.description = description;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
     public String toString() {
-        return id;
+        return shortName;
     }
 }
