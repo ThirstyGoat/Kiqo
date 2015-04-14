@@ -113,7 +113,7 @@ public class ReleaseFormController implements Initializable {
                 return true;
             }
         }
-        for (final Release r : project.getRelease()) {
+        for (final Release r : project.getReleases()) {
             if (shortNameTextField.getText().equals(r.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
                 errorPopOver.show(shortNameTextField);
@@ -136,8 +136,9 @@ public class ReleaseFormController implements Initializable {
     public void setCommand() {
         if (release == null) {
             // new release command
-            command = new CreateReleaseCommand(shortNameTextField.getText(), releaseDatePicker.getValue(),
+            release = new Release(shortNameTextField.getText(), releaseDatePicker.getValue(),
                     descriptionTextField.getText(), project);
+            command = new CreateReleaseCommand(release, project);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -155,8 +156,6 @@ public class ReleaseFormController implements Initializable {
             command = new CompoundCommand(changes);
         }
     }
-
-
 
     public void setStage(Stage stage) {
         this.stage = stage;

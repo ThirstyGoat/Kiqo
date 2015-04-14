@@ -80,24 +80,8 @@ public class Project implements Serializable {
      *
      * @return ObservableList of releases in project
      */
-    public ObservableList<Release> getRelease() {
+    public ObservableList<Release> getReleases() {
         return releaseObservable;
-    }
-
-    /**
-     *
-     * @param release Release to add to the list of releases in Project
-     */
-    public void addRelease(final Release release) {
-        releaseObservable.add(release);
-    }
-
-    /**
-     *
-     * @param release Release to remove from the list of releases in Project
-     */
-    public void removeRelease(final Release release) {
-        releaseObservable.remove(release);
     }
 
     /**
@@ -127,11 +111,8 @@ public class Project implements Serializable {
 
         final Project project = (Project) o;
 
-        if (!shortName.equals(project.shortName)) {
-            return false;
-        }
+        return shortName.equals(project.shortName);
 
-        return true;
     }
 
     /**
@@ -220,10 +201,6 @@ public class Project implements Serializable {
     public String toString() {
         return "Project{" + "shortName='" + shortName + '\'' + ", longName='" + longName + '\'' + ", description='" + description + '\''
                 + ", saveLocation='" + saveLocation + '\'' + '}';
-    }
-
-    public void removePerson(final Person person) {
-        peopleObservable.remove(person);
     }
 
     public void setObservableLists() {

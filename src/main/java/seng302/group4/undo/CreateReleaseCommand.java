@@ -3,44 +3,33 @@ package seng302.group4.undo;
 import seng302.group4.Project;
 import seng302.group4.Release;
 
-import java.time.LocalDate;
-
-
 /**
  * Created by james on 11/04/15.
  */
 public class CreateReleaseCommand extends Command<Release> {
-    private final String id;
-    private final LocalDate releaseDate;
-    private final String description;
     private Project project;
     private Release release;
 
 
-    public CreateReleaseCommand(final String id, final LocalDate releaseDate, final String description, final Project project) {
+    public CreateReleaseCommand(final Release release, final Project project) {
         this.project = project;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.id = id;
+        this.release = release;
     }
 
     @Override
     public Release execute() {
-        if (release == null) {
-            release = new Release(id, releaseDate, description, project);
-        }
-        project.getRelease().add(release);
+        project.getReleases().add(release);
         return release;
     }
 
     @Override
     public void undo() {
-        project.getRelease().remove(release);
+        project.getReleases().remove(release);
     }
 
     @Override
     public String toString() {
-        return "<Create Release: \"" + id + "\">";
+        return "<Create Release: \"" + release.getShortName() + "\">";
     }
 
     @Override

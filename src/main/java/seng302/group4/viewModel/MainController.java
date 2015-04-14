@@ -683,7 +683,7 @@ public class MainController implements Initializable {
                 peopleListView.setItems(selectedProject.getPeople());
                 skillsListView.setItems(selectedProject.getSkills());
                 teamsListView.setItems(selectedProject.getTeams());
-                releasesListView.setItems(selectedProject.getRelease());
+                releasesListView.setItems(selectedProject.getReleases());
 
                 // Update status bar to show current save status of selected project
                 // Probably not the best way to do this, but it's the simplest

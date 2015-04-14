@@ -20,13 +20,13 @@ public class DeleteReleaseCommand extends Command<Release> {
 
     @Override
     public Release execute() {
-        project.getRelease().remove(release);
+        project.getReleases().remove(release);
         return release;
     }
 
     @Override
     public void undo() {
-        project.getRelease().add(release);
+        project.getReleases().add(release);
     }
 
 
