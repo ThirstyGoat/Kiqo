@@ -104,6 +104,12 @@ public class ReleaseFormController implements Initializable {
             return false;
         }
 
+        if (releaseDatePicker.getValue()== null) {
+            errorPopOver.setContentNode(new Label("Release date must not be empty"));
+            errorPopOver.show(releaseDatePicker);
+            return false;
+        }
+
         if (release != null) {
             // we're editing
             if (shortNameTextField.getText().equals(release.getShortName())) {
@@ -182,5 +188,4 @@ public class ReleaseFormController implements Initializable {
             descriptionTextField.setText(release.getDescription());
         }
     }
-
 }

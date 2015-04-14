@@ -97,6 +97,7 @@ public class MainController implements Initializable {
         EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
         Event event = new ListView.EditEvent<>(listView, type, newValue, i);
         listView.fireEvent(event);
+        listView.getSelectionModel().select(null); // Force a change in the listView selection
         listView.getSelectionModel().select(newValue);
     }
 
@@ -177,8 +178,8 @@ public class MainController implements Initializable {
 
             String[] buttons = {"Delete Release", "Cancel"};
             String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Release",
-                    "Are you sure you want to delete the release " + selectedRelease.getShortName() + "?",
-                    "", buttons);
+                    "Are you sure you?",
+                    "Are you sure you want to to delete the release " + selectedRelease.getShortName() + "?", buttons);
 
             if (result.equals("Delete Release")) {
                 undoManager.doCommand(command);

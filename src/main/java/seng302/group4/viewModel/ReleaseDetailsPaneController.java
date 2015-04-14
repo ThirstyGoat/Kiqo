@@ -22,7 +22,6 @@ public class ReleaseDetailsPaneController implements Initializable {
             shortNameLabel.setText(release.getShortName());
             releaseDateLabel.setText(release.getDate().toString());
             descriptionLabel.setText(release.getDescription());
-
         } else {
             shortNameLabel.setText(null);
             releaseDateLabel.setText(null);

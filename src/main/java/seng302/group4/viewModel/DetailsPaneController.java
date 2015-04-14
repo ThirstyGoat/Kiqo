@@ -73,8 +73,6 @@ public class DetailsPaneController implements Initializable {
         }
     }
 
-
-
     private void clear() {
         for (Node node : stackPane.getChildren()) {
             node.setVisible(false);
