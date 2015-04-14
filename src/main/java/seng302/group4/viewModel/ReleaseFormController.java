@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -25,6 +26,7 @@ import java.util.ResourceBundle;
  * Created by james on 11/04/15.
  */
 public class ReleaseFormController implements Initializable {
+    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final PopOver errorPopOver = new PopOver();
     private Project project;
     private Release release;
@@ -51,18 +53,31 @@ public class ReleaseFormController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setTextFieldListener();
-//        setShortNameLengthRestrictor();  // need to discuss if we are going with ID, or shortname or both
+        setShortNameLengthRestrictor();  // need to discuss if we are going with ID, or shortname or both
 
         Platform.runLater(shortNameTextField::requestFocus);
     }
-
+    /**
+     * Sets up a listener on the name field of team to restrict it to the predefined maximum length
+     */
     private void setShortNameLengthRestrictor() {
-
+        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Restrict length of short name text field
+            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
+                " characters"));
+                errorPopOver.show(shortNameTextField);
+            }
+        });
     }
+
 
     private void setTextFieldListener() {
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                errorPopOver.hide();
+            } else {
                 errorPopOver.hide();
             }
         });
@@ -82,10 +97,29 @@ public class ReleaseFormController implements Initializable {
         });
     }
 
-
-
     private boolean validate() {
-        //TODO
+        if (shortNameTextField.getText().length() == 0) {
+            errorPopOver.setContentNode(new Label("Short name must not be empty"));
+            errorPopOver.show(shortNameTextField);
+            return false;
+        }
+
+        if (release != null) {
+            // we're editing
+            if (shortNameTextField.getText().equals(release.getShortName())) {
+                // then that's fine
+                valid = true;
+                setCommand();
+                return true;
+            }
+        }
+        for (final Release r : project.getRelease()) {
+            if (shortNameTextField.getText().equals(r.getShortName())) {
+                errorPopOver.setContentNode(new Label("Short name must be unique"));
+                errorPopOver.show(shortNameTextField);
+                return false;
+            }
+        }
         valid = true;
         setCommand();
         return true;

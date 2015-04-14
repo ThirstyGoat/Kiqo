@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    public PopOver errorPopOver = new PopOver();
     ArrayList<Skill> skills = new ArrayList<Skill>();
     private String shortName;
     private String longName;
@@ -38,7 +39,6 @@ public class PersonFormController implements Initializable {
     private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
     private Stage stage;
-    public PopOver errorPopOver = new PopOver();
     private boolean shortNameModified = false;
 
 
@@ -196,6 +196,9 @@ public class PersonFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
+                        " characters"));
+                errorPopOver.show(shortNameTextField);
             }
         });
     }
@@ -305,6 +308,8 @@ public class PersonFormController implements Initializable {
         });
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                errorPopOver.hide();
+            } else {
                 errorPopOver.hide();
             }
         });

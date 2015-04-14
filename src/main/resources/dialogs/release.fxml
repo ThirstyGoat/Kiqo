@@ -36,8 +36,8 @@
                 <Label text="Release Date:" GridPane.rowIndex="1" />
                 <Label text="Description:" GridPane.rowIndex="2" />
                 <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
-                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <DatePicker fx:id="releaseDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </center>

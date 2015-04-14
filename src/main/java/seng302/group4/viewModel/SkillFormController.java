@@ -1,17 +1,12 @@
 package seng302.group4.viewModel;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
-import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 
@@ -23,15 +18,13 @@ import java.util.ResourceBundle;
  * Created by james on 20/03/15.
  */
 public class SkillFormController implements Initializable {
+    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private final int SHORT_NAME_MAX_LENGTH = 20;
+    public PopOver errorPopOver = new PopOver();
     private String shortName;
     private String description;
     private boolean valid = false;
-
-
     private Stage stage;
-    public PopOver errorPopOver = new PopOver();
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
 
     private Project project;
@@ -90,6 +83,9 @@ public class SkillFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
+                        " characters"));
+                errorPopOver.show(shortNameTextField);
             }
         });
     }
@@ -140,6 +136,8 @@ public class SkillFormController implements Initializable {
 
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                errorPopOver.hide();
+            } else {
                 errorPopOver.hide();
             }
         });
