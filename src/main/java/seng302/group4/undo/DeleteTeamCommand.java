@@ -1,20 +1,20 @@
 package seng302.group4.undo;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 /**
  * Created by james on 11/04/15.
  */
 public class DeleteTeamCommand extends Command<Team> {
-    private Project project;
-    private Team team;
-    private ArrayList<Person> teamMembers = new ArrayList<>();
+    private final Project project;
+    private final Team team;
+    private final ArrayList<Person> teamMembers = new ArrayList<>();
 
 
     /**
@@ -37,12 +37,12 @@ public class DeleteTeamCommand extends Command<Team> {
     @Override
     public Team execute() {
         // Set team members' team field to null
-        for (Person person : team.getTeamMembers()) {
+        for (final Person person : team.getTeamMembers()) {
             person.setTeam(null);
         }
 
         // if setDeleteMembers was called, delete each team member
-        for (Person person : teamMembers) {
+        for (final Person person : teamMembers) {
             System.out.println("Deleting: " + person.getShortName());
             project.getPeople().remove(person);
         }
@@ -55,11 +55,11 @@ public class DeleteTeamCommand extends Command<Team> {
     @Override
     public void undo() {
         // Set team members team field to this team
-        for (Person person : team.getTeamMembers()) {
+        for (final Person person : team.getTeamMembers()) {
             person.setTeam(team);
         }
 
-        for (Person person : teamMembers) {
+        for (final Person person : teamMembers) {
             System.out.println("Undoing deletion of: " + person.getShortName());
             project.getPeople().add(person);
         }
@@ -71,10 +71,6 @@ public class DeleteTeamCommand extends Command<Team> {
     @Override
     public String toString() {
         return "<Delete Team: \"" + team.getShortName() + "\">";
-    }
-
-    public Team getTeam() {
-        return team;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package seng302.group4.undo;
 
+import java.util.ArrayList;
+
+import org.junit.Before;
 import org.junit.Test;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
-
-import java.util.ArrayList;
 
 /**
  * Created by James on 11/04/15.
@@ -19,6 +21,10 @@ public class DeleteTeamCommandTest {
     private Team teamWithMembers;
     private Team teamNoMembers;
 
+    /**
+     * Initialises the test environment.
+     */
+    @Before
     public void setUp() {
         project = new Project();
 
@@ -45,11 +51,12 @@ public class DeleteTeamCommandTest {
         project.getTeams().add(teamNoMembers);
     }
 
+    /**
+     * Tests that a team with no members is successfully deleted from the project.
+     */
     @Test
     public void deleteEmptyTeam_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
 
         command.execute();
 
@@ -60,11 +67,12 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members is deleted but its members are kept.
+     */
     @Test
     public void deleteTeamWithMembersButKeepPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.execute();
 
@@ -75,11 +83,13 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members is successfully deleted from the project, and with the setDeleteMembers flag its
+     * members are also deleted from the project.
+     */
     @Test
     public void deleteTeamWithMembersAndPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.setDeleteMembers();
 
@@ -92,11 +102,12 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3); // person not in team remained
     }
 
+    /**
+     * Tests that a team with no members is re-added to the project, on undo.
+     */
     @Test
     public void undoDeleteEmptyTeam() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
 
         command.execute();
         command.undo();
@@ -108,11 +119,12 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members has its members re-added and itself re-added to the project, on undo.
+     */
     @Test
     public void undoTeamWithMembersButKeepPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.execute();
         command.undo();
@@ -124,11 +136,13 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members has its members re-added and itself re-added to the project, even when the
+     * setDeleteMembers flag is set, on undo.
+     */
     @Test
     public void undoTeamWithMembersAndPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.setDeleteMembers();
 
@@ -142,11 +156,12 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with no members is re-deleted from the project, on redo.
+     */
     @Test
     public void redoEmptyTeam_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
 
         command.execute();
         command.undo();
@@ -159,11 +174,12 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members is re-deleted from the project but its members are retained, on redo.
+     */
     @Test
     public void redoTeamWithMembersButKeepPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.execute();
         command.undo();
@@ -176,11 +192,13 @@ public class DeleteTeamCommandTest {
         assert project.getPeople().contains(person3);
     }
 
+    /**
+     * Tests that a team with members is re-deleted from the project and its members are re-deleted from the project
+     * when the setDeleteMemebers flag is set, on redo.
+     */
     @Test
     public void redoTeamWithMembersAndPeople_Success() {
-        setUp();
-
-        DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
 
         command.setDeleteMembers();
 
