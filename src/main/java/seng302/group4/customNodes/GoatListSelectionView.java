@@ -16,6 +16,9 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     private ListView<T> sourceListView;
     private ListView<T> targetListView;
 
+    /**
+     * Constructor.
+     */
     public GoatListSelectionView() {
         super();
 
@@ -28,10 +31,16 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
         setSkin(skin);
     }
 
+    /**
+     * @return ListView displaying the pool of available items
+     */
     public ListView<T> getSourceListView() {
         return sourceListView;
     }
 
+    /**
+     * @return ListView displaying the assigned items
+     */
     public ListView<T> getTargetListView() {
         return targetListView;
     }
@@ -40,7 +49,7 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
      * Sets a new cell factory to use by both list views. This forces all old
      * List Cells to be thrown away, and new ListCells created with the new cell
      * factory.
-     * 
+     *
      * @param cellFactory
      */
     public final void setCellFactories(Callback<ListView<T>, ListCell<T>> cellFactory) {
