@@ -1,12 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,49 +14,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
-
-import seng302.group4.GoatDialog;
-import seng302.group4.Item;
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.CreateTeamCommand;
-import seng302.group4.undo.DeletePersonCommand;
-import seng302.group4.undo.DeleteSkillCommand;
-import seng302.group4.undo.DeleteTeamCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 import seng302.group4.utils.Utilities;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -106,7 +77,7 @@ public class MainController implements Initializable {
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private final StatusBar statusBar = new StatusBar();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-    private final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
 
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
@@ -129,8 +100,9 @@ public class MainController implements Initializable {
         final EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
         final Event event = new ListView.EditEvent<>(listView, type, newValue, i);
         listView.fireEvent(event);
+        listView.getSelectionModel().select(newValue);
         if (listView.getItems().isEmpty()) {
-            focusedObjectProperty.set(null);
+            focusedItemProperty.set(null);
         } else {
             if (newValue == listView.getSelectionModel().getSelectedItem()) {
                 listView.getSelectionModel().select(null);
