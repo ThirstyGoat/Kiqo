@@ -87,8 +87,8 @@ public class MenuBarController implements Initializable {
         saveMenuItem.setOnAction(event -> mainController.saveProject());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
-        editMenuItem.setOnAction(event -> mainController.editObject());
-        deleteMenuItem.setOnAction(event -> mainController.deleteObject());
+        editMenuItem.setOnAction(event -> mainController.editItem());
+        deleteMenuItem.setOnAction(event -> mainController.deleteItem());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);

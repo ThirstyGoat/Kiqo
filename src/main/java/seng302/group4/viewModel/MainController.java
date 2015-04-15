@@ -68,17 +68,6 @@ import com.google.gson.JsonSyntaxException;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
-    private final UndoManager undoManager = new UndoManager();
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final StatusBar statusBar = new StatusBar();
-    final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-    private final SimpleObjectProperty<Object> focusedObjectProperty = new SimpleObjectProperty<>();
-    private Stage primaryStage;
-    private AnchorPane listAnchorPane;
-    private double dividerPosition;
-    // FXML Injections
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -109,6 +98,20 @@ public class MainController implements Initializable {
     private DetailsPaneController detailsPaneController;
     @FXML
     private MenuBarController menuBarController;
+
+    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+
+    private final UndoManager undoManager = new UndoManager();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final StatusBar statusBar = new StatusBar();
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
+    private final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+
+    private Stage primaryStage;
+    private AnchorPane listAnchorPane;
+    private double dividerPosition;
+
     private Project selectedProject;
     private Person selectedPerson;
     private Skill selectedSkill;
@@ -208,8 +211,8 @@ public class MainController implements Initializable {
         }
     }
 
-    public void deleteObject() {
-        final Object focusedObject = focusedObjectProperty.get();
+    public void deleteItem() {
+        final Item focusedObject = focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
@@ -224,8 +227,8 @@ public class MainController implements Initializable {
         }
     }
 
-    public void editObject() {
-        final Object focusedObject = focusedObjectProperty.get();
+    public void editItem() {
+        final Item focusedObject = focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
@@ -256,9 +259,9 @@ public class MainController implements Initializable {
         initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
-        focusedObjectProperty.addListener(new ChangeListener<Object>() {
+        focusedItemProperty.addListener(new ChangeListener<Item>() {
             @Override
-            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+            public void changed(ObservableValue<? extends Item> observable, Item oldValue, Item newValue) {
                 System.out.println("Focus changed to " + newValue);
                 detailsPaneController.showDetailsPane(newValue);
                 menuBarController.updateAfterAnyObjectSelected(newValue != null);
@@ -280,8 +283,8 @@ public class MainController implements Initializable {
         final MenuItem deleteContextMenu = new MenuItem("Delete");
         contextMenu.getItems().add(editContextMenu);
         contextMenu.getItems().add(deleteContextMenu);
-        editContextMenu.setOnAction(event -> editObject());
-        deleteContextMenu.setOnAction(event -> deleteObject());
+        editContextMenu.setOnAction(event -> editItem());
+        deleteContextMenu.setOnAction(event -> deleteItem());
 
         for (final ListView<? extends Item> listView : listViews) {
             initialiseListView(listView);
@@ -320,7 +323,7 @@ public class MainController implements Initializable {
                     projectListView.getSelectionModel().selectFirst();
                 }
                 if (projectListView.getItems().isEmpty()) {
-                    focusedObjectProperty.set(null);
+                    focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
@@ -331,7 +334,7 @@ public class MainController implements Initializable {
                     peopleListView.getSelectionModel().select(selectedPerson);
                 }
                 if (peopleListView.getItems().isEmpty()) {
-                    focusedObjectProperty.set(null);
+                    focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
@@ -342,7 +345,7 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
                 if (skillsListView.getItems().isEmpty()) {
-                    focusedObjectProperty.set(null);
+                    focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterSkillListSelected(true);
             } else if (newValue == teamsTab) {
@@ -353,7 +356,7 @@ public class MainController implements Initializable {
                     teamsListView.getSelectionModel().select(selectedTeam);
                 }
                 if (teamsListView.getItems().isEmpty()) {
-                    focusedObjectProperty.set(null);
+                    focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterTeamListSelected(true);
             }
@@ -546,10 +549,10 @@ public class MainController implements Initializable {
         changesSaved.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
-                statusBar.setText(ALL_CHANGES_SAVED_TEXT);
+                statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);
             } else {
                 // Then there are unsaved changes, update status message
-                statusBar.setText(UNSAVED_CHANGES_TEXT);
+                statusBar.setText(MainController.UNSAVED_CHANGES_TEXT);
             }
         });
     }
@@ -685,11 +688,11 @@ public class MainController implements Initializable {
                 return listCell;
             }
         });
-    
+
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                focusedObjectProperty.set(newValue);
-    
+                focusedItemProperty.set(newValue);
+
                 // Update status bar to show current save status
                 // Probably not the best way to do this, but it's the simplest
                 changesSaved.set(!changesSaved.get());
