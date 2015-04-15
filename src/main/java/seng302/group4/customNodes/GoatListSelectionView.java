@@ -1,7 +1,6 @@
 package seng302.group4.customNodes;
 
 import impl.org.controlsfx.skin.ListSelectionViewSkin;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -16,8 +15,6 @@ import org.controlsfx.control.ListSelectionView;
 public class GoatListSelectionView<T> extends ListSelectionView<T> {
     private ListView<T> sourceListView;
     private ListView<T> targetListView;
-    // --- Cell Factory
-    private ObjectProperty<Callback<ListView<T>, ListCell<T>>> cellFactory;
 
     public GoatListSelectionView() {
         super();
