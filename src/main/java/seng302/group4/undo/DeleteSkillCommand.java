@@ -1,17 +1,22 @@
 package seng302.group4.undo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
+/**
+ * Command to delete a skill from a project.
+ *
+ */
 public class DeleteSkillCommand extends Command<Skill> {
 
-    private Project project;
-    private Skill skill;
-    private ArrayList<Person> peopleWithSkill = new ArrayList<>();
+    private final Project project;
+    private final Skill skill;
+    private final List<Person> peopleWithSkill = new ArrayList<>();
 
     /**
      * @param skill Skill to be deleted
@@ -33,18 +38,20 @@ public class DeleteSkillCommand extends Command<Skill> {
                 person.getSkills().contains(skill)).collect(Collectors.toList()));
     }
 
-    public ArrayList<Person> getPeopleWithSkill() {
+    /**
+     * @return all people in the project who have the skill that is marked for deletion
+     */
+    public List<Person> getPeopleWithSkill() {
         return peopleWithSkill;
     }
 
     @Override
     public Skill execute() {
         // Remove the skill from any people in the project who have the skill
-        for (Person person : peopleWithSkill) {
+        for (final Person person : peopleWithSkill) {
             person.getSkills().remove(skill);
         }
         project.getSkills().remove(skill);
-//        callbackFunction.call();
         return skill;
     }
 
@@ -53,7 +60,7 @@ public class DeleteSkillCommand extends Command<Skill> {
         // Add the skill back to wherever it was
         project.getSkills().add(skill);
 
-        for (Person person : getPeopleWithSkill()) {
+        for (final Person person : peopleWithSkill) {
             person.getSkills().add(skill);
         }
     }
@@ -63,10 +70,7 @@ public class DeleteSkillCommand extends Command<Skill> {
         return "<Delete Skill: \"" + skill.getShortName() + "\">";
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-
+    @Override
     public String getType() {
         return "Delete Skill";
     }

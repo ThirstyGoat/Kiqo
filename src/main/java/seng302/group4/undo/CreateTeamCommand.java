@@ -1,10 +1,10 @@
 package seng302.group4.undo;
 
+import java.util.ArrayList;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
-
-import java.util.ArrayList;
 
 /**
  * Command to create a project
@@ -18,10 +18,10 @@ public class CreateTeamCommand extends Command<Team> {
     private final ArrayList<Person> teamMembers = new ArrayList<>();
     private final Person productOwner;
     private final Person scrumMaster;
-    private ArrayList<Person> devTeam;
+    private final ArrayList<Person> devTeam;
 
     private Team team;
-    private Project project;
+    private final Project project;
 
     /**
      * Constructor for CreateTeamCommand
@@ -51,7 +51,7 @@ public class CreateTeamCommand extends Command<Team> {
         }
 
         // Assign this team to all the people in the team
-        for (Person person : team.getTeamMembers()) {
+        for (final Person person : team.getTeamMembers()) {
             person.setTeam(team);
         }
 
@@ -66,7 +66,7 @@ public class CreateTeamCommand extends Command<Team> {
         project.getTeams().remove(team);
 
         // Remove this team from all the people within it
-        for (Person person : team.getTeamMembers()) {
+        for (final Person person : team.getTeamMembers()) {
             person.setTeam(null);
         }
     }
@@ -76,10 +76,7 @@ public class CreateTeamCommand extends Command<Team> {
         return "<Create Team: \"" + shortName + "\">";
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
+    @Override
     public String getType() {
         return "Create Team";
     }

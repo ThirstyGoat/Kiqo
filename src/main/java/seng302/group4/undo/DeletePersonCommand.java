@@ -4,18 +4,21 @@ import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
 
+/**
+ * Command to delete a person from a project.
+ *
+ */
 public class DeletePersonCommand extends Command<Person> {
-
-    private Project project;
-    private Person person;
-    private Team team;
+    private final Project project;
+    private final Person person;
+    private final Team team;
     private boolean isProductOwner = false;
     private boolean isScrumMaster = false;
     private boolean inDevTeam = true;
 
     /**
      * @param person Person to be deleted
-     * @param project Project to which the skill belongs
+     * @param project Project to which the person belongs
      */
     public DeletePersonCommand(final Person person, final Project project) {
         this.person = person;
@@ -84,10 +87,7 @@ public class DeletePersonCommand extends Command<Person> {
         return "<Delete Person: \"" + person.getShortName() + "\">";
     }
 
-    public Person getPerson() {
-        return person;
-    }
-
+    @Override
     public String getType() {
         return "Delete Person";
     }
