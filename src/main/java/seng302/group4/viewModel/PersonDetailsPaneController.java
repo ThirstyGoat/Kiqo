@@ -1,14 +1,14 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import seng302.group4.Person;
 import seng302.group4.Skill;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Created by Carina on 25/03/2015.
@@ -61,9 +61,9 @@ public class PersonDetailsPaneController implements Initializable {
 
     public String formatSkillsString(ArrayList<Skill> skills) {
         String toReturn = "";
-        
+
         for (int i = 0; i < skills.size(); i++) {
-            toReturn += skills.get(i);
+            toReturn += skills.get(i).getShortName();
             if (i != skills.size() - 1) {
                 toReturn += ", ";
             }
