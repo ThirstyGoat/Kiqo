@@ -53,8 +53,9 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>1.7.1</version>
         <configuration>
-          <!-- put your configurations here -->
-        </configuration>
+	        <shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
+	        <shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
+	    </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -109,6 +110,57 @@
           <configLocation>src/site/checkstyle/google_checks.xml</configLocation>
         </configuration>
       </plugin>
+      <plugin>
+        <!-- Packaging for Mac OS -->
+		<groupId>sh.tak.appbundler</groupId>
+		<artifactId>appbundle-maven-plugin</artifactId>
+		<version>1.0.2</version>
+		<configuration>
+		  <mainClass>seng302.group4.Main</mainClass>
+		</configuration>
+		<executions>
+		  <execution>
+		    <phase>package</phase>
+		    <goals>
+		      <goal>bundle</goal>
+		    </goals>
+		  </execution>
+		</executions>
+	  </plugin>
+      <plugin>
+      	  <!-- Packaging for MS Windows -->
+          <groupId>com.akathist.maven.plugins.launch4j</groupId>
+          <artifactId>launch4j-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>l4j-gui</id>
+              <phase>package</phase>
+              <goals><goal>launch4j</goal></goals>
+              <configuration>
+                <headerType>gui</headerType>
+                <outfile>target/${artifactId}.exe</outfile>
+                <jar>target/${artifactId}-${version}.jar</jar>
+                <errTitle>${artifactId}: Error</errTitle>
+                <jre>
+                  <minVersion>1.8.0</minVersion>
+                </jre>
+                <versionInfo>
+                    <fileVersion>0.0.0.1</fileVersion>
+                    <txtFileVersion>0.0.0.1</txtFileVersion>
+                    <fileDescription>${artifactId} is amazing. That is all.</fileDescription>
+                    <copyright>Copyright Thirsty Goat 2015</copyright>
+                    <productVersion>0.0.0.1</productVersion>
+                    <txtProductVersion>0.0.0.1</txtProductVersion>
+                    <productName>${artifactId}</productName>
+                    <internalName>${artifactId}</internalName>
+    				<companyName>Thirsty Goat</companyName>
+    				<!-- Original name of the file without the path. Allows to determine whether a file has been renamed by a user.  -->
+                    <originalFilename>${artifactId}.exe</originalFilename>
+                </versionInfo>
+              </configuration>
+            </execution>
+          </executions>
+          </plugin>
     </plugins>
   </build>
   <reporting>
