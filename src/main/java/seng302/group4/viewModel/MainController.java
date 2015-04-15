@@ -132,20 +132,34 @@ public class MainController implements Initializable {
         listView.getSelectionModel().select(newValue);
     }
 
+    /**
+     * @param project
+     *
+     */
+    private void deleteProject(Project project) {
+        GoatDialog
+                .showAlertDialog(primaryStage, "Version Limitation", "No can do.", "Deleting a project is not supported in this version.");
+    }
+
     private void deleteSkill(Skill skill) {
-        final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedProject);
+        if (skill == selectedProject.getPoSkill() || skill == selectedProject.getSmSkill()) {
+            GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                    "The Product Owner and Scrum Master skills cannot be deleted.");
+        } else {
+            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedProject);
 
-        String deleteMessage = "There are no people with this skill.";
-        if (command.getPeopleWithSkill().size() > 0) {
-            deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-            deleteMessage += Utilities.concatenatePeopleList(command.getPeopleWithSkill(), 5);
-        }
-        final String[] buttons = { "Delete Skill", "Cancel" };
-        final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill", "Are you sure you want to delete the skill "
-                + skill.getShortName() + "?", deleteMessage, buttons);
+            String deleteMessage = "There are no people with this skill.";
+            if (command.getPeopleWithSkill().size() > 0) {
+                deleteMessage = "Deleting the skill will also remove it from the following people:\n";
+                deleteMessage += Utilities.concatenatePeopleList(command.getPeopleWithSkill(), 5);
+            }
+            final String[] buttons = { "Delete Skill", "Cancel" };
+            final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
+                    "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
-        if (result.equals("Delete Skill")) {
-            undoManager.doCommand(command);
+            if (result.equals("Delete Skill")) {
+                undoManager.doCommand(command);
+            }
         }
     }
 
@@ -216,8 +230,7 @@ public class MainController implements Initializable {
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
-                    "Deleting a project is not supported in this version.");
+            deleteProject((Project) focusedObject);
         } else if (focusedObject instanceof Person) {
             deletePerson((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
