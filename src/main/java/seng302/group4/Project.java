@@ -1,21 +1,20 @@
 package seng302.group4;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Project class represents a software project
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Project implements Serializable {
+public class Project extends Item {
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
-    public ArrayList<Person> people = new ArrayList<>();
+    private final ArrayList<Person> people = new ArrayList<>();
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
@@ -25,8 +24,8 @@ public class Project implements Serializable {
     private String description;
     private transient File saveLocation;
 
-    private Skill poSkill = new Skill("PO", "Product Owner");
-    private Skill smSkill = new Skill("SM", "Scrum Master");
+    private final Skill poSkill = new Skill("PO", "Product Owner");
+    private final Skill smSkill = new Skill("SM", "Scrum Master");
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -160,6 +159,7 @@ public class Project implements Serializable {
      *
      * @return Short name of project
      */
+    @Override
     public String getShortName() {
         return shortName;
     }

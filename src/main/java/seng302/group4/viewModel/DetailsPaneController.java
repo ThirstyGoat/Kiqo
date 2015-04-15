@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import seng302.group4.Item;
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
@@ -53,23 +54,28 @@ public class DetailsPaneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         clear();
 
-        editButton.setOnAction(event -> mainController.editObject());
-        deleteButton.setOnAction(event -> mainController.deleteObject());
+        editButton.setOnAction(event -> mainController.editItem());
+        deleteButton.setOnAction(event -> mainController.deleteItem());
     }
 
 
-    public void showDetailsPane(Object objectForDisplay) {
-        if (objectForDisplay == null) {
+    /**
+     * Display the details of the specified item.
+     * 
+     * @param item
+     */
+    public void showDetailsPane(Item item) {
+        if (item == null) {
             clear();
         } else {
-            if (objectForDisplay instanceof Project) {
-                showProjectDetailsPane((Project)objectForDisplay);
-            } else if (objectForDisplay instanceof Person) {
-                showPersonDetailsPane((Person)objectForDisplay);
-            } else if (objectForDisplay instanceof Skill) {
-                showSkillDetailPane((Skill)objectForDisplay);
-            } else if (objectForDisplay instanceof Team) {
-                showTeamDetailPane((Team)objectForDisplay);
+            if (item instanceof Project) {
+                showProjectDetailsPane((Project) item);
+            } else if (item instanceof Person) {
+                showPersonDetailsPane((Person) item);
+            } else if (item instanceof Skill) {
+                showSkillDetailPane((Skill) item);
+            } else if (item instanceof Team) {
+                showTeamDetailPane((Team) item);
             }
         }
     }
