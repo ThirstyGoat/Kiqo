@@ -3,7 +3,7 @@ package seng302.group4;
 /**
  * Created by leroy on 25/03/15.
  */
-public class Skill {
+public class Skill extends Item {
     private String shortName;
     private String description;
 
@@ -21,7 +21,7 @@ public class Skill {
             return false;
         }
 
-        Skill skill = (Skill) o;
+        final Skill skill = (Skill) o;
 
         if (description != null ? !description.equals(skill.description)
                                 : skill.description != null) {
@@ -41,6 +41,17 @@ public class Skill {
         return result;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Skill [shortName=" + shortName + ", description=" + description + "]";
+    }
+
+    @Override
     public String getShortName() {
         return shortName;
     }
@@ -55,9 +66,5 @@ public class Skill {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String toString() {
-        return shortName;
     }
 }

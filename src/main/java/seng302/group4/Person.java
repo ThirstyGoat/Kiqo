@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Model class for Person.
  * Created by james on 17/03/15.
  */
-public class Person {
+public class Person extends Item {
     private String shortName;
     private String longName;
     private String description;
@@ -42,19 +42,36 @@ public class Person {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        if (department != null ? !department.equals(person.department) : person.department != null) return false;
-        if (description != null ? !description.equals(person.description) : person.description != null) return false;
-        if (emailAddress != null ? !emailAddress.equals(person.emailAddress) : person.emailAddress != null)
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        if (!longName.equals(person.longName)) return false;
-        if (phoneNumber != null ? !phoneNumber.equals(person.phoneNumber) : person.phoneNumber != null) return false;
-        if (!shortName.equals(person.shortName)) return false;
-        if (userID != null ? !userID.equals(person.userID) : person.userID != null) return false;
+        }
+
+        final Person person = (Person) o;
+
+        if (department != null ? !department.equals(person.department) : person.department != null) {
+            return false;
+        }
+        if (description != null ? !description.equals(person.description) : person.description != null) {
+            return false;
+        }
+        if (emailAddress != null ? !emailAddress.equals(person.emailAddress) : person.emailAddress != null) {
+            return false;
+        }
+        if (!longName.equals(person.longName)) {
+            return false;
+        }
+        if (phoneNumber != null ? !phoneNumber.equals(person.phoneNumber) : person.phoneNumber != null) {
+            return false;
+        }
+        if (!shortName.equals(person.shortName)) {
+            return false;
+        }
+        if (userID != null ? !userID.equals(person.userID) : person.userID != null) {
+            return false;
+        }
 
         return true;
     }
@@ -67,14 +84,14 @@ public class Person {
     }
 
     /**
-     * To string method for a person. 
+     * To string method for a person.
      * Will return the fields that are not set to null
      * @return the string representation of a Person object
      */
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Person{shortName='" + this.shortName + "\', longName='" + this.longName + "\'");
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Person{shortName='" + shortName + "\', longName='" + longName + "\'");
         stringBuilder.append(", description='" + description + "\'");
         stringBuilder.append(", userID='" + userID + "\'");
         stringBuilder.append(", emailAddress='" + emailAddress + "\'");
@@ -84,6 +101,7 @@ public class Person {
         return stringBuilder.toString();
     }
 
+    @Override
     public String getShortName() {
         return shortName;
     }

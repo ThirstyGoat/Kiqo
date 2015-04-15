@@ -1,19 +1,18 @@
 package seng302.group4;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 27/03/15.
  */
-public class Team implements Serializable {
+public class Team extends Item {
     private String shortName;
     private String description;
     private Person productOwner;
     private Person scrumMaster;
     private ArrayList<Person> teamMembers;
-    private ArrayList<Person> devTeam = new ArrayList<>();
+    private final ArrayList<Person> devTeam = new ArrayList<>();
 
     public Team(String shortName, String description, ArrayList<Person> teamMembers) {
         this.shortName = shortName;
@@ -33,6 +32,7 @@ public class Team implements Serializable {
                 '}';
     }
 
+    @Override
     public String getShortName() {
         return shortName;
     }
