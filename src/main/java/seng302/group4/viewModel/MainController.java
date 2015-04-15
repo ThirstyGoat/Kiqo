@@ -1,6 +1,12 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,26 +20,50 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
-import seng302.group4.*;
+
+import seng302.group4.GoatDialog;
+import seng302.group4.Item;
+import seng302.group4.PersistenceManager;
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Skill;
+import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.CreateTeamCommand;
+import seng302.group4.undo.DeletePersonCommand;
+import seng302.group4.undo.DeleteSkillCommand;
+import seng302.group4.undo.DeleteTeamCommand;
+import seng302.group4.undo.UndoManager;
 import seng302.group4.utils.Utilities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -75,7 +105,6 @@ public class MainController implements Initializable {
 
     private final UndoManager undoManager = new UndoManager();
     private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final StatusBar statusBar = new StatusBar();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
 
@@ -102,7 +131,7 @@ public class MainController implements Initializable {
         listView.fireEvent(event);
         listView.getSelectionModel().select(newValue);
         if (listView.getItems().isEmpty()) {
-            focusedItemProperty.set(null);
+            MainController.focusedItemProperty.set(null);
         } else {
             if (newValue == listView.getSelectionModel().getSelectedItem()) {
                 listView.getSelectionModel().select(null);
@@ -137,7 +166,7 @@ public class MainController implements Initializable {
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
             if (result.equals("Delete Skill")) {
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         }
     }
@@ -177,7 +206,7 @@ public class MainController implements Initializable {
             if (deletePeople) {
                 command.setDeleteMembers();
             }
-            undoManager.doCommand(command);
+            doCommand(command);
         }
     }
 
@@ -200,12 +229,12 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
-            undoManager.doCommand(command);
+            doCommand(command);
         }
     }
 
     public void deleteItem() {
-        final Item focusedObject = focusedItemProperty.get();
+        final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
@@ -220,7 +249,7 @@ public class MainController implements Initializable {
     }
 
     public void editItem() {
-        final Item focusedObject = focusedItemProperty.get();
+        final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
@@ -251,7 +280,7 @@ public class MainController implements Initializable {
         initialiseTabs();
         addStatusBar();
         menuBarController.setListenersOnUndoManager(undoManager);
-        focusedItemProperty.addListener(new ChangeListener<Item>() {
+        MainController.focusedItemProperty.addListener(new ChangeListener<Item>() {
             @Override
             public void changed(ObservableValue<? extends Item> observable, Item oldValue, Item newValue) {
                 System.out.println("Focus changed to " + newValue);
@@ -315,7 +344,7 @@ public class MainController implements Initializable {
                     projectListView.getSelectionModel().selectFirst();
                 }
                 if (projectListView.getItems().isEmpty()) {
-                    focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
@@ -326,7 +355,7 @@ public class MainController implements Initializable {
                     peopleListView.getSelectionModel().select(selectedPerson);
                 }
                 if (peopleListView.getItems().isEmpty()) {
-                    focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
@@ -337,7 +366,7 @@ public class MainController implements Initializable {
                     skillsListView.getSelectionModel().select(selectedSkill);
                 }
                 if (skillsListView.getItems().isEmpty()) {
-                    focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterSkillListSelected(true);
             } else if (newValue == teamsTab) {
@@ -348,7 +377,7 @@ public class MainController implements Initializable {
                     teamsListView.getSelectionModel().select(selectedTeam);
                 }
                 if (teamsListView.getItems().isEmpty()) {
-                    focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterTeamListSelected(true);
             }
@@ -473,20 +502,19 @@ public class MainController implements Initializable {
 
     public void undo() {
         undoManager.undoCommand();
-        // If the changes are already saved, and we undo something, then the
-        // changes are now not saved
-        if (changesSaved.get()) {
-            changesSaved.set(false);
-        }
+        changesSaved.set(false);
     }
 
     public void redo() {
         undoManager.redoCommand();
         // If the changes are already saved, and we redo something, then the
         // changes are now not saved
-        if (changesSaved.get()) {
-            changesSaved.set(false);
-        }
+        changesSaved.set(false);
+    }
+
+    private void doCommand(Command<?> command) {
+        undoManager.doCommand(command);
+        changesSaved.set(false);
     }
 
     /**
@@ -534,6 +562,7 @@ public class MainController implements Initializable {
      * save state
      */
     private void addStatusBar() {
+        final StatusBar statusBar = new StatusBar();
         // Add the status bar to the bottom of the window
         mainBorderPane.setBottom(statusBar);
 
@@ -581,7 +610,7 @@ public class MainController implements Initializable {
                 final CompoundCommand command = editSkillController.getCommand();
                 command.setType("Edit Skill");
                 command.setRefreshParameters(skill, skillsListView, detailsPaneController);
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         });
     }
@@ -619,7 +648,7 @@ public class MainController implements Initializable {
                 final CompoundCommand command = editPersonController.getCommand();
                 command.setType("Edit Person");
                 command.setRefreshParameters(person, peopleListView, detailsPaneController);
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         });
     }
@@ -654,7 +683,7 @@ public class MainController implements Initializable {
                 final CompoundCommand command = editProjectController.getCommand();
                 command.setType("Edit Project");
                 command.setRefreshParameters(project, projectListView, detailsPaneController);
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         });
     }
@@ -684,7 +713,7 @@ public class MainController implements Initializable {
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                focusedItemProperty.set(newValue);
+                MainController.focusedItemProperty.set(newValue);
 
                 // Update status bar to show current save status
                 // Probably not the best way to do this, but it's the simplest
@@ -747,7 +776,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (newSkillController.isValid()) {
                 final CreateSkillCommand command = newSkillController.getCommand();
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         });
     }
@@ -781,7 +810,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (newPersonController.isValid()) {
                 final CreatePersonCommand command = newPersonController.getCommand();
-                undoManager.doCommand(command);
+                doCommand(command);
             }
         });
     }
@@ -816,14 +845,14 @@ public class MainController implements Initializable {
                     // creating
                     // Create the command and do it
                     final CreateTeamCommand command = (CreateTeamCommand) teamFormController.getCommand();
-                    undoManager.doCommand(command);
+                    doCommand(command);
                 } else {
                     // editing
 
                     final CompoundCommand command = (CompoundCommand) teamFormController.getCommand();
                     command.setType("Edit Team");
                     command.setRefreshParameters(team, teamsListView, detailsPaneController);
-                    undoManager.doCommand(command);
+                    doCommand(command);
                 }
             }
         });
@@ -857,7 +886,7 @@ public class MainController implements Initializable {
             if (newProjectController.isValid()) {
                 // TODO This will need work when we add support for multiple projects
                 final CreateProjectCommand command = newProjectController.getCommand();
-                addProject(command.execute());
+                addProject(command.execute()); // not undoable
             }
         });
     }
