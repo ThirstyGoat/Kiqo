@@ -608,7 +608,6 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (editSkillController.isValid()) {
                 final CompoundCommand command = editSkillController.getCommand();
-                command.setType("Edit Skill");
                 command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 doCommand(command);
             }
@@ -646,7 +645,6 @@ public class MainController implements Initializable {
 
             if (editPersonController.isValid()) {
                 final CompoundCommand command = editPersonController.getCommand();
-                command.setType("Edit Person");
                 command.setRefreshParameters(person, peopleListView, detailsPaneController);
                 doCommand(command);
             }
@@ -681,7 +679,6 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (editProjectController.isValid()) {
                 final CompoundCommand command = editProjectController.getCommand();
-                command.setType("Edit Project");
                 command.setRefreshParameters(project, projectListView, detailsPaneController);
                 doCommand(command);
             }
@@ -850,7 +847,6 @@ public class MainController implements Initializable {
                     // editing
 
                     final CompoundCommand command = (CompoundCommand) teamFormController.getCommand();
-                    command.setType("Edit Team");
                     command.setRefreshParameters(team, teamsListView, detailsPaneController);
                     doCommand(command);
                 }

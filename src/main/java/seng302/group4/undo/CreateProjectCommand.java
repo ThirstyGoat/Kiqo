@@ -28,7 +28,7 @@ public class CreateProjectCommand extends Command<Project> {
     public CreateProjectCommand(final String shortName, final String longName, final File saveLocation) {
         this.shortName = shortName;
         this.longName = longName;
-        this.description = null;
+        description = null;
         this.saveLocation = saveLocation;
     }
 
@@ -50,28 +50,25 @@ public class CreateProjectCommand extends Command<Project> {
 
     @Override
     public Project execute() {
-        if (this.project == null) {
-            this.project = new Project(this.shortName, this.longName, this.saveLocation, this.description);
+        if (project == null) {
+            project = new Project(shortName, longName, saveLocation, description);
         }
-        return this.project;
+        return project;
     }
 
     @Override
     public String toString() {
-        return "<Create Project: \"" + this.shortName + "\" \"" + this.longName + "\" \"" + this.saveLocation + "\" \"" + this.description
+        return "<Create Project: \"" + shortName + "\" \"" + longName + "\" \"" + saveLocation + "\" \"" + description
                 + "\">";
     }
 
     @Override
     public void undo() {
         // FIXME implement properly
-        this.project.prepareForDestruction();
+        project.prepareForDestruction();
     }
 
-    public Project getProject() {
-        return this.project;
-    }
-
+    @Override
     public String getType() {
         return "Create Project";
     }

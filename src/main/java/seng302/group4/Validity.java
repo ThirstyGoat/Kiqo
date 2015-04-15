@@ -1,17 +1,17 @@
 package seng302.group4;
 
-import seng302.group4.exceptions.InvalidPersonException;
-import seng302.group4.exceptions.InvalidProjectException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import seng302.group4.exceptions.InvalidPersonException;
+import seng302.group4.exceptions.InvalidProjectException;
 
 /**
  * Created by blair_000 on 20/03/2015.
  */
 public class Validity {
     public static boolean checkPersonValidity(Person person, List<Person> people) {
-        for (Person p : people) {
+        for (final Person p : people) {
             if (p.getShortName().equals(person.getShortName())) {
                return false;
             }
@@ -21,9 +21,9 @@ public class Validity {
 
     /**
      * Check that all the people in the People list are valid
+     * 
      * @param people
-     * @return
-     * @throws Exception
+     * @throws InvalidPersonException
      */
     public static void checkPeople(ArrayList<Person> people) throws InvalidPersonException {
         if (people.size() > 0) {
@@ -37,8 +37,9 @@ public class Validity {
 
     /**
      * Checks all the required fields in project to make sure they are non-null
+     *
      * @param project
-     * @return
+     * @return true if all fields are valid
      */
     public static boolean checkProject(Project project) throws InvalidProjectException{
         if (project.getShortName() == null || project.getLongName() == null) {

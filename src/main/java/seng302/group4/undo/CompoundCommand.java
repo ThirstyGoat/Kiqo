@@ -1,6 +1,6 @@
 package seng302.group4.undo;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import javafx.scene.control.ListView;
 import seng302.group4.Item;
@@ -8,20 +8,25 @@ import seng302.group4.viewModel.DetailsPaneController;
 import seng302.group4.viewModel.MainController;
 
 /**
- * Overwrites a field value
+ * Wraps several Commands into an atomic unit. Similar to the idea of
+ * transactions in database theory.
  *
  * @author bjk60
  *
  */
 public class CompoundCommand extends Command<Void> {
-    private ArrayList<Command<?>> commands = new ArrayList<>();
+    private final Collection<Command<?>> commands;
     private String type = "Compound Command";
     private ListView listView;
     private Item item;
     private DetailsPaneController detailsPaneController;
 
-    public CompoundCommand(final ArrayList<Command<?>> changes) {
-        commands = changes;
+    /**
+     * @param commands
+     */
+    public CompoundCommand(String type, final Collection<Command<?>> commands) {
+        this.type = type;
+        this.commands = commands;
     }
 
     @Override
@@ -52,10 +57,6 @@ public class CompoundCommand extends Command<Void> {
     @Override
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type  = type;
     }
 
     public <T extends Item> void setRefreshParameters(T item, ListView<T> listView, DetailsPaneController detailsPaneController) {

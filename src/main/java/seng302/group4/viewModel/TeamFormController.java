@@ -2,7 +2,6 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -65,7 +64,7 @@ public class TeamFormController implements Initializable {
     private Stage stage;
     private Project project;
     private Team team;
-    private Command command;
+    private Command<?> command;
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
@@ -182,9 +181,9 @@ public class TeamFormController implements Initializable {
             // New Members = New Team - Old Team
             // Old Members = Old Team - New Team
 
-            ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
+            final ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
             newMembers.removeAll(team.getTeamMembers());
-            ArrayList<Person> oldMembers = new ArrayList<>(team.getTeamMembers());
+            final ArrayList<Person> oldMembers = new ArrayList<>(team.getTeamMembers());
             oldMembers.removeAll(teamMembers);
 
             // Loop through all the new members and add a command to set their team
@@ -198,7 +197,7 @@ public class TeamFormController implements Initializable {
                     .collect(Collectors.toList()));
 
             valid = !changes.isEmpty();
-            command = new CompoundCommand(changes);
+            command = new CompoundCommand("Edit Team", changes);
         }
     }
 
@@ -206,7 +205,7 @@ public class TeamFormController implements Initializable {
         return valid;
     }
 
-    public Command getCommand() {
+    public Command<?> getCommand() {
         return command;
     }
 
@@ -390,7 +389,7 @@ public class TeamFormController implements Initializable {
 
     private void populatePeopleListView() {
         // all people observableList = project.getPeople();
-        ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+        final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
         sourcePeople.addAll(project.getPeople());
 
         // Remove all people from sourcePeople that are currently in a team
@@ -402,7 +401,7 @@ public class TeamFormController implements Initializable {
             // Note that this shouldn't actually be possible since undo/redo should be disabled
             sourcePeople.removeAll(c.getRemoved());
             targetPeople.removeAll(c.getRemoved());
-            for (Person person : c.getAddedSubList()) {
+            for (final Person person : c.getAddedSubList()) {
                 if (person.getTeam() == team) {
                     targetPeople.add(person);
                 } else {

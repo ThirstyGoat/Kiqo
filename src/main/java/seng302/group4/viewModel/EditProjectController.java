@@ -1,6 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -8,17 +7,12 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 13/03/15.
@@ -41,8 +35,8 @@ public class EditProjectController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.setCancelButton();
-        this.setSaveButton();
+        setCancelButton();
+        setSaveButton();
     }
 
     /**
@@ -52,7 +46,7 @@ public class EditProjectController implements Initializable {
      */
     public void loadProject(final Project project) {
         this.project = project;
-        this.formController.loadProject(project);
+        formController.loadProject(project);
     }
 
     /**
@@ -60,26 +54,26 @@ public class EditProjectController implements Initializable {
      * and instantiates the new project if applicable
      */
     private void setSaveButton() {
-        this.editProjectButton.setOnAction(event -> {
-            this.formController.validate();
-            if (this.formController.isValid()) {
+        editProjectButton.setOnAction(event -> {
+            formController.validate();
+            if (formController.isValid()) {
                 valid = true;
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
-                if (!this.formController.longName.equals(this.project.getLongName())) {
-                    changes.add(new EditCommand<>(this.project, "longName", this.formController.longName));
+                if (!formController.longName.equals(project.getLongName())) {
+                    changes.add(new EditCommand<>(project, "longName", formController.longName));
                 }
-                if (!this.formController.shortName.equals(this.project.getShortName())) {
-                    changes.add(new EditCommand<>(this.project, "shortName", this.formController.shortName));
+                if (!formController.shortName.equals(project.getShortName())) {
+                    changes.add(new EditCommand<>(project, "shortName", formController.shortName));
                 }
-                if (!this.formController.projectLocation.equals(this.project.getSaveLocation())) {
-                    changes.add(new EditCommand<>(this.project, "saveLocation", this.formController.projectLocation));
+                if (!formController.projectLocation.equals(project.getSaveLocation())) {
+                    changes.add(new EditCommand<>(project, "saveLocation", formController.projectLocation));
                 }
-                if (!this.formController.description.equals(this.project.getDescription())) {
-                    changes.add(new EditCommand<>(this.project, "description", this.formController.description));
+                if (!formController.description.equals(project.getDescription())) {
+                    changes.add(new EditCommand<>(project, "description", formController.description));
                 }
 
-                command = new CompoundCommand(changes);
+                command = new CompoundCommand("Edit Project", changes);
 
                 // Close the new project dialog (this window)
                 stage.close();
@@ -107,7 +101,7 @@ public class EditProjectController implements Initializable {
     }
 
     public CompoundCommand getCommand() {
-        return this.command;
+        return command;
     }
 
     public boolean isValid() {

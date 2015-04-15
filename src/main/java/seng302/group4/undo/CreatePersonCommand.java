@@ -2,25 +2,23 @@ package seng302.group4.undo;
 
 import seng302.group4.Person;
 import seng302.group4.Project;
-import seng302.group4.Skill;
-
-import java.util.ArrayList;
 
 /**
- * Command to create a project
+ * Command that adds a Person to a Project
  *
  * @author amy, Edited by Bradley 10/4/15
  *
  */
 public class CreatePersonCommand extends Command<Person> {
-
-    private Person person;
-    private Project project;
+    private final Person person;
+    private final Project project;
 
     /**
      *
-     * @param person Person to be added to a project
-     * @param project Project for which person is to be added to
+     * @param person
+     *            Person to be added to project
+     * @param project
+     *            Project that person is to be added to
      */
     public CreatePersonCommand(final Person person, final Project project) {
         this.person = person;
@@ -36,6 +34,8 @@ public class CreatePersonCommand extends Command<Person> {
     @Override
     public void undo() {
         // Goodbye person
+        // But we'll keep a reference to you just in case we have to redo later
+        // on...
         project.getPeople().remove(person);
     }
 
@@ -44,10 +44,7 @@ public class CreatePersonCommand extends Command<Person> {
         return "<Create Person: \"" + person.getShortName() + "\">";
     }
 
-    public Person getPerson() {
-        return person;
-    }
-
+    @Override
     public String getType() {
         return "Create Person";
     }

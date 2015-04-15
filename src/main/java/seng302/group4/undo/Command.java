@@ -21,7 +21,7 @@ public abstract class Command<T> {
 
     /**
      * Redoes the command. The default implementation re-executes the original
-     * command.
+     * command. Note the lack of a return value, unlike #execute().
      */
     public void redo() {
         this.execute();
@@ -32,14 +32,8 @@ public abstract class Command<T> {
      */
     public abstract void undo();
 
+    /**
+     * @return user-friendly description of functionality
+     */
     public abstract String getType();
-
-    public void callbackMethod(Function function) {
-        function.call();
-    }
-
-    @FunctionalInterface
-    public interface Function {
-        void call();
-    }
 }

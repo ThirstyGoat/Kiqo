@@ -1,5 +1,9 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,10 +15,6 @@ import seng302.group4.Skill;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class EditSkillController implements Initializable {
     private Stage stage;
@@ -33,8 +33,8 @@ public class EditSkillController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.setCancelButton();
-        this.setSaveButton();
+        setCancelButton();
+        setSaveButton();
 
         Platform.runLater(() -> setProjectForFormController());
     }
@@ -52,7 +52,7 @@ public class EditSkillController implements Initializable {
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
                 if (!formController.getShortName().equals(skill.getShortName())) {
-                    for (Skill s : project.getSkills()) {
+                    for (final Skill s : project.getSkills()) {
                         if (formController.getShortName().equals(s.getShortName())) {
                             formController.warnShortnameNotUnique();
                             return;
@@ -66,9 +66,9 @@ public class EditSkillController implements Initializable {
 
                 valid = !changes.isEmpty();
 
-                command = new CompoundCommand(changes);
+                    command = new CompoundCommand("Edit Skill", changes);
                 // Close the new project dialog (this window)
-                this.stage.close();
+                stage.close();
             }
         });
     }
@@ -93,7 +93,7 @@ public class EditSkillController implements Initializable {
      * @return the valid
      */
     public boolean isValid() {
-        return this.valid;
+        return valid;
     }
 
     public void setStage(final Stage stage) {
@@ -101,9 +101,9 @@ public class EditSkillController implements Initializable {
     }
 
     private void setCancelButton() {
-        this.cancelButton.setOnAction(event -> {
+        cancelButton.setOnAction(event -> {
             formController.errorPopOver.hide(Duration.millis(0));
-            this.stage.close();
+            stage.close();
         });
     }
 
