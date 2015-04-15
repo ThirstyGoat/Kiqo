@@ -44,7 +44,7 @@ public class MainController implements Initializable {
     final private String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     final private String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-    private final SimpleObjectProperty<Object> focusedObjectProperty = new SimpleObjectProperty<>();
+    private static final SimpleObjectProperty<Object> focusedObjectProperty = new SimpleObjectProperty<>();
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
     private double dividerPosition;
@@ -96,8 +96,16 @@ public class MainController implements Initializable {
         final EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
         final Event event = new ListView.EditEvent<>(listView, type, newValue, i);
         listView.fireEvent(event);
-        listView.getSelectionModel().select(newValue);
+        if (listView.getItems().isEmpty()) {
+            focusedObjectProperty.set(null);
+        } else {
+            if (newValue == listView.getSelectionModel().getSelectedItem()) {
+                listView.getSelectionModel().select(null);
+            }
+            listView.getSelectionModel().select(newValue);
+        }
     }
+
 
     private void deleteSkill(Skill skill) {
         final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedProject);
