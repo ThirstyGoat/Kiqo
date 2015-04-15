@@ -3,6 +3,7 @@ package seng302.group4.undo;
 import java.util.ArrayList;
 
 import javafx.scene.control.ListView;
+import seng302.group4.Item;
 import seng302.group4.viewModel.DetailsPaneController;
 import seng302.group4.viewModel.MainController;
 
@@ -16,7 +17,7 @@ public class CompoundCommand extends Command<Void> {
     private ArrayList<Command<?>> commands = new ArrayList<>();
     private String type = "Compound Command";
     private ListView listView;
-    private Object object;
+    private Item item;
     private DetailsPaneController detailsPaneController;
 
     public CompoundCommand(final ArrayList<Command<?>> changes) {
@@ -31,10 +32,10 @@ public class CompoundCommand extends Command<Void> {
     }
 
     private void refreshView() {
-        if (object != null && listView != null) {
-            MainController.triggerListUpdate(object, listView);
+        if (item != null && listView != null) {
+            MainController.triggerListUpdate(item, listView);
         }
-        detailsPaneController.showDetailsPane(object);
+        detailsPaneController.showDetailsPane(item);
     }
 
     @Override
@@ -57,9 +58,9 @@ public class CompoundCommand extends Command<Void> {
         this.type  = type;
     }
 
-    public <T> void setRefreshParameters(T object, ListView<T> listView, DetailsPaneController detailsPaneController) {
+    public <T extends Item> void setRefreshParameters(T item, ListView<T> listView, DetailsPaneController detailsPaneController) {
         this.listView = listView;
-        this.object = object;
+        this.item = item;
         this.detailsPaneController = detailsPaneController;
     }
 }
