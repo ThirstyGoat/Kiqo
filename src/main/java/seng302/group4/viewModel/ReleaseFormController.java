@@ -86,7 +86,7 @@ public class ReleaseFormController implements Initializable {
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide();
+                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
@@ -104,8 +104,8 @@ public class ReleaseFormController implements Initializable {
             return false;
         }
 
-        if (releaseDatePicker.getValue()== null) {
-            errorPopOver.setContentNode(new Label("Release date must not be empty"));
+        if (releaseDatePicker.getValue() == null) {
+            errorPopOver.setContentNode(new Label("Valid release date required"));
             errorPopOver.show(releaseDatePicker);
             return false;
         }
