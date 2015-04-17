@@ -69,6 +69,12 @@ import com.google.gson.JsonSyntaxException;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
+    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    private final UndoManager undoManager = new UndoManager();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -99,15 +105,6 @@ public class MainController implements Initializable {
     private DetailsPaneController detailsPaneController;
     @FXML
     private MenuBarController menuBarController;
-
-    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-
-    private final UndoManager undoManager = new UndoManager();
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-    private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
-
     private Stage primaryStage;
     private AnchorPane listAnchorPane;
     private double dividerPosition;
@@ -320,16 +317,22 @@ public class MainController implements Initializable {
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedPerson = newValue;
+            } else {
+                MainController.focusedItemProperty.set(null);
             }
         });
         skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedSkill = newValue;
+            } else {
+                MainController.focusedItemProperty.set(null);
             }
         });
         teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedTeam = newValue;
+            } else {
+                MainController.focusedItemProperty.set(null);
             }
         });
     }
