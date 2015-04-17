@@ -77,20 +77,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>de.akquinet.maven</groupId>
-        <artifactId>maven-latex-plugin</artifactId>
-        <version>1.1</version>
-        <inherited>false</inherited>
-        <executions>
-          <execution>
-            <phase>site</phase>
-            <goals>
-              <goal>latex</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.10</version>
@@ -109,6 +95,20 @@
         <configuration>
           <configLocation>src/site/checkstyle/google_checks.xml</configLocation>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.akquinet.maven</groupId>
+        <artifactId>maven-latex-plugin</artifactId>
+        <version>1.1</version>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals>
+              <goal>latex</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <!-- Packaging for Mac OS -->
@@ -132,6 +132,7 @@
   	  	<!-- Packaging for MS Windows -->
         <groupId>com.akathist.maven.plugins.launch4j</groupId>
         <artifactId>launch4j-maven-plugin</artifactId>
+		<version>1.7.5</version>
         <executions>
           <execution>
             <id>l4j-gui</id>
@@ -220,6 +221,11 @@
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
       </plugin>
     </plugins>
   </reporting>
