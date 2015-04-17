@@ -18,28 +18,23 @@ public class CreateProjectCommand extends Command<Project> {
     private Project project = null;
 
     /**
-     * Constructor for a command that creates a project with the specified
-     * properties and an empty description
+     * Constructor for a command that creates a project with the specified properties and an empty description
      *
-     * @param shortName
-     * @param longName
-     * @param saveLocation
+     * @param shortName non-null unique ID for display
+     * @param longName more detailed name
+     * @param saveLocation where project will be serialised to disk
      */
     public CreateProjectCommand(final String shortName, final String longName, final File saveLocation) {
-        this.shortName = shortName;
-        this.longName = longName;
-        description = null;
-        this.saveLocation = saveLocation;
+        this(shortName, longName, saveLocation, null);
     }
 
     /**
-     * Constructor for a command that creates a project with the specified
-     * properties
+     * Constructor for a command that creates a project with the specified properties
      *
-     * @param shortName
-     * @param longName
-     * @param saveLocation
-     * @param description
+     * @param shortName non-null unique ID for display
+     * @param longName more detailed name
+     * @param saveLocation where project will be serialised to disk
+     * @param description Extended description of the project
      */
     public CreateProjectCommand(final String shortName, final String longName, final File saveLocation, final String description) {
         this.shortName = shortName;

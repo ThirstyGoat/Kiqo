@@ -1,14 +1,13 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import seng302.group4.Person;
 import seng302.group4.Team;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import seng302.group4.utils.Utilities;
 
 public class TeamDetailsPaneController implements Initializable {
     @FXML
@@ -29,7 +28,7 @@ public class TeamDetailsPaneController implements Initializable {
         if (team != null) {
             shortNameLabel.setText(team.getShortName());
             descriptionLabel.setText(team.getDescription());
-            teamMembersLabel.setText(commaSeparatedValues(team.getTeamMembers()));
+            teamMembersLabel.setText(Utilities.commaSeparatedValues(team.getTeamMembers()));
             if (team.getProductOwner() != null) {
                 poLabel.setText(team.getProductOwner().getShortName());
             } else {
@@ -41,7 +40,7 @@ public class TeamDetailsPaneController implements Initializable {
                 smLabel.setText("");
             }
             if (team.getDevTeam() != null) {
-                devTeamLabel.setText(commaSeparatedValues(team.getDevTeam()));
+                devTeamLabel.setText(Utilities.commaSeparatedValues(team.getDevTeam()));
             } else {
                 devTeamLabel.setText("");
             }
@@ -50,21 +49,6 @@ public class TeamDetailsPaneController implements Initializable {
             descriptionLabel.setText(null);
             teamMembersLabel.setText(null);
         }
-    }
-
-    private String commaSeparatedValues(ArrayList<Person> list) {
-        String concatenatedString = "";
-
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                concatenatedString += list.get(i).getShortName();
-                if (i != list.size() - 1) {
-                    concatenatedString += ", ";
-                }
-            }
-        }
-
-        return concatenatedString;
     }
 
     @Override

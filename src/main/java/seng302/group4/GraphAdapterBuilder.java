@@ -16,17 +16,26 @@
 
 package seng302.group4;
 
-import com.google.gson.*;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
+import com.google.gson.JsonElement;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.ObjectConstructor;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.*;
 
 /**
  * Writes a graph of objects as a list of named nodes.
@@ -38,12 +47,13 @@ public final class GraphAdapterBuilder {
     private final ConstructorConstructor constructorConstructor;
 
     public GraphAdapterBuilder() {
-        this.instanceCreators = new HashMap<Type, InstanceCreator<?>>();
-        this.constructorConstructor = new ConstructorConstructor(instanceCreators);
+        instanceCreators = new HashMap<Type, InstanceCreator<?>>();
+        constructorConstructor = new ConstructorConstructor(instanceCreators);
     }
     public GraphAdapterBuilder addType(Type type) {
         final ObjectConstructor<?> objectConstructor = constructorConstructor.get(TypeToken.get(type));
-        InstanceCreator<Object> instanceCreator = new InstanceCreator<Object>() {
+        final InstanceCreator<Object> instanceCreator = new InstanceCreator<Object>() {
+            @Override
             public Object createInstance(Type type) {
                 return objectConstructor.construct();
             }
@@ -60,9 +70,9 @@ public final class GraphAdapterBuilder {
     }
 
     public void registerOn(GsonBuilder gsonBuilder) {
-        Factory factory = new Factory(instanceCreators);
+        final Factory factory = new Factory(instanceCreators);
         gsonBuilder.registerTypeAdapterFactory(factory);
-        for (Map.Entry<Type, InstanceCreator<?>> entry : instanceCreators.entrySet()) {
+        for (final Map.Entry<Type, InstanceCreator<?>> entry : instanceCreators.entrySet()) {
             gsonBuilder.registerTypeAdapter(entry.getKey(), factory);
         }
     }
@@ -75,6 +85,7 @@ public final class GraphAdapterBuilder {
             this.instanceCreators = instanceCreators;
         }
 
+        @Override
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (!instanceCreators.containsKey(type.getType())) {
                 return null;
@@ -161,11 +172,11 @@ public final class GraphAdapterBuilder {
                         // read the entire tree into memory
                         in.beginObject();
                         while (in.hasNext()) {
-                            String name = in.nextName();
+                            final String name = in.nextName();
                             if (currentName == null) {
                                 currentName = name;
                             }
-                            JsonElement element = elementAdapter.read(in);
+                            final JsonElement element = elementAdapter.read(in);
                             graph.map.put(name, new Element<T>(null, name, typeAdapter, element));
                         }
                         in.endObject();
@@ -178,6 +189,7 @@ public final class GraphAdapterBuilder {
                     }
                     try {
                         @SuppressWarnings("unchecked") // graph.map guarantees consistency between value and T
+                        final
                                 Element<T> element = (Element<T>) graph.map.get(currentName);
                         // now that we know the typeAdapter for this name, go from JsonElement to 'T'
                         if (element.value == null) {
@@ -203,14 +215,15 @@ public final class GraphAdapterBuilder {
          * <p>Gson should only ever call this method when we're expecting it to;
          * that is only when we've called back into Gson to deserialize a tree.
          */
+        @Override
         @SuppressWarnings("unchecked")
         public Object createInstance(Type type) {
-            Graph graph = graphThreadLocal.get();
+            final Graph graph = graphThreadLocal.get();
             if (graph == null || graph.nextCreate == null) {
                 throw new IllegalStateException("Unexpected call to createInstance() for " + type);
             }
-            InstanceCreator<?> creator = instanceCreators.get(type);
-            Object result = creator.createInstance(type);
+            final InstanceCreator<?> creator = instanceCreators.get(type);
+            final Object result = creator.createInstance(type);
             graph.nextCreate.value = result;
             graph.nextCreate = null;
             return result;
@@ -243,7 +256,7 @@ public final class GraphAdapterBuilder {
         }
 
         /**
-         * Returns a unique name for an element to be inserted into the graph.
+         * @return a unique name for an element to be inserted into the graph
          */
         public String nextName() {
             return "0x" + Integer.toHexString(map.size() + 1);

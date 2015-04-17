@@ -1,6 +1,6 @@
 package seng302.group4;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model class for Person.
@@ -14,11 +14,12 @@ public class Person extends Item {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private ArrayList<Skill> skills;
+    private List<Skill> skills;
     private Team team;
 
     /**
      * Create new Person
+     *
      * @param shortName a unique short name for the person
      * @param longName a long/full name for the person
      * @param description a description for the person
@@ -26,9 +27,10 @@ public class Person extends Item {
      * @param emailAddress a email address for the person
      * @param phoneNumber a phone number for the person
      * @param department a department the person works in
+     * @param skills list of skills the person has
      */
-    public Person(String shortName, String longName, String description, String userID, String emailAddress,
-                  String phoneNumber, String department, ArrayList<Skill> skills) {
+    public Person(String shortName, String longName, String description, String userID, String emailAddress, String phoneNumber,
+            String department, List<Skill> skills) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -158,11 +160,11 @@ public class Person extends Item {
         this.department = department;
     }
 
-    public ArrayList<Skill> getSkills() {
+    public List<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(ArrayList<Skill> skills) {
+    public void setSkills(List<Skill> skills) {
         this.skills = skills;
     }
 

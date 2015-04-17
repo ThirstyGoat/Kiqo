@@ -10,6 +10,8 @@ import seng302.group4.exceptions.FieldNotFoundException;
  * Overwrites a field value
  *
  * @author amy
+ * @param <ModelObjectType> Type of the model object that declares the field
+ * @param <FieldType> Type of the field that will be edited
  *
  */
 public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {

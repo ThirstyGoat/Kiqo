@@ -2,6 +2,7 @@ package seng302.group4.utils;
 
 import java.util.List;
 
+import seng302.group4.Item;
 import seng302.group4.Person;
 
 /**
@@ -22,5 +23,20 @@ public class Utilities {
         }
 
         return list;
+    }
+
+    public static String commaSeparatedValues(List<? extends Item> list) {
+        String concatenatedString = "";
+
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                concatenatedString += list.get(i).getShortName();
+                if (i != list.size() - 1) {
+                    concatenatedString += ", ";
+                }
+            }
+        }
+
+        return concatenatedString;
     }
 }

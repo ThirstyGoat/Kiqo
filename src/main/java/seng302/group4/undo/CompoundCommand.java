@@ -22,7 +22,8 @@ public class CompoundCommand extends Command<Void> {
     private DetailsPaneController detailsPaneController;
 
     /**
-     * @param commands
+     * @param type short, user-friendly explanation of the functionality
+     * @param commands collection of commands to be performed
      */
     public CompoundCommand(String type, final Collection<Command<?>> commands) {
         this.type = type;

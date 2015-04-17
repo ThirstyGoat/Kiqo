@@ -8,9 +8,10 @@ import javafx.util.Callback;
 import org.controlsfx.control.ListSelectionView;
 
 /**
- * Created by bradley on 26/03/15.
- * Extends original ListSelectionView as authored in the ControlsFX library
- * This class allows a custom cell factory which is great.
+ * Created by bradley on 26/03/15. Extends original ListSelectionView as authored in the ControlsFX library This class
+ * allows a custom cell factory which is great.
+ *
+ * @param <T> Type of item to be displayed in the listviews
  */
 public class GoatListSelectionView<T> extends ListSelectionView<T> {
     private ListView<T> sourceListView;
@@ -46,11 +47,10 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     }
 
     /**
-     * Sets a new cell factory to use by both list views. This forces all old
-     * List Cells to be thrown away, and new ListCells created with the new cell
-     * factory.
+     * Sets a new cell factory to use by both list views. This forces all old List Cells to be thrown away, and new
+     * ListCells created with the new cell factory.
      *
-     * @param cellFactory
+     * @param cellFactory Cell Factory for both ListViews
      */
     public final void setCellFactories(Callback<ListView<T>, ListCell<T>> cellFactory) {
         sourceListView.setCellFactory(cellFactory);

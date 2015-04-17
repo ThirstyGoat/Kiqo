@@ -61,8 +61,8 @@ public class DetailsPaneController implements Initializable {
 
     /**
      * Display the details of the specified item.
-     * 
-     * @param item
+     *
+     * @param item item to be displayed
      */
     public void showDetailsPane(Item item) {
         if (item == null) {

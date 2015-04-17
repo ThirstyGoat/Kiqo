@@ -42,7 +42,7 @@ public class EditProjectController implements Initializable {
     /**
      * Populates the fields with project data to enable editing
      *
-     * @param project
+     * @param project source of existing field data
      */
     public void loadProject(final Project project) {
         this.project = project;

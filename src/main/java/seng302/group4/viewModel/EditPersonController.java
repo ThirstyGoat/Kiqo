@@ -43,7 +43,7 @@ public class EditPersonController implements Initializable {
     /**
      * Populates the fields with project data to enable editing
      *
-     * @param person
+     * @param person source of existing field data
      */
     public void loadPerson(final Person person) {
         this.person = person;

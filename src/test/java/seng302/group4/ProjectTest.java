@@ -1,14 +1,11 @@
 package seng302.group4;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import seng302.group4.Project;
-
 import java.io.File;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ProjectTest {
 
@@ -27,18 +24,18 @@ public class ProjectTest {
     /**
      * Given that the two projects have the same short name they will be equal
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Test
     public void testEquals() throws Exception {
-        Project project2 = new Project("p1", "project1", new File(""));
-        assertTrue("Project should be equal", project2.equals(project1));
+        final Project project2 = new Project("p1", "project1", new File(""));
+        Assert.assertTrue("Project should be equal", project2.equals(project1));
 
         project2.setLongName("project2");
-        assertTrue("Project should still be equal", project2.equals(project1));
+        Assert.assertTrue("Project should still be equal", project2.equals(project1));
 
         project2.setShortName("p2");
-        assertFalse("Project should not be equal", project2.equals(project1));
+        Assert.assertFalse("Project should not be equal", project2.equals(project1));
     }
 
     @Test
