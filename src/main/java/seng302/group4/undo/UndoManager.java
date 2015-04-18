@@ -53,7 +53,7 @@ public class UndoManager {
      * redo stack.
      */
     public void undoCommand() {
-        final Command<? extends Object> command = undoStack.pop();
+        final Command<?> command = undoStack.pop();
         command.undo();
         redoStack.push(command);
         canRedoProperty.set(true);

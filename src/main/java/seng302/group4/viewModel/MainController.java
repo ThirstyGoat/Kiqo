@@ -122,23 +122,30 @@ public class MainController implements Initializable {
      * @param <T> Type of the object
      */
     public static <T> void triggerListUpdate(T newValue, ListView<T> listView) {
+        Item prevFocusedItem = MainController.focusedItemProperty.get();
+
         final int i = listView.getItems().indexOf(newValue);
         final EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
         final Event event = new ListView.EditEvent<>(listView, type, newValue, i);
         listView.fireEvent(event);
-        listView.getSelectionModel().select(newValue);
-        if (listView.getItems().isEmpty()) {
-            MainController.focusedItemProperty.set(null);
-        } else {
-            if (newValue == listView.getSelectionModel().getSelectedItem()) {
-                listView.getSelectionModel().select(null);
-            }
+
+        if (prevFocusedItem == newValue) {
             listView.getSelectionModel().select(newValue);
+            if (listView.getItems().isEmpty()) {
+                MainController.focusedItemProperty.set(null);
+            } else {
+                if (newValue == listView.getSelectionModel().getSelectedItem()) {
+                    listView.getSelectionModel().select(null);
+                }
+                listView.getSelectionModel().select(newValue);
+            }
         }
+
+        MainController.focusedItemProperty.set(prevFocusedItem);
     }
 
     /**
-     * @param project
+     * @param project Project to be deleted
      *
      */
     private void deleteProject(Project project) {
@@ -305,8 +312,7 @@ public class MainController implements Initializable {
         deleteContextMenu.setOnAction(event -> deleteItem());
 
         for (final ListView<? extends Item> listView : listViews) {
-            initialiseListView(listView);
-            listView.setContextMenu(contextMenu);
+            initialiseListView(listView, contextMenu);
         }
 
         // do project-specific things
@@ -691,7 +697,7 @@ public class MainController implements Initializable {
     /**
      * Attaches cell factory and selection listener to the list view.
      */
-    private <T extends Item> void initialiseListView(ListView<T> listView) {
+    private <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
         // derived from example at
         // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
         listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
@@ -705,11 +711,10 @@ public class MainController implements Initializable {
                         setText(empty ? "" : item.getShortName());
                     }
                 };
-                // TODO listCell.setContextMenu(contextMenu);
+                listCell.setContextMenu(contextMenu);
                 return listCell;
             }
         });
-        projectListView.setItems(projects);
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

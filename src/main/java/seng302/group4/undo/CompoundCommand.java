@@ -1,6 +1,7 @@
 package seng302.group4.undo;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import javafx.scene.control.ListView;
 import seng302.group4.Item;
@@ -41,7 +42,6 @@ public class CompoundCommand extends Command<Void> {
         if (item != null && listView != null) {
             MainController.triggerListUpdate(item, listView);
         }
-        detailsPaneController.showDetailsPane(item);
     }
 
     @Override
