@@ -54,7 +54,7 @@ public class ReleaseFormController implements Initializable {
         setButtonHandlers();
         setTextFieldListener();
         setShortNameLengthRestrictor();  // need to discuss if we are going with ID, or shortname or both
-
+        setReleaseDateChecker();
         Platform.runLater(shortNameTextField::requestFocus);
     }
     /**
@@ -66,7 +66,7 @@ public class ReleaseFormController implements Initializable {
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
                 errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
-                " characters"));
+                        " characters"));
                 errorPopOver.show(shortNameTextField);
             }
         });
@@ -79,6 +79,22 @@ public class ReleaseFormController implements Initializable {
                 errorPopOver.hide();
             } else {
                 errorPopOver.hide();
+            }
+        });
+    }
+
+    private void setReleaseDateChecker() {
+        String dateRegX = "(\\d|\\d\\d)/(\\d|\\d\\d)/\\d\\d\\d\\d";
+
+        releaseDatePicker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                if (!releaseDatePicker.getEditor().getText().matches(dateRegX)) {
+                    errorPopOver.setContentNode(new Label("Invalid Date!  "));
+                    errorPopOver.show(releaseDatePicker);
+                    releaseDatePicker.getEditor().setText("");
+                } else {
+                    errorPopOver.hide();
+                }
             }
         });
     }
