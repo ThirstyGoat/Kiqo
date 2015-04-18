@@ -1,12 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,50 +14,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
-
-import seng302.group4.GoatDialog;
-import seng302.group4.Item;
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.CreateTeamCommand;
-import seng302.group4.undo.DeletePersonCommand;
-import seng302.group4.undo.DeleteSkillCommand;
-import seng302.group4.undo.DeleteTeamCommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.undo.*;
 import seng302.group4.utils.Utilities;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -151,6 +121,7 @@ public class MainController implements Initializable {
     private void deleteProject(Project project) {
         GoatDialog
                 .showAlertDialog(primaryStage, "Version Limitation", "No can do.", "Deleting a project is not supported in this version.");
+
     }
 
     private void deleteSkill(Skill skill) {
@@ -158,25 +129,26 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedProject);
+            final UICommand command = new UICommand(new DeleteSkillCommand(skill, selectedProject));
 
             String deleteMessage = "There are no people with this skill.";
-            if (command.getPeopleWithSkill().size() > 0) {
+                if (((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-                deleteMessage += Utilities.concatenatePeopleList(command.getPeopleWithSkill(), 5);
+                deleteMessage += Utilities.concatenatePeopleList(((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill(), 5);
             }
             final String[] buttons = { "Delete Skill", "Cancel" };
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
             if (result.equals("Delete Skill")) {
+                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 doCommand(command);
             }
         }
     }
 
     private void deleteTeam(Team team) {
-        final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedProject);
+        final UICommand command = new UICommand(new DeleteTeamCommand(team, selectedProject));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -208,14 +180,15 @@ public class MainController implements Initializable {
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
             if (deletePeople) {
-                command.setDeleteMembers();
+                ((DeleteTeamCommand) command.getCommand()).setDeleteMembers();
             }
+            command.setRefreshParameters(team, teamsListView, detailsPaneController);
             doCommand(command);
         }
     }
 
     private void deletePerson(Person person) {
-        final DeletePersonCommand command = new DeletePersonCommand(selectedPerson, selectedProject);
+        final UICommand command = new UICommand(new DeletePersonCommand(selectedPerson, selectedProject));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -233,6 +206,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
+            command.setRefreshParameters(person, peopleListView, detailsPaneController);
             doCommand(command);
         }
     }
@@ -616,7 +590,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editSkillController.isValid()) {
-                final CompoundCommand command = editSkillController.getCommand();
+                final UICommand command = new UICommand(editSkillController.getCommand());
                 command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 doCommand(command);
             }
@@ -653,7 +627,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
 
             if (editPersonController.isValid()) {
-                final CompoundCommand command = editPersonController.getCommand();
+                final UICommand command = new UICommand(editPersonController.getCommand());
                 command.setRefreshParameters(person, peopleListView, detailsPaneController);
                 doCommand(command);
             }
@@ -687,7 +661,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
-                final CompoundCommand command = editProjectController.getCommand();
+                final UICommand command = new UICommand(editProjectController.getCommand());
                 command.setRefreshParameters(project, projectListView, detailsPaneController);
                 doCommand(command);
             }
@@ -854,7 +828,7 @@ public class MainController implements Initializable {
                 } else {
                     // editing
 
-                    final CompoundCommand command = (CompoundCommand) teamFormController.getCommand();
+                    final UICommand command = new UICommand(teamFormController.getCommand());
                     command.setRefreshParameters(team, teamsListView, detailsPaneController);
                     doCommand(command);
                 }

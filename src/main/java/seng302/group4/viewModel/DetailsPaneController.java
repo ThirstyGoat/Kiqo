@@ -1,8 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -10,11 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import seng302.group4.Item;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Switches between detail panes depending on type of content shown.
@@ -73,9 +69,9 @@ public class DetailsPaneController implements Initializable {
             } else if (item instanceof Person) {
                 showPersonDetailsPane((Person) item);
             } else if (item instanceof Skill) {
-                showSkillDetailPane((Skill) item);
+                showSkillDetailsPane((Skill) item);
             } else if (item instanceof Team) {
-                showTeamDetailPane((Team) item);
+                showTeamDetailsPane((Team) item);
             }
         }
     }
@@ -89,7 +85,7 @@ public class DetailsPaneController implements Initializable {
         deleteButton.setVisible(false);
     }
 
-    private void showSkillDetailPane(Skill skill) {
+    private void showSkillDetailsPane(Skill skill) {
         skillDetailsPaneController.showDetails(skill);
 
         skillDetailsPane.setVisible(true);
@@ -122,7 +118,7 @@ public class DetailsPaneController implements Initializable {
         showOptionButtons();
     }
 
-    private void showTeamDetailPane(Team team) {
+    private void showTeamDetailsPane(Team team) {
         teamDetailsPaneController.showDetails(team);
 
         skillDetailsPane.setVisible(false);

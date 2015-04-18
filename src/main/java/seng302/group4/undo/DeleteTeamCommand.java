@@ -1,11 +1,11 @@
 package seng302.group4.undo;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Team;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,6 +52,7 @@ public class DeleteTeamCommand extends Command<Team> {
         return team;
     }
 
+    
     @Override
     public void undo() {
         // Set team members team field to this team
