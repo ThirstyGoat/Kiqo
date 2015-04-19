@@ -46,7 +46,7 @@ public class Team extends Item {
         return teamMembers;
     }
 
-    public void setTeamMembers(ArrayList<Person> teamMembers) {
+    public void setTeamMembers(List<Person> teamMembers) {
         this.teamMembers = teamMembers;
     }
 
