@@ -1,9 +1,9 @@
 package seng302.group4.undo;
 
-import javafx.beans.property.SimpleBooleanProperty;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Manages the undo/redo feature
@@ -21,13 +21,13 @@ public class UndoManager {
     /**
      * Executes the command and adds it to the undo stack.
      *
-     * @param command
-     *            command to be executed
+     * @param <T> return type of the command
+     * @param command command to be executed
      * @return return value from command.execute()
      */
     public <T> T doCommand(final Command<T> command) {
-        this.undoStack.push(command);
-        this.redoStack.clear();
+        undoStack.push(command);
+        redoStack.clear();
         canUndoProperty.set(true);
         canRedoProperty.set(false);
         shouldUpdateMenuProperty.set(true);
@@ -39,9 +39,9 @@ public class UndoManager {
      * Redoes the most recently undone command and adds it to the undo stack.
      */
     public void redoCommand() {
-        final Command<? extends Object> command = this.redoStack.pop();
+        final Command<? extends Object> command = redoStack.pop();
         command.redo();
-        this.undoStack.push(command);
+        undoStack.push(command);
         canUndoProperty.set(true);
         canRedoProperty.set(redoStack.size() > 0);
         shouldUpdateMenuProperty.set(true);
@@ -53,9 +53,9 @@ public class UndoManager {
      * redo stack.
      */
     public void undoCommand() {
-        final Command<? extends Object> command = this.undoStack.pop();
+        final Command<?> command = undoStack.pop();
         command.undo();
-        this.redoStack.push(command);
+        redoStack.push(command);
         canRedoProperty.set(true);
         canUndoProperty.set(undoStack.size() > 0);
         shouldUpdateMenuProperty.set(true);

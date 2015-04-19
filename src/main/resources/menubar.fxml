@@ -28,11 +28,8 @@
         <MenuItem fx:id="undoMenuItem" mnemonicParsing="false" text="Undo" />
         <MenuItem fx:id="redoMenuItem" mnemonicParsing="false" text="Redo" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem fx:id="editProjectMenuItem" mnemonicParsing="false" text="Project" />
-          <MenuItem fx:id="editTeamMenuItem" mnemonicParsing="false" text="Team" />
-          <MenuItem fx:id="editPersonMenuItem" mnemonicParsing="false" text="Person" />
-        <MenuItem fx:id="editSkillMenuItem" mnemonicParsing="false" text="Skill" />
-            <MenuItem fx:id="editReleaseMenuItem" mnemonicParsing="false" text="Release" />
+        <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">

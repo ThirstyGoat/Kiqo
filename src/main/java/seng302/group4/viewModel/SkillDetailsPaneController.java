@@ -1,14 +1,12 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import seng302.group4.Project;
 import seng302.group4.Skill;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class SkillDetailsPaneController implements Initializable {
     @FXML

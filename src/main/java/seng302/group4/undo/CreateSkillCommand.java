@@ -4,9 +4,13 @@ import seng302.group4.Project;
 import seng302.group4.Skill;
 
 
+/**
+ * Command to add a Skill to a Project
+ *
+ */
 public class CreateSkillCommand extends Command<Skill> {
-    private Skill skill;
-    private Project project;
+    private final Skill skill;
+    private final Project project;
 
     /**
      * @param skill Skill created
@@ -34,10 +38,7 @@ public class CreateSkillCommand extends Command<Skill> {
         return "<Create Skill: \"" + skill.getShortName() + "\">";
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-
+    @Override
     public String getType() {
         return "Create Skill";
     }

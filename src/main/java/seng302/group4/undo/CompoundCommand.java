@@ -1,64 +1,46 @@
 package seng302.group4.undo;
 
-import javafx.scene.control.ListView;
-import seng302.group4.Skill;
-import seng302.group4.viewModel.MainController;
-
-import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * Overwrites a field value
+ * Wraps several Commands into an atomic unit. Similar to the idea of
+ * transactions in database theory.
  *
  * @author bjk60
  *
  */
 public class CompoundCommand extends Command<Void> {
-    private ArrayList<Command<?>> commands = new ArrayList<>();
+    private final Collection<Command<?>> commands;
     private String type = "Compound Command";
-    private ListView listView;
-    private Object object;
 
-    public CompoundCommand(final ArrayList<Command<?>> changes) {
-        this.commands = changes;
+    /**
+     * @param type short, user-friendly explanation of the functionality
+     * @param commands collection of commands to be performed
+     */
+    public CompoundCommand(String type, final Collection<Command<?>> commands) {
+        this.type = type;
+        this.commands = commands;
     }
 
     @Override
     public Void execute() {
-        this.commands.forEach(seng302.group4.undo.Command::execute);
-
-        // Refresh listview
-        if (object != null && listView != null) {
-            MainController.triggerListUpdate(object, listView);
-        }
+        commands.forEach(seng302.group4.undo.Command::execute);
         return null;
     }
 
     @Override
     public String toString() {
-        return this.commands.size() + " changes";
+        return commands.size() + " changes";
     }
 
     @Override
     public void undo() {
-        this.commands.forEach(seng302.group4.undo.Command::undo);
-
-        // Refresh listview
-        if (object != null && listView != null) {
-            MainController.triggerListUpdate(object, listView);
-        }
+        commands.forEach(seng302.group4.undo.Command::undo);
     }
 
     @Override
     public String getType() {
         return type;
     }
-
-    public void setType(String type) {
-        this.type  = type;
-    }
-
-    public void setRefreshParameters(Object object, ListView listView) {
-        this.listView = listView;
-        this.object = object;
-    }
+    
 }

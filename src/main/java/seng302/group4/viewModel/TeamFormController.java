@@ -56,7 +56,7 @@ public class TeamFormController implements Initializable {
     private Stage stage;
     private Project project;
     private Team team;
-    private Command command;
+    private Command<?> command;
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
@@ -172,8 +172,30 @@ public class TeamFormController implements Initializable {
                 changes.add(new EditCommand<>(team, "devTeam", devTeam));
             }
 
+            // We need to find out who left the team and set their team to null
+            // We also need to find out who entered the team, and set their team to this team
+            // Old Team = team.getTeamMembers();
+            // New Team = teamMembers
+            // New Members = New Team - Old Team
+            // Old Members = Old Team - New Team
+
+            final ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
+            newMembers.removeAll(team.getTeamMembers());
+            final ArrayList<Person> oldMembers = new ArrayList<>(team.getTeamMembers());
+            oldMembers.removeAll(teamMembers);
+
+            // Loop through all the new members and add a command to set their team
+            // Set the person's team field to this team
+            changes.addAll(newMembers.stream().map(person -> new EditCommand<>(person, "team", team))
+                    .collect(Collectors.toList()));
+
+            // Loop through all the old members and add a command to remove their team
+            // Set the person's team field to null, since they're no longer in the team
+            changes.addAll(oldMembers.stream().map(person -> new EditCommand<>(person, "team", null))
+                    .collect(Collectors.toList()));
+
             valid = !changes.isEmpty();
-            command = new CompoundCommand(changes);
+            command = new CompoundCommand("Edit Team", changes);
         }
     }
 
@@ -181,7 +203,7 @@ public class TeamFormController implements Initializable {
         return valid;
     }
 
-    public Command getCommand() {
+    public Command<?> getCommand() {
         return command;
     }
 
@@ -281,18 +303,16 @@ public class TeamFormController implements Initializable {
                     }
 
                     // Select appropriate RadioButton
-                    if (person == productOwner) {
+                    if (productOwner == person || (team != null && team.getProductOwner() == person)) {
                         radioPo.setSelected(true);
-                    } else if (person == scrumMaster) {
+                    } else if (scrumMaster == person || (team != null && team.getScrumMaster() == person)) {
                         radioSm.setSelected(true);
-                    } else if (devTeam != null && devTeam.contains(person)) {
+                    } else if ((devTeam != null && devTeam.contains(person)) ||
+                            (team != null && team.getDevTeam() != null && team.getDevTeam().contains(person))) {
                         radioDev.setSelected(true);
                     } else {
                         radioOther.setSelected(true);
                     }
-
-//                        // Set colors
-//                        radioSm.setStyle("-fx-mark-color: blue");
 
                     hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
 
@@ -366,18 +386,27 @@ public class TeamFormController implements Initializable {
     }
 
     private void populatePeopleListView() {
+        // all people observableList = project.getPeople();
         final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
+        sourcePeople.addAll(project.getPeople());
 
-        final ArrayList<Person> allPeople = new ArrayList<>();
-        // Populate allPeople with all people in the project
-        allPeople.addAll(project.getPeople().stream().collect(Collectors.toList()));
-        // Remove people from allPeople who are currently in a team
-        for (final Team team : project.getTeams()) {
-            team.getTeamMembers().forEach(allPeople::remove);
-        }
+        // Remove all people from sourcePeople that are currently in a team
+        project.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
 
-        // So we are left with ArrayList<Person> allPeople which contains only people who aren't in a team
-        sourcePeople.setAll(allPeople);
+        project.getPeople().addListener((ListChangeListener<Person>) c -> {
+            c.next();
+            // We remove people from the sourcePeople that were removed from the project.
+            // Note that this shouldn't actually be possible since undo/redo should be disabled
+            sourcePeople.removeAll(c.getRemoved());
+            targetPeople.removeAll(c.getRemoved());
+            for (final Person person : c.getAddedSubList()) {
+                if (person.getTeam() == team) {
+                    targetPeople.add(person);
+                } else {
+                    sourcePeople.add(person);
+                }
+            }
+        });
 
         peopleListSelectionView.getSourceListView().setItems(sourcePeople);
         peopleListSelectionView.getTargetListView().setItems(targetPeople);

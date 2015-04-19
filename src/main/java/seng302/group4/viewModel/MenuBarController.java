@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
@@ -8,9 +11,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import seng302.group4.undo.UndoManager;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -32,15 +32,9 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem redoMenuItem;
     @FXML
-    private MenuItem editProjectMenuItem;
+    private MenuItem editMenuItem;
     @FXML
-    private MenuItem editTeamMenuItem;
-    @FXML
-    private MenuItem editPersonMenuItem;
-    @FXML
-    private MenuItem editSkillMenuItem;
-    @FXML
-    private MenuItem editReleaseMenuItem;
+    private MenuItem deleteMenuItem;
     @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
@@ -77,11 +71,8 @@ public class MenuBarController implements Initializable {
         saveMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
-        editProjectMenuItem.setDisable(true);
-        editTeamMenuItem.setDisable(true);
-        editPersonMenuItem.setDisable(true);
-        editSkillMenuItem.setDisable(true);
-        editReleaseMenuItem.setDisable(true);
+        editMenuItem.setDisable(true);
+        deleteMenuItem.setDisable(true);
 
         // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
@@ -102,11 +93,8 @@ public class MenuBarController implements Initializable {
         saveMenuItem.setOnAction(event -> mainController.saveProject());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
-        editProjectMenuItem.setOnAction(event -> mainController.editProject());
-        editTeamMenuItem.setOnAction(event -> mainController.editTeam());
-        editPersonMenuItem.setOnAction(event -> mainController.editPerson());
-        editSkillMenuItem.setOnAction(event-> mainController.editSkill());
-        editReleaseMenuItem.setOnAction(event-> mainController.editRelease());
+        editMenuItem.setOnAction(event -> mainController.editItem());
+        deleteMenuItem.setOnAction(event -> mainController.deleteItem());
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
@@ -266,50 +254,13 @@ public class MenuBarController implements Initializable {
         });
     }
 
-    public void updateAfterProjectSelected(boolean selected) {
-        // disable things
-        editTeamMenuItem.setDisable(selected);
-        editPersonMenuItem.setDisable(selected);
-        editSkillMenuItem.setDisable(selected);
-        editReleaseMenuItem.setDisable(selected);
-
-        // enable things
-        editProjectMenuItem.setDisable(!selected);
-        saveMenuItem.setDisable(!selected);
+    public void updateAfterProjectSelected(boolean enabled) {
+        saveMenuItem.setDisable(!enabled);
     }
 
-    public void updateAfterTeamSelected(boolean selected) {
-        // disable things
-        editProjectMenuItem.setDisable(selected);
-        editPersonMenuItem.setDisable(selected);
-        editSkillMenuItem.setDisable(selected);
-        editReleaseMenuItem.setDisable(selected);
-
-        // enable things
-        editTeamMenuItem.setDisable(!selected);
-    }
-
-    public void updateAfterPersonSelected(boolean selected) {
-        // disable things
-        editProjectMenuItem.setDisable(selected);
-        editTeamMenuItem.setDisable(selected);
-        editSkillMenuItem.setDisable(selected);
-        editReleaseMenuItem.setDisable(selected);
-
-        // enable things
-        editPersonMenuItem.setDisable(!selected);
-    }
-
-
-    public void updateAfterSkillSelected(boolean selected) {
-        // disable things
-        editProjectMenuItem.setDisable(selected);
-        editTeamMenuItem.setDisable(selected);
-        editPersonMenuItem.setDisable(selected);
-        editReleaseMenuItem.setDisable(selected);
-
-        // enable things
-        editSkillMenuItem.setDisable(!selected);
+    public void updateAfterAnyObjectSelected(boolean enabled) {
+        editMenuItem.setDisable(!enabled);
+        deleteMenuItem.setDisable(!enabled);
     }
 
     public void updateAfterReleaseSelected(boolean selected) {

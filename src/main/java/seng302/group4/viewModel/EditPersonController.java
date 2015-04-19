@@ -1,10 +1,12 @@
 package seng302.group4.viewModel;
 
-import javafx.application.Platform;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng302.group4.Person;
@@ -12,10 +14,6 @@ import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Created by James on 18/03/15.
@@ -37,19 +35,19 @@ public class EditPersonController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.setCancelButton();
-        this.setSaveButton();
+        setCancelButton();
+        setSaveButton();
     }
 
 
     /**
      * Populates the fields with project data to enable editing
      *
-     * @param person
+     * @param person source of existing field data
      */
     public void loadPerson(final Person person) {
         this.person = person;
-        this.formController.loadPerson(person);
+        formController.loadPerson(person);
     }
 
     /**
@@ -65,7 +63,7 @@ public class EditPersonController implements Initializable {
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
                 if (!formController.getShortName().equals(person.getShortName())) {
-                    for (Person p : project.getPeople()) {
+                    for (final Person p : project.getPeople()) {
                         if (formController.getShortName().equals(p.getShortName())) {
                             formController.warnShortnameNotUnique();
                             return;
@@ -97,9 +95,9 @@ public class EditPersonController implements Initializable {
 
                 valid = !changes.isEmpty();
 
-                command = new CompoundCommand(changes);
+                    command = new CompoundCommand("Edit Person", changes);
                 // Close the new project dialog (this window)
-                this.stage.close();
+                stage.close();
             }
         });
     }
@@ -120,7 +118,7 @@ public class EditPersonController implements Initializable {
      * @return the valid
      */
     public boolean isValid() {
-        return this.valid;
+        return valid;
     }
 
     public void setStage(final Stage stage) {
@@ -128,9 +126,9 @@ public class EditPersonController implements Initializable {
     }
 
     private void setCancelButton() {
-        this.cancelButton.setOnAction(event -> {
+        cancelButton.setOnAction(event -> {
             formController.errorPopOver.hide(Duration.millis(0));
-            this.stage.close();
+            stage.close();
         });
     }
 

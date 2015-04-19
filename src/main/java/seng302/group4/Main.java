@@ -53,8 +53,9 @@ public class Main extends Application {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 for(File file : db.getFiles()) {
-                    mainController.dragAndDrop(file);
+                    mainController.openProject(file);
                 }
+                // if you want single files
 //                File file = db.getFiles().get(0);
 //                mainController.dragAndDrop(file);
                 event.setDropCompleted(success);

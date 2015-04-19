@@ -53,8 +53,9 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>1.7.1</version>
         <configuration>
-          <!-- put your configurations here -->
-        </configuration>
+	        <shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
+	        <shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
+	    </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -72,20 +73,6 @@
                 </transformer>
               </transformers>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>de.akquinet.maven</groupId>
-        <artifactId>maven-latex-plugin</artifactId>
-        <version>1.1</version>
-        <inherited>false</inherited>
-        <executions>
-          <execution>
-            <phase>site</phase>
-            <goals>
-              <goal>latex</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -108,6 +95,98 @@
         <configuration>
           <configLocation>src/site/checkstyle/google_checks.xml</configLocation>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.akquinet.maven</groupId>
+        <artifactId>maven-latex-plugin</artifactId>
+        <version>1.1</version>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals>
+              <goal>latex</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Packaging for Mac OS -->
+		<groupId>sh.tak.appbundler</groupId>
+		<artifactId>appbundle-maven-plugin</artifactId>
+		<version>1.0.2</version>
+		<configuration>
+		  <mainClass>seng302.group4.Main</mainClass>
+		  <buildDirectory>target/deploy/</buildDirectory>
+		</configuration>
+		<executions>
+		  <execution>
+		    <phase>package</phase>
+		    <goals>
+		      <goal>bundle</goal>
+		    </goals>
+		  </execution>
+		</executions>
+	  </plugin>
+      <plugin>
+  	  	<!-- Packaging for MS Windows -->
+        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+        <artifactId>launch4j-maven-plugin</artifactId>
+		<version>1.7.5</version>
+        <executions>
+          <execution>
+            <id>l4j-gui</id>
+            <phase>package</phase>
+            <goals>
+              <goal>launch4j</goal>
+            </goals>
+            <configuration>
+              <headerType>gui</headerType>
+              <outfile>target/deploy/${project.artifactId}.exe</outfile>
+              <jar>target/${project.artifactId}-${project.version}.jar</jar>
+              <errTitle>${project.artifactId}: Error</errTitle>
+              <jre>
+                <minVersion>1.8.0</minVersion>
+              </jre>
+              <versionInfo>
+                <fileVersion>0.0.0.1</fileVersion>
+                <txtFileVersion>0.0.0.1</txtFileVersion>
+                <fileDescription>${project.artifactId} is amazing. That is all.</fileDescription>
+                <copyright>Copyright Thirsty Goat 2015</copyright>
+                <productVersion>${project.version}.0.0</productVersion>
+                <txtProductVersion>${project.version}</txtProductVersion>
+                <productName>${project.artifactId}</productName>
+                <internalName>${project.artifactId}</internalName>
+  				<companyName>Thirsty Goat</companyName>
+  				<!-- Original name of the file without the path. Allows to determine whether a file has been renamed by a user.  -->
+                <originalFilename>${project.artifactId}.exe</originalFilename>
+              </versionInfo>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+      	<!-- Packaging for Debian Linux (only a shell script) -->
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/deploy</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/scripts</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -143,7 +222,11 @@
           </reportSet>
         </reportSets>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+      </plugin>
     </plugins>
   </reporting>
-
 </project>

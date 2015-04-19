@@ -1,24 +1,24 @@
 package seng302.group4;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 27/03/15.
  */
-public class Team implements Serializable {
+public class Team extends Item {
     private String shortName;
     private String description;
     private Person productOwner;
     private Person scrumMaster;
-    private ArrayList<Person> teamMembers;
-    private ArrayList<Person> devTeam = new ArrayList<>();
+    private List<Person> teamMembers;
+    private final List<Person> devTeam = new ArrayList<>();
 
-    public Team(String shortName, String description, ArrayList<Person> teamMembers) {
+    public Team(String shortName, String description, List<Person> teamMembers2) {
         this.shortName = shortName;
         this.description = description;
-        this.teamMembers = teamMembers;
+        teamMembers = teamMembers2;
     }
 
     @Override
@@ -33,6 +33,7 @@ public class Team implements Serializable {
                 '}';
     }
 
+    @Override
     public String getShortName() {
         return shortName;
     }
@@ -41,7 +42,7 @@ public class Team implements Serializable {
         this.shortName = shortName;
     }
 
-    public ArrayList<Person> getTeamMembers() {
+    public List<Person> getTeamMembers() {
         return teamMembers;
     }
 
@@ -73,12 +74,12 @@ public class Team implements Serializable {
         this.scrumMaster = scrumMaster;
     }
 
-    public ArrayList<Person> getDevTeam() {
+    public List<Person> getDevTeam() {
         return devTeam;
     }
 
-    public void setDevTeam(ArrayList<Person> devTeam) {
-        this.devTeam.clear();
-        this.devTeam.addAll(devTeam.stream().collect(Collectors.toList()));
+    public void setDevTeam(List<Person> devTeam2) {
+        devTeam.clear();
+        devTeam.addAll(devTeam2.stream().collect(Collectors.toList()));
     }
 }

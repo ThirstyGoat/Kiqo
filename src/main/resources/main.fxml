@@ -8,62 +8,43 @@
 
 <BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.3418708240534521" minHeight="-Infinity" prefHeight="160.0" prefWidth="220.0" BorderPane.alignment="CENTER">
-       <items>
-         <AnchorPane maxWidth="500.0" minHeight="0.0" minWidth="280.0" prefWidth="280.0">
-            <children>
-              <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                 <children>
-                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="Projects">
-                     <font>
-                       <Font name="System Bold" size="18.0" />
-                     </font>
-                     <VBox.margin>
-                       <Insets left="10.0" right="10.0" top="10.0" />
-                     </VBox.margin>
-                   </Label>
-                   <TabPane fx:id="tabViewPane">
-                      <tabs>
-                        <Tab fx:id="projectTab" closable="false" text="Project">
-                           <content>
-                             <ListView fx:id="projectListView" editable="true" prefHeight="459.0" prefWidth="242.0" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="teamsTab" closable="false" text="Teams">
-                           <content>
-                             <ListView fx:id="teamsListView" prefHeight="0.0" prefWidth="0.0" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="peopleTab" closable="false" text="People">
-                           <content>
-                             <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="skillsTab" closable="false" text="Skills">
-                           <content>
-                             <ListView fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
-                           </content>
-                        </Tab>
-                              <Tab fx:id="releasesTab" closable="false" text="Release">
-                                 <content>
-                                    <ListView fx:id="releasesListView" prefHeight="0.0" prefWidth="0.0" />
-                                 </content>
-                              </Tab>
-                      </tabs>
-                   </TabPane>
-                 </children>
-              </VBox>
-            </children>
-         </AnchorPane>
-         <AnchorPane>
-            <children>
-                <!-- this goes above if problems in the next few minutes 29/3/15 - bradley
-                minWidth="500" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                -->
-              <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            </children>
-         </AnchorPane>
-       </items>
+    <SplitPane minHeight="-Infinity" fx:id="mainSplitPane" dividerPositions="0.3151447661469933" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane minHeight="0.0" minWidth="280.0" maxWidth="500.0" prefWidth="280.0">
+        <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="">
+            <font>
+              <Font name="System Bold" size="18.0" />
+            </font>
+            <VBox.margin>
+              <Insets left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+          </Label>
+          <TabPane fx:id="tabViewPane">
+            <Tab fx:id="projectTab" closable="false" text="Project">
+              <ListView fx:id="projectListView" editable="true" prefHeight="459.0" prefWidth="242.0" />
+            </Tab>
+            <Tab fx:id="teamsTab" closable="false" text="Teams">
+              <ListView fx:id="teamsListView" prefHeight="0.0" prefWidth="0.0" />
+            </Tab>
+            <Tab fx:id="peopleTab" closable="false" text="People">
+              <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" />
+            </Tab>
+            <Tab fx:id="skillsTab" closable="false" text="Skills">
+              <ListView fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
+            </Tab>
+            <Tab fx:id="releasesTab" closable="false" text="Release">
+                <ListView fx:id="releasesListView" prefHeight="0.0" prefWidth="0.0" />
+            </Tab>
+          </TabPane>
+        </VBox>
+      </AnchorPane>
+      <AnchorPane>
+          <!-- this goes above if problems in the next few minutes 29/3/15 - bradley
+          minWidth="500" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+          -->
+        <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0"
+                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+      </AnchorPane>
     </SplitPane>
   </center>
   <top>
