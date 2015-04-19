@@ -216,19 +216,25 @@ public class MainController implements Initializable {
         }
     }
 
-    public void deleteRelease() {
-        if (selectedRelease != null) {
-            DeleteReleaseCommand command = new DeleteReleaseCommand(selectedRelease, selectedProject);
+    public void deleteRelease(Release release) {
+        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease, selectedProject));
 
-            String[] buttons = {"Delete Release", "Cancel"};
-            String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Release",
-                    "Are you sure you?",
-                    "Are you sure you want to to delete the release " + selectedRelease.getShortName() + "?", buttons);
+        final VBox node = new VBox();
+        node.setSpacing(10);
 
-            if (result.equals("Delete Release")) {
-                undoManager.doCommand(command);
-            }
+        String deleteMessage = "Are you sure you want to remove the release: "
+                + release.getShortName() + ", " + release.getDate() + "?";
+        node.getChildren().add(new Label(deleteMessage));
+
+        final String[] buttons = {"Delete Release", "Cancel"};
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Release",
+                "Are you sure? ", node, buttons);
+
+        if (result.equals("Delete Release")) {
+            command.setRefreshParameters(release, releasesListView, detailsPaneController);
+            doCommand(command);
         }
+
     }
 
     public void deleteItem() {
@@ -243,6 +249,8 @@ public class MainController implements Initializable {
             deleteSkill((Skill) focusedObject);
         } else if (focusedObject instanceof Team) {
             deleteTeam((Team) focusedObject);
+        } else if (focusedObject instanceof Release) {
+            deleteRelease((Release) focusedObject);
         }
     }
 
@@ -258,6 +266,8 @@ public class MainController implements Initializable {
             editSkillDialog((Skill) focusedObject);
         } else if (focusedObject instanceof Team) {
             teamDialog((Team) focusedObject);
+        } else if (focusedObject instanceof Release) {
+            releaseDialog((Release) focusedObject);
         }
     }
 
@@ -301,6 +311,7 @@ public class MainController implements Initializable {
         listViews.add(peopleListView);
         listViews.add(skillsListView);
         listViews.add(teamsListView);
+        listViews.add(releasesListView);
 
         // All these ListViews share a single context menu
         final ContextMenu contextMenu = new ContextMenu();
@@ -337,6 +348,13 @@ public class MainController implements Initializable {
         teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedTeam = newValue;
+            } else {
+                MainController.focusedItemProperty.set(null);
+            }
+        });
+        releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                selectedRelease = newValue;
             } else {
                 MainController.focusedItemProperty.set(null);
             }
@@ -390,14 +408,15 @@ public class MainController implements Initializable {
                 }
                 menuBarController.updateAfterTeamListSelected(true);
             } else if (newValue == releasesTab) {
+                releasesListView.getSelectionModel().select(null);
                 if (selectedRelease == null) {
-                    releasesListView.getSelectionModel().select(null);
                     releasesListView.getSelectionModel().selectFirst();
                 } else {
-                    releasesListView.getSelectionModel().select(null);
                     releasesListView.getSelectionModel().select(selectedRelease);
                 }
-                detailsPaneController.showDetailsPane(releasesListView.getSelectionModel().getSelectedItem());
+                if (releasesListView.getItems().isEmpty()) {
+                    MainController.focusedItemProperty.set(null);
+                }
                 menuBarController.updateAfterReleasesListSelected(true);
             }
         });
@@ -552,7 +571,7 @@ public class MainController implements Initializable {
     private void addClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
             if (!changesSaved.get()) {
-                final String[] options = { "Save changes", "Discard changes", "Cancel" };
+                final String[] options = {"Save changes", "Discard changes", "Cancel"};
                 final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                         "Would you like to save the changes you have made to the project?", options);
                 if (response.equals("Save changes")) {
@@ -764,6 +783,7 @@ public class MainController implements Initializable {
                 peopleListView.setItems(newValue.getPeople());
                 skillsListView.setItems(newValue.getSkills());
                 teamsListView.setItems(newValue.getTeams());
+                releasesListView.setItems(newValue.getReleases());
 
                 // update label to display name of currently selected project
                 listLabel.setText(newValue.getShortName());
@@ -910,17 +930,14 @@ public class MainController implements Initializable {
             if (releaseFormController.isValid()) {
                 if (release == null) {
                     CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
-                    undoManager.doCommand(command);
+                    doCommand(command);
                 } else {
-                    CompoundCommand command = (CompoundCommand) releaseFormController.getCommand();
-                    command.setType("Edit Release");
-                    command.setRefreshParameters(release, releasesListView);
-                    undoManager.doCommand(command);
+                    final UICommand command = new UICommand(releaseFormController.getCommand());
+                    command.setRefreshParameters(release, releasesListView, detailsPaneController);
+                    doCommand(command);
                 }
             }
-
         });
-
     }
 
     private void newProjectDialog() {

@@ -89,7 +89,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
-        openMenuItem.setOnAction(event -> mainController.openProject());
+        openMenuItem.setOnAction(event -> mainController.openProject(null));
         saveMenuItem.setOnAction(event -> mainController.saveProject());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
@@ -263,16 +263,16 @@ public class MenuBarController implements Initializable {
         deleteMenuItem.setDisable(!enabled);
     }
 
-    public void updateAfterReleaseSelected(boolean selected) {
-        // disable things
-        editProjectMenuItem.setDisable(selected);
-        editTeamMenuItem.setDisable(selected);
-        editPersonMenuItem.setDisable(selected);
-        editSkillMenuItem.setDisable(selected);
-
-        // enable things
-        editReleaseMenuItem.setDisable(!selected);
-    }
+//    public void updateAfterReleaseSelected(boolean selected) {
+//        // disable things
+//        editProjectMenuItem.setDisable(selected);
+//        editTeamMenuItem.setDisable(selected);
+//        editPersonMenuItem.setDisable(selected);
+//        editSkillMenuItem.setDisable(selected);
+//
+//        // enable things
+//        editReleaseMenuItem.setDisable(!selected);
+//    }
 
     public void updateAfterProjectListSelected(boolean selected) {
         listShowProjectMenuItem.selectedProperty().set(selected);

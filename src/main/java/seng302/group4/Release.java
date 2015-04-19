@@ -6,7 +6,7 @@ import java.time.LocalDate;
 /**
  * Created by leroy on 10/04/15.
  */
-public class Release {
+public class Release extends Item{
     private Project project;
     private String shortName;
     private String description;

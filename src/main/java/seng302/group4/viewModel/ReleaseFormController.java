@@ -175,7 +175,7 @@ public class ReleaseFormController implements Initializable {
             }
 
             valid = !changes.isEmpty();
-            command = new CompoundCommand(changes);
+            command = new CompoundCommand("Edit Release", changes);
         }
     }
 
