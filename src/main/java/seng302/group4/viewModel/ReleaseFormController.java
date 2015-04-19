@@ -89,12 +89,14 @@ public class ReleaseFormController implements Initializable {
         releaseDatePicker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 if (!releaseDatePicker.getEditor().getText().matches(dateRegX)) {
-                    errorPopOver.setContentNode(new Label("Invalid Date!  "));
+                    errorPopOver.setContentNode(new Label("Valid release date required"));
                     errorPopOver.show(releaseDatePicker);
                     releaseDatePicker.getEditor().setText("");
                 } else {
                     errorPopOver.hide();
                 }
+            } else {
+                errorPopOver.hide();
             }
         });
     }
