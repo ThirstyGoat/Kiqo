@@ -21,5 +21,27 @@ public class Allocation {
         }
     }
 
+    /**
+     *
+     * @return startDate the start date for the allocation
+     */
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
+    /**
+     *
+     * @return endDate the end date for the allocation
+     */
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    /**
+     *
+     * @return team the team for the allocation
+     */
+    public Team getTeam() {
+        return team;
+    }
 }
