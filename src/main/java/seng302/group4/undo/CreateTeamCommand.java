@@ -1,9 +1,11 @@
 package seng302.group4.undo;
 
-import seng302.group4.Person;
-import seng302.group4.Team;
-
 import java.util.ArrayList;
+import java.util.List;
+
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Team;
 
 /**
  * Command to create a project
@@ -14,27 +16,35 @@ import java.util.ArrayList;
 public class CreateTeamCommand extends Command<Team> {
     private final String shortName;
     private final String description;
-    private final ArrayList<Person> teamMembers = new ArrayList<>();
+    private final List<Person> teamMembers = new ArrayList<>();
     private final Person productOwner;
     private final Person scrumMaster;
-    private ArrayList<Person> devTeam;
+    private final List<Person> devTeam;
 
-    private Team team = null;
+    private Team team;
+    private final Project project;
 
     /**
      * Constructor for CreateTeamCommand
+     *
      * @param shortName Short name of the team
      * @param description Description of the team
-     * @param teamMembers ArrayList of people to be in the team
+     * @param teamMembers List of people to be in the team
+     * @param productOwner Person in the Product Owner role for the team
+     * @param scrumMaster Person in the Scrum Master role for the team
+     * @param devTeam List of people in development roles for the team
+     * @param project Project to which this team belongs
      */
-    public CreateTeamCommand(final String shortName, final String description, final ArrayList<Person> teamMembers,
-                             final Person productOwner, final Person scrumMaster, final ArrayList<Person> devTeam) {
+    public CreateTeamCommand(final String shortName, final String description, final List<Person> teamMembers, final Person productOwner,
+            final Person scrumMaster, final List<Person> devTeam,
+                             final Project project) {
         this.shortName = shortName;
         this.description = description;
         this.teamMembers.addAll(teamMembers);
         this.productOwner = productOwner;
         this.scrumMaster = scrumMaster;
         this.devTeam = devTeam;
+        this.project = project;
     }
 
     @Override
@@ -45,12 +55,26 @@ public class CreateTeamCommand extends Command<Team> {
             team.setScrumMaster(scrumMaster);
             team.setDevTeam(devTeam);
         }
+
+        // Assign this team to all the people in the team
+        for (final Person person : team.getTeamMembers()) {
+            person.setTeam(team);
+        }
+
+        // Add team to project
+        project.getTeams().add(team);
         return team;
     }
 
     @Override
     public void undo() {
+        // Goodbye team
+        project.getTeams().remove(team);
 
+        // Remove this team from all the people within it
+        for (final Person person : team.getTeamMembers()) {
+            person.setTeam(null);
+        }
     }
 
     @Override
@@ -58,10 +82,7 @@ public class CreateTeamCommand extends Command<Team> {
         return "<Create Team: \"" + shortName + "\">";
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
+    @Override
     public String getType() {
         return "Create Team";
     }

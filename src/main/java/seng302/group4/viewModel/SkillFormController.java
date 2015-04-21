@@ -1,23 +1,20 @@
 package seng302.group4.viewModel;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import org.controlsfx.control.ListSelectionView;
-import org.controlsfx.control.PopOver;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import org.controlsfx.control.PopOver;
+
+import seng302.group4.Project;
+import seng302.group4.Skill;
 
 /**
  * Created by james on 20/03/15.
@@ -65,7 +62,7 @@ public class SkillFormController implements Initializable {
      */
     public void validate() {
         // Hide existing error message if there is one
-        this.errorPopOver.hide();
+        errorPopOver.hide();
         // Perform validity checks and create project
         if (checkShortName()) {
             // Set project properties

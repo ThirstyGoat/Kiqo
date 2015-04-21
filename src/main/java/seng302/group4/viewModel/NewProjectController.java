@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import seng302.group4.Project;
 import seng302.group4.undo.CreateProjectCommand;
 
 /**
@@ -16,7 +15,6 @@ import seng302.group4.undo.CreateProjectCommand;
  */
 public class NewProjectController implements Initializable {
     private Stage stage;
-    private Project project;
     private boolean valid = false;
 
     // FXML Injections
@@ -31,8 +29,8 @@ public class NewProjectController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.setCancelButton();
-        this.setNewButton();
+        setCancelButton();
+        setNewButton();
         formController.setShortNameSuggester();
     }
 
@@ -41,14 +39,14 @@ public class NewProjectController implements Initializable {
      * checks and instantiates the new project if applicable
      */
     private void setNewButton() {
-        this.newProjectButton.setOnAction(event -> {
-            this.formController.validate();
-            if (this.formController.isValid()) {
-                this.command = new CreateProjectCommand(this.formController.shortName, this.formController.longName,
-                        this.formController.projectLocation, this.formController.description);
-                this.valid = true;
+        newProjectButton.setOnAction(event -> {
+            formController.validate();
+            if (formController.isValid()) {
+                command = new CreateProjectCommand(formController.shortName, formController.longName,
+                        formController.projectLocation, formController.description);
+                valid = true;
                 // Close the new project dialog (this window)
-                this.stage.close();
+                stage.close();
             }
         });
     }
@@ -62,9 +60,9 @@ public class NewProjectController implements Initializable {
      * Sets the cancel button functionality
      */
     private void setCancelButton() {
-        this.cancelButton.setOnAction(event -> {
+        cancelButton.setOnAction(event -> {
             formController.errorPopOver.hide(Duration.millis(0));
-            this.stage.close();
+            stage.close();
         });
     }
 
@@ -72,20 +70,20 @@ public class NewProjectController implements Initializable {
      * @return the formController
      */
     public ProjectFormController getFormController() {
-        return this.formController;
+        return formController;
     }
 
     /**
      * @return the command
      */
     public CreateProjectCommand getCommand() {
-        return this.command;
+        return command;
     }
 
     /**
      * @return validity of all fields
      */
     public boolean isValid() {
-        return this.valid;
+        return valid;
     }
 }

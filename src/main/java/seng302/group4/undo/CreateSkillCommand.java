@@ -1,45 +1,44 @@
 package seng302.group4.undo;
 
+import seng302.group4.Project;
 import seng302.group4.Skill;
 
 
+/**
+ * Command to add a Skill to a Project
+ *
+ */
 public class CreateSkillCommand extends Command<Skill> {
-    private final String shortName;
-    private final String description;
-
-    private Skill skill = null;
+    private final Skill skill;
+    private final Project project;
 
     /**
-     * @param shortName
-     * @param description
+     * @param skill Skill created
+     * @param project Project that the skill is to be associated with
      */
-    public CreateSkillCommand(final String shortName, final String description) {
-        this.shortName = shortName;
-        this.description = description;
+    public CreateSkillCommand(final Skill skill, final Project project) {
+        this.skill = skill;
+        this.project = project;
     }
 
     @Override
     public Skill execute() {
-        if (skill == null) {
-            skill = new Skill(shortName, description);
-        }
+        project.getSkills().add(skill);
         return skill;
     }
 
     @Override
     public void undo() {
-
+        // Goodbye skill
+        project.getSkills().remove(skill);
     }
 
     @Override
     public String toString() {
-        return "<Create Skill: \"" + shortName + "\">";
+        return "<Create Skill: \"" + skill.getShortName() + "\">";
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-
+    @Override
     public String getType() {
         return "Create Skill";
     }

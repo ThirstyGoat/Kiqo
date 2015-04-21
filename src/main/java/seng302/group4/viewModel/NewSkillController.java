@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
  */
 public class NewSkillController implements Initializable {
     private Stage stage;
-    private Skill skill;
     private boolean valid = false;
     private Project project;
 
@@ -65,21 +64,13 @@ public class NewSkillController implements Initializable {
                         return;
                     }
                 }
-
-                command = new CreateSkillCommand(formController.getShortName(), formController.getDescription());
+                Skill skill = new Skill(formController.getShortName(), formController.getDescription());
+                command = new CreateSkillCommand(skill, project);
 
                 valid = true;
                 stage.close();
             }
         });
-    }
-
-    /**
-     * Returns the Person object created by the dialog box
-     * @return the Person created by the dialog box
-     */
-    public Skill getSkill() {
-        return skill;
     }
 
     public Project getProject() {

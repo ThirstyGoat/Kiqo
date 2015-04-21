@@ -26,49 +26,46 @@ public class PersistenceManagerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     /**
-     * Tests that a project can be saved then loaded. All in one test so that it
-     * works with the temp folder
+     * Tests that a project can be saved then loaded. All in one test so that it works with the temp folder
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Test
     public void testLoad_happyCase() throws Exception {
-        this.project = new Project("p", "Project", this.testFolder.newFile("test.json"));
-        PersistenceManager.saveProject(this.project.getSaveLocation(), this.project);
-        Assert.assertTrue(new File(this.project.getSaveLocation() + "").exists());
+        project = new Project("p", "Project", testFolder.newFile("test.json"));
+        PersistenceManager.saveProject(project.getSaveLocation(), project);
+        Assert.assertTrue(new File(project.getSaveLocation() + "").exists());
 
-        final Project loadedProject = PersistenceManager.loadProject(new File(this.testFolder.getRoot() + "/test.json"));
-        Assert.assertTrue(loadedProject.equals(this.project));
+        final Project loadedProject = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/test.json"));
+        Assert.assertTrue(loadedProject.equals(project));
     }
 
     /**
-     * Tests that attempting to load a non-existent project file throws a
-     * {@link FileNotFoundException}.
+     * Tests that attempting to load a non-existent project file throws a {@link FileNotFoundException}.
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Test
     public void testLoad_fileNotFound() throws Exception {
-        this.thrown.expect(FileNotFoundException.class);
+        thrown.expect(FileNotFoundException.class);
 
         final Project p = PersistenceManager.loadProject(new File("a/non/existent/file/path"));
     }
 
     /**
-     * Tests that attempting to load a badly-formed project file throws a
-     * {@link JsonSyntaxException}.
+     * Tests that attempting to load a badly-formed project file throws a {@link JsonSyntaxException}.
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
 
     @Test
     public void testLoad_invalidProjectFormat() throws Exception {
-        this.thrown.expect(JsonSyntaxException.class);
-        final File f = this.testFolder.newFile("test.json");
+        thrown.expect(JsonSyntaxException.class);
+        final File f = testFolder.newFile("test.json");
 
-        final FileWriter fw = new FileWriter(f);
-        fw.write("{"); // lone opening brace == bad json
-        fw.close();
+        try (final FileWriter fw = new FileWriter(f)) {
+            fw.write("{"); // lone opening brace == bad json
+        }
 
         final Project p = PersistenceManager.loadProject(f);
         System.out.println(p);

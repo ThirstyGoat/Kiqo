@@ -25,10 +25,8 @@
         <MenuItem mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
         <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Project" fx:id="editProjectMenuItem" />
-          <MenuItem mnemonicParsing="false" text="Team" fx:id="editTeamMenuItem" />
-          <MenuItem mnemonicParsing="false" text="Person" fx:id="editPersonMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Skill" fx:id="editSkillMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
+        <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">

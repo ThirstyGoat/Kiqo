@@ -1,7 +1,13 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,16 +16,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.control.PopOver;
+
 import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.Skill;
 import seng302.group4.customNodes.GoatListSelectionView;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * Created by james on 20/03/15.
@@ -27,6 +30,7 @@ import java.util.ResourceBundle;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    public PopOver errorPopOver = new PopOver();
     ArrayList<Skill> skills = new ArrayList<Skill>();
     private String shortName;
     private String longName;
@@ -35,10 +39,9 @@ public class PersonFormController implements Initializable {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
+    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
     private Stage stage;
-    public PopOver errorPopOver = new PopOver();
     private boolean shortNameModified = false;
 
 
@@ -80,13 +83,12 @@ public class PersonFormController implements Initializable {
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
-        skillsSelectionView.setCellFactory(view -> {
-            ListCell<Skill> cell = new ListCell<Skill>() {
+        skillsSelectionView.setCellFactories(view -> {
+            final ListCell<Skill> cell = new ListCell<Skill>() {
                 @Override
                 public void updateItem(Skill item, boolean empty) {
                     super.updateItem(item, empty);
-
-                    setText(item.getShortName());
+                    setText(item != null ? item.getShortName() : null);
                 }
             };
             return cell;
@@ -94,15 +96,21 @@ public class PersonFormController implements Initializable {
     }
 
     public void setUpSkillsListSelectionView() {
-        ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
-        // Removes all skills that the current person has, from the list of all the possible skills
-        // So you should never have the same skill on either side
+        final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
 
-        for (Skill skill : project.getSkills()) {
-            if (!targetSkills.contains(skill)) {
-                sourceSkills.add(skill);
-            }
-        }
+        sourceSkills.addAll(project.getSkills());
+
+        // Remove all skills from sourceSkills that are currently in targetSkills
+        sourceSkills.removeAll(targetSkills);
+
+        project.getSkills().addListener((ListChangeListener<Skill>) c -> {
+            c.next();
+            // We remove skills from the sourceSkills that were removed from the project.
+            // Note that this shouldn't actually be possible since undo/redo should be disabled
+            sourceSkills.removeAll(c.getRemoved());
+            targetSkills.removeAll(c.getRemoved());
+            sourceSkills.addAll(c.getAddedSubList());
+        });
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
         skillsSelectionView.getTargetListView().setItems(targetSkills);
@@ -132,7 +140,7 @@ public class PersonFormController implements Initializable {
      */
     public void validate() {
         // Hide existing error message if there is one
-        this.errorPopOver.hide();
+        errorPopOver.hide();
         // Perform validity checks and create project
         if (checkName() && checkShortName()) {
             // Set project properties
@@ -163,7 +171,7 @@ public class PersonFormController implements Initializable {
         }
         // check for uniqueness inside the project
 
-        // >>>>>>>>>>>>>>>> 
+        // >>>>>>>>>>>>>>>>
 
         return true;
     }
@@ -206,7 +214,7 @@ public class PersonFormController implements Initializable {
     public void setShortNameSuggester() {
         // Listen for changes in the long name, and populate the short name character by character up to specified characters
         longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
+            final String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
             if (!shortNameModified) {
                 shortNameTextField.setText(suggestedShortName);
             }

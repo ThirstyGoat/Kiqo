@@ -7,10 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +34,8 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private Button editButton;
     @FXML
+    private Button deleteButton;
+    @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
@@ -51,34 +50,42 @@ public class DetailsPaneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         clear();
 
+        editButton.setOnAction(event -> mainController.editItem());
+        deleteButton.setOnAction(event -> mainController.deleteItem());
     }
 
 
-    public void showDetailsPane(Object objectForDisplay) {
-        if (objectForDisplay == null) {
+    /**
+     * Display the details of the specified item.
+     *
+     * @param item item to be displayed
+     */
+    public void showDetailsPane(Item item) {
+        if (item == null) {
             clear();
         } else {
-            if (objectForDisplay instanceof Project) {
-                showProjectDetailsPane((Project)objectForDisplay);
-            } else if (objectForDisplay instanceof Person) {
-                showPersonDetailsPane((Person)objectForDisplay);
-            } else if (objectForDisplay instanceof Skill) {
-                showSkillDetailPane((Skill)objectForDisplay);
-            } else if (objectForDisplay instanceof Team) {
-                showTeamDetailPane((Team)objectForDisplay);
+            if (item instanceof Project) {
+                showProjectDetailsPane((Project) item);
+            } else if (item instanceof Person) {
+                showPersonDetailsPane((Person) item);
+            } else if (item instanceof Skill) {
+                showSkillDetailsPane((Skill) item);
+            } else if (item instanceof Team) {
+                showTeamDetailsPane((Team) item);
             }
         }
     }
 
 
     private void clear() {
-        for (Node node : stackPane.getChildren()) {
+        for (final Node node : stackPane.getChildren()) {
             node.setVisible(false);
         }
         editButton.setVisible(false);
+        deleteButton.setVisible(false);
     }
 
-    private void showSkillDetailPane(Skill skill) {
+    private void showSkillDetailsPane(Skill skill) {
         skillDetailsPaneController.showDetails(skill);
 
         skillDetailsPane.setVisible(true);
@@ -86,8 +93,7 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
-        editButton.setOnAction(event -> mainController.editSkill());
+        showOptionButtons();
     }
 
     private void showProjectDetailsPane(Project project) {
@@ -98,8 +104,7 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
-        editButton.setOnAction(event -> mainController.editProject());
+        showOptionButtons();
     }
 
     private void showPersonDetailsPane(Person person) {
@@ -110,11 +115,10 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(true);
         teamDetailsPane.setVisible(false);
 
-        showEditButton();
-        editButton.setOnAction(event -> mainController.editPerson());
+        showOptionButtons();
     }
 
-    private void showTeamDetailPane(Team team) {
+    private void showTeamDetailsPane(Team team) {
         teamDetailsPaneController.showDetails(team);
 
         skillDetailsPane.setVisible(false);
@@ -122,12 +126,12 @@ public class DetailsPaneController implements Initializable {
         personDetailsPane.setVisible(false);
         teamDetailsPane.setVisible(true);
 
-        showEditButton();
-        editButton.setOnAction(event -> mainController.editTeam());
+        showOptionButtons();
     }
 
-    private void showEditButton() {
+    private void showOptionButtons() {
         editButton.setVisible(true);
+        deleteButton.setVisible(true);
     }
 
     public void setMainController(MainController mainController) {

@@ -6,14 +6,15 @@
 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
-<BorderPane fx:id="detailsPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.DetailsPaneController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.DetailsPaneController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
   <bottom>
-      <HBox alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0">
+      <HBox alignment="CENTER_RIGHT" spacing="10" prefHeight="-1.0" prefWidth="-1.0">
           <children>
-              <Button fx:id="editButton" defaultButton="true" mnemonicParsing="false" text="Edit" />
+              <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
+              <Button fx:id="editButton" mnemonicParsing="false" text="Edit" />
           </children>
           <padding>
               <Insets top="20.0" />
