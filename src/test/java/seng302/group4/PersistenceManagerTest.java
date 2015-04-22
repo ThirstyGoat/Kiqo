@@ -33,7 +33,7 @@
 //    @Test
 //    public void testLoad_happyCase() throws Exception {
 //        organisation = new Organisation("p", "Project", testFolder.newFile("test.json"));
-//        PersistenceManager.saveProject(organisation.getSaveLocation(), organisation);
+//        PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
 //        Assert.assertTrue(new File(organisation.getSaveLocation() + "").exists());
 //
 //        final Organisation loadedOrganisation = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/test.json"));

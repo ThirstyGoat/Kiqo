@@ -6,8 +6,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -291,7 +289,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedOrganisation = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
+        selectedOrganisation = new Organisation();
         selectedOrganisation.setObservableLists();
         // enable menu items
         menuBarController.enableNewTeam();
@@ -317,6 +315,8 @@ public class MainController implements Initializable {
     }
 
     private void initializeListViews() {
+        setListViewData();
+
         // Get a list of them
         final ArrayList<ListView<? extends Item>> listViews = new ArrayList<>();
         listViews.add(projectListView);
@@ -333,12 +333,6 @@ public class MainController implements Initializable {
         contextMenu.getItems().add(deleteContextMenu);
         editContextMenu.setOnAction(event -> editItem());
         deleteContextMenu.setOnAction(event -> deleteItem());
-
-        projectListView.setItems(selectedOrganisation.getProjects());
-        peopleListView.setItems(selectedOrganisation.getPeople());
-        teamsListView.setItems(selectedOrganisation.getTeams());
-        skillsListView.setItems(selectedOrganisation.getSkills());
-        releasesListView.setItems(selectedOrganisation.getReleases());
 
         for (final ListView<? extends Item> listView : listViews) {
             initialiseListView(listView, contextMenu);
@@ -384,6 +378,17 @@ public class MainController implements Initializable {
                 MainController.focusedItemProperty.set(null);
             }
         });
+    }
+
+    private void setListViewData() {
+        projectListView.setItems(selectedOrganisation.getProjects());
+        peopleListView.setItems(selectedOrganisation.getPeople());
+        teamsListView.setItems(selectedOrganisation.getTeams());
+        skillsListView.setItems(selectedOrganisation.getSkills());
+        releasesListView.setItems(selectedOrganisation.getReleases());
+
+        switchToProjectList();
+        projectListView.getSelectionModel().select(0);
     }
 
     private void initialiseTabs() {
@@ -511,24 +516,36 @@ public class MainController implements Initializable {
         }
         if (organisation != null) {
             organisation.setSaveLocation(filePath);
-            addProjects(organisation.getProjects());
+            selectedOrganisation = organisation;
+            setListViewData();
             System.out.println("File has been loaded successfully");
         }
-        tabViewPane.getSelectionModel().select(projectTab);
     }
 
     /**
      * Saves the project to disk and marks project as saved.
      */
-    public void saveProject() {
+    public void saveOrganisation() {
         final Organisation organisation = selectedOrganisation;
-        try {
-            PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return;
+        // ask for save location if not yet set
+        if (organisation.getSaveLocation() == null) {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            File file = fileChooser.showSaveDialog(primaryStage);
+            if (file != null) {
+                organisation.setSaveLocation(file);
+            }
         }
-        changesSaved.set(true);
+        // if successfully set
+        if (organisation.getSaveLocation() != null) {
+            try {
+                PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            changesSaved.set(true);
+        }
     }
 
     public void setListVisible(boolean visible) {
@@ -592,7 +609,7 @@ public class MainController implements Initializable {
      */
     private void addClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
-            if(!promptForUnsavedChanges()) {
+            if (!promptForUnsavedChanges()) {
                 event.consume();
             }
         });
@@ -608,7 +625,7 @@ public class MainController implements Initializable {
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
             if (response.equals("Save changes")) {
-                saveProject();
+                saveOrganisation();
             } else if (response.equals("Cancel")) {
                 // do nothing
                 return false;
@@ -636,7 +653,7 @@ public class MainController implements Initializable {
 //            menuBarController.enableNewRelease();
 
             switchToProjectList();
-            saveProject();
+            saveOrganisation();
         }
     }
 

@@ -30,13 +30,13 @@ public class Organisation {
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
 
-
-    /**
-     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
-     */
-    public Organisation(final File saveLocation) {
+    public Organisation() {
         skills.add(poSkill);
         skills.add(smSkill);
+    }
+
+    public Organisation(final File saveLocation) {
+        this();
         this.saveLocation = saveLocation;
     }
 

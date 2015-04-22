@@ -89,7 +89,7 @@ public class MenuBarController implements Initializable {
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
-        saveMenuItem.setOnAction(event -> mainController.saveProject());
+        saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
         editMenuItem.setOnAction(event -> mainController.editItem());
