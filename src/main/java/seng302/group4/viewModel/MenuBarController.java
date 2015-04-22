@@ -68,7 +68,6 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setDisable(true);
         newSkillMenuItem.setDisable(true);
         newReleaseMenuItem.setDisable(true);
-        saveMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editMenuItem.setDisable(true);
@@ -89,7 +88,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
-        openMenuItem.setOnAction(event -> mainController.openProject(null));
+        openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveProject());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
@@ -252,10 +251,6 @@ public class MenuBarController implements Initializable {
                 undoManager.shouldUpdateMenuProperty.set(false);
             }
         });
-    }
-
-    public void updateAfterProjectSelected(boolean enabled) {
-        saveMenuItem.setDisable(!enabled);
     }
 
     public void updateAfterAnyObjectSelected(boolean enabled) {

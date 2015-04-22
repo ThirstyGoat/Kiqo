@@ -44,7 +44,6 @@ public class MainController implements Initializable {
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = new UndoManager();
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
@@ -84,6 +83,7 @@ public class MainController implements Initializable {
     private AnchorPane listAnchorPane;
     private double dividerPosition;
 
+    //Todo: set selected org properly
     private Organisation selectedOrganisation;
     private Project selectedProject;
     private Person selectedPerson;
@@ -122,10 +122,10 @@ public class MainController implements Initializable {
     }
 
     /**
-     * @param organisation Project to be deleted
+     * @param project organisation to be deleted
      *
      */
-    private void deleteProject(Project organisation) {
+    private void deleteProject(Project project) {
         GoatDialog
                 .showAlertDialog(primaryStage, "Version Limitation", "No can do.", "Deleting a project is not supported in this version.");
 
@@ -291,6 +291,14 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        selectedOrganisation = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
+        selectedOrganisation.setObservableLists();
+        // enable menu items
+        menuBarController.enableNewTeam();
+        menuBarController.enableNewPerson();
+        menuBarController.enableNewSkill();
+        menuBarController.enableNewRelease();
+
         setLayoutProperties();
         initializeListViews();
         initialiseTabs();
@@ -304,6 +312,8 @@ public class MainController implements Initializable {
                 menuBarController.updateAfterAnyObjectSelected(newValue != null);
             }
         });
+
+        Platform.runLater(() -> listLabel.setText(""));
     }
 
     private void initializeListViews() {
@@ -324,15 +334,28 @@ public class MainController implements Initializable {
         editContextMenu.setOnAction(event -> editItem());
         deleteContextMenu.setOnAction(event -> deleteItem());
 
+        projectListView.setItems(selectedOrganisation.getProjects());
+        peopleListView.setItems(selectedOrganisation.getPeople());
+        teamsListView.setItems(selectedOrganisation.getTeams());
+        skillsListView.setItems(selectedOrganisation.getSkills());
+        releasesListView.setItems(selectedOrganisation.getReleases());
+
         for (final ListView<? extends Item> listView : listViews) {
             initialiseListView(listView, contextMenu);
         }
 
         // do project-specific things
-        augmentProjectListView();
+//        augmentProjectListView();
 
         // set additional listeners so that the selection is retained despite
         // tab-switching
+        projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                selectedProject = newValue;
+            } else {
+                MainController.focusedItemProperty.set(null);
+            }
+        });
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedPerson = newValue;
@@ -454,13 +477,13 @@ public class MainController implements Initializable {
         }
     }
 
-    public void openProject(File draggedFilePath) {
+    public void openOrganisation(File draggedFilePath) {
         File filePath;
 
         if (selectedOrganisation != null) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "Warning.",
-                    "Opening a new Organisation will close the current organisation and lose all unsaved changes.");
-            return;
+            if(!promptForUnsavedChanges()) {
+                return;
+            }
         }
 
         if (draggedFilePath == null) {
@@ -569,17 +592,29 @@ public class MainController implements Initializable {
      */
     private void addClosePrompt() {
         primaryStage.setOnCloseRequest(event -> {
-            if (!changesSaved.get()) {
-                final String[] options = {"Save changes", "Discard changes", "Cancel"};
-                final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
-                        "Would you like to save the changes you have made to the project?", options);
-                if (response.equals("Save changes")) {
-                    saveProject();
-                } else if (response.equals("Cancel")) {
-                    event.consume();
-                }
+            if(!promptForUnsavedChanges()) {
+                event.consume();
             }
         });
+    }
+
+    /**
+     * Prompt the user if they want to save unsaved changes
+     * @return if the user clicked cancel or not
+     */
+    private boolean promptForUnsavedChanges() {
+        if (!changesSaved.get()) {
+            final String[] options = {"Save changes", "Discard changes", "Cancel"};
+            final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
+                    "Would you like to save the changes you have made to the project?", options);
+            if (response.equals("Save changes")) {
+                saveProject();
+            } else if (response.equals("Cancel")) {
+                // do nothing
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -589,16 +624,16 @@ public class MainController implements Initializable {
     private void addProjects(final List<Project> projects) {
         if (projects != null) {
             // Update View Accordingly
-            this.projects.addAll(projects);
+//            this.projects.addAll(projects);
             // Select added projects in the ListView
             projectListView.getSelectionModel().select(null);
             projectListView.getSelectionModel().select(projects.get(0));
 
-            // enable menu items
-            menuBarController.enableNewTeam();
-            menuBarController.enableNewPerson();
-            menuBarController.enableNewSkill();
-            menuBarController.enableNewRelease();
+//            // enable menu items
+//            menuBarController.enableNewTeam();
+//            menuBarController.enableNewPerson();
+//            menuBarController.enableNewSkill();
+//            menuBarController.enableNewRelease();
 
             switchToProjectList();
             saveProject();
@@ -699,7 +734,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void editProjectDialog(Project organisation) {
+    private void editProjectDialog(Project project) {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
@@ -722,12 +757,12 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final EditProjectController editProjectController = loader.getController();
             editProjectController.setStage(stage);
-            editProjectController.loadProject(organisation);
+            editProjectController.loadProject(project);
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
                 final UICommand command = new UICommand(editProjectController.getCommand());
-                command.setRefreshParameters(organisation, projectListView, detailsPaneController);
+                command.setRefreshParameters(project, projectListView, detailsPaneController);
                 doCommand(command);
             }
         });
@@ -764,25 +799,6 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
             }
-        });
-    }
-
-    /**
-     * Adds project-specific features to the project list view.
-     */
-    private void augmentProjectListView() {
-        projectListView.setItems(projects);
-
-        projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedProject = newValue;
-
-                // update label to display name of currently selected project
-                listLabel.setText(newValue.getShortName());
-            }
-            // do this after updating focusedObject, to undo the "enable delete"
-            // effect
-            menuBarController.updateAfterProjectSelected(newValue != null);
         });
     }
 
@@ -954,6 +970,7 @@ public class MainController implements Initializable {
             final Scene scene = new Scene(root);
             stage.setScene(scene);
             final NewProjectController newProjectController = loader.getController();
+            newProjectController.setOrganisation(selectedOrganisation);
             newProjectController.setStage(stage);
 
             stage.showAndWait();

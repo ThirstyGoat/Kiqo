@@ -33,7 +33,7 @@ public class CreateTeamCommand extends Command<Team> {
      * @param productOwner Person in the Product Owner role for the team
      * @param scrumMaster Person in the Scrum Master role for the team
      * @param devTeam List of people in development roles for the team
-     * @param organisation Project to which this team belongs
+     * @param organisation organisation to which this team belongs
      */
     public CreateTeamCommand(final String shortName, final String description, final List<Person> teamMembers, final Person productOwner,
             final Person scrumMaster, final List<Person> devTeam,

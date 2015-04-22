@@ -20,7 +20,7 @@ public class DeleteSkillCommand extends Command<Skill> {
 
     /**
      * @param skill Skill to be deleted
-     * @param organisation Project to which the skill belongs
+     * @param organisation organisation to which the skill belongs
      */
     public DeleteSkillCommand(final Skill skill, final Organisation organisation) {
         this.skill = skill;

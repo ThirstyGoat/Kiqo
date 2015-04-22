@@ -14,7 +14,7 @@
             <children>
               <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                  <children>
-                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="">
+                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="project">
                      <font>
                        <Font name="System Bold" size="18.0" />
                      </font>

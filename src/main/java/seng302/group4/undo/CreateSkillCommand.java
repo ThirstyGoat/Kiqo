@@ -14,7 +14,7 @@ public class CreateSkillCommand extends Command<Skill> {
 
     /**
      * @param skill Skill created
-     * @param organisation Project that the skill is to be associated with
+     * @param organisation organisation that the skill is to be associated with
      */
     public CreateSkillCommand(final Skill skill, final Organisation organisation) {
         this.skill = skill;

@@ -18,7 +18,7 @@ public class DeletePersonCommand extends Command<Person> {
 
     /**
      * @param person Person to be deleted
-     * @param organisation Project to which the person belongs
+     * @param organisation organisation to which the person belongs
      */
     public DeletePersonCommand(final Person person, final Organisation organisation) {
         this.person = person;
