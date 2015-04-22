@@ -8,12 +8,13 @@ import java.util.stream.Collectors;
  * Created by bradley on 27/03/15.
  */
 public class Team extends Item {
+    private final List<Person> devTeam = new ArrayList<>();
     private String shortName;
     private String description;
     private Person productOwner;
     private Person scrumMaster;
     private List<Person> teamMembers;
-    private final List<Person> devTeam = new ArrayList<>();
+    private ArrayList<Allocation> allocations = new ArrayList<>();
 
     public Team(String shortName, String description, List<Person> teamMembers2) {
         this.shortName = shortName;
@@ -81,5 +82,9 @@ public class Team extends Item {
     public void setDevTeam(List<Person> devTeam2) {
         devTeam.clear();
         devTeam.addAll(devTeam2.stream().collect(Collectors.toList()));
+    }
+
+    public ArrayList<Allocation> getAllocations() {
+        return allocations;
     }
 }

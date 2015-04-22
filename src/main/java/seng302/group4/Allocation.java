@@ -9,6 +9,7 @@ public class Allocation {
     private LocalDate startDate;
     private LocalDate endDate;
     private Team team;
+    private Project project;
 
     /**
      * Creates a new allocation, checks that the start date is before the end date
@@ -17,7 +18,7 @@ public class Allocation {
      * @param startDate the start date for the allocation
      * @param endDate the end date for the allocation
      */
-    public Allocation(Team team, LocalDate startDate, LocalDate endDate) {
+    public Allocation(Team team, LocalDate startDate, LocalDate endDate, Project project) {
 
         if(startDate.isAfter(endDate)) {
             throw new RuntimeException("End date is before start date");
@@ -25,6 +26,9 @@ public class Allocation {
             this.team = team;
             this.startDate = startDate;
             this.endDate = endDate;
+            this.project = project;
+            team.getAllocations().add(this); // move to command
+            project.getAllocations().add(this); //move to command
         }
     }
 
@@ -42,6 +46,14 @@ public class Allocation {
      */
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    /**
+     *
+     * @return the project the allocation belongs to
+     */
+    public Project getProject() {
+        return project;
     }
 
     /**
