@@ -18,17 +18,16 @@ public class Organisation {
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
     private final ArrayList<Person> people = new ArrayList<>();
+    private final ArrayList<Release> releases = new ArrayList<>();
+    private final Skill poSkill = new Skill("PO", "Product Owner");
+    private final Skill smSkill = new Skill("SM", "Scrum Master");
     private transient ObservableList<Project> projectsObservable = FXCollections.observableList(projects);
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
     // even though releases are stored under Project, organisation has to keep track of them
-    private transient ObservableList<Release> releaseObservable = FXCollections.observableArrayList();
-
+    private transient ObservableList<Release> releaseObservable = FXCollections.observableArrayList(releases);
     private transient File saveLocation;
-
-    private final Skill poSkill = new Skill("PO", "Product Owner");
-    private final Skill smSkill = new Skill("SM", "Scrum Master");
 
     public Organisation() {
         skills.add(poSkill);
@@ -67,6 +66,17 @@ public class Organisation {
     public Organisation(final File saveLocation) {
         this();
         this.saveLocation = saveLocation;
+    }
+
+    public static void main(String[] args) {
+        final Organisation o = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
+        o.getPeople().add(new Person("sam", null, null, null, null, null, null, null));
+        try {
+            PersistenceManager.saveOrganisation(new File("/Users/samschofield/Desktop/org.json"), o);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public Skill getPoSkill() {
@@ -138,17 +148,6 @@ public class Organisation {
         peopleObservable = FXCollections.observableList(people);
         skillsObservable = FXCollections.observableList(skills);
         teamsObservable = FXCollections.observableList(teams);
-        // releaseObservable = FXCollections.observableList(releases);
-    }
-
-    public static void main(String[] args) {
-        final Organisation o = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
-        o.getPeople().add(new Person("sam", null, null, null, null, null, null, null));
-        try {
-            PersistenceManager.saveOrganisation(new File("/Users/samschofield/Desktop/org.json"), o);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
+        releaseObservable = FXCollections.observableList(releases);
     }
 }
