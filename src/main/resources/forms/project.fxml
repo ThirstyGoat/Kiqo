@@ -8,22 +8,11 @@
   <children>
     <Label text="Name:*" />
     <Label text="Short Name:*" GridPane.rowIndex="1" />
-    <Label text="Description:" GridPane.rowIndex="3" />
-    <Label text="Project Location:*" GridPane.rowIndex="2" />
+    <Label text="Description:" GridPane.rowIndex="2" />
     <Label text="* Indicates required field." GridPane.rowIndex="4" textFill="grey" />
     <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
     <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
-      <children>
-        <Button fx:id="openButton" mnemonicParsing="false" text="Browse..." />
-        <Label fx:id="projectLocationLabel" maxWidth="280.0" textOverrun="LEADING_WORD_ELLIPSIS" HBox.hgrow="ALWAYS">
-          <tooltip>
-            <Tooltip fx:id="projectLocationTooltip" text="${projectLocationLabel.text}"/>
-          </tooltip>
-        </Label>
-      </children>
-    </HBox>
-    <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
   </children>
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />

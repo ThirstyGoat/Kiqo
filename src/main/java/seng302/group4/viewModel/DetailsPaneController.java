@@ -91,6 +91,7 @@ public class DetailsPaneController implements Initializable {
         }
         editButton.setVisible(false);
         deleteButton.setVisible(false);
+        allocateTeamButton.setVisible(false);
     }
 
     private void showSkillDetailsPane(Skill skill) {
@@ -157,7 +158,7 @@ public class DetailsPaneController implements Initializable {
     private void showOptionButtons() {
         editButton.setVisible(true);
         deleteButton.setVisible(true);
-        allocateTeamButton.setVisible(false);
+        allocateTeamButton.setVisible(true);
     }
 
     public void setMainController(MainController mainController) {
