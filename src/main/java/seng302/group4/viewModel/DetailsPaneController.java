@@ -68,8 +68,8 @@ public class DetailsPaneController implements Initializable {
         if (item == null) {
             clear();
         } else {
-            if (item instanceof Project) {
-                showProjectDetailsPane((Project) item);
+            if (item instanceof Organisation) {
+                showProjectDetailsPane((Organisation) item);
             } else if (item instanceof Person) {
                 showPersonDetailsPane((Person) item);
             } else if (item instanceof Skill) {
@@ -102,8 +102,8 @@ public class DetailsPaneController implements Initializable {
         showOptionButtons();
     }
 
-    private void showProjectDetailsPane(Project project) {
-        projectDetailsPaneController.showDetails(project);
+    private void showProjectDetailsPane(Organisation organisation) {
+        projectDetailsPaneController.showDetails(organisation);
 
         skillDetailsPane.setVisible(false);
         projectDetailsPane.setVisible(true);

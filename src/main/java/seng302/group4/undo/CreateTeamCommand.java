@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 /**
@@ -22,7 +22,7 @@ public class CreateTeamCommand extends Command<Team> {
     private final List<Person> devTeam;
 
     private Team team;
-    private final Project project;
+    private final Organisation organisation;
 
     /**
      * Constructor for CreateTeamCommand
@@ -33,18 +33,18 @@ public class CreateTeamCommand extends Command<Team> {
      * @param productOwner Person in the Product Owner role for the team
      * @param scrumMaster Person in the Scrum Master role for the team
      * @param devTeam List of people in development roles for the team
-     * @param project Project to which this team belongs
+     * @param organisation Project to which this team belongs
      */
     public CreateTeamCommand(final String shortName, final String description, final List<Person> teamMembers, final Person productOwner,
             final Person scrumMaster, final List<Person> devTeam,
-                             final Project project) {
+                             final Organisation organisation) {
         this.shortName = shortName;
         this.description = description;
         this.teamMembers.addAll(teamMembers);
         this.productOwner = productOwner;
         this.scrumMaster = scrumMaster;
         this.devTeam = devTeam;
-        this.project = project;
+        this.organisation = organisation;
     }
 
     @Override
@@ -62,14 +62,14 @@ public class CreateTeamCommand extends Command<Team> {
         }
 
         // Add team to project
-        project.getTeams().add(team);
+        organisation.getTeams().add(team);
         return team;
     }
 
     @Override
     public void undo() {
         // Goodbye team
-        project.getTeams().remove(team);
+        organisation.getTeams().remove(team);
 
         // Remove this team from all the people within it
         for (final Person person : team.getTeamMembers()) {

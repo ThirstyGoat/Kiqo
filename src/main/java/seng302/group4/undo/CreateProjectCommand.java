@@ -2,7 +2,7 @@ package seng302.group4.undo;
 
 import java.io.File;
 
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 
 /**
  * Command to create a project
@@ -10,12 +10,12 @@ import seng302.group4.Project;
  * @author amy
  *
  */
-public class CreateProjectCommand extends Command<Project> {
+public class CreateProjectCommand extends Command<Organisation> {
     private final String shortName;
     private final String longName;
     private final String description;
     private final File saveLocation;
-    private Project project = null;
+    private Organisation organisation = null;
 
     /**
      * Constructor for a command that creates a project with the specified properties and an empty description
@@ -44,11 +44,11 @@ public class CreateProjectCommand extends Command<Project> {
     }
 
     @Override
-    public Project execute() {
-        if (project == null) {
-            project = new Project(shortName, longName, saveLocation, description);
+    public Organisation execute() {
+        if (organisation == null) {
+            organisation = new Organisation(shortName, longName, saveLocation, description);
         }
-        return project;
+        return organisation;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CreateProjectCommand extends Command<Project> {
     @Override
     public void undo() {
         // FIXME implement properly
-        project.prepareForDestruction();
+        organisation.prepareForDestruction();
     }
 
     @Override

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 import seng302.group4.customNodes.GoatListSelectionView;
 import seng302.group4.undo.Command;
@@ -54,7 +54,7 @@ public class TeamFormController implements Initializable {
     @FXML
     private Button cancelButton;
     private Stage stage;
-    private Project project;
+    private Organisation organisation;
     private Team team;
     private Command<?> command;
     private boolean valid = false;
@@ -127,7 +127,7 @@ public class TeamFormController implements Initializable {
                 return true;
             }
         }
-        for (final Team t : project.getTeams()) {
+        for (final Team t : organisation.getTeams()) {
             if (shortNameTextField.getText().equals(t.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
                 errorPopOver.show(shortNameTextField);
@@ -145,7 +145,7 @@ public class TeamFormController implements Initializable {
         if (team == null) {
             // create command
             command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers,
-                    productOwner, scrumMaster, devTeam, project);
+                    productOwner, scrumMaster, devTeam, organisation);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -214,9 +214,9 @@ public class TeamFormController implements Initializable {
 
         peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 
-        final Text poText = new Text(project.getPoSkill().getShortName().substring(0, 2));
+        final Text poText = new Text(organisation.getPoSkill().getShortName().substring(0, 2));
         poText.setFill(Color.BLUE);
-        final Text smText = new Text(project.getSmSkill().getShortName().substring(0, 2));
+        final Text smText = new Text(organisation.getSmSkill().getShortName().substring(0, 2));
         smText.setFill(Color.RED);
         final Text devText = new Text("Dev");
         devText.setFill(Color.GREEN);
@@ -295,10 +295,10 @@ public class TeamFormController implements Initializable {
 
                     // Disable PO/SM Radio Buttons if the person doesn't have
                     // the skill
-                    if (!person.getSkills().contains(project.getPoSkill())) {
+                    if (!person.getSkills().contains(organisation.getPoSkill())) {
                         radioPo.setDisable(true);
                     }
-                    if (!person.getSkills().contains(project.getSmSkill())) {
+                    if (!person.getSkills().contains(organisation.getSmSkill())) {
                         radioSm.setDisable(true);
                     }
 
@@ -388,12 +388,12 @@ public class TeamFormController implements Initializable {
     private void populatePeopleListView() {
         // all people observableList = project.getPeople();
         final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
-        sourcePeople.addAll(project.getPeople());
+        sourcePeople.addAll(organisation.getPeople());
 
         // Remove all people from sourcePeople that are currently in a team
-        project.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
+        organisation.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
 
-        project.getPeople().addListener((ListChangeListener<Person>) c -> {
+        organisation.getPeople().addListener((ListChangeListener<Person>) c -> {
             c.next();
             // We remove people from the sourcePeople that were removed from the project.
             // Note that this shouldn't actually be possible since undo/redo should be disabled
@@ -445,8 +445,8 @@ public class TeamFormController implements Initializable {
 
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
         populatePeopleListView();
     }
 }

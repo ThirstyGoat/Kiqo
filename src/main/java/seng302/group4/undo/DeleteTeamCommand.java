@@ -1,7 +1,7 @@
 package seng302.group4.undo;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Created by james on 11/04/15.
  */
 public class DeleteTeamCommand extends Command<Team> {
-    private final Project project;
+    private final Organisation organisation;
     private final Team team;
     private final ArrayList<Person> teamMembers = new ArrayList<>();
 
@@ -20,10 +20,10 @@ public class DeleteTeamCommand extends Command<Team> {
     /**
      *
      * @param team the team to be deleted
-     * @param project the project to delete the team from
+     * @param organisation the project to delete the team from
      */
-    public DeleteTeamCommand(final Team team, final Project project) {
-        this.project = project;
+    public DeleteTeamCommand(final Team team, final Organisation organisation) {
+        this.organisation = organisation;
         this.team = team;
     }
 
@@ -44,11 +44,11 @@ public class DeleteTeamCommand extends Command<Team> {
         // if setDeleteMembers was called, delete each team member
         for (final Person person : teamMembers) {
             System.out.println("Deleting: " + person.getShortName());
-            project.getPeople().remove(person);
+            organisation.getPeople().remove(person);
         }
 
         // delete the team
-        project.getTeams().remove(team);
+        organisation.getTeams().remove(team);
         return team;
     }
 
@@ -62,10 +62,10 @@ public class DeleteTeamCommand extends Command<Team> {
 
         for (final Person person : teamMembers) {
             System.out.println("Undoing deletion of: " + person.getShortName());
-            project.getPeople().add(person);
+            organisation.getPeople().add(person);
         }
 
-        project.getTeams().add(team);
+        organisation.getTeams().add(team);
 
     }
 

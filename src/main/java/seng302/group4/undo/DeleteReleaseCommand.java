@@ -1,6 +1,6 @@
 package seng302.group4.undo;
 
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Release;
 
 
@@ -9,24 +9,24 @@ import seng302.group4.Release;
  */
 public class DeleteReleaseCommand extends Command<Release> {
 
-    private Project project;
+    private Organisation organisation;
     private Release release;
 
 
-    public DeleteReleaseCommand(final Release release, final Project project) {
-        this.project = project;
+    public DeleteReleaseCommand(final Release release, final Organisation organisation) {
+        this.organisation = organisation;
         this.release = release;
     }
 
     @Override
     public Release execute() {
-        project.getReleases().remove(release);
+        organisation.getReleases().remove(release);
         return release;
     }
 
     @Override
     public void undo() {
-        project.getReleases().add(release);
+        organisation.getReleases().add(release);
     }
 
 

@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
@@ -20,7 +20,7 @@ import seng302.group4.undo.EditCommand;
  */
 public class EditPersonController implements Initializable {
     private Stage stage;
-    private Project project;
+    private Organisation organisation;
     private Person person;
     private boolean valid = false;
     private CompoundCommand command;
@@ -63,7 +63,7 @@ public class EditPersonController implements Initializable {
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
                 if (!formController.getShortName().equals(person.getShortName())) {
-                    for (final Person p : project.getPeople()) {
+                    for (final Person p : organisation.getPeople()) {
                         if (formController.getShortName().equals(p.getShortName())) {
                             formController.warnShortnameNotUnique();
                             return;
@@ -102,12 +102,12 @@ public class EditPersonController implements Initializable {
         });
     }
 
-    public Project getProject() {
-        return project;
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public CompoundCommand getCommand() {
@@ -133,6 +133,6 @@ public class EditPersonController implements Initializable {
     }
 
     public void setProjectForFormController() {
-        formController.setProject(project);
+        formController.setOrganisation(organisation);
     }
 }

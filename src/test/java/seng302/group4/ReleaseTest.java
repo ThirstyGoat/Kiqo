@@ -1,17 +1,10 @@
 package seng302.group4;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.Calendar;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 public class ReleaseTest {
 
-    Project project1;
+    Organisation organisation1;
     Date date;
     Release release1;
 

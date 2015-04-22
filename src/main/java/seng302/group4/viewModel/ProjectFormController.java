@@ -16,7 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.controlsfx.control.PopOver;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -63,14 +63,14 @@ public class ProjectFormController implements Initializable {
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
     }
 
-    public void loadProject(final Project project) {
-        this.longNameTextField.setText(project.getLongName());
-        this.shortNameTextField.setText(project.getShortName());
-        this.descriptionTextField.setText(project.getDescription());
+    public void loadProject(final Organisation organisation) {
+        this.longNameTextField.setText(organisation.getLongName());
+        this.shortNameTextField.setText(organisation.getShortName());
+        this.descriptionTextField.setText(organisation.getDescription());
 
         // also sets tooltip text
-        this.projectLocation = project.getSaveLocation();
-        this.projectLocationLabel.setText(project.getSaveLocation().getPath());
+        this.projectLocation = organisation.getSaveLocation();
+        this.projectLocationLabel.setText(organisation.getSaveLocation().getPath());
 
         // disconnect tooltip if blank
         this.updateTooltip();

@@ -10,10 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
-import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 
 /**
@@ -29,7 +27,7 @@ public class SkillFormController implements Initializable {
     private Stage stage;
     private boolean shortNameModified = false;
 
-    private Project project;
+    private Organisation organisation;
 
 
     // FXML Injections
@@ -125,8 +123,8 @@ public class SkillFormController implements Initializable {
         this.stage = stage;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     /**

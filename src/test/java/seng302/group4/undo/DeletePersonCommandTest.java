@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 /**
@@ -14,7 +14,7 @@ import seng302.group4.Team;
  */
 public class DeletePersonCommandTest {
 
-    private Project project;
+    private Organisation organisation;
     private Team team;
 
     /**
@@ -22,7 +22,7 @@ public class DeletePersonCommandTest {
      */
     @Before
     public void setUp() {
-        project = new Project();
+        organisation = new Organisation();
         team = new Team("", "", new ArrayList<>());
     }
 
@@ -33,13 +33,13 @@ public class DeletePersonCommandTest {
     public void deletePerson_PersonRemovedFromProject() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
     }
 
     /**
@@ -49,16 +49,16 @@ public class DeletePersonCommandTest {
     public void deletePerson_PersonRemovedFromTeam() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
     }
 
@@ -69,17 +69,17 @@ public class DeletePersonCommandTest {
     public void deletePersonWithPORole_PersonRemovedFromTeamAndPORole() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
         team.setProductOwner(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
         assert team.getProductOwner() != person;
     }
@@ -91,17 +91,17 @@ public class DeletePersonCommandTest {
     public void deletePersonWithDevRole_PersonRemovedFromTeamAndDevRole() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
         team.getDevTeam().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
         assert !team.getDevTeam().contains(person);
     }
@@ -113,17 +113,17 @@ public class DeletePersonCommandTest {
     public void undoDeletePerson_PersonAddedBackToProject() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
 
         command.undo();
 
-        assert project.getPeople().contains(person);
+        assert organisation.getPeople().contains(person);
     }
 
     /**
@@ -133,21 +133,21 @@ public class DeletePersonCommandTest {
     public void undoDeletePersonInTeam_PersonAddedBackToTeam() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
 
         command.undo();
 
-        assert project.getPeople().contains(person);
+        assert organisation.getPeople().contains(person);
         assert team.getTeamMembers().contains(person);
     }
 
@@ -158,23 +158,23 @@ public class DeletePersonCommandTest {
     public void undoDeletePersonInTeamWithPORole_PersonAddedBackToTeamWithRole() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
         team.setProductOwner(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
         assert team.getProductOwner() != person;
 
         command.undo();
 
-        assert project.getPeople().contains(person);
+        assert organisation.getPeople().contains(person);
         assert team.getTeamMembers().contains(person);
         assert team.getProductOwner() == person;
     }
@@ -186,23 +186,23 @@ public class DeletePersonCommandTest {
     public void undoDeletePersonInTeamWithDevRole_PersonAddedBackToTeamWithDevRole() {
         // Create new person
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
 
         team.getTeamMembers().add(person);
         person.setTeam(team);
         team.getDevTeam().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, project);
+        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
         command.execute();
 
-        assert !project.getPeople().contains(person);
+        assert !organisation.getPeople().contains(person);
         assert !team.getTeamMembers().contains(person);
         assert !team.getDevTeam().contains(person);
 
         command.undo();
 
-        assert project.getPeople().contains(person);
+        assert organisation.getPeople().contains(person);
         assert team.getTeamMembers().contains(person);
         assert team.getDevTeam().contains(person);
     }

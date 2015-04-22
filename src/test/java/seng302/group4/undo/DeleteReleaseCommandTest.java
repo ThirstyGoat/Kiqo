@@ -1,7 +1,7 @@
 package seng302.group4.undo;
 
 import org.junit.Test;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Release;
 
 import java.time.LocalDate;
@@ -12,35 +12,35 @@ import java.time.LocalDate;
 public class DeleteReleaseCommandTest {
     @Test
     public void deleteRelease_ReleaseRemovedFromProject() {
-        Project project = new Project();
-        Release release = new Release("", LocalDate.now(), "", project);
-        project.getReleases().add(release);
+        Organisation organisation = new Organisation();
+        Release release = new Release("", LocalDate.now(), "", organisation);
+        organisation.getReleases().add(release);
 
-        DeleteReleaseCommand command = new DeleteReleaseCommand(release, project);
+        DeleteReleaseCommand command = new DeleteReleaseCommand(release, organisation);
 
-        assert project.getReleases().contains(release);
+        assert organisation.getReleases().contains(release);
 
         command.execute();
 
-        assert !project.getReleases().contains(release);
+        assert !organisation.getReleases().contains(release);
     }
 
     @Test
     public void undoDeleteRelease_ReleaseAddedBackToProject() {
-        Project project = new Project();
-        Release release = new Release("", LocalDate.now(), "", project);
-        project.getReleases().add(release);
+        Organisation organisation = new Organisation();
+        Release release = new Release("", LocalDate.now(), "", organisation);
+        organisation.getReleases().add(release);
 
-        DeleteReleaseCommand command = new DeleteReleaseCommand(release, project);
+        DeleteReleaseCommand command = new DeleteReleaseCommand(release, organisation);
 
-        assert project.getReleases().contains(release);
+        assert organisation.getReleases().contains(release);
 
         command.execute();
 
-        assert !project.getReleases().contains(release);
+        assert !organisation.getReleases().contains(release);
 
         command.undo();
 
-        assert project.getReleases().contains(release);
+        assert organisation.getReleases().contains(release);
     }
 }

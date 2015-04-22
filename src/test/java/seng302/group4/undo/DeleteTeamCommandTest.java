@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 /**
@@ -17,7 +17,7 @@ public class DeleteTeamCommandTest {
     Person person1;
     Person person2;
     Person person3;
-    private Project project;
+    private Organisation organisation;
     private Team teamWithMembers;
     private Team teamNoMembers;
 
@@ -26,7 +26,7 @@ public class DeleteTeamCommandTest {
      */
     @Before
     public void setUp() {
-        project = new Project();
+        organisation = new Organisation();
 
         // Create people
         person1 = new Person("one", "", "", "", "", "", "", new ArrayList<>());
@@ -34,9 +34,9 @@ public class DeleteTeamCommandTest {
         person3 = new Person("three", "", "", "", "", "", "", new ArrayList<>());
 
         // Add people to project
-        project.getPeople().add(person1);
-        project.getPeople().add(person2);
-        project.getPeople().add(person3);
+        organisation.getPeople().add(person1);
+        organisation.getPeople().add(person2);
+        organisation.getPeople().add(person3);
 
         // Create a team
         teamWithMembers = new Team("teamOne", "", new ArrayList<>());
@@ -47,8 +47,8 @@ public class DeleteTeamCommandTest {
         teamWithMembers.getTeamMembers().add(person2);
 
         // Add teams to project
-        project.getTeams().add(teamWithMembers);
-        project.getTeams().add(teamNoMembers);
+        organisation.getTeams().add(teamWithMembers);
+        organisation.getTeams().add(teamNoMembers);
     }
 
     /**
@@ -56,15 +56,15 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void deleteEmptyTeam_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, organisation);
 
         command.execute();
 
         // Check to see if team was deleted and all people remained
-        assert !project.getTeams().contains(teamNoMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert !organisation.getTeams().contains(teamNoMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -72,15 +72,15 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void deleteTeamWithMembersButKeepPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.execute();
 
         // Check to see if team was deleted and all people remained
-        assert !project.getTeams().contains(teamWithMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert !organisation.getTeams().contains(teamWithMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -89,17 +89,17 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void deleteTeamWithMembersAndPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.setDeleteMembers();
 
         command.execute();
 
         // Check to see if team and all team members were deleted
-        assert !project.getTeams().contains(teamWithMembers);
-        assert !project.getPeople().contains(person1);
-        assert !project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3); // person not in team remained
+        assert !organisation.getTeams().contains(teamWithMembers);
+        assert !organisation.getPeople().contains(person1);
+        assert !organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3); // person not in team remained
     }
 
     /**
@@ -107,16 +107,16 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void undoDeleteEmptyTeam() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, organisation);
 
         command.execute();
         command.undo();
 
         // check to see if team was deleted and restored
-        assert project.getTeams().contains(teamNoMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert organisation.getTeams().contains(teamNoMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -124,16 +124,16 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void undoTeamWithMembersButKeepPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.execute();
         command.undo();
 
         // check to see if team was deleted and restored and all ppl remained in project
-        assert project.getTeams().contains(teamWithMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert organisation.getTeams().contains(teamWithMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -142,7 +142,7 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void undoTeamWithMembersAndPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.setDeleteMembers();
 
@@ -150,10 +150,10 @@ public class DeleteTeamCommandTest {
         command.undo();
 
         // check to see if team was deleted and restored and all ppl remained in project
-        assert project.getTeams().contains(teamWithMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert organisation.getTeams().contains(teamWithMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -161,17 +161,17 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void redoEmptyTeam_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamNoMembers, organisation);
 
         command.execute();
         command.undo();
         command.redo();
 
         // check to see if team was deleted and all ppl remained in project
-        assert !project.getTeams().contains(teamNoMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert !organisation.getTeams().contains(teamNoMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -179,17 +179,17 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void redoTeamWithMembersButKeepPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.execute();
         command.undo();
         command.redo();
 
         // check to see if team was deleted and all ppl remained in project
-        assert !project.getTeams().contains(teamWithMembers);
-        assert project.getPeople().contains(person1);
-        assert project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert !organisation.getTeams().contains(teamWithMembers);
+        assert organisation.getPeople().contains(person1);
+        assert organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 
     /**
@@ -198,7 +198,7 @@ public class DeleteTeamCommandTest {
      */
     @Test
     public void redoTeamWithMembersAndPeople_Success() {
-        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, project);
+        final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
         command.setDeleteMembers();
 
@@ -207,9 +207,9 @@ public class DeleteTeamCommandTest {
         command.redo();
 
         // check to see if team and team members were deleted but all non-team members remained in project
-        assert !project.getTeams().contains(teamWithMembers);
-        assert !project.getPeople().contains(person1);
-        assert !project.getPeople().contains(person2);
-        assert project.getPeople().contains(person3);
+        assert !organisation.getTeams().contains(teamWithMembers);
+        assert !organisation.getPeople().contains(person1);
+        assert !organisation.getPeople().contains(person2);
+        assert organisation.getPeople().contains(person3);
     }
 }

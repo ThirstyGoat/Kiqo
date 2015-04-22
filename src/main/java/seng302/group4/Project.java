@@ -1,54 +1,25 @@
 package seng302.group4;
 
 import java.io.File;
-import java.util.ArrayList;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
- * Project class represents a software project
- *
- * Generic getter/setter from http://stackoverflow.com/a/28673716
+ * Created by samschofield on 22/04/15.
  */
 public class Project extends Item {
-    private final ArrayList<Skill> skills = new ArrayList<>();
-    private final ArrayList<Team> teams = new ArrayList<>();
-    private final ArrayList<Person> people = new ArrayList<>();
-    private final ArrayList<Release> releases = new ArrayList<>();
-    private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
-    private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
-    private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
-    private transient ObservableList<Release> releaseObservable = FXCollections.observableList(releases);
-
     private String shortName;
     private String longName;
     private String description;
-    private transient File saveLocation;
 
-    private final Skill poSkill = new Skill("PO", "Product Owner");
-    private final Skill smSkill = new Skill("SM", "Scrum Master");
-
-    /**
-     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
-     */
-    public Project() {
-        skills.add(poSkill);
-        skills.add(smSkill);
-    }
 
     /**
      * Create new Project
      *
      * @param shortName a unique short name for the project
      * @param longName long name for project
-     * @param saveLocation save location for the project
      */
-    public Project(final String shortName, final String longName, final File saveLocation) {
-        this();
+    public Project(final String shortName, final String longName) {
         this.shortName = shortName;
         this.longName = longName;
-        this.saveLocation = saveLocation;
     }
 
     /**
@@ -56,62 +27,12 @@ public class Project extends Item {
      *
      * @param shortName a unique short name for the project
      * @param longName long name for project
-     * @param saveLocation save location for the project
      * @param description description of the project
      */
-    public Project(final String shortName, final String longName, final File saveLocation, final String description) {
-        this();
+    public Project(final String shortName, final String longName, final String description) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
-        this.saveLocation = saveLocation;
-    }
-
-    public Skill getPoSkill() {
-        return poSkill;
-    }
-
-    public Skill getSmSkill() {
-        return smSkill;
-    }
-
-    /**
-     *
-     * @return ObservableList of releases in project
-     */
-    public ObservableList<Release> getReleases() {
-        return releaseObservable;
-    }
-
-    /**
-     *
-     * @return ObservableList of people in project
-     */
-    public ObservableList<Person> getPeople() {
-        return peopleObservable;
-    }
-
-    /**
-     *
-     * @return ObservableList of skills in project
-     */
-    public ObservableList<Skill> getSkills() {
-        return skillsObservable;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Project project = (Project) o;
-
-        return shortName.equals(project.shortName);
-
     }
 
     /**
@@ -146,26 +67,6 @@ public class Project extends Item {
         this.longName = longName;
     }
 
-    /**
-     *
-     * @return save location of project
-     */
-    public File getSaveLocation() {
-        return saveLocation;
-    }
-
-    /**
-     *
-     * @param saveLocation Save location of project
-     */
-    public void setSaveLocation(final File saveLocation) {
-        this.saveLocation = saveLocation;
-    }
-
-    /**
-     *
-     * @return Short name of project
-     */
     @Override
     public String getShortName() {
         return shortName;
@@ -179,12 +80,15 @@ public class Project extends Item {
         this.shortName = shortName;
     }
 
-    /**
-     *
-     * @return ObservableList of teams
-     */
-    public ObservableList<Team> getTeams() {
-        return teamsObservable;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return shortName.equals(project.shortName);
+
     }
 
     @Override
@@ -192,22 +96,12 @@ public class Project extends Item {
         return shortName.hashCode();
     }
 
-    public void prepareForDestruction() {
-        // FIXME Auto-generated method stub
-        // eg. remove people
-    }
-
     @Override
     public String toString() {
-        return "Project{" + "shortName='" + shortName + '\'' + ", longName='" + longName + '\'' + ", description='" + description + '\''
-                + ", saveLocation='" + saveLocation + '\'' + '}';
+        return "Project{" +
+                "shortName='" + shortName + '\'' +
+                ", longName='" + longName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
-
-    public void setObservableLists() {
-        peopleObservable = FXCollections.observableList(people);
-        skillsObservable = FXCollections.observableList(skills);
-        teamsObservable = FXCollections.observableList(teams);
-        releaseObservable = FXCollections.observableList(releases);
-    }
-
 }

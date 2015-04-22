@@ -1,6 +1,6 @@
 package seng302.group4.undo;
 
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 
 
@@ -10,27 +10,27 @@ import seng302.group4.Skill;
  */
 public class CreateSkillCommand extends Command<Skill> {
     private final Skill skill;
-    private final Project project;
+    private final Organisation organisation;
 
     /**
      * @param skill Skill created
-     * @param project Project that the skill is to be associated with
+     * @param organisation Project that the skill is to be associated with
      */
-    public CreateSkillCommand(final Skill skill, final Project project) {
+    public CreateSkillCommand(final Skill skill, final Organisation organisation) {
         this.skill = skill;
-        this.project = project;
+        this.organisation = organisation;
     }
 
     @Override
     public Skill execute() {
-        project.getSkills().add(skill);
+        organisation.getSkills().add(skill);
         return skill;
     }
 
     @Override
     public void undo() {
         // Goodbye skill
-        project.getSkills().remove(skill);
+        organisation.getSkills().remove(skill);
     }
 
     @Override

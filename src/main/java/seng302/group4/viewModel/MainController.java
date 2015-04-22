@@ -43,12 +43,12 @@ public class MainController implements Initializable {
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = new UndoManager();
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final ObservableList<Organisation> organisations = FXCollections.observableArrayList();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
-    private ListView<Project> projectListView;
+    private ListView<Organisation> projectListView;
     @FXML
     private ListView<Person> peopleListView;
     @FXML
@@ -83,7 +83,7 @@ public class MainController implements Initializable {
     private AnchorPane listAnchorPane;
     private double dividerPosition;
 
-    private Project selectedProject;
+    private Organisation selectedOrganisation;
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -120,21 +120,21 @@ public class MainController implements Initializable {
     }
 
     /**
-     * @param project Project to be deleted
+     * @param organisation Project to be deleted
      *
      */
-    private void deleteProject(Project project) {
+    private void deleteProject(Organisation organisation) {
         GoatDialog
                 .showAlertDialog(primaryStage, "Version Limitation", "No can do.", "Deleting a project is not supported in this version.");
 
     }
 
     private void deleteSkill(Skill skill) {
-        if (skill == selectedProject.getPoSkill() || skill == selectedProject.getSmSkill()) {
+        if (skill == selectedOrganisation.getPoSkill() || skill == selectedOrganisation.getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-            final UICommand command = new UICommand(new DeleteSkillCommand(skill, selectedProject));
+            final UICommand command = new UICommand(new DeleteSkillCommand(skill, selectedOrganisation));
 
             String deleteMessage = "There are no people with this skill.";
                 if (((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill().size() > 0) {
@@ -153,7 +153,7 @@ public class MainController implements Initializable {
     }
 
     private void deleteTeam(Team team) {
-        final UICommand command = new UICommand(new DeleteTeamCommand(team, selectedProject));
+        final UICommand command = new UICommand(new DeleteTeamCommand(team, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -193,7 +193,7 @@ public class MainController implements Initializable {
     }
 
     private void deletePerson(Person person) {
-        final UICommand command = new UICommand(new DeletePersonCommand(selectedPerson, selectedProject));
+        final UICommand command = new UICommand(new DeletePersonCommand(selectedPerson, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -217,7 +217,7 @@ public class MainController implements Initializable {
     }
 
     public void deleteRelease(Release release) {
-        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease, selectedProject));
+        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -241,8 +241,8 @@ public class MainController implements Initializable {
         final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Project) {
-            deleteProject((Project) focusedObject);
+        } else if (focusedObject instanceof Organisation) {
+            deleteProject((Organisation) focusedObject);
         } else if (focusedObject instanceof Person) {
             deletePerson((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
@@ -258,8 +258,8 @@ public class MainController implements Initializable {
         final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Project) {
-            editProjectDialog((Project) focusedObject);
+        } else if (focusedObject instanceof Organisation) {
+            editProjectDialog((Organisation) focusedObject);
         } else if (focusedObject instanceof Person) {
             editPersonDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
@@ -365,8 +365,8 @@ public class MainController implements Initializable {
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == projectTab) {
                 projectListView.getSelectionModel().select(null);
-                if (selectedProject != null) {
-                    projectListView.getSelectionModel().select(selectedProject);
+                if (selectedOrganisation != null) {
+                    projectListView.getSelectionModel().select(selectedOrganisation);
                 } else {
                     projectListView.getSelectionModel().selectFirst();
                 }
@@ -423,31 +423,31 @@ public class MainController implements Initializable {
     }
 
     public void newSkill() {
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             newSkillDialog();
         }
     }
 
     public void newPerson() {
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             newPersonDialog();
         }
     }
 
     public void newTeam() {
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             teamDialog(null);
         }
     }
 
     public void newRelease() {
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             releaseDialog(null);
         }
     }
 
     public void newProject() {
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
                     "Only one project at a time is supported in this version.");
             return;
@@ -458,7 +458,7 @@ public class MainController implements Initializable {
     public void openProject(File draggedFilePath) {
         File filePath;
 
-        if (selectedProject != null) {
+        if (selectedOrganisation != null) {
             GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
                     "Only one project at a time is supported in this version.");
             return;
@@ -475,9 +475,9 @@ public class MainController implements Initializable {
         if (filePath == null) {
             return;
         }
-        Project project = null;
+        Organisation organisation = null;
         try {
-            project = PersistenceManager.loadProject(filePath);
+            organisation = PersistenceManager.loadProject(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -487,10 +487,10 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
             e.printStackTrace();
         }
-        if (project != null) {
-            project.setSaveLocation(filePath);
-            addProject(project);
-            System.out.println(project.getShortName() + " has been loaded successfully");
+        if (organisation != null) {
+            organisation.setSaveLocation(filePath);
+            addProject(organisation);
+            System.out.println(organisation.getShortName() + " has been loaded successfully");
         }
         tabViewPane.getSelectionModel().select(projectTab);
     }
@@ -499,9 +499,9 @@ public class MainController implements Initializable {
      * Saves the project to disk and marks project as saved.
      */
     public void saveProject() {
-        final Project project = selectedProject;
+        final Organisation organisation = selectedOrganisation;
         try {
-            PersistenceManager.saveProject(project.getSaveLocation(), project);
+            PersistenceManager.saveProject(organisation.getSaveLocation(), organisation);
         } catch (final IOException e) {
             e.printStackTrace();
             return;
@@ -585,15 +585,15 @@ public class MainController implements Initializable {
 
     /**
      * Adds the new project to the observable list so that it is visible in the list view
-     * @param project New Project to be added
+     * @param organisation New Project to be added
      */
-    private void addProject(final Project project) {
-        if (project != null) {
+    private void addProject(final Organisation organisation) {
+        if (organisation != null) {
             // Update View Accordingly
-            projects.add(project);
+            organisations.add(organisation);
             // Select added project in the ListView
             projectListView.getSelectionModel().select(null);
-            projectListView.getSelectionModel().select(project);
+            projectListView.getSelectionModel().select(organisation);
 
             // enable menu items
             menuBarController.enableNewTeam();
@@ -651,7 +651,7 @@ public class MainController implements Initializable {
             final EditSkillController editSkillController = loader.getController();
             editSkillController.setStage(stage);
             editSkillController.loadSkill(skill);
-            editSkillController.setProject(selectedProject);
+            editSkillController.setOrganisation(selectedOrganisation);
             editSkillController.setProjectForFormController();
 
             stage.showAndWait();
@@ -686,7 +686,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final EditPersonController editPersonController = loader.getController();
             editPersonController.setStage(stage);
-            editPersonController.setProject(selectedProject);
+            editPersonController.setOrganisation(selectedOrganisation);
             editPersonController.setProjectForFormController();
             editPersonController.loadPerson(person);
 
@@ -700,7 +700,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void editProjectDialog(Project project) {
+    private void editProjectDialog(Organisation organisation) {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
@@ -723,12 +723,12 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final EditProjectController editProjectController = loader.getController();
             editProjectController.setStage(stage);
-            editProjectController.loadProject(project);
+            editProjectController.loadProject(organisation);
 
             stage.showAndWait();
             if (editProjectController.isValid()) {
                 final UICommand command = new UICommand(editProjectController.getCommand());
-                command.setRefreshParameters(project, projectListView, detailsPaneController);
+                command.setRefreshParameters(organisation, projectListView, detailsPaneController);
                 doCommand(command);
             }
         });
@@ -772,11 +772,11 @@ public class MainController implements Initializable {
      * Adds project-specific features to the project list view.
      */
     private void augmentProjectListView() {
-        projectListView.setItems(projects);
+        projectListView.setItems(organisations);
 
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                selectedProject = newValue;
+                selectedOrganisation = newValue;
 
                 // Set observable list of people, skills and teams corresponding
                 // to this new project
@@ -817,7 +817,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final NewSkillController newSkillController = loader.getController();
             newSkillController.setStage(stage);
-            newSkillController.setProject(selectedProject);
+            newSkillController.setOrganisation(selectedOrganisation);
 
             stage.showAndWait();
             if (newSkillController.isValid()) {
@@ -850,7 +850,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final NewPersonController newPersonController = loader.getController();
             newPersonController.setStage(stage);
-            newPersonController.setProject(selectedProject);
+            newPersonController.setOrganisation(selectedOrganisation);
             newPersonController.setProjectForFormController();
 
             stage.showAndWait();
@@ -882,7 +882,7 @@ public class MainController implements Initializable {
             final TeamFormController teamFormController = loader.getController();
             teamFormController.setStage(stage);
             teamFormController.setTeam(team);
-            teamFormController.setProject(selectedProject);
+            teamFormController.setOrganisation(selectedOrganisation);
             teamFormController.setListSelectionViewSettings();
 
             stage.showAndWait();
@@ -923,7 +923,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final ReleaseFormController releaseFormController = loader.getController();
             releaseFormController.setStage(stage);
-            releaseFormController.setProject(selectedProject);
+            releaseFormController.setOrganisation(selectedOrganisation);
             releaseFormController.setRelease(release);
 
             stage.showAndWait();

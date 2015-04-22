@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Release;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 public class ReleaseFormController implements Initializable {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final PopOver errorPopOver = new PopOver();
-    private Project project;
+    private Organisation organisation;
     private Release release;
     private Command command;
     private boolean valid = false;
@@ -137,7 +137,7 @@ public class ReleaseFormController implements Initializable {
                 return true;
             }
         }
-        for (final Release r : project.getReleases()) {
+        for (final Release r : organisation.getReleases()) {
             if (shortNameTextField.getText().equals(r.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
                 errorPopOver.show(shortNameTextField);
@@ -161,8 +161,8 @@ public class ReleaseFormController implements Initializable {
         if (release == null) {
             // new release command
             release = new Release(shortNameTextField.getText(), releaseDatePicker.getValue(),
-                    descriptionTextField.getText(), project);
-            command = new CreateReleaseCommand(release, project);
+                    descriptionTextField.getText(), organisation);
+            command = new CreateReleaseCommand(release, organisation);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -185,8 +185,8 @@ public class ReleaseFormController implements Initializable {
         this.stage = stage;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public void setRelease(Release release) {

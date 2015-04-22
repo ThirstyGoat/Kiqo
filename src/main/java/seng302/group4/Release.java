@@ -7,16 +7,16 @@ import java.time.LocalDate;
  * Created by leroy on 10/04/15.
  */
 public class Release extends Item{
-    private Project project;
+    private Organisation organisation;
     private String shortName;
     private String description;
     private LocalDate date;  //change back to date
 
-    public Release(String shortName, LocalDate date, String description, Project project) {
+    public Release(String shortName, LocalDate date, String description, Organisation organisation) {
         this.shortName = shortName;
         this.description = description;
         this.date = date;
-        this.project = project;
+        this.organisation = organisation;
     }
 
     @Override
@@ -38,12 +38,12 @@ public class Release extends Item{
         return shortName.hashCode();
     }
 
-    public Project getProject() {
-        return project;
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public String getShortName() {

@@ -10,7 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
@@ -18,7 +18,7 @@ import seng302.group4.undo.EditCommand;
 
 public class EditSkillController implements Initializable {
     private Stage stage;
-    private Project project;
+    private Organisation organisation;
     private Skill skill;
     private boolean valid = false;
     private CompoundCommand command;
@@ -52,7 +52,7 @@ public class EditSkillController implements Initializable {
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
                 if (!formController.getShortName().equals(skill.getShortName())) {
-                    for (final Skill s : project.getSkills()) {
+                    for (final Skill s : organisation.getSkills()) {
                         if (formController.getShortName().equals(s.getShortName())) {
                             formController.warnShortnameNotUnique();
                             return;
@@ -73,12 +73,12 @@ public class EditSkillController implements Initializable {
         });
     }
 
-    public Project getProject() {
-        return project;
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public void loadSkill(Skill skill) {
@@ -108,7 +108,7 @@ public class EditSkillController implements Initializable {
     }
 
     public void setProjectForFormController() {
-        formController.setProject(project);
+        formController.setOrganisation(organisation);
         formController.loadSkill(skill);
     }
 }

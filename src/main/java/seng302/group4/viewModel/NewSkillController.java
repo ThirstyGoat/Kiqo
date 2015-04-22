@@ -6,7 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 import seng302.group4.undo.CreateSkillCommand;
 
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class NewSkillController implements Initializable {
     private Stage stage;
     private boolean valid = false;
-    private Project project;
+    private Organisation organisation;
 
     // FXML Injections
     @FXML
@@ -58,14 +58,14 @@ public class NewSkillController implements Initializable {
             // check to see that shortname
             formController.validate();
             if (formController.isValid()) {
-                for (Skill s : project.getSkills()) {
+                for (Skill s : organisation.getSkills()) {
                     if (formController.getShortName().equals(s.getShortName())) {
                         formController.warnShortnameNotUnique();
                         return;
                     }
                 }
                 Skill skill = new Skill(formController.getShortName(), formController.getDescription());
-                command = new CreateSkillCommand(skill, project);
+                command = new CreateSkillCommand(skill, organisation);
 
                 valid = true;
                 stage.close();
@@ -73,12 +73,12 @@ public class NewSkillController implements Initializable {
         });
     }
 
-    public Project getProject() {
-        return project;
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public CreateSkillCommand getCommand() {
@@ -86,7 +86,7 @@ public class NewSkillController implements Initializable {
     }
 
     private void setProjectForFormController() {
-        formController.setProject(project);
+        formController.setOrganisation(organisation);
     }
 
     public void setStage(Stage stage) {

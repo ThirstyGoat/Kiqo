@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.undo.CreatePersonCommand;
 
 import java.net.URL;
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class NewPersonController implements Initializable {
     private Stage stage;
     private boolean valid = false;
-    private Project project;
+    private Organisation organisation;
     // FXML Injections
     @FXML
     private Button cancelButton;
@@ -59,7 +59,7 @@ public class NewPersonController implements Initializable {
             // check to see that shortname and longname are populated and shortname is unique within the project
             formController.validate();
             if (formController.isValid()) {
-                for (Person p : project.getPeople()) {
+                for (Person p : organisation.getPeople()) {
                     if (formController.getShortName().equals(p.getShortName())) {
                         formController.warnShortnameNotUnique();
                         return;
@@ -68,19 +68,19 @@ public class NewPersonController implements Initializable {
                 Person person = new Person(formController.getShortName(), formController.getLongName(),
                         formController.getDescription(), formController.getUserID(), formController.getEmailAddress(),
                         formController.getPhoneNumber(), formController.getDepartment(), formController.getSkills());
-                command = new CreatePersonCommand(person, project);
+                command = new CreatePersonCommand(person, organisation);
                 valid = true;
                 stage.close();
             }
         });
     }
 
-    public Project getProject() {
-        return project;
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public CreatePersonCommand getCommand() {
@@ -88,7 +88,7 @@ public class NewPersonController implements Initializable {
     }
 
     public void setProjectForFormController() {
-        formController.setProject(project);
+        formController.setOrganisation(organisation);
         formController.setUpSkillsListSelectionView();
     }
 

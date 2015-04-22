@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 import seng302.group4.customNodes.GoatListSelectionView;
 
@@ -45,7 +45,7 @@ public class PersonFormController implements Initializable {
     private boolean shortNameModified = false;
 
 
-    private Project project;
+    private Organisation organisation;
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -98,12 +98,12 @@ public class PersonFormController implements Initializable {
     public void setUpSkillsListSelectionView() {
         final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
 
-        sourceSkills.addAll(project.getSkills());
+        sourceSkills.addAll(organisation.getSkills());
 
         // Remove all skills from sourceSkills that are currently in targetSkills
         sourceSkills.removeAll(targetSkills);
 
-        project.getSkills().addListener((ListChangeListener<Skill>) c -> {
+        organisation.getSkills().addListener((ListChangeListener<Skill>) c -> {
             c.next();
             // We remove skills from the sourceSkills that were removed from the project.
             // Note that this shouldn't actually be possible since undo/redo should be disabled
@@ -296,8 +296,8 @@ public class PersonFormController implements Initializable {
         this.stage = stage;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
         setUpSkillsList();
     }
 

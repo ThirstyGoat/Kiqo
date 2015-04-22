@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Skill;
 
 /**
@@ -14,14 +14,14 @@ import seng302.group4.Skill;
  */
 public class DeleteSkillCommandTest {
 
-    private Project project;
+    private Organisation organisation;
 
     /**
      * Initialises the test environment.
      */
     @Before
     public void setUp() {
-        project = new Project();
+        organisation = new Organisation();
 
         // Create skills
         final Skill skill1 = new Skill("Skill1", "Skill1 description");
@@ -38,14 +38,14 @@ public class DeleteSkillCommandTest {
         final Person person3 = new Person("", "", "", "", "", "", "", new ArrayList<>());
 
         // Add people to project
-        project.getPeople().add(person1);
-        project.getPeople().add(person2);
-        project.getPeople().add(person3);
+        organisation.getPeople().add(person1);
+        organisation.getPeople().add(person2);
+        organisation.getPeople().add(person3);
 
         // Add skills to project
-        project.getSkills().add(skill1);
-        project.getSkills().add(skill2);
-        project.getSkills().add(skill3);
+        organisation.getSkills().add(skill1);
+        organisation.getSkills().add(skill2);
+        organisation.getSkills().add(skill3);
 
     }
 
@@ -55,12 +55,12 @@ public class DeleteSkillCommandTest {
     @Test
     public void deleteUnusedSkill_Success() {
         final Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.getSkills().add(unusedSkill);
+        organisation.getSkills().add(unusedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, organisation);
 
         command.execute();
-        assert !project.getSkills().contains(unusedSkill);
+        assert !organisation.getSkills().contains(unusedSkill);
     }
 
     /**
@@ -69,14 +69,14 @@ public class DeleteSkillCommandTest {
     @Test
     public void undoDeleteUnusedSkill_Success() {
         final Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        project.getSkills().add(unusedSkill);
+        organisation.getSkills().add(unusedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, organisation);
 
         command.execute();
         command.undo();
 
-        assert project.getSkills().contains(unusedSkill);
+        assert organisation.getSkills().contains(unusedSkill);
     }
 
     /**
@@ -85,15 +85,15 @@ public class DeleteSkillCommandTest {
     @Test
     public void deleteUsedSkill_Success() {
         final Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        organisation.getPeople().get(0).getSkills().add(usedSkill);
+        organisation.getSkills().add(usedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
 
         command.execute();
 
-        assert !project.getSkills().contains(usedSkill);
-        for (final Person person : project.getPeople()) {
+        assert !organisation.getSkills().contains(usedSkill);
+        for (final Person person : organisation.getPeople()) {
             assert !person.getSkills().contains(usedSkill);
         }
     }
@@ -104,12 +104,12 @@ public class DeleteSkillCommandTest {
     @Test
     public void checkDeleteSkill() {
         final Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        organisation.getPeople().get(0).getSkills().add(usedSkill);
+        organisation.getSkills().add(usedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
 
-        assert command.getPeopleWithSkill().contains(project.getPeople().get(0));
+        assert command.getPeopleWithSkill().contains(organisation.getPeople().get(0));
         assert command.getPeopleWithSkill().size() == 1;
     }
 
@@ -119,17 +119,17 @@ public class DeleteSkillCommandTest {
     @Test
     public void undoDeleteUsedSkill_Success() {
         final Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        organisation.getPeople().get(0).getSkills().add(usedSkill);
+        organisation.getSkills().add(usedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
 
         // Remove the skill from people with it, and the project
         command.execute();
 
         // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (final Person person : project.getPeople()) {
+        assert !organisation.getSkills().contains(usedSkill);
+        for (final Person person : organisation.getPeople()) {
             assert !person.getSkills().contains(usedSkill);
         }
 
@@ -137,8 +137,8 @@ public class DeleteSkillCommandTest {
         command.undo();
 
         // Check to make sure that the person now has the skill
-        assert project.getSkills().contains(usedSkill);
-        assert project.getPeople().get(0).getSkills().contains(usedSkill);
+        assert organisation.getSkills().contains(usedSkill);
+        assert organisation.getPeople().get(0).getSkills().contains(usedSkill);
     }
 
     /**
@@ -147,17 +147,17 @@ public class DeleteSkillCommandTest {
     @Test
     public void redoDeleteUsedSkill_Success() {
         final Skill usedSkill = new Skill("", "");
-        project.getPeople().get(0).getSkills().add(usedSkill);
-        project.getSkills().add(usedSkill);
+        organisation.getPeople().get(0).getSkills().add(usedSkill);
+        organisation.getSkills().add(usedSkill);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, project);
+        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
 
         // Remove the skill from people with it, and the project
         command.execute();
 
         // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (final Person person : project.getPeople()) {
+        assert !organisation.getSkills().contains(usedSkill);
+        for (final Person person : organisation.getPeople()) {
             assert !person.getSkills().contains(usedSkill);
         }
 
@@ -165,15 +165,15 @@ public class DeleteSkillCommandTest {
         command.undo();
 
         // Check to make sure that the person now has the skill
-        assert project.getSkills().contains(usedSkill);
-        assert project.getPeople().get(0).getSkills().contains(usedSkill);
+        assert organisation.getSkills().contains(usedSkill);
+        assert organisation.getPeople().get(0).getSkills().contains(usedSkill);
 
         // Redo the action
         command.redo();
 
         // Check to make sure nobody has the skill
-        assert !project.getSkills().contains(usedSkill);
-        for (final Person person : project.getPeople()) {
+        assert !organisation.getSkills().contains(usedSkill);
+        for (final Person person : organisation.getPeople()) {
             assert !person.getSkills().contains(usedSkill);
         }
     }

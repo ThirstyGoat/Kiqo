@@ -1,7 +1,7 @@
 package seng302.group4.undo;
 
 import seng302.group4.Person;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 /**
@@ -9,7 +9,7 @@ import seng302.group4.Team;
  *
  */
 public class DeletePersonCommand extends Command<Person> {
-    private final Project project;
+    private final Organisation organisation;
     private final Person person;
     private final Team team;
     private boolean isProductOwner = false;
@@ -18,11 +18,11 @@ public class DeletePersonCommand extends Command<Person> {
 
     /**
      * @param person Person to be deleted
-     * @param project Project to which the person belongs
+     * @param organisation Project to which the person belongs
      */
-    public DeletePersonCommand(final Person person, final Project project) {
+    public DeletePersonCommand(final Person person, final Organisation organisation) {
         this.person = person;
-        this.project = project;
+        this.organisation = organisation;
         team = person.getTeam();
         if (team != null) {
             if (team.getProductOwner() == person) {
@@ -57,7 +57,7 @@ public class DeletePersonCommand extends Command<Person> {
         }
 
         // Remove the person from the project
-        project.getPeople().remove(person);
+        organisation.getPeople().remove(person);
         return person;
     }
 
@@ -65,7 +65,7 @@ public class DeletePersonCommand extends Command<Person> {
     public void undo() {
         // Repeat execute steps backwards
         // Add person back to project
-        project.getPeople().add(person);
+        organisation.getPeople().add(person);
         if (team != null) {
             // Add person to Team Members
             team.getTeamMembers().add(person);

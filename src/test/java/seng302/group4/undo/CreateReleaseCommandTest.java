@@ -1,7 +1,7 @@
 package seng302.group4.undo;
 
 import org.junit.Test;
-import seng302.group4.Project;
+import seng302.group4.Organisation;
 import seng302.group4.Release;
 
 import java.time.LocalDate;
@@ -12,33 +12,33 @@ import java.time.LocalDate;
 public class CreateReleaseCommandTest {
     @Test
     public void createRelease_ReleaseAddedToProject() {
-        Project project = new Project();
-        Release release = new Release("", LocalDate.now(), "", project);
+        Organisation organisation = new Organisation();
+        Release release = new Release("", LocalDate.now(), "", organisation);
 
-        CreateReleaseCommand command = new CreateReleaseCommand(release, project);
+        CreateReleaseCommand command = new CreateReleaseCommand(release, organisation);
 
-        assert !project.getReleases().contains(release);
+        assert !organisation.getReleases().contains(release);
 
         command.execute();
 
-        assert project.getReleases().contains(release);
+        assert organisation.getReleases().contains(release);
     }
 
     @Test
     public void undoCreateRelease_ReleaseRemovedFromProject() {
-        Project project = new Project();
-        Release release = new Release("", LocalDate.now(), "", project);
+        Organisation organisation = new Organisation();
+        Release release = new Release("", LocalDate.now(), "", organisation);
 
-        CreateReleaseCommand command = new CreateReleaseCommand(release, project);
+        CreateReleaseCommand command = new CreateReleaseCommand(release, organisation);
 
-        assert !project.getReleases().contains(release);
+        assert !organisation.getReleases().contains(release);
 
         command.execute();
 
-        assert project.getReleases().contains(release);
+        assert organisation.getReleases().contains(release);
 
         command.undo();
 
-        assert !project.getReleases().contains(release);
+        assert !organisation.getReleases().contains(release);
     }
 }

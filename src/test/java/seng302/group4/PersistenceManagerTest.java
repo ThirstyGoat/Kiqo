@@ -18,7 +18,7 @@ import com.google.gson.JsonSyntaxException;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PersistenceManagerTest {
 
-    Project project = null;
+    Organisation organisation = null;
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
@@ -32,12 +32,12 @@ public class PersistenceManagerTest {
      */
     @Test
     public void testLoad_happyCase() throws Exception {
-        project = new Project("p", "Project", testFolder.newFile("test.json"));
-        PersistenceManager.saveProject(project.getSaveLocation(), project);
-        Assert.assertTrue(new File(project.getSaveLocation() + "").exists());
+        organisation = new Organisation("p", "Project", testFolder.newFile("test.json"));
+        PersistenceManager.saveProject(organisation.getSaveLocation(), organisation);
+        Assert.assertTrue(new File(organisation.getSaveLocation() + "").exists());
 
-        final Project loadedProject = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/test.json"));
-        Assert.assertTrue(loadedProject.equals(project));
+        final Organisation loadedOrganisation = PersistenceManager.loadProject(new File(testFolder.getRoot() + "/test.json"));
+        Assert.assertTrue(loadedOrganisation.equals(organisation));
     }
 
     /**
@@ -49,7 +49,7 @@ public class PersistenceManagerTest {
     public void testLoad_fileNotFound() throws Exception {
         thrown.expect(FileNotFoundException.class);
 
-        final Project p = PersistenceManager.loadProject(new File("a/non/existent/file/path"));
+        final Organisation p = PersistenceManager.loadProject(new File("a/non/existent/file/path"));
     }
 
     /**
@@ -67,7 +67,7 @@ public class PersistenceManagerTest {
             fw.write("{"); // lone opening brace == bad json
         }
 
-        final Project p = PersistenceManager.loadProject(f);
+        final Organisation p = PersistenceManager.loadProject(f);
         System.out.println(p);
     }
 }
