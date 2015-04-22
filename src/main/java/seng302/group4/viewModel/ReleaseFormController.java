@@ -196,6 +196,7 @@ public class ReleaseFormController implements Initializable {
             // create a release
             stage.setTitle("Create Release");
             okButton.setText("Create Release");
+            releaseDatePicker.setPromptText("dd/mm/yyyy");
         } else {
             // edit an existing release
             stage.setTitle("Edit Release");
