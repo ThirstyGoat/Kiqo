@@ -3,6 +3,7 @@ package seng302.group4.undo;
 import java.io.File;
 
 import seng302.group4.Organisation;
+import seng302.group4.Project;
 
 /**
  * Command to create a project
@@ -10,57 +11,46 @@ import seng302.group4.Organisation;
  * @author amy
  *
  */
-public class CreateProjectCommand extends Command<Organisation> {
+public class CreateProjectCommand extends Command<Project> {
     private final String shortName;
     private final String longName;
     private final String description;
-    private final File saveLocation;
-    private Organisation organisation = null;
-
-    /**
-     * Constructor for a command that creates a project with the specified properties and an empty description
-     *
-     * @param shortName non-null unique ID for display
-     * @param longName more detailed name
-     * @param saveLocation where project will be serialised to disk
-     */
-    public CreateProjectCommand(final String shortName, final String longName, final File saveLocation) {
-        this(shortName, longName, saveLocation, null);
-    }
+    private final Organisation organisation;
+    private Project project = null;
 
     /**
      * Constructor for a command that creates a project with the specified properties
      *
      * @param shortName non-null unique ID for display
      * @param longName more detailed name
-     * @param saveLocation where project will be serialised to disk
      * @param description Extended description of the project
      */
-    public CreateProjectCommand(final String shortName, final String longName, final File saveLocation, final String description) {
+    public CreateProjectCommand(final String shortName, final String longName, final String description,
+                                final Organisation organisation) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
-        this.saveLocation = saveLocation;
+        this.organisation = organisation;
     }
 
     @Override
-    public Organisation execute() {
-        if (organisation == null) {
-            organisation = new Organisation(shortName, longName, saveLocation, description);
+    public Project execute() {
+        if (project == null) {
+            project = new Project(shortName, longName, description);
         }
-        return organisation;
+        organisation.getProjects().add(project);
+        return project;
     }
 
     @Override
     public String toString() {
-        return "<Create Project: \"" + shortName + "\" \"" + longName + "\" \"" + saveLocation + "\" \"" + description
-                + "\">";
+        return "<Create Project: \"" + shortName + "\" \"" + longName + "\" \"" + description + "\">";
     }
 
     @Override
     public void undo() {
-        // FIXME implement properly
-        organisation.prepareForDestruction();
+        // Goodbye team
+        organisation.getProjects().remove(project);
     }
 
     @Override

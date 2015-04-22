@@ -37,13 +37,13 @@ public class Validity {
     /**
      * Checks all the required fields in project to make sure they are non-null
      *
-     * @param organisation Project to be validated
+     * @param project Project to be validated
      * @return true if all fields are valid
      * @throws InvalidProjectException if one or more fields are invalid
      */
-    public static boolean checkProject(Organisation organisation) throws InvalidProjectException{
-        if (organisation.getShortName() == null || organisation.getLongName() == null) {
-            throw new InvalidProjectException(organisation);
+    public static boolean checkProject(Project project) throws InvalidProjectException{
+        if (project.getShortName() == null || project.getLongName() == null) {
+            throw new InvalidProjectException(project);
         }
 
         return true;

@@ -3,6 +3,7 @@ package seng302.group4;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,10 +14,12 @@ import javafx.collections.ObservableList;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Organisation {
+    private final ArrayList<Project> projects = new ArrayList<>();
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
     private final ArrayList<Person> people = new ArrayList<>();
     private final ArrayList<Release> releases = new ArrayList<>();
+    private transient ObservableList<Project> projectsObservable = FXCollections.observableList(projects);
     private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
     private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
     private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
@@ -26,6 +29,7 @@ public class Organisation {
 
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
+
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -92,7 +96,16 @@ public class Organisation {
         return teamsObservable;
     }
 
+    /**
+     *
+     * @return Observable list of projects
+     */
+    public ObservableList<Project> getProjects() {
+        return projectsObservable;
+    }
+
     public void setObservableLists() {
+        projectsObservable = FXCollections.observableList(projects);
         peopleObservable = FXCollections.observableList(people);
         skillsObservable = FXCollections.observableList(skills);
         teamsObservable = FXCollections.observableList(teams);
@@ -103,11 +116,10 @@ public class Organisation {
         Organisation o = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
         o.getPeople().add(new Person("sam", null, null, null, null, null, null, null));
         try {
-            PersistenceManager.saveProject(new File("/Users/samschofield/Desktop/org.json"), o);
+            PersistenceManager.saveOrganisation(new File("/Users/samschofield/Desktop/org.json"), o);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
 }

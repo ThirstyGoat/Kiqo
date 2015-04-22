@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import seng302.group4.Organisation;
+import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.EditCommand;
@@ -28,7 +29,7 @@ public class EditProjectController implements Initializable {
     @FXML
     private ProjectFormController formController;
 
-    private Organisation organisation;
+    private Project project;
 
     private boolean valid = false;
     private CompoundCommand command;
@@ -42,11 +43,11 @@ public class EditProjectController implements Initializable {
     /**
      * Populates the fields with project data to enable editing
      *
-     * @param organisation source of existing field data
+     * @param project source of existing field data
      */
-    public void loadProject(final Organisation organisation) {
-        this.organisation = organisation;
-        formController.loadProject(organisation);
+    public void loadProject(final Project project) {
+        this.project = project;
+        formController.loadProject(project);
     }
 
     /**
@@ -60,17 +61,14 @@ public class EditProjectController implements Initializable {
                 valid = true;
                 final ArrayList<Command<?>> changes = new ArrayList<>();
 
-                if (!formController.longName.equals(organisation.getLongName())) {
-                    changes.add(new EditCommand<>(organisation, "longName", formController.longName));
+                if (!formController.longName.equals(project.getLongName())) {
+                    changes.add(new EditCommand<>(project, "longName", formController.longName));
                 }
-                if (!formController.shortName.equals(organisation.getShortName())) {
-                    changes.add(new EditCommand<>(organisation, "shortName", formController.shortName));
+                if (!formController.shortName.equals(project.getShortName())) {
+                    changes.add(new EditCommand<>(project, "shortName", formController.shortName));
                 }
-                if (!formController.projectLocation.equals(organisation.getSaveLocation())) {
-                    changes.add(new EditCommand<>(organisation, "saveLocation", formController.projectLocation));
-                }
-                if (!formController.description.equals(organisation.getDescription())) {
-                    changes.add(new EditCommand<>(organisation, "description", formController.description));
+                if (!formController.description.equals(project.getDescription())) {
+                    changes.add(new EditCommand<>(project, "description", formController.description));
                 }
 
                 command = new CompoundCommand("Edit Project", changes);
@@ -96,8 +94,8 @@ public class EditProjectController implements Initializable {
         });
     }
 
-    public Organisation getOrganisation() {
-        return organisation;
+    public Project getProject() {
+        return project;
     }
 
     public CompoundCommand getCommand() {

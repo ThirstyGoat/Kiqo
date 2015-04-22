@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import seng302.group4.Organisation;
 import seng302.group4.undo.CreateProjectCommand;
 
 /**
@@ -26,6 +27,7 @@ public class NewProjectController implements Initializable {
     private ProjectFormController formController;
 
     private CreateProjectCommand command;
+    private Organisation organisation;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -42,8 +44,7 @@ public class NewProjectController implements Initializable {
         newProjectButton.setOnAction(event -> {
             formController.validate();
             if (formController.isValid()) {
-                command = new CreateProjectCommand(formController.shortName, formController.longName,
-                        formController.projectLocation, formController.description);
+                command = new CreateProjectCommand(formController.shortName, formController.longName, formController.description, organisation);
                 valid = true;
                 // Close the new project dialog (this window)
                 stage.close();
@@ -54,6 +55,14 @@ public class NewProjectController implements Initializable {
     public void setStage(final Stage stage) {
         this.stage = stage;
         formController.setStage(stage);
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     /**

@@ -11,12 +11,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.controlsfx.control.PopOver;
 import seng302.group4.Organisation;
+import seng302.group4.Project;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -24,7 +24,6 @@ import seng302.group4.Organisation;
 public class ProjectFormController implements Initializable {
     public String longName;
     public String shortName;
-    public File projectLocation;
     public String description;
 
     // FXML Injections
@@ -32,10 +31,6 @@ public class ProjectFormController implements Initializable {
     private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
-    @FXML
-    private Label projectLocationLabel;
-    @FXML
-    private Tooltip projectLocationTooltip;
     @FXML
     private Button openButton;
     @FXML
@@ -52,28 +47,16 @@ public class ProjectFormController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.setOpenButton();
         this.setShortNameHandler();
-
         this.setErrorPopOvers();
-
-        // disconnect tooltip if blank
-        this.updateTooltip();
 
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
     }
 
-    public void loadProject(final Organisation organisation) {
-        this.longNameTextField.setText(organisation.getLongName());
-        this.shortNameTextField.setText(organisation.getShortName());
-        this.descriptionTextField.setText(organisation.getDescription());
-
-        // also sets tooltip text
-        this.projectLocation = organisation.getSaveLocation();
-        this.projectLocationLabel.setText(organisation.getSaveLocation().getPath());
-
-        // disconnect tooltip if blank
-        this.updateTooltip();
+    public void loadProject(final Project project) {
+        this.longNameTextField.setText(project.getLongName());
+        this.shortNameTextField.setText(project.getShortName());
+        this.descriptionTextField.setText(project.getDescription());
     }
 
     /**
@@ -104,7 +87,7 @@ public class ProjectFormController implements Initializable {
         this.errorPopOver.hide();
 
         // Perform validity checks and create project
-        if (this.checkName() && this.checkShortName() && this.checkSaveLocation()) {
+        if (this.checkName() && this.checkShortName()) {
             // Set project properties
             this.longName = this.longNameTextField.getText();
             this.shortName = this.shortNameTextField.getText();
@@ -114,36 +97,36 @@ public class ProjectFormController implements Initializable {
         }
     }
 
-    /**
-     * Checks to make sure that the save location has been set, and it is
-     * writable by the user
-     *
-     * @return Whether or not the save location is valid/readable/writable
-     */
-    private boolean checkSaveLocation() {
-        if (this.projectLocation == null) {
-            // Then the user hasn't selected a project directory, alert them!
-            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
-            this.errorPopOver.show(this.projectLocationLabel);
-            return false;
-        }
-        // Confirm read/write access
-        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
-        if (!equalPermissionsFile.canRead()) {
-            // Then we can't read from the directory, what's the point!
-            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-            this.errorPopOver.show(this.projectLocationLabel);
-            return false;
-        }
-        if (!equalPermissionsFile.canWrite()) {
-            // Then we can't write to the directory
-            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-            this.errorPopOver.show(this.projectLocationLabel);
-            return false;
-        }
-
-        return true;
-    }
+//    /**
+//     * Checks to make sure that the save location has been set, and it is
+//     * writable by the user
+//     *
+//     * @return Whether or not the save location is valid/readable/writable
+//     */
+//    private boolean checkSaveLocation() {
+//        if (this.projectLocation == null) {
+//            // Then the user hasn't selected a project directory, alert them!
+//            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
+//            this.errorPopOver.show(this.projectLocationLabel);
+//            return false;
+//        }
+//        // Confirm read/write access
+//        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
+//        if (!equalPermissionsFile.canRead()) {
+//            // Then we can't read from the directory, what's the point!
+//            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
+//            this.errorPopOver.show(this.projectLocationLabel);
+//            return false;
+//        }
+//        if (!equalPermissionsFile.canWrite()) {
+//            // Then we can't write to the directory
+//            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
+//            this.errorPopOver.show(this.projectLocationLabel);
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     /**
      * Checks to make sure the short name is valid
@@ -215,52 +198,44 @@ public class ProjectFormController implements Initializable {
         });
     }
 
-    /**
-     * Sets the open dialog functionality including getting the path chosen by
-     * the user.
-     */
-    private void setOpenButton() {
-        final String EXTENSION = ".json";
-        this.openButton.setOnAction(event -> {
-            // Hide existing error message if there is one
-                this.errorPopOver.hide();
+//    /**
+//     * Sets the open dialog functionality including getting the path chosen by
+//     * the user.
+//     */
+//    private void setOpenButton() {
+//        final String EXTENSION = ".json";
+//        this.openButton.setOnAction(event -> {
+//            // Hide existing error message if there is one
+//                this.errorPopOver.hide();
+//
+//                final FileChooser fileChooser = new FileChooser();
+//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
+//
+//                if (this.projectLocation != null) {
+//                    // Then this is an edit dialog, we need to make sure that
+//                    // the
+//                    // user opens to the project directory
+//                    fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
+//                    fileChooser.setInitialFileName(this.projectLocation.getName());
+//                } else {
+//                    fileChooser.setInitialFileName(shortNameTextField.getText());
+//                }
+//
+//                File selectedFile = fileChooser.showSaveDialog(this.stage);
+//                if (selectedFile != null) {
+//                    // ensure file has .json extension
+//                    final String selectedFilename = selectedFile.getName();
+//                    if (!selectedFilename.endsWith(EXTENSION)) {
+//                        // append extension
+//                        selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
+//                    }
+//                    // store selected file
+//                    this.projectLocationLabel.setText(selectedFile.getPath());
+//                    this.projectLocation = selectedFile.getAbsoluteFile();
+//                }
+//        });
+//    }
 
-                final FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
-
-                if (this.projectLocation != null) {
-                    // Then this is an edit dialog, we need to make sure that
-                    // the
-                    // user opens to the project directory
-                    fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
-                    fileChooser.setInitialFileName(this.projectLocation.getName());
-                } else {
-                    fileChooser.setInitialFileName(shortNameTextField.getText());
-                }
-
-                File selectedFile = fileChooser.showSaveDialog(this.stage);
-                if (selectedFile != null) {
-                    // ensure file has .json extension
-                    final String selectedFilename = selectedFile.getName();
-                    if (!selectedFilename.endsWith(EXTENSION)) {
-                        // append extension
-                        selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
-                    }
-                    // store selected file
-                    this.projectLocationLabel.setText(selectedFile.getPath());
-                    this.projectLocation = selectedFile.getAbsoluteFile();
-                    this.updateTooltip();
-                }
-        });
-    }
-
-    /**
-     * Attaches or detaches the tooltip for saveLocation based on whether the
-     * tooltip would be empty.
-     */
-    private void updateTooltip() {
-        this.projectLocationLabel.setTooltip(this.projectLocationTooltip.getText().isEmpty() ? null : this.projectLocationTooltip);
-    }
 
     public void setStage(final Stage stage) {
         this.stage = stage;

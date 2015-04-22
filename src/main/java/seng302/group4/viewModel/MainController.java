@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -43,12 +44,12 @@ public class MainController implements Initializable {
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = new UndoManager();
-    private final ObservableList<Organisation> organisations = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
-    private ListView<Organisation> projectListView;
+    private ListView<Project> projectListView;
     @FXML
     private ListView<Person> peopleListView;
     @FXML
@@ -84,6 +85,7 @@ public class MainController implements Initializable {
     private double dividerPosition;
 
     private Organisation selectedOrganisation;
+    private Project selectedProject;
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -123,7 +125,7 @@ public class MainController implements Initializable {
      * @param organisation Project to be deleted
      *
      */
-    private void deleteProject(Organisation organisation) {
+    private void deleteProject(Project organisation) {
         GoatDialog
                 .showAlertDialog(primaryStage, "Version Limitation", "No can do.", "Deleting a project is not supported in this version.");
 
@@ -241,8 +243,8 @@ public class MainController implements Initializable {
         final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Organisation) {
-            deleteProject((Organisation) focusedObject);
+        } else if (focusedObject instanceof Project) {
+            deleteProject((Project) focusedObject);
         } else if (focusedObject instanceof Person) {
             deletePerson((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
@@ -258,8 +260,8 @@ public class MainController implements Initializable {
         final Item focusedObject = MainController.focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Organisation) {
-            editProjectDialog((Organisation) focusedObject);
+        } else if (focusedObject instanceof Project) {
+            editProjectDialog((Project) focusedObject);
         } else if (focusedObject instanceof Person) {
             editPersonDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
@@ -365,8 +367,8 @@ public class MainController implements Initializable {
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == projectTab) {
                 projectListView.getSelectionModel().select(null);
-                if (selectedOrganisation != null) {
-                    projectListView.getSelectionModel().select(selectedOrganisation);
+                if (selectedProject != null) {
+                    projectListView.getSelectionModel().select(selectedProject);
                 } else {
                     projectListView.getSelectionModel().selectFirst();
                 }
@@ -448,19 +450,16 @@ public class MainController implements Initializable {
 
     public void newProject() {
         if (selectedOrganisation != null) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
-                    "Only one project at a time is supported in this version.");
-            return;
+            newProjectDialog();
         }
-        newProjectDialog();
     }
 
     public void openProject(File draggedFilePath) {
         File filePath;
 
         if (selectedOrganisation != null) {
-            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "No can do.",
-                    "Only one project at a time is supported in this version.");
+            GoatDialog.showAlertDialog(primaryStage, "Version Limitation", "Warning.",
+                    "Opening a new Organisation will close the current organisation and lose all unsaved changes.");
             return;
         }
 
@@ -477,7 +476,7 @@ public class MainController implements Initializable {
         }
         Organisation organisation = null;
         try {
-            organisation = PersistenceManager.loadProject(filePath);
+            organisation = PersistenceManager.loadOrganisation(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -489,8 +488,8 @@ public class MainController implements Initializable {
         }
         if (organisation != null) {
             organisation.setSaveLocation(filePath);
-            addProject(organisation);
-            System.out.println(organisation.getShortName() + " has been loaded successfully");
+            addProjects(organisation.getProjects());
+            System.out.println("File has been loaded successfully");
         }
         tabViewPane.getSelectionModel().select(projectTab);
     }
@@ -501,7 +500,7 @@ public class MainController implements Initializable {
     public void saveProject() {
         final Organisation organisation = selectedOrganisation;
         try {
-            PersistenceManager.saveProject(organisation.getSaveLocation(), organisation);
+            PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
         } catch (final IOException e) {
             e.printStackTrace();
             return;
@@ -584,16 +583,16 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Adds the new project to the observable list so that it is visible in the list view
-     * @param organisation New Project to be added
+     * Adds the new projects to the observable list so that it is visible in the list view
+     * @param projects New Project to be added
      */
-    private void addProject(final Organisation organisation) {
-        if (organisation != null) {
+    private void addProjects(final List<Project> projects) {
+        if (projects != null) {
             // Update View Accordingly
-            organisations.add(organisation);
-            // Select added project in the ListView
+            this.projects.addAll(projects);
+            // Select added projects in the ListView
             projectListView.getSelectionModel().select(null);
-            projectListView.getSelectionModel().select(organisation);
+            projectListView.getSelectionModel().select(projects.get(0));
 
             // enable menu items
             menuBarController.enableNewTeam();
@@ -700,7 +699,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void editProjectDialog(Organisation organisation) {
+    private void editProjectDialog(Project organisation) {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
         Platform.runLater(() -> {
@@ -772,18 +771,11 @@ public class MainController implements Initializable {
      * Adds project-specific features to the project list view.
      */
     private void augmentProjectListView() {
-        projectListView.setItems(organisations);
+        projectListView.setItems(projects);
 
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                selectedOrganisation = newValue;
-
-                // Set observable list of people, skills and teams corresponding
-                // to this new project
-                peopleListView.setItems(newValue.getPeople());
-                skillsListView.setItems(newValue.getSkills());
-                teamsListView.setItems(newValue.getTeams());
-                releasesListView.setItems(newValue.getReleases());
+                selectedProject = newValue;
 
                 // update label to display name of currently selected project
                 listLabel.setText(newValue.getShortName());
@@ -968,7 +960,7 @@ public class MainController implements Initializable {
             if (newProjectController.isValid()) {
                 // TODO This will need work when we add support for multiple projects
                 final CreateProjectCommand command = newProjectController.getCommand();
-                addProject(command.execute()); // not undoable
+                doCommand(command); // not undoable
             }
         });
     }
