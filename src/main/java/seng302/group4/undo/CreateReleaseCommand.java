@@ -7,8 +7,8 @@ import seng302.group4.Release;
  * Created by james on 11/04/15.
  */
 public class CreateReleaseCommand extends Command<Release> {
-    private Organisation organisation;
-    private Release release;
+    private final Organisation organisation;
+    private final Release release;
 
 
     public CreateReleaseCommand(final Release release, final Organisation organisation) {
@@ -18,13 +18,13 @@ public class CreateReleaseCommand extends Command<Release> {
 
     @Override
     public Release execute() {
-        organisation.getReleases().add(release);
+        release.getProject().getReleases().add(release);
         return release;
     }
 
     @Override
     public void undo() {
-        organisation.getReleases().remove(release);
+        release.getProject().getReleases().remove(release);
     }
 
     @Override

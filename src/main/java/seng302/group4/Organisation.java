@@ -1,11 +1,9 @@
 package seng302.group4;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -32,51 +30,11 @@ public class Organisation {
     public Organisation() {
         skills.add(poSkill);
         skills.add(smSkill);
-
-        // register listener on projects list to listen for changes in releases
-        // derived from http://docs.oracle.com/javafx/2/api/javafx/collections/ListChangeListener.Change.html
-        projectsObservable.addListener(new ListChangeListener<Project>() {
-            @Override
-            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Project> c) {
-                while (c.next()) {
-                    if (c.wasPermutated()) {
-                        // ignore permutate
-                    } else if (c.wasUpdated() || c.wasReplaced()) {
-                        replaceReleaseList(c.getList());
-                    } else {
-                        for (final Project remitem : c.getRemoved()) {
-                            releaseObservable.removeAll(remitem.getReleases());
-                        }
-                        for (final Project additem : c.getAddedSubList()) {
-                            releaseObservable.addAll(additem.getReleases());
-                        }
-                    }
-                }
-            }
-
-            private void replaceReleaseList(ObservableList<? extends Project> list) {
-                releaseObservable.clear();
-                for (final Project project : list) {
-                    releaseObservable.addAll(project.getReleases());
-                }
-            }
-        });
     }
 
     public Organisation(final File saveLocation) {
         this();
         this.saveLocation = saveLocation;
-    }
-
-    public static void main(String[] args) {
-        final Organisation o = new Organisation(new File("/Users/samschofield/Desktop/org.json"));
-        o.getPeople().add(new Person("sam", null, null, null, null, null, null, null));
-        try {
-            PersistenceManager.saveOrganisation(new File("/Users/samschofield/Desktop/org.json"), o);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public Skill getPoSkill() {

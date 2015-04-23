@@ -9,11 +9,13 @@ import java.time.LocalDate;
 public class Release extends Item{
     private Organisation organisation;
     private String shortName;
+    private Project project;
+    private LocalDate date; // change back to date
     private String description;
-    private LocalDate date;  //change back to date
 
-    public Release(String shortName, LocalDate date, String description, Organisation organisation) {
+    public Release(String shortName, Project project, LocalDate date, String description, Organisation organisation) {
         this.shortName = shortName;
+        this.project = project;
         this.description = description;
         this.date = date;
         this.organisation = organisation;
@@ -28,7 +30,7 @@ public class Release extends Item{
             return false;
         }
 
-        Release release = (Release) o;
+        final Release release = (Release) o;
 
         return shortName.equals(release.shortName);
     }
@@ -46,12 +48,21 @@ public class Release extends Item{
         this.organisation = organisation;
     }
 
+    @Override
     public String getShortName() {
         return shortName;
     }
 
     public void setShortName(String shortName) {
         this.shortName = shortName;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public String getDescription() {
@@ -70,7 +81,9 @@ public class Release extends Item{
         this.date = date;
     }
 
+    @Override
     public String toString() {
-        return shortName;
+        return "Release{shortName=" + shortName + ", project=" + project.getShortName() + ", date=" + date + ", description=" + description
+                + "}";
     }
 }

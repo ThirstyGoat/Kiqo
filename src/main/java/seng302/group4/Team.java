@@ -16,10 +16,10 @@ public class Team extends Item {
     private List<Person> teamMembers;
     private ArrayList<Allocation> allocations = new ArrayList<>();
 
-    public Team(String shortName, String description, List<Person> teamMembers2) {
+    public Team(String shortName, String description, List<Person> teamMembers) {
         this.shortName = shortName;
         this.description = description;
-        teamMembers = teamMembers2;
+        this.teamMembers = teamMembers;
     }
 
     @Override
@@ -79,9 +79,9 @@ public class Team extends Item {
         return devTeam;
     }
 
-    public void setDevTeam(List<Person> devTeam2) {
-        devTeam.clear();
-        devTeam.addAll(devTeam2.stream().collect(Collectors.toList()));
+    public void setDevTeam(List<Person> devTeam) {
+        this.devTeam.clear();
+        this.devTeam.addAll(devTeam.stream().collect(Collectors.toList()));
     }
 
     public ArrayList<Allocation> getAllocations() {

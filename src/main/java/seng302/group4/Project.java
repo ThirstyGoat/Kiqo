@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -89,13 +90,20 @@ public class Project extends Item {
     }
 
     /**
+     * @param releases list of releases associated with this project
+     */
+    public void setReleases(final List<Release> releases) {
+        this.releasesObservable.clear();
+        this.releasesObservable.addAll(releases);
+    }
+    
+    /**
      * Gets the array of team allocations
      * @return The ObservableList of Team Allocations
      */
     public ObservableList<Allocation> getAllocations() {
         return allocationsObservable;
     }
-
 
 //    /**
 //     * Gets the array of all allocations belonging to team

@@ -14,11 +14,13 @@
                 <Font name="System Bold" size="12.0" fx:id="x1" />
               </font>
             </Label>
-            <Label font="$x1" text="Release Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Project:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Release Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <Label fx:id="releaseDateLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="projectLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="releaseDateLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
