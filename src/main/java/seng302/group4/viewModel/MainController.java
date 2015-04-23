@@ -1,31 +1,5 @@
 package seng302.group4.viewModel;
 
-import com.google.gson.JsonSyntaxException;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.*;
-import javafx.util.Callback;
-import org.controlsfx.control.StatusBar;
-import seng302.group4.*;
-import seng302.group4.exceptions.InvalidPersonException;
-import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
-import seng302.group4.utils.Utilities;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,6 +7,67 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+
+import org.controlsfx.control.StatusBar;
+
+import seng302.group4.GoatDialog;
+import seng302.group4.Item;
+import seng302.group4.Organisation;
+import seng302.group4.PersistenceManager;
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Release;
+import seng302.group4.Skill;
+import seng302.group4.Team;
+import seng302.group4.exceptions.InvalidPersonException;
+import seng302.group4.exceptions.InvalidProjectException;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateReleaseCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.CreateTeamCommand;
+import seng302.group4.undo.DeletePersonCommand;
+import seng302.group4.undo.DeleteReleaseCommand;
+import seng302.group4.undo.DeleteSkillCommand;
+import seng302.group4.undo.DeleteTeamCommand;
+import seng302.group4.undo.UICommand;
+import seng302.group4.undo.UndoManager;
+import seng302.group4.utils.Utilities;
+
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Main controller for the primary view
@@ -97,7 +132,7 @@ public class MainController implements Initializable {
      * @param <T> Type of the object
      */
     public static <T> void triggerListUpdate(T newValue, ListView<T> listView) {
-        Item prevFocusedItem = MainController.focusedItemProperty.get();
+        final Item prevFocusedItem = MainController.focusedItemProperty.get();
 
         final int i = listView.getItems().indexOf(newValue);
         final EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
@@ -217,12 +252,12 @@ public class MainController implements Initializable {
     }
 
     public void deleteRelease(Release release) {
-        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease, selectedOrganisation));
+        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease));
 
         final VBox node = new VBox();
         node.setSpacing(10);
 
-        String deleteMessage = "Are you sure you want to remove the release: "
+        final String deleteMessage = "Are you sure you want to remove the release: "
                 + release.getShortName() + ", " + release.getDate() + "?";
         node.getChildren().add(new Label(deleteMessage));
 
@@ -338,17 +373,18 @@ public class MainController implements Initializable {
             initialiseListView(listView, contextMenu);
         }
 
-        // do project-specific things
-//        augmentProjectListView();
-
         // set additional listeners so that the selection is retained despite
         // tab-switching
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            // only for project: also update releases listView
+                releasesListView.setItems(null);
             if (newValue != null) {
                 selectedProject = newValue;
+                releasesListView.setItems(FXCollections.observableList(selectedProject.getReleases()));
             } else {
                 MainController.focusedItemProperty.set(null);
             }
+
         });
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -385,7 +421,6 @@ public class MainController implements Initializable {
         peopleListView.setItems(selectedOrganisation.getPeople());
         teamsListView.setItems(selectedOrganisation.getTeams());
         skillsListView.setItems(selectedOrganisation.getSkills());
-        releasesListView.setItems(selectedOrganisation.getReleases());
 
         switchToProjectList();
         projectListView.getSelectionModel().select(0);
@@ -531,7 +566,7 @@ public class MainController implements Initializable {
         if (organisation.getSaveLocation() == null) {
             final FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-            File file = fileChooser.showSaveDialog(primaryStage);
+            final File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
                 organisation.setSaveLocation(file);
             }
@@ -928,7 +963,7 @@ public class MainController implements Initializable {
         });
     }
 
-    public void releaseDialog(Release release) {
+    private void releaseDialog(Release release) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
@@ -954,7 +989,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (releaseFormController.isValid()) {
                 if (release == null) {
-                    CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
+                    final CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
                     doCommand(command);
                 } else {
                     final UICommand command = new UICommand(releaseFormController.getCommand());

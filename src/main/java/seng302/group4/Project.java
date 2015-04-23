@@ -10,7 +10,7 @@ public class Project extends Item {
     private String shortName;
     private String longName;
     private String description;
-    private final ArrayList<Release> releases = new ArrayList<>();
+    private final List<Release> releases = new ArrayList<>();
 
     /**
      * Create new Project
@@ -81,6 +81,17 @@ public class Project extends Item {
         this.shortName = shortName;
     }
 
+    /**
+     * @param releases list of releases associated with this project
+     */
+    public void setReleases(final List<Release> releases) {
+        this.releases.clear();
+        this.releases.addAll(releases);
+    }
+
+    /**
+     * @return list of releases associated with this project
+     */
     public List<Release> getReleases() {
         return releases;
     }

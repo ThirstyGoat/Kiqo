@@ -1,5 +1,10 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,18 +13,22 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
+
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
+import org.controlsfx.control.textfield.TextFields;
+
 import seng302.group4.Organisation;
+import seng302.group4.Project;
 import seng302.group4.Release;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateReleaseCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 
 /**
@@ -37,6 +46,8 @@ public class ReleaseFormController implements Initializable {
     @FXML
     private TextField shortNameTextField;
     @FXML
+    private TextField projectTextField;
+    @FXML
     private DatePicker releaseDatePicker;
     @FXML
     private TextField descriptionTextField;
@@ -46,17 +57,18 @@ public class ReleaseFormController implements Initializable {
     private Button cancelButton;
 
     private Stage stage;
-
-
+    private Project project;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setTextFieldListener();
-        setShortNameLengthRestrictor();  // need to discuss if we are going with ID, or shortname or both
+        setShortNameTextFieldListener();
+        setShortNameLengthRestrictor();
+        setProjectTextFieldSuggester();
         setReleaseDateChecker();
         Platform.runLater(shortNameTextField::requestFocus);
     }
+
     /**
      * Sets up a listener on the name field of team to restrict it to the predefined maximum length
      */
@@ -72,19 +84,42 @@ public class ReleaseFormController implements Initializable {
         });
     }
 
-
-    private void setTextFieldListener() {
+    private void setShortNameTextFieldListener() {
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            } else {
-                errorPopOver.hide();
-            }
+            errorPopOver.hide();
         });
     }
 
+    private void setProjectTextFieldSuggester() {
+        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
+        // use a String converter so that the Project's short name is used.
+        TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
+            @Override
+            public Collection<Project> call(ISuggestionRequest request) {
+                // TODO filter based on input string
+                // if (project.contains(request.getUserText()) { /* keep it */ }
+                return organisation.getProjects();
+            }
+
+        }, new StringConverter<Project>() {
+            @Override
+            public Project fromString(String string) {
+                for (final Project project : organisation.getProjects()) {
+                    if (project.getShortName().equals(string)) {
+                        return project;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public String toString(Project project) {
+                return project.getShortName();
+            }
+        });
+    }
     private void setReleaseDateChecker() {
-        String dateRegX = "(\\d|\\d\\d)/(\\d|\\d\\d)/\\d\\d\\d\\d";
+        final String dateRegX = "(\\d|\\d\\d)/(\\d|\\d\\d)/\\d\\d\\d\\d";
 
         releaseDatePicker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -122,6 +157,26 @@ public class ReleaseFormController implements Initializable {
             return false;
         }
 
+        if (projectTextField.getText().length() == 0) {
+            errorPopOver.setContentNode(new Label("Project must not be empty"));
+            errorPopOver.show(projectTextField);
+            return false;
+        } else {
+            // check that text matches an existing shortName (and keep a reference to the matching project)
+            project = null;
+            for (final Project p : organisation.getProjects()) {
+                if (projectTextField.getText().equals(p.getShortName())) {
+                    project = p;
+                    break;
+                }
+            }
+            if (project == null) {
+                errorPopOver.setContentNode(new Label("Project \"" + projectTextField.getText() + "\" does not exist"));
+                errorPopOver.show(projectTextField);
+                return false;
+            }
+        }
+
         if (releaseDatePicker.getValue() == null) {
             errorPopOver.setContentNode(new Label("Valid release date required"));
             errorPopOver.show(releaseDatePicker);
@@ -137,7 +192,7 @@ public class ReleaseFormController implements Initializable {
                 return true;
             }
         }
-        for (final Release r : organisation.getReleases()) {
+        for (final Release r : project.getReleases()) {
             if (shortNameTextField.getText().equals(r.getShortName())) {
                 errorPopOver.setContentNode(new Label("Short name must be unique"));
                 errorPopOver.show(shortNameTextField);
@@ -160,7 +215,7 @@ public class ReleaseFormController implements Initializable {
     public void setCommand() {
         if (release == null) {
             // new release command
-            release = new Release(shortNameTextField.getText(), releaseDatePicker.getValue(),
+            release = new Release(shortNameTextField.getText(), project, releaseDatePicker.getValue(),
                     descriptionTextField.getText(), organisation);
             command = new CreateReleaseCommand(release, organisation);
         } else {
@@ -168,6 +223,9 @@ public class ReleaseFormController implements Initializable {
             final ArrayList<Command<?>> changes = new ArrayList<>();
             if (!shortNameTextField.getText().equals(release.getShortName())) {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
+            }
+            if (!project.equals(release.getProject())) {
+                changes.add(new EditCommand<>(release, "project", project));
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {
                 changes.add(new EditCommand<>(release, "date", releaseDatePicker.getValue()));
@@ -203,6 +261,7 @@ public class ReleaseFormController implements Initializable {
             okButton.setText("Save");
 
             shortNameTextField.setText(release.getShortName());
+            projectTextField.setText(release.getProject().getShortName());
             releaseDatePicker.setValue(release.getDate());
             descriptionTextField.setText(release.getDescription());
         }

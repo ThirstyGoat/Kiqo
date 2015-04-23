@@ -34,6 +34,7 @@ public class PersistenceManager {
          gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
                 .addType(Organisation.class)
+.addType(Project.class)
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
@@ -60,6 +61,7 @@ public class PersistenceManager {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         new GraphAdapterBuilder()
                 .addType(Organisation.class)
+.addType(Project.class)
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
