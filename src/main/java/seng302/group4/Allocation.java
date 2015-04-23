@@ -14,7 +14,7 @@ public class Allocation {
     /**
      * Creates a new allocation, checks that the start date is before the end date
      * @throws RuntimeException if start date is after end date
-     * @param team the team for the allocaiton
+     * @param team the team for the allocation
      * @param startDate the start date for the allocation
      * @param endDate the end date for the allocation
      */
@@ -27,8 +27,6 @@ public class Allocation {
             this.startDate = startDate;
             this.endDate = endDate;
             this.project = project;
-            team.getAllocations().add(this); // move to command
-            project.getAllocations().add(this); //move to command
         }
     }
 

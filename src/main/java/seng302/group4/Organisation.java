@@ -149,5 +149,8 @@ public class Organisation {
         skillsObservable = FXCollections.observableList(skills);
         teamsObservable = FXCollections.observableList(teams);
         releaseObservable = FXCollections.observableList(releases);
+
+        // Set the observable lists for each of the projects
+        getProjects().forEach(seng302.group4.Project::setObservableLists);
     }
 }
