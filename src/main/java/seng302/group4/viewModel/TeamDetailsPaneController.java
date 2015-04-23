@@ -1,13 +1,15 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import seng302.group4.Allocation;
 import seng302.group4.Team;
 import seng302.group4.utils.Utilities;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
     @FXML
@@ -22,7 +24,25 @@ public class TeamDetailsPaneController implements Initializable {
     private Label smLabel;
     @FXML
     private Label devTeamLabel;
+    @FXML
+    private Label allocationLabel;
 
+    public static String newlineSeparatedValues(ArrayList<Allocation> list) {
+        StringBuffer sb = new StringBuffer();
+
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                sb.append(list.get(i).getProject().getShortName());
+                sb.append(", " + list.get(i).getStartDate());
+                sb.append(", " + list.get(i).getEndDate() + "\n");
+                if (i != list.size() - 1) {
+                    sb.append("\n ");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
 
     public void showDetails(final Team team) {
         if (team != null) {
@@ -43,6 +63,11 @@ public class TeamDetailsPaneController implements Initializable {
                 devTeamLabel.setText(Utilities.commaSeparatedValues(team.getDevTeam()));
             } else {
                 devTeamLabel.setText("");
+            }
+            if (team.getAllocations() != null) {
+                allocationLabel.setText(newlineSeparatedValues(team.getAllocations()));
+            } else {
+                allocationLabel.setText("");
             }
         } else {
             shortNameLabel.setText(null);

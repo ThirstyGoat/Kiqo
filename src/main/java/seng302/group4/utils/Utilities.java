@@ -1,9 +1,9 @@
 package seng302.group4.utils;
 
-import java.util.List;
-
 import seng302.group4.Item;
 import seng302.group4.Person;
+
+import java.util.List;
 
 /**
  * Created by bradley on 9/04/15.

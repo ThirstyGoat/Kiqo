@@ -3,6 +3,7 @@ package seng302.group4;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by samschofield on 22/04/15.
  */
@@ -11,7 +12,8 @@ public class Project extends Item {
     private String longName;
     private String description;
     private final List<Release> releases = new ArrayList<>();
-
+    private ArrayList<Allocation> allocations = new ArrayList<>();
+    
     /**
      * Create new Project
      *
@@ -95,6 +97,29 @@ public class Project extends Item {
     public List<Release> getReleases() {
         return releases;
     }
+    
+    /**
+     * Gets the array of team allocations
+     * @return The ArrayList of Team Allocations
+     */
+    public ArrayList<Allocation> getAllocations() {
+        return allocations;
+    }
+
+//    /**
+//     * Gets the array of all allocations belonging to team
+//     * @param team The team to get allocations for
+//     * @return An ArrayList of the teams allocations
+//     */
+//    public ArrayList<Allocation> getTeamsAllocations(Team team) {
+//        ArrayList<Allocation> teamsAllocations = new ArrayList<>();
+//        for (Allocation allocation : teamAllocations) {
+//            if (allocation.getTeam().getShortName().equals(team.getShortName())) {
+//                teamsAllocations.add(allocation);
+//            }
+//        }
+//        return teamsAllocations;
+//    }
 
     @Override
     public boolean equals(Object o) {
