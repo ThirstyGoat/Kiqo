@@ -38,7 +38,7 @@
                 <Label text="End Date:" GridPane.rowIndex="2" />
                 <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1"  GridPane.halignment="RIGHT"/>
-                <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
+                <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
             </children>
         </GridPane>
   </center>
