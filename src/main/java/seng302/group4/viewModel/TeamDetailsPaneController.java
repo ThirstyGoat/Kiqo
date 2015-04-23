@@ -29,18 +29,17 @@ public class TeamDetailsPaneController implements Initializable {
 
     public static String newlineSeparatedValues(ArrayList<Allocation> list) {
         StringBuffer sb = new StringBuffer();
-
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 sb.append(list.get(i).getProject().getShortName());
                 sb.append(", " + list.get(i).getStartDate());
-                sb.append(", " + list.get(i).getEndDate() + "\n");
-                if (i != list.size() - 1) {
-                    sb.append("\n ");
+                if (list.get(i).getEndDate() != null) {
+                    sb.append("-" + list.get(i).getEndDate() + "\n");
+                } else {
+                    sb.append("-\n");
                 }
             }
         }
-
         return sb.toString();
     }
 
