@@ -1,0 +1,215 @@
+package seng302.group4.viewModel;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.Duration;
+import javafx.util.StringConverter;
+
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
+import org.controlsfx.control.textfield.TextFields;
+
+import seng302.group4.Allocation;
+import seng302.group4.Organisation;
+import seng302.group4.Project;
+import seng302.group4.Team;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.EditCommand;
+
+/**
+ * Created by Amy on 23/04/15.
+ */
+public class AllocationFormController implements Initializable {
+    // UI
+    private final PopOver errorPopOver = new PopOver();
+    private Stage stage;
+    // Command
+    private boolean valid;
+    private Command<?> command;
+    // Model
+    private Organisation organisation;
+    private Project project;
+    // Form Data
+    private Team team = null;
+
+    // FXML
+    @FXML
+    private TextField teamTextField;
+    @FXML
+    private DatePicker startDatePicker;
+    @FXML
+    private DatePicker endDatePicker;
+    @FXML
+    private Button okButton;
+    @FXML
+    private Button cancelButton;
+    private Allocation allocation;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        startDatePicker.setPromptText("dd/mm/yyyy");
+        endDatePicker.setPromptText("dd/mm/yyyy");
+        setTextFieldSuggester();
+        setButtonHandlers();
+
+        Platform.runLater(teamTextField::requestFocus);
+    }
+
+    private void setTextFieldSuggester() {
+        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
+        // use a String converter so that the Project's short name is used.
+        TextFields.bindAutoCompletion(teamTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Team>>() {
+            @Override
+            public Collection<Team> call(ISuggestionRequest request) {
+                // TODO filter based on input string
+                // if (project.contains(request.getUserText()) { /* keep it */ }
+                return organisation.getTeams();
+            }
+        }, new StringConverter<Team>() {
+            @Override
+            public Team fromString(String string) {
+                for (final Team team : organisation.getTeams()) {
+                    if (team.getShortName().equals(string)) {
+                        return team;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public String toString(Team team) {
+                return team.getShortName();
+            }
+        });
+    }
+
+    private void setButtonHandlers() {
+        okButton.setOnAction(event -> {
+            if (validate()) {
+                errorPopOver.hide(Duration.millis(0));
+                stage.close();
+            }
+        });
+
+        cancelButton.setOnAction(event -> {
+            errorPopOver.hide(Duration.millis(0));
+            stage.close();
+        });
+    }
+
+    private boolean validate() {
+        // check that team exists (and keep a reference to the matching team)
+        team = null;
+        for (final Team p : organisation.getTeams()) {
+            if (teamTextField.getText().equals(p.getShortName())) {
+                team = p;
+                break;
+            }
+        }
+        if (team == null) {
+            errorPopOver.setContentNode(new Label("Team \"" + teamTextField.getText() + "\" does not exist"));
+            errorPopOver.show(teamTextField);
+            return false;
+        }
+
+        if (startDatePicker.getValue() == null) {
+            errorPopOver.setContentNode(new Label("Valid start date required"));
+            errorPopOver.show(startDatePicker);
+            return false;
+        }
+
+        if (endDatePicker.getValue() == null) {
+            errorPopOver.setContentNode(new Label("Valid end date required"));
+            errorPopOver.show(endDatePicker);
+            return false;
+        } else if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+            errorPopOver.setContentNode(new Label("End date must follow start date"));
+            errorPopOver.show(endDatePicker);
+            return false;
+        }
+
+        valid = true;
+        setCommand();
+        return true;
+    }
+
+    private void setCommand() {
+        if (allocation == null) {
+            allocation = new Allocation(team, startDatePicker.getValue(), endDatePicker.getValue(), project);
+            // command = new CreateAllocationCommand(allocation); TODO uncomment when Brad;s command is working
+        } else {
+            // edit command
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+            if (!team.equals(allocation.getTeam())) {
+                changes.add(new EditCommand<>(allocation, "team", team));
+            }
+            if (!startDatePicker.getValue().equals(allocation.getStartDate())) {
+                changes.add(new EditCommand<>(allocation, "startDate", startDatePicker.getValue()));
+            }
+            if (!endDatePicker.getValue().equals(allocation.getEndDate())) {
+                changes.add(new EditCommand<>(allocation, "endDate", endDatePicker.getValue()));
+            }
+            valid = !changes.isEmpty();
+            command = new CompoundCommand("Edit Allocation", changes);
+        }
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public Command<?> getCommand() {
+        return command;
+    }
+
+    public void setStage(Stage stage)  {
+        this.stage = stage;
+    }
+
+    public void setAllocation(Allocation allocation) {
+        this.allocation = allocation;
+        if (project == null) {
+            throw new RuntimeException("Project must not be null for Allocation dialog");
+        }
+        if (allocation == null) {
+            // We are creating a new allocation (for an existing project)
+            stage.setTitle("Create Allocation");
+            okButton.setText("Create Allocation");
+        } else {
+            // edit an existing allocation
+            stage.setTitle("Edit Allocation");
+            okButton.setText("Save");
+
+            teamTextField.setText(allocation.getTeam().getShortName());
+            startDatePicker.setValue(allocation.getStartDate());
+            endDatePicker.setValue(allocation.getEndDate());
+        }
+    }
+
+    /**
+     * Sets the project which will have teams allocated to it
+     *
+     * @param project destination Project
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
+}

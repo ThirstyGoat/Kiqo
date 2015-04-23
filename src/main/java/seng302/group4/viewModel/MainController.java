@@ -42,6 +42,7 @@ import javafx.util.Callback;
 
 import org.controlsfx.control.StatusBar;
 
+import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
 import seng302.group4.Item;
 import seng302.group4.Organisation;
@@ -514,6 +515,12 @@ public class MainController implements Initializable {
     public void newProject() {
         if (selectedOrganisation != null) {
             newProjectDialog();
+        }
+    }
+
+    public void allocateTeams() {
+        if (selectedOrganisation != null) {
+            allocationDialog(null);
         }
     }
 
@@ -996,6 +1003,39 @@ public class MainController implements Initializable {
                     command.setRefreshParameters(release, releasesListView, detailsPaneController);
                     doCommand(command);
                 }
+            }
+        });
+    }
+
+    private void allocationDialog(Allocation allocation) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/allocation.fxml"));
+            BorderPane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final AllocationFormController allocationFormController = loader.getController();
+            allocationFormController.setStage(stage);
+            allocationFormController.setOrganisation(selectedOrganisation);
+            allocationFormController.setProject(selectedProject);
+            allocationFormController.setAllocation(allocation);
+
+            stage.showAndWait();
+            if (allocationFormController.isValid()) {
+                final UICommand command = new UICommand(allocationFormController.getCommand());
+                command.setRefreshParameters(selectedProject, projectListView, detailsPaneController);
+                doCommand(command);
             }
         });
     }

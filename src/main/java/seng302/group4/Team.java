@@ -14,7 +14,7 @@ public class Team extends Item {
     private Person productOwner;
     private Person scrumMaster;
     private List<Person> teamMembers;
-    private ArrayList<Allocation> allocations = new ArrayList<>();
+    private final ArrayList<Allocation> allocations = new ArrayList<>();
 
     public Team(String shortName, String description, List<Person> teamMembers) {
         this.shortName = shortName;

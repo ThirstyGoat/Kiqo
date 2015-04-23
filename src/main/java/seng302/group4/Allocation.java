@@ -6,10 +6,10 @@ import java.time.LocalDate;
  * Created by samschofield on 21/04/15.
  */
 public class Allocation {
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Team team;
-    private Project project;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final Team team;
+    private final Project project;
 
     /**
      * Creates a new allocation, checks that the start date is before the end date
@@ -19,17 +19,12 @@ public class Allocation {
      * @param endDate the end date for the allocation
      */
     public Allocation(Team team, LocalDate startDate, LocalDate endDate, Project project) {
-
-        if(startDate.isAfter(endDate)) {
-            throw new RuntimeException("End date is before start date");
-        } else {
-            this.team = team;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.project = project;
-            team.getAllocations().add(this); // move to command
-            project.getAllocations().add(this); //move to command
-        }
+        this.team = team;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.project = project;
+        team.getAllocations().add(this); // move to command
+        project.getAllocations().add(this); // move to command
     }
 
     /**

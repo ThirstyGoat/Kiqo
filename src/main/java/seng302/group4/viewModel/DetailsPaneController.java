@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -7,10 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import seng302.group4.*;
-
-import java.net.URL;
-import java.util.ResourceBundle;
+import seng302.group4.Item;
+import seng302.group4.Person;
+import seng302.group4.Project;
+import seng302.group4.Release;
+import seng302.group4.Skill;
+import seng302.group4.Team;
 
 /**
  * Switches between detail panes depending on type of content shown.
@@ -58,7 +63,7 @@ public class DetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
-//        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());  // uncomment when amy finishes the dialog
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
 
 

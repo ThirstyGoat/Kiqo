@@ -118,6 +118,7 @@ public class ReleaseFormController implements Initializable {
             }
         });
     }
+
     private void setReleaseDateChecker() {
         final String dateRegX = "(\\d|\\d\\d)/(\\d|\\d\\d)/\\d\\d\\d\\d";
 

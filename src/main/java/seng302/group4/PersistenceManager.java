@@ -38,6 +38,7 @@ public class PersistenceManager {
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
+.addType(Allocation.class)
                 .registerOn(gsonBuilder);
 
         final Gson gson = gsonBuilder.create();
@@ -65,6 +66,7 @@ public class PersistenceManager {
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
+.addType(Allocation.class)
                 .registerOn(gsonBuilder);
         final Gson gson = gsonBuilder.create();
         if (filePath != null) {
