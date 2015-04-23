@@ -1,6 +1,7 @@
 package seng302.group4.viewModel;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -136,6 +137,25 @@ public class AllocationFormController implements Initializable {
         if (endDatePicker.getValue() != null && !endDatePicker.getValue().isAfter(startDatePicker.getValue())) {
             errorPopOver.setContentNode(new Label("End date must follow start date"));
             errorPopOver.show(endDatePicker);
+            return false;
+        }
+
+        boolean dateRangesOverlap = false;
+        for (Allocation a : team.getAllocations()) {
+            // If the end dates are null, then the allocation has no specified period
+            // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
+            LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
+            LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
+            if ((a.getStartDate().isBefore(bEnd)) &&
+                    (aEnd.isAfter(startDatePicker.getValue()))) {
+                dateRangesOverlap = true;
+                break;
+            }
+        }
+
+        if (dateRangesOverlap) {
+            errorPopOver.setContentNode(new Label("Team is already allocated to this project during this period!"));
+            errorPopOver.show(startDatePicker);
             return false;
         }
 
