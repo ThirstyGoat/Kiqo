@@ -141,20 +141,19 @@ public class AllocationFormController implements Initializable {
         }
 
         boolean dateRangesOverlap = false;
-        for (Allocation a : team.getAllocations()) {
+        for (final Allocation a : team.getAllocations()) {
             // If the end dates are null, then the allocation has no specified period
             // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
-            LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
-            LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
-            if ((a.getStartDate().isBefore(bEnd)) &&
-                    (aEnd.isAfter(startDatePicker.getValue()))) {
+            final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
+            final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
+            if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
                 dateRangesOverlap = true;
                 break;
             }
         }
 
         if (dateRangesOverlap) {
-            errorPopOver.setContentNode(new Label("Team is already allocated to this project during this period!"));
+            errorPopOver.setContentNode(new Label("Team is already allocated to a project during this period!"));
             errorPopOver.show(startDatePicker);
             return false;
         }

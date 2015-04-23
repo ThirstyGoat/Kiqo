@@ -27,8 +27,8 @@ public class Team extends Item {
         return "Team{" +
                 "shortName='" + shortName + '\'' +
                 ", description='" + description + '\'' +
-                ", productOwner=" + productOwner +
-                ", scrumMaster=" + scrumMaster +
+ ", productOwner="
+                + productOwner.getShortName() + ", scrumMaster=" + scrumMaster.getShortName() +
                 ", teamMembers=" + teamMembers +
                 ", devTeam=" + devTeam +
                 '}';

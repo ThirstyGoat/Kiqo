@@ -1,10 +1,10 @@
 package seng302.group4;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 
 /**
@@ -96,7 +96,7 @@ public class Project extends Item {
     public ObservableList<Allocation> getAllocations() {
         return allocationsObservable;
     }
-    
+
     public ObservableList<Release> getReleases() {
         return releasesObservable;
     }
@@ -120,8 +120,8 @@ public class Project extends Item {
      * @param releases list of releases associated with this project
      */
     public void setReleases(final List<Release> releases) {
-        this.releasesObservable.clear();
-        this.releasesObservable.addAll(releases);
+        releasesObservable.clear();
+        releasesObservable.addAll(releases);
     }
 
     @Override
@@ -146,11 +146,8 @@ public class Project extends Item {
 
     @Override
     public String toString() {
-        return "Project{" +
-                "shortName='" + shortName + '\'' +
-                ", longName='" + longName + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "Project{shortName=" + shortName + ", longName=" + longName + ", description=" + description + ", releases=" + releases
+                + ", allocations=" + allocations + "}";
     }
 
     public void setObservableLists() {
