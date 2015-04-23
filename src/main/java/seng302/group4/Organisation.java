@@ -53,6 +53,22 @@ public class Organisation {
         return releaseObservable;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Organisation that = (Organisation) o;
+
+        return !(saveLocation != null ? !saveLocation.equals(that.saveLocation) : that.saveLocation != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return saveLocation != null ? saveLocation.hashCode() : 0;
+    }
+
     /**
      *
      * @return ObservableList of people in project
