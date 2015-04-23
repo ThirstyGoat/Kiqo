@@ -28,6 +28,7 @@ import seng302.group4.Project;
 import seng302.group4.Team;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreateAllocationCommand;
 import seng302.group4.undo.EditCommand;
 
 /**
@@ -150,7 +151,7 @@ public class AllocationFormController implements Initializable {
     private void setCommand() {
         if (allocation == null) {
             allocation = new Allocation(team, startDatePicker.getValue(), endDatePicker.getValue(), project);
-            // command = new CreateAllocationCommand(allocation); TODO uncomment when Brad;s command is working
+            command = new CreateAllocationCommand(allocation);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
