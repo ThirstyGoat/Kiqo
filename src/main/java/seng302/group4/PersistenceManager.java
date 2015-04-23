@@ -34,11 +34,12 @@ public class PersistenceManager {
          gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
                 .addType(Organisation.class)
-.addType(Project.class)
+                .addType(Project.class)
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
-.addType(Allocation.class)
+                .addType(Release.class)
+                .addType(Allocation.class)
                 .registerOn(gsonBuilder);
 
         final Gson gson = gsonBuilder.create();
@@ -62,12 +63,14 @@ public class PersistenceManager {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         new GraphAdapterBuilder()
                 .addType(Organisation.class)
-.addType(Project.class)
+                .addType(Project.class)
                 .addType(Team.class)
                 .addType(Person.class)
                 .addType(Skill.class)
-.addType(Allocation.class)
+                .addType(Release.class)
+                .addType(Allocation.class)
                 .registerOn(gsonBuilder);
+
         final Gson gson = gsonBuilder.create();
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));

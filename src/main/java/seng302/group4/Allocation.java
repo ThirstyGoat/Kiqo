@@ -23,8 +23,6 @@ public class Allocation {
         this.startDate = startDate;
         this.endDate = endDate;
         this.project = project;
-        team.getAllocations().add(this); // move to command
-        project.getAllocations().add(this); // move to command
     }
 
     /**

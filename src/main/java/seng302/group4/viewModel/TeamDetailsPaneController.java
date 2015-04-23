@@ -64,6 +64,7 @@ public class TeamDetailsPaneController implements Initializable {
                 devTeamLabel.setText("");
             }
             if (team.getAllocations() != null) {
+                System.out.println(team.getAllocations());
                 allocationLabel.setText(newlineSeparatedValues(team.getAllocations()));
             } else {
                 allocationLabel.setText("");

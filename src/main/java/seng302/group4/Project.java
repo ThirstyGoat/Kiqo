@@ -90,19 +90,15 @@ public class Project extends Item {
     }
 
     /**
-     * @param releases list of releases associated with this project
-     */
-    public void setReleases(final List<Release> releases) {
-        this.releasesObservable.clear();
-        this.releasesObservable.addAll(releases);
-    }
-    
-    /**
      * Gets the array of team allocations
      * @return The ObservableList of Team Allocations
      */
     public ObservableList<Allocation> getAllocations() {
         return allocationsObservable;
+    }
+    
+    public ObservableList<Release> getReleases() {
+        return releasesObservable;
     }
 
 //    /**
@@ -120,8 +116,12 @@ public class Project extends Item {
 //        return teamsAllocations;
 //    }
 
-    public ObservableList<Release> getReleases() {
-        return releasesObservable;
+    /**
+     * @param releases list of releases associated with this project
+     */
+    public void setReleases(final List<Release> releases) {
+        this.releasesObservable.clear();
+        this.releasesObservable.addAll(releases);
     }
 
     @Override
@@ -155,6 +155,6 @@ public class Project extends Item {
 
     public void setObservableLists() {
         releasesObservable = FXCollections.observableList(releases);
-        allocationsObservable = FXCollections.observableList(allocationsObservable);
+        allocationsObservable = FXCollections.observableList(allocations);
     }
 }

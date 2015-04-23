@@ -133,11 +133,7 @@ public class AllocationFormController implements Initializable {
             return false;
         }
 
-        if (endDatePicker.getValue() == null) {
-            errorPopOver.setContentNode(new Label("Valid end date required"));
-            errorPopOver.show(endDatePicker);
-            return false;
-        } else if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+        if (endDatePicker.getValue() != null && !endDatePicker.getValue().isAfter(startDatePicker.getValue())) {
             errorPopOver.setContentNode(new Label("End date must follow start date"));
             errorPopOver.show(endDatePicker);
             return false;
