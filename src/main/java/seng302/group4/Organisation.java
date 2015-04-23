@@ -1,7 +1,6 @@
 package seng302.group4;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -17,15 +16,16 @@ public class Organisation {
     private final ArrayList<Skill> skills = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
     private final ArrayList<Person> people = new ArrayList<>();
-    private transient ObservableList<Project> projectsObservable;
-    private transient ObservableList<Person> peopleObservable;
-    private transient ObservableList<Skill> skillsObservable;
-    private transient ObservableList<Team> teamsObservable;
-
-    private transient File saveLocation;
-
+    private final ArrayList<Release> releases = new ArrayList<>();
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
+    private transient ObservableList<Project> projectsObservable = FXCollections.observableList(projects);
+    private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
+    private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
+    private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
+    // even though releases are stored under Project, organisation has to keep track of them
+    private transient ObservableList<Release> releaseObservable = FXCollections.observableArrayList(releases);
+    private transient File saveLocation;
 
     public Organisation() {
         skills.add(poSkill);
@@ -43,6 +43,14 @@ public class Organisation {
 
     public Skill getSmSkill() {
         return smSkill;
+    }
+
+    /**
+     *
+     * @return ObservableList of releases in project
+     */
+    public ObservableList<Release> getReleases() {
+        return releaseObservable;
     }
 
     /**
@@ -98,5 +106,9 @@ public class Organisation {
         peopleObservable = FXCollections.observableList(people);
         skillsObservable = FXCollections.observableList(skills);
         teamsObservable = FXCollections.observableList(teams);
+        releaseObservable = FXCollections.observableList(releases);
+
+        // Set the observable lists for each of the projects
+        getProjects().forEach(seng302.group4.Project::setObservableLists);
     }
 }

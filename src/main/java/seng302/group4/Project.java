@@ -1,5 +1,8 @@
 package seng302.group4;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +11,15 @@ import java.util.List;
  * Created by samschofield on 22/04/15.
  */
 public class Project extends Item {
+    private final ArrayList<Release> releases = new ArrayList<>();
+    private final ArrayList<Allocation> allocations = new ArrayList<>();
     private String shortName;
     private String longName;
     private String description;
-    private final List<Release> releases = new ArrayList<>();
-    private ArrayList<Allocation> allocations = new ArrayList<>();
-    
+    /* We interact with the observableLists, but serialise the arrayLists */
+    private transient ObservableList<Release> releasesObservable = FXCollections.observableList(releases);
+    private transient ObservableList<Allocation> allocationsObservable = FXCollections.observableList(allocations);
+
     /**
      * Create new Project
      *
@@ -87,23 +93,16 @@ public class Project extends Item {
      * @param releases list of releases associated with this project
      */
     public void setReleases(final List<Release> releases) {
-        this.releases.clear();
-        this.releases.addAll(releases);
-    }
-
-    /**
-     * @return list of releases associated with this project
-     */
-    public List<Release> getReleases() {
-        return releases;
+        this.releasesObservable.clear();
+        this.releasesObservable.addAll(releases);
     }
     
     /**
      * Gets the array of team allocations
-     * @return The ArrayList of Team Allocations
+     * @return The ObservableList of Team Allocations
      */
-    public ArrayList<Allocation> getAllocations() {
-        return allocations;
+    public ObservableList<Allocation> getAllocations() {
+        return allocationsObservable;
     }
 
 //    /**
@@ -120,6 +119,10 @@ public class Project extends Item {
 //        }
 //        return teamsAllocations;
 //    }
+
+    public ObservableList<Release> getReleases() {
+        return releasesObservable;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -148,5 +151,10 @@ public class Project extends Item {
                 ", longName='" + longName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public void setObservableLists() {
+        releasesObservable = FXCollections.observableList(releases);
+        allocationsObservable = FXCollections.observableList(allocationsObservable);
     }
 }

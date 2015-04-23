@@ -68,6 +68,7 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
+        mainController.openOrganisation(new File("/Users/james/Desktop/Kiqo.json"));
 
     }
 }
