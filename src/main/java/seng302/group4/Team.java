@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
  */
 public class Team extends Item {
     private final List<Person> devTeam = new ArrayList<>();
+    private final ArrayList<Allocation> allocations = new ArrayList<>();
     private String shortName;
     private String description;
     private Person productOwner;
     private Person scrumMaster;
     private List<Person> teamMembers;
-    private final ArrayList<Allocation> allocations = new ArrayList<>();
 
     public Team(String shortName, String description, List<Person> teamMembers) {
         this.shortName = shortName;
@@ -24,14 +24,25 @@ public class Team extends Item {
 
     @Override
     public String toString() {
-        return "Team{" +
-                "shortName='" + shortName + '\'' +
-                ", description='" + description + '\'' +
- ", productOwner="
-                + productOwner.getShortName() + ", scrumMaster=" + scrumMaster.getShortName() +
-                ", teamMembers=" + teamMembers +
-                ", devTeam=" + devTeam +
-                '}';
+        StringBuffer sb = new StringBuffer();
+        sb.append("Team{" + shortName);
+        if (description != null) {
+            sb.append(", description='" + description);
+        }
+        if (productOwner != null) {
+            sb.append(", productOwner=" + productOwner.getShortName());
+        }
+        if (scrumMaster != null) {
+            sb.append(", scrumMaster=" + scrumMaster.getShortName());
+        }
+        if (!teamMembers.isEmpty()) {
+            sb.append(", teamMembers=" + teamMembers);
+        }
+        if (!devTeam.isEmpty()) {
+            sb.append(", devTeam=" + devTeam);
+        }
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override
