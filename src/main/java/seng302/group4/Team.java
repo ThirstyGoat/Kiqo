@@ -30,9 +30,15 @@ public class Team extends Item {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Team{" + shortName);
-        sb.append(", description='" + description);
-//        sb.append(", productOwner=" + productOwner.getShortName());
-//        sb.append(", scrumMaster=" + scrumMaster.getShortName());
+        sb.append(", description=" + description);
+        sb.append(", productOwner=");
+        if (productOwner != null) {
+            sb.append(productOwner.getShortName());
+        }
+        sb.append(", scrumMaster=");
+        if (scrumMaster != null) {
+            sb.append(scrumMaster.getShortName());
+        }
         sb.append(", teamMembers=" + teamMembers);
         sb.append(", devTeam=" + devTeam);
         sb.append('}');
