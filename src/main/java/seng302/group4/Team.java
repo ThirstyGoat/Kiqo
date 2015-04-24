@@ -20,6 +20,14 @@ public class Team extends Item {
     private Person scrumMaster;
     private List<Person> teamMembers;
 
+    /**
+     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
+     */
+    public Team() {
+        this.shortName = "";
+        this.description = "";
+    }
+
     public Team(String shortName, String description, List<Person> teamMembers) {
         this.shortName = shortName;
         this.description = description;

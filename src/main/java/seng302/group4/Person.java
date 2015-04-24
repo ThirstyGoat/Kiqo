@@ -18,6 +18,19 @@ public class Person extends Item {
     private Team team;
 
     /**
+     * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
+     */
+    public Person() {
+        this.shortName = "";
+        this.longName = "";
+        this.description = "";
+        this.userID = "";
+        this.emailAddress = "";
+        this.phoneNumber = "";
+        this.department = "";
+    }
+
+    /**
      * Create new Person
      *
      * @param shortName a unique short name for the person
