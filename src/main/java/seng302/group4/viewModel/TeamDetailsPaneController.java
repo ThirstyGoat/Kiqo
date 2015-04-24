@@ -8,6 +8,7 @@ import seng302.group4.Team;
 import seng302.group4.utils.Utilities;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -29,14 +30,15 @@ public class TeamDetailsPaneController implements Initializable {
 
     public static String newlineSeparatedValues(ArrayList<Allocation> list) {
         StringBuffer sb = new StringBuffer();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 sb.append(list.get(i).getProject().getShortName());
-                sb.append(", " + list.get(i).getStartDate());
+                sb.append(", " + list.get(i).getStartDate().format(dtf));
                 if (list.get(i).getEndDate() != null) {
-                    sb.append("-" + list.get(i).getEndDate() + "\n");
+                    sb.append(" - " + list.get(i).getEndDate().format(dtf) + "\n");
                 } else {
-                    sb.append("-\n");
+                    sb.append(" - \n");
                 }
             }
         }
