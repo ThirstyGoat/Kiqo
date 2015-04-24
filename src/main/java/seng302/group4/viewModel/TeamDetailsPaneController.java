@@ -1,5 +1,6 @@
 package seng302.group4.viewModel;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -9,7 +10,6 @@ import seng302.group4.utils.Utilities;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
@@ -28,7 +28,7 @@ public class TeamDetailsPaneController implements Initializable {
     @FXML
     private Label allocationLabel;
 
-    public static String newlineSeparatedValues(ArrayList<Allocation> list) {
+    public static String newlineSeparatedValues(ObservableList<Allocation> list) {
         StringBuffer sb = new StringBuffer();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (list.size() > 0) {

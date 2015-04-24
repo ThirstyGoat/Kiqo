@@ -1,10 +1,10 @@
 package seng302.group4;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Project class represents a software project
@@ -126,5 +126,8 @@ public class Organisation {
 
         // Set the observable lists for each of the projects
         getProjects().forEach(seng302.group4.Project::setObservableLists);
+
+        // Set the observable lists for each of the teams
+        getTeams().forEach(seng302.group4.Team::setObservableLists);
     }
 }
