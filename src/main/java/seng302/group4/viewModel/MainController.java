@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -381,7 +380,7 @@ public class MainController implements Initializable {
                 releasesListView.setItems(null);
             if (newValue != null) {
                 selectedProject = newValue;
-                releasesListView.setItems(FXCollections.observableList(selectedProject.getReleases()));
+                releasesListView.setItems(selectedProject != null ? selectedProject.getReleases() : null);
             } else {
                 MainController.focusedItemProperty.set(null);
             }
@@ -422,6 +421,7 @@ public class MainController implements Initializable {
         peopleListView.setItems(selectedOrganisation.getPeople());
         teamsListView.setItems(selectedOrganisation.getTeams());
         skillsListView.setItems(selectedOrganisation.getSkills());
+        // releases are looked after by projectListView selectionChangeListener
 
         switchToProjectList();
         projectListView.getSelectionModel().select(0);
