@@ -998,6 +998,12 @@ public class MainController implements Initializable {
                 if (release == null) {
                     final CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
                     doCommand(command);
+
+                    /*
+                    todo: this should be update automatically? without this line it doesn't until you click projects
+                    then click back on releases tab
+                     */
+                    releasesListView.setItems(selectedProject.getReleases());
                 } else {
                     final UICommand command = new UICommand(releaseFormController.getCommand());
                     command.setRefreshParameters(release, releasesListView, detailsPaneController);
