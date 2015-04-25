@@ -24,6 +24,10 @@ public class MoveItemCommand extends Command<Void> {
         this.item = item;
         this.position = position;
         this.destination = destination;
+
+        if (!position.contains(item)) {
+            throw new RuntimeException("Item not found in position collection");
+        }
     }
 
     @Override

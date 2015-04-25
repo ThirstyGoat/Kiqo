@@ -51,4 +51,17 @@ public class MoveItemCommandTest extends TestCase {
         assertTrue(destination.contains(mockObject));
     }
 
+    public void testItemNotInList() {
+        final MockObject mockObject = new MockObject();
+        ArrayList<Item> position  = new ArrayList<>();
+        ArrayList<Item> destination = new ArrayList<>();
+
+        try {
+            final MoveItemCommand moveCommand = new MoveItemCommand(mockObject, position, destination);
+        } catch (RuntimeException e) {
+            assertTrue(true);
+        }
+
+    }
+
 }
