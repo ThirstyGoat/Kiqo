@@ -22,13 +22,11 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
+import seng302.group4.Item;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
 import seng302.group4.Release;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CompoundCommand;
-import seng302.group4.undo.CreateReleaseCommand;
-import seng302.group4.undo.EditCommand;
+import seng302.group4.undo.*;
 
 
 /**
@@ -226,6 +224,7 @@ public class ReleaseFormController implements Initializable {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }
             if (!project.equals(release.getProject())) {
+                changes.add(new MoveItemCommand(release, (Collection) release.getProject().getReleases(), (Collection) project.getReleases()));
                 changes.add(new EditCommand<>(release, "project", project));
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {
