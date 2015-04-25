@@ -1,5 +1,8 @@
 package seng302.group4;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +13,7 @@ import java.util.stream.Collectors;
 public class Team extends Item {
     private final List<Person> devTeam = new ArrayList<>();
     private final ArrayList<Allocation> allocations = new ArrayList<>();
+    private transient ObservableList<Allocation> allocationsObservable = FXCollections.observableList(allocations);
     private String shortName;
     private String description;
     private Person productOwner;
@@ -26,21 +30,17 @@ public class Team extends Item {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Team{" + shortName);
-        if (description != null) {
-            sb.append(", description='" + description);
-        }
+        sb.append(", description=" + description);
+        sb.append(", productOwner=");
         if (productOwner != null) {
-            sb.append(", productOwner=" + productOwner.getShortName());
+            sb.append(productOwner.getShortName());
         }
+        sb.append(", scrumMaster=");
         if (scrumMaster != null) {
-            sb.append(", scrumMaster=" + scrumMaster.getShortName());
+            sb.append(scrumMaster.getShortName());
         }
-        if (!teamMembers.isEmpty()) {
-            sb.append(", teamMembers=" + teamMembers);
-        }
-        if (!devTeam.isEmpty()) {
-            sb.append(", devTeam=" + devTeam);
-        }
+        sb.append(", teamMembers=" + teamMembers);
+        sb.append(", devTeam=" + devTeam);
         sb.append('}');
         return sb.toString();
     }
@@ -95,7 +95,11 @@ public class Team extends Item {
         this.devTeam.addAll(devTeam.stream().collect(Collectors.toList()));
     }
 
-    public ArrayList<Allocation> getAllocations() {
-        return allocations;
+    public ObservableList<Allocation> getAllocations() {
+        return allocationsObservable;
+    }
+
+    public void setObservableLists() {
+        allocationsObservable = FXCollections.observableList(allocations);
     }
 }

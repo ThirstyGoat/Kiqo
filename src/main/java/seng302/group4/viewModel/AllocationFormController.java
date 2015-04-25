@@ -1,11 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,12 +11,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
-
 import seng302.group4.Allocation;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
@@ -31,6 +23,12 @@ import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateAllocationCommand;
 import seng302.group4.undo.EditCommand;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
 
 /**
  * Created by Amy on 23/04/15.
@@ -144,6 +142,7 @@ public class AllocationFormController implements Initializable {
         for (final Allocation a : team.getAllocations()) {
             // If the end dates are null, then the allocation has no specified period
             // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
+            System.out.println("here");
             final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
             final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
             if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
