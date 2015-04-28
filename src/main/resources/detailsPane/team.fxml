@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="seng302.group4.viewModel.TeamDetailsPaneController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.TeamDetailsPaneController">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
@@ -26,19 +27,32 @@
             <Label fx:id="poLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="smLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="devTeamLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label fx:id="allocationLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TableView fx:id="allocationTableView" prefHeight="300.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+              <columns>
+                <TableColumn fx:id="projectTableColumn" prefWidth="100.0" text="Project" />
+                <TableColumn fx:id="startDateTableColumn" prefWidth="100.0" text="Start Date" />
+                <TableColumn fx:id="endDateTableColumn" prefWidth="100.0" text="End Date" />
+              </columns>
+              <GridPane.margin>
+                <Insets right="35.0" top="8.0" />
+              </GridPane.margin>
+              <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+              </columnResizePolicy>
+            </TableView>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints />
           </rowConstraints>
         </GridPane>
       </content>

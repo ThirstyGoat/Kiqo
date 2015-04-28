@@ -6,10 +6,13 @@ import java.time.LocalDate;
  * Created by samschofield on 21/04/15.
  */
 public class Allocation {
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private final LocalDate startDate;  //remove this
+    private final LocalDate endDate;  //remove this
     private final Team team;
     private final Project project;
+//    private final StringProperty projectStringProperty;
+//    private final ObjectProperty<LocalDate> startDateProperty;
+//    private final ObjectProperty<LocalDate> endDateProperty;
 
     /**
      * Creates a new allocation, checks that the start date is before the end date
@@ -20,10 +23,47 @@ public class Allocation {
      */
     public Allocation(Team team, LocalDate startDate, LocalDate endDate, Project project) {
         this.team = team;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.project = project;
+        this.startDate = startDate;  //remove this
+        this.endDate = endDate;  //remove this
+        this.project = project;  //remove this
+//        this.projectStringProperty = new SimpleStringProperty(project.getShortName());  //DO NOT DELETE, USING THESE WHEN GSON IS FIXED
+//        this.startDateProperty = new SimpleObjectProperty<>(startDate);  //DO NOT DELETE, USING THESE WHEN GSON IS FIXED
+//        this.endDateProperty = new SimpleObjectProperty<>(endDate);  //DO NOT DELETE, USING THESE WHEN GSON IS FIXED
+
     }
+
+//    ######################### DO NOT DELETE, USING THESE WHEN GSON IS FIXED #########################
+
+//    public StringProperty getProjectStringProperty() {
+//        return projectStringProperty;
+//    }
+//
+//
+//    public void setProjectStringProperty(String projectStringProperty) {
+//        this.projectStringProperty.set(projectStringProperty);
+//    }
+//
+//
+//    public ObjectProperty<LocalDate> getStartDateProperty() {
+//        return startDateProperty;
+//    }
+//
+//    public void setStartDateProperty(LocalDate startDateProperty) {
+//        this.startDateProperty.set(startDateProperty);
+//    }
+//
+//
+//    public ObjectProperty<LocalDate> getEndDateProperty() {
+//        return endDateProperty;
+//    }
+//
+//    public void setEndDateProperty(LocalDate endDateProperty) {
+//        this.endDateProperty.set(endDateProperty);
+//    }
+
+
+    // ######################### remove these and fix references #########################
+
 
     /**
      *
@@ -40,6 +80,12 @@ public class Allocation {
     public LocalDate getEndDate() {
         return endDate;
     }
+
+    public String getProjectShortName() {
+        return project.getShortName();
+    }
+
+    // ###################################################################################
 
     /**
      *

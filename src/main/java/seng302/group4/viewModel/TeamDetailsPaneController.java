@@ -1,15 +1,17 @@
 package seng302.group4.viewModel;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import seng302.group4.Allocation;
 import seng302.group4.Team;
 import seng302.group4.utils.Utilities;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
@@ -26,24 +28,14 @@ public class TeamDetailsPaneController implements Initializable {
     @FXML
     private Label devTeamLabel;
     @FXML
-    private Label allocationLabel;
+    private TableView<Allocation> allocationTableView = new TableView<Allocation>();
+    @FXML
+    private TableColumn<Allocation, String> projectTableColumn;
+    @FXML
+    private TableColumn<Allocation, LocalDate> startDateTableColumn;
+    @FXML
+    private TableColumn<Allocation, LocalDate> endDateTableColumn;
 
-    public static String newlineSeparatedValues(ObservableList<Allocation> list) {
-        StringBuffer sb = new StringBuffer();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                sb.append(list.get(i).getProject().getShortName());
-                sb.append(", " + list.get(i).getStartDate().format(dtf));
-                if (list.get(i).getEndDate() != null) {
-                    sb.append(" - " + list.get(i).getEndDate().format(dtf) + "\n");
-                } else {
-                    sb.append(" - \n");
-                }
-            }
-        }
-        return sb.toString();
-    }
 
     public void showDetails(final Team team) {
         if (team != null) {
@@ -66,10 +58,7 @@ public class TeamDetailsPaneController implements Initializable {
                 devTeamLabel.setText("");
             }
             if (team.getAllocations() != null) {
-                System.out.println(team.getAllocations());
-                allocationLabel.setText(newlineSeparatedValues(team.getAllocations()));
-            } else {
-                allocationLabel.setText("");
+                allocationTableView.setItems(team.getAllocations());
             }
         } else {
             shortNameLabel.setText(null);
@@ -80,6 +69,15 @@ public class TeamDetailsPaneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+//        projectTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProjectStringProperty());
+//        startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
+//        endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
+        projectTableColumn.setCellValueFactory(new PropertyValueFactory<Allocation, String>("projectShortName"));
+        startDateTableColumn.setCellValueFactory(new PropertyValueFactory<Allocation, LocalDate>("startDate"));
+        endDateTableColumn.setCellValueFactory(new PropertyValueFactory<Allocation, LocalDate>("endDate"));
+
+        // fixes ghost column issue and resizing
+        allocationTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     }
 }
