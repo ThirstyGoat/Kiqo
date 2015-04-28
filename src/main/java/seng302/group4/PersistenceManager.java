@@ -7,17 +7,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
  */
 public class PersistenceManager {
-
+    private static Gson gson;
     /**
      * Saves the given Organisation to the given filepath as organisation_shortname.json FILE PATH MUST BE VALID
      *
@@ -26,9 +29,6 @@ public class PersistenceManager {
      * @throws IOException Cannot write to file
      */
     public static void saveOrganisation(final File filePath, final Organisation organisation) throws IOException {
-//        System.out.println(organisation);
-//        System.out.println(organisation.people);
-//        System.out.println(organisation.getPeople());
         final GsonBuilder gsonBuilder = new GsonBuilder();
         // Turn me on baby -
          gsonBuilder.setPrettyPrinting();
@@ -71,12 +71,30 @@ public class PersistenceManager {
                 .addType(Allocation.class)
                 .registerOn(gsonBuilder);
 
-        final Gson gson = gsonBuilder.create();
+        gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
+        gson = gsonBuilder.create();
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
             organisation = gson.fromJson(br, Organisation.class);
-            organisation.setObservableLists();
         }
         return organisation;
+    }
+
+    /**
+     * Custom Deserializer for ObservableLists
+     */
+    private static class ObservableListDeserializer implements JsonDeserializer<ObservableList> {
+
+        @Override
+        public ObservableList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
+
+            ObservableList<Object> observableList =  FXCollections.observableArrayList();
+            for (JsonElement element : json.getAsJsonArray()) {
+                observableList.add(gson.fromJson(element, type));
+            }
+            return observableList;
+        }
     }
 }

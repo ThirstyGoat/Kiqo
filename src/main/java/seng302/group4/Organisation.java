@@ -1,6 +1,7 @@
 package seng302.group4;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -11,17 +12,13 @@ import javafx.collections.ObservableList;
  *
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
-public class Organisation {
-    private final ArrayList<Project> projects = new ArrayList<>();
-    private final ArrayList<Skill> skills = new ArrayList<>();
-    private final ArrayList<Team> teams = new ArrayList<>();
-    private final ArrayList<Person> people = new ArrayList<>();
+public class Organisation implements Serializable {
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
-    private transient ObservableList<Project> projectsObservable = FXCollections.observableList(projects);
-    private transient ObservableList<Person> peopleObservable = FXCollections.observableList(people);
-    private transient ObservableList<Skill> skillsObservable = FXCollections.observableList(skills);
-    private transient ObservableList<Team> teamsObservable = FXCollections.observableList(teams);
+    private ObservableList<Project> projects = FXCollections.observableArrayList();
+    private ObservableList<Person> people = FXCollections.observableArrayList();
+    private ObservableList<Skill> skills = FXCollections.observableArrayList();
+    private ObservableList<Team> teams = FXCollections.observableArrayList();
     private transient File saveLocation;
 
     public Organisation() {
@@ -67,7 +64,7 @@ public class Organisation {
      * @return ObservableList of people in project
      */
     public ObservableList<Person> getPeople() {
-        return peopleObservable;
+        return people;
     }
 
     /**
@@ -75,7 +72,7 @@ public class Organisation {
      * @return ObservableList of skills in project
      */
     public ObservableList<Skill> getSkills() {
-        return skillsObservable;
+        return skills;
     }
 
     /**
@@ -99,7 +96,7 @@ public class Organisation {
      * @return ObservableList of teams
      */
     public ObservableList<Team> getTeams() {
-        return teamsObservable;
+        return teams;
     }
 
     /**
@@ -107,19 +104,6 @@ public class Organisation {
      * @return Observable list of projects
      */
     public ObservableList<Project> getProjects() {
-        return projectsObservable;
-    }
-
-    public void setObservableLists() {
-        projectsObservable = FXCollections.observableList(projects);
-        peopleObservable = FXCollections.observableList(people);
-        skillsObservable = FXCollections.observableList(skills);
-        teamsObservable = FXCollections.observableList(teams);
-
-        // Set the observable lists for each of the projects
-        getProjects().forEach(seng302.group4.Project::setObservableLists);
-
-        // Set the observable lists for each of the teams
-        getTeams().forEach(seng302.group4.Team::setObservableLists);
+        return projects;
     }
 }

@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
  */
 public class Team extends Item {
     private final List<Person> devTeam = new ArrayList<>();
-    private final ArrayList<Allocation> allocations = new ArrayList<>();
-    private transient ObservableList<Allocation> allocationsObservable = FXCollections.observableList(allocations);
+    private ObservableList<Allocation> allocations = FXCollections.observableArrayList();
     private String shortName;
     private String description;
     private Person productOwner;
@@ -104,10 +103,7 @@ public class Team extends Item {
     }
 
     public ObservableList<Allocation> getAllocations() {
-        return allocationsObservable;
+        return allocations;
     }
 
-    public void setObservableLists() {
-        allocationsObservable = FXCollections.observableList(allocations);
-    }
 }

@@ -81,10 +81,6 @@ public class Allocation {
         return endDate;
     }
 
-    public String getProjectShortName() {
-        return project.getShortName();
-    }
-
     // ###################################################################################
 
     /**

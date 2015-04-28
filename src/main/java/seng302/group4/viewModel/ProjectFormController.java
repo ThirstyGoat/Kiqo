@@ -54,9 +54,9 @@ public class ProjectFormController implements Initializable {
     }
 
     public void loadProject(final Project project) {
-        this.longNameTextField.setText(project.getLongName());
-        this.shortNameTextField.setText(project.getShortName());
-        this.descriptionTextField.setText(project.getDescription());
+        longNameTextField.setText(project.getLongName());
+        shortNameTextField.setText(project.getShortName());
+        descriptionTextField.setText(project.getDescription());
     }
 
     /**

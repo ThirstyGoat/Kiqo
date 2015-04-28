@@ -319,7 +319,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisation = new Organisation();
-        selectedOrganisation.setObservableLists();
         // enable menu items
         menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
@@ -474,7 +473,7 @@ public class MainController implements Initializable {
                 } else {
                     releasesListView.getSelectionModel().select(selectedRelease);
                 }
-                if (releasesListView.getItems().isEmpty()) {
+                if (releasesListView.getItems() == null || releasesListView.getItems().isEmpty()) {
                     MainController.focusedItemProperty.set(null);
                 }
                 menuBarController.updateAfterReleasesListSelected(true);

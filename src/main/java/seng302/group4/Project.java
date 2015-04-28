@@ -1,8 +1,8 @@
 package seng302.group4;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,14 +11,12 @@ import javafx.collections.ObservableList;
  * Created by samschofield on 22/04/15.
  */
 public class Project extends Item {
-    private final ArrayList<Release> releases = new ArrayList<>();
-    private final ArrayList<Allocation> allocations = new ArrayList<>();
     private String shortName;
     private String longName;
     private String description;
     /* We interact with the observableLists, but serialise the arrayLists */
-    private transient ObservableList<Release> releasesObservable = FXCollections.observableList(releases);
-    private transient ObservableList<Allocation> allocationsObservable = FXCollections.observableList(allocations);
+    private ObservableList<Release> releases = FXCollections.observableArrayList();
+    private ObservableList<Allocation> allocations = FXCollections.observableArrayList();
 
     /**
      * Create new Project
@@ -94,34 +92,20 @@ public class Project extends Item {
      * @return The ObservableList of Team Allocations
      */
     public ObservableList<Allocation> getAllocations() {
-        return allocationsObservable;
+        return allocations;
     }
 
     public ObservableList<Release> getReleases() {
-        return releasesObservable;
+        return releases;
     }
 
-//    /**
-//     * Gets the array of all allocations belonging to team
-//     * @param team The team to get allocations for
-//     * @return An ArrayList of the teams allocations
-//     */
-//    public ArrayList<Allocation> getTeamsAllocations(Team team) {
-//        ArrayList<Allocation> teamsAllocations = new ArrayList<>();
-//        for (Allocation allocation : teamAllocations) {
-//            if (allocation.getTeam().getShortName().equals(team.getShortName())) {
-//                teamsAllocations.add(allocation);
-//            }
-//        }
-//        return teamsAllocations;
-//    }
 
     /**
      * @param releases list of releases associated with this project
      */
     public void setReleases(final List<Release> releases) {
-        releasesObservable.clear();
-        releasesObservable.addAll(releases);
+        releases.clear();
+        releases.addAll(releases);
     }
 
     @Override
@@ -148,10 +132,5 @@ public class Project extends Item {
     public String toString() {
         return "Project{shortName=" + shortName + ", longName=" + longName + ", description=" + description + ", releases=" + releases
                 + ", allocations=" + allocations + "}";
-    }
-
-    public void setObservableLists() {
-        releasesObservable = FXCollections.observableList(releases);
-        allocationsObservable = FXCollections.observableList(allocations);
     }
 }
