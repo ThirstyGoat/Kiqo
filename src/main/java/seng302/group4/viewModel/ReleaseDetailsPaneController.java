@@ -21,10 +21,35 @@ public class ReleaseDetailsPaneController implements Initializable {
 
     public void showDetails(final Release release) {
         if (release != null) {
-            shortNameLabel.setText(release.getShortName());
-            projectLabel.setText(release.getProject().getShortName());
+            shortNameLabel.textProperty().bind(release.shortNameProperty());
+
+            projectLabel.textProperty().bind(release.getProject().shortNameProperty());
+            // Add listener on project
+            release.projectProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    // Then the product owner is not null, proceed
+                    projectLabel.textProperty().unbind();
+                    projectLabel.textProperty().bind(newValue.shortNameProperty());
+                } else {
+                    projectLabel.textProperty().unbind();
+                    projectLabel.setText(null);
+                }
+            });
+
             releaseDateLabel.setText(release.getDate().toString());
-            descriptionLabel.setText(release.getDescription());
+            // Add listener on date
+            release.dateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    // Then the product owner is not null, proceed
+                    releaseDateLabel.textProperty().unbind();
+                    releaseDateLabel.setText(newValue.toString());
+                } else {
+                    releaseDateLabel.textProperty().unbind();
+                    releaseDateLabel.setText(null);
+                }
+            });
+
+            descriptionLabel.textProperty().bind(release.descriptionProperty());
         } else {
             shortNameLabel.setText(null);
             projectLabel.setText(null);

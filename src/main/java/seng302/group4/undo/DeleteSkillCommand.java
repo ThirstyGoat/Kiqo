@@ -1,10 +1,6 @@
 package seng302.group4.undo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import seng302.group4.Person;
 import seng302.group4.Organisation;
@@ -19,7 +15,7 @@ public class DeleteSkillCommand extends Command<Skill> {
     private final Organisation organisation;
     private final Skill skill;
     // Hash map of people with skills, and the index at which the skill appears in their skills list
-    private final Map<Person, Integer> peopleWithSkill = new HashMap<>();
+    private final Map<Integer, Person> peopleWithSkill = new LinkedHashMap<>();
 
     private int organisationIndex;
 
@@ -41,7 +37,7 @@ public class DeleteSkillCommand extends Command<Skill> {
     private void setPeopleWithSkill() {
         for (Person person : organisation.getPeople()) {
             if (person.getSkills().contains(skill)) {
-                peopleWithSkill.put(person, person.observableSkills().indexOf(skill));
+                peopleWithSkill.put(person.observableSkills().indexOf(skill), person);
             }
         }
     }
@@ -51,7 +47,7 @@ public class DeleteSkillCommand extends Command<Skill> {
      */
     public ArrayList<Person> getPeopleWithSkill() {
         ArrayList<Person> arrayList = new ArrayList<>();
-        for (Person person : peopleWithSkill.keySet()) {
+        for (Person person : peopleWithSkill.values()) {
             arrayList.add(person);
         }
         return arrayList;
@@ -60,9 +56,8 @@ public class DeleteSkillCommand extends Command<Skill> {
     @Override
     public Skill execute() {
         // Remove the skill from any people in the project who have the skill
-        for (Person person : peopleWithSkill.keySet()) {
+        for (Person person : peopleWithSkill.values()) {
             person.observableSkills().remove(skill);
-            System.out.println("removed skill: " + skill + " from: " + person);
         }
 
         organisationIndex = organisation.getSkills().indexOf(skill);
@@ -75,8 +70,8 @@ public class DeleteSkillCommand extends Command<Skill> {
         // Add the skill back to wherever it was
         organisation.getSkills().add(organisationIndex, skill);
 
-        for (Map.Entry<Person, Integer> entry : peopleWithSkill.entrySet()) {
-            entry.getKey().observableSkills().add(entry.getValue(), skill);
+        for (Map.Entry<Integer, Person> entry : peopleWithSkill.entrySet()) {
+            entry.getValue().observableSkills().add(entry.getKey(), skill);
         }
     }
 

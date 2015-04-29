@@ -6,6 +6,7 @@ import seng302.group4.Team;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ public class DeleteTeamCommand extends Command<Team> {
     private final Team team;
     // Hash map of people in the team to be deleted, and the index at which the person appears in people list of
     // the organisation
-    private final Map<Person, Integer> teamMembers = new HashMap<>();
+    private final Map<Integer, Person> teamMembers = new LinkedHashMap<>();
 
     private int organisationIndex;
 
@@ -37,7 +38,7 @@ public class DeleteTeamCommand extends Command<Team> {
      */
     public void setDeleteMembers() {
         for (Person person : team.getTeamMembers()) {
-            teamMembers.put(person, organisation.getPeople().indexOf(person));
+            teamMembers.put(organisation.getPeople().indexOf(person), person);
         }
     }
 
@@ -49,7 +50,7 @@ public class DeleteTeamCommand extends Command<Team> {
         }
 
         // if setDeleteMembers was called, delete each team member
-        for (Person person : teamMembers.keySet()) {
+        for (Person person : teamMembers.values()) {
             organisation.getPeople().remove(person);
         }
 
@@ -67,8 +68,8 @@ public class DeleteTeamCommand extends Command<Team> {
             person.setTeam(team);
         }
 
-        for (Map.Entry<Person, Integer> entry : teamMembers.entrySet()) {
-            organisation.getPeople().add(entry.getValue(), entry.getKey());
+        for (Map.Entry<Integer, Person> entry : teamMembers.entrySet()) {
+            organisation.getPeople().add(entry.getKey(), entry.getValue());
         }
 
         organisation.getTeams().add(organisationIndex, team);

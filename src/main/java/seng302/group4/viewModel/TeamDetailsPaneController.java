@@ -53,9 +53,13 @@ public class TeamDetailsPaneController implements Initializable {
             descriptionLabel.textProperty().bind(team.descriptionProperty());
             teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableTeamMembers()));
 
+            if (team.getProductOwner() != null) {
+                poLabel.textProperty().bind(team.getProductOwner().shortNameProperty());
+            }
             team.productOwnerProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     // Then the product owner is not null, proceed
+                    poLabel.textProperty().unbind();
                     poLabel.textProperty().bind(newValue.shortNameProperty());
                 } else {
                     poLabel.textProperty().unbind();
@@ -63,9 +67,13 @@ public class TeamDetailsPaneController implements Initializable {
                 }
             });
 
+            if (team.getScrumMaster() != null) {
+                smLabel.textProperty().bind(team.getScrumMaster().shortNameProperty());
+            }
             team.scrumMasterProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     // Then the scrum master is not null, proceed
+                    smLabel.textProperty().unbind();
                     smLabel.textProperty().bind(newValue.shortNameProperty());
                 } else {
                     smLabel.textProperty().unbind();

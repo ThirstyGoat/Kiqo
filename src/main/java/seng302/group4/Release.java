@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,16 +14,28 @@ import java.time.LocalDate;
 public class Release extends Item {
     private Organisation organisation;
     private StringProperty shortName;
-    private Project project;
-    private LocalDate date; // change back to date
-    private String description;
+    private StringProperty description;
+    private ObjectProperty<Project> project;
+    private ObjectProperty<LocalDate> date; // change back to date
 
     public Release(String shortName, Project project, LocalDate date, String description, Organisation organisation) {
         this.shortName = new SimpleStringProperty(shortName);
-        this.project = project;
-        this.description = description;
-        this.date = date;
+        this.project = new SimpleObjectProperty<>(project);
+        this.description = new SimpleStringProperty(description);
+        this.date = new SimpleObjectProperty<>(date);
         this.organisation = organisation;
+    }
+
+    public ObjectProperty<Project> projectProperty() {
+        return project;
+    }
+
+    public ObjectProperty<LocalDate> dateProperty() {
+        return date;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
     @Override
@@ -66,32 +80,32 @@ public class Release extends Item {
     }
 
     public Project getProject() {
-        return project;
+        return project.get();
     }
 
     public void setProject(Project project) {
-        this.project = project;
+        this.project.set(project);
     }
 
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description.set(description);
     }
 
     public LocalDate getDate() {
-        return date;
+        return date.get();
     }
 
     public void setDate(LocalDate date) {
-        this.date = date;
+        this.date.set(date);
     }
 
     @Override
     public String toString() {
-        return "Release{shortName=" + shortName + ", project=" + project.getShortName() + ", date=" + date + ", description=" + description
+        return "Release{shortName=" + shortName + ", project=" + project.get().getShortName() + ", date=" + date + ", description=" + description
                 + "}";
     }
 }

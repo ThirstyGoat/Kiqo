@@ -997,7 +997,7 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     final UICommand command = new UICommand(releaseFormController.getCommand());
-                    command.setRefreshParameters(release, releasesListView, detailsPaneController);
+//                    command.setRefreshParameters(release, releasesListView, detailsPaneController);
                     doCommand(command);
                 }
             }
