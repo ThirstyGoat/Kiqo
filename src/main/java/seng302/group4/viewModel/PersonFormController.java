@@ -17,6 +17,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
 import seng302.group4.Person;
@@ -140,7 +141,7 @@ public class PersonFormController implements Initializable {
      */
     public void validate() {
         // Hide existing error message if there is one
-        errorPopOver.hide();
+        errorPopOver.hide(Duration.millis(0));
         // Perform validity checks and create project
         if (checkName() && checkShortName()) {
             // Set project properties
@@ -311,14 +312,14 @@ public class PersonFormController implements Initializable {
         // Set handlers so that popovers are hidden on field focus
         longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                errorPopOver.hide();
+                errorPopOver.hide(Duration.millis(0));
             }
         });
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                errorPopOver.hide();
+                errorPopOver.hide(Duration.millis(0));
             } else {
-                errorPopOver.hide();
+                errorPopOver.hide(Duration.millis(0));
             }
         });
     }
