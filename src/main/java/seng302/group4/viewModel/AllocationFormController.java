@@ -84,14 +84,7 @@ public class AllocationFormController implements Initializable {
     private void setTextFieldSuggester() {
         // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
         // use a String converter so that the Project's short name is used.
-        TextFields.bindAutoCompletion(teamTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Team>>() {
-            @Override
-            public Collection<Team> call(ISuggestionRequest request) {
-                // TODO filter based on input string
-                // if (project.contains(request.getUserText()) { /* keep it */ }
-                return organisation.getTeams();
-            }
-        }, new StringConverter<Team>() {
+        TextFields.bindAutoCompletion(teamTextField, request -> organisation.getTeams(), new StringConverter<Team>() {
             @Override
             public Team fromString(String string) {
                 for (final Team team : organisation.getTeams()) {

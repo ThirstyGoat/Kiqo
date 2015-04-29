@@ -11,12 +11,12 @@ import java.time.LocalDate;
  * Created by samschofield on 21/04/15.
  */
 public class Allocation {
-    private final Team team;
-    private final Project project;
+    private Team team;
+    private Project project;
 
-    private final StringProperty teamStringProperty;
-    private final ObjectProperty<LocalDate> startDate;
-    private final ObjectProperty<LocalDate> endDate;
+    private StringProperty teamStringProperty;
+    private ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDate> endDate = new SimpleObjectProperty<>();
 
     /**
      * Creates a new allocation, checks that the start date is before the end date
@@ -30,42 +30,9 @@ public class Allocation {
         this.project = project;  //remove this
 
         teamStringProperty = new SimpleStringProperty(team.getShortName());
-        this.startDate = new SimpleObjectProperty<>(startDate);
-        this.endDate = new SimpleObjectProperty<>(endDate);
+        this.startDate.set(startDate);
+        this.endDate.set(endDate);
     }
-
-//    ######################### DO NOT DELETE, USING THESE WHEN GSON IS FIXED #########################
-
-//    public StringProperty getProjectStringProperty() {
-//        return projectStringProperty;
-//    }
-//
-//
-//    public void setProjectStringProperty(String projectStringProperty) {
-//        this.projectStringProperty.set(projectStringProperty);
-//    }
-//
-//
-//    public ObjectProperty<LocalDate> getStartDateProperty() {
-//        return startDateProperty;
-//    }
-//
-//    public void setStartDateProperty(LocalDate startDateProperty) {
-//        this.startDateProperty.set(startDateProperty);
-//    }
-//
-//
-//    public ObjectProperty<LocalDate> getEndDateProperty() {
-//        return endDateProperty;
-//    }
-//
-//    public void setEndDateProperty(LocalDate endDateProperty) {
-//        this.endDateProperty.set(endDateProperty);
-//    }
-
-
-    // ######################### remove these and fix references #########################
-
 
     /**
      *
@@ -79,15 +46,29 @@ public class Allocation {
         return startDate;
     }
 
+    public void setStartDate(LocalDate date) {
+        startDate.set(date);
+    }
+
+    public void setEndDate(LocalDate date) {
+        endDate.set(date);
+    }
+
     /**
      *
      * @return endDate the end date for the allocation
      */
     public LocalDate getEndDate() {
+        // If your IDE says endDate can not be null, lies.
         return (endDate == null) ? null : endDate.get();
     }
 
     public ObjectProperty getEndDateProperty() {
+        // Since the end date can be null (ie. an allocation has no definite end date, we need to at least
+        // create the property
+        if (endDate == null) {
+            endDate = new SimpleObjectProperty<>();
+        }
         return endDate;
     }
 

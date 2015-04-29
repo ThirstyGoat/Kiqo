@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import seng302.group4.*;
 
 import java.net.URL;
@@ -60,7 +61,6 @@ public class DetailsPaneController implements Initializable {
         deleteButton.setOnAction(event -> mainController.deleteItem());
         allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
-
 
     /**
      * Display the details of the specified item.
@@ -163,5 +163,6 @@ public class DetailsPaneController implements Initializable {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        projectDetailsPaneController.setMainController(mainController);
     }
 }

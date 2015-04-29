@@ -633,7 +633,7 @@ public class MainController implements Initializable {
         changesSaved.set(false);
     }
 
-    private void doCommand(Command<?> command) {
+    public void doCommand(Command<?> command) {
         undoManager.doCommand(command);
         changesSaved.set(false);
     }
@@ -1059,7 +1059,6 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (newProjectController.isValid()) {
-                // TODO This will need work when we add support for multiple projects
                 final CreateProjectCommand command = newProjectController.getCommand();
                 doCommand(command); // not undoable
             }
@@ -1071,5 +1070,9 @@ public class MainController implements Initializable {
      */
     private void setLayoutProperties() {
         listAnchorPane = (AnchorPane) mainSplitPane.getItems().get(0);
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }
