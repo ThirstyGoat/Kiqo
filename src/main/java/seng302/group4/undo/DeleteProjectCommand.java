@@ -16,6 +16,8 @@ public class DeleteProjectCommand extends Command<Project> {
     private final Organisation organisation;
     private final Project project;
 
+    private int index;
+
     /**
      *
      * @param project the team to be deleted
@@ -28,6 +30,7 @@ public class DeleteProjectCommand extends Command<Project> {
 
     @Override
     public Project execute() {
+        index = organisation.getProjects().indexOf(project);
         organisation.getProjects().remove(project);
         return project;
     }
@@ -35,7 +38,7 @@ public class DeleteProjectCommand extends Command<Project> {
     
     @Override
     public void undo() {
-        organisation.getProjects().add(project);
+        organisation.getProjects().add(index, project);
     }
 
     @Override

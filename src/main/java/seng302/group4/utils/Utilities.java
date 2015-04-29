@@ -1,5 +1,12 @@
 package seng302.group4.utils;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableStringValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import seng302.group4.Item;
 import seng302.group4.Person;
 
@@ -38,5 +45,15 @@ public class Utilities {
         }
 
         return concatenatedString;
+    }
+
+    public static StringProperty commaSeparatedValuesProperty(ObservableList<? extends Item> list) {
+        StringProperty result = new SimpleStringProperty();
+        result.set(commaSeparatedValues(list));
+        list.addListener((ListChangeListener<Item>) c -> {
+            result.set(commaSeparatedValues(list));
+        });
+
+        return result;
     }
 }

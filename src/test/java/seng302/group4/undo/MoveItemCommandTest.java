@@ -1,5 +1,6 @@
 package seng302.group4.undo;
 
+import javafx.beans.property.StringProperty;
 import junit.framework.TestCase;
 import seng302.group4.Item;
 
@@ -16,6 +17,12 @@ public class MoveItemCommandTest extends TestCase {
         public String getShortName() {
             return null;
         }
+
+        @Override
+        public StringProperty shortNameProperty() {
+            return null;
+        }
+
     }
 
     public void test() {

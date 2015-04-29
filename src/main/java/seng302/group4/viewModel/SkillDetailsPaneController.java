@@ -17,8 +17,8 @@ public class SkillDetailsPaneController implements Initializable {
 
     public void showDetails(final Skill skill) {
         if (skill != null) {
-            shortNameLabel.setText(skill.getShortName());
-            descriptionLabel.setText(skill.getDescription());
+            shortNameLabel.textProperty().bind(skill.shortNameProperty());
+            descriptionLabel.textProperty().bind(skill.descriptionProperty());
         } else {
             shortNameLabel.setText(null);
             descriptionLabel.setText(null);

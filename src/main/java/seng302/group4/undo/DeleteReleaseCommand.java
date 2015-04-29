@@ -9,6 +9,7 @@ import seng302.group4.Release;
 public class DeleteReleaseCommand extends Command<Release> {
     private final Release release;
 
+    private int index;
 
     public DeleteReleaseCommand(final Release release) {
         this.release = release;
@@ -16,13 +17,14 @@ public class DeleteReleaseCommand extends Command<Release> {
 
     @Override
     public Release execute() {
+        index = release.getProject().getReleases().indexOf(release);
         release.getProject().getReleases().remove(release);
         return release;
     }
 
     @Override
     public void undo() {
-        release.getProject().getReleases().add(release);
+        release.getProject().getReleases().add(index, release);
     }
 
 

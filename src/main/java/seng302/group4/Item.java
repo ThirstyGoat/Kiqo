@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import javafx.beans.property.StringProperty;
+
 import java.io.Serializable;
 
 /**
@@ -11,4 +13,6 @@ public abstract class Item implements Serializable {
      * @return non-null unique identifier for this item
      */
     public abstract String getShortName();
+
+    public abstract StringProperty shortNameProperty();
 }

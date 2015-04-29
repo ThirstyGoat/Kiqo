@@ -16,6 +16,8 @@ public class DeletePersonCommand extends Command<Person> {
     private boolean isScrumMaster = false;
     private boolean inDevTeam = true;
 
+    private int index;
+
     /**
      * @param person Person to be deleted
      * @param organisation organisation to which the person belongs
@@ -56,6 +58,10 @@ public class DeletePersonCommand extends Command<Person> {
             team.getTeamMembers().remove(person);
         }
 
+        // We keep track of the position in the list that the person was in, so they can be added back to the same
+        // position, not at the bottom
+        index = organisation.getPeople().indexOf(person);
+
         // Remove the person from the project
         organisation.getPeople().remove(person);
         return person;
@@ -64,8 +70,9 @@ public class DeletePersonCommand extends Command<Person> {
     @Override
     public void undo() {
         // Repeat execute steps backwards
-        // Add person back to project
-        organisation.getPeople().add(person);
+        // Add person back to project at appropriate index
+        organisation.getPeople().add(index, person);
+
         if (team != null) {
             // Add person to Team Members
             team.getTeamMembers().add(person);

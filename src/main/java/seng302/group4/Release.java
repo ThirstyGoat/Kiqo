@@ -1,20 +1,23 @@
 package seng302.group4;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.time.LocalDate;
 
 
 /**
  * Created by leroy on 10/04/15.
  */
-public class Release extends Item{
+public class Release extends Item {
     private Organisation organisation;
-    private String shortName;
+    private StringProperty shortName;
     private Project project;
     private LocalDate date; // change back to date
     private String description;
 
     public Release(String shortName, Project project, LocalDate date, String description, Organisation organisation) {
-        this.shortName = shortName;
+        this.shortName = new SimpleStringProperty(shortName);
         this.project = project;
         this.description = description;
         this.date = date;
@@ -50,11 +53,16 @@ public class Release extends Item{
 
     @Override
     public String getShortName() {
+        return shortName.get();
+    }
+
+    @Override
+    public StringProperty shortNameProperty() {
         return shortName;
     }
 
     public void setShortName(String shortName) {
-        this.shortName = shortName;
+        this.shortName.set(shortName);
     }
 
     public Project getProject() {

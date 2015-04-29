@@ -1,7 +1,9 @@
 package seng302.group4.undo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import seng302.group4.Person;
@@ -16,7 +18,10 @@ public class DeleteSkillCommand extends Command<Skill> {
 
     private final Organisation organisation;
     private final Skill skill;
-    private final List<Person> peopleWithSkill = new ArrayList<>();
+    // Hash map of people with skills, and the index at which the skill appears in their skills list
+    private final Map<Person, Integer> peopleWithSkill = new HashMap<>();
+
+    private int organisationIndex;
 
     /**
      * @param skill Skill to be deleted
@@ -34,23 +39,33 @@ public class DeleteSkillCommand extends Command<Skill> {
      * to the ArrayList that contains only people who have that skill
      */
     private void setPeopleWithSkill() {
-        peopleWithSkill.addAll(organisation.getPeople().stream().filter(person ->
-                person.getSkills().contains(skill)).collect(Collectors.toList()));
+        for (Person person : organisation.getPeople()) {
+            if (person.getSkills().contains(skill)) {
+                peopleWithSkill.put(person, person.observableSkills().indexOf(skill));
+            }
+        }
     }
 
     /**
      * @return all people in the project who have the skill that is marked for deletion
      */
-    public List<Person> getPeopleWithSkill() {
-        return peopleWithSkill;
+    public ArrayList<Person> getPeopleWithSkill() {
+        ArrayList<Person> arrayList = new ArrayList<>();
+        for (Person person : peopleWithSkill.keySet()) {
+            arrayList.add(person);
+        }
+        return arrayList;
     }
 
     @Override
     public Skill execute() {
         // Remove the skill from any people in the project who have the skill
-        for (final Person person : peopleWithSkill) {
-            person.getSkills().remove(skill);
+        for (Person person : peopleWithSkill.keySet()) {
+            person.observableSkills().remove(skill);
+            System.out.println("removed skill: " + skill + " from: " + person);
         }
+
+        organisationIndex = organisation.getSkills().indexOf(skill);
         organisation.getSkills().remove(skill);
         return skill;
     }
@@ -58,10 +73,10 @@ public class DeleteSkillCommand extends Command<Skill> {
     @Override
     public void undo() {
         // Add the skill back to wherever it was
-        organisation.getSkills().add(skill);
+        organisation.getSkills().add(organisationIndex, skill);
 
-        for (final Person person : peopleWithSkill) {
-            person.getSkills().add(skill);
+        for (Map.Entry<Person, Integer> entry : peopleWithSkill.entrySet()) {
+            entry.getKey().observableSkills().add(entry.getValue(), skill);
         }
     }
 

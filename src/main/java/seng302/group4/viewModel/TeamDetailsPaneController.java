@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -8,6 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
+import seng302.group4.Person;
 import seng302.group4.Team;
 import seng302.group4.undo.DeleteAllocationCommand;
 import seng302.group4.undo.EditCommand;
@@ -45,24 +49,32 @@ public class TeamDetailsPaneController implements Initializable {
 
     public void showDetails(final Team team) {
         if (team != null) {
-            shortNameLabel.setText(team.getShortName());
-            descriptionLabel.setText(team.getDescription());
-            teamMembersLabel.setText(Utilities.commaSeparatedValues(team.getTeamMembers()));
-            if (team.getProductOwner() != null) {
-                poLabel.setText(team.getProductOwner().getShortName());
-            } else {
-                poLabel.setText("");
-            }
-            if (team.getScrumMaster() != null) {
-                smLabel.setText(team.getScrumMaster().getShortName());
-            } else {
-                smLabel.setText("");
-            }
-            if (team.getDevTeam() != null) {
-                devTeamLabel.setText(Utilities.commaSeparatedValues(team.getDevTeam()));
-            } else {
-                devTeamLabel.setText("");
-            }
+            shortNameLabel.textProperty().bind(team.shortNameProperty());
+            descriptionLabel.textProperty().bind(team.descriptionProperty());
+            teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableTeamMembers()));
+
+            team.productOwnerProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    // Then the product owner is not null, proceed
+                    poLabel.textProperty().bind(newValue.shortNameProperty());
+                } else {
+                    poLabel.textProperty().unbind();
+                    poLabel.setText(null);
+                }
+            });
+
+            team.scrumMasterProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    // Then the scrum master is not null, proceed
+                    smLabel.textProperty().bind(newValue.shortNameProperty());
+                } else {
+                    smLabel.textProperty().unbind();
+                    smLabel.setText(null);
+                }
+            });
+
+            devTeamLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableDevTeam()));
+
             if (team.getAllocations() != null) {
                 allocationsTableView.setItems(team.getAllocations());
             }

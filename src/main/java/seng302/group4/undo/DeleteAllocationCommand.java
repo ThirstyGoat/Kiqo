@@ -11,6 +11,9 @@ public class DeleteAllocationCommand extends Command<Allocation> {
     private Project project;
     private Team team;
 
+    private int projectIndex;
+    private int teamIndex;
+
     /**
      * @param allocation Allocation to be deleted
      */
@@ -22,15 +25,18 @@ public class DeleteAllocationCommand extends Command<Allocation> {
 
     @Override
     public Allocation execute() {
+        projectIndex = project.getAllocations().indexOf(allocation);
         project.getAllocations().remove(allocation);
+
+        teamIndex = team.getAllocations().indexOf(allocation);
         team.getAllocations().remove(allocation);
         return allocation;
     }
 
     @Override
     public void undo() {
-        project.getAllocations().add(allocation);
-        team.getAllocations().add(allocation);
+        project.getAllocations().add(projectIndex, allocation);
+        team.getAllocations().add(teamIndex, allocation);
     }
 
     @Override

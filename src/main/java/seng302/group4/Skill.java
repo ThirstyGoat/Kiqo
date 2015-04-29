@@ -1,23 +1,26 @@
 package seng302.group4;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Created by leroy on 25/03/15.
  */
 public class Skill extends Item {
-    private String shortName;
-    private String description;
+    private StringProperty shortName;
+    private StringProperty description;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Skill() {
-        this.shortName = "";
-        this.description = "";
+        this.shortName = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
     }
 
     public Skill(String shortName, String description) {
-        this.shortName = shortName;
-        this.description = description;
+        this.shortName = new SimpleStringProperty(shortName);
+        this.description = new SimpleStringProperty(description);
     }
 
     @Override
@@ -61,18 +64,27 @@ public class Skill extends Item {
 
     @Override
     public String getShortName() {
+        return shortName.get();
+    }
+
+    @Override
+    public StringProperty shortNameProperty() {
         return shortName;
     }
 
-    public String getDescription() {
+    public StringProperty descriptionProperty() {
         return description;
     }
 
+    public String getDescription() {
+        return description.get();
+    }
+
     public void setShortName(String shortName) {
-        this.shortName = shortName;
+        this.shortName.set(shortName);
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description.set(description);
     }
 }

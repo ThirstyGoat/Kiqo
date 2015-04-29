@@ -1,5 +1,11 @@
 package seng302.group4;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,27 +13,27 @@ import java.util.List;
  * Created by james on 17/03/15.
  */
 public class Person extends Item {
-    private String shortName;
-    private String longName;
-    private String description;
-    private String userID;
-    private String emailAddress;
-    private String phoneNumber;
-    private String department;
-    private List<Skill> skills;
+    private StringProperty shortName;
+    private StringProperty longName;
+    private StringProperty description;
+    private StringProperty userID;
+    private StringProperty emailAddress;
+    private StringProperty phoneNumber;
+    private StringProperty department;
+    private ObservableList<Skill> skills = FXCollections.observableArrayList();
     private Team team;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Person() {
-        this.shortName = "";
-        this.longName = "";
-        this.description = "";
-        this.userID = "";
-        this.emailAddress = "";
-        this.phoneNumber = "";
-        this.department = "";
+        this.shortName = new SimpleStringProperty();
+        this.longName = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
+        this.userID = new SimpleStringProperty();
+        this.emailAddress = new SimpleStringProperty();
+        this.phoneNumber = new SimpleStringProperty();
+        this.department = new SimpleStringProperty();
     }
 
     /**
@@ -44,15 +50,47 @@ public class Person extends Item {
      */
     public Person(String shortName, String longName, String description, String userID, String emailAddress, String phoneNumber,
             String department, List<Skill> skills) {
-        this.shortName = shortName;
-        this.longName = longName;
-        this.description = description;
+        this.shortName = new SimpleStringProperty(shortName);
+        this.longName = new SimpleStringProperty(longName);
+        this.description = new SimpleStringProperty(description);
 
-        this.userID = userID;
-        this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
-        this.department = department;
-        this.skills = skills;
+        this.userID = new SimpleStringProperty(userID);
+        this.emailAddress = new SimpleStringProperty(emailAddress);
+        this.phoneNumber = new SimpleStringProperty(phoneNumber);
+        this.department = new SimpleStringProperty(department);
+        this.skills.addAll(skills);
+    }
+
+    public StringProperty shortNameProperty() {
+        return shortName;
+    }
+
+    public StringProperty longNameProperty() {
+        return longName;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public StringProperty userIDProperty() {
+        return userID;
+    }
+
+    public StringProperty emailAddressProperty() {
+        return emailAddress;
+    }
+
+    public StringProperty phoneNumberProperty() {
+        return phoneNumber;
+    }
+
+    public StringProperty departmentProperty() {
+        return department;
+    }
+
+    public ObservableList<Skill> observableSkills() {
+        return skills;
     }
 
     @Override
@@ -118,67 +156,71 @@ public class Person extends Item {
 
     @Override
     public String getShortName() {
-        return shortName;
+        return shortName.get();
     }
 
     public void setShortName(String shortName) {
-        this.shortName = shortName;
+        this.shortName.set(shortName);
     }
 
     public String getLongName() {
-        return longName;
+        return longName.get();
     }
 
     public void setLongName(String longName) {
-        this.longName = longName;
+        this.longName.set(longName);
     }
 
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description.set(description);
     }
 
     public String getUserID() {
-        return userID;
+        return userID.get();
     }
 
     public void setUserID(String userID) {
-        this.userID = userID;
+        this.userID.set(userID);
     }
 
     public String getEmailAddress() {
-        return emailAddress;
+        return emailAddress.get();
     }
 
     public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+        this.emailAddress.set(emailAddress);
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phoneNumber.get();
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber.set(phoneNumber);
     }
 
     public String getDepartment() {
-        return department;
+        return department.get();
     }
 
     public void setDepartment(String department) {
-        this.department = department;
+        this.department.set(department);
     }
 
     public List<Skill> getSkills() {
-        return skills;
+        ArrayList<Skill> arrayList = new ArrayList<>();
+        arrayList.addAll(skills);
+        return arrayList;
+
     }
 
     public void setSkills(List<Skill> skills) {
-        this.skills = skills;
+        this.skills.clear();
+        this.skills.addAll(skills);
     }
 
     public Team getTeam() {

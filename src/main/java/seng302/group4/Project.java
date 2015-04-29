@@ -87,6 +87,7 @@ public class Project extends Item {
         this.shortName.set(shortName);
     }
 
+    @Override
     public StringProperty shortNameProperty() {
         return shortName;
     }

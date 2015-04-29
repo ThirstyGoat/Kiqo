@@ -5,6 +5,8 @@ import seng302.group4.Organisation;
 import seng302.group4.Team;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -14,8 +16,11 @@ import java.util.stream.Collectors;
 public class DeleteTeamCommand extends Command<Team> {
     private final Organisation organisation;
     private final Team team;
-    private final ArrayList<Person> teamMembers = new ArrayList<>();
+    // Hash map of people in the team to be deleted, and the index at which the person appears in people list of
+    // the organisation
+    private final Map<Person, Integer> teamMembers = new HashMap<>();
 
+    private int organisationIndex;
 
     /**
      *
@@ -31,7 +36,9 @@ public class DeleteTeamCommand extends Command<Team> {
      * Sets the members of the team to be deleted
      */
     public void setDeleteMembers() {
-        teamMembers.addAll(team.getTeamMembers().stream().collect(Collectors.toList()));
+        for (Person person : team.getTeamMembers()) {
+            teamMembers.put(person, organisation.getPeople().indexOf(person));
+        }
     }
 
     @Override
@@ -42,12 +49,12 @@ public class DeleteTeamCommand extends Command<Team> {
         }
 
         // if setDeleteMembers was called, delete each team member
-        for (final Person person : teamMembers) {
-            System.out.println("Deleting: " + person.getShortName());
+        for (Person person : teamMembers.keySet()) {
             organisation.getPeople().remove(person);
         }
 
         // delete the team
+        organisationIndex = organisation.getTeams().indexOf(team);
         organisation.getTeams().remove(team);
         return team;
     }
@@ -60,12 +67,11 @@ public class DeleteTeamCommand extends Command<Team> {
             person.setTeam(team);
         }
 
-        for (final Person person : teamMembers) {
-            System.out.println("Undoing deletion of: " + person.getShortName());
-            organisation.getPeople().add(person);
+        for (Map.Entry<Person, Integer> entry : teamMembers.entrySet()) {
+            organisation.getPeople().add(entry.getValue(), entry.getKey());
         }
 
-        organisation.getTeams().add(team);
+        organisation.getTeams().add(organisationIndex, team);
 
     }
 

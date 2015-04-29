@@ -37,14 +37,15 @@ public class PersonDetailsPaneController implements Initializable {
 
     public void showDetails(final Person person) {
         if (person != null) {
-            shortNameLabel.setText(person.getShortName());
-            longNameLabel.setText(person.getLongName());
-            userIDLabel.setText(person.getUserID());
-            emailLabel.setText(person.getEmailAddress());
-            phoneLabel.setText(person.getPhoneNumber());
-            departmentLabel.setText(person.getDepartment());
-            skillsLabel.setText(Utilities.commaSeparatedValues(person.getSkills()));
-            descriptionLabel.setText(person.getDescription());
+            shortNameLabel.textProperty().bind(person.shortNameProperty());
+            longNameLabel.textProperty().bind(person.longNameProperty());
+            userIDLabel.textProperty().bind(person.userIDProperty());
+            emailLabel.textProperty().bind(person.emailAddressProperty());
+            phoneLabel.textProperty().bind(person.phoneNumberProperty());
+            departmentLabel.textProperty().bind(person.departmentProperty());
+            descriptionLabel.textProperty().bind(person.descriptionProperty());
+
+            skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);

@@ -742,7 +742,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (editSkillController.isValid()) {
                 final UICommand command = new UICommand(editSkillController.getCommand());
-                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
+//                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 doCommand(command);
             }
         });
@@ -779,7 +779,7 @@ public class MainController implements Initializable {
 
             if (editPersonController.isValid()) {
                 final UICommand command = new UICommand(editPersonController.getCommand());
-                command.setRefreshParameters(person, peopleListView, detailsPaneController);
+//                command.setRefreshParameters(person, peopleListView, detailsPaneController);
                 doCommand(command);
             }
         });
@@ -834,6 +834,11 @@ public class MainController implements Initializable {
                         // calling super here is very important
                         super.updateItem(item, empty);
                         setText(empty ? "" : item.getShortName());
+                        if (item != null) {
+                            item.shortNameProperty().addListener((observable, oldValue, newValue) -> {
+                                setText(newValue);
+                            });
+                        }
                     }
                 };
                 listCell.setContextMenu(contextMenu);
@@ -955,7 +960,7 @@ public class MainController implements Initializable {
                     // editing
 
                     final UICommand command = new UICommand(teamFormController.getCommand());
-                    command.setRefreshParameters(team, teamsListView, detailsPaneController);
+                    //command.setRefreshParameters(team, teamsListView, detailsPaneController);
                     doCommand(command);
                 }
             }
