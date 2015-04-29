@@ -1,6 +1,8 @@
 package seng302.group4.viewModel;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -67,6 +69,16 @@ public class AllocationFormController implements Initializable {
         setButtonHandlers();
 
         Platform.runLater(teamTextField::requestFocus);
+
+        datePickerChecker();
+    }
+
+    private void datePickerChecker() {
+        startDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (endDatePicker.getValue() == null) {
+                endDatePicker.setValue(startDatePicker.getValue());
+            }
+        });
     }
 
     private void setTextFieldSuggester() {

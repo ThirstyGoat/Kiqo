@@ -551,6 +551,8 @@ public class MainController implements Initializable {
             selectedOrganisation = organisation;
             setListViewData();
             System.out.println("File has been loaded successfully");
+            // Clear undo/redo stack
+            undoManager.empty();
         }
     }
 

@@ -9,12 +9,16 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 
 import com.google.gson.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sun.management.MethodInfo;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -41,6 +45,9 @@ public class PersistenceManager {
                 .addType(Release.class)
                 .addType(Allocation.class)
                 .registerOn(gsonBuilder);
+
+        gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
 
         final Gson gson = gsonBuilder.create();
         try (final Writer writer = new FileWriter(filePath)) {
@@ -72,6 +79,8 @@ public class PersistenceManager {
                 .registerOn(gsonBuilder);
 
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
+        gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
         gson = gsonBuilder.create();
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -95,6 +104,34 @@ public class PersistenceManager {
                 observableList.add(gson.fromJson(element, type));
             }
             return observableList;
+        }
+    }
+
+    private static class StringPropertyDeserializer implements JsonDeserializer, JsonSerializer<StringProperty> {
+        @Override
+        public Object deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+            return new SimpleStringProperty(jsonElement.getAsString());
+        }
+
+        @Override
+        public JsonElement serialize(StringProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
+            return gson.toJsonTree(s.get(), String.class);
+        }
+    }
+
+    private static class ObjectPropertyDeserializer implements JsonDeserializer, JsonSerializer<ObjectProperty> {
+        @Override
+        public Object deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+            Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
+            return new SimpleObjectProperty<>(gson.fromJson(jsonElement, objectType));
+        }
+
+        @Override
+        public JsonElement serialize(ObjectProperty o, Type type, JsonSerializationContext jsonSerializationContext) {
+            Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
+            return gson.toJsonTree(o.get(), objectType);
         }
     }
 }

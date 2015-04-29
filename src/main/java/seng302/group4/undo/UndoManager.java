@@ -62,6 +62,17 @@ public class UndoManager {
         System.out.println("Undoing " + command.toString());
     }
 
+    /**
+     * Empties undo/redo stack. Useful when opening new project and previous commands are now obsolete
+     */
+    public void empty() {
+        undoStack.clear();
+        redoStack.clear();
+        canUndoProperty.set(false);
+        canRedoProperty.set(false);
+        shouldUpdateMenuProperty.set(true);
+    }
+
     public String getUndoType() {
         return undoStack.peek().getType();
     }
