@@ -2,6 +2,7 @@ package seng302.group4;
 
 import java.util.List;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,10 +12,9 @@ import javafx.collections.ObservableList;
  * Created by samschofield on 22/04/15.
  */
 public class Project extends Item {
-    private String shortName;
-    private String longName;
-    private String description;
-    /* We interact with the observableLists, but serialise the arrayLists */
+    private StringProperty shortName;
+    private StringProperty longName;
+    private StringProperty description;
     private ObservableList<Release> releases = FXCollections.observableArrayList();
     private ObservableList<Allocation> allocations = FXCollections.observableArrayList();
 
@@ -25,8 +25,8 @@ public class Project extends Item {
      * @param longName long name for project
      */
     public Project(final String shortName, final String longName) {
-        this.shortName = shortName;
-        this.longName = longName;
+        this.shortName = new SimpleStringProperty(shortName);
+        this.longName = new SimpleStringProperty(longName);
     }
 
     /**
@@ -37,9 +37,9 @@ public class Project extends Item {
      * @param description description of the project
      */
     public Project(final String shortName, final String longName, final String description) {
-        this.shortName = shortName;
-        this.longName = longName;
-        this.description = description;
+        this.shortName = new SimpleStringProperty(shortName);
+        this.longName = new SimpleStringProperty(longName);
+        this.description = new SimpleStringProperty(description);
     }
 
     /**
@@ -47,7 +47,7 @@ public class Project extends Item {
      * @return Description of the project
      */
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     /**
@@ -55,7 +55,7 @@ public class Project extends Item {
      * @param description Description of the project
      */
     public void setDescription(final String description) {
-        this.description = description;
+        this.description.set(description);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Project extends Item {
      * @return longName Long name of the project
      */
     public String getLongName() {
-        return longName;
+        return longName.get();
     }
 
     /**
@@ -71,12 +71,12 @@ public class Project extends Item {
      * @param longName Long name for the project
      */
     public void setLongName(final String longName) {
-        this.longName = longName;
+        this.longName.set(longName);
     }
 
     @Override
     public String getShortName() {
-        return shortName;
+        return shortName.get();
     }
 
     /**
@@ -84,7 +84,19 @@ public class Project extends Item {
      * @param shortName Short name of the project
      */
     public void setShortName(final String shortName) {
-        this.shortName = shortName;
+        this.shortName.set(shortName);
+    }
+
+    public StringProperty shortNameProperty() {
+        return shortName;
+    }
+
+    public StringProperty longNameProperty() {
+        return longName;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
     /**

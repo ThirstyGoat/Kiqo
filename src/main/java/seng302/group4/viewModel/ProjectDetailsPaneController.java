@@ -2,14 +2,19 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
+import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.undo.DeleteAllocationCommand;
 import seng302.group4.undo.EditCommand;
@@ -42,7 +47,7 @@ public class ProjectDetailsPaneController implements Initializable {
     }
 
     private void initializeTable() {
-        teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeamStringProperty());
+        teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
@@ -66,7 +71,18 @@ public class ProjectDetailsPaneController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
         contextMenu.getItems().add(deleteMenuItem);
-        allocationsTableView.setContextMenu(contextMenu);
+
+        allocationsTableView.setRowFactory(param -> {
+            final TableRow<Allocation> row = new TableRow<>();
+            row.itemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    row.setContextMenu(null);
+                } else {
+                    row.setContextMenu(contextMenu);
+                }
+            });
+            return row;
+        });
 
         deleteMenuItem.setOnAction(event -> {
             Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
@@ -88,9 +104,9 @@ public class ProjectDetailsPaneController implements Initializable {
 
     public void showDetails(final Project project) {
         if (project != null) {
-            shortNameLabel.setText(project.getShortName());
-            longNameLabel.setText(project.getLongName());
-            descriptionLabel.setText(project.getDescription());
+            shortNameLabel.textProperty().bind(project.shortNameProperty());
+            longNameLabel.textProperty().bind(project.longNameProperty());
+            descriptionLabel.textProperty().bind(project.descriptionProperty());
             allocationsTableView.setItems(project.getAllocations());
         } else {
             shortNameLabel.setText(null);

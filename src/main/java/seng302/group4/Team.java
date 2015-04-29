@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 public class Team extends Item {
     private final List<Person> devTeam = new ArrayList<>();
     private ObservableList<Allocation> allocations = FXCollections.observableArrayList();
-    private String shortName;
+    private StringProperty shortName;
     private String description;
     private Person productOwner;
     private Person scrumMaster;
@@ -23,12 +25,12 @@ public class Team extends Item {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Team() {
-        this.shortName = "";
+        this.shortName = new SimpleStringProperty();
         this.description = "";
     }
 
     public Team(String shortName, String description, List<Person> teamMembers) {
-        this.shortName = shortName;
+        this.shortName = new SimpleStringProperty(shortName);
         this.description = description;
         this.teamMembers = teamMembers;
     }
@@ -54,11 +56,15 @@ public class Team extends Item {
 
     @Override
     public String getShortName() {
-        return shortName;
+        return shortName.get();
     }
 
     public void setShortName(String shortName) {
-        this.shortName = shortName;
+        this.shortName.set(shortName);
+    }
+
+    public StringProperty shortNameProperty() {
+        return shortName;
     }
 
     public List<Person> getTeamMembers() {

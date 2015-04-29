@@ -72,10 +72,6 @@ public class Allocation {
         return endDate;
     }
 
-    public StringProperty getTeamStringProperty() {
-        return teamStringProperty;
-    }
-
     // ###################################################################################
 
     /**

@@ -164,5 +164,6 @@ public class DetailsPaneController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         projectDetailsPaneController.setMainController(mainController);
+        teamDetailsPaneController.setMainController(mainController);
     }
 }

@@ -20,12 +20,25 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                 datePicker.setValue(cell.getItem());
                 datePicker.hide();
-                commitEdit(datePicker.getValue());
-                setGraphic(null);
-                setText(datePicker.getValue().toString());
                 event.consume();
             });
             return cell ;
+        });
+
+        datePicker.showingProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                // If datepicker is no longer showing
+                // Check if date has been changed, if so commitEdit
+                boolean dateChanged = !(getItem().isEqual(datePicker.getValue()));
+                if (dateChanged) {
+                    // If the date has been changed, commit the edit
+                    commitEdit(datePicker.getValue());
+                }
+                datePicker.hide();
+                setGraphic(null);
+                setText(datePicker.getValue().toString());
+                cancelEdit();
+            }
         });
     }
 
@@ -55,8 +68,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
     public void cancelEdit() {
         super.cancelEdit();
         if (!isEmpty()) {
-            setGraphic(null);
-            setText(getItem().toString());
+            datePicker.hide();
         }
     }
 }

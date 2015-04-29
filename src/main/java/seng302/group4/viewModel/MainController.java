@@ -813,7 +813,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (editProjectController.isValid()) {
                 final UICommand command = new UICommand(editProjectController.getCommand());
-                command.setRefreshParameters(project, projectListView, detailsPaneController);
+                //command.setRefreshParameters(project, projectListView, detailsPaneController);
                 doCommand(command);
             }
         });
