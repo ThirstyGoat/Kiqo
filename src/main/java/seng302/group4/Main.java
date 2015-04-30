@@ -1,5 +1,7 @@
 package seng302.group4;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +12,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import seng302.group4.viewModel.MainController;
-
-import java.io.File;
 
 /**
  * Main entry point for application

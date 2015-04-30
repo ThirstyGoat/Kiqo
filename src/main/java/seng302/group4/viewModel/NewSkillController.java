@@ -1,5 +1,8 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,9 +12,6 @@ import javafx.util.Duration;
 import seng302.group4.Organisation;
 import seng302.group4.Skill;
 import seng302.group4.undo.CreateSkillCommand;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * Created by james on 18/03/15.

@@ -1,11 +1,11 @@
 package seng302.group4.viewModel;
 
+import java.time.LocalDate;
+
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
-
-import java.time.LocalDate;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 

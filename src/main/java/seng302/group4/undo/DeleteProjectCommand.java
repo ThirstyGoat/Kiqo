@@ -1,12 +1,7 @@
 package seng302.group4.undo;
 
 import seng302.group4.Organisation;
-import seng302.group4.Person;
 import seng302.group4.Project;
-import seng302.group4.Team;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 /**

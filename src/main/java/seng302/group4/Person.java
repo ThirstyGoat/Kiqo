@@ -1,12 +1,12 @@
 package seng302.group4;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Model class for Person.

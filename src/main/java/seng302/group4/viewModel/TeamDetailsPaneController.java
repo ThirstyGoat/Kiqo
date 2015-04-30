@@ -1,25 +1,23 @@
 package seng302.group4.viewModel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
-import seng302.group4.Person;
 import seng302.group4.Team;
 import seng302.group4.undo.DeleteAllocationCommand;
 import seng302.group4.undo.EditCommand;
 import seng302.group4.utils.Utilities;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
 

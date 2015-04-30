@@ -1,8 +1,11 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,13 +13,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
+
 import seng302.group4.Allocation;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
@@ -25,12 +27,6 @@ import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateAllocationCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
 
 /**
  * Created by Amy on 23/04/15.

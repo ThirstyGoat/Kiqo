@@ -16,12 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 
-import seng302.group4.Person;
 import seng302.group4.Organisation;
+import seng302.group4.Person;
 import seng302.group4.Skill;
 import seng302.group4.customNodes.GoatListSelectionView;
 

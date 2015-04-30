@@ -1,6 +1,8 @@
 package seng302.group4.undo;
 
-import seng302.group4.*;
+import seng302.group4.Allocation;
+import seng302.group4.Project;
+import seng302.group4.Team;
 
 /**
  * Command to delete a person from a project.

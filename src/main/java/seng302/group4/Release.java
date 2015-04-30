@@ -1,11 +1,11 @@
 package seng302.group4;
 
+import java.time.LocalDate;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.time.LocalDate;
 
 
 /**

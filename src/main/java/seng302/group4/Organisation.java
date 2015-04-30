@@ -2,7 +2,6 @@ package seng302.group4;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
