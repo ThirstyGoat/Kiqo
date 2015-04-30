@@ -371,8 +371,16 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 selectedProject = newValue;
                 releasesListView.setItems(selectedProject.getReleases());
+
+                // Update list label
+                listLabel.textProperty().unbind();
+                listLabel.textProperty().bind(newValue.shortNameProperty());
             } else {
                 MainController.focusedItemProperty.set(null);
+
+                // Update list label
+                listLabel.textProperty().unbind();
+                listLabel.setText(null);
             }
 
         });
@@ -539,6 +547,7 @@ public class MainController implements Initializable {
             organisation = PersistenceManager.loadOrganisation(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
+            e.printStackTrace();
         } catch (final InvalidPersonException e) {
             GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
             e.printStackTrace();
@@ -592,13 +601,6 @@ public class MainController implements Initializable {
             dividerPosition = mainSplitPane.getDividerPositions()[0];
             mainSplitPane.getItems().remove(listAnchorPane);
         }
-    }
-
-    public void setPrimaryStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        addClosePrompt();
-        menuBarController.setMainController(this);
-        detailsPaneController.setMainController(this);
     }
 
     public void switchToSkillList() {
@@ -1079,5 +1081,12 @@ public class MainController implements Initializable {
 
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public void setPrimaryStage(final Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        addClosePrompt();
+        menuBarController.setMainController(this);
+        detailsPaneController.setMainController(this);
     }
 }

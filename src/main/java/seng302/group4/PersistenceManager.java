@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 
 import com.google.gson.*;
 import javafx.beans.property.ObjectProperty;
@@ -18,7 +17,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sun.management.MethodInfo;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -33,23 +31,10 @@ public class PersistenceManager {
      * @throws IOException Cannot write to file
      */
     public static void saveOrganisation(final File filePath, final Organisation organisation) throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder();
-        // Turn me on baby -
-         gsonBuilder.setPrettyPrinting();
-        new GraphAdapterBuilder()
-                .addType(Organisation.class)
-                .addType(Project.class)
-                .addType(Team.class)
-                .addType(Person.class)
-                .addType(Skill.class)
-                .addType(Release.class)
-                .addType(Allocation.class)
-                .registerOn(gsonBuilder);
+        if (gson == null) {
+            createGson();
+        }
 
-        gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
-        gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
-
-        final Gson gson = gsonBuilder.create();
         try (final Writer writer = new FileWriter(filePath)) {
             gson.toJson(organisation, writer);
         }
@@ -67,7 +52,21 @@ public class PersistenceManager {
      */
     public static Organisation loadOrganisation(final File filePath) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
         Organisation organisation = null;
+
+        if (gson == null) {
+            createGson();
+        }
+
+        if (filePath != null) {
+            final BufferedReader br = new BufferedReader(new FileReader(filePath));
+            organisation = gson.fromJson(br, Organisation.class);
+        }
+        return organisation;
+    }
+
+    private static void createGson() {
         final GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
                 .addType(Organisation.class)
                 .addType(Project.class)
@@ -82,11 +81,6 @@ public class PersistenceManager {
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
         gson = gsonBuilder.create();
-        if (filePath != null) {
-            final BufferedReader br = new BufferedReader(new FileReader(filePath));
-            organisation = gson.fromJson(br, Organisation.class);
-        }
-        return organisation;
     }
 
     /**
@@ -98,6 +92,9 @@ public class PersistenceManager {
         public ObservableList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
+            if (gson == null) {
+                createGson();
+            }
 
             ObservableList<Object> observableList =  FXCollections.observableArrayList();
             for (JsonElement element : json.getAsJsonArray()) {
@@ -107,31 +104,45 @@ public class PersistenceManager {
         }
     }
 
-    private static class StringPropertyDeserializer implements JsonDeserializer, JsonSerializer<StringProperty> {
+    private static class StringPropertyDeserializer implements JsonDeserializer<StringProperty>, JsonSerializer<StringProperty> {
         @Override
-        public Object deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+        public StringProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
             return new SimpleStringProperty(jsonElement.getAsString());
         }
 
         @Override
         public JsonElement serialize(StringProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
-            return gson.toJsonTree(s.get(), String.class);
+            if (s != null && s.get() != null) {
+                return new JsonPrimitive(s.get());
+            } else {
+                return null;
+            }
         }
     }
 
-    private static class ObjectPropertyDeserializer implements JsonDeserializer, JsonSerializer<ObjectProperty> {
+    private static class ObjectPropertyDeserializer implements JsonDeserializer<ObjectProperty>, JsonSerializer<ObjectProperty> {
         @Override
-        public Object deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+        public ObjectProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
             Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
+            if (gson == null) {
+                createGson();
+            }
             return new SimpleObjectProperty<>(gson.fromJson(jsonElement, objectType));
         }
 
         @Override
         public JsonElement serialize(ObjectProperty o, Type type, JsonSerializationContext jsonSerializationContext) {
             Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
-            return gson.toJsonTree(o.get(), objectType);
+            if (o != null && o.get() != null) {
+                if (gson == null) {
+                    createGson();
+                }
+                return gson.toJsonTree(o.get(), objectType);
+            } else {
+                return null;
+            }
         }
     }
 }
