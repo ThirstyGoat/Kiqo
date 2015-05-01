@@ -1,9 +1,12 @@
 package seng302.group4.viewModel;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import seng302.group4.Allocation;
 
 import java.time.LocalDate;
 
@@ -12,7 +15,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
     private final DatePicker datePicker;
 
     public DatePickerCell() {
-        // Initialize the DatePicker for birthday  
+        // Initialize the DatePicker for birthday
         this.datePicker = new DatePicker();
 
         datePicker.setDayCellFactory(picker -> {
@@ -24,22 +27,10 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
             });
             return cell ;
         });
+    }
 
-        datePicker.showingProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                // If datepicker is no longer showing
-                // Check if date has been changed, if so commitEdit
-                boolean dateChanged = !(getItem().isEqual(datePicker.getValue()));
-                if (dateChanged) {
-                    // If the date has been changed, commit the edit
-                    commitEdit(datePicker.getValue());
-                }
-                datePicker.hide();
-                setGraphic(null);
-                setText(datePicker.getValue().toString());
-                cancelEdit();
-            }
-        });
+    public DatePicker getDatePicker() {
+        return datePicker;
     }
 
     @Override

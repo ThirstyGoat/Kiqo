@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -51,8 +52,18 @@ public class ProjectDetailsPaneController implements Initializable {
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
-        startDateTableColumn.setCellFactory(param -> new DatePickerCell<>());
-        endDateTableColumn.setCellFactory(param -> new DatePickerCell<>());
+        startDateTableColumn.setCellFactory(param -> {
+            AllocationDatePickerCell<Allocation> startDateCellFactory = new AllocationDatePickerCell<>();
+            startDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.START_DATE);
+            return startDateCellFactory;
+        });
+
+        endDateTableColumn.setCellFactory(param -> {
+            AllocationDatePickerCell<Allocation> endDateCellFactory = new AllocationDatePickerCell<>();
+            endDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.END_DATE);
+            return endDateCellFactory;
+        });
+
         allocationsTableView.setEditable(true);
 
         startDateTableColumn.setOnEditCommit(event -> {
@@ -69,8 +80,9 @@ public class ProjectDetailsPaneController implements Initializable {
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ContextMenu contextMenu = new ContextMenu();
+        MenuItem clearEndDateMenuItem = new MenuItem("Clear End Date");
         MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
-        contextMenu.getItems().add(deleteMenuItem);
+        contextMenu.getItems().addAll(clearEndDateMenuItem, deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
             final TableRow<Allocation> row = new TableRow<>();
@@ -78,10 +90,26 @@ public class ProjectDetailsPaneController implements Initializable {
                 if (newValue == null) {
                     row.setContextMenu(null);
                 } else {
+                    if (newValue.getEndDate() == null) {
+                        clearEndDateMenuItem.setDisable(true);
+                    }
+                    newValue.getEndDateProperty().addListener((observable1, oldValue1, newValue1) -> {
+                        if (newValue1 == null) {
+                            clearEndDateMenuItem.setDisable(true);
+                        } else {
+                            clearEndDateMenuItem.setDisable(false);
+                        }
+                    });
                     row.setContextMenu(contextMenu);
                 }
             });
             return row;
+        });
+
+        clearEndDateMenuItem.setOnAction(event -> {
+            Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", null);
+            mainController.doCommand(command);
         });
 
         deleteMenuItem.setOnAction(event -> {

@@ -15,9 +15,9 @@ import seng302.group4.exceptions.FieldNotFoundException;
  *
  */
 public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
-    private Object oldVal;
     private final Object newVal;
     private final ModelObjectType subject;
+    private Object oldVal;
     private PropertyDescriptor propertyDescriptor;
 
     /**
@@ -60,7 +60,8 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
 
     @Override
     public String toString() {
-        return "<Edit " + this.subject.getClass() + ": set " + this.propertyDescriptor.getName() + " to " + this.newVal.toString() + ">";
+        String newValue = (this.newVal != null) ? this.newVal.toString() : "null";
+        return "<Edit " + this.subject.getClass() + ": set " + this.propertyDescriptor.getName() + " to " + newValue + ">";
     }
 
     @Override

@@ -147,7 +147,6 @@ public class AllocationFormController implements Initializable {
         for (final Allocation a : team.getAllocations()) {
             // If the end dates are null, then the allocation has no specified period
             // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
-            System.out.println("here");
             final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
             final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
             if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
