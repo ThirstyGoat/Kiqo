@@ -37,18 +37,13 @@ public class Skill extends Item {
         if (!getShortName().equals(skill.getShortName())) {
             return false;
         }
-        if (!getDescription().equals(skill.getDescription())) {
-            return false;
-        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = getShortName().hashCode();
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        return result;
+        return getShortName().hashCode();
     }
 
     /*
@@ -58,7 +53,7 @@ public class Skill extends Item {
      */
     @Override
     public String toString() {
-        return "Skill{shortName=" + shortName + ", description=" + description + "}";
+        return "Skill{shortName=" + getShortName() + ", description=" + getDescription() + "}";
     }
 
     @Override

@@ -1,6 +1,5 @@
 package seng302.group4;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -118,18 +117,18 @@ public class Person extends Item {
 
     /**
      * To string method for a person. Will return the fields that are not set to null
-     * 
+     *
      * @return the string representation of a Person object
      */
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Person{shortName='" + shortName + "\', longName='" + longName + "\'");
-        stringBuilder.append(", description='" + description + "\'");
-        stringBuilder.append(", userID='" + userID + "\'");
-        stringBuilder.append(", emailAddress='" + emailAddress + "\'");
-        stringBuilder.append(", phoneNumber='" + phoneNumber + "\'");
-        stringBuilder.append(", department='" + department + "\'");
+        stringBuilder.append("Person{shortName='" + getShortName() + "\', longName='" + getLongName() + "\'");
+        stringBuilder.append(", description='" + getDescription() + "\'");
+        stringBuilder.append(", userID='" + getUserID() + "\'");
+        stringBuilder.append(", emailAddress='" + getEmailAddress() + "\'");
+        stringBuilder.append(", phoneNumber='" + getPhoneNumber() + "\'");
+        stringBuilder.append(", department='" + getDepartment() + "\'");
         stringBuilder.append(", team='" + ((team == null) ? "null" : team.getShortName()) + "'}");
         return stringBuilder.toString();
     }
@@ -191,11 +190,8 @@ public class Person extends Item {
         this.department.set(department);
     }
 
-    public List<Skill> getSkills() {
-        final ArrayList<Skill> arrayList = new ArrayList<>();
-        arrayList.addAll(skills);
-        return arrayList;
-
+    public ObservableList<Skill> getSkills() {
+        return skills;
     }
 
     public void setSkills(List<Skill> skills) {
