@@ -1,27 +1,35 @@
 package seng302.group4.undo;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import org.junit.Before;
 import org.junit.Test;
+
 import seng302.group4.Allocation;
 import seng302.group4.Project;
 import seng302.group4.Team;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * Created by bradley on 23/04/15.
  */
 public class CreateAllocationCommandTest {
 
+    private Team team;
+    private Project project;
+    private Allocation allocation;
+    private CreateAllocationCommand command;
+
+    @Before
+    public void setUp() {
+        team = new Team("", "", new ArrayList<>());
+        project = new Project("", "");
+        allocation = new Allocation(team, LocalDate.of(2015, 1, 1), LocalDate.of(2016, 1, 1), project);
+        command = new CreateAllocationCommand(allocation);
+    }
+
     @Test
     public void createAllocation_AllocationAdded() {
-        Team team = new Team("", "", new ArrayList<>());
-        Project project = new Project("", "");
-
-        Allocation allocation = new Allocation(team, LocalDate.now(), LocalDate.of(2016, 1, 1), project);
-
-        CreateAllocationCommand command = new CreateAllocationCommand(allocation);
-
         command.execute();
 
         assert team.getAllocations().contains(allocation);
@@ -30,18 +38,7 @@ public class CreateAllocationCommandTest {
 
     @Test
     public void undoCreateAllocation_AllocationRemoved() {
-        Team team = new Team("", "", new ArrayList<>());
-        Project project = new Project("", "");
-
-        Allocation allocation = new Allocation(team, LocalDate.now(), LocalDate.of(2016, 1, 1), project);
-
-        CreateAllocationCommand command = new CreateAllocationCommand(allocation);
-
         command.execute();
-
-        assert team.getAllocations().contains(allocation);
-        assert project.getAllocations().contains(allocation);
-
         command.undo();
 
         assert !team.getAllocations().contains(allocation);

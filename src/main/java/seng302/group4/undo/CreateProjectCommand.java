@@ -1,7 +1,5 @@
 package seng302.group4.undo;
 
-import java.io.File;
-
 import seng302.group4.Organisation;
 import seng302.group4.Project;
 
@@ -24,6 +22,7 @@ public class CreateProjectCommand extends Command<Project> {
      * @param shortName non-null unique ID for display
      * @param longName more detailed name
      * @param description Extended description of the project
+     * @param organisation organisation to which the project belongs
      */
     public CreateProjectCommand(final String shortName, final String longName, final String description,
                                 final Organisation organisation) {

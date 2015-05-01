@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import seng302.group4.Organisation;
 import seng302.group4.Project;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;

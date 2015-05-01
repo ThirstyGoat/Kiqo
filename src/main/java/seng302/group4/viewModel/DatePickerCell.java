@@ -1,6 +1,5 @@
 package seng302.group4.viewModel;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;

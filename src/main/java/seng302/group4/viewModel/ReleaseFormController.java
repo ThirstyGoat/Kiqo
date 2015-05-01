@@ -22,11 +22,14 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import seng302.group4.Item;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
 import seng302.group4.Release;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CompoundCommand;
+import seng302.group4.undo.CreateReleaseCommand;
+import seng302.group4.undo.EditCommand;
+import seng302.group4.undo.MoveItemCommand;
 
 
 /**

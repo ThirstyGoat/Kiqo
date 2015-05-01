@@ -1,17 +1,17 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import seng302.group4.Person;
 import seng302.group4.Organisation;
+import seng302.group4.Person;
 import seng302.group4.undo.CreatePersonCommand;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * Created by james on 18/03/15.

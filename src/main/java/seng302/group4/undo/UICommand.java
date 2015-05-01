@@ -1,7 +1,6 @@
 package seng302.group4.undo;
 
 import javafx.scene.control.ListView;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import seng302.group4.Item;
 import seng302.group4.viewModel.DetailsPaneController;
 import seng302.group4.viewModel.MainController;
@@ -12,7 +11,7 @@ import seng302.group4.viewModel.MainController;
  */
 public class UICommand extends Command<Void> {
 
-    private Command command;
+    private final Command command;
     private ListView listView;
     private Item item;
     private DetailsPaneController detailsPaneController;
@@ -28,7 +27,6 @@ public class UICommand extends Command<Void> {
         return null;
     }
 
-    @Getter
     public Command getCommand(){
         return command;
     }

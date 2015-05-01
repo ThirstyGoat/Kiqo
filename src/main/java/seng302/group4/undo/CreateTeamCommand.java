@@ -3,8 +3,8 @@ package seng302.group4.undo;
 import java.util.ArrayList;
 import java.util.List;
 
-import seng302.group4.Person;
 import seng302.group4.Organisation;
+import seng302.group4.Person;
 import seng302.group4.Team;
 
 /**

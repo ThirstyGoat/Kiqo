@@ -2,20 +2,18 @@ package seng302.group4.viewModel;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.util.Callback;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
-import seng302.group4.Person;
 import seng302.group4.Project;
 import seng302.group4.undo.DeleteAllocationCommand;
 import seng302.group4.undo.EditCommand;
@@ -67,21 +65,21 @@ public class ProjectDetailsPaneController implements Initializable {
         allocationsTableView.setEditable(true);
 
         startDateTableColumn.setOnEditCommit(event -> {
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
         endDateTableColumn.setOnEditCommit(event -> {
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
         // fixes ghost column issue and resizing
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem clearEndDateMenuItem = new MenuItem("Clear End Date");
-        MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem clearEndDateMenuItem = new MenuItem("Clear End Date");
+        final MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
         contextMenu.getItems().addAll(clearEndDateMenuItem, deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
@@ -113,9 +111,9 @@ public class ProjectDetailsPaneController implements Initializable {
         });
 
         deleteMenuItem.setOnAction(event -> {
-            Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
 
-            DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
+            final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
 
             final String[] buttons = {"Delete Allocation", "Cancel"};
             final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),

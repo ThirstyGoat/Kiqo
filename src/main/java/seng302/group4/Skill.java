@@ -7,15 +7,15 @@ import javafx.beans.property.StringProperty;
  * Created by leroy on 25/03/15.
  */
 public class Skill extends Item {
-    private StringProperty shortName;
-    private StringProperty description;
+    private final StringProperty shortName;
+    private final StringProperty description;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Skill() {
-        this.shortName = new SimpleStringProperty();
-        this.description = new SimpleStringProperty();
+        shortName = new SimpleStringProperty();
+        description = new SimpleStringProperty();
     }
 
     public Skill(String shortName, String description) {
@@ -34,11 +34,10 @@ public class Skill extends Item {
 
         final Skill skill = (Skill) o;
 
-        if (description != null ? !description.equals(skill.description)
-                                : skill.description != null) {
+        if (!getShortName().equals(skill.getShortName())) {
             return false;
         }
-        if (!shortName.equals(skill.shortName)) {
+        if (!getDescription().equals(skill.getDescription())) {
             return false;
         }
 
@@ -47,19 +46,19 @@ public class Skill extends Item {
 
     @Override
     public int hashCode() {
-        int result = shortName.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        int result = getShortName().hashCode();
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         return result;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Skill [shortName=" + shortName + ", description=" + description + "]";
+        return "Skill{shortName=" + shortName + ", description=" + description + "}";
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -54,7 +53,19 @@ import seng302.group4.Skill;
 import seng302.group4.Team;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.*;
+import seng302.group4.undo.Command;
+import seng302.group4.undo.CreatePersonCommand;
+import seng302.group4.undo.CreateProjectCommand;
+import seng302.group4.undo.CreateReleaseCommand;
+import seng302.group4.undo.CreateSkillCommand;
+import seng302.group4.undo.CreateTeamCommand;
+import seng302.group4.undo.DeletePersonCommand;
+import seng302.group4.undo.DeleteProjectCommand;
+import seng302.group4.undo.DeleteReleaseCommand;
+import seng302.group4.undo.DeleteSkillCommand;
+import seng302.group4.undo.DeleteTeamCommand;
+import seng302.group4.undo.UICommand;
+import seng302.group4.undo.UndoManager;
 import seng302.group4.utils.Utilities;
 
 import com.google.gson.JsonSyntaxException;
@@ -149,7 +160,7 @@ public class MainController implements Initializable {
      *
      */
     private void deleteProject(Project project) {
-        DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisation);
+        final DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisation);
 
         final String[] buttons = {"Delete Project", "Cancel"};
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Project", "Are you sure?",

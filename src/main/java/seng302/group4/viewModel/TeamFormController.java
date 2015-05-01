@@ -1,5 +1,10 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -7,7 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -15,20 +26,17 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
-import seng302.group4.Person;
+
 import seng302.group4.Organisation;
+import seng302.group4.Person;
 import seng302.group4.Team;
 import seng302.group4.customNodes.GoatListSelectionView;
 import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateTeamCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * Created by james on 27/03/15.

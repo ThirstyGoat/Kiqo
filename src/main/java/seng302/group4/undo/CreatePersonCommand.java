@@ -1,7 +1,7 @@
 package seng302.group4.undo;
 
-import seng302.group4.Person;
 import seng302.group4.Organisation;
+import seng302.group4.Person;
 
 /**
  * Command that adds a Person to a Project

@@ -1,8 +1,13 @@
 package seng302.group4.viewModel;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,10 +18,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
+
 import seng302.group4.Allocation;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
@@ -25,12 +31,6 @@ import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateAllocationCommand;
 import seng302.group4.undo.EditCommand;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
 
 /**
  * Created by Amy on 23/04/15.
@@ -65,8 +65,8 @@ public class AllocationFormController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         startDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setPromptText("dd/mm/yyyy");
-        setTextFieldSuggester();
         setButtonHandlers();
+        setTextFieldAutoCompletionBinding();
 
         Platform.runLater(teamTextField::requestFocus);
 
@@ -81,10 +81,20 @@ public class AllocationFormController implements Initializable {
         });
     }
 
-    private void setTextFieldSuggester() {
-        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Project's short name is used.
-        TextFields.bindAutoCompletion(teamTextField, request -> organisation.getTeams(), new StringConverter<Team>() {
+    private AutoCompletionBinding<Team> setTextFieldAutoCompletionBinding() {
+        // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
+        // uses a String converter so that the Team's short name is used.
+        final AutoCompletionBinding<Team> binding = TextFields.bindAutoCompletion(teamTextField,
+                new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Team>>() {
+            @Override
+            public Collection<Team> call(AutoCompletionBinding.ISuggestionRequest request) {
+                final Collection<Team> teams = organisation.getTeams().stream()
+                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                        .collect(Collectors.toList());
+                return teams;
+            }
+
+        }, new StringConverter<Team>() {
             @Override
             public Team fromString(String string) {
                 for (final Team team : organisation.getTeams()) {
@@ -100,6 +110,15 @@ public class AllocationFormController implements Initializable {
                 return team.getShortName();
             }
         });
+
+        teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // forces suggestion list to show
+                binding.setUserInput("");
+            }
+        });
+
+        return binding;
     }
 
     private void setButtonHandlers() {

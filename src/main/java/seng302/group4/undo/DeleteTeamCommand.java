@@ -1,14 +1,11 @@
 package seng302.group4.undo;
 
-import seng302.group4.Person;
-import seng302.group4.Organisation;
-import seng302.group4.Team;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import seng302.group4.Organisation;
+import seng302.group4.Person;
+import seng302.group4.Team;
 
 
 /**
@@ -37,7 +34,7 @@ public class DeleteTeamCommand extends Command<Team> {
      * Sets the members of the team to be deleted
      */
     public void setDeleteMembers() {
-        for (Person person : team.getTeamMembers()) {
+        for (final Person person : team.getTeamMembers()) {
             teamMembers.put(organisation.getPeople().indexOf(person), person);
         }
     }
@@ -50,7 +47,7 @@ public class DeleteTeamCommand extends Command<Team> {
         }
 
         // if setDeleteMembers was called, delete each team member
-        for (Person person : teamMembers.values()) {
+        for (final Person person : teamMembers.values()) {
             organisation.getPeople().remove(person);
         }
 
@@ -60,7 +57,7 @@ public class DeleteTeamCommand extends Command<Team> {
         return team;
     }
 
-    
+
     @Override
     public void undo() {
         // Set team members team field to this team
@@ -68,7 +65,7 @@ public class DeleteTeamCommand extends Command<Team> {
             person.setTeam(team);
         }
 
-        for (Map.Entry<Integer, Person> entry : teamMembers.entrySet()) {
+        for (final Map.Entry<Integer, Person> entry : teamMembers.entrySet()) {
             organisation.getPeople().add(entry.getKey(), entry.getValue());
         }
 

@@ -1,5 +1,8 @@
 package seng302.group4;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,27 +10,24 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by bradley on 27/03/15.
  */
 public class Team extends Item {
-    private ObservableList<Allocation> allocations = FXCollections.observableArrayList();
-    private StringProperty shortName;
-    private StringProperty description;
-    private ObjectProperty<Person> productOwner = new SimpleObjectProperty<>();
-    private ObjectProperty<Person> scrumMaster = new SimpleObjectProperty<>();
-    private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
-    private ObservableList<Person> devTeam = FXCollections.observableArrayList();
+    private final ObservableList<Allocation> allocations = FXCollections.observableArrayList();
+    private final StringProperty shortName;
+    private final StringProperty description;
+    private final ObjectProperty<Person> productOwner = new SimpleObjectProperty<>();
+    private final ObjectProperty<Person> scrumMaster = new SimpleObjectProperty<>();
+    private final ObservableList<Person> teamMembers = FXCollections.observableArrayList();
+    private final ObservableList<Person> devTeam = FXCollections.observableArrayList();
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Team() {
-        this.shortName = new SimpleStringProperty();
-        this.description = new SimpleStringProperty();
+        shortName = new SimpleStringProperty();
+        description = new SimpleStringProperty();
     }
 
     public Team(String shortName, String description, List<Person> teamMembers) {
@@ -54,25 +54,6 @@ public class Team extends Item {
     }
 
     @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("Team{" + shortName);
-        sb.append(", description=" + description);
-        sb.append(", productOwner=");
-        if (getProductOwner() != null) {
-            sb.append(getProductOwner().getShortName());
-        }
-        sb.append(", scrumMaster=");
-        if (getScrumMaster() != null) {
-            sb.append(getScrumMaster().getShortName());
-        }
-        sb.append(", teamMembers=" + teamMembers);
-        sb.append(", devTeam=" + devTeam);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
     public String getShortName() {
         return shortName.get();
     }
@@ -82,9 +63,14 @@ public class Team extends Item {
     }
 
     public List<Person> getTeamMembers() {
-        ArrayList<Person> arrayList = new ArrayList<>();
+        final ArrayList<Person> arrayList = new ArrayList<>();
         arrayList.addAll(teamMembers);
         return arrayList;
+    }
+
+    public void setTeamMembers(List<Person> teamMembers) {
+        this.teamMembers.clear();
+        this.teamMembers.addAll(teamMembers);
     }
 
     public ObservableList<Person> observableTeamMembers() {
@@ -93,11 +79,6 @@ public class Team extends Item {
 
     public ObservableList<Person> observableDevTeam() {
         return devTeam;
-    }
-
-    public void setTeamMembers(List<Person> teamMembers) {
-        this.teamMembers.clear();
-        this.teamMembers.addAll(teamMembers);
     }
 
     public String getDescription() {
@@ -125,7 +106,7 @@ public class Team extends Item {
     }
 
     public List<Person> getDevTeam() {
-        ArrayList<Person> arrayList = new ArrayList<>();
+        final ArrayList<Person> arrayList = new ArrayList<>();
         arrayList.addAll(devTeam);
         return arrayList;
     }
@@ -137,6 +118,65 @@ public class Team extends Item {
 
     public ObservableList<Allocation> getAllocations() {
         return allocations;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Team{" + shortName);
+        sb.append(", description=" + description);
+        sb.append(", productOwner=");
+        if (getProductOwner() != null) {
+            sb.append(getProductOwner().getShortName());
+        }
+        sb.append(", scrumMaster=");
+        if (getScrumMaster() != null) {
+            sb.append(getScrumMaster().getShortName());
+        }
+        sb.append(", teamMembers=" + teamMembers);
+        sb.append(", devTeam=" + devTeam);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getShortName() == null) ? 0 : getShortName().hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Team)) {
+            return false;
+        }
+        final Team other = (Team) obj;
+        if (getShortName() == null) {
+            if (other.getShortName() != null) {
+                return false;
+            }
+        } else if (!getShortName().equals(other.getShortName())) {
+            return false;
+        }
+        return true;
     }
 
 }

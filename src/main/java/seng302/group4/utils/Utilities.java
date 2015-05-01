@@ -1,16 +1,13 @@
 package seng302.group4.utils;
 
-import javafx.beans.InvalidationListener;
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableStringValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import seng302.group4.Item;
 import seng302.group4.Person;
-
-import java.util.List;
 
 /**
  * Created by bradley on 9/04/15.
