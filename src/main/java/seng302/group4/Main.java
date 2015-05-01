@@ -1,7 +1,5 @@
 package seng302.group4;
 
-import java.io.File;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +10,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import seng302.group4.viewModel.MainController;
+
+import java.io.File;
 
 /**
  * Main entry point for application
@@ -52,7 +52,7 @@ public class Main extends Application {
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                for(File file : db.getFiles()) {
+                for (File file : db.getFiles()) {
                     mainController.openOrganisation(file);
                 }
                 // if you want single files
@@ -68,6 +68,7 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
-        //mainController.openOrganisation(new File("/Users/james/Desktop/Kiqo.json"));
+//        mainController.openOrganisation(new File("/Users/james/Desktop/Kiqo.json"));
+
     }
 }

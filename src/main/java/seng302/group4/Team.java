@@ -1,14 +1,14 @@
 package seng302.group4;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bradley on 27/03/15.
@@ -55,7 +55,7 @@ public class Team extends Item {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Team{" + shortName);
         sb.append(", description=" + description);
         sb.append(", productOwner=");
@@ -87,17 +87,17 @@ public class Team extends Item {
         return arrayList;
     }
 
+    public void setTeamMembers(List<Person> teamMembers) {
+        this.teamMembers.clear();
+        this.teamMembers.addAll(teamMembers);
+    }
+
     public ObservableList<Person> observableTeamMembers() {
         return teamMembers;
     }
 
     public ObservableList<Person> observableDevTeam() {
         return devTeam;
-    }
-
-    public void setTeamMembers(List<Person> teamMembers) {
-        this.teamMembers.clear();
-        this.teamMembers.addAll(teamMembers);
     }
 
     public String getDescription() {
