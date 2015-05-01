@@ -32,13 +32,11 @@ public class EditPersonController implements Initializable {
     @FXML
     private PersonFormController formController;
 
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         setCancelButton();
         setSaveButton();
     }
-
 
     /**
      * Populates the fields with project data to enable editing
@@ -51,55 +49,56 @@ public class EditPersonController implements Initializable {
     }
 
     /**
-     * Sets the event handler for the Save button, performs validation checks
-     * and instantiates the new project if applicable
+     * Sets the event handler for the Save button, performs validation checks and instantiates the new project if
+     * applicable
      */
     private void setSaveButton() {
         editPersonButton.setOnAction(event -> {
             // check to see that shortname and longname fields are populated and shortname is unique within the project
-            formController.validate();
-            if (formController.isValid()) {
+                formController.validate();
+                if (formController.isValid()) {
 
-                final ArrayList<Command<?>> changes = new ArrayList<>();
+                    final ArrayList<Command<?>> changes = new ArrayList<>();
 
-                if (!formController.getShortName().equals(person.getShortName())) {
-                    for (final Person p : organisation.getPeople()) {
-                        if (formController.getShortName().equals(p.getShortName())) {
-                            formController.warnShortnameNotUnique();
-                            return;
+                    if (!formController.getShortName().equals(person.getShortName())) {
+                        for (final Person p : organisation.getPeople()) {
+                            if (formController.getShortName().equals(p.getShortName())) {
+                                formController.warnShortnameNotUnique();
+                                return;
+                            }
                         }
+                        changes.add(new EditCommand<>(person, "shortName", formController.getShortName()));
                     }
-                    changes.add(new EditCommand<>(person, "shortName", formController.getShortName()));
-                }
-                if (!formController.getLongName().equals(person.getLongName())) {
-                    changes.add(new EditCommand<>(person, "longName", formController.getLongName()));
-                }
-                if (!formController.getDescription().equals(person.getDescription())) {
-                    changes.add(new EditCommand<>(person, "description", formController.getDescription()));
-                }
-                if (!formController.getUserID().equals(person.getUserID())) {
-                    changes.add(new EditCommand<>(person, "userID", formController.getUserID()));
-                }
-                if (!formController.getEmailAddress().equals(person.getEmailAddress())) {
-                    changes.add(new EditCommand<>(person, "emailAddress", formController.getEmailAddress()));
-                }
-                if (!formController.getPhoneNumber().equals(person.getPhoneNumber())) {
-                    changes.add(new EditCommand<>(person, "phoneNumber", formController.getPhoneNumber()));
-                }
-                if (!formController.getDepartment().equals(person.getDepartment())) {
-                    changes.add(new EditCommand<>(person, "department", formController.getDepartment()));
-                }
-                if (!formController.getSkills().equals(person.getSkills())) {
-                    changes.add(new EditCommand<>(person, "skills", formController.getSkills()));
-                }
+                    if (!formController.getLongName().equals(person.getLongName())) {
+                        changes.add(new EditCommand<>(person, "longName", formController.getLongName()));
+                    }
+                    if (!formController.getDescription().equals(person.getDescription())) {
+                        changes.add(new EditCommand<>(person, "description", formController.getDescription()));
+                    }
+                    if (!formController.getUserID().equals(person.getUserID())) {
+                        changes.add(new EditCommand<>(person, "userID", formController.getUserID()));
+                    }
+                    if (!formController.getEmailAddress().equals(person.getEmailAddress())) {
+                        changes.add(new EditCommand<>(person, "emailAddress", formController.getEmailAddress()));
+                    }
+                    if (!formController.getPhoneNumber().equals(person.getPhoneNumber())) {
+                        changes.add(new EditCommand<>(person, "phoneNumber", formController.getPhoneNumber()));
+                    }
+                    if (!formController.getDepartment().equals(person.getDepartment())) {
+                        changes.add(new EditCommand<>(person, "department", formController.getDepartment()));
+                    }
+                    if (!formController.getSkills().containsAll(person.getSkills())
+                            && person.getSkills().containsAll(formController.getSkills())) {
+                        changes.add(new EditCommand<>(person, "skills", formController.getSkills()));
+                    }
 
-                valid = !changes.isEmpty();
+                    valid = !changes.isEmpty();
 
                     command = new CompoundCommand("Edit Person", changes);
-                // Close the new project dialog (this window)
-                stage.close();
-            }
-        });
+                    // Close the new project dialog (this window)
+                    stage.close();
+                }
+            });
     }
 
     public Organisation getOrganisation() {
