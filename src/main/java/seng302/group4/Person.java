@@ -9,31 +9,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Model class for Person.
- * Created by james on 17/03/15.
+ * Model class for Person. Created by james on 17/03/15.
  */
 public class Person extends Item {
-    private StringProperty shortName;
-    private StringProperty longName;
-    private StringProperty description;
-    private StringProperty userID;
-    private StringProperty emailAddress;
-    private StringProperty phoneNumber;
-    private StringProperty department;
-    private ObservableList<Skill> skills = FXCollections.observableArrayList();
+    private final StringProperty shortName;
+    private final StringProperty longName;
+    private final StringProperty description;
+    private final StringProperty userID;
+    private final StringProperty emailAddress;
+    private final StringProperty phoneNumber;
+    private final StringProperty department;
+    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
     private Team team;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Person() {
-        this.shortName = new SimpleStringProperty();
-        this.longName = new SimpleStringProperty();
-        this.description = new SimpleStringProperty();
-        this.userID = new SimpleStringProperty();
-        this.emailAddress = new SimpleStringProperty();
-        this.phoneNumber = new SimpleStringProperty();
-        this.department = new SimpleStringProperty();
+        shortName = new SimpleStringProperty();
+        longName = new SimpleStringProperty();
+        description = new SimpleStringProperty();
+        userID = new SimpleStringProperty();
+        emailAddress = new SimpleStringProperty();
+        phoneNumber = new SimpleStringProperty();
+        department = new SimpleStringProperty();
     }
 
     /**
@@ -61,6 +60,7 @@ public class Person extends Item {
         this.skills.addAll(skills);
     }
 
+    @Override
     public StringProperty shortNameProperty() {
         return shortName;
     }
@@ -104,25 +104,7 @@ public class Person extends Item {
 
         final Person person = (Person) o;
 
-        if (department != null ? !department.equals(person.department) : person.department != null) {
-            return false;
-        }
-        if (description != null ? !description.equals(person.description) : person.description != null) {
-            return false;
-        }
-        if (emailAddress != null ? !emailAddress.equals(person.emailAddress) : person.emailAddress != null) {
-            return false;
-        }
-        if (!longName.equals(person.longName)) {
-            return false;
-        }
-        if (phoneNumber != null ? !phoneNumber.equals(person.phoneNumber) : person.phoneNumber != null) {
-            return false;
-        }
-        if (!shortName.equals(person.shortName)) {
-            return false;
-        }
-        if (userID != null ? !userID.equals(person.userID) : person.userID != null) {
+        if (!getShortName().equals(person.getShortName())) {
             return false;
         }
 
@@ -131,14 +113,12 @@ public class Person extends Item {
 
     @Override
     public int hashCode() {
-        int result = shortName.hashCode();
-        result = 31 * result + longName.hashCode();
-        return result;
+        return getShortName().hashCode();
     }
 
     /**
-     * To string method for a person.
-     * Will return the fields that are not set to null
+     * To string method for a person. Will return the fields that are not set to null
+     * 
      * @return the string representation of a Person object
      */
     @Override
@@ -212,7 +192,7 @@ public class Person extends Item {
     }
 
     public List<Skill> getSkills() {
-        ArrayList<Skill> arrayList = new ArrayList<>();
+        final ArrayList<Skill> arrayList = new ArrayList<>();
         arrayList.addAll(skills);
         return arrayList;
 
