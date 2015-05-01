@@ -21,10 +21,12 @@ import seng302.group4.Project;
  * Created by Bradley, James on 13/03/15.
  */
 public class ProjectFormController implements Initializable {
+    public final PopOver errorPopOver = new PopOver();
+    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+    private final int SHORT_NAME_MAX_LENGTH = 20;
     public String longName;
     public String shortName;
     public String description;
-
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -34,13 +36,7 @@ public class ProjectFormController implements Initializable {
     private Button openButton;
     @FXML
     private TextField descriptionTextField;
-
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private boolean shortNameModified = false;
-
-    public final PopOver errorPopOver = new PopOver();
-
     private boolean valid = false;
     private Window stage;
 

@@ -61,6 +61,10 @@ public class Skill extends Item {
         return shortName.get();
     }
 
+    public void setShortName(String shortName) {
+        this.shortName.set(shortName);
+    }
+
     @Override
     public StringProperty shortNameProperty() {
         return shortName;
@@ -72,10 +76,6 @@ public class Skill extends Item {
 
     public String getDescription() {
         return description.get();
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName.set(shortName);
     }
 
     public void setDescription(String description) {

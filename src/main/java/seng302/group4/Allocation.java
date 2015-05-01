@@ -39,16 +39,12 @@ public class Allocation {
         return startDate.get();
     }
 
-    public ObjectProperty getStartDateProperty() {
-        return startDate;
-    }
-
     public void setStartDate(LocalDate date) {
         startDate.set(date);
     }
 
-    public void setEndDate(LocalDate date) {
-        endDate.set(date);
+    public ObjectProperty getStartDateProperty() {
+        return startDate;
     }
 
     /**
@@ -58,6 +54,10 @@ public class Allocation {
     public LocalDate getEndDate() {
         // If your IDE says endDate can not be null, lies.
         return (endDate == null) ? null : endDate.get();
+    }
+
+    public void setEndDate(LocalDate date) {
+        endDate.set(date);
     }
 
     public ObjectProperty getEndDateProperty() {

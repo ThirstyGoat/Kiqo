@@ -31,6 +31,7 @@ import seng302.group4.customNodes.GoatListSelectionView;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     public PopOver errorPopOver = new PopOver();
     ArrayList<Skill> skills = new ArrayList<Skill>();
     private String shortName;
@@ -40,7 +41,6 @@ public class PersonFormController implements Initializable {
     private String emailAddress;
     private String phoneNumber;
     private String department;
-    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private boolean valid = false;
     private Stage stage;
     private boolean shortNameModified = false;

@@ -20,9 +20,8 @@ public class CreateTeamCommand extends Command<Team> {
     private final Person productOwner;
     private final Person scrumMaster;
     private final List<Person> devTeam;
-
-    private Team team;
     private final Organisation organisation;
+    private Team team;
 
     /**
      * Constructor for CreateTeamCommand

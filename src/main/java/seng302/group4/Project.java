@@ -14,9 +14,9 @@ import javafx.collections.ObservableList;
 public class Project extends Item {
     private final StringProperty shortName;
     private final StringProperty longName;
-    private StringProperty description;
     private final ObservableList<Release> releases = FXCollections.observableArrayList();
     private final ObservableList<Allocation> allocations = FXCollections.observableArrayList();
+    private StringProperty description;
 
     /**
      * Create new Project

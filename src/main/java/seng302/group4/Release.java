@@ -11,11 +11,11 @@ import javafx.beans.property.StringProperty;
  * Created by leroy on 10/04/15.
  */
 public class Release extends Item {
-    private Organisation organisation;
     private final StringProperty shortName;
     private final StringProperty description;
     private final ObjectProperty<Project> project;
     private final ObjectProperty<LocalDate> date; // change back to date
+    private Organisation organisation;
 
     public Release(String shortName, Project project, LocalDate date, String description, Organisation organisation) {
         this.shortName = new SimpleStringProperty(shortName);
@@ -50,13 +50,13 @@ public class Release extends Item {
         return shortName.get();
     }
 
+    public void setShortName(String shortName) {
+        this.shortName.set(shortName);
+    }
+
     @Override
     public StringProperty shortNameProperty() {
         return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName.set(shortName);
     }
 
     public Project getProject() {

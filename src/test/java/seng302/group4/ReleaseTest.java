@@ -9,8 +9,8 @@ import org.junit.Test;
 
 public class ReleaseTest {
 
-    Project project1;
     final LocalDate date = LocalDate.now();
+    Project project1;
     Release release1;
 
     @Before
