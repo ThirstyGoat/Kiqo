@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng302.group4.utils.Utilities;
 
 /**
  * Created by bradley on 27/03/15.
@@ -123,8 +124,8 @@ public class Team extends Item {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Team{" + shortName);
-        sb.append(", description=" + description);
+        sb.append("Team{" + getShortName());
+        sb.append(", description=" + getDescription());
         sb.append(", productOwner=");
         if (getProductOwner() != null) {
             sb.append(getProductOwner().getShortName());
@@ -133,28 +134,25 @@ public class Team extends Item {
         if (getScrumMaster() != null) {
             sb.append(getScrumMaster().getShortName());
         }
-        sb.append(", teamMembers=" + teamMembers);
-        sb.append(", devTeam=" + devTeam);
+        sb.append(", teamMembers=" + Utilities.commaSeparatedValues(getTeamMembers()));
+        sb.append(", devTeam=" + Utilities.commaSeparatedValues(getDevTeam()));
         sb.append('}');
         return sb.toString();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getShortName() == null) ? 0 : getShortName().hashCode());
-        return result;
+        return getShortName().hashCode();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

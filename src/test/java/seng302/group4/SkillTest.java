@@ -1,9 +1,8 @@
 package seng302.group4;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class SkillTest {
 
@@ -16,16 +15,16 @@ public class SkillTest {
 
     @Test
     public void testEquals() throws Exception {
-        Skill skill2 = new Skill("skill1-shortname", "Description of the skill");
-        assertTrue("Skills should be equal", skill2.equals(skill1));
+        final Skill skill2 = new Skill("skill1-shortname", "Description of the skill");
+        Assert.assertEquals("Skills should be equal", skill1, skill2);
 
         skill2.setDescription("Different description");
-        assertFalse("Skills should not be equal", skill2.equals(skill1));
+        Assert.assertEquals("Skills should be equal", skill1, skill2);
     }
 
     @Test
     public void testEqualsShortName() throws Exception {
-        Skill skill2 = new Skill("different shortname", "Description of the skill");
-        assertFalse("Skills should not be equal", skill2.equals(skill1));
+        final Skill skill2 = new Skill("different shortname", "Description of the skill");
+        Assert.assertNotEquals("Skills should not be equal", skill1, skill2);
     }
 }

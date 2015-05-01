@@ -1,7 +1,10 @@
 package seng302.group4.undo;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,166 +18,112 @@ import seng302.group4.Skill;
 public class DeleteSkillCommandTest {
 
     private Organisation organisation;
+    private Skill skill1;
+    private Person person1;
 
     /**
      * Initialises the test environment.
      */
     @Before
     public void setUp() {
-        organisation = new Organisation();
+        organisation = new Organisation(new File(""));
 
-        // Create skills
-        final Skill skill1 = new Skill("Skill1", "Skill1 description");
-        final Skill skill2 = new Skill("Skill2", "Skill2 description");
-        final Skill skill3 = new Skill("Skill3", "Skill3 description");
+        // create two of each, for checking that only the relevant object is modified
+        person1 = new Person("person1", "", "", "", "", "", "", new ArrayList<>());
+        final Person person2 = new Person("person2", "", "", "", "", "", "", new ArrayList<>());
+        organisation.getPeople().addAll(person1, person2);
 
-        // Create people
-        final Person person1 = new Person("", "", "", "", "", "", "", new ArrayList<>());
-        final ArrayList<Skill> skillSet = new ArrayList<>();
-        skillSet.add(skill1);
-        skillSet.add(skill2);
-        skillSet.add(skill3);
-        final Person person2 = new Person("", "", "", "", "", "", "", skillSet);
-        final Person person3 = new Person("", "", "", "", "", "", "", new ArrayList<>());
-
-        // Add people to project
-        organisation.getPeople().add(person1);
-        organisation.getPeople().add(person2);
-        organisation.getPeople().add(person3);
-
-        // Add skills to project
-        organisation.getSkills().add(skill1);
-        organisation.getSkills().add(skill2);
-        organisation.getSkills().add(skill3);
-
+        skill1 = new Skill("skill1", "");
+        final Skill skill2 = new Skill("skill2", "");
+        organisation.getSkills().addAll(skill1, skill2);
     }
 
     /**
-     * Tests that a skill not assigned to any people is successfully deleted from the project.
+     * Tests that a skill1 not assigned to any people is successfully deleted from the project and successfully re-added
+     * to the project on undo.
      */
     @Test
-    public void deleteUnusedSkill_Success() {
-        final Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        organisation.getSkills().add(unusedSkill);
+    public void testCommand_unusedSkill() {
+        final DeleteSkillCommand command = new DeleteSkillCommand(skill1, organisation);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, organisation);
-
-        command.execute();
-        assert !organisation.getSkills().contains(unusedSkill);
-    }
-
-    /**
-     * Tests that a skill not assigned to any people is successfully re-added to the project, on undo.
-     */
-    @Test
-    public void undoDeleteUnusedSkill_Success() {
-        final Skill unusedSkill = new Skill("Unused skill name", "Unused skill description");
-        organisation.getSkills().add(unusedSkill);
-
-        final DeleteSkillCommand command = new DeleteSkillCommand(unusedSkill, organisation);
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.hasItem(skill1));
 
         command.execute();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+
         command.undo();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.hasItem(skill1));
 
-        assert organisation.getSkills().contains(unusedSkill);
+        command.redo();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
     }
 
     /**
-     * Tests that a skill assigned to a person is successfully deleted from its person and the project.
+     * Tests that a skill assigned to a person is deleted from its people and the project, with undo and redo.
      */
     @Test
-    public void deleteUsedSkill_Success() {
-        final Skill usedSkill = new Skill("", "");
-        organisation.getPeople().get(0).getSkills().add(usedSkill);
-        organisation.getSkills().add(usedSkill);
+    public void testCommand_usedSkill() {
+        useSkill();
+        final DeleteSkillCommand command = new DeleteSkillCommand(skill1, organisation);
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.hasItem(skill1));
+        assertSkillIsUsed();
 
         command.execute();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+        assertSkillIsNotUsed();
 
-        assert !organisation.getSkills().contains(usedSkill);
-        for (final Person person : organisation.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
+        command.undo();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.hasItem(skill1));
+        assertSkillIsUsed();
+
+        command.redo();
+        Assert.assertThat(organisation.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+        assertSkillIsNotUsed();
     }
 
     /**
      * Tests that the {@link DeleteSkillCommand#getPeopleWithSkill()} method returns an accurate result.
      */
     @Test
-    public void checkDeleteSkill() {
-        final Skill usedSkill = new Skill("", "");
-        organisation.getPeople().get(0).getSkills().add(usedSkill);
-        organisation.getSkills().add(usedSkill);
+    public void testGetPeopleWithSkill() {
+        // unused skill
+        final DeleteSkillCommand command1 = new DeleteSkillCommand(skill1, organisation);
+        Assert.assertThat(command1.getPeopleWithSkill(), CoreMatchers.not(CoreMatchers.hasItem(person1)));
 
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
-
-        assert command.getPeopleWithSkill().contains(organisation.getPeople().get(0));
-        assert command.getPeopleWithSkill().size() == 1;
+        // used skill
+        useSkill();
+        final DeleteSkillCommand command2 = new DeleteSkillCommand(skill1, organisation);
+        Assert.assertThat(command2.getPeopleWithSkill(), CoreMatchers.hasItem(person1));
+        Assert.assertEquals(1, command2.getPeopleWithSkill().size());
     }
 
     /**
-     * Tests that a skill assigned to people is successfully re-added to its people and the project, on undo.
+     * Assigns skill1 to person1
      */
-    @Test
-    public void undoDeleteUsedSkill_Success() {
-        final Skill usedSkill = new Skill("", "");
-        organisation.getPeople().get(0).getSkills().add(usedSkill);
-        organisation.getSkills().add(usedSkill);
-
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
-
-        // Remove the skill from people with it, and the project
-        command.execute();
-
-        // Check to make sure nobody has the skill
-        assert !organisation.getSkills().contains(usedSkill);
-        for (final Person person : organisation.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
-        }
-
-        // Undo the action
-        command.undo();
-
-        // Check to make sure that the person now has the skill
-        assert organisation.getSkills().contains(usedSkill);
-        assert organisation.getPeople().get(0).getSkills().contains(usedSkill);
+    private void useSkill() {
+        person1.getSkills().add(skill1);
     }
 
     /**
-     * Tests that a skill assigned to people is successfully re-deleted from its people and the project.
+     * Asserts that skill1 is not assigned to any people.
      */
-    @Test
-    public void redoDeleteUsedSkill_Success() {
-        final Skill usedSkill = new Skill("", "");
-        organisation.getPeople().get(0).getSkills().add(usedSkill);
-        organisation.getSkills().add(usedSkill);
-
-        final DeleteSkillCommand command = new DeleteSkillCommand(usedSkill, organisation);
-
-        // Remove the skill from people with it, and the project
-        command.execute();
-
-        // Check to make sure nobody has the skill
-        assert !organisation.getSkills().contains(usedSkill);
+    private void assertSkillIsNotUsed() {
         for (final Person person : organisation.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
+            Assert.assertThat(person.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
         }
+    }
 
-        // Undo the action
-        command.undo();
-
-        // Check to make sure that the person now has the skill
-        assert organisation.getSkills().contains(usedSkill);
-        assert organisation.getPeople().get(0).getSkills().contains(usedSkill);
-
-        // Redo the action
-        command.redo();
-
-        // Check to make sure nobody has the skill
-        assert !organisation.getSkills().contains(usedSkill);
+    /**
+     * Asserts that skill1 is assigned to person1, and not to any other people.
+     */
+    private void assertSkillIsUsed() {
         for (final Person person : organisation.getPeople()) {
-            assert !person.getSkills().contains(usedSkill);
+            if (person == person1) {
+                Assert.assertThat(person.getSkills(), CoreMatchers.hasItem(skill1));
+            } else {
+                Assert.assertThat(person.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+            }
         }
     }
 }

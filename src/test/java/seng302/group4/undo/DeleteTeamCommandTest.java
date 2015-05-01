@@ -1,7 +1,10 @@
 package seng302.group4.undo;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +29,7 @@ public class DeleteTeamCommandTest {
      */
     @Before
     public void setUp() {
-        organisation = new Organisation();
+        organisation = new Organisation(new File(""));
 
         // Create people
         person1 = new Person("one", "", "", "", "", "", "", new ArrayList<>());
@@ -39,12 +42,12 @@ public class DeleteTeamCommandTest {
         organisation.getPeople().add(person3);
 
         // Create a team
-        teamWithMembers = new Team("teamOne", "", new ArrayList<>());
-        teamNoMembers = new Team("teamOne", "", new ArrayList<>());
+        teamWithMembers = new Team("team1", "has members", new ArrayList<>());
+        teamNoMembers = new Team("team2", "has no members", new ArrayList<>());
 
         // Populate team members
-        teamWithMembers.getTeamMembers().add(person1);
-        teamWithMembers.getTeamMembers().add(person2);
+        teamWithMembers.observableTeamMembers().add(person1);
+        teamWithMembers.observableTeamMembers().add(person2);
 
         // Add teams to project
         organisation.getTeams().add(teamWithMembers);
@@ -61,10 +64,10 @@ public class DeleteTeamCommandTest {
         command.execute();
 
         // Check to see if team was deleted and all people remained
-        assert !organisation.getTeams().contains(teamNoMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamNoMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -77,10 +80,11 @@ public class DeleteTeamCommandTest {
         command.execute();
 
         // Check to see if team was deleted and all people remained
-        assert !organisation.getTeams().contains(teamWithMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamWithMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -96,10 +100,10 @@ public class DeleteTeamCommandTest {
         command.execute();
 
         // Check to see if team and all team members were deleted
-        assert !organisation.getTeams().contains(teamWithMembers);
-        assert !organisation.getPeople().contains(person1);
-        assert !organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3); // person not in team remained
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamWithMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person1)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person2)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3)); // person not in team remained
     }
 
     /**
@@ -113,10 +117,10 @@ public class DeleteTeamCommandTest {
         command.undo();
 
         // check to see if team was deleted and restored
-        assert organisation.getTeams().contains(teamNoMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.hasItem(teamNoMembers));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -130,10 +134,10 @@ public class DeleteTeamCommandTest {
         command.undo();
 
         // check to see if team was deleted and restored and all ppl remained in project
-        assert organisation.getTeams().contains(teamWithMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.hasItem(teamWithMembers));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -150,10 +154,10 @@ public class DeleteTeamCommandTest {
         command.undo();
 
         // check to see if team was deleted and restored and all ppl remained in project
-        assert organisation.getTeams().contains(teamWithMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.hasItem(teamWithMembers));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -168,10 +172,10 @@ public class DeleteTeamCommandTest {
         command.redo();
 
         // check to see if team was deleted and all ppl remained in project
-        assert !organisation.getTeams().contains(teamNoMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamNoMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
@@ -186,15 +190,15 @@ public class DeleteTeamCommandTest {
         command.redo();
 
         // check to see if team was deleted and all ppl remained in project
-        assert !organisation.getTeams().contains(teamWithMembers);
-        assert organisation.getPeople().contains(person1);
-        assert organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamWithMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person1));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person2));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 
     /**
-     * Tests that a team with members is re-deleted from the project and its members are re-deleted from the project
-     * when the setDeleteMemebers flag is set, on redo.
+     * Tests that a team with members is re-deleted from the project and its members are re-deleted from the project when
+     * the setDeleteMembers flag is set, on redo.
      */
     @Test
     public void redoTeamWithMembersAndPeople_Success() {
@@ -207,9 +211,9 @@ public class DeleteTeamCommandTest {
         command.redo();
 
         // check to see if team and team members were deleted but all non-team members remained in project
-        assert !organisation.getTeams().contains(teamWithMembers);
-        assert !organisation.getPeople().contains(person1);
-        assert !organisation.getPeople().contains(person2);
-        assert organisation.getPeople().contains(person3);
+        Assert.assertThat(organisation.getTeams(), CoreMatchers.not(CoreMatchers.hasItem(teamWithMembers)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person1)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person2)));
+        Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person3));
     }
 }
