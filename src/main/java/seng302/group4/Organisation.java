@@ -3,6 +3,7 @@ package seng302.group4;
 import java.io.File;
 import java.io.Serializable;
 
+import com.google.gson.annotations.Since;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,7 +19,9 @@ public class Organisation implements Serializable {
     private ObservableList<Person> people = FXCollections.observableArrayList();
     private ObservableList<Skill> skills = FXCollections.observableArrayList();
     private ObservableList<Team> teams = FXCollections.observableArrayList();
+    private String version;
     private transient File saveLocation;
+
 
     public Organisation() {
         skills.add(poSkill);
@@ -28,6 +31,10 @@ public class Organisation implements Serializable {
     public Organisation(final File saveLocation) {
         this();
         this.saveLocation = saveLocation;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public Skill getPoSkill() {
@@ -88,6 +95,7 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
+        this.version = "1.0";
     }
 
     /**

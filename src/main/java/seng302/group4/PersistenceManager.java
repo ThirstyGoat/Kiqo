@@ -7,27 +7,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.*;
+import java.util.function.Function;
 
+import com.google.gson.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -43,7 +35,7 @@ public class PersistenceManager {
      */
     public static void saveOrganisation(final File filePath, final Organisation organisation) throws IOException {
         if (gson == null) {
-            createGson();
+            createGson(false);
         }
 
         try (final Writer writer = new FileWriter(filePath)) {
@@ -65,17 +57,28 @@ public class PersistenceManager {
         Organisation organisation = null;
 
         if (gson == null) {
-            createGson();
+            createGson(false);
         }
 
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
             organisation = gson.fromJson(br, Organisation.class);
+
+            if(organisation.getVersion() == null) {
+                final BufferedReader br1 = new BufferedReader(new FileReader(filePath));
+                createGson(true);
+                Organisation organisation2 = gson.fromJson(br1, Organisation.class);
+                organisation.getProjects().setAll(organisation2.getProjects());
+            }
         }
         return organisation;
     }
 
-    private static void createGson() {
+    /**
+     * Creates the GSON object
+     * @param isOldFile if the file is from a previous version or not (alters the typeAdapter for organisation
+     */
+    private static void createGson(boolean isOldFile) {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
         new GraphAdapterBuilder()
@@ -91,7 +94,32 @@ public class PersistenceManager {
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
+
+        if(isOldFile) {
+            gsonBuilder.registerTypeAdapter(Organisation.class, new OrganisationDeserializer());
+        }
+
         gson = gsonBuilder.create();
+    }
+
+    /**
+     * Custom Deserializer for Organisation. Is used when loading a project from a json file for deliverable 1
+     */
+    private static class OrganisationDeserializer implements JsonDeserializer<Organisation> {
+
+        /**
+         * Used to deserialize the json from deliverable 1, is under Organisation because the old "project" is interpreted
+         * as an "Organisation" by gson
+         */
+        @Override
+        public Organisation deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            // this organisation is just a container for project to comply with the return type
+            Organisation org = new Organisation();
+
+            Project p = jsonDeserializationContext.deserialize(jsonElement, Project.class);
+            org.getProjects().add(p);
+            return org;
+        }
     }
 
     /**
@@ -104,7 +132,7 @@ public class PersistenceManager {
                 throws JsonParseException {
             Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
             if (gson == null) {
-                createGson();
+                createGson(false);
             }
 
             ObservableList<Object> observableList =  FXCollections.observableArrayList();
@@ -138,7 +166,7 @@ public class PersistenceManager {
                 throws JsonParseException {
             Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (gson == null) {
-                createGson();
+                createGson(false);
             }
             return new SimpleObjectProperty<>(gson.fromJson(jsonElement, objectType));
         }
@@ -148,7 +176,7 @@ public class PersistenceManager {
             Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (o != null && o.get() != null) {
                 if (gson == null) {
-                    createGson();
+                    createGson(false);
                 }
                 return gson.toJsonTree(o.get(), objectType);
             } else {
