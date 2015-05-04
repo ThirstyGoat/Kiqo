@@ -1,12 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,11 +11,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-
 import seng302.group4.Allocation;
 import seng302.group4.Organisation;
 import seng302.group4.Project;
@@ -31,6 +22,13 @@ import seng302.group4.undo.Command;
 import seng302.group4.undo.CompoundCommand;
 import seng302.group4.undo.CreateAllocationCommand;
 import seng302.group4.undo.EditCommand;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by Amy on 23/04/15.
@@ -76,7 +74,7 @@ public class AllocationFormController implements Initializable {
     private void datePickerChecker() {
         startDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (endDatePicker.getValue() == null) {
-                endDatePicker.setValue(startDatePicker.getValue());
+                endDatePicker.setValue(startDatePicker.getValue().plusDays(1));
             }
         });
     }

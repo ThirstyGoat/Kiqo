@@ -1,23 +1,18 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import seng302.group4.Allocation;
 import seng302.group4.GoatDialog;
 import seng302.group4.Team;
 import seng302.group4.undo.DeleteAllocationCommand;
 import seng302.group4.undo.EditCommand;
 import seng302.group4.utils.Utilities;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
 
@@ -101,9 +96,19 @@ public class TeamDetailsPaneController implements Initializable {
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
-        startDateTableColumn.setCellFactory(param -> new DatePickerCell<>());
-        endDateTableColumn.setCellFactory(param -> new DatePickerCell<>());
         allocationsTableView.setEditable(true);
+
+        startDateTableColumn.setCellFactory(param -> {
+            AllocationDatePickerCell<Allocation> startDateCellFactory = new AllocationDatePickerCell<>();
+            startDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.START_DATE);
+            return startDateCellFactory;
+        });
+
+        endDateTableColumn.setCellFactory(param -> {
+            AllocationDatePickerCell<Allocation> endDateCellFactory = new AllocationDatePickerCell<>();
+            endDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.END_DATE);
+            return endDateCellFactory;
+        });
 
         startDateTableColumn.setOnEditCommit(event -> {
             EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
