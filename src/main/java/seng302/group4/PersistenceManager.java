@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -39,7 +40,9 @@ public class PersistenceManager {
         }
 
         try (final Writer writer = new FileWriter(filePath)) {
-            gson.toJson(organisation, writer);
+            JsonElement jsonElement = gson.toJsonTree(organisation);
+            jsonElement.getAsJsonObject().addProperty("VERSION", 1.0);
+            gson.toJson(jsonElement, writer);
         }
         System.out.println("Saved organisation.");
     }
@@ -62,9 +65,13 @@ public class PersistenceManager {
 
         if (filePath != null) {
             final BufferedReader br = new BufferedReader(new FileReader(filePath));
-            organisation = gson.fromJson(br, Organisation.class);
 
-            if(organisation.getVersion() == null) {
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = (JsonObject) parser.parse(br);
+            JsonElement version = jsonObject.get("VERSION");
+            organisation = gson.fromJson(jsonObject, Organisation.class);
+
+            if(version == null) {
                 final BufferedReader br1 = new BufferedReader(new FileReader(filePath));
                 createGson(true);
                 Organisation organisation2 = gson.fromJson(br1, Organisation.class);
