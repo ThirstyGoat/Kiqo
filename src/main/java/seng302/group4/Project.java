@@ -12,11 +12,11 @@ import javafx.collections.ObservableList;
  * Created by samschofield on 22/04/15.
  */
 public class Project extends Item {
-    private  StringProperty shortName;
-    private  StringProperty longName;
+    private final StringProperty shortName;
+    private final StringProperty longName;
     private final ObservableList<Release> releases;// = FXCollections.observableArrayList();
     private final ObservableList<Allocation> allocations;// = FXCollections.observableArrayList();
-    private StringProperty description;
+    private final StringProperty description;
 
     /**
      * Dont use this if you are a person
@@ -24,6 +24,9 @@ public class Project extends Item {
     public Project() {
         releases = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
+        shortName = new SimpleStringProperty();
+        longName = new SimpleStringProperty();
+        description = new SimpleStringProperty();
     }
 
     /**
@@ -34,8 +37,8 @@ public class Project extends Item {
      */
     public Project(final String shortName, final String longName) {
         this();
-        this.shortName = new SimpleStringProperty(shortName);
-        this.longName = new SimpleStringProperty(longName);
+        setShortName(shortName);
+        setLongName(longName);
     }
 
     /**
@@ -47,9 +50,9 @@ public class Project extends Item {
      */
     public Project(final String shortName, final String longName, final String description) {
         this();
-        this.shortName = new SimpleStringProperty(shortName);
-        this.longName = new SimpleStringProperty(longName);
-        this.description = new SimpleStringProperty(description);
+        setShortName(shortName);
+        setLongName(longName);
+        setDescription(description);
     }
 
     /**
