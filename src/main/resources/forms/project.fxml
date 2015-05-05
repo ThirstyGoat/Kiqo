@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.ProjectFormController">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.ProjectFormController">
   <children>
     <Label text="Name:*" />
     <Label text="Short Name:*" GridPane.rowIndex="1" />
