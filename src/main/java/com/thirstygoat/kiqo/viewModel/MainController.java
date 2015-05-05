@@ -280,20 +280,22 @@ public class MainController implements Initializable {
     }
 
     public void deleteItem() {
-        final Item focusedObject = MainController.focusedItemProperty.get();
-        if (focusedObject == null) {
-            // do nothing
-        } else if (focusedObject instanceof Project) {
-            deleteProject((Project) focusedObject);
-        } else if (focusedObject instanceof Person) {
-            deletePerson((Person) focusedObject);
-        } else if (focusedObject instanceof Skill) {
-            deleteSkill((Skill) focusedObject);
-        } else if (focusedObject instanceof Team) {
-            deleteTeam((Team) focusedObject);
-        } else if (focusedObject instanceof Release) {
-            deleteRelease((Release) focusedObject);
-        }
+        Platform.runLater(() -> {
+            final Item focusedObject = MainController.focusedItemProperty.get();
+            if (focusedObject == null) {
+                // do nothing
+            } else if (focusedObject instanceof Project) {
+                deleteProject((Project) focusedObject);
+            } else if (focusedObject instanceof Person) {
+                deletePerson((Person) focusedObject);
+            } else if (focusedObject instanceof Skill) {
+                deleteSkill((Skill) focusedObject);
+            } else if (focusedObject instanceof Team) {
+                deleteTeam((Team) focusedObject);
+            } else if (focusedObject instanceof Release) {
+                deleteRelease((Release) focusedObject);
+            }
+        });
     }
 
     public void editItem() {
