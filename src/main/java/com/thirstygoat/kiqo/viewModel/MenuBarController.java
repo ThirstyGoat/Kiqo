@@ -1,10 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.thirstygoat.kiqo.undo.UndoManager;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +10,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -30,6 +29,8 @@ public class MenuBarController implements Initializable {
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
+    @FXML
+    private MenuItem saveAsMenuItem;
     @FXML
     private MenuItem undoMenuItem;
     @FXML
@@ -109,6 +110,7 @@ public class MenuBarController implements Initializable {
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
+        saveAsMenuItem.setOnAction(event -> mainController.saveAsOrganisation());
         quitMenuItem.setOnAction(event -> mainController.exit());
 
         editMenuItem.setOnAction(event -> mainController.editItem());
@@ -225,6 +227,8 @@ public class MenuBarController implements Initializable {
         newSkillMenuItem.setAccelerator(
             new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
+                KeyCombination.SHIFT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));

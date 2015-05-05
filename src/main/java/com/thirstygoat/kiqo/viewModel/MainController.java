@@ -572,6 +572,30 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts the user for a new save location via a filechooser.
+     * Updates the organisation's current save location.
+     * Saves the current organisation to it.
+     */
+    public void saveAsOrganisation() {
+        final Organisation organisation = selectedOrganisation;
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+        final File file = fileChooser.showSaveDialog(primaryStage);
+        if (file != null) {
+            organisation.setSaveLocation(file);
+        }
+        if (organisation.getSaveLocation() != null) {
+            try {
+                PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            changesSaved.set(true);
+        }
+    }
+
     public void setListVisible(boolean visible) {
         if (visible) {
             // shows the list view
