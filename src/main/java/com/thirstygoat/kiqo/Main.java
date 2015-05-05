@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo;
 
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.File;
-
-import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Main entry point for application
@@ -29,6 +28,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Kiqo");
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
