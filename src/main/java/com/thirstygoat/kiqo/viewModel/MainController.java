@@ -11,6 +11,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -132,6 +134,10 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Project")) {
             doCommand(command);
+        }
+
+        if (selectedOrganisation.getProjects().size() < 1) {
+            menuBarController.disableNewRelease();
         }
 
     }
@@ -297,7 +303,7 @@ public class MainController implements Initializable {
         menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
-        menuBarController.enableNewRelease();
+//        menuBarController.enableNewRelease();
 
         setLayoutProperties();
         initializeListViews();
@@ -339,6 +345,7 @@ public class MainController implements Initializable {
         for (final ListView<? extends Item> listView : listViews) {
             initialiseListView(listView, contextMenu);
         }
+
 
         // set additional listeners so that the selection is retained despite
         // tab-switching
@@ -392,14 +399,36 @@ public class MainController implements Initializable {
     }
 
     private void setListViewData() {
+
         projectListView.setItems(selectedOrganisation.getProjects());
+
+        // ensure that you can only crate a realease if a project exists
+        projectListView.getItems().addListener(new ListChangeListener<Project>() {
+            @Override
+            public void onChanged(Change<? extends Project> c) {
+                setNewReleaseEnabled();
+            }
+        });
+
         peopleListView.setItems(selectedOrganisation.getPeople());
         teamsListView.setItems(selectedOrganisation.getTeams());
         skillsListView.setItems(selectedOrganisation.getSkills());
         // releases are looked after by projectListView selectionChangeListener
 
+
         switchToProjectList();
         projectListView.getSelectionModel().select(0);
+    }
+
+    /**
+     * Sets if new release is enabled or not dependant on the existence of at lease 1 project
+     */
+    private void setNewReleaseEnabled() {
+        if (projectListView.getItems().size() > 0) {
+            menuBarController.enableNewRelease();
+        } else {
+            menuBarController.disableNewRelease();
+        }
     }
 
     private void initialiseTabs() {
@@ -490,6 +519,10 @@ public class MainController implements Initializable {
     public void newProject() {
         if (selectedOrganisation != null) {
             newProjectDialog();
+
+            if (selectedOrganisation.getProjects().size() > 0) {
+                menuBarController.enableNewRelease();
+            }
         }
     }
 
@@ -543,6 +576,7 @@ public class MainController implements Initializable {
             System.out.println("File has been loaded successfully");
             // Clear undo/redo stack
             undoManager.empty();
+            setNewReleaseEnabled();
         }
     }
 

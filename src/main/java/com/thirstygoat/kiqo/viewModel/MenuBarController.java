@@ -327,4 +327,8 @@ public class MenuBarController implements Initializable {
     public void enableNewRelease() {
         newReleaseMenuItem.setDisable(false);
     }
+
+    public void disableNewRelease() {
+        newReleaseMenuItem.setDisable(true);
+    }
 }
