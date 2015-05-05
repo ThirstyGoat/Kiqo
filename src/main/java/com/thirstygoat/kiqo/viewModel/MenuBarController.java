@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.undo.UndoManager;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
@@ -12,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -81,6 +83,22 @@ public class MenuBarController implements Initializable {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        addEditDeleteShortcuts();
+    }
+
+    private void addEditDeleteShortcuts() {
+        final KeyCombination editKey = new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination deleteKey = new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN);
+        mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (editKey.match(event)) {
+                    mainController.editItem();
+                } else if (deleteKey.match(event)) {
+                    mainController.deleteItem();
+                }
+            }
+        });
     }
 
     private void addMenuItemHandlers() {
