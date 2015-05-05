@@ -566,6 +566,10 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
             e.printStackTrace();
         }
+
+        if(PersistenceManager.getIsOldJSON()) {
+            GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
+        }
         if (organisation != null) {
             organisation.setSaveLocation(filePath);
             selectedOrganisation = organisation;
