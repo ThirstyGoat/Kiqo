@@ -1,9 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.Project;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,10 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
 import org.controlsfx.control.PopOver;
 
-import com.thirstygoat.kiqo.Project;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -44,8 +42,15 @@ public class ProjectFormController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         setShortNameHandler();
         setErrorPopOvers();
-
+        setPrompts();
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
+    }
+
+    private void setPrompts() {
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        longNameTextField.setPromptText("Goats");
+        descriptionTextField.setPromptText("Describe this project.");
+
     }
 
     public void loadProject(final Project project) {

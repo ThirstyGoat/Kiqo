@@ -1,10 +1,9 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.Organisation;
+import com.thirstygoat.kiqo.Project;
+import com.thirstygoat.kiqo.Release;
+import com.thirstygoat.kiqo.undo.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,20 +15,15 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Project;
-import com.thirstygoat.kiqo.Release;
-import com.thirstygoat.kiqo.undo.Command;
-import com.thirstygoat.kiqo.undo.CompoundCommand;
-import com.thirstygoat.kiqo.undo.CreateReleaseCommand;
-import com.thirstygoat.kiqo.undo.EditCommand;
-import com.thirstygoat.kiqo.undo.MoveItemCommand;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
 
 
 /**
@@ -67,7 +61,14 @@ public class ReleaseFormController implements Initializable {
         setShortNameLengthRestrictor();
         setProjectTextFieldSuggester();
         setReleaseDateChecker();
+        setPrompts();
         Platform.runLater(shortNameTextField::requestFocus);
+    }
+
+    private void setPrompts() {
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        projectTextField.setPromptText("Project this release is associated with.");
+        descriptionTextField.setPromptText("Describe this release.");
     }
 
     /**

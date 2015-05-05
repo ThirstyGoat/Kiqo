@@ -1,5 +1,13 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import com.thirstygoat.kiqo.Allocation;
+import com.thirstygoat.kiqo.Organisation;
+import com.thirstygoat.kiqo.Project;
+import com.thirstygoat.kiqo.Team;
+import com.thirstygoat.kiqo.undo.Command;
+import com.thirstygoat.kiqo.undo.CompoundCommand;
+import com.thirstygoat.kiqo.undo.CreateAllocationCommand;
+import com.thirstygoat.kiqo.undo.EditCommand;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,19 +19,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-
-import com.thirstygoat.kiqo.Allocation;
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Project;
-import com.thirstygoat.kiqo.Team;
-import com.thirstygoat.kiqo.undo.Command;
-import com.thirstygoat.kiqo.undo.CompoundCommand;
-import com.thirstygoat.kiqo.undo.CreateAllocationCommand;
-import com.thirstygoat.kiqo.undo.EditCommand;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -63,14 +61,19 @@ public class AllocationFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        startDatePicker.setPromptText("dd/mm/yyyy");
-        endDatePicker.setPromptText("dd/mm/yyyy");
         setButtonHandlers();
         setTextFieldAutoCompletionBinding();
+        setPrompts();
 
         Platform.runLater(teamTextField::requestFocus);
 
         datePickerChecker();
+    }
+
+    private void setPrompts() {
+        teamTextField.setPromptText("Team this allocation is associated with");
+        startDatePicker.setPromptText("dd/mm/yyyy");
+        endDatePicker.setPromptText("dd/mm/yyyy");
     }
 
     private void datePickerChecker() {

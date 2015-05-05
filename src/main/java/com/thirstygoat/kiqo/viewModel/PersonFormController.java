@@ -1,10 +1,9 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.Organisation;
+import com.thirstygoat.kiqo.Person;
+import com.thirstygoat.kiqo.Skill;
+import com.thirstygoat.kiqo.customNodes.GoatListSelectionView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,13 +16,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import org.controlsfx.control.PopOver;
 
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Person;
-import com.thirstygoat.kiqo.Skill;
-import com.thirstygoat.kiqo.customNodes.GoatListSelectionView;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Created by james on 20/03/15.
@@ -70,7 +68,18 @@ public class PersonFormController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setShortNameHandler();
         setErrorPopOvers();
+        setPrompts();
         Platform.runLater(longNameTextField::requestFocus);
+    }
+
+    private void setPrompts() {
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        longNameTextField.setPromptText("Bill Goat");
+        descriptionTextField.setPromptText("Describe this awesome person");
+        userIDTextField.setPromptText("Identify this person!");
+        emailTextField.setPromptText("Their email?");
+        phoneTextField.setPromptText("A phone number would be good too.");
+        departmentTextField.setPromptText("What department do they work for?");
     }
 
     /**

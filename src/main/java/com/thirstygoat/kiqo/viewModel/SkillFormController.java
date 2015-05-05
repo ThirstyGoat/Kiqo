@@ -1,20 +1,18 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.Organisation;
+import com.thirstygoat.kiqo.Skill;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import org.controlsfx.control.PopOver;
 
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Skill;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Created by james on 20/03/15.
@@ -43,7 +41,13 @@ public class SkillFormController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setErrorPopOvers();
         setShortNameHandler();
+        setPrompts();
         Platform.runLater(shortNameTextField::requestFocus);
+    }
+
+    private void setPrompts() {
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        descriptionTextField.setPromptText("Describe this skill.");
     }
 
     /**

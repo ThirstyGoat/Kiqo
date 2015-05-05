@@ -1,34 +1,5 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import org.controlsfx.control.PopOver;
-
 import com.thirstygoat.kiqo.Organisation;
 import com.thirstygoat.kiqo.Person;
 import com.thirstygoat.kiqo.Team;
@@ -37,6 +8,27 @@ import com.thirstygoat.kiqo.undo.Command;
 import com.thirstygoat.kiqo.undo.CompoundCommand;
 import com.thirstygoat.kiqo.undo.CreateTeamCommand;
 import com.thirstygoat.kiqo.undo.EditCommand;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by james on 27/03/15.
@@ -74,8 +66,14 @@ public class TeamFormController implements Initializable {
         setButtonHandlers();
         setTextFieldListener();
         setShortNameLengthRestrictor();
+        setPrompts();
 
         Platform.runLater(shortNameTextField::requestFocus);
+    }
+
+    private void setPrompts() {
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        descriptionTextField.setPromptText("Describe this team.");
     }
 
     /**
