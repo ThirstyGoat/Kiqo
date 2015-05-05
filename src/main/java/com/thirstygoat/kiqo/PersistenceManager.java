@@ -7,11 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
-import java.util.function.Function;
 
 import com.google.gson.*;
 import javafx.beans.property.ObjectProperty;
@@ -20,13 +17,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
  */
 public class PersistenceManager {
     private static Gson gson;
+    private static boolean isOldJSON = false;
     /**
      * Saves the given Organisation to the given filepath as organisation_shortname.json FILE PATH MUST BE VALID
      *
@@ -71,13 +68,16 @@ public class PersistenceManager {
             JsonElement version = jsonObject.get("VERSION");
             organisation = gson.fromJson(jsonObject, Organisation.class);
 
+            // loading old json file
             if(version == null) {
+                isOldJSON = true;
                 final BufferedReader br1 = new BufferedReader(new FileReader(filePath));
                 createGson(true);
                 Organisation organisation2 = gson.fromJson(br1, Organisation.class);
                 organisation.getProjects().setAll(organisation2.getProjects());
             }
         }
+
         return organisation;
     }
 
@@ -107,6 +107,10 @@ public class PersistenceManager {
         }
 
         gson = gsonBuilder.create();
+    }
+
+    public static boolean getIsOldJSON() {
+        return isOldJSON;
     }
 
     /**
