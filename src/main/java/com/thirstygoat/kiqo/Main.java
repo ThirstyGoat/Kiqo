@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo;
 
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.File;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Main entry point for application
@@ -29,6 +30,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
+        this.primaryStage.setMinWidth(900);
+        this.primaryStage.setMinHeight(600);
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
@@ -38,7 +41,7 @@ public class Main extends Application {
         scene.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
+                final Dragboard db = event.getDragboard();
                 if (db.hasFiles()) {
                     event.acceptTransferModes(TransferMode.COPY);
                 } else {
@@ -51,9 +54,9 @@ public class Main extends Application {
         scene.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                for (File file : db.getFiles()) {
+                final Dragboard db = event.getDragboard();
+                final boolean success = false;
+                for (final File file : db.getFiles()) {
                     mainController.openOrganisation(file);
                 }
                 // if you want single files

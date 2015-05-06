@@ -6,15 +6,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
+<BorderPane fx:id="mainBorderPane" prefHeight="600" prefWidth="900.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.34521158129175944" minHeight="-Infinity" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+    <SplitPane fx:id="mainSplitPane" dividerPositions="0.35" minHeight="-Infinity" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
        <items>
-         <AnchorPane maxWidth="500.0" minHeight="0.0" minWidth="280.0" prefWidth="280.0">
+         <AnchorPane maxWidth="500.0" minHeight="-1" minWidth="280.0" >
             <children>
-              <VBox opacity="1.0" prefHeight="369.0" prefWidth="114.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <VBox opacity="1.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                  <children>
-                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="project">
+                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="-1" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="project">
                      <font>
                        <Font name="System Bold" size="18.0" />
                      </font>
@@ -26,27 +26,27 @@
                       <tabs>
                         <Tab fx:id="projectTab" closable="false" text="Project">
                            <content>
-                             <ListView fx:id="projectListView" editable="true" prefHeight="459.0" prefWidth="242.0" />
+                             <ListView fx:id="projectListView" editable="true" />
                            </content>
                         </Tab>
                         <Tab fx:id="teamsTab" closable="false" text="Teams">
                            <content>
-                             <ListView fx:id="teamsListView" prefHeight="0.0" prefWidth="0.0" />
+                             <ListView fx:id="teamsListView" />
                            </content>
                         </Tab>
                         <Tab fx:id="peopleTab" closable="false" text="People">
                            <content>
-                             <ListView fx:id="peopleListView" prefHeight="0.0" prefWidth="0.0" />
+                             <ListView fx:id="peopleListView" />
                            </content>
                         </Tab>
                         <Tab fx:id="skillsTab" closable="false" text="Skills">
                            <content>
-                             <ListView fx:id="skillsListView" prefHeight="0.0" prefWidth="0.0" />
+                             <ListView fx:id="skillsListView"/>
                            </content>
                         </Tab>
                         <Tab fx:id="releasesTab" closable="false" text="Release">
                            <content>
-                               <ListView fx:id="releasesListView" prefHeight="0.0" prefWidth="0.0" />
+                               <ListView fx:id="releasesListView" />
                            </content>
                         </Tab>
                       </tabs>
@@ -55,11 +55,8 @@
               </VBox>
             </children>
          </AnchorPane>
-         <AnchorPane>
+         <AnchorPane minWidth="500" >
             <children>
-                <!-- this goes above if problems in the next few minutes 29/3/15 - bradley
-                minWidth="500" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                -->
               <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
          </AnchorPane>
