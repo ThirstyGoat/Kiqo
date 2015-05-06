@@ -51,7 +51,6 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
                     setText(item.toString());
                 }
             }
-//            setText((item != null) ? item.toString() : null);
         }
     }
 
