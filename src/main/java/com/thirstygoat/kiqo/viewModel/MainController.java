@@ -1,11 +1,13 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.*;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.undo.*;
-import com.thirstygoat.kiqo.utils.Utilities;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,22 +20,55 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.Allocation;
+import com.thirstygoat.kiqo.GoatDialog;
+import com.thirstygoat.kiqo.Item;
+import com.thirstygoat.kiqo.Organisation;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.Person;
+import com.thirstygoat.kiqo.Project;
+import com.thirstygoat.kiqo.Release;
+import com.thirstygoat.kiqo.Skill;
+import com.thirstygoat.kiqo.Team;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.undo.Command;
+import com.thirstygoat.kiqo.undo.CreatePersonCommand;
+import com.thirstygoat.kiqo.undo.CreateProjectCommand;
+import com.thirstygoat.kiqo.undo.CreateReleaseCommand;
+import com.thirstygoat.kiqo.undo.CreateSkillCommand;
+import com.thirstygoat.kiqo.undo.CreateTeamCommand;
+import com.thirstygoat.kiqo.undo.DeletePersonCommand;
+import com.thirstygoat.kiqo.undo.DeleteProjectCommand;
+import com.thirstygoat.kiqo.undo.DeleteReleaseCommand;
+import com.thirstygoat.kiqo.undo.DeleteSkillCommand;
+import com.thirstygoat.kiqo.undo.DeleteTeamCommand;
+import com.thirstygoat.kiqo.undo.UICommand;
+import com.thirstygoat.kiqo.undo.UndoManager;
+import com.thirstygoat.kiqo.utils.Utilities;
 
 /**
  * Main controller for the primary view
@@ -496,6 +531,26 @@ public class MainController implements Initializable {
         });
     }
 
+    public void setSelectedTab(int tab) {
+        switch (tab) {
+            case 0:
+                tabViewPane.getSelectionModel().select(projectTab);
+                break;
+            case 1:
+                tabViewPane.getSelectionModel().select(teamsTab);
+                break;
+            case 2:
+                tabViewPane.getSelectionModel().select(peopleTab);
+                break;
+            case 3:
+                tabViewPane.getSelectionModel().select(skillsTab);
+                break;
+            case 4:
+                tabViewPane.getSelectionModel().select(releasesTab);
+                break;
+        }
+    }
+
     public void newSkill() {
         if (selectedOrganisation != null) {
             newSkillDialog();
@@ -619,6 +674,11 @@ public class MainController implements Initializable {
         final Organisation organisation = selectedOrganisation;
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+        final File existingFile = selectedOrganisation.getSaveLocation();
+        if (existingFile != null) {
+            fileChooser.setInitialDirectory(existingFile.getParentFile());
+            fileChooser.setInitialFileName(existingFile.getName());
+        }
         final File file = fileChooser.showSaveDialog(primaryStage);
         if (file != null) {
             organisation.setSaveLocation(file);

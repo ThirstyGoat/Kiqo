@@ -107,7 +107,7 @@ public class ProjectDetailsPaneController implements Initializable {
 
         clearEndDateMenuItem.setOnAction(event -> {
             Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", null);
+            EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
             mainController.doCommand(command);
         });
 
