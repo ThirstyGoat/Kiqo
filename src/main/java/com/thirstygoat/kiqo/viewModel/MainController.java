@@ -357,8 +357,13 @@ public class MainController implements Initializable {
                 releasesListView.setItems(selectedProject.getReleases());
 
                 // Update list label
-                listLabel.textProperty().unbind();
-                listLabel.textProperty().bind(newValue.shortNameProperty());
+                if (projectListView.getItems().contains(newValue)) {
+                    listLabel.textProperty().unbind();
+                    listLabel.textProperty().bind(newValue.shortNameProperty());
+                } else {
+                    Platform.runLater(() -> listLabel.setText(""));
+                }
+
             } else {
                 MainController.focusedItemProperty.set(null);
 
