@@ -1,11 +1,12 @@
 package com.thirstygoat.kiqo;
 
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model class for Person. Created by james on 17/03/15.
@@ -190,8 +191,10 @@ public class Person extends Item {
         this.department.set(department);
     }
 
-    public ObservableList<Skill> getSkills() {
-        return skills;
+    public List<Skill> getSkills() {
+        final ArrayList<Skill> arrayList = new ArrayList<>();
+        arrayList.addAll(skills);
+        return arrayList;
     }
 
     public void setSkills(List<Skill> skills) {

@@ -1,14 +1,13 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.thirstygoat.kiqo.Person;
 import com.thirstygoat.kiqo.utils.Utilities;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Carina on 25/03/2015.
@@ -46,7 +45,7 @@ public class PersonDetailsPaneController implements Initializable {
             departmentLabel.textProperty().bind(person.departmentProperty());
             descriptionLabel.textProperty().bind(person.descriptionProperty());
 
-            skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.getSkills()));
+            skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.ProjectFormController">
   <children>
     <Label text="Name:*" />

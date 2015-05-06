@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -276,7 +275,7 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Project) {
             editProjectDialog((Project) focusedObject);
         } else if (focusedObject instanceof Person) {
-            editPersonDialog((Person) focusedObject);
+            personDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
             editSkillDialog((Skill) focusedObject);
         } else if (focusedObject instanceof Team) {
@@ -505,7 +504,7 @@ public class MainController implements Initializable {
 
     public void newPerson() {
         if (selectedOrganisation != null) {
-            newPersonDialog();
+            personDialog(null);
         }
     }
 
@@ -790,44 +789,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (editSkillController.isValid()) {
                 final UICommand command = new UICommand(editSkillController.getCommand());
-//                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
-                doCommand(command);
-            }
-        });
-    }
-
-    private void editPersonDialog(Person person) {
-        // Needed to wrap the dialog box in runLater due to the dialog box
-        // occasionally opening twice (known FX issue)
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("Edit Person");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editPerson.fxml"));
-            BorderPane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final EditPersonController editPersonController = loader.getController();
-            editPersonController.setStage(stage);
-            editPersonController.setOrganisation(selectedOrganisation);
-            editPersonController.setProjectForFormController();
-            editPersonController.loadPerson(person);
-
-            stage.showAndWait();
-
-            if (editPersonController.isValid()) {
-                final UICommand command = new UICommand(editPersonController.getCommand());
-//                command.setRefreshParameters(person, peopleListView, detailsPaneController);
+                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
                 doCommand(command);
             }
         });
@@ -939,9 +901,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void newPersonDialog() {
-        // Needed to wrap the dialog box in runLater due to the dialog box
-        // occasionally opening twice (known FX issue)
+    private void personDialog(Person person) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.setTitle("New Person");
@@ -950,8 +910,8 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newPerson.fxml"));
-            BorderPane root;
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/person.fxml"));
+            Pane root;
             try {
                 root = loader.load();
             } catch (final IOException e) {
@@ -960,15 +920,24 @@ public class MainController implements Initializable {
             }
             final Scene scene = new Scene(root);
             stage.setScene(scene);
-            final NewPersonController newPersonController = loader.getController();
-            newPersonController.setStage(stage);
-            newPersonController.setOrganisation(selectedOrganisation);
-            newPersonController.setProjectForFormController();
+            final PersonFormController personFormController = loader.getController();
+
+            personFormController.setStage(stage);
+            personFormController.setOrganisation(selectedOrganisation);
+            personFormController.setPerson(person);
 
             stage.showAndWait();
-            if (newPersonController.isValid()) {
-                final CreatePersonCommand command = newPersonController.getCommand();
-                doCommand(command);
+            if (personFormController.isValid()) {
+                if(person == null) {
+                    // create and do command
+                    final Command command = personFormController.getCommand();
+                    doCommand(command);
+                } else {
+                    //editing
+                    final UICommand command = new UICommand(personFormController.getCommand());
+                    doCommand(command);
+                }
+
             }
         });
     }
@@ -982,7 +951,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/team.fxml"));
-            BorderPane root;
+            Pane root;
             try {
                 root = loader.load();
             } catch (final IOException e) {
@@ -1000,15 +969,12 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (teamFormController.isValid()) {
                 if (team == null) {
-                    // creating
-                    // Create the command and do it
-                    final CreateTeamCommand command = (CreateTeamCommand) teamFormController.getCommand();
+                    // create and do command
+                    final Command command = teamFormController.getCommand();
                     doCommand(command);
                 } else {
                     // editing
-
                     final UICommand command = new UICommand(teamFormController.getCommand());
-                    //command.setRefreshParameters(team, teamsListView, detailsPaneController);
                     doCommand(command);
                 }
             }
@@ -1024,7 +990,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/release.fxml"));
-            BorderPane root;
+            Pane root;
             try {
                 root = loader.load();
             } catch (final IOException e) {
@@ -1045,7 +1011,6 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     final UICommand command = new UICommand(releaseFormController.getCommand());
-//                    command.setRefreshParameters(release, releasesListView, detailsPaneController);
                     doCommand(command);
                 }
             }
@@ -1061,7 +1026,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/allocation.fxml"));
-            BorderPane root;
+            Pane root;
             try {
                 root = loader.load();
             } catch (final IOException e) {

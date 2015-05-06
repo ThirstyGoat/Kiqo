@@ -4,13 +4,17 @@ import com.thirstygoat.kiqo.Organisation;
 import com.thirstygoat.kiqo.Person;
 import com.thirstygoat.kiqo.Skill;
 import com.thirstygoat.kiqo.customNodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.undo.Command;
+import com.thirstygoat.kiqo.undo.CompoundCommand;
+import com.thirstygoat.kiqo.undo.CreatePersonCommand;
+import com.thirstygoat.kiqo.undo.EditCommand;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
@@ -29,22 +33,16 @@ import java.util.ResourceBundle;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     public PopOver errorPopOver = new PopOver();
-    ArrayList<Skill> skills = new ArrayList<Skill>();
-    private String shortName;
-    private String longName;
-    private String description;
-    private String userID;
-    private String emailAddress;
-    private String phoneNumber;
-    private String department;
-    private boolean valid = false;
     private Stage stage;
-    private boolean shortNameModified = false;
-
-
     private Organisation organisation;
+    private Person person;
+    private boolean valid = false;
+    private boolean shortNameModified = false;
+    private Command command;
+    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
+
+
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -62,13 +60,18 @@ public class PersonFormController implements Initializable {
     private TextField departmentTextField;
     @FXML
     private GoatListSelectionView<Skill> skillsSelectionView;
-
+    @FXML
+    private Button okButton;
+    @FXML
+    private Button cancelButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setShortNameHandler();
         setErrorPopOvers();
         setPrompts();
+        setButtonHandlers();
+        setShortNameSuggester();
         Platform.runLater(longNameTextField::requestFocus);
     }
 
@@ -77,7 +80,7 @@ public class PersonFormController implements Initializable {
         longNameTextField.setPromptText("Bill Goat");
         descriptionTextField.setPromptText("Describe this awesome person");
         userIDTextField.setPromptText("Identify this person!");
-        emailTextField.setPromptText("Their email?");
+        emailTextField.setPromptText("hello@example.com");
         phoneTextField.setPromptText("A phone number would be good too.");
         departmentTextField.setPromptText("What department do they work for?");
     }
@@ -105,99 +108,178 @@ public class PersonFormController implements Initializable {
         });
     }
 
-    public void setUpSkillsListSelectionView() {
+    private void setSkillsListSelectionViewData() {
         final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
 
         sourceSkills.addAll(organisation.getSkills());
+        if (person != null) {
+            sourceSkills.removeAll(person.getSkills());
+            targetSkills.addAll(person.getSkills());
+        }
 
-        // Remove all skills from sourceSkills that are currently in targetSkills
-        sourceSkills.removeAll(targetSkills);
-
-        organisation.getSkills().addListener((ListChangeListener<Skill>) c -> {
-            c.next();
-            // We remove skills from the sourceSkills that were removed from the project.
-            // Note that this shouldn't actually be possible since undo/redo should be disabled
-            sourceSkills.removeAll(c.getRemoved());
-            targetSkills.removeAll(c.getRemoved());
-            sourceSkills.addAll(c.getAddedSubList());
-        });
+//        organisation.getSkills().addListener((ListChangeListener<Skill>) c -> {
+//            c.next();
+//            // We remove skills from the sourceSkills that were removed from the project.
+//            // Note that this shouldn't actually be possible since undo/redo should be disabled
+//            sourceSkills.removeAll(c.getRemoved());
+//            targetSkills.removeAll(c.getRemoved());
+//            sourceSkills.addAll(c.getAddedSubList());
+//        });
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
         skillsSelectionView.getTargetListView().setItems(targetSkills);
     }
 
-
     /**
      * Sets the TextFields displayed in the dialog to the Person that will be edited.
      * @param person the Person that is loaded
      */
-    public void loadPerson(final Person person) {
-        longNameTextField.setText(person.getLongName());
-        shortNameTextField.setText(person.getShortName());
-        descriptionTextField.setText(person.getDescription());
-        userIDTextField.setText(person.getUserID());
-        emailTextField.setText(person.getEmailAddress());
-        phoneTextField.setText(person.getPhoneNumber());
-        departmentTextField.setText(person.getDepartment());
+    public void setPerson(final Person person) {
+        this.person = person;
 
-        // Load existing skills into skill list
-        targetSkills.setAll(person.getSkills());
-        setUpSkillsListSelectionView();
+        if (person == null) {
+            // Then we are creating a new one
+            stage.setTitle("Create Person");
+            okButton.setText("Create Person");
+        } else {
+            // We are editing an existing Person
+            stage.setTitle("Edit Person");
+            okButton.setText("Save");
+
+            longNameTextField.setText(person.getLongName());
+            shortNameTextField.setText(person.getShortName());
+            descriptionTextField.setText(person.getDescription());
+            userIDTextField.setText(person.getUserID());
+            emailTextField.setText(person.getEmailAddress());
+            phoneTextField.setText(person.getPhoneNumber());
+            departmentTextField.setText(person.getDepartment());
+        }
+
+        // Load skills into skill lists
+        setSkillsListSelectionViewData();
+    }
+    
+    private void setButtonHandlers() {
+        okButton.setOnAction(event -> {
+            if (validate()) {
+                errorPopOver.hide(Duration.millis(0));
+                stage.close();
+            }
+        });
+
+        cancelButton.setOnAction(event -> {
+            errorPopOver.hide(Duration.millis(0));
+            stage.close();
+        });
     }
 
-    /**
-     * Performs validation checks and displays error popovers where applicable
-     */
-    public void validate() {
-        // Hide existing error message if there is one
-        errorPopOver.hide(Duration.millis(0));
-        // Perform validity checks and create project
-        if (checkName() && checkShortName()) {
-            // Set project properties
-            longName = longNameTextField.getText();
-            shortName = shortNameTextField.getText();
-            description = descriptionTextField.getText();
-            userID = userIDTextField.getText();
-            emailAddress = emailTextField.getText();
-            phoneNumber = phoneTextField.getText();
-            department = departmentTextField.getText();
+    private void setCommand() {
+        final ArrayList<Skill> skills = new ArrayList<>();
+        skills.addAll(targetSkills);
 
-            skills.clear();
-            skills.addAll(targetSkills);
+        if (person == null) {
+            Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
+                    descriptionTextField.getText(), userIDTextField.getText(), emailTextField.getText(),
+                    phoneTextField.getText(), departmentTextField.getText(), skills);
+            command = new CreatePersonCommand(p, organisation);
+        } else {
+            final ArrayList<Command<?>> changes = new ArrayList<>();
 
-            valid = true;
+            if (!shortNameTextField.getText().equals(person.getShortName())) {
+                for (final Person p : organisation.getPeople()) {
+                    if (shortNameTextField.getText().equals(p.getShortName())) {
+                        errorPopOver.setContentNode(new Label("Short name must be unique"));
+                        errorPopOver.show(shortNameTextField);
+                        return;
+                    }
+                }
+                changes.add(new EditCommand<>(person, "shortName", shortNameTextField.getText()));
+            }
+            if (!longNameTextField.getText().equals(person.getLongName())) {
+                changes.add(new EditCommand<>(person, "longName", longNameTextField.getText()));
+            }
+            if (!descriptionTextField.getText().equals(person.getDescription())) {
+                changes.add(new EditCommand<>(person, "description", descriptionTextField.getText()));
+            }
+            if (!userIDTextField.getText().equals(person.getUserID())) {
+                changes.add(new EditCommand<>(person, "userID", userIDTextField.getText()));
+            }
+            if (!emailTextField.getText().equals(person.getEmailAddress())) {
+                changes.add(new EditCommand<>(person, "emailAddress", emailTextField.getText()));
+            }
+            if (!phoneTextField.getText().equals(person.getPhoneNumber())) {
+                changes.add(new EditCommand<>(person, "phoneNumber", phoneTextField.getText()));
+            }
+            if (!departmentTextField.getText().equals(person.getDepartment())) {
+                changes.add(new EditCommand<>(person, "department", departmentTextField.getText()));
+            }
+            if (!(skills.containsAll(person.getSkills())
+                    && person.getSkills().containsAll(skills))) {
+                changes.add(new EditCommand<>(person, "skills", skills));
+            }
+
+            valid = !changes.isEmpty();
+
+            command = new CompoundCommand("Edit Person", changes);
         }
     }
-
-    /**
-     * Checks to make sure the short name is valid
-     * @return Whether or not the short name is valid
-     */
-    private boolean checkShortName() {
+    
+    
+    
+    private boolean validate() {
         if (shortNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Short name must not be empty"));
             errorPopOver.show(shortNameTextField);
             return false;
         }
-        // check for uniqueness inside the project
 
-        // >>>>>>>>>>>>>>>>
-
-        return true;
-    }
-
-    /**
-     * Checks to make sure the long name is valid
-     * @return Whether or not the long name is valid
-     */
-    private boolean checkName() {
-        if (longNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(longNameTextField);
-            return false;
+        if (person != null) {
+            // we're editing
+            if (shortNameTextField.getText().equals(person.getShortName())) {
+                // then that's fine
+                valid = true;
+                setCommand();
+                return true;
+            }
         }
+
+        // shortname must be unique
+        for (final Person p : organisation.getPeople()) {
+            if (shortNameTextField.getText().equals(p.getShortName())) {
+                errorPopOver.setContentNode(new Label("Short name must be unique"));
+                errorPopOver.show(shortNameTextField);
+                return false;
+            }
+        }
+
+        valid = true;
+        setCommand();
         return true;
     }
+
+//    /**
+//     * Performs validation checks and displays error popovers where applicable
+//     */
+//    public void validate() {
+//        // Hide existing error message if there is one
+//        errorPopOver.hide(Duration.millis(0));
+//        // Perform validity checks and create project
+//        if (checkName() && checkShortName()) {
+//            // Set project properties
+//            longName = longNameTextField.getText();
+//            shortName = shortNameTextField.getText();
+//            description = descriptionTextField.getText();
+//            userID = userIDTextField.getText();
+//            emailAddress = emailTextField.getText();
+//            phoneNumber = phoneTextField.getText();
+//            department = departmentTextField.getText();
+//
+//            skills.clear();
+//            skills.addAll(targetSkills);
+//
+//            valid = true;
+//        }
+//    }
 
     /**
      * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
@@ -234,73 +316,11 @@ public class PersonFormController implements Initializable {
         });
     }
 
-
-    // ------- is this used?? -----------
-
-    /**
-     * Creates a Person that has any ignored fields from the dialog set to null
-     * @return a Person object created by the new Person dialog
-     */
-    private Person createPerson() {
-        String description = null;
-        String userID = null;
-        String emailAddress = null;
-        String phoneNumber = null;
-        String department = null;
-        if (!descriptionTextField.getText().equals("")) {
-            description = descriptionTextField.getText();
-        }
-        if (!userIDTextField.getText().equals("")) {
-            userID = userIDTextField.getText();
-        }
-        if (!emailTextField.getText().equals("")) {
-            emailAddress = emailTextField.getText();
-        }
-        if (!phoneTextField.getText().equals("")) {
-            phoneNumber = phoneTextField.getText();
-        }
-        if (!departmentTextField.getText().equals("")) {
-            department = departmentTextField.getText();
-        }
-        return new Person(shortNameTextField.getText(), longNameTextField.getText(), description, userID, emailAddress,
-                phoneNumber, department, getSkills());
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public String getLongName() {
-        return longName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public ArrayList<Skill> getSkills() {
-        return skills;
-    }
-
     public boolean isValid() {
         return valid;
     }
+
+    public Command<?> getCommand() { return command; }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -331,14 +351,5 @@ public class PersonFormController implements Initializable {
                 errorPopOver.hide(Duration.millis(0));
             }
         });
-    }
-
-
-    /**
-     * Warms if the short name of a person is not unique
-     */
-    public void warnShortnameNotUnique() {
-        errorPopOver.setContentNode(new Label("Short name must be unique"));
-        errorPopOver.show(shortNameTextField);
     }
 }
