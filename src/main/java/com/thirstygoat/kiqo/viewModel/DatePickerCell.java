@@ -7,8 +7,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.thirstygoat.kiqo.Allocation;
+import javafx.util.StringConverter;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
@@ -17,6 +19,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
     public DatePickerCell() {
         // Initialize the DatePicker for birthday
         this.datePicker = new DatePicker();
+
 
         datePicker.setDayCellFactory(picker -> {
             DateCell cell = new DateCell();
@@ -40,7 +43,15 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
             setText(null);
             setGraphic(null);
         } else {
-            setText((item != null) ? item.toString() : null);
+
+            if (item != null) {
+                if (item.equals(LocalDate.MAX)) {
+                    setText("");
+                } else {
+                    setText(item.toString());
+                }
+            }
+//            setText((item != null) ? item.toString() : null);
         }
     }
 
@@ -49,15 +60,22 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
         super.startEdit();
         if (!isEmpty()) {
             setText(null);
-            datePicker.setValue(getItem());
+            if(getItem().equals(LocalDate.MAX)) {
+                datePicker.setValue(LocalDate.now().plusDays(1));
+            } else {
+                datePicker.setValue(getItem());
+            }
+
             setGraphic(datePicker);
             datePicker.show();
         }
     }
 
+
     @Override
     public void cancelEdit() {
         super.cancelEdit();
+        updateItem(getItem(), false);
         if (!isEmpty()) {
             datePicker.hide();
         }

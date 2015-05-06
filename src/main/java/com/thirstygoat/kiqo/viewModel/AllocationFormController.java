@@ -25,6 +25,7 @@ import org.controlsfx.control.textfield.TextFields;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -74,6 +75,32 @@ public class AllocationFormController implements Initializable {
         teamTextField.setPromptText("Team this allocation is associated with");
         startDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setPromptText("dd/mm/yyyy");
+        endDatePicker.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "dd/MM/yyyy";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            {
+                endDatePicker.setPromptText(pattern.toLowerCase());
+            }
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null && !date.equals(LocalDate.MAX)) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return LocalDate.MAX;
+                }
+            }
+        });
     }
 
     private void datePickerChecker() {
