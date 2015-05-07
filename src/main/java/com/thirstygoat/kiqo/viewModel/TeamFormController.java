@@ -1,13 +1,9 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateTeamCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,7 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -27,10 +29,15 @@ import javafx.util.Duration;
 
 import org.controlsfx.control.PopOver;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateTeamCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by james on 27/03/15.
@@ -66,7 +73,7 @@ public class TeamFormController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setTextFieldListener();
+        setErrorPopOvers();
         setShortNameLengthRestrictor();
         setPrompts();
 
@@ -93,22 +100,17 @@ public class TeamFormController implements Initializable {
         });
     }
 
-    private void setTextFieldListener() {
+    private void setErrorPopOvers() {
+        errorPopOver.setDetachable(false);
         shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // then focus is on this text field
-                errorPopOver.hide();
-            }
-            else {
-                errorPopOver.hide();
-            }
+            errorPopOver.hide();
         });
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide();
+                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
@@ -135,13 +137,12 @@ public class TeamFormController implements Initializable {
                 return true;
             }
         }
-        for (final Team t : organisation.getTeams()) {
-            if (shortNameTextField.getText().equals(t.getShortName())) {
-                errorPopOver.setContentNode(new Label("Short name must be unique"));
-                errorPopOver.show(shortNameTextField);
-                return false;
-            }
+        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getTeams())) {
+            errorPopOver.setContentNode(new Label("Short name must be unique"));
+            errorPopOver.show(shortNameTextField);
+            return false;
         }
+
         valid = true;
         setCommand();
         return true;

@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateSkillCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Skill;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,12 +13,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateSkillCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by james on 20/03/15.
@@ -126,7 +129,7 @@ public class SkillFormController implements Initializable {
 
     private void setCommand() {
         if (skill == null) {
-            Skill s = new Skill(shortNameTextField.getText(), descriptionTextField.getText());
+            final Skill s = new Skill(shortNameTextField.getText(), descriptionTextField.getText());
             command = new CreateSkillCommand(s, organisation);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -164,13 +167,10 @@ public class SkillFormController implements Initializable {
             }
         }
 
-        // shortname must be unique
-        for (final Skill s : organisation.getSkills()) {
-            if (shortNameTextField.getText().equals(s.getShortName())) {
-                errorPopOver.setContentNode(new Label("Short name must be unique"));
-                errorPopOver.show(shortNameTextField);
-                return false;
-            }
+        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getSkills())) {
+            errorPopOver.setContentNode(new Label("Short name must be unique"));
+            errorPopOver.show(shortNameTextField);
+            return false;
         }
 
         valid = true;
@@ -214,14 +214,5 @@ public class SkillFormController implements Initializable {
                 errorPopOver.hide();
             }
         });
-    }
-
-
-    /**
-     * Warms if the short name of a person is not unique
-     */
-    public void warnShortnameNotUnique() {
-        errorPopOver.setContentNode(new Label("Short name must be unique"));
-        errorPopOver.show(shortNameTextField);
     }
 }

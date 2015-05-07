@@ -64,7 +64,7 @@ public class ReleaseFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        errorPopOver.setDetachable(false);
+        setErrorPopOvers();
         setButtonHandlers();
         setShortNameTextFieldListener();
         setShortNameLengthRestrictor();
@@ -287,5 +287,21 @@ public class ReleaseFormController implements Initializable {
             releaseDatePicker.setValue(release.getDate());
             descriptionTextField.setText(release.getDescription());
         }
+    }
+
+    /**
+     * Sets focus listeners on text fields so PopOvers are hidden upon focus
+     */
+    private void setErrorPopOvers() {
+        // Set PopOvers as not detachable so we don't have floating PopOvers
+        errorPopOver.setDetachable(false);
+
+        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                errorPopOver.hide();
+            } else {
+                errorPopOver.hide();
+            }
+        });
     }
 }

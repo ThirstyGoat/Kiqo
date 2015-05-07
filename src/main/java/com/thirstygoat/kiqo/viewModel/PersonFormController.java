@@ -1,13 +1,10 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,12 +17,18 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreatePersonCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by james on 20/03/15.
@@ -158,7 +161,7 @@ public class PersonFormController implements Initializable {
         // Load skills into skill lists
         setSkillsListSelectionViewData();
     }
-    
+
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
@@ -178,7 +181,7 @@ public class PersonFormController implements Initializable {
         skills.addAll(targetSkills);
 
         if (person == null) {
-            Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
+            final Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
                     descriptionTextField.getText(), userIDTextField.getText(), emailTextField.getText(),
                     phoneTextField.getText(), departmentTextField.getText(), skills);
             command = new CreatePersonCommand(p, organisation);
@@ -216,9 +219,7 @@ public class PersonFormController implements Initializable {
             command = new CompoundCommand("Edit Person", changes);
         }
     }
-    
-    
-    
+
     private boolean validate() {
         if (shortNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Short name must not be empty"));
@@ -236,13 +237,10 @@ public class PersonFormController implements Initializable {
             }
         }
 
-        // shortname must be unique
-        for (final Person p : organisation.getPeople()) {
-            if (shortNameTextField.getText().equals(p.getShortName())) {
-                errorPopOver.setContentNode(new Label("Short name must be unique"));
-                errorPopOver.show(shortNameTextField);
-                return false;
-            }
+        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getPeople())) {
+            errorPopOver.setContentNode(new Label("Short name must be unique"));
+            errorPopOver.show(shortNameTextField);
+            return false;
         }
 
         valid = true;
