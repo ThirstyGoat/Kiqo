@@ -29,7 +29,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -45,11 +44,9 @@ import org.controlsfx.control.StatusBar;
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
 import com.thirstygoat.kiqo.command.CreateProjectCommand;
 import com.thirstygoat.kiqo.command.CreateReleaseCommand;
 import com.thirstygoat.kiqo.command.CreateSkillCommand;
-import com.thirstygoat.kiqo.command.CreateTeamCommand;
 import com.thirstygoat.kiqo.command.DeletePersonCommand;
 import com.thirstygoat.kiqo.command.DeleteProjectCommand;
 import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
@@ -108,13 +105,14 @@ public class MainController implements Initializable {
     @FXML
     private Label listLabel;
     @FXML
+    private Pane listPane;
+    @FXML
     private Pane detailsPane;
     @FXML
     private DetailsPaneController detailsPaneController;
     @FXML
     private MenuBarController menuBarController;
     private Stage primaryStage;
-    private AnchorPane listAnchorPane;
     private double dividerPosition;
 
     //Todo: set selected org properly
@@ -339,7 +337,6 @@ public class MainController implements Initializable {
         menuBarController.enableNewSkill();
 //        menuBarController.enableNewRelease();
 
-        setLayoutProperties();
         initializeListViews();
         initialiseTabs();
         saveStateChanges();
@@ -697,12 +694,12 @@ public class MainController implements Initializable {
     public void setListVisible(boolean visible) {
         if (visible) {
             // shows the list view
-            mainSplitPane.getItems().add(0, listAnchorPane);
+            mainSplitPane.getItems().add(0, listPane);
             mainSplitPane.setDividerPosition(0, dividerPosition);
         } else {
             // hides the list view
             dividerPosition = mainSplitPane.getDividerPositions()[0];
-            mainSplitPane.getItems().remove(listAnchorPane);
+            mainSplitPane.getItems().remove(listPane);
         }
     }
 
@@ -1142,14 +1139,6 @@ public class MainController implements Initializable {
             }
         });
     }
-
-    /**
-     * Sets layout specific properties
-     */
-    private void setLayoutProperties() {
-        listAnchorPane = (AnchorPane) mainSplitPane.getItems().get(0);
-    }
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }

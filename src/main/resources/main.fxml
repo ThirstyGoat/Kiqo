@@ -6,60 +6,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="mainBorderPane" prefHeight="600" prefWidth="900.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.35" minHeight="-Infinity" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+    <SplitPane fx:id="mainSplitPane" dividerPositions="0.35" minHeight="-1" maxHeight="-1" prefWidth="200.0" BorderPane.alignment="CENTER">
        <items>
-         <AnchorPane maxWidth="500.0" minHeight="-1" minWidth="280.0" >
-            <children>
-              <VBox opacity="1.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                 <children>
-                   <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="-1" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="project">
-                     <font>
-                       <Font name="System Bold" size="18.0" />
-                     </font>
-                     <VBox.margin>
-                       <Insets left="10.0" right="10.0" top="10.0" />
-                     </VBox.margin>
-                   </Label>
-                   <TabPane fx:id="tabViewPane">
-                      <tabs>
-                        <Tab fx:id="projectTab" closable="false" text="Project">
-                           <content>
-                             <ListView fx:id="projectListView" editable="true" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="teamsTab" closable="false" text="Teams">
-                           <content>
-                             <ListView fx:id="teamsListView" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="peopleTab" closable="false" text="People">
-                           <content>
-                             <ListView fx:id="peopleListView" />
-                           </content>
-                        </Tab>
-                        <Tab fx:id="skillsTab" closable="false" text="Skills">
-                           <content>
-                             <ListView fx:id="skillsListView"/>
-                           </content>
-                        </Tab>
-                        <Tab fx:id="releasesTab" closable="false" text="Release">
-                           <content>
-                               <ListView fx:id="releasesListView" />
-                           </content>
-                        </Tab>
-                      </tabs>
-                   </TabPane>
-                 </children>
-              </VBox>
-            </children>
-         </AnchorPane>
-         <AnchorPane minWidth="500" >
-            <children>
-              <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            </children>
-         </AnchorPane>
+         <VBox fx:id="listPane" opacity="1.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+             <children>
+               <Label fx:id="listLabel" alignment="CENTER_LEFT" maxHeight="-1.0" maxWidth="-1" prefHeight="-1.0" prefWidth="-1.0" styleClass="title" text="project">
+                 <font>
+                   <Font name="System Bold" size="18.0" />
+                 </font>
+                 <VBox.margin>
+                   <Insets left="10.0" right="10.0" top="10.0" />
+                 </VBox.margin>
+               </Label>
+               <TabPane fx:id="tabViewPane" VBox.vgrow="ALWAYS">
+                  <tabs>
+                    <Tab fx:id="projectTab" closable="false" text="Project">
+                       <content>
+                         <ListView fx:id="projectListView" editable="true" />
+                       </content>
+                    </Tab>
+                    <Tab fx:id="teamsTab" closable="false" text="Teams">
+                       <content>
+                         <ListView fx:id="teamsListView" />
+                       </content>
+                    </Tab>
+                    <Tab fx:id="peopleTab" closable="false" text="People">
+                       <content>
+                         <ListView fx:id="peopleListView" />
+                       </content>
+                    </Tab>
+                    <Tab fx:id="skillsTab" closable="false" text="Skills">
+                       <content>
+                         <ListView fx:id="skillsListView"/>
+                       </content>
+                    </Tab>
+                    <Tab fx:id="releasesTab" closable="false" text="Release">
+                       <content>
+                           <ListView fx:id="releasesListView" />
+                       </content>
+                    </Tab>
+                  </tabs>
+               </TabPane>
+             </children>
+           </VBox>
+         <fx:include fx:id="detailsPane" source="detailsPane/main.fxml"/>
        </items>
     </SplitPane>
   </center>
