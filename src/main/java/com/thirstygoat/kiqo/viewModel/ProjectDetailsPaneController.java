@@ -12,16 +12,12 @@ import com.thirstygoat.kiqo.nodes.GoatDialog;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 /**
  * Created by Bradley on 25/03/2015.
+ *
  */
 public class ProjectDetailsPaneController implements Initializable {
     private MainController mainController;
@@ -40,11 +36,14 @@ public class ProjectDetailsPaneController implements Initializable {
     private TableColumn<Allocation, LocalDate> startDateTableColumn;
     @FXML
     private TableColumn<Allocation, LocalDate> endDateTableColumn;
+    @FXML
+    private Button allocateTeamButton;
 
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         initializeTable();
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
 
     private void initializeTable() {
