@@ -1,6 +1,6 @@
 package com.thirstygoat.kiqo.exceptions;
 
-import com.thirstygoat.kiqo.Person;
+import com.thirstygoat.kiqo.model.Person;
 
 /**
  * Created by samschofield on 20/03/15.

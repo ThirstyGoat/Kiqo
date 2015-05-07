@@ -1,9 +1,10 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Project;
-import com.thirstygoat.kiqo.Release;
-import com.thirstygoat.kiqo.undo.*;
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;

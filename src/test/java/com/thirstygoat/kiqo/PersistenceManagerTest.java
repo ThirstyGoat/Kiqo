@@ -13,8 +13,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 
 import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.Organisation;
 import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.model.Organisation;
 
 // Methods are run in alphabetical order
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

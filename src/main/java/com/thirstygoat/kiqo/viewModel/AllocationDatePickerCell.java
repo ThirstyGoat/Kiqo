@@ -2,7 +2,7 @@ package com.thirstygoat.kiqo.viewModel;
 
 import java.time.LocalDate;
 
-import com.thirstygoat.kiqo.GoatDialog;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 
 import javafx.stage.Stage;
 
@@ -43,7 +43,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void startDateValidation(LocalDate date) {
-        com.thirstygoat.kiqo.Allocation allocation = (com.thirstygoat.kiqo.Allocation)getTableRow().getItem();
+        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         // Check to make sure that start date comes before end date if end date is set
         if (allocation.getEndDate() != null && !date.isBefore(allocation.getEndDate())) {
             // Then the start date was set before the end date [the end date is set] - prohibit and alert
@@ -55,7 +55,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
 
         // Check date to make sure it doesn't cause overlap with any of the team's other allocations
         boolean dateRangesOverlap = false;
-        for (final com.thirstygoat.kiqo.Allocation a : allocation.getTeam().getAllocations()) {
+        for (final com.thirstygoat.kiqo.model.Allocation a : allocation.getTeam().getAllocations()) {
             if (a == allocation) {
                 continue;
             }
@@ -81,7 +81,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void endDateValidation(LocalDate date) {
-        com.thirstygoat.kiqo.Allocation allocation = (com.thirstygoat.kiqo.Allocation)getTableRow().getItem();
+        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         // Check to make sure that end date comes after start date
         if (date != null && !date.isAfter(allocation.getStartDate())) {
             // Then the start date was set before the end date [the end date is set] - prohibit and alert
@@ -93,7 +93,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
 
         // Check date to make sure it doesn't cause overlap with any of the team's other allocations
         boolean dateRangesOverlap = false;
-        for (final com.thirstygoat.kiqo.Allocation a : allocation.getTeam().getAllocations()) {
+        for (final com.thirstygoat.kiqo.model.Allocation a : allocation.getTeam().getAllocations()) {
             if (a == allocation) {
                 continue;
             }
@@ -128,7 +128,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void revertDate() {
-        com.thirstygoat.kiqo.Allocation allocation = (com.thirstygoat.kiqo.Allocation)getTableRow().getItem();
+        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         if (type == ValidationType.START_DATE) {
             updateItem(allocation.getStartDate(), false);
         } else if (type == ValidationType.END_DATE) {

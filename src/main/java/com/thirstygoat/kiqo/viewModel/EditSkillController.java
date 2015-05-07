@@ -4,11 +4,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.Organisation;
-import com.thirstygoat.kiqo.Skill;
-import com.thirstygoat.kiqo.undo.Command;
-import com.thirstygoat.kiqo.undo.CompoundCommand;
-import com.thirstygoat.kiqo.undo.EditCommand;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

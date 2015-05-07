@@ -3,12 +3,12 @@ package com.thirstygoat.kiqo.viewModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.Item;
-import com.thirstygoat.kiqo.Person;
-import com.thirstygoat.kiqo.Project;
-import com.thirstygoat.kiqo.Release;
-import com.thirstygoat.kiqo.Skill;
-import com.thirstygoat.kiqo.Team;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

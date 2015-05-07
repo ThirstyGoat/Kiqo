@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.undo.UndoManager;
+import com.thirstygoat.kiqo.command.UndoManager;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

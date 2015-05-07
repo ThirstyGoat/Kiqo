@@ -9,7 +9,8 @@ import javafx.scene.layout.HBox;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import com.thirstygoat.kiqo.Allocation;
+import com.thirstygoat.kiqo.model.Allocation;
+
 import javafx.util.StringConverter;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {

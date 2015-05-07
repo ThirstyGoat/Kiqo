@@ -3,7 +3,7 @@ package com.thirstygoat.kiqo.viewModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.Skill;
+import com.thirstygoat.kiqo.model.Skill;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

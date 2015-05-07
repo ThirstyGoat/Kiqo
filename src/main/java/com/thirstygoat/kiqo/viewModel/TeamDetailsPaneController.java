@@ -8,12 +8,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.Allocation;
-import com.thirstygoat.kiqo.GoatDialog;
-import com.thirstygoat.kiqo.Team;
-import com.thirstygoat.kiqo.undo.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.undo.EditCommand;
-import com.thirstygoat.kiqo.utils.Utilities;
+import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.util.Utilities;
 
 public class TeamDetailsPaneController implements Initializable {
 

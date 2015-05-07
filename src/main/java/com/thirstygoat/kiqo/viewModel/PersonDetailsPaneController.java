@@ -1,7 +1,8 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.Person;
-import com.thirstygoat.kiqo.utils.Utilities;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;

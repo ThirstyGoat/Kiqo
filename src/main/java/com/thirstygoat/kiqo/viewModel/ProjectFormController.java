@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.Project;
+import com.thirstygoat.kiqo.model.Project;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
