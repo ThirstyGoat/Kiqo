@@ -3,18 +3,13 @@ package com.thirstygoat.kiqo.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
 import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by samschofield on 21/04/15.
  */
-public class AllocationTest extends TestCase {
+public class AllocationTest {
 
     /**
      * Tests that an allocations startdate must be before its end date
@@ -28,21 +23,21 @@ public class AllocationTest extends TestCase {
         try {
             new Allocation(t1, LocalDate.now(), LocalDate.now().minusDays(1), p1);
         } catch (final RuntimeException e) {
-            TestCase.assertTrue(true);
+            Assert.assertTrue(true);
         }
 
         // exception should not be thrown if start date and end date are the same
         try {
             new Allocation(t1, LocalDate.now(), LocalDate.now(), p1);
         } catch (final RuntimeException e) {
-            TestCase.fail();
+            Assert.fail();
         }
 
         // exception should not be thrown if start date is before end date
         try {
             new Allocation(t1, LocalDate.now(), LocalDate.now().plusDays(1), p1);
         } catch (final RuntimeException e) {
-            TestCase.fail();
+            Assert.fail();
         }
 
     }

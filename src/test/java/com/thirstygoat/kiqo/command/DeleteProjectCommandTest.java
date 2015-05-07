@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 
@@ -23,27 +23,27 @@ public class DeleteProjectCommandTest {
     }
     @Test
     public void deleteProject_ProjectRemoved() {
-        DeleteProjectCommand command = new DeleteProjectCommand(project, organisation);
+        final DeleteProjectCommand command = new DeleteProjectCommand(project, organisation);
 
-        assert organisation.getProjects().contains(project);
+        Assert.assertTrue(organisation.getProjects().contains(project));
 
         command.execute();
 
-        assert !organisation.getProjects().contains(project);
+        Assert.assertFalse(organisation.getProjects().contains(project));
     }
 
     @Test
     public void undoDeleteAllocation_AllocationAddedBack() {
-        DeleteProjectCommand command = new DeleteProjectCommand(project, organisation);
+        final DeleteProjectCommand command = new DeleteProjectCommand(project, organisation);
 
-        assert organisation.getProjects().contains(project);
+        Assert.assertTrue(organisation.getProjects().contains(project));
 
         command.execute();
 
-        assert !organisation.getProjects().contains(project);
+        Assert.assertFalse(organisation.getProjects().contains(project));
 
         command.undo();
 
-        assert organisation.getProjects().contains(project);
+        Assert.assertTrue(organisation.getProjects().contains(project));
     }
 }

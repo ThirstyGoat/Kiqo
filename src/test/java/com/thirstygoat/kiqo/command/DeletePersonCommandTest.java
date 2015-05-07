@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
@@ -84,7 +83,7 @@ public class DeletePersonCommandTest {
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
         Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        assert team.getProductOwner() != person;
+        Assert.assertNotEquals(team.getProductOwner(), person);
     }
 
     /**
@@ -173,13 +172,13 @@ public class DeletePersonCommandTest {
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
         Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        assert team.getProductOwner() != person;
+        Assert.assertNotEquals(team.getProductOwner(), person);
 
         command.undo();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person));
         Assert.assertThat(team.observableTeamMembers(), CoreMatchers.hasItem(person));
-        assert team.getProductOwner() == person;
+        Assert.assertEquals(team.getProductOwner(), person);
     }
 
     /**

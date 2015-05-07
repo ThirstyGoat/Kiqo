@@ -3,10 +3,10 @@ package com.thirstygoat.kiqo.command;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.CreateAllocationCommand;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
@@ -33,8 +33,8 @@ public class CreateAllocationCommandTest {
     public void createAllocation_AllocationAdded() {
         command.execute();
 
-        assert team.getAllocations().contains(allocation);
-        assert project.getAllocations().contains(allocation);
+        Assert.assertTrue(team.getAllocations().contains(allocation));
+        Assert.assertTrue(project.getAllocations().contains(allocation));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class CreateAllocationCommandTest {
         command.execute();
         command.undo();
 
-        assert !team.getAllocations().contains(allocation);
-        assert !project.getAllocations().contains(allocation);
+        Assert.assertFalse(team.getAllocations().contains(allocation));
+        Assert.assertFalse(project.getAllocations().contains(allocation));
     }
 }
