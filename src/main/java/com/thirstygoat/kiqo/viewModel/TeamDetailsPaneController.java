@@ -83,7 +83,7 @@ public class TeamDetailsPaneController implements Initializable {
             devTeamLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableDevTeam()));
 
             if (team.getAllocations() != null) {
-                allocationsTableView.setItems(team.getAllocations());
+                allocationsTableView.setItems(team.observableAllocations());
             }
         } else {
             shortNameLabel.setText(null);

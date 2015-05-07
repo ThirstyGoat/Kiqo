@@ -164,4 +164,8 @@ public class Project extends Item {
         return "Project{shortName=" + shortName + ", longName=" + longName + ", description=" + description + ", releases=" + releases
                 + ", allocations=" + allocations + "}";
     }
+
+    public ObservableList<Allocation> observableAllocations() {
+        return allocations;
+    }
 }

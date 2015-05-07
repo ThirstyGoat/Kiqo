@@ -8,27 +8,27 @@ import com.thirstygoat.kiqo.model.Team;
  * Created by bradley on 23/04/15.
  */
 public class CreateAllocationCommand extends Command<Allocation> {
-    private Allocation allocation;
-    private Project project;
-    private Team team;
+    private final Allocation allocation;
+    private final Project project;
+    private final Team team;
 
     public CreateAllocationCommand(Allocation allocation) {
         this.allocation = allocation;
-        this.team = allocation.getTeam();
-        this.project = allocation.getProject();
+        team = allocation.getTeam();
+        project = allocation.getProject();
     }
 
     @Override
     public Allocation execute() {
-        project.getAllocations().add(allocation);
-        team.getAllocations().add(allocation);
+        project.observableAllocations().add(allocation);
+        team.observableAllocations().add(allocation);
         return null;
     }
 
     @Override
     public void undo() {
-        team.getAllocations().remove(allocation);
-        project.getAllocations().remove(allocation);
+        team.observableAllocations().remove(allocation);
+        project.observableAllocations().remove(allocation);
     }
 
     @Override
