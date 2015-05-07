@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
@@ -103,7 +102,7 @@ public class DeleteSkillCommandTest {
      * Assigns skill1 to person1
      */
     private void useSkill() {
-        person1.getSkills().add(skill1);
+        person1.observableSkills().add(skill1);
     }
 
     /**

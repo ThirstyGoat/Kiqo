@@ -3,10 +3,10 @@ package com.thirstygoat.kiqo.command;
 import java.io.File;
 import java.time.LocalDate;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
@@ -29,23 +29,23 @@ public class DeleteReleaseCommandTest {
 
     @Test
     public void deleteRelease_ReleaseRemovedFromProject() {
-        assert project.getReleases().contains(release);
+        Assert.assertTrue(project.getReleases().contains(release));
 
         command.execute();
 
-        assert !project.getReleases().contains(release);
+        Assert.assertFalse(project.getReleases().contains(release));
     }
 
     @Test
     public void undoDeleteRelease_ReleaseAddedBackToProject() {
-        assert project.getReleases().contains(release);
+        Assert.assertTrue(project.getReleases().contains(release));
 
         command.execute();
 
-        assert !project.getReleases().contains(release);
+        Assert.assertFalse(project.getReleases().contains(release));
 
         command.undo();
 
-        assert project.getReleases().contains(release);
+        Assert.assertTrue(project.getReleases().contains(release));
     }
 }

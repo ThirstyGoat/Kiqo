@@ -1,9 +1,10 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -22,10 +23,14 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateReleaseCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
 
 
 /**
@@ -58,6 +63,7 @@ public class ReleaseFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        errorPopOver.setDetachable(false);
         setButtonHandlers();
         setShortNameTextFieldListener();
         setShortNameLengthRestrictor();
@@ -97,12 +103,14 @@ public class ReleaseFormController implements Initializable {
     private void setProjectTextFieldSuggester() {
         // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
         // use a String converter so that the Project's short name is used.
-        TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
+        final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
             @Override
             public Collection<Project> call(ISuggestionRequest request) {
-                // TODO filter based on input string
-                // if (project.contains(request.getUserText()) { /* keep it */ }
-                return organisation.getProjects();
+                // filter based on input string
+                final Collection<Project> projects = organisation.getProjects().stream()
+                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                        .collect(Collectors.toList());
+                return projects;
             }
 
         }, new StringConverter<Project>() {
@@ -119,6 +127,13 @@ public class ReleaseFormController implements Initializable {
             @Override
             public String toString(Project project) {
                 return project.getShortName();
+            }
+        });
+
+        projectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // forces suggestion list to show
+                binding.setUserInput("");
             }
         });
     }

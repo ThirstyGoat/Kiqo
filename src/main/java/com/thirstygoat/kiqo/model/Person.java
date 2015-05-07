@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -192,9 +193,7 @@ public class Person extends Item {
     }
 
     public List<Skill> getSkills() {
-        final ArrayList<Skill> arrayList = new ArrayList<>();
-        arrayList.addAll(skills);
-        return arrayList;
+        return Collections.unmodifiableList(skills);
     }
 
     public void setSkills(List<Skill> skills) {

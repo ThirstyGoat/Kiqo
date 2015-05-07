@@ -3,11 +3,10 @@ package com.thirstygoat.kiqo.command;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.CreateAllocationCommand;
-import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
@@ -33,25 +32,25 @@ public class DeleteAllocationCommandTest {
 
     @Test
     public void deleteAllocation_AllocationRemoved() {
-        assert project.getAllocations().contains(allocation);
-        assert team.getAllocations().contains(allocation);
+        Assert.assertTrue(project.getAllocations().contains(allocation));
+        Assert.assertTrue(team.getAllocations().contains(allocation));
 
         command.execute();
 
-        assert !project.getAllocations().contains(allocation);
-        assert !team.getAllocations().contains(allocation);
+        Assert.assertFalse(project.getAllocations().contains(allocation));
+        Assert.assertFalse(team.getAllocations().contains(allocation));
     }
 
     @Test
     public void undoDeleteAllocation_AllocationAddedBack() {
         command.execute();
 
-        assert !project.getAllocations().contains(allocation);
-        assert !team.getAllocations().contains(allocation);
+        Assert.assertFalse(project.getAllocations().contains(allocation));
+        Assert.assertFalse(team.getAllocations().contains(allocation));
 
         command.undo();
 
-        assert project.getAllocations().contains(allocation);
-        assert team.getAllocations().contains(allocation);
+        Assert.assertTrue(project.getAllocations().contains(allocation));
+        Assert.assertTrue(team.getAllocations().contains(allocation));
     }
 }

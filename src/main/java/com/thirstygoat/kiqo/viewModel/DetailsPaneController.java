@@ -64,7 +64,6 @@ public class DetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
-        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
 
     /**
@@ -96,7 +95,6 @@ public class DetailsPaneController implements Initializable {
         }
         editButton.setVisible(false);
         deleteButton.setVisible(false);
-        allocateTeamButton.setVisible(false);
     }
 
     private void showSkillDetailsPane(Skill skill) {
@@ -121,7 +119,6 @@ public class DetailsPaneController implements Initializable {
         releaseDetailsPane.setVisible(false);
 
         showOptionButtons();
-        allocateTeamButton.setVisible(true);
     }
 
     private void showPersonDetailsPane(Person person) {
@@ -163,7 +160,6 @@ public class DetailsPaneController implements Initializable {
     private void showOptionButtons() {
         editButton.setVisible(true);
         deleteButton.setVisible(true);
-        allocateTeamButton.setVisible(false);
     }
 
     public void setMainController(MainController mainController) {
