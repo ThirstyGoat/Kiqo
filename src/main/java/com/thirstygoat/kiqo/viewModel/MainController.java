@@ -1,13 +1,13 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,52 +20,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CreateProjectCommand;
-import com.thirstygoat.kiqo.command.CreateReleaseCommand;
-import com.thirstygoat.kiqo.command.CreateSkillCommand;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.UICommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -310,7 +279,7 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Person) {
             personDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
-            editSkillDialog((Skill) focusedObject);
+            skillDialog((Skill) focusedObject);
         } else if (focusedObject instanceof Team) {
             teamDialog((Team) focusedObject);
         } else if (focusedObject instanceof Release) {
@@ -550,7 +519,7 @@ public class MainController implements Initializable {
 
     public void newSkill() {
         if (selectedOrganisation != null) {
-            newSkillDialog();
+            skillDialog(null);
         }
     }
 
@@ -816,42 +785,6 @@ public class MainController implements Initializable {
         });
     }
 
-    private void editSkillDialog(Skill skill) {
-        // Needed to wrap the dialog box in runLater due to the dialog box
-        // occasionally opening twice (known FX issue)
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("Edit Skill");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editSkill.fxml"));
-            BorderPane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final EditSkillController editSkillController = loader.getController();
-            editSkillController.setStage(stage);
-            editSkillController.loadSkill(skill);
-            editSkillController.setOrganisation(selectedOrganisation);
-            editSkillController.setProjectForFormController();
-
-            stage.showAndWait();
-            if (editSkillController.isValid()) {
-                final UICommand command = new UICommand(editSkillController.getCommand());
-                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
-                doCommand(command);
-            }
-        });
-    }
-
     private void editProjectDialog(Project project) {
         // Needed to wrap the dialog box in runLater due to the dialog box
         // occasionally opening twice (known FX issue)
@@ -925,38 +858,6 @@ public class MainController implements Initializable {
         });
     }
 
-    private void newSkillDialog() {
-        // Needed to wrap the dialog box in runLater due to the dialog box
-        // occasionally opening twice (known FX issue)
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("New Skill");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/newSkill.fxml"));
-            BorderPane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final NewSkillController newSkillController = loader.getController();
-            newSkillController.setStage(stage);
-            newSkillController.setOrganisation(selectedOrganisation);
-
-            stage.showAndWait();
-            if (newSkillController.isValid()) {
-                final CreateSkillCommand command = newSkillController.getCommand();
-                doCommand(command);
-            }
-        });
-    }
 
     private void personDialog(Person person) {
         Platform.runLater(() -> {
@@ -1073,6 +974,47 @@ public class MainController implements Initializable {
             }
         });
     }
+    private void skillDialog(Skill skill) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("New Skill");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/skill.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final SkillFormController skillFormController = loader.getController();
+
+            skillFormController.setStage(stage);
+            skillFormController.setOrganisation(selectedOrganisation);
+            skillFormController.loadSkill(skill);
+
+            stage.showAndWait();
+            if (skillFormController.isValid()) {
+                if(skill == null) {
+                    // create and do command
+                    final Command command = skillFormController.getCommand();
+                    doCommand(command);
+                } else {
+                    //editing
+                    final UICommand command = new UICommand(skillFormController.getCommand());
+                    doCommand(command);
+                }
+
+            }
+        });
+    }
+
 
     private void allocationDialog(Allocation allocation) {
         Platform.runLater(() -> {

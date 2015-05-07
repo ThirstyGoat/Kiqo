@@ -8,7 +8,6 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +20,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -188,13 +186,6 @@ public class PersonFormController implements Initializable {
             final ArrayList<Command<?>> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(person.getShortName())) {
-                for (final Person p : organisation.getPeople()) {
-                    if (shortNameTextField.getText().equals(p.getShortName())) {
-                        errorPopOver.setContentNode(new Label("Short name must be unique"));
-                        errorPopOver.show(shortNameTextField);
-                        return;
-                    }
-                }
                 changes.add(new EditCommand<>(person, "shortName", shortNameTextField.getText()));
             }
             if (!longNameTextField.getText().equals(person.getLongName())) {
@@ -259,29 +250,6 @@ public class PersonFormController implements Initializable {
         return true;
     }
 
-//    /**
-//     * Performs validation checks and displays error popovers where applicable
-//     */
-//    public void validate() {
-//        // Hide existing error message if there is one
-//        errorPopOver.hide(Duration.millis(0));
-//        // Perform validity checks and create project
-//        if (checkName() && checkShortName()) {
-//            // Set project properties
-//            longName = longNameTextField.getText();
-//            shortName = shortNameTextField.getText();
-//            description = descriptionTextField.getText();
-//            userID = userIDTextField.getText();
-//            emailAddress = emailTextField.getText();
-//            phoneNumber = phoneTextField.getText();
-//            department = departmentTextField.getText();
-//
-//            skills.clear();
-//            skills.addAll(targetSkills);
-//
-//            valid = true;
-//        }
-//    }
 
     /**
      * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
