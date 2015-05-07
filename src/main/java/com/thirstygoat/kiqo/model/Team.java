@@ -1,9 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.thirstygoat.kiqo.util.Utilities;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +9,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by bradley on 27/03/15.
@@ -55,6 +55,14 @@ public class Team extends Item {
         return scrumMaster;
     }
 
+    public ObservableList<Person> observableTeamMembers() {
+        return teamMembers;
+    }
+
+    public ObservableList<Person> observableDevTeam() {
+        return devTeam;
+    }
+
     @Override
     public String getShortName() {
         return shortName.get();
@@ -65,22 +73,12 @@ public class Team extends Item {
     }
 
     public List<Person> getTeamMembers() {
-        final ArrayList<Person> arrayList = new ArrayList<>();
-        arrayList.addAll(teamMembers);
-        return arrayList;
+        return Collections.unmodifiableList(teamMembers);
     }
 
     public void setTeamMembers(List<Person> teamMembers) {
         this.teamMembers.clear();
         this.teamMembers.addAll(teamMembers);
-    }
-
-    public ObservableList<Person> observableTeamMembers() {
-        return teamMembers;
-    }
-
-    public ObservableList<Person> observableDevTeam() {
-        return devTeam;
     }
 
     public String getDescription() {
@@ -108,9 +106,7 @@ public class Team extends Item {
     }
 
     public List<Person> getDevTeam() {
-        final ArrayList<Person> arrayList = new ArrayList<>();
-        arrayList.addAll(devTeam);
-        return arrayList;
+        return Collections.unmodifiableList(devTeam);
     }
 
     public void setDevTeam(List<Person> devTeam) {
@@ -118,7 +114,11 @@ public class Team extends Item {
         this.devTeam.addAll(devTeam);
     }
 
-    public ObservableList<Allocation> getAllocations() {
+    public List<Allocation> getAllocations() {
+        return Collections.unmodifiableList(allocations);
+    }
+
+    public ObservableList<Allocation> observableAllocations() {
         return allocations;
     }
 
