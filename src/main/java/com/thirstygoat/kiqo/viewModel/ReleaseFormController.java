@@ -31,6 +31,7 @@ import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.util.Utilities;
 
 
 /**
@@ -212,13 +213,13 @@ public class ReleaseFormController implements Initializable {
                 return true;
             }
         }
-        for (final Release r : project.getReleases()) {
-            if (shortNameTextField.getText().equals(r.getShortName())) {
-                errorPopOver.setContentNode(new Label("Short name must be unique"));
-                errorPopOver.show(shortNameTextField);
-                return false;
-            }
+
+        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), project.getReleases())) {
+            errorPopOver.setContentNode(new Label("Short name must be unique"));
+            errorPopOver.show(shortNameTextField);
+            return false;
         }
+
         valid = true;
         setCommand();
         return true;

@@ -1,14 +1,17 @@
 package com.thirstygoat.kiqo.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
 
 /**
  * Created by bradley on 9/04/15.
@@ -46,12 +49,27 @@ public class Utilities {
     }
 
     public static StringProperty commaSeparatedValuesProperty(ObservableList<? extends Item> list) {
-        StringProperty result = new SimpleStringProperty();
-        result.set(commaSeparatedValues(list));
+        final StringProperty result = new SimpleStringProperty();
+        result.set(Utilities.commaSeparatedValues(list));
         list.addListener((ListChangeListener<Item>) c -> {
-            result.set(commaSeparatedValues(list));
+            result.set(Utilities.commaSeparatedValues(list));
         });
 
         return result;
+    }
+
+    /**
+     * Checks whether the given shortname is unique among the given Collection.
+     * @param shortName Short Name to be checked
+     * @param items items among which the name must be unique
+     * @return shortName is unique among items
+     */
+    public static boolean shortnameIsUnique(String shortName, Collection<? extends Item> items) {
+        // copy all the shortnames into a new list
+        final Collection<String> list = new ArrayList<>();
+        list.addAll(items.stream().map(Item::getShortName).collect(Collectors.toList()));
+
+        // now for the actual check
+        return !list.contains(shortName);
     }
 }
