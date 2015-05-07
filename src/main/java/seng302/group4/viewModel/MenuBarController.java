@@ -1,8 +1,5 @@
 package seng302.group4.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
@@ -11,6 +8,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import seng302.group4.undo.UndoManager;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -23,6 +23,8 @@ public class MenuBarController implements Initializable {
     private MenuItem newSkillMenuItem;
     @FXML
     private MenuItem newReleaseMenuItem;
+    @FXML
+    private MenuItem generateStatusReportMenuItem;
     @FXML
     private MenuItem openMenuItem;
     @FXML
@@ -88,6 +90,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
         quitMenuItem.setOnAction(event -> mainController.exit());

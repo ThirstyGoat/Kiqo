@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
-
-<MenuBar useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group4.viewModel.MenuBarController">
+<MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" fx:controller="seng302.group4.viewModel.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="File">
       <items>
@@ -11,6 +9,7 @@
           <items>
             <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
             <MenuItem fx:id="newReleaseMenuItem" mnemonicParsing="false" text="Release" />
+            <MenuItem fx:id="generateStatusReportMenuItem" mnemonicParsing="false" text="Generate Report" />
             <MenuItem fx:id="newTeamMenuItem" mnemonicParsing="false" text="Team" />
             <MenuItem fx:id="newPersonMenuItem" mnemonicParsing="false" text="Person" />
             <MenuItem fx:id="newSkillMenuItem" mnemonicParsing="false" text="Skill" />

@@ -1,13 +1,6 @@
 package seng302.group4.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,56 +12,29 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
-
-import seng302.group4.Allocation;
-import seng302.group4.GoatDialog;
-import seng302.group4.Item;
-import seng302.group4.Organisation;
-import seng302.group4.PersistenceManager;
-import seng302.group4.Person;
-import seng302.group4.Project;
-import seng302.group4.Release;
-import seng302.group4.Skill;
-import seng302.group4.Team;
+import seng302.group4.*;
 import seng302.group4.exceptions.InvalidPersonException;
 import seng302.group4.exceptions.InvalidProjectException;
-import seng302.group4.undo.Command;
-import seng302.group4.undo.CreatePersonCommand;
-import seng302.group4.undo.CreateProjectCommand;
-import seng302.group4.undo.CreateReleaseCommand;
-import seng302.group4.undo.CreateSkillCommand;
-import seng302.group4.undo.CreateTeamCommand;
-import seng302.group4.undo.DeletePersonCommand;
-import seng302.group4.undo.DeleteProjectCommand;
-import seng302.group4.undo.DeleteReleaseCommand;
-import seng302.group4.undo.DeleteSkillCommand;
-import seng302.group4.undo.DeleteTeamCommand;
-import seng302.group4.undo.UICommand;
-import seng302.group4.undo.UndoManager;
+import seng302.group4.reportGenerator.ReportGenerator;
+import seng302.group4.undo.*;
 import seng302.group4.utils.Utilities;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
@@ -611,6 +577,30 @@ public class MainController implements Initializable {
             // hides the list view
             dividerPosition = mainSplitPane.getDividerPositions()[0];
             mainSplitPane.getItems().remove(listAnchorPane);
+        }
+    }
+
+    public void saveStatusReport() {
+        final String EXTENSION = ".yaml";
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
+        final File existingFile = selectedOrganisation.getSaveLocation();
+        if (existingFile != null) {
+            fileChooser.setInitialDirectory(existingFile.getParentFile());
+            fileChooser.setInitialFileName(existingFile.getName());
+        }
+
+        final File selectedFile = fileChooser.showSaveDialog(primaryStage);
+
+        if (selectedFile != null) {
+            try {
+                FileWriter fileWriter = new FileWriter(selectedFile);
+                ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
+                fileWriter.write(reportGenerator.generateReport());
+                fileWriter.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
