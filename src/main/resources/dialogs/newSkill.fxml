@@ -17,6 +17,6 @@
     </HBox>
   </bottom>
   <center>
-    <fx:include fx:id="form" source="skills.fxml" BorderPane.alignment="CENTER" />
+    <fx:include fx:id="form" source="skill.fxml" BorderPane.alignment="CENTER" />
   </center>
 </BorderPane>
