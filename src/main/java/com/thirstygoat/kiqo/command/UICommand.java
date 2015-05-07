@@ -1,23 +1,22 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.viewModel.DetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.MainController;
-
 import javafx.scene.control.ListView;
+
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 
 /**
  * Created by Carina Blair on 15/04/2015.
+ * @param <T> Type of item and listView to be updated
  */
-public class UICommand extends Command<Void> {
+public class UICommand<T extends Item> extends Command<Void> {
 
-    private final Command command;
-    private ListView listView;
-    private Item item;
-    private DetailsPaneController detailsPaneController;
+    private final Command<T> command;
+    private ListView<T> listView;
+    private T item;
 
-    public UICommand(Command<?> command) {
+    public UICommand(Command<T> command) {
         this.command = command;
     }
 
@@ -28,7 +27,7 @@ public class UICommand extends Command<Void> {
         return null;
     }
 
-    public Command getCommand(){
+    public Command<T> getCommand(){
         return command;
     }
 
@@ -49,9 +48,8 @@ public class UICommand extends Command<Void> {
         return command.getType();
     }
 
-    public <T extends Item> void setRefreshParameters(T item, ListView<T> listView, DetailsPaneController detailsPaneController) {
+    public void setRefreshParameters(T item, ListView<T> listView) {
         this.listView = listView;
         this.item = item;
-        this.detailsPaneController = detailsPaneController;
     }
 }

@@ -43,7 +43,7 @@ public class Allocation {
         startDate.set(date);
     }
 
-    public ObjectProperty getStartDateProperty() {
+    public ObjectProperty<LocalDate> getStartDateProperty() {
         return startDate;
     }
 
@@ -64,7 +64,7 @@ public class Allocation {
         }
     }
 
-    public ObjectProperty getEndDateProperty() {
+    public ObjectProperty<LocalDate> getEndDateProperty() {
         // Since the end date can be null (ie. an allocation has no definite end date, we need to at least
         // create the property
         if (endDate == null) {
@@ -93,7 +93,7 @@ public class Allocation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -141,7 +141,7 @@ public class Allocation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override

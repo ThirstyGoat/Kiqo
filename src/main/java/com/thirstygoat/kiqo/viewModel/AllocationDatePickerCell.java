@@ -2,14 +2,15 @@ package com.thirstygoat.kiqo.viewModel;
 
 import java.time.LocalDate;
 
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-
 import javafx.stage.Stage;
+
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 
 /**
  * Created by bradley on 30/04/15.
  */
-public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocation> {
+public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
 
     private ValidationType type;
 
@@ -43,7 +44,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void startDateValidation(LocalDate date) {
-        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+        final com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         // Check to make sure that start date comes before end date if end date is set
         if (allocation.getEndDate() != null && !date.isBefore(allocation.getEndDate())) {
             // Then the start date was set before the end date [the end date is set] - prohibit and alert
@@ -81,7 +82,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void endDateValidation(LocalDate date) {
-        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+        final com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         // Check to make sure that end date comes after start date
         if (date != null && !date.isAfter(allocation.getStartDate())) {
             // Then the start date was set before the end date [the end date is set] - prohibit and alert
@@ -119,7 +120,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void acceptChange() {
-        boolean dateChanged = !(getItem().isEqual(getDatePicker().getValue()));
+        final boolean dateChanged = !(getItem().isEqual(getDatePicker().getValue()));
         if (dateChanged) {
             // If the date has been changed, commit the edit
             updateItem(getDatePicker().getValue(), false);
@@ -128,7 +129,7 @@ public class AllocationDatePickerCell<Allocation> extends DatePickerCell<Allocat
     }
 
     private void revertDate() {
-        com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+        final com.thirstygoat.kiqo.model.Allocation allocation = (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         if (type == ValidationType.START_DATE) {
             updateItem(allocation.getStartDate(), false);
         } else if (type == ValidationType.END_DATE) {

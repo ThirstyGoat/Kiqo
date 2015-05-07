@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
+import java.util.ArrayList;
+
 import javafx.beans.property.StringProperty;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-
-import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.model.Item;
 
 /**
@@ -29,48 +28,49 @@ public class MoveItemCommandTest extends TestCase {
 
     public void test() {
         final MockObject mockObject = new MockObject();
-        ArrayList<Item> position  = new ArrayList<>();
-        ArrayList<Item> destination = new ArrayList<>();
+        final ArrayList<Item> position  = new ArrayList<>();
+        final ArrayList<Item> destination = new ArrayList<>();
 
         position.add(mockObject);
-        final MoveItemCommand moveCommand = new MoveItemCommand(mockObject, position, destination);
+        final MoveItemCommand<MockObject> moveCommand = new MoveItemCommand<>(mockObject, position, destination);
 
         // test execute
         moveCommand.execute();
         // check that the original position no longer contains the item
-        assertFalse(position.contains(mockObject));
+        TestCase.assertFalse(position.contains(mockObject));
 
         // check that the destination now contains the item
-        assertTrue(destination.contains(mockObject));
+        TestCase.assertTrue(destination.contains(mockObject));
 
         // test undo
         moveCommand.undo();
         // original position should now contain item
-        assertTrue(position.contains(mockObject));
+        TestCase.assertTrue(position.contains(mockObject));
 
         // destination should no longer contain item
-        assertFalse(destination.contains(mockObject));
+        TestCase.assertFalse(destination.contains(mockObject));
 
         // test redo
         moveCommand.redo();
         // check that the original position no longer contains the item
-        assertFalse(position.contains(mockObject));
+        TestCase.assertFalse(position.contains(mockObject));
 
         // check that the destination now contains the item
-        assertTrue(destination.contains(mockObject));
+        TestCase.assertTrue(destination.contains(mockObject));
     }
 
     public void testItemNotInList() {
         final MockObject mockObject = new MockObject();
-        ArrayList<Item> position  = new ArrayList<>();
-        ArrayList<Item> destination = new ArrayList<>();
+        final ArrayList<Item> position  = new ArrayList<>();
+        final ArrayList<Item> destination = new ArrayList<>();
 
         try {
-            final MoveItemCommand moveCommand = new MoveItemCommand(mockObject, position, destination);
-        } catch (RuntimeException e) {
-            assertTrue(true);
+            final MoveItemCommand<MockObject> moveCommand = new MoveItemCommand<>(mockObject, position, destination);
+        } catch (final RuntimeException e) {
+            TestCase.assertTrue(true);
         }
 
+        // TODO implement me
     }
 
 }

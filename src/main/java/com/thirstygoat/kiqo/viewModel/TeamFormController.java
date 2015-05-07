@@ -46,7 +46,6 @@ public class TeamFormController implements Initializable {
 
     private final ArrayList<Person> devTeam = new ArrayList<>();
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    private final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final PopOver errorPopOver = new PopOver();
     private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
@@ -238,7 +237,7 @@ public class TeamFormController implements Initializable {
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
 
-        setCellFactory(peopleListSelectionView.getSourceListView());
+        TeamFormController.setCellFactory(peopleListSelectionView.getSourceListView());
         setTargetPeopleCellFactory(peopleListSelectionView.getTargetListView());
 
         // Set change listener on target list view
@@ -262,7 +261,7 @@ public class TeamFormController implements Initializable {
 
     }
 
-    private void setCellFactory(ListView<Person> listView) {
+    private static void setCellFactory(ListView<Person> listView) {
         listView.setCellFactory(view -> new ListCell<Person>() {
             @Override
             public void updateItem(Person person, boolean empty) {

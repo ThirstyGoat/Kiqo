@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.model;
 import java.io.File;
 import java.io.Serializable;
 
-import com.google.gson.annotations.Since;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,12 +14,11 @@ import javafx.collections.ObservableList;
 public class Organisation implements Serializable {
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
-    private ObservableList<Project> projects = FXCollections.observableArrayList();
-    private ObservableList<Person> people = FXCollections.observableArrayList();
-    private ObservableList<Skill> skills = FXCollections.observableArrayList();
-    private ObservableList<Team> teams = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList();
+    private final ObservableList<Person> people = FXCollections.observableArrayList();
+    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
+    private final ObservableList<Team> teams = FXCollections.observableArrayList();
     private transient File saveLocation;
-
 
     public Organisation() {
         skills.add(poSkill);
@@ -39,7 +37,7 @@ public class Organisation implements Serializable {
     public Skill getSmSkill() {
         return smSkill;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -57,21 +57,21 @@ public class Skill extends Item {
     }
 
     @Override
-    public String getShortName() {
-        return shortName.get();
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName.set(shortName);
-    }
-
-    @Override
     public StringProperty shortNameProperty() {
         return shortName;
     }
 
     public StringProperty descriptionProperty() {
         return description;
+    }
+
+    @Override
+    public String getShortName() {
+        return shortName.get();
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName.set(shortName);
     }
 
     public String getDescription() {

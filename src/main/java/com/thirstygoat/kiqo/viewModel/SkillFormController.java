@@ -36,7 +36,7 @@ public class SkillFormController implements Initializable {
     private String description;
     private boolean valid = false;
     private Stage stage;
-    private Command command;
+    private Command<?> command;
     private boolean shortNameModified = false;
 
     private Organisation organisation;
@@ -151,8 +151,9 @@ public class SkillFormController implements Initializable {
 
     /**
      * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
      */
-    public boolean validate() {
+    private boolean validate() {
         if(shortNameTextField.getText().length() == 0) {
             errorPopOver.setContentNode(new Label("Short name must not be empty"));
             errorPopOver.show(shortNameTextField);

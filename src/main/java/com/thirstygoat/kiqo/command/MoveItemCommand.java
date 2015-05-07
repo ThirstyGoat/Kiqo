@@ -7,11 +7,12 @@ import com.thirstygoat.kiqo.model.Item;
 /**
  * Created by samschofield on 25/04/15.
  * Command for moving an item from one collection to another
+ * @param <T> Type of Item to be moved
  */
-public class MoveItemCommand extends Command<Void> {
-    private final Item item;
-    private final Collection<Item> position;
-    private final Collection<Item> destination;
+public class MoveItemCommand<T extends Item> extends Command<Void> {
+    private final T item;
+    private final Collection<? super T> position;
+    private final Collection<? super T> destination;
 
 
     /**
@@ -20,7 +21,7 @@ public class MoveItemCommand extends Command<Void> {
      * @param position The current position of the item
      * @param destination The desired destination for the item
      */
-    public MoveItemCommand(final Item item, final Collection<Item> position, final Collection<Item> destination) {
+    public MoveItemCommand(final T item, final Collection<? super T> position, final Collection<? super T> destination) {
         this.item = item;
         this.position = position;
         this.destination = destination;

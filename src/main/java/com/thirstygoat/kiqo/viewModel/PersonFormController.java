@@ -42,7 +42,7 @@ public class PersonFormController implements Initializable {
     private Person person;
     private boolean valid = false;
     private boolean shortNameModified = false;
-    private Command command;
+    private Command<?> command;
     private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
 
 

@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,21 +19,51 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CreateProjectCommand;
+import com.thirstygoat.kiqo.command.CreateReleaseCommand;
+import com.thirstygoat.kiqo.command.DeletePersonCommand;
+import com.thirstygoat.kiqo.command.DeleteProjectCommand;
+import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
+import com.thirstygoat.kiqo.command.DeleteSkillCommand;
+import com.thirstygoat.kiqo.command.DeleteTeamCommand;
+import com.thirstygoat.kiqo.command.UICommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Main controller for the primary view
@@ -148,7 +177,7 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-            final UICommand command = new UICommand(new DeleteSkillCommand(skill, selectedOrganisation));
+            final UICommand<Skill> command = new UICommand<>(new DeleteSkillCommand(skill, selectedOrganisation));
 
             String deleteMessage = "There are no people with this skill.";
                 if (((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill().size() > 0) {
@@ -160,14 +189,14 @@ public class MainController implements Initializable {
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
             if (result.equals("Delete Skill")) {
-                command.setRefreshParameters(skill, skillsListView, detailsPaneController);
+                command.setRefreshParameters(skill, skillsListView);
                 doCommand(command);
             }
         }
     }
 
     private void deleteTeam(Team team) {
-        final UICommand command = new UICommand(new DeleteTeamCommand(team, selectedOrganisation));
+        final UICommand<Team> command = new UICommand<>(new DeleteTeamCommand(team, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -201,13 +230,13 @@ public class MainController implements Initializable {
             if (deletePeople) {
                 ((DeleteTeamCommand) command.getCommand()).setDeleteMembers();
             }
-            command.setRefreshParameters(team, teamsListView, detailsPaneController);
+            command.setRefreshParameters(team, teamsListView);
             doCommand(command);
         }
     }
 
     private void deletePerson(Person person) {
-        final UICommand command = new UICommand(new DeletePersonCommand(selectedPerson, selectedOrganisation));
+        final UICommand<Person> command = new UICommand<>(new DeletePersonCommand(selectedPerson, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -225,7 +254,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
-            command.setRefreshParameters(person, peopleListView, detailsPaneController);
+            command.setRefreshParameters(person, peopleListView);
             doCommand(command);
         }
     }
@@ -245,7 +274,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Release")) {
-            command.setRefreshParameters(release, releasesListView, detailsPaneController);
+            command.setRefreshParameters(release, releasesListView);
             doCommand(command);
         }
 
@@ -354,7 +383,7 @@ public class MainController implements Initializable {
                 releasesListView.setItems(null);
             if (newValue != null) {
                 selectedProject = newValue;
-                releasesListView.setItems(selectedProject.getReleases());
+                releasesListView.setItems(selectedProject.observableReleases());
 
                 // Update list label
                 if (projectListView.getItems().contains(newValue)) {
@@ -592,7 +621,6 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
         }
         if (organisation != null) {
-            organisation.setSaveLocation(filePath);
             selectedOrganisation = organisation;
             setListViewData();
             System.out.println("File has been loaded successfully");
@@ -737,29 +765,6 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Adds the new projects to the observable list so that it is visible in the list view
-     * @param projects New Project to be added
-     */
-    private void addProjects(final List<Project> projects) {
-        if (projects != null) {
-            // Update View Accordingly
-//            this.projects.addAll(projects);
-            // Select added projects in the ListView
-            projectListView.getSelectionModel().select(null);
-            projectListView.getSelectionModel().select(projects.get(0));
-
-//            // enable menu items
-//            menuBarController.enableNewTeam();
-//            menuBarController.enableNewPerson();
-//            menuBarController.enableNewSkill();
-//            menuBarController.enableNewRelease();
-
-            switchToProjectList();
-            saveOrganisation();
-        }
-    }
-
-    /**
      * Set up the status bar for the application and monitor for changes in the
      * save state
      */
@@ -885,7 +890,7 @@ public class MainController implements Initializable {
             if (personFormController.isValid()) {
                 if(person == null) {
                     // create and do command
-                    final Command command = personFormController.getCommand();
+                    final Command<?> command = personFormController.getCommand();
                     doCommand(command);
                 } else {
                     //editing
@@ -925,7 +930,7 @@ public class MainController implements Initializable {
             if (teamFormController.isValid()) {
                 if (team == null) {
                     // create and do command
-                    final Command command = teamFormController.getCommand();
+                    final Command<?> command = teamFormController.getCommand();
                     doCommand(command);
                 } else {
                     // editing
@@ -1000,7 +1005,7 @@ public class MainController implements Initializable {
             if (skillFormController.isValid()) {
                 if(skill == null) {
                     // create and do command
-                    final Command command = skillFormController.getCommand();
+                    final Command<?> command = skillFormController.getCommand();
                     doCommand(command);
                 } else {
                     //editing
@@ -1040,7 +1045,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (allocationFormController.isValid()) {
                 final UICommand command = new UICommand(allocationFormController.getCommand());
-                command.setRefreshParameters(selectedProject, projectListView, detailsPaneController);
+                command.setRefreshParameters(selectedProject, projectListView);
                 doCommand(command);
             }
         });

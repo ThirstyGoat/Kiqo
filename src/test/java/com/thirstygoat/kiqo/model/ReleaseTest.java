@@ -1,15 +1,10 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.File;
 import java.time.LocalDate;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
 
 public class ReleaseTest {
 
@@ -20,18 +15,18 @@ public class ReleaseTest {
     @Before
     public void setUp() throws Exception {
         project1 = new Project("p1", "project1");
-        release1 = new Release("release1", project1, date, "Description of the release", new Organisation(new File("")));
+        release1 = new Release("release1", project1, date, "Description of the release");
     }
 
     @Test
     public void testEquals() throws Exception {
-        final Release release2 = new Release("release1", project1, date, "Description of the release", new Organisation(new File("")));
+        final Release release2 = new Release("release1", project1, date, "Description of the release");
         Assert.assertTrue("Releases should be equal", release2.equals(release1));
     }
 
     @Test
     public void testEqualsId() throws Exception {
-        final Release release2 = new Release("differentId", project1, date, "Description of the release", new Organisation(new File("")));
+        final Release release2 = new Release("differentId", project1, date, "Description of the release");
         Assert.assertFalse("Releases should not be equal", release2.equals(release1));
     }
 }

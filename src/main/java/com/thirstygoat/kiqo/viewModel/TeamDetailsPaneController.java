@@ -1,12 +1,17 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -100,32 +105,32 @@ public class TeamDetailsPaneController implements Initializable {
         allocationsTableView.setEditable(true);
 
         startDateTableColumn.setCellFactory(param -> {
-            AllocationDatePickerCell<Allocation> startDateCellFactory = new AllocationDatePickerCell<>();
+            final AllocationDatePickerCell startDateCellFactory = new AllocationDatePickerCell();
             startDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.START_DATE);
             return startDateCellFactory;
         });
 
         endDateTableColumn.setCellFactory(param -> {
-            AllocationDatePickerCell<Allocation> endDateCellFactory = new AllocationDatePickerCell<>();
+            final AllocationDatePickerCell endDateCellFactory = new AllocationDatePickerCell();
             endDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.END_DATE);
             return endDateCellFactory;
         });
 
         startDateTableColumn.setOnEditCommit(event -> {
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
         endDateTableColumn.setOnEditCommit(event -> {
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
         // fixes ghost column issue and resizing
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
         contextMenu.getItems().add(deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
@@ -141,9 +146,9 @@ public class TeamDetailsPaneController implements Initializable {
         });
 
         deleteMenuItem.setOnAction(event -> {
-            Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
 
-            DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
+            final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
 
             final String[] buttons = {"Delete Allocation", "Cancel"};
             final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),

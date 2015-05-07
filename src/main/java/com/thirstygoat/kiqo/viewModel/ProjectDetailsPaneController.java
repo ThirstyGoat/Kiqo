@@ -4,16 +4,22 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
-
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 /**
  * Created by Bradley on 25/03/2015.
@@ -52,13 +58,13 @@ public class ProjectDetailsPaneController implements Initializable {
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
         startDateTableColumn.setCellFactory(param -> {
-            AllocationDatePickerCell<Allocation> startDateCellFactory = new AllocationDatePickerCell<>();
+            final AllocationDatePickerCell startDateCellFactory = new AllocationDatePickerCell();
             startDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.START_DATE);
             return startDateCellFactory;
         });
 
         endDateTableColumn.setCellFactory(param -> {
-            AllocationDatePickerCell<Allocation> endDateCellFactory = new AllocationDatePickerCell<>();
+            final AllocationDatePickerCell endDateCellFactory = new AllocationDatePickerCell();
             endDateCellFactory.setValidationType(AllocationDatePickerCell.ValidationType.END_DATE);
             return endDateCellFactory;
         });
@@ -106,9 +112,9 @@ public class ProjectDetailsPaneController implements Initializable {
         });
 
         clearEndDateMenuItem.setOnAction(event -> {
-            Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
-            LocalDate endDate = selectedAllocation.getEndDate();
-            EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
+            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            final LocalDate endDate = selectedAllocation.getEndDate();
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
             mainController.doCommand(command);
 
             boolean canChange = true;

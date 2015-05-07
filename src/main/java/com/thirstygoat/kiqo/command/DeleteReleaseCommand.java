@@ -18,13 +18,13 @@ public class DeleteReleaseCommand extends Command<Release> {
     @Override
     public Release execute() {
         index = release.getProject().getReleases().indexOf(release);
-        release.getProject().getReleases().remove(release);
+        release.getProject().observableReleases().remove(release);
         return release;
     }
 
     @Override
     public void undo() {
-        release.getProject().getReleases().add(index, release);
+        release.getProject().observableReleases().add(index, release);
     }
 
 

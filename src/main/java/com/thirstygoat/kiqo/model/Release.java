@@ -15,14 +15,12 @@ public class Release extends Item {
     private final StringProperty description;
     private final ObjectProperty<Project> project;
     private final ObjectProperty<LocalDate> date; // change back to date
-    private Organisation organisation;
 
-    public Release(String shortName, Project project, LocalDate date, String description, Organisation organisation) {
+    public Release(String shortName, Project project, LocalDate date, String description) {
         this.shortName = new SimpleStringProperty(shortName);
         this.project = new SimpleObjectProperty<>(project);
         this.description = new SimpleStringProperty(description);
         this.date = new SimpleObjectProperty<>(date);
-        this.organisation = organisation;
     }
 
     public ObjectProperty<Project> projectProperty() {
@@ -35,14 +33,6 @@ public class Release extends Item {
 
     public StringProperty descriptionProperty() {
         return description;
-    }
-
-    public Organisation getOrganisation() {
-        return organisation;
-    }
-
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
     }
 
     @Override
@@ -97,9 +87,9 @@ public class Release extends Item {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-    
+
         final Release release = (Release) o;
-    
+
         return getShortName().equals(release.getShortName());
     }
 

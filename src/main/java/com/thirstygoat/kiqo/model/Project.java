@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import java.util.Collections;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -121,8 +122,12 @@ public class Project extends Item {
         return allocations;
     }
 
-    public ObservableList<Release> getReleases() {
+    public ObservableList<Release> observableReleases() {
         return releases;
+    }
+
+    public List<Release> getReleases() {
+        return Collections.unmodifiableList(releases);
     }
 
 

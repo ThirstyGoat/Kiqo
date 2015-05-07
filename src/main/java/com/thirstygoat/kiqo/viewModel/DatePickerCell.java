@@ -1,17 +1,11 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import java.time.LocalDate;
+
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-import com.thirstygoat.kiqo.model.Allocation;
-
-import javafx.util.StringConverter;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
@@ -23,7 +17,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
 
         datePicker.setDayCellFactory(picker -> {
-            DateCell cell = new DateCell();
+            final DateCell cell = new DateCell();
             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                 datePicker.setValue(cell.getItem());
                 datePicker.hide();

@@ -13,7 +13,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 
 import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.model.Organisation;
 
 // Methods are run in alphabetical order
@@ -34,12 +33,13 @@ public class PersistenceManagerTest {
      */
     @Test
     public void testLoad_happyCase() throws Exception {
-        organisation = new Organisation(testFolder.newFile("test.json"));
-        PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
-        Assert.assertTrue(new File(organisation.getSaveLocation() + "").exists());
+        final File file = testFolder.newFile("test.json");
 
-        final Organisation loadedOrganisation = PersistenceManager.loadOrganisation(new File(testFolder.getRoot() + "/test.json"));
-//        Assert.assertTrue(loadedOrganisation.equals(organisation));
+        organisation = new Organisation(file);
+        PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
+
+        final Organisation loadedOrganisation = PersistenceManager.loadOrganisation(file);
+        Assert.assertEquals(organisation, loadedOrganisation);
     }
 
     /**

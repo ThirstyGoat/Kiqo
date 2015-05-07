@@ -1,13 +1,11 @@
 package com.thirstygoat.kiqo.command;
 
-import java.io.File;
 import java.time.LocalDate;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 
@@ -22,8 +20,8 @@ public class DeleteReleaseCommandTest {
     @Before
     public void setup() {
         project = new Project("", "");
-        release = new Release("", project, LocalDate.now(), "", new Organisation(new File("")));
-        project.getReleases().add(release);
+        release = new Release("", project, LocalDate.now(), "");
+        project.observableReleases().add(release);
         command = new DeleteReleaseCommand(release);
     }
 

@@ -42,7 +42,7 @@ public class ReleaseFormController implements Initializable {
     private final PopOver errorPopOver = new PopOver();
     private Organisation organisation;
     private Release release;
-    private Command command;
+    private Command<?> command;
     private boolean valid = false;
 
     // Begin FXML Injections
@@ -229,7 +229,7 @@ public class ReleaseFormController implements Initializable {
         return valid;
     }
 
-    public Command getCommand() {
+    public Command<?> getCommand() {
         return command;
     }
 
@@ -237,8 +237,8 @@ public class ReleaseFormController implements Initializable {
         if (release == null) {
             // new release command
             release = new Release(shortNameTextField.getText(), project, releaseDatePicker.getValue(),
-                    descriptionTextField.getText(), organisation);
-            command = new CreateReleaseCommand(release, organisation);
+                    descriptionTextField.getText());
+            command = new CreateReleaseCommand(release);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -246,7 +246,7 @@ public class ReleaseFormController implements Initializable {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }
             if (!project.equals(release.getProject())) {
-                changes.add(new MoveItemCommand(release, (Collection) release.getProject().getReleases(), (Collection) project.getReleases()));
+                changes.add(new MoveItemCommand<>(release, release.getProject().observableReleases(), project.observableReleases()));
                 changes.add(new EditCommand<>(release, "project", project));
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {

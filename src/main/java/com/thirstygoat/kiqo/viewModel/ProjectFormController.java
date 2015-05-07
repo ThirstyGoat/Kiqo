@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.Project;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,13 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import org.controlsfx.control.PopOver;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Project;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -38,7 +37,7 @@ public class ProjectFormController implements Initializable {
     private TextField descriptionTextField;
     private boolean shortNameModified = false;
     private boolean valid = false;
-    private Window stage;
+    private Stage stage;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
