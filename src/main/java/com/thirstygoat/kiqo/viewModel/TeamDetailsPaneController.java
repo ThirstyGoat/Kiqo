@@ -6,12 +6,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -19,6 +14,7 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.stage.Stage;
 
 public class TeamDetailsPaneController implements Initializable {
 
@@ -44,6 +40,8 @@ public class TeamDetailsPaneController implements Initializable {
     private TableColumn<Allocation, LocalDate> startDateTableColumn;
     @FXML
     private TableColumn<Allocation, LocalDate> endDateTableColumn;
+    @FXML
+    private Button allocateTeamButton;
 
 
     public void showDetails(final Team team) {
@@ -95,6 +93,7 @@ public class TeamDetailsPaneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeTable();
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
 
     private void initializeTable() {
@@ -131,7 +130,8 @@ public class TeamDetailsPaneController implements Initializable {
 
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
-        contextMenu.getItems().add(deleteMenuItem);
+        final MenuItem clearEndDateMenuItem = new MenuItem("Clear End Date");
+        contextMenu.getItems().addAll(clearEndDateMenuItem, deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
             final TableRow<Allocation> row = new TableRow<>();
@@ -139,10 +139,48 @@ public class TeamDetailsPaneController implements Initializable {
                 if (newValue == null) {
                     row.setContextMenu(null);
                 } else {
+                    if (newValue.getEndDate() == LocalDate.MAX) {
+                        clearEndDateMenuItem.setDisable(true);
+                    }
+                    newValue.getEndDateProperty().addListener((observable1, oldValue1, newValue1) -> {
+                        if (newValue1 == LocalDate.MAX) {
+                            clearEndDateMenuItem.setDisable(true);
+                        } else {
+                            clearEndDateMenuItem.setDisable(false);
+                        }
+                    });
                     row.setContextMenu(contextMenu);
                 }
             });
             return row;
+        });
+
+        clearEndDateMenuItem.setOnAction(event -> {
+            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            final LocalDate endDate = selectedAllocation.getEndDate();
+            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
+            mainController.doCommand(command);
+
+            boolean canChange = true;
+
+            for (final Allocation allocation : selectedAllocation.getTeam().getAllocations()) {
+                if (allocation == selectedAllocation) {
+                    continue;
+                }
+
+                if (allocation.getStartDate().isAfter(selectedAllocation.getStartDate())) {
+                    canChange = false;
+                    break;
+                }
+            }
+
+            if (!canChange) {
+                // Then this change would make the allocation overlap with another allocation - prohibit and alert
+                GoatDialog.showAlertDialog((Stage) allocationsTableView.getScene().getWindow(), "Error", "Error",
+                        "Allocation can not overlap with another allocation!");
+                selectedAllocation.setEndDate(endDate);
+                return;
+            }
         });
 
         deleteMenuItem.setOnAction(event -> {
