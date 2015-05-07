@@ -613,13 +613,10 @@ public class MainController implements Initializable {
             organisation = PersistenceManager.loadOrganisation(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
-            e.printStackTrace();
         } catch (final InvalidPersonException e) {
             GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
-            e.printStackTrace();
         } catch (final FileNotFoundException e) {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
-            e.printStackTrace();
         }
 
         if(PersistenceManager.getIsOldJSON()) {
@@ -655,7 +652,7 @@ public class MainController implements Initializable {
             try {
                 PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
             } catch (final IOException e) {
-                e.printStackTrace();
+                GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
             changesSaved.set(true);
@@ -684,7 +681,7 @@ public class MainController implements Initializable {
             try {
                 PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
             } catch (final IOException e) {
-                e.printStackTrace();
+                GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
             changesSaved.set(true);
