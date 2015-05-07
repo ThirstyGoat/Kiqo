@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
@@ -49,10 +50,30 @@ public class Utilities {
     }
 
     public static StringProperty commaSeparatedValuesProperty(ObservableList<? extends Item> list) {
-        final StringProperty result = new SimpleStringProperty();
-        result.set(Utilities.commaSeparatedValues(list));
+        StringProperty result = new SimpleStringProperty();
+        result.set(commaSeparatedValues(list));
+
+        // Add listeners on each of the string properties within the observable list
+        final ChangeListener<String> stringChangeListener =
+                (observable, oldValue, newValue) -> result.set(commaSeparatedValues(list));
+
+        for (Item item : list) {
+            item.shortNameProperty().addListener(stringChangeListener);
+        }
+
         list.addListener((ListChangeListener<Item>) c -> {
-            result.set(Utilities.commaSeparatedValues(list));
+            c.next();
+            // Remove shortNameProperty listeners on each of items removed from the list
+            for (Item item : c.getRemoved()) {
+                item.shortNameProperty().removeListener(stringChangeListener);
+            }
+
+            // Add shortNameProperty listener for each of the items added to the list
+            for (Item item : c.getAddedSubList()) {
+                item.shortNameProperty().addListener(stringChangeListener);
+            }
+
+            result.set(commaSeparatedValues(list));
         });
 
         return result;
