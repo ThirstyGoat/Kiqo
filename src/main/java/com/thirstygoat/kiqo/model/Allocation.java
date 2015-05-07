@@ -28,7 +28,7 @@ public class Allocation {
         this.project = project; // remove this
 
         this.startDate.set(startDate);
-        this.endDate.set(endDate);
+        setEndDate(endDate);
     }
 
     /**
@@ -57,7 +57,11 @@ public class Allocation {
     }
 
     public void setEndDate(LocalDate date) {
-        endDate.set(date);
+        if (date == null) {
+            endDate.set(LocalDate.MAX);
+        } else {
+            endDate.set(date);
+        }
     }
 
     public ObjectProperty getEndDateProperty() {

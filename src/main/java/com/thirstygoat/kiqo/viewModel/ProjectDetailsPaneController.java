@@ -89,11 +89,11 @@ public class ProjectDetailsPaneController implements Initializable {
                 if (newValue == null) {
                     row.setContextMenu(null);
                 } else {
-                    if (newValue.getEndDate() == null) {
+                    if (newValue.getEndDate() == LocalDate.MAX) {
                         clearEndDateMenuItem.setDisable(true);
                     }
                     newValue.getEndDateProperty().addListener((observable1, oldValue1, newValue1) -> {
-                        if (newValue1 == null) {
+                        if (newValue1 == LocalDate.MAX) {
                             clearEndDateMenuItem.setDisable(true);
                         } else {
                             clearEndDateMenuItem.setDisable(false);
