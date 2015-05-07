@@ -18,6 +18,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 /**
  * Created by Bradley on 25/03/2015.
@@ -107,8 +108,30 @@ public class ProjectDetailsPaneController implements Initializable {
 
         clearEndDateMenuItem.setOnAction(event -> {
             Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+            LocalDate endDate = selectedAllocation.getEndDate();
             EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
             mainController.doCommand(command);
+
+            boolean canChange = true;
+
+            for (final Allocation allocation : selectedAllocation.getTeam().getAllocations()) {
+                if (allocation == selectedAllocation) {
+                    continue;
+                }
+
+                if (allocation.getStartDate().isAfter(selectedAllocation.getStartDate())) {
+                    canChange = false;
+                    break;
+                }
+            }
+
+            if (!canChange) {
+                // Then this change would make the allocation overlap with another allocation - prohibit and alert
+                GoatDialog.showAlertDialog((Stage) allocationsTableView.getScene().getWindow(), "Error", "Error",
+                        "Allocation can not overlap with another allocation!");
+                selectedAllocation.setEndDate(endDate);
+                return;
+            }
         });
 
         deleteMenuItem.setOnAction(event -> {
