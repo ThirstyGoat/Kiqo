@@ -64,6 +64,10 @@ public class Utilities {
     }
 
     public static String stripExtention(String line) {
-        return line.substring(0, line.lastIndexOf('.'));
+        int index = line.lastIndexOf('.');
+        if (index > 0) {
+            return line.substring(0, index);
+        }
+        return line;
     }
 }

@@ -2,6 +2,7 @@ package seng302.group4;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng302.group4.utils.Utilities;
 
 import java.io.File;
 import java.io.Serializable;
@@ -90,7 +91,7 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
-        organisationName = saveLocation.getName();
+        organisationName = Utilities.stripExtention(saveLocation.getName());
     }
 
 

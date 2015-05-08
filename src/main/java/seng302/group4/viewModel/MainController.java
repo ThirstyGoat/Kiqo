@@ -587,7 +587,7 @@ public class MainController implements Initializable {
         final File existingFile = selectedOrganisation.getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
-            fileChooser.setInitialFileName(existingFile.getName());
+            fileChooser.setInitialFileName(selectedOrganisation.getOrganisationName());
         }
 
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
