@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -119,7 +120,10 @@ public class Project extends Item {
      * @return The ObservableList of Team Allocations
      */
     public List<Allocation> getAllocations() {
-        return Collections.unmodifiableList(allocations);
+        ArrayList<Allocation> allocations = new ArrayList<>();
+        allocations.addAll(this.allocations);
+        return allocations;
+//        return Collections.unmodifiableList(allocations);
     }
 
     public ObservableList<Release> observableReleases() {
@@ -127,7 +131,10 @@ public class Project extends Item {
     }
 
     public List<Release> getReleases() {
-        return Collections.unmodifiableList(releases);
+        ArrayList<Release> releases = new ArrayList<>();
+        releases.addAll(this.releases);
+        return releases;
+//        return Collections.unmodifiableList(releases);
     }
 
 

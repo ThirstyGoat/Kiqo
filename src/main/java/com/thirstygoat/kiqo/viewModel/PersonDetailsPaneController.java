@@ -45,7 +45,6 @@ public class PersonDetailsPaneController implements Initializable {
             phoneLabel.textProperty().bind(person.phoneNumberProperty());
             departmentLabel.textProperty().bind(person.departmentProperty());
             descriptionLabel.textProperty().bind(person.descriptionProperty());
-
             skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
         } else {
             shortNameLabel.setText(null);
