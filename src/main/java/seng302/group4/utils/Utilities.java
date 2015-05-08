@@ -62,4 +62,8 @@ public class Utilities {
     public static String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
+
+    public static String stripExtention(String line) {
+        return line.substring(0, line.lastIndexOf('.'));
+    }
 }

@@ -4,6 +4,7 @@ import seng302.group4.*;
 import seng302.group4.utils.ApplicationInfo;
 import seng302.group4.utils.Utilities;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,8 +48,15 @@ public final class ReportGenerator {
         teams.addAll(organisation.getTeams());
         people = new ArrayList<Person>();
         people.addAll(organisation.getPeople());
-        String filePath = organisation.getSaveLocation().getName();
-        String organsiationTitle = Utilities.capitalize(filePath.substring(0, filePath.lastIndexOf('.')));
+
+        File filePath = organisation.getSaveLocation();
+        String organsiationTitle;
+        if (filePath != null) {
+             organsiationTitle = Utilities.capitalize(Utilities.stripExtention(filePath.getName()));
+
+        } else {
+            organsiationTitle = "Untitled";
+        }
         title= (new String[]{
                 "Organisation: " + organsiationTitle,
                 "",
