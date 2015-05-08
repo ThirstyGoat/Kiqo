@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class Person extends Item {
     private final StringProperty emailAddress;
     private final StringProperty phoneNumber;
     private final StringProperty department;
-    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
+    private final ObservableList<Skill> skills;
     private Team team;
 
     /**
@@ -33,6 +35,7 @@ public class Person extends Item {
         emailAddress = new SimpleStringProperty();
         phoneNumber = new SimpleStringProperty();
         department = new SimpleStringProperty();
+        skills = FXCollections.observableArrayList();
     }
 
     /**
@@ -57,6 +60,7 @@ public class Person extends Item {
         this.emailAddress = new SimpleStringProperty(emailAddress);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.department = new SimpleStringProperty(department);
+        this.skills = FXCollections.observableArrayList();
         this.skills.addAll(skills);
     }
 
@@ -192,7 +196,11 @@ public class Person extends Item {
     }
 
     public List<Skill> getSkills() {
-        return Collections.unmodifiableList(skills);
+        // temp fix to allow undo add skill to person
+        ArrayList<Skill> skills1 = new ArrayList<>();
+        skills1.addAll(skills);
+        return skills1;
+//        return Collections.unmodifiableList(skills);
     }
 
     public void setSkills(List<Skill> skills) {

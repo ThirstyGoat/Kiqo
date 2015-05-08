@@ -4,13 +4,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.ProjectDetailsPaneController">
+<AnchorPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.ProjectDetailsPaneController">
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <GridPane mouseTransparent="false" vgap="10.0">
             <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
-              <font>
-                <Font name="System Bold" size="12.0" fx:id="x1" />
-              </font>
+                <font>
+                    <Font name="System Bold" size="12.0" fx:id="x1" />
+                </font>
             </Label>
             <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
@@ -18,25 +18,19 @@
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TableView fx:id="allocationsTableView" prefHeight="200" prefWidth="-1" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="teamTableColumn" text="Team" />
-                <TableColumn fx:id="startDateTableColumn" text="Start Date" />
-                <TableColumn fx:id="endDateTableColumn" text="End Date" />
-              </columns>
-            </TableView>
-                  <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-          <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          </columnConstraints>
-          <rowConstraints>
-            <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-          </rowConstraints>
+            <fx:include source="allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS"/>
+            <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            </rowConstraints>
         </GridPane>
     </ScrollPane>
 </AnchorPane>

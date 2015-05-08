@@ -6,6 +6,7 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
