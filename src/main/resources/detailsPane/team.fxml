@@ -30,14 +30,8 @@
             <Label fx:id="poLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="smLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="devTeamLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TableView fx:id="allocationsTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-              <columns>
-                  <TableColumn fx:id="projectTableColumn" prefWidth="90" text="Project" />
-                  <TableColumn fx:id="startDateTableColumn" prefWidth="100" text="Start Date" />
-                  <TableColumn fx:id="endDateTableColumn" prefWidth="100" text="End Date" />
-              </columns>
-            </TableView>
-                  <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+            <fx:include source="allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS"/>
+            <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
