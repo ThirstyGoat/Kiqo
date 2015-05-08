@@ -93,4 +93,23 @@ public class Utilities {
         // now for the actual check
         return !list.contains(shortName);
     }
+
+    /**
+     * Checks whether the given shortname is unique among the given Collection.
+     * @param shortName Short Name to be checked
+     * @param item Item being changed
+     * @param items items among which the name must be unique
+     * @return shortName is unique among items
+     */
+    public static boolean shortnameIsUnique(String shortName, Item item, Collection<? extends Item> items) {
+        for (Item i : items) {
+            if (item != null && i == item) {
+                continue;
+            }
+            if (i.getShortName().equals(shortName)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
