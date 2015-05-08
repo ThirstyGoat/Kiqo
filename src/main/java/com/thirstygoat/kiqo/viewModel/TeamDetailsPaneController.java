@@ -6,7 +6,14 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -14,7 +21,6 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.stage.Stage;
 
 public class TeamDetailsPaneController implements Initializable {
 
@@ -138,6 +144,7 @@ public class TeamDetailsPaneController implements Initializable {
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     row.setContextMenu(null);
+                    row.getStyleClass().removeAll("allocation-current", "allocation-past", "allocation-future");
                 } else {
                     if (newValue.getEndDate() == LocalDate.MAX) {
                         clearEndDateMenuItem.setDisable(true);
@@ -150,6 +157,16 @@ public class TeamDetailsPaneController implements Initializable {
                         }
                     });
                     row.setContextMenu(contextMenu);
+
+                    // set background color
+                    final LocalDate now = LocalDate.now();
+                    if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
+                        row.getStyleClass().add("allocation-current");
+                    } else if (newValue.getStartDate().isAfter(now)) {
+                        row.getStyleClass().add("allocation-future");
+                    } else {
+                        row.getStyleClass().add("allocation-past");
+                    }
                 }
             });
             return row;

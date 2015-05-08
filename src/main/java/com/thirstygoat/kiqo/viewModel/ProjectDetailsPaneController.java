@@ -93,7 +93,9 @@ public class ProjectDetailsPaneController implements Initializable {
             final TableRow<Allocation> row = new TableRow<>();
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
+                    // row is empty
                     row.setContextMenu(null);
+                    row.getStyleClass().removeAll("allocation-current", "allocation-past", "allocation-future");
                 } else {
                     if (newValue.getEndDate() == LocalDate.MAX) {
                         clearEndDateMenuItem.setDisable(true);
@@ -106,6 +108,16 @@ public class ProjectDetailsPaneController implements Initializable {
                         }
                     });
                     row.setContextMenu(contextMenu);
+
+                    // set background color
+                    final LocalDate now = LocalDate.now();
+                    if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
+                        row.getStyleClass().add("allocation-current");
+                    } else if (newValue.getStartDate().isAfter(now)) {
+                        row.getStyleClass().add("allocation-future");
+                    } else {
+                        row.getStyleClass().add("allocation-past");
+                    }
                 }
             });
             return row;
@@ -162,7 +174,7 @@ public class ProjectDetailsPaneController implements Initializable {
             shortNameLabel.textProperty().bind(project.shortNameProperty());
             longNameLabel.textProperty().bind(project.longNameProperty());
             descriptionLabel.textProperty().bind(project.descriptionProperty());
-            allocationsTableView.setItems(project.getAllocations());
+            allocationsTableView.setItems(project.observableAllocations());
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);
