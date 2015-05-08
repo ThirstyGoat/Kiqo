@@ -1,11 +1,10 @@
 package seng302.group4;
 
-import java.io.File;
-import java.io.Serializable;
-
-import com.google.gson.annotations.Since;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.io.File;
+import java.io.Serializable;
 
 /**
  * Project class represents a software project
@@ -20,6 +19,7 @@ public class Organisation implements Serializable {
     private ObservableList<Skill> skills = FXCollections.observableArrayList();
     private ObservableList<Team> teams = FXCollections.observableArrayList();
     private transient File saveLocation;
+    private String organisationName = "Untitled";
 
 
     public Organisation() {
@@ -90,6 +90,12 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
+        organisationName = saveLocation.getName();
+    }
+
+
+    public String getOrganisationName() {
+        return organisationName;
     }
 
     /**

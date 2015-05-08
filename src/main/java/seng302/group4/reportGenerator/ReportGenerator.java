@@ -2,9 +2,7 @@ package seng302.group4.reportGenerator;
 
 import seng302.group4.*;
 import seng302.group4.utils.ApplicationInfo;
-import seng302.group4.utils.Utilities;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,16 +47,9 @@ public final class ReportGenerator {
         people = new ArrayList<Person>();
         people.addAll(organisation.getPeople());
 
-        File filePath = organisation.getSaveLocation();
-        String organsiationTitle;
-        if (filePath != null) {
-             organsiationTitle = Utilities.capitalize(Utilities.stripExtention(filePath.getName()));
 
-        } else {
-            organsiationTitle = "Untitled";
-        }
         title= (new String[]{
-                "Organisation: " + organsiationTitle,
+                "Organisation: " + organisation.getOrganisationName(),
                 "",
                 "Generated: " + LocalDateTime.now().format(titleFormatter),
                 "by " + ApplicationInfo.getProperty("name"),
