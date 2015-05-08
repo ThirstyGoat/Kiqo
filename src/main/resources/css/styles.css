@@ -5,22 +5,16 @@
 	-fx-padding: 0 0 0 3px;
 }
 
-/*.tab-header-area {*/
-	/*visibility: hidden;*/
-	/*-fx-padding: 0 0 0 0px;*/
-/*}*/
+.allocation-past {
+	-fx-background-color: seashell;
+}
 
-/*.headers-region {*/
-	/*visibility: hidden;*/
-	/*-fx-padding: 0 0 0 0px;*/
-/*}*/
+.allocation-current {
+	-fx-background-color: lightseagreen;
+}
 
-/*.tab {*/
-	/*-fx-padding: 0 0 0 0px;*/
-	/*-fx-font-size: 1px;*/
-	/*-fx-tab-max-height: 5px;*/
-/*}*/
-
-
+.allocation-future {
+	-fx-background-color: lightskyblue;
+}
 
 

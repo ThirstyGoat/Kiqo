@@ -118,8 +118,8 @@ public class Project extends Item {
      * Gets the array of team allocations
      * @return The ObservableList of Team Allocations
      */
-    public ObservableList<Allocation> getAllocations() {
-        return allocations;
+    public List<Allocation> getAllocations() {
+        return Collections.unmodifiableList(allocations);
     }
 
     public ObservableList<Release> observableReleases() {

@@ -70,8 +70,6 @@ public class AllocationFormController implements Initializable {
         setPrompts();
 
         Platform.runLater(teamTextField::requestFocus);
-
-        datePickerChecker();
     }
 
     private void setPrompts() {
@@ -102,14 +100,6 @@ public class AllocationFormController implements Initializable {
                 } else {
                     return LocalDate.MAX;
                 }
-            }
-        });
-    }
-
-    private void datePickerChecker() {
-        startDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            if (endDatePicker.getValue() == null) {
-                endDatePicker.setValue(startDatePicker.getValue().plusDays(1));
             }
         });
     }
