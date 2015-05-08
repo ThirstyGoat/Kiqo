@@ -31,7 +31,7 @@ public class ProjectDetailsPaneController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT);
+        allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM);
         allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
     }
 

@@ -36,9 +36,11 @@ public class AllocationsTableViewController implements Initializable {
 
     public void init(FirstColumnType type) {
         if (type.equals(FirstColumnType.PROJECT)) {
+            System.out.println("project");
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
             teamTableColumn.setText("Project");
         } else if(type.equals(FirstColumnType.TEAM)){
+            System.out.println("team");
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
         }
         initializeTable();
@@ -91,6 +93,8 @@ public class AllocationsTableViewController implements Initializable {
                 } else {
                     if (newValue.getEndDate() == LocalDate.MAX) {
                         clearEndDateMenuItem.setDisable(true);
+                    } else {
+                        clearEndDateMenuItem.setDisable(false);
                     }
                     newValue.getEndDateProperty().addListener((observable1, oldValue1, newValue1) -> {
                         if (newValue1 == LocalDate.MAX) {
@@ -120,7 +124,6 @@ public class AllocationsTableViewController implements Initializable {
             final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
             final LocalDate endDate = selectedAllocation.getEndDate();
             final EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
-            mainController.doCommand(command);
 
             boolean canChange = true;
 
@@ -140,7 +143,8 @@ public class AllocationsTableViewController implements Initializable {
                 GoatDialog.showAlertDialog((Stage) allocationsTableView.getScene().getWindow(), "Error", "Error",
                         "Allocation can not overlap with another allocation!");
                 selectedAllocation.setEndDate(endDate);
-                return;
+            } else {
+                mainController.doCommand(command);
             }
         });
 
