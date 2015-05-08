@@ -1,9 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateProjectCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,10 +14,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
-import com.thirstygoat.kiqo.model.Project;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -26,6 +32,8 @@ public class ProjectFormController implements Initializable {
     public String longName;
     public String shortName;
     public String description;
+    private Project project;
+    private Command<?> command;
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -35,15 +43,22 @@ public class ProjectFormController implements Initializable {
     private Button openButton;
     @FXML
     private TextField descriptionTextField;
+    @FXML
+    private Button okButton;
+    @FXML
+    private Button cancelButton;
     private boolean shortNameModified = false;
     private boolean valid = false;
     private Stage stage;
+    private Organisation organisation;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         setShortNameHandler();
         setErrorPopOvers();
         setPrompts();
+        setButtonHandlers();
+        setShortNameSuggester();
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
     }
 
@@ -55,9 +70,21 @@ public class ProjectFormController implements Initializable {
     }
 
     public void loadProject(final Project project) {
-        longNameTextField.setText(project.getLongName());
-        shortNameTextField.setText(project.getShortName());
-        descriptionTextField.setText(project.getDescription());
+        this.project = project;
+
+        if (project == null) {
+            // Then we are creating a new one
+            stage.setTitle("Create Project");
+            okButton.setText("Create Project");
+        } else {
+            // We are editing an existing project
+            stage.setTitle("Edit Project");
+            okButton.setText("Save");
+
+            longNameTextField.setText(project.getLongName());
+            shortNameTextField.setText(project.getShortName());
+            descriptionTextField.setText(project.getDescription());
+        }
     }
 
     /**
@@ -80,54 +107,77 @@ public class ProjectFormController implements Initializable {
         });
     }
 
-    /**
-     * Performs validation checks and displays error popovers where applicable
-     */
-    public void validate() {
-        // Hide existing error message if there is one
-        errorPopOver.hide();
+    private void setButtonHandlers() {
+        okButton.setOnAction(event -> {
+            if (validate()) {
+                errorPopOver.hide(Duration.millis(0));
+                stage.close();
+            }
+        });
 
-        // Perform validity checks and create project
-        if (checkName() && checkShortName()) {
-            // Set project properties
-            longName = longNameTextField.getText();
-            shortName = shortNameTextField.getText();
-            description = descriptionTextField.getText();
+        cancelButton.setOnAction(event -> {
+            errorPopOver.hide(Duration.millis(0));
+            stage.close();
+        });
+    }
 
-            valid = true;
+    private void setCommand() {
+        if (project == null) {
+            final Project p = new Project(shortNameTextField.getText(),longNameTextField.getText(), descriptionTextField.getText());
+            command = new CreateProjectCommand(p, organisation);
+        } else {
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+
+            if (!shortNameTextField.getText().equals(project.getShortName())) {
+                changes.add(new EditCommand<>(project, "shortName", shortNameTextField.getText()));
+            }
+            if (!longNameTextField.getText().equals(project.getLongName())) {
+                changes.add(new EditCommand<>(project, "longName", longNameTextField.getText()));
+            }
+            if (!descriptionTextField.getText().equals(project.getDescription())) {
+                changes.add(new EditCommand<>(project, "description", descriptionTextField.getText()));
+            }
+
+            valid = !changes.isEmpty();
+
+            command = new CompoundCommand("Edit Project", changes);
         }
     }
 
-//    /**
-//     * Checks to make sure that the save location has been set, and it is
-//     * writable by the user
-//     *
-//     * @return Whether or not the save location is valid/readable/writable
-//     */
-//    private boolean checkSaveLocation() {
-//        if (this.projectLocation == null) {
-//            // Then the user hasn't selected a project directory, alert them!
-//            this.errorPopOver.setContentNode(new Label("Please select a Project Location"));
-//            this.errorPopOver.show(this.projectLocationLabel);
-//            return false;
-//        }
-//        // Confirm read/write access
-//        final File equalPermissionsFile = this.projectLocation.exists() ? this.projectLocation : this.projectLocation.getParentFile();
-//        if (!equalPermissionsFile.canRead()) {
-//            // Then we can't read from the directory, what's the point!
-//            this.errorPopOver.setContentNode(new Label("Can't read from the specified directory"));
-//            this.errorPopOver.show(this.projectLocationLabel);
-//            return false;
-//        }
-//        if (!equalPermissionsFile.canWrite()) {
-//            // Then we can't write to the directory
-//            this.errorPopOver.setContentNode(new Label("Can't write to the specified directory"));
-//            this.errorPopOver.show(this.projectLocationLabel);
-//            return false;
-//        }
-//
-//        return true;
-//    }
+
+    /**
+     * Performs validation checks and displays error popovers where applicable
+     */
+    public boolean validate() {
+        if (shortNameTextField.getText().length() == 0) {
+            errorPopOver.setContentNode(new Label("Short name must not be empty"));
+            errorPopOver.show(shortNameTextField);
+            return false;
+        }
+        else if (longNameTextField.getText().length() == 0) {
+            errorPopOver.setContentNode(new Label("Long name must not be empty"));
+            errorPopOver.show(longNameTextField);
+            return false;
+        }
+
+        if (project != null) {
+            if (shortNameTextField.getText().equals(project.getShortName())) {
+                valid = true;
+                setCommand();
+                return true;
+            }
+        }
+
+        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getProjects())) {
+            errorPopOver.setContentNode(new Label("Short name must be unique"));
+            errorPopOver.show(shortNameTextField);
+            return false;
+        }
+
+        valid = true;
+        setCommand();
+        return true;
+    }
 
     /**
      * Checks to make sure the short name is valid
@@ -199,44 +249,10 @@ public class ProjectFormController implements Initializable {
         });
     }
 
-//    /**
-//     * Sets the open dialog functionality including getting the path chosen by
-//     * the user.
-//     */
-//    private void setOpenButton() {
-//        final String EXTENSION = ".json";
-//        this.openButton.setOnAction(event -> {
-//            // Hide existing error message if there is one
-//                this.errorPopOver.hide();
-//
-//                final FileChooser fileChooser = new FileChooser();
-//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*" + EXTENSION));
-//
-//                if (this.projectLocation != null) {
-//                    // Then this is an edit dialog, we need to make sure that
-//                    // the
-//                    // user opens to the project directory
-//                    fileChooser.setInitialDirectory(this.projectLocation.getParentFile());
-//                    fileChooser.setInitialFileName(this.projectLocation.getName());
-//                } else {
-//                    fileChooser.setInitialFileName(shortNameTextField.getText());
-//                }
-//
-//                File selectedFile = fileChooser.showSaveDialog(this.stage);
-//                if (selectedFile != null) {
-//                    // ensure file has .json extension
-//                    final String selectedFilename = selectedFile.getName();
-//                    if (!selectedFilename.endsWith(EXTENSION)) {
-//                        // append extension
-//                        selectedFile = new File(selectedFile.getParentFile(), selectedFilename + EXTENSION);
-//                    }
-//                    // store selected file
-//                    this.projectLocationLabel.setText(selectedFile.getPath());
-//                    this.projectLocation = selectedFile.getAbsoluteFile();
-//                }
-//        });
-//    }
-
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
+    public Command<?> getCommand() { return command; }
 
     public void setStage(final Stage stage) {
         this.stage = stage;
