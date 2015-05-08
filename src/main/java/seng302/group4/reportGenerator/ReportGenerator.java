@@ -2,6 +2,7 @@ package seng302.group4.reportGenerator;
 
 import seng302.group4.*;
 import seng302.group4.utils.ApplicationInfo;
+import seng302.group4.utils.Utilities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,18 +28,14 @@ public final class ReportGenerator {
     private static final String SKILL_COMMENT = "-   ### Skill ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
+    private static final String ALLOCATION_COMMENT = "-   ### Allocation ###";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter titleFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     private final List<Team> teams;
     private final List<Person> people;
     private final Organisation organisation;
     // Create the header string for the report
-    private final String[] title = (new String[]{
-            "//TODO ORGANISATION_NAME",
-            "",
-            "Generated: " + LocalDateTime.now().format(titleFormatter),
-            "by " + ApplicationInfo.getProperty("name"),
-            "Version: " + ApplicationInfo.getProperty("version")});
+    private final String[] title;
 
     /**
      * Constructor for report generator
@@ -50,6 +47,14 @@ public final class ReportGenerator {
         teams.addAll(organisation.getTeams());
         people = new ArrayList<Person>();
         people.addAll(organisation.getPeople());
+        String filePath = organisation.getSaveLocation().getName();
+        String organsiationTitle = Utilities.capitalize(filePath.substring(0, filePath.lastIndexOf('.')));
+        title= (new String[]{
+                "Organisation: " + organsiationTitle,
+                "",
+                "Generated: " + LocalDateTime.now().format(titleFormatter),
+                "by " + ApplicationInfo.getProperty("name"),
+                "Version: " + ApplicationInfo.getProperty("version")});
     }
 
     /**
@@ -206,9 +211,8 @@ public final class ReportGenerator {
         final LocalDate now = LocalDate.now();
         for (final Allocation allocation : team.getAllocations()) {
             if (allocation.getStartDate().isBefore(now) && allocation.getEndDate().isAfter(now)) {
-                lines.add(ReportUtils.formattedLine("Project", allocation.getProject().getShortName()));
-                lines.add(ReportUtils.formattedLine("Current Allocation Start", allocation.getStartDate().format(formatter)));
-                lines.add(ReportUtils.formattedLine("Current Allocation End", allocation.getEndDate().format(formatter)));
+                lines.add(ReportGenerator.ALLOCATION_COMMENT);
+                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
             }
         }
         return lines;
@@ -229,7 +233,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.formattedLine("Department", person.getDepartment()));
         lines.add("Skills:");
         for (Skill skill : person.getSkills()) {
-            lines.add("- " + skill.getShortName());
+            lines.add("-" + ReportUtils.indent(INDENT_SIZE) + ReportUtils.formattedLine("Short Name", skill.getShortName()));
         }
         return lines;
     }
@@ -241,6 +245,17 @@ public final class ReportGenerator {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.formattedLine("shortName", skill.getShortName()));
         lines.add(ReportUtils.formattedLine("description", skill.getDescription()));
+        return lines;
+    }
+
+    /**
+     *  Generate skill data.
+     */
+    private List<String> generateAllocationlReport(Allocation allocation) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.formattedLine("Current Allocation Project", allocation.getProject().getShortName()));
+        lines.add(ReportUtils.formattedLine("Current Allocation Start Date", allocation.getStartDate().format(formatter)));
+        lines.add(ReportUtils.formattedLine("Current Allocation End Date", allocation.getEndDate().format(formatter)));
         return lines;
     }
 }

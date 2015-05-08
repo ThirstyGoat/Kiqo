@@ -1,13 +1,13 @@
 package seng302.group4.utils;
 
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import seng302.group4.Item;
 import seng302.group4.Person;
+
+import java.util.List;
 
 /**
  * Created by bradley on 9/04/15.
@@ -52,5 +52,14 @@ public class Utilities {
         });
 
         return result;
+    }
+
+    /**
+     * Capitalize the first letter of a string.
+     * @param line to be capitalized.
+     * @return a capitalized string.
+     */
+    public static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 }
