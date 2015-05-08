@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,9 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import org.controlsfx.control.PopOver;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
@@ -29,6 +27,9 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 /**
  * Created by james on 20/03/15.
@@ -36,16 +37,14 @@ import com.thirstygoat.kiqo.util.Utilities;
 public class PersonFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    public PopOver errorPopOver = new PopOver();
+    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
     private Person person;
     private boolean valid = false;
     private boolean shortNameModified = false;
     private Command<?> command;
-    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
-
-
     // FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -71,11 +70,33 @@ public class PersonFormController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setShortNameHandler();
-        setErrorPopOvers();
         setPrompts();
         setButtonHandlers();
         setShortNameSuggester();
         Platform.runLater(longNameTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        // Validation for short name
+        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+                Utilities.shortnameIsUnique(shortNameTextField.getText(), person, organisation.getPeople());
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty."));
+
+        validationSupport.registerValidator(longNameTextField,
+                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -120,15 +141,6 @@ public class PersonFormController implements Initializable {
             targetSkills.addAll(person.getSkills());
         }
 
-//        organisation.getSkills().addListener((ListChangeListener<Skill>) c -> {
-//            c.next();
-//            // We remove skills from the sourceSkills that were removed from the project.
-//            // Note that this shouldn't actually be possible since undo/redo should be disabled
-//            sourceSkills.removeAll(c.getRemoved());
-//            targetSkills.removeAll(c.getRemoved());
-//            sourceSkills.addAll(c.getAddedSubList());
-//        });
-
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
         skillsSelectionView.getTargetListView().setItems(targetSkills);
     }
@@ -143,11 +155,12 @@ public class PersonFormController implements Initializable {
         if (person == null) {
             // Then we are creating a new one
             stage.setTitle("Create Person");
-            okButton.setText("Create Person");
+            okButton.setText("Done");
         } else {
             // We are editing an existing Person
             stage.setTitle("Edit Person");
-            okButton.setText("Save");
+            okButton.setText("Done");
+            shortNameModified = true;
 
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
@@ -165,13 +178,11 @@ public class PersonFormController implements Initializable {
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
 
         cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
             stage.close();
         });
     }
@@ -220,34 +231,19 @@ public class PersonFormController implements Initializable {
         }
     }
 
+    /**
+     * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
+     */
     private boolean validate() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
+        if (validationSupport.isInvalid()) {
             return false;
+        } else {
+            valid = true;
         }
-
-        if (person != null) {
-            // we're editing
-            if (shortNameTextField.getText().equals(person.getShortName())) {
-                // then that's fine
-                valid = true;
-                setCommand();
-                return true;
-            }
-        }
-
-        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getPeople())) {
-            errorPopOver.setContentNode(new Label("Short name must be unique"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        valid = true;
         setCommand();
         return true;
     }
-
 
     /**
      * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
@@ -264,9 +260,6 @@ public class PersonFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
-                        " characters"));
-                errorPopOver.show(shortNameTextField);
             }
         });
     }
@@ -297,27 +290,5 @@ public class PersonFormController implements Initializable {
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         setUpSkillsList();
-    }
-
-    /**
-     * Sets focus listeners on text fields so PopOvers are hidden upon focus
-     */
-    private void setErrorPopOvers() {
-        // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
-
-        // Set handlers so that popovers are hidden on field focus
-        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide(Duration.millis(0));
-            }
-        });
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide(Duration.millis(0));
-            } else {
-                errorPopOver.hide(Duration.millis(0));
-            }
-        });
     }
 }

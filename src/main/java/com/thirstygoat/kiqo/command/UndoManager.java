@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  *
  */
 public class UndoManager {
-    private final Deque<Command<? extends Object>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
+    private final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
     public SimpleBooleanProperty canUndoProperty = new SimpleBooleanProperty(false);
     public SimpleBooleanProperty canRedoProperty = new SimpleBooleanProperty(false);
 
@@ -39,7 +39,7 @@ public class UndoManager {
      * Redoes the most recently undone command and adds it to the undo stack.
      */
     public void redoCommand() {
-        final Command<? extends Object> command = redoStack.pop();
+        final Command<?> command = redoStack.pop();
         command.redo();
         undoStack.push(command);
         canUndoProperty.set(true);
@@ -71,6 +71,20 @@ public class UndoManager {
         canUndoProperty.set(false);
         canRedoProperty.set(false);
         shouldUpdateMenuProperty.set(true);
+    }
+
+    /**
+     * @return The size of the redo stack
+     */
+    public int getRedoStackSize() {
+        return redoStack.size();
+    }
+
+    /**
+     * @return The size of the undo stack
+     */
+    public int getUndoStackSize() {
+        return undoStack.size();
     }
 
     public String getUndoType() {

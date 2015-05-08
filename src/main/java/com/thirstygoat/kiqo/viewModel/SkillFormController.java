@@ -4,13 +4,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -23,6 +24,7 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.controlsfx.validation.*;
 
 /**
  * Created by james on 20/03/15.
@@ -30,7 +32,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 public class SkillFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    public PopOver errorPopOver = new PopOver();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Skill skill;
     private String shortName;
     private String description;
@@ -38,10 +40,7 @@ public class SkillFormController implements Initializable {
     private Stage stage;
     private Command<?> command;
     private boolean shortNameModified = false;
-
     private Organisation organisation;
-
-
     // FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -57,11 +56,30 @@ public class SkillFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setErrorPopOvers();
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
         Platform.runLater(shortNameTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        // Validation for short name
+        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+                Utilities.shortnameIsUnique(shortNameTextField.getText(), skill, organisation.getSkills());
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty."));
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -79,11 +97,11 @@ public class SkillFormController implements Initializable {
         if (skill == null) {
             // Then we are creating a new one
             stage.setTitle("Create Skill");
-            okButton.setText("Create Skill");
+            okButton.setText("Done");
         } else {
             // We are editing an existing skill
             stage.setTitle("Edit Skill");
-            okButton.setText("Save");
+            okButton.setText("Done");
 
             shortNameTextField.setText(skill.getShortName());
             descriptionTextField.setText(skill.getDescription());
@@ -105,9 +123,6 @@ public class SkillFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
-                        " characters"));
-                errorPopOver.show(shortNameTextField);
             }
         });
     }
@@ -115,15 +130,11 @@ public class SkillFormController implements Initializable {
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
 
@@ -154,27 +165,11 @@ public class SkillFormController implements Initializable {
      * @return all fields are valid
      */
     private boolean validate() {
-        if(shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
+        if (validationSupport.isInvalid()) {
             return false;
+        } else {
+            valid = true;
         }
-
-        if (skill != null) {
-            if (shortNameTextField.getText().equals(skill.getShortName())) {
-                valid = true;
-                setCommand();
-                return true;
-            }
-        }
-
-        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getSkills())) {
-            errorPopOver.setContentNode(new Label("Short name must be unique"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        valid = true;
         setCommand();
         return true;
     }
@@ -201,19 +196,4 @@ public class SkillFormController implements Initializable {
 
     public Command<?> getCommand() { return command; }
 
-    /**
-     * Sets focus listeners on text fields so PopOvers are hidden upon focus
-     */
-    private void setErrorPopOvers() {
-        // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
-
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            } else {
-                errorPopOver.hide();
-            }
-        });
-    }
 }

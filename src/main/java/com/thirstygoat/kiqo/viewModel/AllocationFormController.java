@@ -1,20 +1,17 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateAllocationCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -23,6 +20,15 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateAllocationCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+import org.controlsfx.validation.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,7 +42,6 @@ import java.util.stream.Collectors;
  */
 public class AllocationFormController implements Initializable {
     // UI
-    private final PopOver errorPopOver = new PopOver();
     private Stage stage;
     // Command
     private boolean valid;
@@ -46,6 +51,8 @@ public class AllocationFormController implements Initializable {
     private Project project;
     // Form Data
     private Team team = null;
+
+    private ValidationSupport validationSupport = new ValidationSupport();
 
     // FXML
     @FXML
@@ -62,12 +69,90 @@ public class AllocationFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        errorPopOver.setDetachable(false);
         setButtonHandlers();
         setTextFieldAutoCompletionBinding();
         setPrompts();
 
         Platform.runLater(teamTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        Predicate<String> projectValidation = s -> {
+            for (Team t : organisation.getTeams()) {
+                if (t.getShortName().equals(teamTextField.getText())) {
+                    team = t;
+                    LocalDate sd = startDatePicker.getValue();
+                    LocalDate ed = endDatePicker.getValue();
+                    startDatePicker.setValue(null);
+                    endDatePicker.setValue(null);
+                    startDatePicker.setValue(sd);
+                    endDatePicker.setValue(ed);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+                "Team must already exist"));
+
+        Predicate<LocalDate> dateOverlapValidatorPredicate = localDate -> {
+            if (team == null) {
+                return true;
+            }
+            boolean dateRangesOverlap = false;
+            for (final Allocation a : team.getAllocations()) {
+                // If the end dates are null, then the allocation has no specified period
+                // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
+                final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
+                final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
+                if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
+                    dateRangesOverlap = true;
+                    break;
+                }
+            }
+
+            return !dateRangesOverlap;
+        };
+
+        Validator dateOverlapValidator = Validator.createPredicateValidator(dateOverlapValidatorPredicate,
+                "This team is already allocated to a project during this period");
+
+        Predicate<LocalDate> startDateNullValidatorPredicate = localDate -> {
+            LocalDate edpv = endDatePicker.getValue();
+            endDatePicker.setValue(null);
+            endDatePicker.setValue(edpv);
+            return startDatePicker.getValue() != null;
+        };
+
+        Validator startDateNullValidator = Validator.createPredicateValidator(startDateNullValidatorPredicate,
+                "Start date must not be empty");
+        // Create a validator for startDate that combines two validators
+        Validator startDateValidator = Validator.combine(startDateNullValidator, dateOverlapValidator);
+
+        validationSupport.registerValidator(startDatePicker, startDateValidator);
+
+        Predicate<LocalDate> endDateNullValidatorPredicate =
+                localDate -> localDate == null || localDate.isAfter(startDatePicker.getValue());
+
+        Validator endDateNullValidator = Validator.createPredicateValidator(endDateNullValidatorPredicate,
+                "End date must not come before the start date");
+
+
+        Validator endDateValidator = Validator.combine(endDateNullValidator, dateOverlapValidator);
+
+        validationSupport.registerValidator(endDatePicker, endDateValidator);
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -106,16 +191,11 @@ public class AllocationFormController implements Initializable {
         // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
         // uses a String converter so that the Team's short name is used.
         final AutoCompletionBinding<Team> binding = TextFields.bindAutoCompletion(teamTextField,
-                new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Team>>() {
-            @Override
-            public Collection<Team> call(AutoCompletionBinding.ISuggestionRequest request) {
-                final Collection<Team> teams = organisation.getTeams().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return teams;
-            }
-
-        }, new StringConverter<Team>() {
+                request -> {
+                    return organisation.getTeams().stream()
+                            .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                            .collect(Collectors.toList());
+                }, new StringConverter<Team>() {
             @Override
             public Team fromString(String string) {
                 for (final Team team : organisation.getTeams()) {
@@ -145,63 +225,23 @@ public class AllocationFormController implements Initializable {
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
+    /**
+     * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
+     */
     private boolean validate() {
-        // check that team exists (and keep a reference to the matching team)
-        team = null;
-        for (final Team p : organisation.getTeams()) {
-            if (teamTextField.getText().equals(p.getShortName())) {
-                team = p;
-                break;
-            }
-        }
-        if (team == null) {
-            errorPopOver.setContentNode(new Label("Team \"" + teamTextField.getText() + "\" does not exist"));
-            errorPopOver.show(teamTextField);
+        if (validationSupport.isInvalid()) {
             return false;
+        } else {
+            valid = true;
         }
-
-        if (startDatePicker.getValue() == null) {
-            errorPopOver.setContentNode(new Label("Valid start date required"));
-            errorPopOver.show(startDatePicker);
-            return false;
-        }
-
-        if (endDatePicker.getValue() != null && !endDatePicker.getValue().isAfter(startDatePicker.getValue())) {
-            errorPopOver.setContentNode(new Label("End date must follow start date"));
-            errorPopOver.show(endDatePicker);
-            return false;
-        }
-
-        boolean dateRangesOverlap = false;
-        for (final Allocation a : team.getAllocations()) {
-            // If the end dates are null, then the allocation has no specified period
-            // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
-            final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
-            final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
-            if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
-                dateRangesOverlap = true;
-                break;
-            }
-        }
-
-        if (dateRangesOverlap) {
-            errorPopOver.setContentNode(new Label("Team is already allocated to a project during this period!"));
-            errorPopOver.show(startDatePicker);
-            return false;
-        }
-
-        valid = true;
         setCommand();
         return true;
     }

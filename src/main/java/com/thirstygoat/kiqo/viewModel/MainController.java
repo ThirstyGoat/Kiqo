@@ -89,6 +89,8 @@ public class MainController implements Initializable {
     private Team selectedTeam;
     private Release selectedRelease;
 
+    private int[] savePosition = {0, 0};
+
     /**
      * Triggers an update of a specific object in a list view, so that updateItem is called and the
      * cell is recreated with current data (ie. if the short name changes in this case).
@@ -614,6 +616,8 @@ public class MainController implements Initializable {
                 GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
+            savePosition[0] = undoManager.getUndoStackSize();
+            savePosition[1] = undoManager.getRedoStackSize();
             changesSaved.set(true);
         }
     }
@@ -681,18 +685,38 @@ public class MainController implements Initializable {
 
     public void undo() {
         undoManager.undoCommand();
-        changesSaved.set(false);
+
+
+        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
+        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
+
+        if (undoManager.getUndoStackSize() == savePosition[0] &&
+                undoManager.getRedoStackSize() == savePosition[1]) {
+            changesSaved.set(true);
+        } else {
+            changesSaved.set(false);
+        }
     }
 
     public void redo() {
         undoManager.redoCommand();
         // If the changes are already saved, and we redo something, then the
         // changes are now not saved
-        changesSaved.set(false);
+        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
+        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
+
+        if (undoManager.getUndoStackSize() == savePosition[0] &&
+                undoManager.getRedoStackSize() == savePosition[1]) {
+            changesSaved.set(true);
+        } else {
+            changesSaved.set(false);
+        }
     }
 
     public void doCommand(Command<?> command) {
         undoManager.doCommand(command);
+        savePosition[0] = 0;
+        savePosition[1] = 0;
         changesSaved.set(false);
     }
 
@@ -980,7 +1004,6 @@ public class MainController implements Initializable {
             }
         });
     }
-
 
     private void allocationDialog(Allocation allocation) {
         Platform.runLater(() -> {

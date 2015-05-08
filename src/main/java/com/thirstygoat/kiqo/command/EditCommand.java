@@ -67,6 +67,7 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
     @Override
     public void undo() {
         try {
+            System.out.println(this.propertyDescriptor.getWriteMethod());
             this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.oldVal);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             // TODO Auto-generated catch block
