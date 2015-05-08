@@ -97,11 +97,11 @@ public class SkillFormController implements Initializable {
         if (skill == null) {
             // Then we are creating a new one
             stage.setTitle("Create Skill");
-            okButton.setText("Create Skill");
+            okButton.setText("Done");
         } else {
             // We are editing an existing skill
             stage.setTitle("Edit Skill");
-            okButton.setText("Save");
+            okButton.setText("Done");
 
             shortNameTextField.setText(skill.getShortName());
             descriptionTextField.setText(skill.getDescription());

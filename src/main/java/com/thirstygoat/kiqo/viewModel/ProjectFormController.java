@@ -11,22 +11,22 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.controlsfx.control.PopOver;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * Created by Bradley, James on 13/03/15.
  */
 public class ProjectFormController implements Initializable {
-    public final PopOver errorPopOver = new PopOver();
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     public String longName;
@@ -40,8 +40,6 @@ public class ProjectFormController implements Initializable {
     @FXML
     private TextField shortNameTextField;
     @FXML
-    private Button openButton;
-    @FXML
     private TextField descriptionTextField;
     @FXML
     private Button okButton;
@@ -52,14 +50,38 @@ public class ProjectFormController implements Initializable {
     private Stage stage;
     private Organisation organisation;
 
+    private ValidationSupport validationSupport = new ValidationSupport();
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         setShortNameHandler();
-        setErrorPopOvers();
         setPrompts();
         setButtonHandlers();
         setShortNameSuggester();
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        // Validation for short name
+        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+                Utilities.shortnameIsUnique(shortNameTextField.getText(), project, organisation.getProjects());
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty."));
+
+        validationSupport.registerValidator(longNameTextField,
+                Validator.createEmptyValidator("Long name can not be empty", Severity.ERROR));
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -75,50 +97,17 @@ public class ProjectFormController implements Initializable {
         if (project == null) {
             // Then we are creating a new one
             stage.setTitle("Create Project");
-            okButton.setText("Create Project");
+            okButton.setText("Done");
         } else {
             // We are editing an existing project
             stage.setTitle("Edit Project");
-            okButton.setText("Save");
+            okButton.setText("Done");
+            shortNameModified = true;
 
             longNameTextField.setText(project.getLongName());
             shortNameTextField.setText(project.getShortName());
             descriptionTextField.setText(project.getDescription());
         }
-    }
-
-    /**
-     * Sets focus listeners on text fields so PopOvers are hidden upon focus
-     */
-    private void setErrorPopOvers() {
-        // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
-
-        // Set handlers so that popovers are hidden on field focus
-        longNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            }
-        });
-    }
-
-    private void setButtonHandlers() {
-        okButton.setOnAction(event -> {
-            if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
-                stage.close();
-            }
-        });
-
-        cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
-            stage.close();
-        });
     }
 
     private void setCommand() {
@@ -144,73 +133,30 @@ public class ProjectFormController implements Initializable {
         }
     }
 
+    private void setButtonHandlers() {
+        okButton.setOnAction(event -> {
+            if (validate()) {
+                stage.close();
+            }
+        });
+
+        cancelButton.setOnAction(event -> {
+            stage.close();
+        });
+    }
+
 
     /**
      * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
      */
-    public boolean validate() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
+    private boolean validate() {
+        if (validationSupport.isInvalid()) {
             return false;
+        } else {
+            valid = true;
         }
-        else if (longNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Long name must not be empty"));
-            errorPopOver.show(longNameTextField);
-            return false;
-        }
-
-        if (project != null) {
-            if (shortNameTextField.getText().equals(project.getShortName())) {
-                valid = true;
-                setCommand();
-                return true;
-            }
-        }
-
-        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getProjects())) {
-            errorPopOver.setContentNode(new Label("Short name must be unique"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        valid = true;
         setCommand();
-        return true;
-    }
-
-    /**
-     * Checks to make sure the short name is valid
-     *
-     * @return Whether or not the short name is valid
-     */
-    private boolean checkShortName() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-        // TODO Check for uniqueness
-        // if (!UNIQUE CHECKER) {
-        // shortNamePopOver.setContentNode(new
-        // Label("Short name must be unique"));
-        // shortNamePopOver.show(shortNameTextField);
-        // shortNameTextField.requestFocus();
-        // }
-        return true;
-    }
-
-    /**
-     * Checks to make sure the long name is valid
-     *
-     * @return Whether or not the long name is valid
-     */
-    private boolean checkName() {
-        if (longNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Name must not be empty"));
-            errorPopOver.show(longNameTextField);
-            return false;
-        }
         return true;
     }
 

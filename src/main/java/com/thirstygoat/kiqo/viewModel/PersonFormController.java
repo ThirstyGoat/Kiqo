@@ -17,9 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import org.controlsfx.control.PopOver;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
@@ -163,6 +160,7 @@ public class PersonFormController implements Initializable {
             // We are editing an existing Person
             stage.setTitle("Edit Person");
             okButton.setText("Done");
+            shortNameModified = true;
 
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());

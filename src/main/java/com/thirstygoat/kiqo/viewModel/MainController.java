@@ -91,7 +91,7 @@ public class MainController implements Initializable {
     private Team selectedTeam;
     private Release selectedRelease;
 
-    private int[] savePosition;
+    private int[] savePosition = {0, 0};
 
     /**
      * Triggers an update of a specific object in a list view, so that updateItem is called and the
@@ -624,6 +624,8 @@ public class MainController implements Initializable {
                 GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
+            savePosition[0] = undoManager.getUndoStackSize();
+            savePosition[1] = undoManager.getRedoStackSize();
             changesSaved.set(true);
         }
     }
@@ -692,7 +694,11 @@ public class MainController implements Initializable {
     public void undo() {
         undoManager.undoCommand();
 
-        if (savePosition != null && undoManager.getUndoStackSize() == savePosition[0] &&
+
+        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
+        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
+
+        if (undoManager.getUndoStackSize() == savePosition[0] &&
                 undoManager.getRedoStackSize() == savePosition[1]) {
             changesSaved.set(true);
         } else {
@@ -704,7 +710,10 @@ public class MainController implements Initializable {
         undoManager.redoCommand();
         // If the changes are already saved, and we redo something, then the
         // changes are now not saved
-        if (savePosition != null && undoManager.getUndoStackSize() == savePosition[0] &&
+        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
+        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
+
+        if (undoManager.getUndoStackSize() == savePosition[0] &&
                 undoManager.getRedoStackSize() == savePosition[1]) {
             changesSaved.set(true);
         } else {
@@ -714,6 +723,8 @@ public class MainController implements Initializable {
 
     public void doCommand(Command<?> command) {
         undoManager.doCommand(command);
+        savePosition[0] = 0;
+        savePosition[1] = 0;
         changesSaved.set(false);
     }
 
@@ -762,8 +773,6 @@ public class MainController implements Initializable {
                 // If changes are saved, then update message to reflect that
                 statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);
                 primaryStage.setTitle("Kiqo");
-
-                savePosition = new int[]{undoManager.getUndoStackSize(), undoManager.getRedoStackSize()};
             } else {
                 // Then there are unsaved changes, update status message
                 statusBar.setText(MainController.UNSAVED_CHANGES_TEXT);
@@ -1043,7 +1052,6 @@ public class MainController implements Initializable {
             }
         });
     }
-
 
     private void allocationDialog(Allocation allocation) {
         Platform.runLater(() -> {

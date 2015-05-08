@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -11,14 +13,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
@@ -32,6 +31,9 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 
 /**
@@ -39,7 +41,6 @@ import com.thirstygoat.kiqo.util.Utilities;
  */
 public class ReleaseFormController implements Initializable {
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    private final PopOver errorPopOver = new PopOver();
     private Organisation organisation;
     private Release release;
     private Command<?> command;
@@ -62,16 +63,62 @@ public class ReleaseFormController implements Initializable {
     private Stage stage;
     private Project project;
 
+    private ValidationSupport validationSupport = new ValidationSupport();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setErrorPopOvers();
         setButtonHandlers();
-        setShortNameTextFieldListener();
         setShortNameLengthRestrictor();
         setProjectTextFieldSuggester();
-        setReleaseDateChecker();
         setPrompts();
         Platform.runLater(shortNameTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        // Validation for short name
+        Predicate<String> shortNameValidation = s -> {
+            if (s.length() == 0) {
+                return false;
+            }
+            if (project == null) {
+                return true;
+            }
+            return Utilities.shortnameIsUnique(shortNameTextField.getText(), release, project.getReleases());
+        };
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty."));
+
+        Predicate<String> projectValidation = s -> {
+            for (Project p : organisation.getProjects()) {
+                if (p.getShortName().equals(projectTextField.getText())) {
+                    project = p;
+                    // Redo validation for shortname text field
+                    String snt = shortNameTextField.getText();
+                    shortNameTextField.setText("");
+                    shortNameTextField.setText(snt);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+                "Project must already exist"));
+
+        validationSupport.registerValidator(releaseDatePicker,
+                Validator.createEmptyValidator("Release date must be valid", Severity.ERROR));
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -88,16 +135,7 @@ public class ReleaseFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
-                        " characters"));
-                errorPopOver.show(shortNameTextField);
             }
-        });
-    }
-
-    private void setShortNameTextFieldListener() {
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            errorPopOver.hide();
         });
     }
 
@@ -139,88 +177,28 @@ public class ReleaseFormController implements Initializable {
         });
     }
 
-    private void setReleaseDateChecker() {
-        final String dateRegX = "(\\d|\\d\\d)/(\\d|\\d\\d)/\\d\\d\\d\\d";
-
-        releaseDatePicker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                if (!releaseDatePicker.getEditor().getText().matches(dateRegX)) {
-                    errorPopOver.setContentNode(new Label("Valid release date required"));
-                    errorPopOver.show(releaseDatePicker);
-                    releaseDatePicker.getEditor().setText("");
-                } else {
-                    errorPopOver.hide();
-                }
-            } else {
-                errorPopOver.hide();
-            }
-        });
-    }
-
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
 
         cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
             stage.close();
         });
     }
 
+    /**
+     * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
+     */
     private boolean validate() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        if (projectTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Project must not be empty"));
-            errorPopOver.show(projectTextField);
+        if (validationSupport.isInvalid()) {
             return false;
         } else {
-            // check that text matches an existing shortName (and keep a reference to the matching project)
-            project = null;
-            for (final Project p : organisation.getProjects()) {
-                if (projectTextField.getText().equals(p.getShortName())) {
-                    project = p;
-                    break;
-                }
-            }
-            if (project == null) {
-                errorPopOver.setContentNode(new Label("Project \"" + projectTextField.getText() + "\" does not exist"));
-                errorPopOver.show(projectTextField);
-                return false;
-            }
+            valid = true;
         }
-
-        if (releaseDatePicker.getValue() == null) {
-            errorPopOver.setContentNode(new Label("Valid release date required"));
-            errorPopOver.show(releaseDatePicker);
-            return false;
-        }
-
-        if (release != null) {
-            // we're editing
-            if (shortNameTextField.getText().equals(release.getShortName())) {
-                // then that's fine
-                valid = true;
-                setCommand();
-                return true;
-            }
-        }
-
-        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), project.getReleases())) {
-            errorPopOver.setContentNode(new Label("Short name must be unique"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        valid = true;
         setCommand();
         return true;
     }
@@ -275,33 +253,17 @@ public class ReleaseFormController implements Initializable {
         if (release == null) {
             // create a release
             stage.setTitle("Create Release");
-            okButton.setText("Create Release");
+            okButton.setText("Done");
             releaseDatePicker.setPromptText("dd/mm/yyyy");
         } else {
             // edit an existing release
             stage.setTitle("Edit Release");
-            okButton.setText("Save");
+            okButton.setText("Done");
 
             shortNameTextField.setText(release.getShortName());
             projectTextField.setText(release.getProject().getShortName());
             releaseDatePicker.setValue(release.getDate());
             descriptionTextField.setText(release.getDescription());
         }
-    }
-
-    /**
-     * Sets focus listeners on text fields so PopOvers are hidden upon focus
-     */
-    private void setErrorPopOvers() {
-        // Set PopOvers as not detachable so we don't have floating PopOvers
-        errorPopOver.setDetachable(false);
-
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                errorPopOver.hide();
-            } else {
-                errorPopOver.hide();
-            }
-        });
     }
 }

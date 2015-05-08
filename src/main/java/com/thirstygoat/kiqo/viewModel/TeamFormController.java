@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.viewModel;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -38,6 +39,9 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 /**
  * Created by james on 27/03/15.
@@ -47,7 +51,6 @@ public class TeamFormController implements Initializable {
     private final ArrayList<Person> devTeam = new ArrayList<>();
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
-    private final PopOver errorPopOver = new PopOver();
     private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
     // Begin FXML Injections
@@ -69,14 +72,49 @@ public class TeamFormController implements Initializable {
     private Person scrumMaster;
     private Person productOwner;
 
+    private ValidationSupport validationSupport = new ValidationSupport();
+
+    private static void setCellFactory(ListView<Person> listView) {
+        listView.setCellFactory(view -> new ListCell<Person>() {
+            @Override
+            public void updateItem(Person person, boolean empty) {
+                super.updateItem(person, empty);
+                if (person != null) {
+                    setText(person.getShortName());
+                } else {
+                    setText(null);
+                }
+            }
+        });
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setErrorPopOvers();
         setShortNameLengthRestrictor();
         setPrompts();
 
         Platform.runLater(shortNameTextField::requestFocus);
+
+        setValidationSupport();
+    }
+
+    private void setValidationSupport() {
+        // Validation for short name
+        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+                Utilities.shortnameIsUnique(shortNameTextField.getText(), team, organisation.getTeams());
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty."));
+
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // Then invalid, disable ok button
+                okButton.setDisable(true);
+            } else {
+                okButton.setDisable(false);
+            }
+        });
     }
 
     private void setPrompts() {
@@ -92,57 +130,32 @@ public class TeamFormController implements Initializable {
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-                errorPopOver.setContentNode(new Label("Short name must be under " + SHORT_NAME_MAX_LENGTH +
-                        " characters"));
-                errorPopOver.show(shortNameTextField);
             }
-        });
-    }
-
-    private void setErrorPopOvers() {
-        errorPopOver.setDetachable(false);
-        shortNameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            errorPopOver.hide();
         });
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
             if (validate()) {
-                errorPopOver.hide(Duration.millis(0));
                 stage.close();
             }
         });
 
         cancelButton.setOnAction(event -> {
-            errorPopOver.hide(Duration.millis(0));
             stage.close();
         });
     }
 
+    /**
+     * Performs validation checks and displays error popovers where applicable
+     * @return all fields are valid
+     */
     private boolean validate() {
-        if (shortNameTextField.getText().length() == 0) {
-            errorPopOver.setContentNode(new Label("Short name must not be empty"));
-            errorPopOver.show(shortNameTextField);
+        if (validationSupport.isInvalid()) {
             return false;
+        } else {
+            valid = true;
         }
-
-        if (team != null) {
-            // we're editing
-            if (shortNameTextField.getText().equals(team.getShortName())) {
-                // then that's fine
-                valid = true;
-                setCommand();
-                return true;
-            }
-        }
-        if (!Utilities.shortnameIsUnique(shortNameTextField.getText(), organisation.getTeams())) {
-            errorPopOver.setContentNode(new Label("Short name must be unique"));
-            errorPopOver.show(shortNameTextField);
-            return false;
-        }
-
-        valid = true;
         setCommand();
         return true;
     }
@@ -259,20 +272,6 @@ public class TeamFormController implements Initializable {
         });
 
 
-    }
-
-    private static void setCellFactory(ListView<Person> listView) {
-        listView.setCellFactory(view -> new ListCell<Person>() {
-            @Override
-            public void updateItem(Person person, boolean empty) {
-                super.updateItem(person, empty);
-                if (person != null) {
-                    setText(person.getShortName());
-                } else {
-                    setText(null);
-                }
-            }
-        });
     }
 
     private void setTargetPeopleCellFactory(ListView<Person> listView) {
