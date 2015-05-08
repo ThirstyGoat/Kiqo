@@ -121,6 +121,8 @@ public class MainController implements Initializable {
     private Team selectedTeam;
     private Release selectedRelease;
 
+    private int[] savePosition;
+
     /**
      * Triggers an update of a specific object in a list view, so that updateItem is called and the
      * cell is recreated with current data (ie. if the short name changes in this case).
@@ -719,14 +721,25 @@ public class MainController implements Initializable {
 
     public void undo() {
         undoManager.undoCommand();
-        changesSaved.set(false);
+
+        if (savePosition != null && undoManager.getUndoStackSize() == savePosition[0] &&
+                undoManager.getRedoStackSize() == savePosition[1]) {
+            changesSaved.set(true);
+        } else {
+            changesSaved.set(false);
+        }
     }
 
     public void redo() {
         undoManager.redoCommand();
         // If the changes are already saved, and we redo something, then the
         // changes are now not saved
-        changesSaved.set(false);
+        if (savePosition != null && undoManager.getUndoStackSize() == savePosition[0] &&
+                undoManager.getRedoStackSize() == savePosition[1]) {
+            changesSaved.set(true);
+        } else {
+            changesSaved.set(false);
+        }
     }
 
     public void doCommand(Command<?> command) {
@@ -779,6 +792,8 @@ public class MainController implements Initializable {
                 // If changes are saved, then update message to reflect that
                 statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);
                 primaryStage.setTitle("Kiqo");
+
+                savePosition = new int[]{undoManager.getUndoStackSize(), undoManager.getRedoStackSize()};
             } else {
                 // Then there are unsaved changes, update status message
                 statusBar.setText(MainController.UNSAVED_CHANGES_TEXT);
