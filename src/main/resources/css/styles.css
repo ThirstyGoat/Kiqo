@@ -17,4 +17,9 @@
 	-fx-background-color: lightskyblue;
 }
 
+.table-view:focused .table-row-cell:filled:focused:selected {
+	-fx-background-color: -fx-focus-color;
+}
+
+
 

@@ -82,6 +82,7 @@ public class AllocationsTableViewController implements Initializable {
         contextMenu.getItems().addAll(clearEndDateMenuItem, deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
+
             final TableRow<Allocation> row = new TableRow<>();
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
@@ -102,6 +103,7 @@ public class AllocationsTableViewController implements Initializable {
 
                     // set background color
                     final LocalDate now = LocalDate.now();
+                    row.getStyleClass().removeAll("allocation-current", "allocation-future", "allocation-past");
                     if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
                         row.getStyleClass().add("allocation-current");
                     } else if (newValue.getStartDate().isAfter(now)) {
@@ -156,7 +158,6 @@ public class AllocationsTableViewController implements Initializable {
             if (result.equals("Delete Allocation")) {
                 mainController.doCommand(command);
             }
-
         });
     }
 
