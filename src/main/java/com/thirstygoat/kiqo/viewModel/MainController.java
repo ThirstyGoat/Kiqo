@@ -11,6 +11,8 @@ import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -339,9 +341,13 @@ public class MainController implements Initializable {
         // tab-switching
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             // only for project: also update releases listView
-                releasesListView.setItems(null);
+            releasesListView.setItems(null);
+            selectedProject = newValue;
+            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == projectTab) {
+                MainController.focusedItemProperty.set(newValue);
+            }
+
             if (newValue != null) {
-                selectedProject = newValue;
                 releasesListView.setItems(selectedProject.observableReleases());
 
                 // Update list label
@@ -353,40 +359,35 @@ public class MainController implements Initializable {
                 }
 
             } else {
-                MainController.focusedItemProperty.set(null);
-
                 // Update list label
                 listLabel.textProperty().unbind();
                 listLabel.setText(null);
             }
-
         });
+
+
         peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedPerson = newValue;
-            } else {
-                MainController.focusedItemProperty.set(null);
+            selectedPerson = newValue;
+            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == peopleTab) {
+                MainController.focusedItemProperty.set(newValue);
             }
         });
         skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedSkill = newValue;
-            } else {
-                MainController.focusedItemProperty.set(null);
+            selectedSkill = newValue;
+            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == skillsTab) {
+                MainController.focusedItemProperty.set(newValue);
             }
         });
         teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedTeam = newValue;
-            } else {
-                MainController.focusedItemProperty.set(null);
+            selectedTeam = newValue;
+            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == teamsTab) {
+                MainController.focusedItemProperty.set(newValue);
             }
         });
         releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedRelease = newValue;
-            } else {
-                MainController.focusedItemProperty.set(null);
+            selectedRelease = newValue;
+            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == releasesTab) {
+                MainController.focusedItemProperty.set(newValue);
             }
         });
     }
@@ -432,59 +433,39 @@ public class MainController implements Initializable {
     private void initialiseTabs() {
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == projectTab) {
-                projectListView.getSelectionModel().select(null);
-                if (selectedProject != null) {
-                    projectListView.getSelectionModel().select(selectedProject);
-                } else {
+                if (selectedProject == null) {
                     projectListView.getSelectionModel().selectFirst();
                 }
-                if (projectListView.getItems().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
+                MainController.focusedItemProperty.set(selectedProject);
+
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
-                peopleListView.getSelectionModel().select(null);
                 if (selectedPerson == null) {
                     peopleListView.getSelectionModel().selectFirst();
-                } else {
-                    peopleListView.getSelectionModel().select(selectedPerson);
                 }
-                if (peopleListView.getItems().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
+                MainController.focusedItemProperty.set(selectedPerson);
+
                 menuBarController.updateAfterPersonListSelected(true);
             } else if (newValue == skillsTab) {
-                skillsListView.getSelectionModel().select(null);
                 if (selectedSkill == null) {
                     skillsListView.getSelectionModel().selectFirst();
-                } else {
-                    skillsListView.getSelectionModel().select(selectedSkill);
                 }
-                if (skillsListView.getItems().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
+                MainController.focusedItemProperty.set(selectedSkill);
+
                 menuBarController.updateAfterSkillListSelected(true);
             } else if (newValue == teamsTab) {
-                teamsListView.getSelectionModel().select(null);
                 if (selectedTeam == null) {
                     teamsListView.getSelectionModel().selectFirst();
-                } else {
-                    teamsListView.getSelectionModel().select(selectedTeam);
                 }
-                if (teamsListView.getItems().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
+                MainController.focusedItemProperty.set(selectedTeam);
+
                 menuBarController.updateAfterTeamListSelected(true);
             } else if (newValue == releasesTab) {
-                releasesListView.getSelectionModel().select(null);
                 if (selectedRelease == null) {
                     releasesListView.getSelectionModel().selectFirst();
-                } else {
-                    releasesListView.getSelectionModel().select(selectedRelease);
                 }
-                if (releasesListView.getItems() == null || releasesListView.getItems().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
+                MainController.focusedItemProperty.set(selectedRelease);
+
                 menuBarController.updateAfterReleasesListSelected(true);
             }
         });
@@ -832,24 +813,29 @@ public class MainController implements Initializable {
                             item.shortNameProperty().addListener((observable, oldValue, newValue) -> {
                                 setText(newValue);
                             });
+                            setContextMenu(contextMenu);
                         }
                     }
                 };
-                listCell.setContextMenu(contextMenu);
                 return listCell;
             }
         });
 
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                MainController.focusedItemProperty.set(newValue);
-
                 // Update status bar to show current save status
                 // Probably not the best way to do this, but it's the simplest
                 changesSaved.set(!changesSaved.get());
                 changesSaved.set(!changesSaved.get());
             }
         });
+//
+//        listView.getItems().addListener((ListChangeListener<T>) c -> {
+//            c.next();
+//            if (c.getAddedSubList().size() > 0) {
+//                listView.getSelectionModel().select(c.getAddedSubList().get(0));
+//            }
+//        });
     }
 
 
