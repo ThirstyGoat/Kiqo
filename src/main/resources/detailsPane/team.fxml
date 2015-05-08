@@ -30,7 +30,7 @@
             <Label fx:id="poLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="smLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="devTeamLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <fx:include source="allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS"/>
+            <fx:include source="allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS"/>
             <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>
