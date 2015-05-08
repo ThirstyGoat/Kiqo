@@ -147,27 +147,24 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-            final UICommand<Skill> command = new UICommand<>(new DeleteSkillCommand(skill, selectedOrganisation));
 
             String deleteMessage = "There are no people with this skill.";
-                if (((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill().size() > 0) {
+            DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
+                if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-                deleteMessage += Utilities.concatenatePeopleList(((DeleteSkillCommand) command.getCommand()).getPeopleWithSkill(), 5);
+                deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
             }
             final String[] buttons = { "Delete Skill", "Cancel" };
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
             if (result.equals("Delete Skill")) {
-                command.setRefreshParameters(skill, skillsListView);
-                doCommand(command);
+                doCommand(new DeleteSkillCommand(skill, selectedOrganisation));
             }
         }
     }
 
     private void deleteTeam(Team team) {
-        final UICommand<Team> command = new UICommand<>(new DeleteTeamCommand(team, selectedOrganisation));
-
         final VBox node = new VBox();
         node.setSpacing(10);
 
@@ -197,16 +194,15 @@ public class MainController implements Initializable {
             // Then delete the team
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
+            DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
             if (deletePeople) {
-                ((DeleteTeamCommand) command.getCommand()).setDeleteMembers();
+                command.setDeleteMembers();
             }
-            command.setRefreshParameters(team, teamsListView);
             doCommand(command);
         }
     }
 
     private void deletePerson(Person person) {
-        final UICommand<Person> command = new UICommand<>(new DeletePersonCommand(selectedPerson, selectedOrganisation));
 
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -224,15 +220,12 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
-            command.setRefreshParameters(person, peopleListView);
-            doCommand(command);
+            doCommand(new DeletePersonCommand(selectedPerson, selectedOrganisation));
         }
     }
 
     public void deleteRelease(Release release) {
-        final UICommand command = new UICommand(new DeleteReleaseCommand(selectedRelease));
-
-        final VBox node = new VBox();
+       final VBox node = new VBox();
         node.setSpacing(10);
 
         final String deleteMessage = "Are you sure you want to remove the release: "
@@ -244,8 +237,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Release")) {
-            command.setRefreshParameters(release, releasesListView);
-            doCommand(command);
+            doCommand(new DeleteReleaseCommand(selectedRelease));
         }
 
     }
@@ -790,48 +782,12 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     //editing
-                    final UICommand command = new UICommand(projectFormController.getCommand());
-                    doCommand(command);
+                    doCommand(projectFormController.getCommand());
                 }
 
             }
         });
     }
-
-
-//    private void editProjectDialog(Project project) {
-//        // Needed to wrap the dialog box in runLater due to the dialog box
-//        // occasionally opening twice (known FX issue)
-//        Platform.runLater(() -> {
-//            final Stage stage = new Stage();
-//            stage.setTitle("Edit Project");
-//            stage.initOwner(primaryStage);
-//            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.initStyle(StageStyle.UTILITY);
-//            stage.setResizable(false);
-//            final FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/editProject.fxml"));
-//            BorderPane root;
-//            try {
-//                root = loader.load();
-//            } catch (final IOException e) {
-//                e.printStackTrace();
-//                return;
-//            }
-//            final Scene scene = new Scene(root);
-//            stage.setScene(scene);
-//            final EditProjectController editProjectController = loader.getController();
-//            editProjectController.setStage(stage);
-//            editProjectController.loadProject(project);
-//
-//            stage.showAndWait();
-//            if (editProjectController.isValid()) {
-//                final UICommand command = new UICommand(editProjectController.getCommand());
-//                //command.setRefreshParameters(project, projectListView, detailsPaneController);
-//                doCommand(command);
-//            }
-//        });
-//    }
 
     /**
      * Attaches cell factory and selection listener to the list view.
@@ -906,8 +862,7 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     //editing
-                    final UICommand command = new UICommand(personFormController.getCommand());
-                    doCommand(command);
+                    doCommand(personFormController.getCommand());
                 }
 
             }
@@ -946,8 +901,7 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     // editing
-                    final UICommand command = new UICommand(teamFormController.getCommand());
-                    doCommand(command);
+                    doCommand(teamFormController.getCommand());
                 }
             }
         });
@@ -982,8 +936,7 @@ public class MainController implements Initializable {
                     final CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
                     doCommand(command);
                 } else {
-                    final UICommand command = new UICommand(releaseFormController.getCommand());
-                    doCommand(command);
+                    doCommand(releaseFormController.getCommand());
                 }
             }
         });
@@ -1021,8 +974,7 @@ public class MainController implements Initializable {
                     doCommand(command);
                 } else {
                     //editing
-                    final UICommand command = new UICommand(skillFormController.getCommand());
-                    doCommand(command);
+                    doCommand(skillFormController.getCommand());
                 }
 
             }
@@ -1056,9 +1008,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (allocationFormController.isValid()) {
-                final UICommand command = new UICommand(allocationFormController.getCommand());
-                command.setRefreshParameters(selectedProject, projectListView);
-                doCommand(command);
+              doCommand(allocationFormController.getCommand());
             }
         });
     }
