@@ -9,7 +9,6 @@
           <items>
             <MenuItem fx:id="newProjectMenuItem" mnemonicParsing="false" text="Project" />
             <MenuItem fx:id="newReleaseMenuItem" mnemonicParsing="false" text="Release" />
-            <MenuItem fx:id="generateStatusReportMenuItem" mnemonicParsing="false" text="Generate Report" />
             <MenuItem fx:id="newTeamMenuItem" mnemonicParsing="false" text="Team" />
             <MenuItem fx:id="newPersonMenuItem" mnemonicParsing="false" text="Person" />
             <MenuItem fx:id="newSkillMenuItem" mnemonicParsing="false" text="Skill" />
@@ -18,6 +17,8 @@
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem fx:id="generateStatusReportMenuItem" mnemonicParsing="false" text="Generate Report" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
       </items>
