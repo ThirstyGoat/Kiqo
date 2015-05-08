@@ -1,14 +1,15 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.model.Project;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 25/03/2015.
@@ -27,6 +28,8 @@ public class ProjectDetailsPaneController implements Initializable {
     private Button allocateTeamButton;
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
+    private boolean hasProject = false;
+    private boolean hasTeams = false;
 
 
     @Override
@@ -52,5 +55,35 @@ public class ProjectDetailsPaneController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         allocationsTableViewController.setMainController(mainController);
+        setAllocationButtonListeners();
+    }
+
+    private void setAllocationButtonListeners() {
+        mainController.getSelectedOrganisation().getProjects().addListener((ListChangeListener<Project>) c -> {
+            if (mainController.getSelectedOrganisation().getProjects().isEmpty()) {
+                // project list is empty so disable button
+                hasProject = false;
+                allocateTeamButton.setDisable(true);
+            } else {
+                // project is not empty so check if team is not empty too
+                hasProject = true;
+                if (hasTeams) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
+
+        mainController.getSelectedOrganisation().getTeams().addListener((ListChangeListener<Team>) c -> {
+            if (mainController.getSelectedOrganisation().getTeams().isEmpty()) {
+                // team list is empty
+                allocateTeamButton.setDisable(true);
+                hasTeams = false;
+            } else {
+                hasTeams = true;
+                if (hasProject) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
     }
 }

@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.Utilities;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.util.Utilities;
-import javafx.stage.Stage;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class TeamDetailsPaneController implements Initializable {
 
@@ -36,6 +32,8 @@ public class TeamDetailsPaneController implements Initializable {
     private AllocationsTableViewController allocationsTableViewController;
     @FXML
     private Button allocateTeamButton;
+    private boolean hasTeams = false;
+    private boolean hasProject = false;
 
 
     public void showDetails(final Team team) {
@@ -93,5 +91,35 @@ public class TeamDetailsPaneController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         allocationsTableViewController.setMainController(mainController);
+        setAllocationButtonListeners();
+    }
+
+    private void setAllocationButtonListeners() {
+        mainController.getSelectedOrganisation().getProjects().addListener((ListChangeListener<Project>) c -> {
+            if (mainController.getSelectedOrganisation().getProjects().isEmpty()) {
+                // project list is empty so disable button
+                hasProject = false;
+                allocateTeamButton.setDisable(true);
+            } else {
+                // project is not empty so check if team is not empty too
+                hasProject = true;
+                if (hasTeams) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
+
+        mainController.getSelectedOrganisation().getTeams().addListener((ListChangeListener<Team>) c -> {
+            if (mainController.getSelectedOrganisation().getTeams().isEmpty()) {
+                // team list is empty
+                allocateTeamButton.setDisable(true);
+                hasTeams = false;
+            } else {
+                hasTeams = true;
+                if (hasProject) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
     }
 }

@@ -11,8 +11,6 @@ import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -301,13 +299,10 @@ public class MainController implements Initializable {
         initialiseTabs();
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
-        MainController.focusedItemProperty.addListener(new ChangeListener<Item>() {
-            @Override
-            public void changed(ObservableValue<? extends Item> observable, Item oldValue, Item newValue) {
-                System.out.println("Focus changed to " + newValue);
-                detailsPaneController.showDetailsPane(newValue);
-                menuBarController.updateAfterAnyObjectSelected(newValue != null);
-            }
+        MainController.focusedItemProperty.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Focus changed to " + newValue);
+            detailsPaneController.showDetailsPane(newValue);
+            menuBarController.updateAfterAnyObjectSelected(newValue != null);
         });
 
         Platform.runLater(() -> listLabel.setText(""));
@@ -394,6 +389,7 @@ public class MainController implements Initializable {
         });
     }
 
+
     private void setListViewData() {
 
         projectListView.setItems(selectedOrganisation.getProjects());
@@ -414,6 +410,10 @@ public class MainController implements Initializable {
 
         switchToProjectList();
         projectListView.getSelectionModel().select(0);
+    }
+
+    public Organisation getSelectedOrganisation() {
+        return selectedOrganisation;
     }
 
     /**
@@ -543,7 +543,7 @@ public class MainController implements Initializable {
     }
 
     public void allocateTeams() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisation != null ) {
             allocationDialog(null);
         }
     }
@@ -1003,7 +1003,9 @@ public class MainController implements Initializable {
             final AllocationFormController allocationFormController = loader.getController();
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
+
             allocationFormController.setProject(selectedProject);
+
             allocationFormController.setAllocation(allocation);
 
             stage.showAndWait();
