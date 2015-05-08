@@ -32,6 +32,7 @@ import org.controlsfx.validation.*;
 public class SkillFormController implements Initializable {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Skill skill;
     private String shortName;
     private String description;
@@ -39,12 +40,7 @@ public class SkillFormController implements Initializable {
     private Stage stage;
     private Command<?> command;
     private boolean shortNameModified = false;
-
     private Organisation organisation;
-
-    private ValidationSupport validationSupport;
-
-
     // FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -69,7 +65,6 @@ public class SkillFormController implements Initializable {
     }
 
     private void setValidationSupport() {
-        validationSupport = new ValidationSupport();
         // Validation for short name
         Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), skill, organisation.getSkills());
