@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 
-<TableView fx:id="allocationsTableView"  prefHeight="200" prefWidth="-1" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.AllocationsTableViewController">
+<TableView fx:id="allocationsTableView" prefHeight="200" prefWidth="-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.AllocationsTableViewController">
   <columns>
       <TableColumn fx:id="teamTableColumn" text="Team" />
       <TableColumn fx:id="startDateTableColumn" text="Start Date" />
