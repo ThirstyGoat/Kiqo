@@ -19,6 +19,8 @@
         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
         <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" text="Save As" />
         <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem fx:id="generateStatusReportMenuItem" mnemonicParsing="false" text="Generate Report" />
+        <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
       </items>
     </Menu>

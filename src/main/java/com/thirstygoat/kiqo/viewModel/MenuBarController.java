@@ -27,6 +27,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem generateStatusReportMenuItem;
+    @FXML
     private MenuItem openMenuItem;
     @FXML
     private MenuItem saveMenuItem;
@@ -125,6 +127,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
         saveAsMenuItem.setOnAction(event -> mainController.saveAsOrganisation());
