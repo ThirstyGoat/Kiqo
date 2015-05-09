@@ -9,10 +9,10 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -41,6 +41,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private static final String PRODUCT_NAME = "Kiqo";
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = new UndoManager();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
@@ -85,7 +86,7 @@ public class MainController implements Initializable {
 
     //Todo: set selected org properly
     private Organisation selectedOrganisation;
-    private Project selectedProject;
+    private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -93,34 +94,23 @@ public class MainController implements Initializable {
 
     private int[] savePosition = {0, 0};
 
-    /**
-     * Triggers an update of a specific object in a list view, so that updateItem is called and the
-     * cell is recreated with current data (ie. if the short name changes in this case).
-     * @param newValue Object in the list that has changed
-     * @param listView ListView that object belongs to
-     * @param <T> Type of the object
-     */
-    public static <T> void triggerListUpdate(T newValue, ListView<T> listView) {
-        final Item prevFocusedItem = MainController.focusedItemProperty.get();
+    private StringProperty stageTitleProperty = new SimpleStringProperty();
 
-        final int i = listView.getItems().indexOf(newValue);
-        final EventType<? extends ListView.EditEvent<T>> type = ListView.editCommitEvent();
-        final Event event = new ListView.EditEvent<>(listView, type, newValue, i);
-        listView.fireEvent(event);
+    private void setStageTitleProperty() {
+        // Add a listener to know when changes are saved, so that the title can be updated
+        StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
+        changesSaved.addListener((observable, oldValue, newValue) -> {
+            changesSavedAsterisk.set(newValue ? "" : "*");
+        });
 
-        if (prevFocusedItem == newValue) {
-            listView.getSelectionModel().select(newValue);
-            if (listView.getItems().isEmpty()) {
-                MainController.focusedItemProperty.set(null);
-            } else {
-                if (newValue == listView.getSelectionModel().getSelectedItem()) {
-                    listView.getSelectionModel().select(null);
-                }
-                listView.getSelectionModel().select(newValue);
-            }
-        }
+        StringProperty titlePrefix = new SimpleStringProperty(
+                selectedProject.get() != null ? selectedProject.get().getShortName() + " - " : "");
+        selectedProject.addListener((observable, oldValue, newValue) -> {
+            titlePrefix.set(newValue != null ? newValue.getShortName() + " - " : "");
+        });
 
-        MainController.focusedItemProperty.set(prevFocusedItem);
+        stageTitleProperty.bind(Bindings.concat(titlePrefix).concat(PRODUCT_NAME).concat(changesSavedAsterisk));
+        primaryStage.titleProperty().bind(stageTitleProperty);
     }
 
     /**
@@ -342,13 +332,13 @@ public class MainController implements Initializable {
         projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             // only for project: also update releases listView
             releasesListView.setItems(null);
-            selectedProject = newValue;
+            selectedProject.set(newValue);
             if (tabViewPane.getSelectionModel().selectedItemProperty().get() == projectTab) {
                 MainController.focusedItemProperty.set(newValue);
             }
 
             if (newValue != null) {
-                releasesListView.setItems(selectedProject.observableReleases());
+                releasesListView.setItems(selectedProject.get().observableReleases());
 
                 // Update list label
                 if (projectListView.getItems().contains(newValue)) {
@@ -436,7 +426,7 @@ public class MainController implements Initializable {
                 if (selectedProject == null) {
                     projectListView.getSelectionModel().selectFirst();
                 }
-                MainController.focusedItemProperty.set(selectedProject);
+                MainController.focusedItemProperty.set(selectedProject.get());
 
                 menuBarController.updateAfterProjectListSelected(true);
             } else if (newValue == peopleTab) {
@@ -745,11 +735,9 @@ public class MainController implements Initializable {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
                 statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);
-                primaryStage.setTitle("Kiqo");
             } else {
                 // Then there are unsaved changes, update status message
                 statusBar.setText(MainController.UNSAVED_CHANGES_TEXT);
-                primaryStage.setTitle("Kiqo*");
             }
         });
     }
@@ -829,13 +817,6 @@ public class MainController implements Initializable {
                 changesSaved.set(!changesSaved.get());
             }
         });
-//
-//        listView.getItems().addListener((ListChangeListener<T>) c -> {
-//            c.next();
-//            if (c.getAddedSubList().size() > 0) {
-//                listView.getSelectionModel().select(c.getAddedSubList().get(0));
-//            }
-//        });
     }
 
 
@@ -1013,7 +994,7 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
 
-            allocationFormController.setProject(selectedProject);
+            allocationFormController.setProject(selectedProject.get());
 
             allocationFormController.setAllocation(allocation);
 
@@ -1033,5 +1014,7 @@ public class MainController implements Initializable {
         addClosePrompt();
         menuBarController.setMainController(this);
         detailsPaneController.setMainController(this);
+
+        setStageTitleProperty();
     }
 }
