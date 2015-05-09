@@ -176,36 +176,34 @@ public class AllocationsTableViewController implements Initializable {
     }
 
     private void setAllocationButtonListeners() {
-        mainController.getSelectedOrganisation().getProjects().addListener((ListChangeListener<Project>) c -> {
-            if (mainController.getSelectedOrganisation().getProjects().isEmpty()) {
-                // project list is empty so disable button
-                hasProject = false;
-                allocateTeamButton.setDisable(true);
-            } else {
-                // project is not empty so check if team is not empty too
-                hasProject = true;
-                if (hasTeams) {
-                    allocateTeamButton.setDisable(false);
-                }
-            }
+
+        setButtonDisabled();
+
+        mainController.getSelectedOrganisationProperty().getValue().getProjects().addListener((ListChangeListener<Project>) c -> {
+            setButtonDisabled();
         });
 
-        mainController.getSelectedOrganisation().getTeams().addListener((ListChangeListener<Team>) c -> {
-            if (mainController.getSelectedOrganisation().getTeams().isEmpty()) {
-                // team list is empty
-                allocateTeamButton.setDisable(true);
-                hasTeams = false;
-            } else {
-                hasTeams = true;
-                if (hasProject) {
-                    allocateTeamButton.setDisable(false);
-                }
-            }
+        mainController.getSelectedOrganisationProperty().getValue().getTeams().addListener((ListChangeListener<Team>) c -> {
+            setButtonDisabled();
         });
+    }
+
+    /**
+     * Enables the add allocations button if there are projects and teams in the org
+     * otherwise disable it
+     */
+    private void setButtonDisabled() {
+        boolean areProjects = mainController.getSelectedOrganisationProperty().getValue().getProjects().size() > 0;
+        boolean areTeams = mainController.getSelectedOrganisationProperty().getValue().getTeams().size() > 0;
+        allocateTeamButton.setDisable(!(areProjects && areTeams));
     }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        // need to reset the listeners if the organisation changed i.e. load from json file
+        mainController.getSelectedOrganisationProperty().addListener((observable, oldValue, newValue) -> {
+            setAllocationButtonListeners();
+        });
         setAllocationButtonListeners();
     }
 

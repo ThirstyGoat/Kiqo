@@ -87,6 +87,7 @@ public class MainController implements Initializable {
 
     //Todo: set selected org properly
     private Organisation selectedOrganisation;
+    private SimpleObjectProperty<Organisation> selectedOrganisationProperty;
     private Project selectedProject;
     private Person selectedPerson;
     private Skill selectedSkill;
@@ -295,8 +296,10 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisation = new Organisation();
-        // enable menu items
-        menuBarController.enableNewTeam();
+        selectedOrganisationProperty = new SimpleObjectProperty<>(selectedOrganisation);
+
+            // enable menu items
+            menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
 //        menuBarController.enableNewRelease();
@@ -419,6 +422,10 @@ public class MainController implements Initializable {
 
     public Organisation getSelectedOrganisation() {
         return selectedOrganisation;
+    }
+
+    public SimpleObjectProperty<Organisation> getSelectedOrganisationProperty() {
+        return selectedOrganisationProperty;
     }
 
     /**
@@ -556,6 +563,7 @@ public class MainController implements Initializable {
         Organisation organisation = null;
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
+            selectedOrganisationProperty.set(organisation);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {

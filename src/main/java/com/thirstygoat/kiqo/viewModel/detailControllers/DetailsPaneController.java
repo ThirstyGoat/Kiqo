@@ -45,8 +45,6 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private Button deleteButton;
     @FXML
-    private Button allocateTeamButton;
-    @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
