@@ -3,7 +3,10 @@ package com.thirstygoat.kiqo.viewModel;
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +27,9 @@ public class AllocationsTableViewController implements Initializable {
     }
 
     private MainController mainController;
+    private FirstColumnType type;
+    private boolean hasProject = false;
+    private boolean hasTeams = false;
 
     @FXML
     private TableView<Allocation> allocationsTableView;
@@ -33,20 +39,24 @@ public class AllocationsTableViewController implements Initializable {
     private TableColumn<Allocation, LocalDate> startDateTableColumn;
     @FXML
     private TableColumn<Allocation, LocalDate> endDateTableColumn;
+    @FXML
+    private Button allocateTeamButton;
 
     public void init(FirstColumnType type) {
-        if (type.equals(FirstColumnType.PROJECT)) {
-            System.out.println("project");
-            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
-            teamTableColumn.setText("Project");
-        } else if(type.equals(FirstColumnType.TEAM)){
-            System.out.println("team");
-            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
-        }
+        this.type = type;
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
         initializeTable();
     }
 
     private void initializeTable() {
+
+        // set the Title of the first column and the cell factory for the first column
+        if (type.equals(FirstColumnType.PROJECT)) {
+            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
+            teamTableColumn.setText("Project");
+        } else if (type.equals(FirstColumnType.TEAM)) {
+            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
+        }
 
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
@@ -165,8 +175,38 @@ public class AllocationsTableViewController implements Initializable {
         });
     }
 
+    private void setAllocationButtonListeners() {
+        mainController.getSelectedOrganisation().getProjects().addListener((ListChangeListener<Project>) c -> {
+            if (mainController.getSelectedOrganisation().getProjects().isEmpty()) {
+                // project list is empty so disable button
+                hasProject = false;
+                allocateTeamButton.setDisable(true);
+            } else {
+                // project is not empty so check if team is not empty too
+                hasProject = true;
+                if (hasTeams) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
+
+        mainController.getSelectedOrganisation().getTeams().addListener((ListChangeListener<Team>) c -> {
+            if (mainController.getSelectedOrganisation().getTeams().isEmpty()) {
+                // team list is empty
+                allocateTeamButton.setDisable(true);
+                hasTeams = false;
+            } else {
+                hasTeams = true;
+                if (hasProject) {
+                    allocateTeamButton.setDisable(false);
+                }
+            }
+        });
+    }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        setAllocationButtonListeners();
     }
 
     public void setItems(ObservableList<Allocation> items) {

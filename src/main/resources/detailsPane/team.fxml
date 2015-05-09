@@ -27,7 +27,6 @@
             <Label fx:id="smLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="devTeamLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <fx:include source="allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS"/>
-            <Button fx:id="allocateTeamButton" mnemonicParsing="false" disable="true" text="Add Allocation" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
