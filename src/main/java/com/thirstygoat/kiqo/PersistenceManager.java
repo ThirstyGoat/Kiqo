@@ -97,7 +97,9 @@ public class PersistenceManager {
                 organisation.getProjects().setAll(organisation2.getProjects());
             }
         }
-        organisation.setSaveLocation(file);
+        if (organisation != null) {
+            organisation.setSaveLocation(file);
+        }
         return organisation;
     }
 

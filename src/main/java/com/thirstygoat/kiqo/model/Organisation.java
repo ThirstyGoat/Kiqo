@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.model;
 import java.io.File;
 import java.io.Serializable;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group4.utils.Utilities;
@@ -23,7 +25,7 @@ public class Organisation implements Serializable {
     private final ObservableList<Skill> skills = FXCollections.observableArrayList();
     private final ObservableList<Team> teams = FXCollections.observableArrayList();
     private transient File saveLocation;
-    private String organisationName = "Untitled";
+    private StringProperty organisationName = new SimpleStringProperty("Untitled");
 
     public Organisation() {
         skills.add(poSkill);
@@ -93,11 +95,10 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
-        organisationName = Utilities.stripExtention(saveLocation.getName());
+        organisationName.set(Utilities.stripExtention(saveLocation.getName()));
     }
 
-
-    public String getOrganisationName() {
+    public StringProperty organisationNameProperty() {
         return organisationName;
     }
 

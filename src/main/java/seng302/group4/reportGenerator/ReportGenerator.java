@@ -49,7 +49,7 @@ public final class ReportGenerator {
 
 
         title= (new String[]{
-                "Organisation: " + organisation.getOrganisationName(),
+                "Organisation: " + organisation.organisationNameProperty().get(),
                 "",
                 "Generated: " + LocalDateTime.now().format(titleFormatter),
                 "by " + ApplicationInfo.getProperty("name"),

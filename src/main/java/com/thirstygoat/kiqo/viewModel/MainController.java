@@ -14,6 +14,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -95,9 +97,7 @@ public class MainController implements Initializable {
     private Team selectedTeam;
     private Release selectedRelease;
 
-    private int[] savePosition = {0, 0};
-
-    private StringProperty stageTitleProperty = new SimpleStringProperty();
+    private int savePosition = 0;
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
@@ -106,14 +106,18 @@ public class MainController implements Initializable {
             changesSavedAsterisk.set(newValue ? "" : "*");
         });
 
-        StringProperty titlePrefix = new SimpleStringProperty(
-                selectedProject.get() != null ? selectedProject.get().getShortName() + " - " : "");
-        selectedProject.addListener((observable, oldValue, newValue) -> {
-            titlePrefix.set(newValue != null ? newValue.getShortName() + " - " : "");
+        StringProperty orgName = new SimpleStringProperty();
+        orgName.bind(selectedOrganisationProperty.get().organisationNameProperty());
+        selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
+            orgName.unbind();
+            orgName.bind(newValue.organisationNameProperty());
         });
 
-        stageTitleProperty.bind(Bindings.concat(titlePrefix).concat(PRODUCT_NAME).concat(changesSavedAsterisk));
-        primaryStage.titleProperty().bind(stageTitleProperty);
+        primaryStage.titleProperty().bind(Bindings
+                .concat(orgName)
+                .concat(changesSavedAsterisk)
+                .concat(" - ")
+                .concat(PRODUCT_NAME));
     }
 
     /**
@@ -597,8 +601,7 @@ public class MainController implements Initializable {
                 GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
-            savePosition[0] = undoManager.getUndoStackSize();
-            savePosition[1] = undoManager.getRedoStackSize();
+            savePosition = undoManager.getUndoStackSize();
             changesSaved.set(true);
         }
     }
@@ -655,7 +658,7 @@ public class MainController implements Initializable {
         final File existingFile = selectedOrganisation.getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
-            fileChooser.setInitialFileName(selectedOrganisation.getOrganisationName());
+            fileChooser.setInitialFileName(selectedOrganisation.organisationNameProperty().get());
         }
 
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
@@ -690,38 +693,19 @@ public class MainController implements Initializable {
 
     public void undo() {
         undoManager.undoCommand();
-
-
-        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
-        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
-
-        if (undoManager.getUndoStackSize() == savePosition[0] &&
-                undoManager.getRedoStackSize() == savePosition[1]) {
-            changesSaved.set(true);
-        } else {
-            changesSaved.set(false);
-        }
+        // If the changes are already saved, and we undo something, then the changes are now not saved
+        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void redo() {
         undoManager.redoCommand();
-        // If the changes are already saved, and we redo something, then the
-        // changes are now not saved
-        System.out.println("Save position: " + savePosition[0] + ", " + savePosition[1]);
-        System.out.println("Current position: " + undoManager.getUndoStackSize() + ", " + undoManager.getRedoStackSize());
+        // If the changes are already saved, and we redo something, then the changes are now not saved
 
-        if (undoManager.getUndoStackSize() == savePosition[0] &&
-                undoManager.getRedoStackSize() == savePosition[1]) {
-            changesSaved.set(true);
-        } else {
-            changesSaved.set(false);
-        }
+        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void doCommand(Command<?> command) {
         undoManager.doCommand(command);
-        savePosition[0] = 0;
-        savePosition[1] = 0;
         changesSaved.set(false);
     }
 

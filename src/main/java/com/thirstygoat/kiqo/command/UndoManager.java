@@ -74,13 +74,6 @@ public class UndoManager {
     }
 
     /**
-     * @return The size of the redo stack
-     */
-    public int getRedoStackSize() {
-        return redoStack.size();
-    }
-
-    /**
      * @return The size of the undo stack
      */
     public int getUndoStackSize() {
