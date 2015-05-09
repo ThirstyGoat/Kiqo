@@ -7,12 +7,9 @@ import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -34,6 +31,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import seng302.group4.reportGenerator.ReportGenerator;
+
+import java.io.FileWriter;
 
 /**
  * Main controller for the primary view
@@ -154,7 +154,7 @@ public class MainController implements Initializable {
             DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-                deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
+                deleteMessage += seng302.group4.utils.Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
             }
             final String[] buttons = { "Delete Skill", "Cancel" };
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
@@ -176,7 +176,7 @@ public class MainController implements Initializable {
             checkbox = new CheckBox("Also delete the people belonging to this team");
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
                     "?\nCurrent team members:\n";
-            deleteMessage += Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
+            deleteMessage += seng302.group4.utils.Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             node.getChildren().add(checkbox);
         } else {
@@ -646,6 +646,30 @@ public class MainController implements Initializable {
 
     public void switchToSkillList() {
         tabViewPane.getSelectionModel().select(skillsTab);
+    }
+
+    public void saveStatusReport() {
+        final String EXTENSION = ".yaml";
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
+        final File existingFile = selectedOrganisation.getSaveLocation();
+        if (existingFile != null) {
+            fileChooser.setInitialDirectory(existingFile.getParentFile());
+            fileChooser.setInitialFileName(selectedOrganisation.getOrganisationName());
+        }
+
+        final File selectedFile = fileChooser.showSaveDialog(primaryStage);
+
+        if (selectedFile != null) {
+            try {
+                FileWriter fileWriter = new FileWriter(selectedFile);
+                ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
+                fileWriter.write(reportGenerator.generateReport());
+                fileWriter.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void switchToPersonList() {

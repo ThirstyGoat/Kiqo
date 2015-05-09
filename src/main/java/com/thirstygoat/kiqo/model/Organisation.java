@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng302.group4.utils.Utilities;
+
+import java.io.File;
+import java.io.Serializable;
 
 /**
  * Project class represents a software project
@@ -19,6 +23,7 @@ public class Organisation implements Serializable {
     private final ObservableList<Skill> skills = FXCollections.observableArrayList();
     private final ObservableList<Team> teams = FXCollections.observableArrayList();
     private transient File saveLocation;
+    private String organisationName = "Untitled";
 
     public Organisation() {
         skills.add(poSkill);
@@ -88,6 +93,12 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
+        organisationName = Utilities.stripExtention(saveLocation.getName());
+    }
+
+
+    public String getOrganisationName() {
+        return organisationName;
     }
 
     /**

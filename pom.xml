@@ -1,5 +1,5 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.thirstygoat.kiqo</groupId>
   <artifactId>Kiqo</artifactId>
@@ -11,17 +11,17 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <repositories>
-	<repository>
-		<id>apache.snapshots</id>
-		<url>https://repository.apache.org/content/repositories/snapshots</url>
-		<snapshots>
-			<enabled>true</enabled>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
-		<releases>
-			<enabled>false</enabled>
-		</releases>
-	</repository>
+    <repository>
+      <id>apache.snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -30,16 +30,16 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-          <version>2.3.1</version>
-      </dependency>
-      <dependency>
-          <groupId>org.controlsfx</groupId>
-          <artifactId>controlsfx</artifactId>
-          <version>8.20.8</version>
-      </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>8.20.8</version>
+    </dependency>
   </dependencies>
   <pluginRepositories>
     <pluginRepository>
@@ -66,9 +66,9 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>1.7.1</version>
         <configuration>
-	        <shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
-	        <shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
-	    </configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
+          <shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
+        </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -142,10 +142,10 @@
 		</executions>
 	  </plugin>
       <plugin>
-  	  	<!-- Packaging for MS Windows -->
+        <!-- Packaging for MS Windows -->
         <groupId>com.akathist.maven.plugins.launch4j</groupId>
         <artifactId>launch4j-maven-plugin</artifactId>
-		<version>1.7.5</version>
+        <version>1.7.5</version>
         <executions>
           <execution>
             <id>l4j-gui</id>
@@ -170,8 +170,8 @@
                 <txtProductVersion>${project.version}</txtProductVersion>
                 <productName>${project.artifactId}</productName>
                 <internalName>${project.artifactId}</internalName>
-  				<companyName>Thirsty Goat</companyName>
-  				<!-- Original name of the file without the path. Allows to determine whether a file has been renamed by a user.  -->
+                <companyName>Thirsty Goat</companyName>
+                <!-- Original name of the file without the path. Allows to determine whether a file has been renamed by a user.  -->
                 <originalFilename>${project.artifactId}.exe</originalFilename>
               </versionInfo>
             </configuration>
@@ -179,7 +179,7 @@
         </executions>
       </plugin>
       <plugin>
-      	<!-- Packaging for Debian Linux (only a shell script) -->
+        <!-- Packaging for Debian Linux (only a shell script) -->
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
         <executions>
@@ -191,17 +191,23 @@
             </goals>
             <configuration>
               <outputDirectory>${basedir}/target/deploy</outputDirectory>
-              <resources>          
+              <resources>
                 <resource>
                   <directory>src/main/scripts</directory>
                   <filtering>true</filtering>
                 </resource>
-              </resources>              
-            </configuration>            
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
   </build>
   <reporting>
     <plugins>
@@ -211,29 +217,29 @@
         <version>2.8</version>
         <reportSets>
           <reportSet>
-              <reports>
-                  <report>index</report>
-                  <report>help</report>
-                  <report>project-team</report>
-                  <report>modules</report>
-                  <report>plugins</report>
-                  <report>cim</report>
-                  <report>issue-tracking</report>
-                  <report>scm</report>
-                  <report>license</report>
-                  <report>plugin-management</report>
-                  <report>distribution-management</report>
-                  <report>summary</report>
-                  <report>mailing-list</report>
-                  <report>issue-tracking</report>
-                  <!--
-        	      The dependency report is disabled due to bug in Apache BCEL https://issues.apache.org/jira/browse/BCEL-173
-                  Couldn't get workaround happening (from https://github.com/RichardWarburton/lambda-behave/issues/31) 
-        	      Since the dependency report is not necessary, we'll just skip it.
-                  
-                  <report>dependencies</report>
-                  -->
-              </reports>
+            <reports>
+              <report>index</report>
+              <report>help</report>
+              <report>project-team</report>
+              <report>modules</report>
+              <report>plugins</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>scm</report>
+              <report>license</report>
+              <report>plugin-management</report>
+              <report>distribution-management</report>
+              <report>summary</report>
+              <report>mailing-list</report>
+              <report>issue-tracking</report>
+              <!--
+              The dependency report is disabled due to bug in Apache BCEL https://issues.apache.org/jira/browse/BCEL-173
+              Couldn't get workaround happening (from https://github.com/RichardWarburton/lambda-behave/issues/31)
+              Since the dependency report is not necessary, we'll just skip it.
+
+              <report>dependencies</report>
+              -->
+            </reports>
           </reportSet>
         </reportSets>
       </plugin>
@@ -257,7 +263,7 @@
         <reportSets>
           <reportSet>
             <reports>
-             <report>checkstyle</report>
+              <report>checkstyle</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -266,7 +272,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.10.3</version>
-		<reportSets>
+        <reportSets>
           <reportSet>
             <id>default</id>
             <reports>
@@ -275,6 +281,9 @@
             </reports>
           </reportSet>
         </reportSets>
+        <configuration>
+          <excludePackageNames>com.*</excludePackageNames>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
