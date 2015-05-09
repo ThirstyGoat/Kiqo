@@ -7,6 +7,8 @@ import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;

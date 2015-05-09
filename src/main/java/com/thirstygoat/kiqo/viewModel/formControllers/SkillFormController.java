@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -7,15 +7,10 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import org.controlsfx.control.PopOver;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;

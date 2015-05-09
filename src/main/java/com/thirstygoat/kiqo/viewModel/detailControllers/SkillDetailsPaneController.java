@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;

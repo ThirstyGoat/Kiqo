@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -10,6 +10,7 @@ import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
 
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;

@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.Utilities;

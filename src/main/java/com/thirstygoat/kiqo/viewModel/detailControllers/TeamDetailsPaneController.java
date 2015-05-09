@@ -1,8 +1,10 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.AllocationsTableViewController;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

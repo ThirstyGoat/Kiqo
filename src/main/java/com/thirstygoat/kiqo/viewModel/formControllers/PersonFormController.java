@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel;
+package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import java.net.URL;
 import java.util.ArrayList;
