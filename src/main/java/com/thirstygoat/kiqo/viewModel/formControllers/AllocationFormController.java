@@ -9,6 +9,8 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -65,7 +67,7 @@ public class AllocationFormController implements Initializable {
     }
 
     private void setValidationSupport() {
-        Predicate<String> projectValidation = null;
+        Predicate<String> projectValidation;
         if(team == null) {
             projectValidation = s -> {
                 for (Team t : organisation.getTeams()) {
@@ -104,9 +106,7 @@ public class AllocationFormController implements Initializable {
                     "Project must already exist"));
         }
 
-
-
-        Predicate<LocalDate> dateOverlapValidatorPredicate = localDate -> {
+        Predicate<LocalDate> endDateOverlapValidatorPredicate = localDate -> {
             if (team == null) {
                 return true;
             }
@@ -128,12 +128,13 @@ public class AllocationFormController implements Initializable {
             return !dateRangesOverlap;
         };
 
-        Validator dateOverlapValidator = Validator.createPredicateValidator(dateOverlapValidatorPredicate,
+        Validator endDateOverlapValidator = Validator.createPredicateValidator(endDateOverlapValidatorPredicate,
                 "This team is already allocated to a project during this period");
+
 
         Predicate<LocalDate> startDateNullValidatorPredicate = localDate -> {
             LocalDate edpv = endDatePicker.getValue();
-            endDatePicker.setValue(null);
+            endDatePicker.setValue(LocalDate.MIN);
             endDatePicker.setValue(edpv);
             return startDatePicker.getValue() != null;
         };
@@ -141,18 +142,27 @@ public class AllocationFormController implements Initializable {
         Validator startDateNullValidator = Validator.createPredicateValidator(startDateNullValidatorPredicate,
                 "Start date must not be empty");
         // Create a validator for startDate that combines two validators
-        Validator startDateValidator = Validator.combine(startDateNullValidator, dateOverlapValidator);
+        Validator startDateValidator = Validator.combine(startDateNullValidator);
 
         validationSupport.registerValidator(startDatePicker, startDateValidator);
 
-        Predicate<LocalDate> endDateNullValidatorPredicate =
-                localDate -> localDate == null || localDate.isAfter(startDatePicker.getValue());
+        Predicate<LocalDate> endDateBeforeValidatorPredicate = new Predicate<LocalDate>() {
+            @Override
+            public boolean test(LocalDate localDate) {
+                if (localDate == null) {
+                    return true;
+                } else if (startDatePicker.getValue() == null) {
+                    return true;
+                } else {
+                    return localDate.isAfter(startDatePicker.getValue());
+                }
+            }
+        };
 
-        Validator endDateNullValidator = Validator.createPredicateValidator(endDateNullValidatorPredicate,
+        Validator endDateBeforeValidator = Validator.createPredicateValidator(endDateBeforeValidatorPredicate,
                 "End date must not come before the start date");
 
-
-        Validator endDateValidator = Validator.combine(endDateNullValidator, dateOverlapValidator);
+        Validator endDateValidator = Validator.combine(endDateBeforeValidator, endDateOverlapValidator);
 
         validationSupport.registerValidator(endDatePicker, endDateValidator);
 

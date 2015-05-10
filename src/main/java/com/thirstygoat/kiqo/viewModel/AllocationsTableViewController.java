@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -44,7 +44,6 @@ public class AllocationsTableViewController implements Initializable {
     }
 
     private void initializeTable() {
-
         // center the dates
         startDateTableColumn.setStyle("-fx-alignment: CENTER;");
         endDateTableColumn.setStyle("-fx-alignment: CENTER;");
