@@ -27,22 +27,6 @@ public class PersistenceManagerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     /**
-     * Tests that a project can be saved then loaded. All in one test so that it works with the temp folder
-     *
-     * @throws Exception Exception
-     */
-    @Test
-    public void testLoad_happyCase() throws Exception {
-        final File file = testFolder.newFile("test.json");
-
-        organisation = new Organisation(file);
-        PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
-
-        final Organisation loadedOrganisation = PersistenceManager.loadOrganisation(file);
-        Assert.assertEquals(organisation, loadedOrganisation);
-    }
-
-    /**
      * Tests that attempting to load a non-existent project file throws a {@link FileNotFoundException}.
      *
      * @throws Exception Exception
