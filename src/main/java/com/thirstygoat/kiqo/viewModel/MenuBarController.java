@@ -94,11 +94,11 @@ public class MenuBarController implements Initializable {
     private void addEditDeleteShortcuts() {
         final KeyCombination editKey = new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN);
         final KeyCombination deleteKey = new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN);
-        listShowProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.SHORTCUT_DOWN));
-        listShowTeamMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN));
-        listShowPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN));
-        listShowSkillMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN));
-        listShowReleaseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.SHORTCUT_DOWN));
+        final KeyCombination projectTabKey = new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination teamTabKey = new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination peopleTabKey = new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination skillTabKey = new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN);
+        final KeyCombination releaseTabKey = new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.SHORTCUT_DOWN);
 
         mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
             @Override
@@ -107,6 +107,16 @@ public class MenuBarController implements Initializable {
                     mainController.editItem();
                 } else if (deleteKey.match(event)) {
                     mainController.deleteItem();
+                } else if (projectTabKey.match(event)) {
+                    mainController.setSelectedTab(0);
+                } else if (teamTabKey.match(event)) {
+                    mainController.setSelectedTab(1);
+                } else if (peopleTabKey.match(event)) {
+                    mainController.setSelectedTab(2);
+                } else if (skillTabKey.match(event)) {
+                    mainController.setSelectedTab(3);
+                } else if (releaseTabKey.match(event)) {
+                    mainController.setSelectedTab(4);
                 }
             }
         });
