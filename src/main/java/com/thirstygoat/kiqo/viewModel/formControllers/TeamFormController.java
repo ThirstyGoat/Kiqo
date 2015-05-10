@@ -42,6 +42,15 @@ public class TeamFormController implements Initializable {
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
+    private Stage stage;
+    private Organisation organisation;
+    private Team team;
+    private Command<?> command;
+    private boolean valid = false;
+    private Person scrumMaster;
+    private Person productOwner;
+    private ValidationSupport validationSupport = new ValidationSupport();
+
     // Begin FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -53,15 +62,6 @@ public class TeamFormController implements Initializable {
     private Button okButton;
     @FXML
     private Button cancelButton;
-    private Stage stage;
-    private Organisation organisation;
-    private Team team;
-    private Command<?> command;
-    private boolean valid = false;
-    private Person scrumMaster;
-    private Person productOwner;
-
-    private ValidationSupport validationSupport = new ValidationSupport();
 
     private static void setCellFactory(ListView<Person> listView) {
         listView.setCellFactory(view -> new ListCell<Person>() {
@@ -181,13 +181,6 @@ public class TeamFormController implements Initializable {
             if (!(devTeam.containsAll(team.getDevTeam()) && team.getDevTeam().containsAll(devTeam))) {
                 changes.add(new EditCommand<>(team, "devTeam", devTeam));
             }
-
-            // We need to find out who left the team and set their team to null
-            // We also need to find out who entered the team, and set their team to this team
-            // Old Team = team.getTeamMembers();
-            // New Team = teamMembers
-            // New Members = New Team - Old Team
-            // Old Members = Old Team - New Team
 
             final ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
             newMembers.removeAll(team.getTeamMembers());

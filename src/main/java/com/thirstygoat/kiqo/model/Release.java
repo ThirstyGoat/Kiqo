@@ -1,11 +1,11 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.time.LocalDate;
 
 /**
  * Created by leroy on 10/04/15.
@@ -14,7 +14,7 @@ public class Release extends Item {
     private final StringProperty shortName;
     private final StringProperty description;
     private final ObjectProperty<Project> project;
-    private final ObjectProperty<LocalDate> date; // change back to date
+    private final ObjectProperty<LocalDate> date;
 
     public Release(String shortName, Project project, LocalDate date, String description) {
         this.shortName = new SimpleStringProperty(shortName);

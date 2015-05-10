@@ -34,7 +34,13 @@ public class ProjectFormController implements Initializable {
     public String description;
     private Project project;
     private Command<?> command;
-    // FXML Injections
+    private boolean shortNameModified = false;
+    private boolean valid = false;
+    private Stage stage;
+    private Organisation organisation;
+    private ValidationSupport validationSupport = new ValidationSupport();
+
+    // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -45,12 +51,6 @@ public class ProjectFormController implements Initializable {
     private Button okButton;
     @FXML
     private Button cancelButton;
-    private boolean shortNameModified = false;
-    private boolean valid = false;
-    private Stage stage;
-    private Organisation organisation;
-
-    private ValidationSupport validationSupport = new ValidationSupport();
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {

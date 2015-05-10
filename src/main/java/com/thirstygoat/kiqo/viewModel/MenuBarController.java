@@ -303,17 +303,6 @@ public class MenuBarController implements Initializable {
         deleteMenuItem.setDisable(!enabled);
     }
 
-//    public void updateAfterReleaseSelected(boolean selected) {
-//        // disable things
-//        editProjectMenuItem.setDisable(selected);
-//        editTeamMenuItem.setDisable(selected);
-//        editPersonMenuItem.setDisable(selected);
-//        editSkillMenuItem.setDisable(selected);
-//
-//        // enable things
-//        editReleaseMenuItem.setDisable(!selected);
-//    }
-
     public void updateAfterProjectListSelected(boolean selected) {
         listShowProjectMenuItem.selectedProperty().set(selected);
     }

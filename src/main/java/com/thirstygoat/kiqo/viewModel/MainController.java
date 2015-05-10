@@ -83,7 +83,6 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private double dividerPosition;
 
-    //Todo: set selected org properly
     private Organisation selectedOrganisation;
     private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Organisation> selectedOrganisationProperty;
@@ -296,7 +295,6 @@ public class MainController implements Initializable {
         menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
-//        menuBarController.enableNewRelease();
 
         initializeListViews();
         initialiseTabs();
@@ -577,14 +575,6 @@ public class MainController implements Initializable {
 
         if(PersistenceManager.getIsOldJSON()) {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
-        }
-        if (organisation != null) {
-//            selectedOrganisation = organisation;
-//            setListViewData();
-//            System.out.println("File has been loaded successfully");
-//            // Clear undo/redo stack
-//            undoManager.empty();
-//            setNewReleaseEnabled();
         }
     }
 
