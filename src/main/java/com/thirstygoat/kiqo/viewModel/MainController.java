@@ -85,7 +85,7 @@ public class MainController implements Initializable {
 
     private Organisation selectedOrganisation;
     private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty;
+    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -289,7 +289,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisation = new Organisation();
-        selectedOrganisationProperty = new SimpleObjectProperty<>(selectedOrganisation);
+        selectedOrganisationProperty.set(selectedOrganisation);
 
             // enable menu items
         menuBarController.enableNewTeam();
@@ -307,9 +307,9 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
+            System.out.println("New organisation");
             selectedOrganisation = newValue;
             setListViewData();
-            System.out.println("New organisation");
             // Clear undo/redo stack
             undoManager.empty();
             setNewReleaseEnabled();
@@ -565,6 +565,7 @@ public class MainController implements Initializable {
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
+            changesSaved.set(true);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -1044,9 +1045,12 @@ public class MainController implements Initializable {
     public void newOrganisation() {
         if (selectedOrganisation != null) {
             if(!promptForUnsavedChanges()) {
+                System.out.println("prompt");
                 return;
             }
         }
+        System.out.println("new org being set");
         selectedOrganisationProperty.set(new Organisation());
+        System.out.println("finished");
     }
 }
