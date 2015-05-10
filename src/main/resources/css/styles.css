@@ -5,6 +5,10 @@
 	-fx-padding: 0 0 0 3px;
 }
 
+.allocation-non-existent-project, .allocation-non-existent-team {
+    -fx-background-color: #ff3333;
+}
+
 .allocation-past {
 	-fx-background-color: seashell;
 }

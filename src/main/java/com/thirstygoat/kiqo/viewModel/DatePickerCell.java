@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
@@ -28,15 +30,12 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
                 if (item.equals(LocalDate.MAX)) {
                     setText("");
                 } else {
-                    setText(item.toString()); // TODO set date formatter
+                    DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    setText(item.format(df));
                 }
                 setGraphic(null);
             }
         }
-    }
-
-    public void basicEdit() {
-        super.startEdit();
     }
 
     @Override
@@ -52,7 +51,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
     @Override
     public void cancelEdit() {
-        super.cancelEdit();
         updateItem(getItem(), false);
+        super.cancelEdit();
     }
 }
