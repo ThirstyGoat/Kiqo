@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import javafx.application.Platform;
@@ -24,7 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
-import seng302.group4.reportGenerator.ReportGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;

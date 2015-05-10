@@ -5,7 +5,7 @@ import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import seng302.group4.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
