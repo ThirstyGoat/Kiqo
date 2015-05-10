@@ -35,7 +35,6 @@ public class Main extends Application {
         root = loader.load();
         final Scene scene = new Scene(root);
 
-
         scene.setOnDragOver(event -> {
             final Dragboard db = event.getDragboard();
             if (db.hasFiles()) {
@@ -44,7 +43,6 @@ public class Main extends Application {
                 event.consume();
             }
         });
-
 
         scene.setOnDragDropped(event -> {
             final Dragboard db = event.getDragboard();
@@ -60,12 +58,9 @@ public class Main extends Application {
             event.consume();
         });
 
-
         primaryStage.setScene(scene);
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
-//        mainController.openOrganisation(new File("/Users/james/Desktop/Kiqo.json"));
-
     }
 }

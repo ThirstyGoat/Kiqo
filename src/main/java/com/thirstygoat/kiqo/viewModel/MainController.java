@@ -307,7 +307,6 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            System.out.println("New organisation");
             selectedOrganisation = newValue;
             setListViewData();
             // Clear undo/redo stack
@@ -479,26 +478,6 @@ public class MainController implements Initializable {
                 menuBarController.updateAfterReleasesListSelected(true);
             }
         });
-    }
-
-    public void setSelectedTab(int tab) {
-        switch (tab) {
-            case 0:
-                tabViewPane.getSelectionModel().select(projectTab);
-                break;
-            case 1:
-                tabViewPane.getSelectionModel().select(teamsTab);
-                break;
-            case 2:
-                tabViewPane.getSelectionModel().select(peopleTab);
-                break;
-            case 3:
-                tabViewPane.getSelectionModel().select(skillsTab);
-                break;
-            case 4:
-                tabViewPane.getSelectionModel().select(releasesTab);
-                break;
-        }
     }
 
     public void newSkill() {
@@ -1046,12 +1025,9 @@ public class MainController implements Initializable {
     public void newOrganisation() {
         if (selectedOrganisation != null) {
             if(!promptForUnsavedChanges()) {
-                System.out.println("prompt");
                 return;
             }
         }
-        System.out.println("new org being set");
         selectedOrganisationProperty.set(new Organisation());
-        System.out.println("finished");
     }
 }
