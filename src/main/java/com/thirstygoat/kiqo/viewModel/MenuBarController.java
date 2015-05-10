@@ -94,10 +94,6 @@ public class MenuBarController implements Initializable {
     private void addEditDeleteShortcuts() {
         final KeyCombination editKey = new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN);
         final KeyCombination deleteKey = new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination teamTabKey = new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination peopleTabKey = new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination skillTabKey = new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination releaseTabKey = new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.SHORTCUT_DOWN);
         listShowProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.SHORTCUT_DOWN));
         listShowTeamMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN));
         listShowPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN));
