@@ -1,4 +1,4 @@
-package seng302.group4;
+package com.thirstygoat.kiqo;
 
 
 import com.thirstygoat.kiqo.model.*;
