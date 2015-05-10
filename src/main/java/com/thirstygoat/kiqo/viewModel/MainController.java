@@ -480,6 +480,26 @@ public class MainController implements Initializable {
         });
     }
 
+    public void setSelectedTab(int tab) {
+        switch (tab) {
+            case 0:
+                tabViewPane.getSelectionModel().select(projectTab);
+                break;
+            case 1:
+                tabViewPane.getSelectionModel().select(teamsTab);
+                break;
+            case 2:
+                tabViewPane.getSelectionModel().select(peopleTab);
+                break;
+            case 3:
+                tabViewPane.getSelectionModel().select(skillsTab);
+                break;
+            case 4:
+                tabViewPane.getSelectionModel().select(releasesTab);
+                break;
+        }
+    }
+
     public void newSkill() {
         if (selectedOrganisation != null) {
             skillDialog(null);
