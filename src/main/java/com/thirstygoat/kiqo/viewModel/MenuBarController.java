@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.command.UndoManager;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +15,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
+    @FXML
+    private MenuItem newOrganisationMenuItem;
     @FXML
     private MenuItem newProjectMenuItem;
     @FXML
@@ -123,6 +124,7 @@ public class MenuBarController implements Initializable {
 
     private void addMenuItemHandlers() {
         newProjectMenuItem.setOnAction(event -> mainController.newProject());
+        newOrganisationMenuItem.setOnAction(event -> mainController.newOrganisation());
         newTeamMenuItem.setOnAction(event -> mainController.newTeam());
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
@@ -300,17 +302,6 @@ public class MenuBarController implements Initializable {
         editMenuItem.setDisable(!enabled);
         deleteMenuItem.setDisable(!enabled);
     }
-
-//    public void updateAfterReleaseSelected(boolean selected) {
-//        // disable things
-//        editProjectMenuItem.setDisable(selected);
-//        editTeamMenuItem.setDisable(selected);
-//        editPersonMenuItem.setDisable(selected);
-//        editSkillMenuItem.setDisable(selected);
-//
-//        // enable things
-//        editReleaseMenuItem.setDisable(!selected);
-//    }
 
     public void updateAfterProjectListSelected(boolean selected) {
         listShowProjectMenuItem.selectedProperty().set(selected);

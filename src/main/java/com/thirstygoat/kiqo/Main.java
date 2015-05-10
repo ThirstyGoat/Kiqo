@@ -1,18 +1,16 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.io.File;
 
 /**
  * Main entry point for application
@@ -38,33 +36,28 @@ public class Main extends Application {
         final Scene scene = new Scene(root);
 
 
-        scene.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                final Dragboard db = event.getDragboard();
-                if (db.hasFiles()) {
-                    event.acceptTransferModes(TransferMode.COPY);
-                } else {
-                    event.consume();
-                }
+        scene.setOnDragOver(event -> {
+            final Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
+                event.consume();
             }
         });
 
 
-        scene.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                final Dragboard db = event.getDragboard();
-                final boolean success = false;
-                for (final File file : db.getFiles()) {
-                    mainController.openOrganisation(file);
-                }
-                // if you want single files
-//                File file = db.getFiles().get(0);
-//                mainController.dragAndDrop(file);
-                event.setDropCompleted(success);
-                event.consume();
+        scene.setOnDragDropped(event -> {
+            final Dragboard db = event.getDragboard();
+            final boolean success = false;
+            if (db.getFiles().size() > 1) {
+                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                        "Drag and drop only supports individual files.");
+            } else {
+                File file = db.getFiles().get(0);
+                mainController.openOrganisation(file);
             }
+            event.setDropCompleted(success);
+            event.consume();
         });
 
 

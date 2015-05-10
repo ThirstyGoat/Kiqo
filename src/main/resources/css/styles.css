@@ -21,5 +21,6 @@
 	-fx-background-color: -fx-focus-color;
 }
 
-
-
+.table-view .column-header#teamTableColumn .label {
+	-fx-alignment: CENTER_LEFT;
+}

@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
+import java.time.LocalDate;
 
 /**
  * Created by samschofield on 21/04/15.
@@ -25,7 +25,7 @@ public class Allocation {
      */
     public Allocation(Team team, LocalDate startDate, LocalDate endDate, Project project) {
         this.team = team;
-        this.project = project; // remove this
+        this.project = project;
 
         this.startDate.set(startDate);
         setEndDate(endDate);
@@ -72,8 +72,6 @@ public class Allocation {
         }
         return endDate;
     }
-
-    // ###################################################################################
 
     /**
      *

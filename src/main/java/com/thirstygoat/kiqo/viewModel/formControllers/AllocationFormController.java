@@ -1,22 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateAllocationCommand;
@@ -25,28 +8,42 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
-import org.controlsfx.validation.*;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
-import javax.swing.text.TabExpander;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Amy on 23/04/15.
  */
 public class AllocationFormController implements Initializable {
-    // UI
     private Stage stage;
-    // Command
     private boolean valid;
     private Command<?> command;
-    // Model
     private Organisation organisation;
     private Project project;
-    // Form Data
     private Team team = null;
 
     private ValidationSupport validationSupport = new ValidationSupport();
 
-    // FXML
+    // Begin FXML Injections
     @FXML
     private TextField teamTextField;
     @FXML
@@ -85,6 +82,8 @@ public class AllocationFormController implements Initializable {
                 }
                 return false;
             };
+            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+                    "Team must already exist"));
         } else {
             projectValidation = s -> {
                 for (Project t : organisation.getProjects()) {
@@ -101,10 +100,11 @@ public class AllocationFormController implements Initializable {
                 }
                 return false;
             };
+            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+                    "Project must already exist"));
         }
 
-        validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
-                "Team must already exist"));
+
 
         Predicate<LocalDate> dateOverlapValidatorPredicate = localDate -> {
             if (team == null) {

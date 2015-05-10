@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,8 +15,8 @@ import javafx.collections.ObservableList;
 public class Project extends Item {
     private final StringProperty shortName;
     private final StringProperty longName;
-    private final ObservableList<Release> releases;// = FXCollections.observableArrayList();
-    private final ObservableList<Allocation> allocations;// = FXCollections.observableArrayList();
+    private final ObservableList<Release> releases;
+    private final ObservableList<Allocation> allocations;
     private final StringProperty description;
 
     /**

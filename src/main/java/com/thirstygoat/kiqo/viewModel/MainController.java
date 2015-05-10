@@ -12,10 +12,6 @@ import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,16 +24,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
+import seng302.group4.reportGenerator.ReportGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import seng302.group4.reportGenerator.ReportGenerator;
-
-import java.io.FileWriter;
 
 /**
  * Main controller for the primary view
@@ -88,10 +83,9 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private double dividerPosition;
 
-    //Todo: set selected org properly
     private Organisation selectedOrganisation;
     private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty;
+    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -268,7 +262,12 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Person) {
             personDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
-            skillDialog((Skill) focusedObject);
+            if (focusedObject == selectedOrganisation.getPoSkill() || focusedObject == selectedOrganisation.getSmSkill()) {
+                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                        "The Product Owner and Scrum Master skills cannot be edited.");
+            } else {
+                skillDialog((Skill) focusedObject);
+            }
         } else if (focusedObject instanceof Team) {
             teamDialog((Team) focusedObject);
         } else if (focusedObject instanceof Release) {
@@ -289,13 +288,12 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisation = new Organisation();
-        selectedOrganisationProperty = new SimpleObjectProperty<>(selectedOrganisation);
+        selectedOrganisationProperty.set(selectedOrganisation);
 
             // enable menu items
-            menuBarController.enableNewTeam();
+        menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
-//        menuBarController.enableNewRelease();
 
         initializeListViews();
         initialiseTabs();
@@ -305,6 +303,15 @@ public class MainController implements Initializable {
             System.out.println("Focus changed to " + newValue);
             detailsPaneController.showDetailsPane(newValue);
             menuBarController.updateAfterAnyObjectSelected(newValue != null);
+        });
+
+        selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
+            System.out.println("New organisation");
+            selectedOrganisation = newValue;
+            setListViewData();
+            // Clear undo/redo stack
+            undoManager.empty();
+            setNewReleaseEnabled();
         });
 
         Platform.runLater(() -> listLabel.setText(""));
@@ -557,6 +564,7 @@ public class MainController implements Initializable {
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
+            changesSaved.set(true);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -567,14 +575,6 @@ public class MainController implements Initializable {
 
         if(PersistenceManager.getIsOldJSON()) {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
-        }
-        if (organisation != null) {
-            selectedOrganisation = organisation;
-            setListViewData();
-            System.out.println("File has been loaded successfully");
-            // Clear undo/redo stack
-            undoManager.empty();
-            setNewReleaseEnabled();
         }
     }
 
@@ -864,7 +864,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (personFormController.isValid()) {
-                if(person == null) {
+                if (person == null) {
                     // create and do command
                     final Command<?> command = personFormController.getCommand();
                     doCommand(command);
@@ -1039,5 +1039,17 @@ public class MainController implements Initializable {
         detailsPaneController.setMainController(this);
 
         setStageTitleProperty();
+    }
+
+    public void newOrganisation() {
+        if (selectedOrganisation != null) {
+            if(!promptForUnsavedChanges()) {
+                System.out.println("prompt");
+                return;
+            }
+        }
+        System.out.println("new org being set");
+        selectedOrganisationProperty.set(new Organisation());
+        System.out.println("finished");
     }
 }

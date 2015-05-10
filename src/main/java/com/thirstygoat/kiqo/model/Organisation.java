@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.File;
-import java.io.Serializable;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -45,25 +42,6 @@ public class Organisation implements Serializable {
         return smSkill;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Organisation that = (Organisation) o;
-
-        return !(saveLocation != null ? !saveLocation.equals(that.saveLocation) : that.saveLocation != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return saveLocation != null ? saveLocation.hashCode() : 0;
-    }
 
     /**
      *
