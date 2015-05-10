@@ -32,7 +32,6 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
             if (!newValue) {
                 // If no longer in focus we need to perform validation
                 performValidation();
-                cancelEdit();
             }
         });
     }
@@ -159,6 +158,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
             getDatePicker().setValue(allocation.getEndDate());
         }
         getDatePicker().valueProperty().addListener(datePickerListener);
+        cancelEdit();
     }
 
     @Override

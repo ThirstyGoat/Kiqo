@@ -97,14 +97,18 @@ public class AllocationsTableViewController implements Initializable {
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     row.setContextMenu(null);
-                    row.getStyleClass().removeAll("allocation-current", "allocation-past", "allocation-future");
+                    row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-past", "allocation-future");
                 } else {
                     row.setContextMenu(contextMenu);
 
                     // set background color
                     final LocalDate now = LocalDate.now();
-                    row.getStyleClass().removeAll("allocation-current", "allocation-future", "allocation-past");
-                    if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
+                    row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
+                    if (!mainController.getSelectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
+                        row.getStyleClass().add("allocation-non-existent-team");
+                    } else if (!mainController.getSelectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
+                        row.getStyleClass().add("allocation-non-existent-project");
+                    } else if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
                         row.getStyleClass().add("allocation-current");
                     } else if (newValue.getStartDate().isAfter(now)) {
                         row.getStyleClass().add("allocation-future");
