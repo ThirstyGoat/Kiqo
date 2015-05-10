@@ -293,7 +293,7 @@ public class MainController implements Initializable {
         selectedOrganisationProperty = new SimpleObjectProperty<>(selectedOrganisation);
 
             // enable menu items
-            menuBarController.enableNewTeam();
+        menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
 //        menuBarController.enableNewRelease();
@@ -306,6 +306,15 @@ public class MainController implements Initializable {
             System.out.println("Focus changed to " + newValue);
             detailsPaneController.showDetailsPane(newValue);
             menuBarController.updateAfterAnyObjectSelected(newValue != null);
+        });
+
+        selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
+            selectedOrganisation = newValue;
+            setListViewData();
+            System.out.println("New organisation");
+            // Clear undo/redo stack
+            undoManager.empty();
+            setNewReleaseEnabled();
         });
 
         Platform.runLater(() -> listLabel.setText(""));
@@ -570,12 +579,12 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
         }
         if (organisation != null) {
-            selectedOrganisation = organisation;
-            setListViewData();
-            System.out.println("File has been loaded successfully");
-            // Clear undo/redo stack
-            undoManager.empty();
-            setNewReleaseEnabled();
+//            selectedOrganisation = organisation;
+//            setListViewData();
+//            System.out.println("File has been loaded successfully");
+//            // Clear undo/redo stack
+//            undoManager.empty();
+//            setNewReleaseEnabled();
         }
     }
 
@@ -865,7 +874,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (personFormController.isValid()) {
-                if(person == null) {
+                if (person == null) {
                     // create and do command
                     final Command<?> command = personFormController.getCommand();
                     doCommand(command);
@@ -1040,5 +1049,14 @@ public class MainController implements Initializable {
         detailsPaneController.setMainController(this);
 
         setStageTitleProperty();
+    }
+
+    public void newOrganisation() {
+        if (selectedOrganisation != null) {
+            if(!promptForUnsavedChanges()) {
+                return;
+            }
+        }
+        selectedOrganisationProperty.set(new Organisation());
     }
 }
