@@ -40,7 +40,7 @@
                     <ListView fx:id="skillsListView" />
                   </content>
                 </Tab>
-                <Tab fx:id="releasesTab" closable="false" text="Release">
+                <Tab fx:id="releasesTab" closable="false" text="Releases">
                   <content>
                     <ListView fx:id="releasesListView" />
                   </content>

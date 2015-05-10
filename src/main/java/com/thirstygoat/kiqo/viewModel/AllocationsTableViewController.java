@@ -22,15 +22,10 @@ import java.util.ResourceBundle;
  * TableView for allocations of teams to projects
  */
 public class AllocationsTableViewController implements Initializable {
-    public enum  FirstColumnType {
-        PROJECT, TEAM
-    }
-
     private MainController mainController;
     private FirstColumnType type;
     private boolean hasProject = false;
     private boolean hasTeams = false;
-
     @FXML
     private TableView<Allocation> allocationsTableView;
     @FXML
@@ -89,9 +84,8 @@ public class AllocationsTableViewController implements Initializable {
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem clearEndDateMenuItem = new MenuItem("Clear End Date");
         final MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
-        contextMenu.getItems().addAll(clearEndDateMenuItem, deleteMenuItem);
+        contextMenu.getItems().addAll(deleteMenuItem);
 
         allocationsTableView.setRowFactory(param -> {
 
@@ -101,18 +95,6 @@ public class AllocationsTableViewController implements Initializable {
                     row.setContextMenu(null);
                     row.getStyleClass().removeAll("allocation-current", "allocation-past", "allocation-future");
                 } else {
-                    if (newValue.getEndDate() == LocalDate.MAX) {
-                        clearEndDateMenuItem.setDisable(true);
-                    } else {
-                        clearEndDateMenuItem.setDisable(false);
-                    }
-                    newValue.getEndDateProperty().addListener((observable1, oldValue1, newValue1) -> {
-                        if (newValue1 == LocalDate.MAX) {
-                            clearEndDateMenuItem.setDisable(true);
-                        } else {
-                            clearEndDateMenuItem.setDisable(false);
-                        }
-                    });
                     row.setContextMenu(contextMenu);
 
                     // set background color
@@ -128,34 +110,6 @@ public class AllocationsTableViewController implements Initializable {
                 }
             });
             return row;
-        });
-
-        clearEndDateMenuItem.setOnAction(event -> {
-            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
-            final LocalDate endDate = selectedAllocation.getEndDate();
-            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(selectedAllocation, "endDate", LocalDate.MAX);
-
-            boolean canChange = true;
-
-            for (final Allocation allocation : selectedAllocation.getTeam().getAllocations()) {
-                if (allocation == selectedAllocation) {
-                    continue;
-                }
-
-                if (allocation.getStartDate().isAfter(selectedAllocation.getStartDate())) {
-                    canChange = false;
-                    break;
-                }
-            }
-
-            if (!canChange) {
-                // Then this change would make the allocation overlap with another allocation - prohibit and alert
-                GoatDialog.showAlertDialog((Stage) allocationsTableView.getScene().getWindow(), "Error", "Error",
-                        "Allocation can not overlap with another allocation!");
-                selectedAllocation.setEndDate(endDate);
-            } else {
-                mainController.doCommand(command);
-            }
         });
 
         deleteMenuItem.setOnAction(event -> {
@@ -213,5 +167,9 @@ public class AllocationsTableViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    public enum  FirstColumnType {
+        PROJECT, TEAM
     }
 }

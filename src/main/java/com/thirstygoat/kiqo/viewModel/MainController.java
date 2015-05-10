@@ -138,7 +138,6 @@ public class MainController implements Initializable {
         if (selectedOrganisation.getProjects().size() < 1) {
             menuBarController.disableNewRelease();
         }
-
     }
 
     private void deleteSkill(Skill skill) {
