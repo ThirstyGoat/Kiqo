@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -176,6 +177,45 @@ public class AllocationsTableViewController implements Initializable {
 
     public void setItems(ObservableList<Allocation> items) {
         allocationsTableView.setItems(items);
+        ChangeListener<LocalDate> listener = (observable, oldValue, newValue) -> {
+            // Refresh table view since dates have changed and background colours/tooltips need to update accordingly
+
+//            ObservableList<Allocation> tmpItems = allocationsTableView.getItems();
+//            allocationsTableView.setItems(null);
+//            allocationsTableView.setItems(tmpItems);
+            initializeTable();
+        };
+
+        for (Allocation allocation : items) {
+            allocation.getStartDateProperty().addListener(listener);
+            allocation.getEndDateProperty().addListener(listener);
+        }
+
+        mainController.getSelectedOrganisationProperty().get().getTeams().addListener((ListChangeListener<Team>) c -> {
+            c.next();
+            if (!c.getAddedSubList().isEmpty() || !c.getRemoved().isEmpty()) {
+                initializeTable();
+            }
+        });
+
+        mainController.getSelectedOrganisationProperty().get().getProjects().addListener((ListChangeListener<Project>) c -> {
+            c.next();
+            if (!c.getAddedSubList().isEmpty() || !c.getRemoved().isEmpty()) {
+                initializeTable();
+            }
+        });
+
+        items.addListener((ListChangeListener<Allocation>) c -> {
+            c.next();
+            for (Allocation a : c.getAddedSubList()) {
+                a.getStartDateProperty().addListener(listener);
+                a.getEndDateProperty().addListener(listener);
+            }
+            for (Allocation a : c.getRemoved()) {
+                a.getStartDateProperty().removeListener(listener);
+                a.getEndDateProperty().removeListener(listener);
+            }
+        });
     }
 
     @Override
