@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
 import com.thirstygoat.kiqo.model.*;
-import seng302.group4.utils.ApplicationInfo;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -129,6 +129,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.formattedLine("Short Name", project.getShortName()));
         lines.add(ReportUtils.formattedLine("Long Name", project.getLongName()));
         lines.add(ReportUtils.formattedLine("Description", null));
+        lines.add("Releases:");
 
         for (Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);

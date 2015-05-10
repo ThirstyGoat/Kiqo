@@ -1,4 +1,4 @@
-package seng302.group4.utils;
+package com.thirstygoat.kiqo.util;
 
 import java.io.IOException;
 import java.util.Properties;
