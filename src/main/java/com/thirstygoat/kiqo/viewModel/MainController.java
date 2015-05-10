@@ -12,10 +12,6 @@ import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,16 +24,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
+import seng302.group4.reportGenerator.ReportGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import seng302.group4.reportGenerator.ReportGenerator;
-
-import java.io.FileWriter;
 
 /**
  * Main controller for the primary view
@@ -269,7 +264,12 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Person) {
             personDialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
-            skillDialog((Skill) focusedObject);
+            if (focusedObject == selectedOrganisation.getPoSkill() || focusedObject == selectedOrganisation.getSmSkill()) {
+                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                        "The Product Owner and Scrum Master skills cannot be edited.");
+            } else {
+                skillDialog((Skill) focusedObject);
+            }
         } else if (focusedObject instanceof Team) {
             teamDialog((Team) focusedObject);
         } else if (focusedObject instanceof Release) {
