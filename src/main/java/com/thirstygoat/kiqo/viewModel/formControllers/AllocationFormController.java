@@ -82,6 +82,8 @@ public class AllocationFormController implements Initializable {
                 }
                 return false;
             };
+            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+                    "Team must already exist"));
         } else {
             projectValidation = s -> {
                 for (Project t : organisation.getProjects()) {
@@ -98,10 +100,11 @@ public class AllocationFormController implements Initializable {
                 }
                 return false;
             };
+            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+                    "Project must already exist"));
         }
 
-        validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
-                "Team must already exist"));
+
 
         Predicate<LocalDate> dateOverlapValidatorPredicate = localDate -> {
             if (team == null) {
