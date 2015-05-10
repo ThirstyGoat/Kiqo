@@ -1,4 +1,4 @@
-package seng302.group4.reportGenerator;
+package com.thirstygoat.kiqo.reportGenerator;
 
 import com.thirstygoat.kiqo.model.*;
 import seng302.group4.utils.ApplicationInfo;

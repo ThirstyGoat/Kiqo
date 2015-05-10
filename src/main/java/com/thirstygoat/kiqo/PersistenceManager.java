@@ -95,6 +95,7 @@ public class PersistenceManager {
                 PersistenceManager.createGson(true);
                 final Organisation organisation2 = PersistenceManager.gson.fromJson(br1, Organisation.class);
                 organisation.getProjects().setAll(organisation2.getProjects());
+                PersistenceManager.createGson(false);
             }
         }
         if (organisation != null) {
@@ -133,6 +134,10 @@ public class PersistenceManager {
 
     public static boolean getIsOldJSON() {
         return PersistenceManager.isOldJSON;
+    }
+
+    public static void resetIsOldJSON() {
+        PersistenceManager.isOldJSON = false;
     }
 
     /**

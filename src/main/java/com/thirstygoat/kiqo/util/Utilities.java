@@ -112,4 +112,17 @@ public class Utilities {
         }
         return true;
     }
+
+    /**
+     * Strips file extension from a file name
+     * @param line
+     * @return file name with extension stripped
+     */
+    public static String stripExtension(String line) {
+        int index = line.lastIndexOf('.');
+        if (index > 0) {
+            return line.substring(0, index);
+        }
+        return line;
+    }
 }

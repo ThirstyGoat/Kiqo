@@ -1,4 +1,4 @@
-package seng302.group4.reportGenerator;
+package com.thirstygoat.kiqo.reportGenerator;
 
 import java.util.Collections;
 import java.util.Date;

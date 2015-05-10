@@ -122,7 +122,6 @@ public class Project extends Item {
         ArrayList<Allocation> allocations = new ArrayList<>();
         allocations.addAll(this.allocations);
         return allocations;
-//        return Collections.unmodifiableList(allocations);
     }
 
     public ObservableList<Release> observableReleases() {
@@ -133,7 +132,6 @@ public class Project extends Item {
         ArrayList<Release> releases = new ArrayList<>();
         releases.addAll(this.releases);
         return releases;
-//        return Collections.unmodifiableList(releases);
     }
 
 
@@ -155,9 +153,7 @@ public class Project extends Item {
         }
 
         final Project project = (Project) o;
-
         return getShortName().equals(project.getShortName());
-
     }
 
     @Override

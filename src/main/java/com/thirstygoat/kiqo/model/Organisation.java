@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng302.group4.utils.Utilities;
 
 import java.io.File;
 import java.io.Serializable;
@@ -73,7 +73,7 @@ public class Organisation implements Serializable {
      */
     public void setSaveLocation(final File saveLocation) {
         this.saveLocation = saveLocation;
-        organisationName.set(Utilities.stripExtention(saveLocation.getName()));
+        organisationName.set(Utilities.stripExtension(saveLocation.getName()));
     }
 
     public StringProperty organisationNameProperty() {
