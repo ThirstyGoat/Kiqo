@@ -98,6 +98,7 @@ public class AllocationsTableViewController implements Initializable {
                 if (newValue == null) {
                     row.setContextMenu(null);
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-past", "allocation-future");
+                    row.setTooltip(null);
                 } else {
                     row.setContextMenu(contextMenu);
 
@@ -106,14 +107,19 @@ public class AllocationsTableViewController implements Initializable {
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
                     if (!mainController.getSelectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
                         row.getStyleClass().add("allocation-non-existent-team");
+                        row.setTooltip(new Tooltip("This allocation belongs to a non-existent team."));
                     } else if (!mainController.getSelectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
                         row.getStyleClass().add("allocation-non-existent-project");
+                        row.setTooltip(new Tooltip("This allocation belongs to a non-existent project."));
                     } else if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
                         row.getStyleClass().add("allocation-current");
+                        row.setTooltip(new Tooltip("This allocation is currently in progress."));
                     } else if (newValue.getStartDate().isAfter(now)) {
                         row.getStyleClass().add("allocation-future");
+                        row.setTooltip(new Tooltip("This allocation is scheduled for the future."));
                     } else {
                         row.getStyleClass().add("allocation-past");
+                        row.setTooltip(new Tooltip("This allocation has been and gone."));
                     }
                 }
             });
