@@ -18,7 +18,7 @@
     <center>
 <GridPane vgap="10.0">
   <children>
-    <Label text="Short Name:*" GridPane.rowIndex="0" />
+    <Label text="Short Name:" GridPane.rowIndex="0" />
     <Label text="Description:" GridPane.rowIndex="1" />
     <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />

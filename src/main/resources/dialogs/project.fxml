@@ -18,10 +18,9 @@
     <center>
 <GridPane vgap="10.0">
   <children>
-    <Label text="Name:*" />
-    <Label text="Short Name:*" GridPane.rowIndex="1" />
+    <Label text="Name:" />
+    <Label text="Short Name:" GridPane.rowIndex="1" />
     <Label text="Description:" GridPane.rowIndex="2" />
-    <Label text="* Indicates required field." GridPane.rowIndex="4" textFill="grey" />
     <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
     <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />

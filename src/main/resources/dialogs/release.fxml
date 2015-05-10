@@ -32,9 +32,9 @@
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
             <children>
-                <Label text="Short Name:*" />
-                <Label text="Project:*" GridPane.rowIndex="1"/>
-                <Label text="Release Date:*" GridPane.rowIndex="2" />
+                <Label text="Short Name:" />
+                <Label text="Project:" GridPane.rowIndex="1"/>
+                <Label text="Release Date:" GridPane.rowIndex="2" />
                 <Label text="Description:" GridPane.rowIndex="3" />
                 <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                 <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />

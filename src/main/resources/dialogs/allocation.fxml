@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.thirstygoat.kiqo.nodes.GoatListSelectionView?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController">
   <bottom>
     <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
@@ -33,8 +32,8 @@
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
             <children>
-                <Label text="Team:*" GridPane.rowIndex="0" fx:id="teamLabel"/>
-                <Label text="Start Date:*" GridPane.rowIndex="1" />
+                <Label text="Team:" GridPane.rowIndex="0" fx:id="teamLabel"/>
+                <Label text="Start Date:" GridPane.rowIndex="1" />
                 <Label text="End Date:" GridPane.rowIndex="2" />
                 <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1"  GridPane.halignment="RIGHT"/>

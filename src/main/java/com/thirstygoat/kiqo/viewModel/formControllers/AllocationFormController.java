@@ -336,10 +336,10 @@ public class AllocationFormController implements Initializable {
 //        }
 
         if (project == null) {
-            teamLabel.setText("Project:*");
+            teamLabel.setText("Project:");
             setTextFieldAutoCompletionBindingProject();
         } else if (team == null) {
-            teamLabel.setText("Team:*");
+            teamLabel.setText("Team:");
             setTextFieldAutoCompletionBindingTeam();
         }
         setPrompts();
