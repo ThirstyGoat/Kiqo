@@ -306,7 +306,6 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            System.out.println("New organisation");
             selectedOrganisation = newValue;
             setListViewData();
             // Clear undo/redo stack
@@ -1044,12 +1043,9 @@ public class MainController implements Initializable {
     public void newOrganisation() {
         if (selectedOrganisation != null) {
             if(!promptForUnsavedChanges()) {
-                System.out.println("prompt");
                 return;
             }
         }
-        System.out.println("new org being set");
         selectedOrganisationProperty.set(new Organisation());
-        System.out.println("finished");
     }
 }
