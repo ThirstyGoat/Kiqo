@@ -100,7 +100,7 @@ public class PersonFormController implements Initializable {
 
     private void setPrompts() {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
-        longNameTextField.setPromptText("Bill Goat");
+        longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this awesome person");
         userIDTextField.setPromptText("Identify this person!");
         emailTextField.setPromptText("hello@example.com");
