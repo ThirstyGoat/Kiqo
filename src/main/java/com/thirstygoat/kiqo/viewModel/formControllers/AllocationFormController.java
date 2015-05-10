@@ -336,11 +336,9 @@ public class AllocationFormController implements Initializable {
 //        }
 
         if (project == null) {
-            System.out.println("get the project");
             teamLabel.setText("Project:*");
             setTextFieldAutoCompletionBindingProject();
         } else if (team == null) {
-            System.out.println("get the team");
             teamLabel.setText("Team:*");
             setTextFieldAutoCompletionBindingTeam();
         }
