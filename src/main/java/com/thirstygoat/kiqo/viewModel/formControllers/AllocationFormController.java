@@ -27,6 +27,8 @@ import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import org.controlsfx.validation.*;
 
+import javax.swing.text.TabExpander;
+
 /**
  * Created by Amy on 23/04/15.
  */
@@ -52,6 +54,8 @@ public class AllocationFormController implements Initializable {
     @FXML
     private DatePicker endDatePicker;
     @FXML
+    private Label teamLabel;
+    @FXML
     private Button okButton;
     @FXML
     private Button cancelButton;
@@ -60,30 +64,44 @@ public class AllocationFormController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setTextFieldAutoCompletionBinding();
-        setPrompts();
-
         Platform.runLater(teamTextField::requestFocus);
-
-        setValidationSupport();
     }
 
     private void setValidationSupport() {
-        Predicate<String> projectValidation = s -> {
-            for (Team t : organisation.getTeams()) {
-                if (t.getShortName().equals(teamTextField.getText())) {
-                    team = t;
-                    LocalDate sd = startDatePicker.getValue();
-                    LocalDate ed = endDatePicker.getValue();
-                    startDatePicker.setValue(null);
-                    endDatePicker.setValue(null);
-                    startDatePicker.setValue(sd);
-                    endDatePicker.setValue(ed);
-                    return true;
+        Predicate<String> projectValidation = null;
+        if(team == null) {
+            projectValidation = s -> {
+                for (Team t : organisation.getTeams()) {
+                    if (t.getShortName().equals(teamTextField.getText())) {
+                        team = t;
+                        LocalDate sd = startDatePicker.getValue();
+                        LocalDate ed = endDatePicker.getValue();
+                        startDatePicker.setValue(null);
+                        endDatePicker.setValue(null);
+                        startDatePicker.setValue(sd);
+                        endDatePicker.setValue(ed);
+                        return true;
+                    }
                 }
-            }
-            return false;
-        };
+                return false;
+            };
+        } else {
+            projectValidation = s -> {
+                for (Project t : organisation.getProjects()) {
+                    if (t.getShortName().equals(teamTextField.getText())) {
+                        project = t;
+                        LocalDate sd = startDatePicker.getValue();
+                        LocalDate ed = endDatePicker.getValue();
+                        startDatePicker.setValue(null);
+                        endDatePicker.setValue(null);
+                        startDatePicker.setValue(sd);
+                        endDatePicker.setValue(ed);
+                        return true;
+                    }
+                }
+                return false;
+            };
+        }
 
         validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
                 "Team must already exist"));
@@ -98,9 +116,12 @@ public class AllocationFormController implements Initializable {
                 // to make things easier, we pretend that they're infinite, ie. LocalDate.MAX
                 final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
                 final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
-                if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
-                    dateRangesOverlap = true;
-                    break;
+
+                if(startDatePicker.getValue() != null) {
+                    if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
+                        dateRangesOverlap = true;
+                        break;
+                    }
                 }
             }
 
@@ -146,7 +167,11 @@ public class AllocationFormController implements Initializable {
     }
 
     private void setPrompts() {
-        teamTextField.setPromptText("Team this allocation is associated with");
+        if (team == null) {
+            teamTextField.setPromptText("Team this allocation is associated with");
+        } else {
+            teamTextField.setPromptText("Project this allocation is associated with");
+        }
         startDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setConverter(new StringConverter<LocalDate>() {
@@ -177,7 +202,7 @@ public class AllocationFormController implements Initializable {
         });
     }
 
-    private AutoCompletionBinding<Team> setTextFieldAutoCompletionBinding() {
+    private AutoCompletionBinding<Team> setTextFieldAutoCompletionBindingTeam() {
         // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
         // uses a String converter so that the Team's short name is used.
         final AutoCompletionBinding<Team> binding = TextFields.bindAutoCompletion(teamTextField,
@@ -186,18 +211,18 @@ public class AllocationFormController implements Initializable {
                             .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
                             .collect(Collectors.toList());
                 }, new StringConverter<Team>() {
-            @Override
-            public Team fromString(String string) {
-                for (final Team team : organisation.getTeams()) {
-                    if (team.getShortName().equals(string)) {
-                        return team;
+                    @Override
+                    public Team fromString(String string) {
+                        for (final Team team : organisation.getTeams()) {
+                            if (team.getShortName().equals(string)) {
+                                return team;
+                            }
+                        }
+                        return null;
                     }
-                }
-                return null;
-            }
 
-            @Override
-            public String toString(Team team) {
+                    @Override
+                    public String toString(Team team) {
                 return team.getShortName();
             }
         });
@@ -211,6 +236,41 @@ public class AllocationFormController implements Initializable {
 
         return binding;
     }
+
+    private AutoCompletionBinding<Project> setTextFieldAutoCompletionBindingProject() {
+            // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
+            // uses a String converter so that the Team's short name is used.
+            final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(teamTextField,
+                    request -> {
+                        return organisation.getProjects().stream()
+                                .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                                .collect(Collectors.toList());
+                    }, new StringConverter<Project>() {
+                        @Override
+                        public Project fromString(String string) {
+                            for (final Project project : organisation.getProjects()) {
+                                if (project.getShortName().equals(string)) {
+                                    return project;
+                                }
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        public String toString(Project project) {
+                            return project.getShortName();
+                        }
+                    });
+
+            teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    // forces suggestion list to show
+                    binding.setUserInput("");
+                }
+            });
+
+            return binding;
+        }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
@@ -271,9 +331,24 @@ public class AllocationFormController implements Initializable {
 
     public void setAllocation(Allocation allocation) throws RuntimeException {
         this.allocation = allocation;
+//        if (project == null) {
+//            throw new RuntimeException("Project must not be null for Allocation dialog");
+//        }
+
         if (project == null) {
-            throw new RuntimeException("Project must not be null for Allocation dialog");
+            System.out.println("get the project");
+            teamLabel.setText("Project:*");
+            setTextFieldAutoCompletionBindingProject();
+        } else if (team == null) {
+            System.out.println("get the team");
+            teamLabel.setText("Team:*");
+            setTextFieldAutoCompletionBindingTeam();
         }
+        setPrompts();
+        setValidationSupport();
+
+
+
         if (allocation == null) {
             // We are creating a new allocation (for an existing project)
             stage.setTitle("Create Allocation");
@@ -296,6 +371,10 @@ public class AllocationFormController implements Initializable {
      */
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public void setOrganisation(Organisation organisation) {

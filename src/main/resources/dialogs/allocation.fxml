@@ -33,7 +33,7 @@
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
             <children>
-                <Label text="Team:*" GridPane.rowIndex="0"/>
+                <Label text="Team:*" GridPane.rowIndex="0" fx:id="teamLabel"/>
                 <Label text="Start Date:*" GridPane.rowIndex="1" />
                 <Label text="End Date:" GridPane.rowIndex="2" />
                 <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />

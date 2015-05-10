@@ -787,7 +787,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (projectFormController.isValid()) {
-                if(project == null) {
+                if (project == null) {
                     // create and do command
                     final Command<?> command = projectFormController.getCommand();
                     doCommand(command);
@@ -1012,7 +1012,13 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
 
-            allocationFormController.setProject(selectedProject.get());
+            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
+                allocationFormController.setProject(null);
+                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
+            } else {
+                allocationFormController.setProject(selectedProject.get());
+                allocationFormController.setTeam(null);
+            }
 
             allocationFormController.setAllocation(allocation);
 
