@@ -51,8 +51,8 @@ public class AllocationsTableViewController implements Initializable {
     private void initializeTable() {
 
         // center the dates
-        startDateTableColumn.setStyle( "-fx-alignment: CENTER;");
-        endDateTableColumn.setStyle( "-fx-alignment: CENTER;");
+        startDateTableColumn.setStyle("-fx-alignment: CENTER;");
+        endDateTableColumn.setStyle("-fx-alignment: CENTER;");
 
         // set the Title of the first column and the cell factory for the first column
         if (type.equals(FirstColumnType.PROJECT)) {
