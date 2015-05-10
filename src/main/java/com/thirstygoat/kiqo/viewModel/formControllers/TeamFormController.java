@@ -1,32 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateTeamCommand;
@@ -36,8 +9,28 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by james on 27/03/15.
@@ -231,11 +224,11 @@ public class TeamFormController implements Initializable {
 
         peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 
-        final Text poText = new Text(organisation.getPoSkill().getShortName().substring(0, 2));
+        final Text poText = new Text(organisation.getPoSkill().getShortName().substring(0, 2) + " ");
         poText.setFill(Color.BLUE);
-        final Text smText = new Text(organisation.getSmSkill().getShortName().substring(0, 2));
+        final Text smText = new Text(organisation.getSmSkill().getShortName().substring(0, 2) + " ");
         smText.setFill(Color.RED);
-        final Text devText = new Text("Dev");
+        final Text devText = new Text("Dev ");
         devText.setFill(Color.GREEN);
         final Text otherText = new Text("Other");
         final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
