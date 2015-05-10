@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -33,7 +34,7 @@ public class PersonDetailsPaneController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-
+        emailLabel.managedProperty().bind(emailLabel.textProperty().isNotEmpty());
     }
 
     public void showDetails(final Person person) {
