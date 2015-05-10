@@ -400,7 +400,7 @@ public class MainController implements Initializable {
 
     private void setListViewData() {
 
-        projectListView.setItems(selectedOrganisation.getProjects());
+        projectListView.setItems(selectedOrganisationProperty.getValue().getProjects());
 
         // ensure that you can only crate a realease if a project exists
         projectListView.getItems().addListener(new ListChangeListener<Project>() {
@@ -575,6 +575,7 @@ public class MainController implements Initializable {
 
         if(PersistenceManager.getIsOldJSON()) {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
+            PersistenceManager.resetIsOldJSON();
         }
     }
 
