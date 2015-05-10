@@ -416,11 +416,11 @@ public class TeamFormController implements Initializable {
         if (team == null) {
             // Then we are creating a new team
             stage.setTitle("Create Team");
-            okButton.setText("Create Team");
+            okButton.setText("Done");
         } else {
             // We are editing an existing team
             stage.setTitle("Edit Team");
-            okButton.setText("Save");
+            okButton.setText("Done");
 
             // Populate fields with existing data
             shortNameTextField.setText(team.getShortName());
