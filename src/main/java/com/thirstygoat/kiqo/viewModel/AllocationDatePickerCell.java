@@ -32,6 +32,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
             if (!newValue) {
                 // If no longer in focus we need to perform validation
                 performValidation();
+                cancelEdit();
             }
         });
     }
@@ -44,13 +45,6 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
             // Perform END_DATE validation
             endDateValidation((getDatePicker().getValue() != null) ? getDatePicker().getValue() : LocalDate.MAX);
         }
-
-        getDatePicker().hide();
-        setGraphic(null);
-        if (getText() == null) {
-            setText(getDatePicker().getValue().toString()); // TODO set date formatter
-        }
-        cancelEdit();
     }
 
     public void setValidationType(ValidationType type) {
@@ -61,7 +55,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
         final com.thirstygoat.kiqo.model.Allocation allocation =
                 (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
         // Check to make sure that start date comes before end date if end date is set
-        if (date == null) {
+        if (date == null || date == LocalDate.MAX) {
             // Alert the user that this is not allowed
             revertDate();
             GoatDialog.showAlertDialog((Stage) getTableView().getScene().getWindow(), "Error", "Error",
@@ -153,8 +147,6 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
         }
     }
 
-
-
     private void revertDate() {
         final com.thirstygoat.kiqo.model.Allocation allocation =
                 (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
@@ -181,6 +173,12 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
             getDatePicker().valueProperty().addListener(datePickerListener);
         }
         super.startEdit();
+    }
+
+    @Override
+    public void cancelEdit() {
+        // Don't panic. We do nothing.
+        super.cancelEdit();
     }
 
     public enum ValidationType {
