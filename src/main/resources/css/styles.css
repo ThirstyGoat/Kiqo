@@ -14,11 +14,11 @@
 }
 
 .allocation-current {
-	-fx-background-color: lightseagreen;
+	-fx-background-color: #24c339;
 }
 
 .allocation-future {
-	-fx-background-color: lightskyblue;
+	-fx-background-color: #ffb429;
 }
 
 .table-view:focused .table-row-cell:filled:focused:selected {
