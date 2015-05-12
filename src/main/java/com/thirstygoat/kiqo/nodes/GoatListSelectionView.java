@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.nodes;
 
-import impl.org.controlsfx.skin.ListSelectionViewSkin;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -23,12 +22,13 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     public GoatListSelectionView() {
         super();
 
-        final ListSelectionViewSkin<T> skin = new ListSelectionViewSkin<T>(this) {
+        final GoatListSelectionViewSkin<T> skin = new GoatListSelectionViewSkin<T>(this) {
             {
                 sourceListView = getSourceListView();
                 targetListView = getTargetListView();
             }
         };
+
         setSkin(skin);
     }
 
