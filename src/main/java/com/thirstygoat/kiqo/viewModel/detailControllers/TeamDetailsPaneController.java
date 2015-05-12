@@ -1,14 +1,11 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.AllocationsTableViewController;
 import com.thirstygoat.kiqo.viewModel.MainController;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -41,6 +38,9 @@ public class TeamDetailsPaneController implements Initializable {
 
             if (team.getProductOwner() != null) {
                 poLabel.textProperty().bind(team.getProductOwner().shortNameProperty());
+            } else {
+                poLabel.textProperty().unbind();
+                poLabel.setText(null);
             }
             team.productOwnerProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
@@ -55,6 +55,9 @@ public class TeamDetailsPaneController implements Initializable {
 
             if (team.getScrumMaster() != null) {
                 smLabel.textProperty().bind(team.getScrumMaster().shortNameProperty());
+            } else {
+                smLabel.textProperty().unbind();
+                smLabel.setText(null);
             }
             team.scrumMasterProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
