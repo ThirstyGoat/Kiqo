@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<TabPane xmlns:fx="http://javafx.com/fxml/1" fx:id="tabViewPane" VBox.vgrow="ALWAYS" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
+  <tabs>
+    <Tab fx:id="projectTab" closable="false" text="Project">
+      <content>
+        <ListView fx:id="projectListView" editable="true" />
+      </content>
+    </Tab>
+    <Tab fx:id="teamsTab" closable="false" text="Teams">
+      <content>
+        <ListView fx:id="teamsListView" />
+      </content>
+    </Tab>
+    <Tab fx:id="peopleTab" closable="false" text="People">
+      <content>
+        <ListView fx:id="peopleListView" />
+      </content>
+    </Tab>
+    <Tab fx:id="skillsTab" closable="false" text="Skills">
+      <content>
+        <ListView fx:id="skillsListView" />
+      </content>
+    </Tab>
+    <Tab fx:id="releasesTab" closable="false" text="Releases">
+      <content>
+        <ListView fx:id="releasesListView" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
+
