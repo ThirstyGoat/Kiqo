@@ -8,6 +8,7 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Team;
 
 import com.thirstygoat.kiqo.viewModel.MainController;
@@ -17,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -37,6 +39,8 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private AnchorPane skillDetailsPane;
     @FXML
+    private AnchorPane storyDetailsPane;
+    @FXML
     private AnchorPane teamDetailsPane;
     @FXML
     private AnchorPane releaseDetailsPane;
@@ -51,11 +55,21 @@ public class DetailsPaneController implements Initializable {
     @FXML
     private SkillDetailsPaneController skillDetailsPaneController;
     @FXML
+    private StoryDetailsPaneController storyDetailsPaneController;
+    @FXML
     private TeamDetailsPaneController teamDetailsPaneController;
     @FXML
     private ReleaseDetailsPaneController releaseDetailsPaneController;
 
     private MainController mainController;
+    private Pane[] panes = {
+            projectDetailsPane,
+            personDetailsPane,
+            skillDetailsPane,
+            storyDetailsPane,
+            teamDetailsPane,
+            releaseDetailsPane,
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,6 +98,8 @@ public class DetailsPaneController implements Initializable {
                 showTeamDetailsPane((Team) item);
             } else if (item instanceof Release) {
                 showReleaseDetailPane((Release) item);
+            } else if (item instanceof Story) {
+                showStoryDetailPane((Story) item);
             }
         }
     }
@@ -98,62 +114,51 @@ public class DetailsPaneController implements Initializable {
 
     private void showSkillDetailsPane(Skill skill) {
         skillDetailsPaneController.showDetails(skill);
-
-        skillDetailsPane.setVisible(true);
-        projectDetailsPane.setVisible(false);
-        personDetailsPane.setVisible(false);
-        teamDetailsPane.setVisible(false);
-        releaseDetailsPane.setVisible(false);
-
+        show(skillDetailsPane);
         showOptionButtons();
     }
 
     private void showProjectDetailsPane(Project project) {
         projectDetailsPaneController.showDetails(project);
-
-        skillDetailsPane.setVisible(false);
-        projectDetailsPane.setVisible(true);
-        personDetailsPane.setVisible(false);
-        teamDetailsPane.setVisible(false);
-        releaseDetailsPane.setVisible(false);
-
+        show(projectDetailsPane);
         showOptionButtons();
     }
 
     private void showPersonDetailsPane(Person person) {
         personDetailsPaneController.showDetails(person);
-
-        skillDetailsPane.setVisible(false);
-        projectDetailsPane.setVisible(false);
-        personDetailsPane.setVisible(true);
-        teamDetailsPane.setVisible(false);
-        releaseDetailsPane.setVisible(false);
-
+        show(personDetailsPane);
         showOptionButtons();
     }
 
     private void showTeamDetailsPane(Team team) {
         teamDetailsPaneController.showDetails(team);
-
-        skillDetailsPane.setVisible(false);
-        projectDetailsPane.setVisible(false);
-        personDetailsPane.setVisible(false);
-        teamDetailsPane.setVisible(true);
-        releaseDetailsPane.setVisible(false);
-
+        show(teamDetailsPane);
         showOptionButtons();
     }
 
     private void showReleaseDetailPane(Release release) {
         releaseDetailsPaneController.showDetails(release);
-
-        skillDetailsPane.setVisible(false);
-        projectDetailsPane.setVisible(false);
-        personDetailsPane.setVisible(false);
-        teamDetailsPane.setVisible(false);
-        releaseDetailsPane.setVisible(true);
-
+        show(releaseDetailsPane);
         showOptionButtons();
+    }
+
+    private void showStoryDetailPane(Story story) {
+        storyDetailsPaneController.showDetails(story);
+        show(storyDetailsPane);
+        showOptionButtons();
+    }
+
+    /**
+     * Shows the appropriate pane
+     * @param pane Pane to be shown
+     */
+    private void show(Pane pane) {
+        // Hide all panes initially, then show the appropriate pane
+        for (Pane p : panes) {
+            p.setVisible(false);
+        }
+
+        pane.setVisible(true);
     }
 
     private void showOptionButtons() {

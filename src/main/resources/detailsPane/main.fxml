@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<BorderPane fx:id="detailsPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -25,6 +25,7 @@
         <fx:include fx:id="skillDetailsPane" source="skill.fxml" />
         <fx:include fx:id="teamDetailsPane" source="team.fxml" />
         <fx:include fx:id="releaseDetailsPane" source="release.fxml" />
+        <fx:include fx:id="storyDetailsPane" source="story.fxml" />
     </StackPane>
   </center>
 </BorderPane>
