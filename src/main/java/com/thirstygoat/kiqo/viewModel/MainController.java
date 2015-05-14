@@ -44,7 +44,6 @@ import org.controlsfx.control.StatusBar;
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CreateReleaseCommand;
 import com.thirstygoat.kiqo.command.DeletePersonCommand;
 import com.thirstygoat.kiqo.command.DeleteProjectCommand;
 import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
@@ -67,10 +66,6 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.PersonFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ProjectFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ReleaseFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.SkillFormController;
 
 /**
  * Main controller for the primary view
@@ -701,8 +696,7 @@ public class MainController implements Initializable {
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
-            try {
-                final FileWriter fileWriter = new FileWriter(selectedFile);
+            try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
