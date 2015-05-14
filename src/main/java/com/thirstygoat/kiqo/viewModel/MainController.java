@@ -1,32 +1,5 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.*;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.*;
-import javafx.util.Callback;
-import org.controlsfx.control.StatusBar;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -34,6 +7,70 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+
+import org.controlsfx.control.StatusBar;
+
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CreateReleaseCommand;
+import com.thirstygoat.kiqo.command.DeletePersonCommand;
+import com.thirstygoat.kiqo.command.DeleteProjectCommand;
+import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
+import com.thirstygoat.kiqo.command.DeleteSkillCommand;
+import com.thirstygoat.kiqo.command.DeleteTeamCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.PersonFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ProjectFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReleaseFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.SkillFormController;
 
 /**
  * Main controller for the primary view
@@ -85,8 +122,8 @@ public class MainController implements Initializable {
     private double dividerPosition;
 
     private Organisation selectedOrganisation;
-    private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -96,12 +133,12 @@ public class MainController implements Initializable {
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
-        StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
+        final StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
         changesSaved.addListener((observable, oldValue, newValue) -> {
             changesSavedAsterisk.set(newValue ? "" : "*");
         });
 
-        StringProperty orgName = new SimpleStringProperty();
+        final StringProperty orgName = new SimpleStringProperty();
         orgName.bind(selectedOrganisationProperty.get().organisationNameProperty());
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             orgName.unbind();
@@ -112,7 +149,7 @@ public class MainController implements Initializable {
                 .concat(orgName)
                 .concat(changesSavedAsterisk)
                 .concat(" - ")
-                .concat(PRODUCT_NAME));
+                .concat(MainController.PRODUCT_NAME));
     }
 
     /**
@@ -142,7 +179,7 @@ public class MainController implements Initializable {
         } else {
 
             String deleteMessage = "There are no people with this skill.";
-            DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
+            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
                 deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
@@ -187,7 +224,7 @@ public class MainController implements Initializable {
             // Then delete the team
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
-            DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
+            final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
             if (deletePeople) {
                 command.setDeleteMembers();
             }
@@ -259,20 +296,20 @@ public class MainController implements Initializable {
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
-            projectDialog((Project) focusedObject);
+            dialog((Project) focusedObject);
         } else if (focusedObject instanceof Person) {
-            personDialog((Person) focusedObject);
+            dialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
             if (focusedObject == selectedOrganisation.getPoSkill() || focusedObject == selectedOrganisation.getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
             } else {
-                skillDialog((Skill) focusedObject);
+                dialog((Skill) focusedObject);
             }
         } else if (focusedObject instanceof Team) {
-            teamDialog((Team) focusedObject);
+            dialog((Team) focusedObject);
         } else if (focusedObject instanceof Release) {
-            releaseDialog((Release) focusedObject);
+            dialog((Release) focusedObject);
         }
     }
 
@@ -502,31 +539,31 @@ public class MainController implements Initializable {
 
     public void newSkill() {
         if (selectedOrganisation != null) {
-            skillDialog(null);
+            dialog(null, "Skill");
         }
     }
 
     public void newPerson() {
         if (selectedOrganisation != null) {
-            personDialog(null);
+            dialog(null, "Person");
         }
     }
 
     public void newTeam() {
         if (selectedOrganisation != null) {
-            teamDialog(null);
+            dialog(null, "Team");
         }
     }
 
     public void newRelease() {
         if (selectedOrganisation != null) {
-            releaseDialog(null);
+            dialog(null, "Release");
         }
     }
 
     public void newProject() {
         if (selectedOrganisation != null) {
-            projectDialog(null);
+            dialog(null, "Project");
 
             if (selectedOrganisation.getProjects().size() > 0) {
                 menuBarController.enableNewRelease();
@@ -665,11 +702,11 @@ public class MainController implements Initializable {
 
         if (selectedFile != null) {
             try {
-                FileWriter fileWriter = new FileWriter(selectedFile);
-                ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
+                final FileWriter fileWriter = new FileWriter(selectedFile);
+                final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
-            } catch(Exception e) {
+            } catch(final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -760,46 +797,6 @@ public class MainController implements Initializable {
         });
     }
 
-    private void projectDialog(Project project) {
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("New Project");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/project.fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final ProjectFormController projectFormController = loader.getController();
-
-            projectFormController.setStage(stage);
-            projectFormController.setOrganisation(selectedOrganisation);
-            projectFormController.loadProject(project);
-
-            stage.showAndWait();
-            if (projectFormController.isValid()) {
-                if (project == null) {
-                    // create and do command
-                    final Command<?> command = projectFormController.getCommand();
-                    doCommand(command);
-                } else {
-                    //editing
-                    doCommand(projectFormController.getCommand());
-                }
-
-            }
-        });
-    }
-
     /**
      * Attaches cell factory and selection listener to the list view.
      */
@@ -837,56 +834,31 @@ public class MainController implements Initializable {
         });
     }
 
-
-    private void personDialog(Person person) {
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("New Person");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/person.fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final PersonFormController personFormController = loader.getController();
-
-            personFormController.setStage(stage);
-            personFormController.setOrganisation(selectedOrganisation);
-            personFormController.setPerson(person);
-
-            stage.showAndWait();
-            if (personFormController.isValid()) {
-                if (person == null) {
-                    // create and do command
-                    final Command<?> command = personFormController.getCommand();
-                    doCommand(command);
-                } else {
-                    //editing
-                    doCommand(personFormController.getCommand());
-                }
-
-            }
-        });
+    /**
+     * Convenience method for {dialog(t, type)}
+     * @param t must not be null
+     */
+    private <T> void dialog(T t) {
+        final String[] fullname = t.getClass().getName().split("\\.");
+        final String name = fullname[fullname.length - 1];
+        dialog(t, name);
     }
 
-    private void teamDialog(Team team) {
+    /**
+     *
+     * @param t may be null
+     * @param type type of t. This is displayed in the dialog title and also used to retrieve the fxml file, eg. "Project" => "forms/project.fxml".
+     */
+    private <T> void dialog(T t, String type) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
+            stage.setTitle(t == null ? "New " : "Edit " + type);
             final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/team.fxml"));
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
             Pane root;
             try {
                 root = loader.load();
@@ -896,96 +868,15 @@ public class MainController implements Initializable {
             }
             final Scene scene = new Scene(root);
             stage.setScene(scene);
-            final TeamFormController teamFormController = loader.getController();
-            teamFormController.setStage(stage);
-            teamFormController.setTeam(team);
-            teamFormController.setOrganisation(selectedOrganisation);
-            teamFormController.setListSelectionViewSettings();
+            @SuppressWarnings("unchecked")
+            final IFormController<T> formController = (IFormController<T>) loader.getController();
+            formController.setStage(stage);
+            formController.setOrganisation(selectedOrganisation);
+            formController.populateFields(t);
 
             stage.showAndWait();
-            if (teamFormController.isValid()) {
-                if (team == null) {
-                    // create and do command
-                    final Command<?> command = teamFormController.getCommand();
-                    doCommand(command);
-                } else {
-                    // editing
-                    doCommand(teamFormController.getCommand());
-                }
-            }
-        });
-    }
-
-    private void releaseDialog(Release release) {
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/release.fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final ReleaseFormController releaseFormController = loader.getController();
-            releaseFormController.setStage(stage);
-            releaseFormController.setOrganisation(selectedOrganisation);
-            releaseFormController.setRelease(release);
-
-            stage.showAndWait();
-            if (releaseFormController.isValid()) {
-                if (release == null) {
-                    final CreateReleaseCommand command = (CreateReleaseCommand) releaseFormController.getCommand();
-                    doCommand(command);
-                } else {
-                    doCommand(releaseFormController.getCommand());
-                }
-            }
-        });
-    }
-    private void skillDialog(Skill skill) {
-        Platform.runLater(() -> {
-            final Stage stage = new Stage();
-            stage.setTitle("New Skill");
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setResizable(false);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/skill.fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            final SkillFormController skillFormController = loader.getController();
-
-            skillFormController.setStage(stage);
-            skillFormController.setOrganisation(selectedOrganisation);
-            skillFormController.loadSkill(skill);
-
-            stage.showAndWait();
-            if (skillFormController.isValid()) {
-                if(skill == null) {
-                    // create and do command
-                    final Command<?> command = skillFormController.getCommand();
-                    doCommand(command);
-                } else {
-                    //editing
-                    doCommand(skillFormController.getCommand());
-                }
-
+            if (formController.isValid()) {
+                doCommand(formController.getCommand());
             }
         });
     }
@@ -998,7 +889,7 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.UTILITY);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("dialogs/allocation.fxml"));
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/allocation.fxml"));
             Pane root;
             try {
                 root = loader.load();
@@ -1012,15 +903,15 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
 
-            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (MainController.focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
-                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
+                allocationFormController.setTeam((Team) MainController.focusedItemProperty.getValue());
             } else {
                 allocationFormController.setProject(selectedProject.get());
                 allocationFormController.setTeam(null);
             }
 
-            allocationFormController.setAllocation(allocation);
+            allocationFormController.populateFields(allocation);
 
             stage.showAndWait();
             if (allocationFormController.isValid()) {
