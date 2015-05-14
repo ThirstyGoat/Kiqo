@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.google.gson.JsonSyntaxException;
+import com.sun.xml.internal.ws.dump.LoggingDumpTube;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
@@ -32,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -93,6 +95,28 @@ public class MainController implements Initializable {
     private Release selectedRelease;
 
     private int savePosition = 0;
+    private File lastSavedFile;
+
+    private void setLastSavedFile(File file) {
+        try {
+            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
+            // Delete the tmp file upon exit of the application
+            lastSavedFile.deleteOnExit();
+            // Copy the opened file to the tmp file
+            Files.copy(file.toPath(), lastSavedFile.toPath());
+        } catch (IOException e) {
+            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
+                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
+                            "Revert functionality is disabled");
+            // TODO Disable revert functionality
+        }
+    }
+
+    private void revert() {
+        // TODO checking stuff
+
+        openOrganisation(lastSavedFile);
+    }
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
@@ -560,11 +584,13 @@ public class MainController implements Initializable {
         if (filePath == null) {
             return;
         }
-        Organisation organisation = null;
+        Organisation organisation;
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             changesSaved.set(true);
+            // Store the organisation as it currently stands
+            setLastSavedFile(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
