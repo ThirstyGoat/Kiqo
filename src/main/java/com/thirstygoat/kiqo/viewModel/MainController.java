@@ -63,7 +63,7 @@ import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
 
@@ -110,7 +110,7 @@ public class MainController implements Initializable {
     @FXML
     private Pane detailsPane;
     @FXML
-    private DetailsPaneController detailsPaneController;
+    private MainDetailsPaneController detailsPaneController;
     @FXML
     private MenuBarController menuBarController;
     private Stage primaryStage;

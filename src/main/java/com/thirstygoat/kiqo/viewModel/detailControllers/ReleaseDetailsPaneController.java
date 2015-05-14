@@ -3,13 +3,14 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.model.Release;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class ReleaseDetailsPaneController implements Initializable {
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.viewModel.MainController;
+
+public class ReleaseDetailsPaneController implements Initializable, IDetailsPaneController<Release> {
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -20,6 +21,7 @@ public class ReleaseDetailsPaneController implements Initializable {
     private Label descriptionLabel;
 
 
+    @Override
     public void showDetails(final Release release) {
         if (release != null) {
             shortNameLabel.textProperty().bind(release.shortNameProperty());
@@ -62,5 +64,10 @@ public class ReleaseDetailsPaneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    @Override
+    public void setMainController(MainController mainController) {
+        // don't do it
     }
 }
