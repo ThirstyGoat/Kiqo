@@ -79,8 +79,6 @@ public class MainController implements Initializable {
     @FXML
     private SplitPane mainSplitPane;
     @FXML
-    private Label listLabel;
-    @FXML
     private Pane listPane;
     @FXML
     private Pane detailsPane;
@@ -96,20 +94,14 @@ public class MainController implements Initializable {
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = "Kiqo";
-    public final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = new UndoManager();
     private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
 
     private Stage primaryStage;
     private double dividerPosition;
 
-    private Organisation selectedOrganisation;
-    private final ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private Person selectedPerson;
-    private Skill selectedSkill;
-    private Team selectedTeam;
-    private Release selectedRelease;
+    public final ObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
 
     private int savePosition = 0;
 
@@ -139,7 +131,7 @@ public class MainController implements Initializable {
      *
      */
     private void deleteProject(Project project) {
-        final DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisation);
+        final DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisationProperty.get());
 
         final String[] buttons = {"Delete Project", "Cancel"};
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Project", "Are you sure?",
@@ -149,19 +141,19 @@ public class MainController implements Initializable {
             doCommand(command);
         }
 
-        if (selectedOrganisation.getProjects().size() < 1) {
+        if (selectedOrganisationProperty.get().getProjects().size() < 1) {
             menuBarController.disableNewRelease();
         }
     }
 
     private void deleteSkill(Skill skill) {
-        if (skill == selectedOrganisation.getPoSkill() || skill == selectedOrganisation.getSmSkill()) {
+        if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
 
             String deleteMessage = "There are no people with this skill.";
-            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
+            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
                 deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
@@ -171,7 +163,7 @@ public class MainController implements Initializable {
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
             if (result.equals("Delete Skill")) {
-                doCommand(new DeleteSkillCommand(skill, selectedOrganisation));
+                doCommand(new DeleteSkillCommand(skill, selectedOrganisationProperty.get()));
             }
         }
     }
@@ -206,7 +198,7 @@ public class MainController implements Initializable {
             // Then delete the team
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
-            final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
+            final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisationProperty.get());
             if (deletePeople) {
                 command.setDeleteMembers();
             }
@@ -232,7 +224,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
-            doCommand(new DeletePersonCommand(selectedPerson, selectedOrganisation));
+            doCommand(new DeletePersonCommand((Person) focusedItemProperty.get(), selectedOrganisationProperty.get()));
         }
     }
 
@@ -249,7 +241,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Release")) {
-            doCommand(new DeleteReleaseCommand(selectedRelease));
+            doCommand(new DeleteReleaseCommand((Release) focusedItemProperty.get()));
         }
 
     }
@@ -282,7 +274,7 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Person) {
             dialog((Person) focusedObject);
         } else if (focusedObject instanceof Skill) {
-            if (focusedObject == selectedOrganisation.getPoSkill() || focusedObject == selectedOrganisation.getSmSkill()) {
+            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() || focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
             } else {
@@ -307,10 +299,9 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedOrganisation = new Organisation();
-        selectedOrganisationProperty.set(selectedOrganisation);
+        selectedOrganisationProperty.set(new Organisation());
 
-            // enable menu items
+        // enable menu items
         menuBarController.enableNewTeam();
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
@@ -324,61 +315,51 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            selectedOrganisation = newValue;
             // Clear undo/redo stack
             undoManager.empty();
         });
     }
 
-
-
-    public Organisation getSelectedOrganisation() {
-        return selectedOrganisation;
-    }
-
-    public SimpleObjectProperty<Organisation> getSelectedOrganisationProperty() {
+    public ObjectProperty<Organisation> getSelectedOrganisationProperty() {
         return selectedOrganisationProperty;
     }
 
-
-
-
     public void newSkill() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Skill");
         }
     }
 
     public void newPerson() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Person");
         }
     }
 
     public void newTeam() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Team");
         }
     }
 
     public void newRelease() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Release");
         }
     }
 
     public void newProject() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Project");
 
-            if (selectedOrganisation.getProjects().size() > 0) {
+            if (selectedOrganisationProperty.get().getProjects().size() > 0) {
                 menuBarController.enableNewRelease();
             }
         }
     }
 
     public void allocateTeams() {
-        if (selectedOrganisation != null ) {
+        if (selectedOrganisationProperty.get() != null ) {
             allocationDialog(null);
         }
     }
@@ -386,7 +367,7 @@ public class MainController implements Initializable {
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             if(!promptForUnsavedChanges()) {
                 return;
             }
@@ -426,7 +407,7 @@ public class MainController implements Initializable {
      * Saves the project to disk and marks project as saved.
      */
     public void saveOrganisation() {
-        final Organisation organisation = selectedOrganisation;
+        final Organisation organisation = selectedOrganisationProperty.get();
         // ask for save location if not yet set
         if (organisation.getSaveLocation() == null) {
             final FileChooser fileChooser = new FileChooser();
@@ -455,10 +436,10 @@ public class MainController implements Initializable {
      * Saves the current organisation to it.
      */
     public void saveAsOrganisation() {
-        final Organisation organisation = selectedOrganisation;
+        final Organisation organisation = selectedOrganisationProperty.get();
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-        final File existingFile = selectedOrganisation.getSaveLocation();
+        final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
@@ -494,17 +475,17 @@ public class MainController implements Initializable {
         final String EXTENSION = ".yaml";
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
-        final File existingFile = selectedOrganisation.getSaveLocation();
+        final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
-            fileChooser.setInitialFileName(selectedOrganisation.organisationNameProperty().get());
+            fileChooser.setInitialFileName(selectedOrganisationProperty.get().organisationNameProperty().get());
         }
 
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
             try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
-                final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
+                final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisationProperty.get());
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
             } catch(final Exception e) {
@@ -656,7 +637,7 @@ public class MainController implements Initializable {
             @SuppressWarnings("unchecked")
             final IFormController<T> formController = (IFormController<T>) loader.getController();
             formController.setStage(stage);
-            formController.setOrganisation(selectedOrganisation);
+            formController.setOrganisation(selectedOrganisationProperty.get());
             formController.populateFields(t);
 
             stage.showAndWait();
@@ -686,7 +667,7 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             final AllocationFormController allocationFormController = loader.getController();
             allocationFormController.setStage(stage);
-            allocationFormController.setOrganisation(selectedOrganisation);
+            allocationFormController.setOrganisation(selectedOrganisationProperty.get());
 
             if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
@@ -720,7 +701,7 @@ public class MainController implements Initializable {
     }
 
     public void newOrganisation() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             if(!promptForUnsavedChanges()) {
                 return;
             }
