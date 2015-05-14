@@ -142,10 +142,9 @@ public class SideBarController implements Initializable {
         peopleListView.setItems(mainController.selectedOrganisationProperty.get().getPeople());
         teamsListView.setItems(mainController.selectedOrganisationProperty.get().getTeams());
         skillsListView.setItems(mainController.selectedOrganisationProperty.get().getSkills());
-        // releases are looked after by projectListView selectionChangeListener
 
         switchToProjectList();
-        projectListView.getSelectionModel().select(0);
+        projectListView.getSelectionModel().selectFirst();
     }
 
     public void switchToSkillList() {
