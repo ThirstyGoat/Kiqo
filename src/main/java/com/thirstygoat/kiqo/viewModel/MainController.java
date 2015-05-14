@@ -691,8 +691,8 @@ public class MainController implements Initializable {
             if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
                 allocationFormController.setTeam((Team) focusedItemProperty.getValue());
-            } else {
-                allocationFormController.setProject(selectedProject.get());
+            } else if (focusedItemProperty.getValue().getClass().equals(Project.class)) {
+                allocationFormController.setProject((Project) focusedItemProperty.getValue());
                 allocationFormController.setTeam(null);
             }
 
@@ -700,7 +700,7 @@ public class MainController implements Initializable {
 
             stage.showAndWait();
             if (allocationFormController.isValid()) {
-              doCommand(allocationFormController.getCommand());
+                doCommand(allocationFormController.getCommand());
             }
         });
     }
