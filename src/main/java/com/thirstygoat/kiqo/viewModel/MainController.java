@@ -43,6 +43,7 @@ public class MainController implements Initializable {
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
+    public boolean revertSupported = true;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -81,7 +82,6 @@ public class MainController implements Initializable {
     private MenuBarController menuBarController;
     private Stage primaryStage;
     private double dividerPosition;
-
     private Organisation selectedOrganisation;
     private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
@@ -89,24 +89,21 @@ public class MainController implements Initializable {
     private Skill selectedSkill;
     private Team selectedTeam;
     private Release selectedRelease;
-
     private int savePosition = 0;
     private File lastSavedFile;
 
     private void setLastSavedFile(File file) {
+        lastSavedFile.deleteOnExit();
         try {
-            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
-            // Delete the tmp file upon exit of the application
-            lastSavedFile.deleteOnExit();
-            // Copy the opened file to the tmp file
             FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
             Files.copy(file.toPath(), outputStream);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
                     "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
                             "Revert functionality is disabled");
-            // TODO Disable revert functionality
+            revertSupported = false;
         }
+
     }
 
     private void revert() {
@@ -319,6 +316,15 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
+        } catch (IOException ignored) {
+            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
+                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
+                            "Revert functionality is disabled");
+            revertSupported = false;
+        }
+
         selectedOrganisation = new Organisation();
         selectedOrganisationProperty.set(selectedOrganisation);
 

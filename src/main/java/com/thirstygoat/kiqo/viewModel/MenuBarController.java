@@ -98,7 +98,9 @@ public class MenuBarController implements Initializable {
 
     private void setListenersOnChangesSaved() {
         mainController.changesSaved.addListener((o, oldValue, newValue) -> {
-            revertMenuItem.setDisable(newValue);
+            if (mainController.revertSupported) {
+                revertMenuItem.setDisable(newValue);
+            }
         });
     }
 
