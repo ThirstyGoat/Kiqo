@@ -20,7 +20,7 @@
                 <Insets left="10.0" right="10.0" top="10.0" />
               </VBox.margin>
             </Label>
-            <fx:include fx:id="tabViewPane" source="sidebar.fxml" />
+            <fx:include fx:id="sideBar" source="sidebar.fxml" />
           </children>
         </VBox>
         <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" />

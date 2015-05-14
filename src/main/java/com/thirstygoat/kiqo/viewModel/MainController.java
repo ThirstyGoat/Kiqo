@@ -19,6 +19,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
@@ -71,36 +72,10 @@ import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
-    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-    private static final String PRODUCT_NAME = "Kiqo";
-    private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
-    private final UndoManager undoManager = new UndoManager();
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
+
+    // BEGIN FXML INJECTIONS
     @FXML
     private BorderPane mainBorderPane;
-    @FXML
-    private ListView<Project> projectListView;
-    @FXML
-    private ListView<Person> peopleListView;
-    @FXML
-    private ListView<Skill> skillsListView;
-    @FXML
-    private ListView<Team> teamsListView;
-    @FXML
-    private ListView<Release> releasesListView;
-    @FXML
-    private Tab projectTab;
-    @FXML
-    private Tab peopleTab;
-    @FXML
-    private Tab skillsTab;
-    @FXML
-    private Tab teamsTab;
-    @FXML
-    private Tab releasesTab;
-    @FXML
-    private TabPane tabViewPane;
     @FXML
     private SplitPane mainSplitPane;
     @FXML
@@ -112,13 +87,25 @@ public class MainController implements Initializable {
     @FXML
     private MainDetailsPaneController detailsPaneController;
     @FXML
+    private TabPane sideBar;
+    @FXML
+    private SideBarController sideBarController;
+    @FXML
     private MenuBarController menuBarController;
+    
+    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private static final String PRODUCT_NAME = "Kiqo";
+    public final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    private final UndoManager undoManager = new UndoManager();
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
+
     private Stage primaryStage;
     private double dividerPosition;
 
     private Organisation selectedOrganisation;
     private final ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -269,7 +256,7 @@ public class MainController implements Initializable {
 
     public void deleteItem() {
         Platform.runLater(() -> {
-            final Item focusedObject = MainController.focusedItemProperty.get();
+            final Item focusedObject = focusedItemProperty.get();
             if (focusedObject == null) {
                 // do nothing
             } else if (focusedObject instanceof Project) {
@@ -287,7 +274,7 @@ public class MainController implements Initializable {
     }
 
     public void editItem() {
-        final Item focusedObject = MainController.focusedItemProperty.get();
+        final Item focusedObject = focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
         } else if (focusedObject instanceof Project) {
@@ -328,11 +315,9 @@ public class MainController implements Initializable {
         menuBarController.enableNewPerson();
         menuBarController.enableNewSkill();
 
-        initializeListViews();
-        initialiseTabs();
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
-        MainController.focusedItemProperty.addListener((observable, oldValue, newValue) -> {
+        focusedItemProperty.addListener((observable, oldValue, newValue) -> {
             System.out.println("Focus changed to " + newValue);
             detailsPaneController.showDetailsPane(newValue);
             menuBarController.updateAfterAnyObjectSelected(newValue != null);
@@ -340,117 +325,12 @@ public class MainController implements Initializable {
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             selectedOrganisation = newValue;
-            setListViewData();
             // Clear undo/redo stack
             undoManager.empty();
-            setNewReleaseEnabled();
-        });
-
-        Platform.runLater(() -> listLabel.setText(""));
-    }
-
-    private void initializeListViews() {
-        setListViewData();
-
-        // Get a list of them
-        final ArrayList<ListView<? extends Item>> listViews = new ArrayList<>();
-        listViews.add(projectListView);
-        listViews.add(peopleListView);
-        listViews.add(skillsListView);
-        listViews.add(teamsListView);
-        listViews.add(releasesListView);
-
-        // All these ListViews share a single context menu
-        final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem editContextMenu = new MenuItem("Edit");
-        final MenuItem deleteContextMenu = new MenuItem("Delete");
-        contextMenu.getItems().add(editContextMenu);
-        contextMenu.getItems().add(deleteContextMenu);
-        editContextMenu.setOnAction(event -> editItem());
-        deleteContextMenu.setOnAction(event -> deleteItem());
-
-        for (final ListView<? extends Item> listView : listViews) {
-            initialiseListView(listView, contextMenu);
-        }
-
-
-        // set additional listeners so that the selection is retained despite
-        // tab-switching
-        projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // only for project: also update releases listView
-            releasesListView.setItems(null);
-            selectedProject.set(newValue);
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == projectTab) {
-                MainController.focusedItemProperty.set(newValue);
-            }
-
-            if (newValue != null) {
-                releasesListView.setItems(selectedProject.get().observableReleases());
-
-                // Update list label
-                if (projectListView.getItems().contains(newValue)) {
-                    listLabel.textProperty().unbind();
-                    listLabel.textProperty().bind(newValue.shortNameProperty());
-                } else {
-                    Platform.runLater(() -> listLabel.setText(""));
-                }
-
-            } else {
-                // Update list label
-                listLabel.textProperty().unbind();
-                listLabel.setText(null);
-            }
-        });
-
-
-        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedPerson = newValue;
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == peopleTab) {
-                MainController.focusedItemProperty.set(newValue);
-            }
-        });
-        skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedSkill = newValue;
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == skillsTab) {
-                MainController.focusedItemProperty.set(newValue);
-            }
-        });
-        teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedTeam = newValue;
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == teamsTab) {
-                MainController.focusedItemProperty.set(newValue);
-            }
-        });
-        releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedRelease = newValue;
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == releasesTab) {
-                MainController.focusedItemProperty.set(newValue);
-            }
         });
     }
 
 
-    private void setListViewData() {
-
-        projectListView.setItems(selectedOrganisationProperty.getValue().getProjects());
-
-        // ensure that you can only crate a realease if a project exists
-        projectListView.getItems().addListener(new ListChangeListener<Project>() {
-            @Override
-            public void onChanged(Change<? extends Project> c) {
-                setNewReleaseEnabled();
-            }
-        });
-
-        peopleListView.setItems(selectedOrganisation.getPeople());
-        teamsListView.setItems(selectedOrganisation.getTeams());
-        skillsListView.setItems(selectedOrganisation.getSkills());
-        // releases are looked after by projectListView selectionChangeListener
-
-
-        switchToProjectList();
-        projectListView.getSelectionModel().select(0);
-    }
 
     public Organisation getSelectedOrganisation() {
         return selectedOrganisation;
@@ -460,77 +340,8 @@ public class MainController implements Initializable {
         return selectedOrganisationProperty;
     }
 
-    /**
-     * Sets if new release is enabled or not dependant on the existence of at lease 1 project
-     */
-    private void setNewReleaseEnabled() {
-        if (projectListView.getItems().size() > 0) {
-            menuBarController.enableNewRelease();
-        } else {
-            menuBarController.disableNewRelease();
-        }
-    }
 
-    private void initialiseTabs() {
-        tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == projectTab) {
-                if (selectedProject == null) {
-                    projectListView.getSelectionModel().selectFirst();
-                }
-                MainController.focusedItemProperty.set(selectedProject.get());
 
-                menuBarController.updateAfterProjectListSelected(true);
-            } else if (newValue == peopleTab) {
-                if (selectedPerson == null) {
-                    peopleListView.getSelectionModel().selectFirst();
-                }
-                MainController.focusedItemProperty.set(selectedPerson);
-
-                menuBarController.updateAfterPersonListSelected(true);
-            } else if (newValue == skillsTab) {
-                if (selectedSkill == null) {
-                    skillsListView.getSelectionModel().selectFirst();
-                }
-                MainController.focusedItemProperty.set(selectedSkill);
-
-                menuBarController.updateAfterSkillListSelected(true);
-            } else if (newValue == teamsTab) {
-                if (selectedTeam == null) {
-                    teamsListView.getSelectionModel().selectFirst();
-                }
-                MainController.focusedItemProperty.set(selectedTeam);
-
-                menuBarController.updateAfterTeamListSelected(true);
-            } else if (newValue == releasesTab) {
-                if (selectedRelease == null) {
-                    releasesListView.getSelectionModel().selectFirst();
-                }
-                MainController.focusedItemProperty.set(selectedRelease);
-
-                menuBarController.updateAfterReleasesListSelected(true);
-            }
-        });
-    }
-
-    public void setSelectedTab(int tab) {
-        switch (tab) {
-            case 0:
-                tabViewPane.getSelectionModel().select(projectTab);
-                break;
-            case 1:
-                tabViewPane.getSelectionModel().select(teamsTab);
-                break;
-            case 2:
-                tabViewPane.getSelectionModel().select(peopleTab);
-                break;
-            case 3:
-                tabViewPane.getSelectionModel().select(skillsTab);
-                break;
-            case 4:
-                tabViewPane.getSelectionModel().select(releasesTab);
-                break;
-        }
-    }
 
     public void newSkill() {
         if (selectedOrganisation != null) {
@@ -679,10 +490,6 @@ public class MainController implements Initializable {
         }
     }
 
-    public void switchToSkillList() {
-        tabViewPane.getSelectionModel().select(skillsTab);
-    }
-
     public void saveStatusReport() {
         final String EXTENSION = ".yaml";
         final FileChooser fileChooser = new FileChooser();
@@ -704,22 +511,6 @@ public class MainController implements Initializable {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void switchToPersonList() {
-        tabViewPane.getSelectionModel().select(peopleTab);
-    }
-
-    public void switchToTeamList() {
-        tabViewPane.getSelectionModel().select(teamsTab);
-    }
-
-    public void switchToProjectList() {
-        tabViewPane.getSelectionModel().select(projectTab);
-    }
-
-    public void switchToReleaseList() {
-        tabViewPane.getSelectionModel().select(releasesTab);
     }
 
     public void undo() {
@@ -897,9 +688,9 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
 
-            if (MainController.focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
-                allocationFormController.setTeam((Team) MainController.focusedItemProperty.getValue());
+                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
             } else {
                 allocationFormController.setProject(selectedProject.get());
                 allocationFormController.setTeam(null);
@@ -923,6 +714,7 @@ public class MainController implements Initializable {
         addClosePrompt();
         menuBarController.setMainController(this);
         detailsPaneController.setMainController(this);
+        sideBarController.setMainController(this);
 
         setStageTitleProperty();
     }

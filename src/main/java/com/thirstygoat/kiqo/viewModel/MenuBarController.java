@@ -100,26 +100,26 @@ public class MenuBarController implements Initializable {
         final KeyCombination skillTabKey = new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN);
         final KeyCombination releaseTabKey = new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.SHORTCUT_DOWN);
 
-        mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (editKey.match(event)) {
-                    mainController.editItem();
-                } else if (deleteKey.match(event)) {
-                    mainController.deleteItem();
-                } else if (projectTabKey.match(event)) {
-                    mainController.setSelectedTab(0);
-                } else if (teamTabKey.match(event)) {
-                    mainController.setSelectedTab(1);
-                } else if (peopleTabKey.match(event)) {
-                    mainController.setSelectedTab(2);
-                } else if (skillTabKey.match(event)) {
-                    mainController.setSelectedTab(3);
-                } else if (releaseTabKey.match(event)) {
-                    mainController.setSelectedTab(4);
-                }
-            }
-        });
+//        mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent event) {
+//                if (editKey.match(event)) {
+//                    mainController.editItem();
+//                } else if (deleteKey.match(event)) {
+//                    mainController.deleteItem();
+//                } else if (projectTabKey.match(event)) {
+//                    mainController.setSelectedTab(0);
+//                } else if (teamTabKey.match(event)) {
+//                    mainController.setSelectedTab(1);
+//                } else if (peopleTabKey.match(event)) {
+//                    mainController.setSelectedTab(2);
+//                } else if (skillTabKey.match(event)) {
+//                    mainController.setSelectedTab(3);
+//                } else if (releaseTabKey.match(event)) {
+//                    mainController.setSelectedTab(4);
+//                }
+//            }
+//        });
     }
 
     private void addMenuItemHandlers() {
@@ -152,7 +152,7 @@ public class MenuBarController implements Initializable {
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToProjectList();
+//                mainController.switchToProjectList();
                 listShowProjectMenuItem.setDisable(true);
             }
         });
@@ -167,7 +167,7 @@ public class MenuBarController implements Initializable {
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToTeamList();
+//                mainController.switchToTeamList();
                 listShowTeamMenuItem.setDisable(true);
                 listShowTeamMenuItem.setSelected(true);
             }
@@ -183,7 +183,7 @@ public class MenuBarController implements Initializable {
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToPersonList();
+//                mainController.switchToPersonList();
                 listShowPersonMenuItem.setDisable(true);
                 listShowPersonMenuItem.setSelected(true);
             }
@@ -199,7 +199,7 @@ public class MenuBarController implements Initializable {
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToSkillList();
+//                mainController.switchToSkillList();
                 listShowSkillMenuItem.setDisable(true);
             }
         });
@@ -214,7 +214,7 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
 
-                mainController.switchToReleaseList();
+//                mainController.switchToReleaseList();
                 listShowReleaseMenuItem.setDisable(true);
             }
         });

@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<TabPane xmlns:fx="http://javafx.com/fxml/1" fx:id="tabViewPane" VBox.vgrow="ALWAYS" fx:controller="com.thirstygoat.kiqo.viewModel.MainController">
+<TabPane xmlns:fx="http://javafx.com/fxml/1" fx:id="tabViewPane" VBox.vgrow="ALWAYS" fx:controller="com.thirstygoat.kiqo.viewModel.SideBarController">
   <tabs>
     <Tab fx:id="projectTab" closable="false" text="Project">
       <content>
