@@ -809,21 +809,21 @@ public class MainController implements Initializable {
         listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
             @Override
             public ListCell<T> call(final ListView<T> arg0) {
-                final ListCell<T> listCell = new ListCell<T>() {
+                return new ListCell<T>() {
                     @Override
                     protected void updateItem(final T item, final boolean empty) {
                         // calling super here is very important
                         super.updateItem(item, empty);
-                        setText(empty ? "" : item.getShortName());
                         if (item != null) {
-                            item.shortNameProperty().addListener((observable, oldValue, newValue) -> {
-                                setText(newValue);
-                            });
+                            textProperty().bind(item.shortNameProperty());
                             setContextMenu(contextMenu);
+                        } else {
+                            textProperty().unbind();
+                            setText("");
+                            setContextMenu(null);
                         }
                     }
                 };
-                return listCell;
             }
         });
 
