@@ -27,10 +27,7 @@ import javafx.stage.*;
 import javafx.util.Callback;
 import org.controlsfx.control.StatusBar;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -44,8 +41,8 @@ public class MainController implements Initializable {
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = "Kiqo";
     private static final SimpleObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -102,7 +99,8 @@ public class MainController implements Initializable {
             // Delete the tmp file upon exit of the application
             lastSavedFile.deleteOnExit();
             // Copy the opened file to the tmp file
-            Files.copy(file.toPath(), lastSavedFile.toPath());
+            FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
+            Files.copy(file.toPath(), outputStream);
         } catch (IOException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
                     "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
@@ -112,12 +110,19 @@ public class MainController implements Initializable {
     }
 
     private void revert() {
-        // TODO checking stuff
+        Organisation organisation;
         try {
-            selectedOrganisationProperty.set(PersistenceManager.loadOrganisation(lastSavedFile));
+            organisation = PersistenceManager.loadOrganisation(lastSavedFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
+            return;
         }
+        organisation.setSaveLocation(getSelectedOrganisation().getSaveLocation());
+
+        EditCommand<MainController, Organisation> command = new EditCommand<>(this, "selectedOrganisation", organisation);
+        command.setType("Revert");
+        doCommand(command);
+        saveOrganisation();
     }
 
     private void setStageTitleProperty() {
@@ -336,7 +341,6 @@ public class MainController implements Initializable {
             selectedOrganisation = newValue;
             setListViewData();
             // Clear undo/redo stack
-            undoManager.empty();
             setNewReleaseEnabled();
         });
 
@@ -447,7 +451,11 @@ public class MainController implements Initializable {
     }
 
     public Organisation getSelectedOrganisation() {
-        return selectedOrganisation;
+        return selectedOrganisationProperty.get();
+    }
+
+    public void setSelectedOrganisation(Organisation organisation) {
+        selectedOrganisationProperty.set(organisation);
     }
 
     public SimpleObjectProperty<Organisation> getSelectedOrganisationProperty() {
@@ -591,6 +599,8 @@ public class MainController implements Initializable {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             changesSaved.set(true);
+            // Empty the undo/redo stack(s)
+            undoManager.empty();
             // Store the organisation as it currently stands
             setLastSavedFile(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {

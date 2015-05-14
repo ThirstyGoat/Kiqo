@@ -92,6 +92,14 @@ public class MenuBarController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         addEditDeleteShortcuts();
+
+        setListenersOnChangesSaved();
+    }
+
+    private void setListenersOnChangesSaved() {
+        mainController.changesSaved.addListener((o, oldValue, newValue) -> {
+            revertMenuItem.setDisable(newValue);
+        });
     }
 
     private void addEditDeleteShortcuts() {
@@ -268,7 +276,6 @@ public class MenuBarController implements Initializable {
     public void setListenersOnUndoManager(UndoManager undoManager) {
         undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
             undoMenuItem.setDisable(!newValue);
-            revertMenuItem.setDisable(!newValue);
             if (newValue) {
                 // Update text to say (eg. Undo 'Create Project')
                 undoMenuItem.setText("Undo " + undoManager.getUndoType());

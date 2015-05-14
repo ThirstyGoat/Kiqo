@@ -19,6 +19,7 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
     private final ModelObjectType subject;
     private Object oldVal;
     private PropertyDescriptor propertyDescriptor;
+    private String type = "Edit";
 
     /**
      * @param subject
@@ -77,6 +78,10 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
 
     @Override
     public String getType() {
-        return "Edit";
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
