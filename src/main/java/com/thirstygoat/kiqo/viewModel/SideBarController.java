@@ -69,9 +69,9 @@ public class SideBarController implements Initializable {
                 selectedListView.getSelectionModel().selectFirst();
             }
             mainController.focusedItemProperty.set(selectedListView.getSelectionModel().getSelectedItem());
+            setListViewListener();
         });
     }
-
 
     private void initializeListViews() {
         setListViewData();
@@ -96,45 +96,16 @@ public class SideBarController implements Initializable {
         for (final ListView<? extends Item> listView : listViews) {
             initialiseListView(listView, contextMenu);
         }
+        setListViewListener();
+    }
 
-
-
-        // set additional listeners so that the selection is retained despite
-        // tab-switching
-        projectListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // only for project: also update releases listView
-            releasesListView.setItems(null);
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == projectTab) {
-                mainController.focusedItemProperty.set(newValue);
-            }
-
-            if (newValue != null) {
-                releasesListView.setItems(newValue.observableReleases());
-            }
-        });
-
-
-
-
-        peopleListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == peopleTab) {
-                mainController.focusedItemProperty.set(newValue);
-            }
-        });
-        skillsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == skillsTab) {
-                mainController.focusedItemProperty.set(newValue);
-            }
-        });
-        teamsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == teamsTab) {
-                mainController.focusedItemProperty.set(newValue);
-            }
-        });
-        releasesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (tabViewPane.getSelectionModel().selectedItemProperty().get() == releasesTab) {
-                mainController.focusedItemProperty.set(newValue);
-            }
+    /**
+     * sets a change listener on the selected item of the selected listView
+     */
+    private void setListViewListener() {
+        Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
+        tabListViewMap.get(selectedTab.getId()).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            mainController.focusedItemProperty.set(newValue);
         });
     }
 
@@ -167,19 +138,15 @@ public class SideBarController implements Initializable {
     }
 
     private void setListViewData() {
-
         projectListView.setItems(mainController.selectedOrganisationProperty.get().getProjects());
         peopleListView.setItems(mainController.selectedOrganisationProperty.get().getPeople());
         teamsListView.setItems(mainController.selectedOrganisationProperty.get().getTeams());
         skillsListView.setItems(mainController.selectedOrganisationProperty.get().getSkills());
         // releases are looked after by projectListView selectionChangeListener
 
-
         switchToProjectList();
         projectListView.getSelectionModel().select(0);
     }
-
-
 
     public void switchToSkillList() {
         tabViewPane.getSelectionModel().select(skillsTab);
@@ -221,21 +188,17 @@ public class SideBarController implements Initializable {
         }
     }
 
-
     public void setOrganisationProperty(ObjectProperty<Organisation> organisationProperty) {
         this.organisationProperty = organisationProperty;
     }
 
-
     /**
-     * Set the main controller
-     * @param mainController
+     * Set the main controller and initialise the tabs and listviews
      */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         initialiseTabs();
         initializeListViews();
-
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
     }
 }
