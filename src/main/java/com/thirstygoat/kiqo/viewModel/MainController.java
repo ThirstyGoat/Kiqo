@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.google.gson.JsonSyntaxException;
-import com.sun.xml.internal.ws.dump.LoggingDumpTube;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
@@ -114,8 +113,11 @@ public class MainController implements Initializable {
 
     private void revert() {
         // TODO checking stuff
-
-        openOrganisation(lastSavedFile);
+        try {
+            selectedOrganisationProperty.set(PersistenceManager.loadOrganisation(lastSavedFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setStageTitleProperty() {
@@ -764,6 +766,26 @@ public class MainController implements Initializable {
         }
         return true;
     }
+
+    /**
+     * Prompt the user if they want to save unsaved changes
+     * @return if the user clicked cancel or not
+     */
+    public boolean promptBeforeRevert() {
+        if (!changesSaved.get()) {
+            final String[] options = {"Revert", "Cancel"};
+            final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "Revert",
+                    "Would you like to revert the unsaved changes you have made to this project?", options);
+            if (response.equals("Revert")) {
+                revert();
+            } else if (response.equals("Cancel")) {
+                // do nothing
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Set up the status bar for the application and monitor for changes in the

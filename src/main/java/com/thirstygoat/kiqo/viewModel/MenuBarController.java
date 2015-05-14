@@ -28,6 +28,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem revertMenuItem;
+    @FXML
     private MenuItem generateStatusReportMenuItem;
     @FXML
     private MenuItem openMenuItem;
@@ -80,8 +82,9 @@ public class MenuBarController implements Initializable {
         redoMenuItem.setDisable(true);
         editMenuItem.setDisable(true);
         deleteMenuItem.setDisable(true);
+        revertMenuItem.setDisable(true);
 
-        // listShowProjectMenuItem is disabled here, because it is the default list view.
+            // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
         listShowProjectMenuItem.setSelected(true);
     }
@@ -129,6 +132,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
@@ -264,6 +268,7 @@ public class MenuBarController implements Initializable {
     public void setListenersOnUndoManager(UndoManager undoManager) {
         undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
             undoMenuItem.setDisable(!newValue);
+            revertMenuItem.setDisable(!newValue);
             if (newValue) {
                 // Update text to say (eg. Undo 'Create Project')
                 undoMenuItem.setText("Undo " + undoManager.getUndoType());
@@ -342,4 +347,5 @@ public class MenuBarController implements Initializable {
     public void disableNewRelease() {
         newReleaseMenuItem.setDisable(true);
     }
+
 }
