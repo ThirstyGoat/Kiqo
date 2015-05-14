@@ -727,4 +727,8 @@ public class MainController implements Initializable {
         }
         selectedOrganisationProperty.set(new Organisation());
     }
+
+    public SideBarController getSideBarController() {
+        return sideBarController;
+    }
 }
