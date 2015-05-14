@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Created by leroy on 15/05/15.
  */
-public class Story {
+public class Story extends Item {
     private SimpleStringProperty shortName;
     private SimpleStringProperty longName;
     private SimpleStringProperty description;
