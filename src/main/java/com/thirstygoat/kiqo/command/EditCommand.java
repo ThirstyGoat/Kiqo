@@ -3,6 +3,9 @@ package com.thirstygoat.kiqo.command;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
 
@@ -15,6 +18,7 @@ import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
  *
  */
 public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
+    private static final Logger LOGGER = Logger.getLogger(EditCommand.class.getName());
     private final Object newVal;
     private final ModelObjectType subject;
     private Object oldVal;
@@ -60,18 +64,18 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
 
     @Override
     public String toString() {
-        String newValue = (this.newVal != null) ? this.newVal.toString() : "null";
+        final String newValue = (this.newVal != null) ? this.newVal.toString() : "null";
         return "<Edit " + this.subject.getClass() + ": set " + this.propertyDescriptor.getName() + " to " + newValue + ">";
     }
 
     @Override
     public void undo() {
         try {
-            System.out.println(this.propertyDescriptor.getWriteMethod());
-            this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.oldVal);
+            final Method writeMethod = this.propertyDescriptor.getWriteMethod();
+            EditCommand.LOGGER.log(Level.INFO, "Editing via %s", writeMethod);
+            writeMethod.invoke(this.subject, this.oldVal);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            EditCommand.LOGGER.log(Level.SEVERE, "Can't edit", e);
         }
     }
 

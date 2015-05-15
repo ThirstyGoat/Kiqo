@@ -1,7 +1,15 @@
 package com.thirstygoat.kiqo;
 
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.io.File;
+import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +18,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.File;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Main entry point for application
@@ -21,6 +30,8 @@ public class Main extends Application {
     private MainController mainController;
 
     public static void main( String[] args ) {
+        Main.setupLogging();
+
         Application.launch(args);
     }
 
@@ -51,7 +62,7 @@ public class Main extends Application {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "Drag and drop only supports individual files.");
             } else {
-                File file = db.getFiles().get(0);
+                final File file = db.getFiles().get(0);
                 mainController.openOrganisation(file);
             }
             event.setDropCompleted(success);
@@ -62,5 +73,54 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
+    }
+
+    /**
+     * Configure default logging behaviour for all classes in **this package**
+     */
+    private static void setupLogging() {
+        // set up logging for this package
+        final Logger logger = Logger.getLogger(Main.class.getPackage().getName());
+        logger.setLevel(Level.ALL);
+        final Formatter formatter = new SimpleFormatter() {
+            /**
+             * If record has parameters, uses record's original message as a format string.
+             * If not, default behaviour.
+             */
+            @Override
+            public String formatMessage(LogRecord record) {
+                final String message;
+                if (record.getParameters() == null) {
+                    message = super.formatMessage(record);
+                } else {
+                    message = String.format(record.getMessage(), record.getParameters());
+                }
+                return message;
+            }
+
+            /**
+             * Format on one-line (except throwable, which is on next)
+             */
+            @Override
+            public String format(LogRecord record) {
+                final Object thrown = (record.getThrown() == null) ? "" : record.getThrown();
+                return record.getLevel() + ": " +
+                        formatMessage(record) +
+                        " (from " + record.getSourceClassName() + "#" + record.getSourceMethodName() + " " + new Date(record.getMillis()).toString() + ")\n" +
+                        thrown;
+            }
+        };
+        final Handler handler = new StreamHandler(System.out, formatter) {
+            @Override
+            public void publish(LogRecord record) {
+                super.publish(record);
+                super.flush(); // display immediately
+            }
+        };
+        handler.setLevel(Level.ALL);
+        logger.setUseParentHandlers(false);
+        logger.addHandler(handler);
+
+        logger.log(Level.INFO, "Logger %s successfully started", logger.getName());
     }
 }
