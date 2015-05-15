@@ -2,31 +2,28 @@ package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
+
 
 /**
  * Created by samschofield and James on 14/05/15.
  */
 public class SideBarController implements Initializable {
     @FXML
-    private ListView<Project> projectListView;
+    private TreeView<Item> projectTreeView;
     @FXML
     private ListView<Person> peopleListView;
     @FXML
     private ListView<Skill> skillsListView;
     @FXML
     private ListView<Team> teamsListView;
-    @FXML
-    private ListView<Release> releasesListView;
     @FXML
     private Tab projectTab;
     @FXML
@@ -36,13 +33,11 @@ public class SideBarController implements Initializable {
     @FXML
     private Tab teamsTab;
     @FXML
-    private Tab releasesTab;
-    @FXML
     private TabPane tabViewPane;
 
     private MainController mainController;
-    private Map<String, ListView<? extends Item>> tabListViewMap = new HashMap<>();
-    private ListView<? extends Item> selectedListView;
+    private Map<String, Control> tabListViewMap = new HashMap<>();
+    private Control selectedListView;
     private ObjectProperty<Organisation> organisationProperty;
 
     @Override
@@ -56,33 +51,50 @@ public class SideBarController implements Initializable {
     private void initialiseTabs() {
 
         // uses getId because equals method on tabs doesnt play nicely with hashmap
-        tabListViewMap.put(projectTab.getId(), projectListView);
+        tabListViewMap.put(projectTab.getId(), projectTreeView);
         tabListViewMap.put(teamsTab.getId(), teamsListView);
         tabListViewMap.put(peopleTab.getId(), peopleListView);
         tabListViewMap.put(skillsTab.getId(), skillsListView);
-        tabListViewMap.put(releasesTab.getId(), releasesListView);
 
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedListView = tabListViewMap.get(newValue.getId());
 
-            if (selectedListView.getSelectionModel().getSelectedItem() == null) {
-                selectedListView.getSelectionModel().selectFirst();
+            if (selectedListView.getClass() != TreeView.class) {
+                ListView<Item> castedListView = ((ListView<Item>) selectedListView);
+                if (castedListView.getSelectionModel().getSelectedItem() == null) {
+                    castedListView.getSelectionModel().selectFirst();
+                }
+                mainController.focusedItemProperty.set(castedListView.getSelectionModel().getSelectedItem());
+                setListViewListener();
             }
-            mainController.focusedItemProperty.set(selectedListView.getSelectionModel().getSelectedItem());
-            setListViewListener();
         });
+    }
+
+    private void initializeProjectTreeView() {
+        projectTreeView.getSelectionModel().selectedItemProperty().addListener((o, oldValue1, newValue1) -> {
+            System.out.println(newValue1);
+            mainController.focusedItemProperty.set(newValue1.getValue());
+            // TODO fix brokeness
+        });
+
     }
 
     private void initializeListViews() {
         setListViewData();
+        TreeItem<Item> root = new TreeItem<>();
+        projectTreeView.setRoot(root);
+        projectTreeView.setShowRoot(false);
+        root.setExpanded(true);
+        for (Project project : mainController.getSelectedOrganisationProperty().get().getProjects()) {
+            System.out.println(project.getShortName());
+            root.getChildren().add(new TreeItem<>(project));
+        }
 
         // Get a list of them
         final ArrayList<ListView<? extends Item>> listViews = new ArrayList<>();
-        listViews.add(projectListView);
         listViews.add(peopleListView);
         listViews.add(skillsListView);
         listViews.add(teamsListView);
-        listViews.add(releasesListView);
 
         // All these ListViews share a single context menu
         final ContextMenu contextMenu = new ContextMenu();
@@ -104,9 +116,12 @@ public class SideBarController implements Initializable {
      */
     private void setListViewListener() {
         Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
-        tabListViewMap.get(selectedTab.getId()).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mainController.focusedItemProperty.set(newValue);
-        });
+        if (tabListViewMap.get(selectedTab.getId()).getClass() != TreeView.class) {
+            ListView<Item> castedListView = (ListView<Item>)tabListViewMap.get(selectedTab.getId());
+            castedListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                mainController.focusedItemProperty.set(newValue);
+            });
+        }
     }
 
     /**
@@ -138,13 +153,68 @@ public class SideBarController implements Initializable {
     }
 
     private void setListViewData() {
-        projectListView.setItems(mainController.selectedOrganisationProperty.get().getProjects());
+        projectTreeView.setCellFactory(new Callback<TreeView<Item>, TreeCell<Item>>() {
+            @Override
+            public TreeCell<Item> call(TreeView<Item> param) {
+                return new TreeCell<Item>() {
+                    @Override
+                    protected void updateItem(Item item, boolean empty) {
+                        if (item != null) {
+                            textProperty().bind(item.shortNameProperty());
+                        } else {
+                            textProperty().unbind();
+                            textProperty().set("");
+                        }
+                        super.updateItem(item, empty);
+                    }
+                };
+            }
+        });
+        addProjectsToTree(mainController.getSelectedOrganisationProperty().get().getProjects());
+
+        mainController.getSelectedOrganisationProperty().get().getProjects().addListener(new ListChangeListener<Project>() {
+            @Override
+            public void onChanged(Change<? extends Project> c) {
+                c.next();
+                addProjectsToTree(c.getAddedSubList());
+                removeProjectsFromTree(c.getRemoved());
+            }
+        });
+
+
+
         peopleListView.setItems(mainController.selectedOrganisationProperty.get().getPeople());
         teamsListView.setItems(mainController.selectedOrganisationProperty.get().getTeams());
         skillsListView.setItems(mainController.selectedOrganisationProperty.get().getSkills());
 
         switchToProjectList();
-        projectListView.getSelectionModel().selectFirst();
+    }
+
+    private void removeProjectsFromTree(List<? extends Project> removedProjects) {
+        Iterator<TreeItem<Item>> i = projectTreeView.getRoot().getChildren().iterator();
+        while (i.hasNext()) {
+            TreeItem<Item> projectTreeItem = i.next();
+            if (removedProjects.contains(projectTreeItem.getValue())) {
+                projectTreeItem.getParent().getChildren().remove(projectTreeItem);
+            }
+        }
+
+    }
+
+    private void addProjectsToTree(List<? extends Project> projects) {
+        for (Project project : projects) {
+            TreeItem<Item> projectItem = new TreeItem<>(project);
+            projectTreeView.getRoot().getChildren().add(projectItem);
+
+            TreeItem<Item> releaseRootItem = new TreeItem<>();
+            releaseRootItem.setGraphic(new Label("Releases"));
+            projectItem.getChildren().add(releaseRootItem);
+
+            for (Release release : project.getReleases()) {
+                TreeItem<Item> releaseItem = new TreeItem<>(release);
+                releaseRootItem.getChildren().add(releaseItem);
+            }
+        }
     }
 
     public void switchToSkillList() {
@@ -163,9 +233,6 @@ public class SideBarController implements Initializable {
         tabViewPane.getSelectionModel().select(projectTab);
     }
 
-    public void switchToReleaseList() {
-        tabViewPane.getSelectionModel().select(releasesTab);
-    }
 
     public void setOrganisationProperty(ObjectProperty<Organisation> organisationProperty) {
         this.organisationProperty = organisationProperty;
@@ -178,6 +245,7 @@ public class SideBarController implements Initializable {
         this.mainController = mainController;
         initialiseTabs();
         initializeListViews();
+        initializeProjectTreeView();
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
     }
 }

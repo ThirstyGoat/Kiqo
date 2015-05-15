@@ -1,78 +1,51 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Side;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
-
-import org.controlsfx.control.StatusBar;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import javafx.util.Callback;
+import org.controlsfx.control.StatusBar;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
 
+    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private static final String PRODUCT_NAME = "Kiqo";
+    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    public final ObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    private final UndoManager undoManager = new UndoManager();
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     // BEGIN FXML INJECTIONS
     @FXML
     private BorderPane mainBorderPane;
@@ -90,19 +63,8 @@ public class MainController implements Initializable {
     private SideBarController sideBarController;
     @FXML
     private MenuBarController menuBarController;
-    
-    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-    private static final String PRODUCT_NAME = "Kiqo";
-    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
-    private final UndoManager undoManager = new UndoManager();
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
-
     private Stage primaryStage;
     private double dividerPosition;
-
-    public final ObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-
     private int savePosition = 0;
 
     private void setStageTitleProperty() {
@@ -139,10 +101,6 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Project")) {
             doCommand(command);
-        }
-
-        if (selectedOrganisationProperty.get().getProjects().size() < 1) {
-            menuBarController.disableNewRelease();
         }
     }
 
@@ -351,10 +309,6 @@ public class MainController implements Initializable {
     public void newProject() {
         if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Project");
-
-            if (selectedOrganisationProperty.get().getProjects().size() > 0) {
-                menuBarController.enableNewRelease();
-            }
         }
     }
 
