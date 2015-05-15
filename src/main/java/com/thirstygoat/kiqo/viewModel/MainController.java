@@ -338,7 +338,7 @@ public class MainController implements Initializable {
         if (filePath == null) {
             return;
         }
-        Organisation organisation = null;
+        Organisation organisation;
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
