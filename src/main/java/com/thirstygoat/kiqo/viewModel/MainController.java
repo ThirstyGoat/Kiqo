@@ -638,7 +638,7 @@ public class MainController implements Initializable {
      * Saves the project to disk and marks project as saved.
      */
     public void saveOrganisation() {
-        final Organisation organisation = selectedOrganisation;
+        final Organisation organisation = getSelectedOrganisation();
         // ask for save location if not yet set
         if (organisation.getSaveLocation() == null) {
             final FileChooser fileChooser = new FileChooser();
@@ -656,6 +656,8 @@ public class MainController implements Initializable {
                 GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
                 return;
             }
+            setLastSavedFile(organisation.getSaveLocation());
+
             savePosition = undoManager.getUndoStackSize();
             changesSaved.set(true);
         }
