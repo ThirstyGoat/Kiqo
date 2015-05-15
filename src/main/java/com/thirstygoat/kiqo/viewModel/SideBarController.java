@@ -1,8 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ListChangeListener;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -38,57 +37,83 @@ public class SideBarController implements Initializable {
     private MainController mainController;
     private Map<String, Control> tabListViewMap = new HashMap<>();
     private Control selectedListView;
-    private ObjectProperty<Organisation> organisationProperty;
+    private final ContextMenu contextMenu = new ContextMenu();
+
+    public enum TabOption {
+        PROJECTS,
+        PEOPLE,
+        TEAMS,
+        SKILLS
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // do nothing
+        initialiseTabs();
     }
 
     /**
      * Initialise the tabs for the sidebar
      */
     private void initialiseTabs() {
-
         // uses getId because equals method on tabs doesnt play nicely with hashmap
         tabListViewMap.put(projectTab.getId(), projectTreeView);
         tabListViewMap.put(teamsTab.getId(), teamsListView);
         tabListViewMap.put(peopleTab.getId(), peopleListView);
         tabListViewMap.put(skillsTab.getId(), skillsListView);
 
-        tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedListView = tabListViewMap.get(newValue.getId());
+        // Create listeners for lists
+        ChangeListener<Item> listViewChangeListener = (o, oldValue, newValue) -> {
+            mainController.focusedItemProperty.set(newValue);
+        };
 
-            if (selectedListView.getClass() != TreeView.class) {
-                ListView<Item> castedListView = ((ListView<Item>) selectedListView);
-                if (castedListView.getSelectionModel().getSelectedItem() == null) {
-                    castedListView.getSelectionModel().selectFirst();
-                }
-                mainController.focusedItemProperty.set(castedListView.getSelectionModel().getSelectedItem());
-                setListViewListener();
+        ChangeListener<TreeItem<Item>> treeViewChangeListener = (o, oldValue, newValue) -> {
+            Item toShow = (newValue != null) ? newValue.getValue() : null;
+            if (newValue != null && newValue.getValue().getClass() == TreeNodeHeading.class) {
+                toShow = null;
+            }
+            mainController.focusedItemProperty.set(toShow);
+        };
+
+        // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
+        tabViewPane.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
+            System.out.println("selected " + newValue);
+            // Remove the change listeners
+            projectTreeView.getSelectionModel().selectedItemProperty().removeListener(treeViewChangeListener);
+            peopleListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
+            teamsListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
+            skillsListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
+
+            // Add the change listener on the appropriate TreeView/ListView
+            if (newValue == projectTab) {
+                int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
+                projectTreeView.getSelectionModel().select(null);
+                projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
+                projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
+            } else if (newValue == peopleTab) {
+                int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
+                peopleListView.getSelectionModel().select(null);
+                peopleListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
+                peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
+            } else if (newValue == teamsTab) {
+                int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
+                teamsListView.getSelectionModel().select(null);
+                teamsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
+                teamsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
+            } else if (newValue == skillsTab) {
+                int selectedIndex = skillsListView.getSelectionModel().selectedIndexProperty().get();
+                skillsListView.getSelectionModel().select(null);
+                skillsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
+                skillsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             }
         });
-    }
 
-    private void initializeProjectTreeView() {
-        projectTreeView.getSelectionModel().selectedItemProperty().addListener((o, oldValue1, newValue1) -> {
-            System.out.println(newValue1);
-            mainController.focusedItemProperty.set(newValue1.getValue());
-            // TODO fix brokeness
-        });
-
+        // Initially select the project tab
+        projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
     }
 
     private void initializeListViews() {
         setListViewData();
-        TreeItem<Item> root = new TreeItem<>();
-        projectTreeView.setRoot(root);
         projectTreeView.setShowRoot(false);
-        root.setExpanded(true);
-        for (Project project : mainController.getSelectedOrganisationProperty().get().getProjects()) {
-            System.out.println(project.getShortName());
-            root.getChildren().add(new TreeItem<>(project));
-        }
 
         // Get a list of them
         final ArrayList<ListView<? extends Item>> listViews = new ArrayList<>();
@@ -97,7 +122,6 @@ public class SideBarController implements Initializable {
         listViews.add(teamsListView);
 
         // All these ListViews share a single context menu
-        final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editContextMenu = new MenuItem("Edit");
         final MenuItem deleteContextMenu = new MenuItem("Delete");
         contextMenu.getItems().add(editContextMenu);
@@ -161,81 +185,41 @@ public class SideBarController implements Initializable {
                     protected void updateItem(Item item, boolean empty) {
                         if (item != null) {
                             textProperty().bind(item.shortNameProperty());
+                            if (item.getClass() != TreeNodeHeading.class) {
+                                setContextMenu(contextMenu);
+                            }
                         } else {
                             textProperty().unbind();
                             textProperty().set("");
+                            setContextMenu(null);
                         }
                         super.updateItem(item, empty);
                     }
                 };
             }
         });
-        addProjectsToTree(mainController.getSelectedOrganisationProperty().get().getProjects());
 
-        mainController.getSelectedOrganisationProperty().get().getProjects().addListener(new ListChangeListener<Project>() {
-            @Override
-            public void onChanged(Change<? extends Project> c) {
-                c.next();
-                addProjectsToTree(c.getAddedSubList());
-                removeProjectsFromTree(c.getRemoved());
-            }
-        });
-
-
+        TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects());
+        projectTreeView.setRoot(root);
+        root.setExpanded(true);
 
         peopleListView.setItems(mainController.selectedOrganisationProperty.get().getPeople());
         teamsListView.setItems(mainController.selectedOrganisationProperty.get().getTeams());
         skillsListView.setItems(mainController.selectedOrganisationProperty.get().getSkills());
 
-        switchToProjectList();
+        show(TabOption.PROJECTS);
     }
 
-    private void removeProjectsFromTree(List<? extends Project> removedProjects) {
-        Iterator<TreeItem<Item>> i = projectTreeView.getRoot().getChildren().iterator();
-        while (i.hasNext()) {
-            TreeItem<Item> projectTreeItem = i.next();
-            if (removedProjects.contains(projectTreeItem.getValue())) {
-                projectTreeItem.getParent().getChildren().remove(projectTreeItem);
-            }
+    public void show(TabOption tabOption) {
+        if (tabOption == TabOption.PROJECTS) {
+            tabViewPane.getSelectionModel().select(projectTab);
+        } else if (tabOption == TabOption.TEAMS) {
+            tabViewPane.getSelectionModel().select(teamsTab);
+        } else if (tabOption == TabOption.PEOPLE) {
+            tabViewPane.getSelectionModel().select(peopleTab);
+        } else if (tabOption == TabOption.SKILLS) {
+            tabViewPane.getSelectionModel().select(skillsTab);
         }
-
-    }
-
-    private void addProjectsToTree(List<? extends Project> projects) {
-        for (Project project : projects) {
-            TreeItem<Item> projectItem = new TreeItem<>(project);
-            projectTreeView.getRoot().getChildren().add(projectItem);
-
-            TreeItem<Item> releaseRootItem = new TreeItem<>(new TreeNodeHeading("Releases"));
-
-            projectItem.getChildren().add(releaseRootItem);
-
-            for (Release release : project.getReleases()) {
-                TreeItem<Item> releaseItem = new TreeItem<>(release);
-                releaseRootItem.getChildren().add(releaseItem);
-            }
-        }
-    }
-
-    public void switchToSkillList() {
-        tabViewPane.getSelectionModel().select(skillsTab);
-    }
-
-    public void switchToPersonList() {
-        tabViewPane.getSelectionModel().select(peopleTab);
-    }
-
-    public void switchToTeamList() {
-        tabViewPane.getSelectionModel().select(teamsTab);
-    }
-
-    public void switchToProjectList() {
-        tabViewPane.getSelectionModel().select(projectTab);
-    }
-
-
-    public void setOrganisationProperty(ObjectProperty<Organisation> organisationProperty) {
-        this.organisationProperty = organisationProperty;
     }
 
     /**
@@ -243,9 +227,7 @@ public class SideBarController implements Initializable {
      */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        initialiseTabs();
         initializeListViews();
-        initializeProjectTreeView();
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
     }
 }

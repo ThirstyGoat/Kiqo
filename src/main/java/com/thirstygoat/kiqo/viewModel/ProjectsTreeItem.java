@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.TreeNodeHeading;
+import com.thirstygoat.kiqo.model.Project;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
@@ -13,41 +13,41 @@ import java.util.Map;
  * Represents an item with children in a TreeView
  * @author Bradley Kirwan
  */
-public class GoatTreeItem extends TreeItem<Item> {
-    private Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
+public class ProjectsTreeItem extends TreeItem<Item> {
+    private Map<Project, TreeItem<Item>> treeItemMap = new HashMap<>();
 
-    public GoatTreeItem(Item item) {
+    public ProjectsTreeItem(ObservableList<Project> element) {
         super();
-        setValue(item);
+        addChildren(element);
     }
 
-    public void addChild(String name, ObservableList<? extends Item> childItems) {
-        TreeItem<Item> parent = new TreeItem<>(new TreeNodeHeading(name));
-
+    private void addChildren(ObservableList<Project> childItems) {
         // Add all children to the tree item
-        for (Item item : childItems) {
-            TreeItem<Item> treeItem = new TreeItem<>(item);
-            parent.getChildren().add(treeItem);
+        for (Project item : childItems) {
+            GoatTreeItem treeItem = new GoatTreeItem(item);
+            treeItem.addChild("Releases", item.observableReleases());
+            getChildren().add(treeItem);
 
             // Add release tree item to map
             treeItemMap.put(item, treeItem);
         }
 
-        ListChangeListener<Item> listener = c -> {
+        ListChangeListener<Project> listener = c -> {
             c.next();
 
             // Get added items and add them to this TreeItem
-            for (Item item : c.getAddedSubList()) {
-                TreeItem<Item> treeItem = new TreeItem<>(item);
+            for (Project item : c.getAddedSubList()) {
+                GoatTreeItem treeItem = new GoatTreeItem(item);
+                treeItem.addChild("Releases", item.observableReleases());
                 int index = childItems.indexOf(item);
-                parent.getChildren().add(index, treeItem);
+                getChildren().add(index, treeItem);
 
                 // Add item tree item to map
                 treeItemMap.put(item, treeItem);
             }
 
             for (Item item : c.getRemoved()) {
-                parent.getChildren().remove(treeItemMap.get(item));
+                getChildren().remove(treeItemMap.get(item));
 
                 // Remove item from item tree map
                 treeItemMap.remove(item);
@@ -55,7 +55,5 @@ public class GoatTreeItem extends TreeItem<Item> {
         };
 
         childItems.addListener(listener);
-
-        getChildren().add(parent);
     }
 }

@@ -105,13 +105,13 @@ public class MenuBarController implements Initializable {
                 } else if (deleteKey.match(event)) {
                     mainController.deleteItem();
                 } else if (projectTabKey.match(event)) {
-                    mainController.getSideBarController().switchToProjectList();
+                    mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
                 } else if (teamTabKey.match(event)) {
-                    mainController.getSideBarController().switchToTeamList();
+                    mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
                 } else if (peopleTabKey.match(event)) {
-                    mainController.getSideBarController().switchToPersonList();
+                    mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
                 } else if (skillTabKey.match(event)) {
-                    mainController.getSideBarController().switchToSkillList();
+                    mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
                 }
             }
         });
