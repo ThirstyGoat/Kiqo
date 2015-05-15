@@ -710,8 +710,8 @@ public class MainController implements Initializable {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
-            } catch(final Exception e) {
-                e.printStackTrace();
+            } catch (final IOException e) {
+                MainController.LOGGER.log(Level.SEVERE, "Can't save status report", e);
             }
         }
     }
@@ -815,7 +815,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);
@@ -893,7 +893,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);
@@ -932,7 +932,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);
@@ -970,7 +970,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);
@@ -1005,7 +1005,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);
@@ -1044,7 +1044,7 @@ public class MainController implements Initializable {
             try {
                 root = loader.load();
             } catch (final IOException e) {
-                e.printStackTrace();
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
                 return;
             }
             final Scene scene = new Scene(root);

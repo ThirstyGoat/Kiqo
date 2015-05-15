@@ -52,14 +52,18 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
      */
     @Override
     public Void execute() {
-        try {
-            this.oldVal = this.propertyDescriptor.getReadMethod().invoke(this.subject);
-            this.propertyDescriptor.getWriteMethod().invoke(this.subject, this.newVal);
-        } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        editField(this.newVal);
         return null;
+    }
+
+    @Override
+    public void undo() {
+        editField(this.oldVal);
+    }
+
+    @Override
+    public String getType() {
+        return "Edit";
     }
 
     @Override
@@ -68,19 +72,16 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
         return "<Edit " + this.subject.getClass() + ": set " + this.propertyDescriptor.getName() + " to " + newValue + ">";
     }
 
-    @Override
-    public void undo() {
+    /**
+     * @param value value with which to set the field
+     */
+    private void editField(Object value) {
         try {
             final Method writeMethod = this.propertyDescriptor.getWriteMethod();
             EditCommand.LOGGER.log(Level.INFO, "Editing via %s", writeMethod);
-            writeMethod.invoke(this.subject, this.oldVal);
+            writeMethod.invoke(this.subject, value);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            EditCommand.LOGGER.log(Level.SEVERE, "Can't edit", e);
+            EditCommand.LOGGER.log(Level.SEVERE, "Can't edit!", e);
         }
-    }
-
-    @Override
-    public String getType() {
-        return "Edit";
     }
 }
