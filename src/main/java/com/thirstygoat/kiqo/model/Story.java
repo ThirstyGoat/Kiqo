@@ -88,6 +88,10 @@ public class Story extends Item {
        return project;
     }
 
+    public Project getProject() {
+        return project.get();
+    }
+
     public int getPriority() {
         return priority.get();
     }
