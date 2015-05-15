@@ -1,37 +1,79 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import org.controlsfx.control.StatusBar;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CreateReleaseCommand;
+import com.thirstygoat.kiqo.command.DeletePersonCommand;
+import com.thirstygoat.kiqo.command.DeleteProjectCommand;
+import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
+import com.thirstygoat.kiqo.command.DeleteSkillCommand;
+import com.thirstygoat.kiqo.command.DeleteTeamCommand;
+import com.thirstygoat.kiqo.command.RevertCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.PersonFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ProjectFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReleaseFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.SkillFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.TeamFormController;
 
 /**
  * Main controller for the primary view
@@ -83,8 +125,8 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private double dividerPosition;
     private Organisation selectedOrganisation;
-    private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private Person selectedPerson;
     private Skill selectedSkill;
     private Team selectedTeam;
@@ -93,11 +135,10 @@ public class MainController implements Initializable {
     private File lastSavedFile;
 
     private void setLastSavedFile(File file) {
-        lastSavedFile.deleteOnExit();
         try {
-            FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
+            final FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
             Files.copy(file.toPath(), outputStream);
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
             GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
                     "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
                             "Revert functionality is disabled");
@@ -109,10 +150,10 @@ public class MainController implements Initializable {
     private void revert() {
         Organisation organisation;
 
-        if (getSelectedOrganisation().getSaveLocation() != null) {
+        if (selectedOrganisation.getSaveLocation() != null) {
             try {
                 organisation = PersistenceManager.loadOrganisation(lastSavedFile);
-            } catch (FileNotFoundException ignored) {
+            } catch (final FileNotFoundException ignored) {
                 GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
                 return;
             }
@@ -124,23 +165,24 @@ public class MainController implements Initializable {
             organisation.setSaveLocation(getSelectedOrganisation().getSaveLocation());
         }
 
-        EditCommand<MainController, Organisation> command = new EditCommand<>(this, "selectedOrganisation", organisation);
-        command.setType("Revert");
+        final Command<?> command = new RevertCommand(this, "selectedOrganisation", organisation, () -> {
+            changesSaved.set(true);
+        });
         doCommand(command);
 
-        if (getSelectedOrganisation().getSaveLocation() != null) {
-            saveOrganisation();
+        if (selectedOrganisation.getSaveLocation() != null) {
+            saveToDisk(organisation);
         }
     }
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
-        StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
+        final StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
         changesSaved.addListener((observable, oldValue, newValue) -> {
             changesSavedAsterisk.set(newValue ? "" : "*");
         });
 
-        StringProperty orgName = new SimpleStringProperty();
+        final StringProperty orgName = new SimpleStringProperty();
         orgName.bind(selectedOrganisationProperty.get().organisationNameProperty());
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             orgName.unbind();
@@ -151,7 +193,7 @@ public class MainController implements Initializable {
                 .concat(orgName)
                 .concat(changesSavedAsterisk)
                 .concat(" - ")
-                .concat(PRODUCT_NAME));
+                .concat(MainController.PRODUCT_NAME));
     }
 
     /**
@@ -181,7 +223,7 @@ public class MainController implements Initializable {
         } else {
 
             String deleteMessage = "There are no people with this skill.";
-            DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
+            final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisation);
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
                 deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
@@ -226,7 +268,7 @@ public class MainController implements Initializable {
             // Then delete the team
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
-            DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
+            final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisation);
             if (deletePeople) {
                 command.setDeleteMembers();
             }
@@ -329,7 +371,8 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
-        } catch (IOException ignored) {
+            lastSavedFile.deleteOnExit();
+        } catch (final IOException ignored) {
             GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
                     "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
                             "Revert functionality is disabled");
@@ -635,59 +678,41 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Saves the project to disk and marks project as saved.
+     * Optionally prompts the user for a new save location.
+     * Updates the organisation's current save location.
+     * Saves the current organisation to it.
+     *
+     * @param saveAs force user to select a save location
      */
-    public void saveOrganisation() {
+    public void saveOrganisation(boolean saveAs) {
         final Organisation organisation = selectedOrganisation;
-        // ask for save location if not yet set
-        if (organisation.getSaveLocation() == null) {
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-            final File file = fileChooser.showSaveDialog(primaryStage);
+
+        // ask for save location
+        if (saveAs || organisation.getSaveLocation() == null) {
+            final File file = promptForSaveLocation(organisation.getSaveLocation());
             if (file != null) {
                 organisation.setSaveLocation(file);
             }
         }
-        // if successfully set
-        if (organisation.getSaveLocation() != null) {
-            try {
-                PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
-            } catch (final IOException e) {
-                GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
-                return;
-            }
-            savePosition = undoManager.getUndoStackSize();
-            changesSaved.set(true);
+
+        if (organisation.getSaveLocation() != null) { // if not cancelled
+            saveToDisk(organisation);
         }
     }
 
     /**
-     * Prompts the user for a new save location via a filechooser.
-     * Updates the organisation's current save location.
-     * Saves the current organisation to it.
+     * @param organisation
      */
-    public void saveAsOrganisation() {
-        final Organisation organisation = selectedOrganisation;
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
-        final File existingFile = selectedOrganisation.getSaveLocation();
-        if (existingFile != null) {
-            fileChooser.setInitialDirectory(existingFile.getParentFile());
-            fileChooser.setInitialFileName(existingFile.getName());
+    private void saveToDisk(final Organisation organisation) {
+        // do the save
+        try {
+            PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
+        } catch (final IOException e) {
+            GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
+            return;
         }
-        final File file = fileChooser.showSaveDialog(primaryStage);
-        if (file != null) {
-            organisation.setSaveLocation(file);
-        }
-        if (organisation.getSaveLocation() != null) {
-            try {
-                PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
-            } catch (final IOException e) {
-                GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
-                return;
-            }
-            changesSaved.set(true);
-        }
+        savePosition = undoManager.getUndoStackSize();
+        changesSaved.set(true);
     }
 
     public void setListVisible(boolean visible) {
@@ -720,11 +745,11 @@ public class MainController implements Initializable {
 
         if (selectedFile != null) {
             try {
-                FileWriter fileWriter = new FileWriter(selectedFile);
-                ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
+                final FileWriter fileWriter = new FileWriter(selectedFile);
+                final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
-            } catch(Exception e) {
+            } catch(final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -760,8 +785,9 @@ public class MainController implements Initializable {
     }
 
     public void doCommand(Command<?> command) {
-        undoManager.doCommand(command);
+        // set changes saved BEFORE executing the command so that the command is able to override changesSaved (eg. Revert)
         changesSaved.set(false);
+        undoManager.doCommand(command);
     }
 
     /**
@@ -776,6 +802,24 @@ public class MainController implements Initializable {
     }
 
     /**
+     *
+     * Saves the project to disk and marks project as saved.
+     *
+     * @param existingFile initial directory and filename to suggest
+     * @return file to save in (may be null if cancelled)
+     */
+    private File promptForSaveLocation(File existingFile) {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+        if (existingFile != null) {
+            fileChooser.setInitialDirectory(existingFile.getParentFile());
+            fileChooser.setInitialFileName(existingFile.getName());
+        }
+        final File file = fileChooser.showSaveDialog(primaryStage);
+        return file;
+    }
+
+    /**
      * Prompt the user if they want to save unsaved changes
      * @return if the user clicked cancel or not
      */
@@ -785,7 +829,7 @@ public class MainController implements Initializable {
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
             if (response.equals("Save changes")) {
-                saveOrganisation();
+                saveOrganisation(false);
             } else if (response.equals("Discard changes")) {
                 return true;
             } else {
@@ -1088,9 +1132,9 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisation);
 
-            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (MainController.focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
-                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
+                allocationFormController.setTeam((Team) MainController.focusedItemProperty.getValue());
             } else {
                 allocationFormController.setProject(selectedProject.get());
                 allocationFormController.setTeam(null);
