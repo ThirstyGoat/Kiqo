@@ -30,7 +30,7 @@ public class Main extends Application {
     private MainController mainController;
 
     public static void main( String[] args ) {
-        Main.setupLogging();
+        Main.setupLogging(Level.ALL);
 
         Application.launch(args);
     }
@@ -76,12 +76,13 @@ public class Main extends Application {
     }
 
     /**
-     * Configure default logging behaviour for all classes in **this package**
+     * Configure default logging behaviour for all classes in **this package** to print to stdout with a custom formatter, including intelligent string formatting.
+     * @param level minimum logging level displayed
      */
-    private static void setupLogging() {
+    private static void setupLogging(Level level) {
         // set up logging for this package
         final Logger logger = Logger.getLogger(Main.class.getPackage().getName());
-        logger.setLevel(Level.ALL);
+        logger.setLevel(level);
         final Formatter formatter = new SimpleFormatter() {
             /**
              * If record has parameters, uses record's original message as a format string.
