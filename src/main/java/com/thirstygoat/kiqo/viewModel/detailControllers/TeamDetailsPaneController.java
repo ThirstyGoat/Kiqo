@@ -1,19 +1,18 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.AllocationsTableViewController;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.AllocationsTableViewController;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
-public class TeamDetailsPaneController implements Initializable {
-
-    private MainController mainController;
+public class TeamDetailsPaneController implements Initializable, IDetailsPaneController<Team> {
 
     @FXML
     private Label shortNameLabel;
@@ -30,6 +29,7 @@ public class TeamDetailsPaneController implements Initializable {
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
 
+    @Override
     public void showDetails(final Team team) {
         if (team != null) {
             shortNameLabel.textProperty().bind(team.shortNameProperty());
@@ -87,10 +87,8 @@ public class TeamDetailsPaneController implements Initializable {
         allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT);
     }
 
+    @Override
     public void setMainController(MainController mainController) {
-        this.mainController = mainController;
         allocationsTableViewController.setMainController(mainController);
     }
-
-
 }

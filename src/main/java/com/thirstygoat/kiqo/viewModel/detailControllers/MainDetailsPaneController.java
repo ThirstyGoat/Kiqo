@@ -3,15 +3,6 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-
-import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -21,13 +12,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.viewModel.MainController;
 /**
- * Switches between detail panes depending on type of content shown.
+ * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).
  *
  * @author amy
  *
  */
-public class DetailsPaneController implements Initializable {
+public class MainDetailsPaneController implements Initializable {
     @FXML
     private BorderPane detailsPane;
     @FXML
@@ -62,14 +61,7 @@ public class DetailsPaneController implements Initializable {
     private ReleaseDetailsPaneController releaseDetailsPaneController;
 
     private MainController mainController;
-    private Pane[] panes = {
-            projectDetailsPane,
-            personDetailsPane,
-            skillDetailsPane,
-            storyDetailsPane,
-            teamDetailsPane,
-            releaseDetailsPane,
-    };
+    private Pane[] panes;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,6 +69,14 @@ public class DetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
+        panes = new Pane[] {
+                projectDetailsPane,
+                personDetailsPane,
+                skillDetailsPane,
+                storyDetailsPane,
+                teamDetailsPane,
+                releaseDetailsPane,
+        };
     }
 
     /**
@@ -154,7 +154,7 @@ public class DetailsPaneController implements Initializable {
      */
     private void show(Pane pane) {
         // Hide all panes initially, then show the appropriate pane
-        for (Pane p : panes) {
+        for (final Pane p : panes) {
             p.setVisible(false);
         }
 
