@@ -108,18 +108,29 @@ public class MainController implements Initializable {
 
     private void revert() {
         Organisation organisation;
-        try {
-            organisation = PersistenceManager.loadOrganisation(lastSavedFile);
-        } catch (FileNotFoundException e) {
-            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
-            return;
+
+        if (getSelectedOrganisation().getSaveLocation() != null) {
+            try {
+                organisation = PersistenceManager.loadOrganisation(lastSavedFile);
+            } catch (FileNotFoundException ignored) {
+                GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
+                return;
+            }
+        } else {
+            organisation = new Organisation();
         }
-        organisation.setSaveLocation(getSelectedOrganisation().getSaveLocation());
+
+        if (getSelectedOrganisation().getSaveLocation() != null) {
+            organisation.setSaveLocation(getSelectedOrganisation().getSaveLocation());
+        }
 
         EditCommand<MainController, Organisation> command = new EditCommand<>(this, "selectedOrganisation", organisation);
         command.setType("Revert");
         doCommand(command);
-        saveOrganisation();
+
+        if (getSelectedOrganisation().getSaveLocation() != null) {
+            saveOrganisation();
+        }
     }
 
     private void setStageTitleProperty() {
@@ -775,8 +786,9 @@ public class MainController implements Initializable {
                     "Would you like to save the changes you have made to the project?", options);
             if (response.equals("Save changes")) {
                 saveOrganisation();
-            } else if (response.equals("Cancel")) {
-                // do nothing
+            } else if (response.equals("Discard changes")) {
+                return true;
+            } else {
                 return false;
             }
         }
@@ -794,7 +806,7 @@ public class MainController implements Initializable {
                     "Would you like to revert the unsaved changes you have made to this project?", options);
             if (response.equals("Revert")) {
                 revert();
-            } else if (response.equals("Cancel")) {
+            } else {
                 // do nothing
                 return false;
             }
