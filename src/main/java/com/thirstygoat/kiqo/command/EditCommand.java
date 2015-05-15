@@ -52,6 +52,11 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
      */
     @Override
     public Void execute() {
+        try {
+            this.oldVal = propertyDescriptor.getReadMethod().invoke(subject, null);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            EditCommand.LOGGER.log(Level.SEVERE, "Can't read old value", e);
+        }
         editField(this.newVal);
         return null;
     }
@@ -78,7 +83,7 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
     private void editField(Object value) {
         try {
             final Method writeMethod = this.propertyDescriptor.getWriteMethod();
-            EditCommand.LOGGER.log(Level.INFO, "Editing via %s", writeMethod);
+            EditCommand.LOGGER.log(Level.INFO, "Editing %s via %s", new Object[] {propertyDescriptor.getName(), writeMethod});
             writeMethod.invoke(this.subject, value);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             EditCommand.LOGGER.log(Level.SEVERE, "Can't edit!", e);
