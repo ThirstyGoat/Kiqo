@@ -791,7 +791,7 @@ public class MainController implements Initializable {
         if (!changesSaved.get()) {
             final String[] options = {"Revert", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
-                    "Save As before reverting or you will lose these changes", options);
+                    "\"File > Save As\" before reverting or you will lose these changes.", options);
             if (response.equals("Revert")) {
                 revert();
             } else if (response.equals("Cancel")) {
