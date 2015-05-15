@@ -1,9 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 
 /**
  * Created by leroy on 15/05/15.
@@ -11,21 +8,17 @@ import javafx.beans.property.SimpleStringProperty;
 public class Story extends Item {
     private static final int DEFAULT_PRIORITY = 0;
 
-    private SimpleStringProperty shortName;
-    private SimpleStringProperty longName;
-    private SimpleStringProperty description;
+    private StringProperty shortName;
+    private StringProperty longName;
+    private StringProperty description;
     private ObjectProperty<Person> creator;
-    private SimpleIntegerProperty priority;
+    private IntegerProperty priority;
 
     /**
      * no-arg constructor for JavaBeans compliance
      */
     public Story() {
-        this.shortName = new SimpleStringProperty("");
-        this.longName = new SimpleStringProperty("");
-        this.description = new SimpleStringProperty("");
-        this.creator = null;
-        this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
+        this("", "", "", null, DEFAULT_PRIORITY);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Integer priority) {
@@ -40,7 +33,7 @@ public class Story extends Item {
         return shortName.get();
     }
 
-    public SimpleStringProperty shortNameProperty() {
+    public StringProperty shortNameProperty() {
         return shortName;
     }
 
@@ -52,7 +45,7 @@ public class Story extends Item {
         return longName.get();
     }
 
-    public SimpleStringProperty longNameProperty() {
+    public StringProperty longNameProperty() {
         return longName;
     }
 
@@ -64,7 +57,7 @@ public class Story extends Item {
         return description.get();
     }
 
-    public SimpleStringProperty descriptionProperty() {
+    public StringProperty descriptionProperty() {
         return description;
     }
 
@@ -88,7 +81,7 @@ public class Story extends Item {
         return priority.get();
     }
 
-    public SimpleIntegerProperty priorityProperty() {
+    public IntegerProperty priorityProperty() {
         return priority;
     }
 
