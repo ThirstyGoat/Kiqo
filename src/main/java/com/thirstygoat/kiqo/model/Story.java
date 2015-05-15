@@ -2,17 +2,39 @@ package com.thirstygoat.kiqo.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by leroy on 15/05/15.
  */
 public class Story extends Item {
+    private int DEFAULT_PRIORITY = 0;
+
     private SimpleStringProperty shortName;
     private SimpleStringProperty longName;
     private SimpleStringProperty description;
     private ObjectProperty<Person> creator;
     private SimpleIntegerProperty priority;
+
+    /**
+     * no-arg constructor for JavaBeans compliance
+     */
+    public Story() {
+        this.shortName = new SimpleStringProperty("");
+        this.longName = new SimpleStringProperty("");
+        this.description = new SimpleStringProperty("");
+        this.creator = null;
+        this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
+    }
+
+    public Story(String shortName, String longName, String description, Person creator, Integer priority) {
+        this.shortName = new SimpleStringProperty(shortName);
+        this.longName = new SimpleStringProperty(longName);
+        this.description = new SimpleStringProperty(description);
+        this.creator = new SimpleObjectProperty<>(creator);
+        this.priority = new SimpleIntegerProperty(priority);
+    }
 
     public String getShortName() {
         return shortName.get();
