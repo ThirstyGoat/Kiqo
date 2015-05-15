@@ -170,9 +170,9 @@ public class MainController implements Initializable {
         });
         doCommand(command);
 
-        if (selectedOrganisation.getSaveLocation() != null) {
-            saveToDisk(organisation);
-        }
+//        if (selectedOrganisation.getSaveLocation() != null) {
+//            saveToDisk(organisation);
+//        }
     }
 
     private void setStageTitleProperty() {
@@ -701,6 +701,7 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Saves the organisation to its savelocation (assumed not to be null).
      * @param organisation
      */
     private void saveToDisk(final Organisation organisation) {
@@ -709,8 +710,9 @@ public class MainController implements Initializable {
             PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
         } catch (final IOException e) {
             GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
-            return;
+            return; // do not continue here
         }
+        setLastSavedFile(organisation.getSaveLocation());
         savePosition = undoManager.getUndoStackSize();
         changesSaved.set(true);
     }
@@ -772,16 +774,15 @@ public class MainController implements Initializable {
     }
 
     public void undo() {
-        undoManager.undoCommand();
         // If the changes are already saved, and we undo something, then the changes are now not saved
         changesSaved.set(undoManager.getUndoStackSize() == savePosition);
+        undoManager.undoCommand();
     }
 
     public void redo() {
-        undoManager.redoCommand();
         // If the changes are already saved, and we redo something, then the changes are now not saved
-
         changesSaved.set(undoManager.getUndoStackSize() == savePosition);
+        undoManager.redoCommand();
     }
 
     public void doCommand(Command<?> command) {
