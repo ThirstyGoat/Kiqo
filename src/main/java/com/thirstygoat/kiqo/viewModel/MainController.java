@@ -69,7 +69,6 @@ import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
 
-
 /**
  * Main controller for the primary view
  */
@@ -723,8 +722,7 @@ public class MainController implements Initializable {
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
-            try {
-                final FileWriter fileWriter = new FileWriter(selectedFile);
+            try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisation);
                 fileWriter.write(reportGenerator.generateReport());
                 fileWriter.close();
