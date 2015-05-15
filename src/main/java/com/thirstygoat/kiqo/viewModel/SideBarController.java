@@ -206,7 +206,7 @@ public class SideBarController implements Initializable {
             TreeItem<Item> projectItem = new TreeItem<>(project);
             projectTreeView.getRoot().getChildren().add(projectItem);
 
-            TreeItem<Item> releaseRootItem = new TreeItem<>(new TreeNodeThing("Releases"));
+            TreeItem<Item> releaseRootItem = new TreeItem<>(new TreeNodeHeading("Releases"));
 
             projectItem.getChildren().add(releaseRootItem);
 
