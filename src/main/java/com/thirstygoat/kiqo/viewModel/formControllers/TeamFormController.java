@@ -1,5 +1,35 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateTeamCommand;
@@ -9,33 +39,11 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by james on 27/03/15.
  */
-public class TeamFormController implements Initializable {
+public class TeamFormController implements Initializable, IFormController<Team> {
 
     private final ArrayList<Person> devTeam = new ArrayList<>();
     private final int SHORT_NAME_MAX_LENGTH = 20;
@@ -49,7 +57,7 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     // Begin FXML Injections
     @FXML
@@ -90,7 +98,7 @@ public class TeamFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), team, organisation.getTeams());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
@@ -202,15 +210,17 @@ public class TeamFormController implements Initializable {
         }
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() {
         return command;
     }
 
-    public void setListSelectionViewSettings() {
+    private void setListSelectionViewSettings() {
         peopleListSelectionView.setSourceHeader(new Label("People Available:"));
         final BorderPane targetHeader = new BorderPane();
         targetHeader.setLeft(new Label("People Selected:"));
@@ -402,15 +412,17 @@ public class TeamFormController implements Initializable {
     }
 
 
+    @Override
     public void setStage(Stage stage)  {
         this.stage = stage;
     }
 
     /**
-     * Sets the team to be edited and populates fie lds if applicable
+     * Sets the team to be edited and populates fields if applicable
      * @param team Team to be edited
      */
-    public void setTeam(Team team) {
+    @Override
+    public void populateFields(Team team) {
         this.team = team;
 
         if (team == null) {
@@ -434,8 +446,10 @@ public class TeamFormController implements Initializable {
 
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         populatePeopleListView();
+        setListSelectionViewSettings();
     }
 }

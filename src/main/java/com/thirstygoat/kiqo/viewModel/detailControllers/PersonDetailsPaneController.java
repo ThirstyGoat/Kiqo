@@ -1,20 +1,20 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Created by Carina on 25/03/2015.
  */
-public class PersonDetailsPaneController implements Initializable {
+public class PersonDetailsPaneController implements Initializable, IDetailsPaneController<Person> {
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -37,6 +37,7 @@ public class PersonDetailsPaneController implements Initializable {
         emailLabel.managedProperty().bind(emailLabel.textProperty().isNotEmpty());
     }
 
+    @Override
     public void showDetails(final Person person) {
         if (person != null) {
             shortNameLabel.textProperty().bind(person.shortNameProperty());
@@ -57,5 +58,10 @@ public class PersonDetailsPaneController implements Initializable {
             skillsLabel.setText(null);
             descriptionLabel.setText(null);
         }
+    }
+
+    @Override
+    public void setMainController(MainController mainController) {
+        // don't do it
     }
 }

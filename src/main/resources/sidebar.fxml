@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<TabPane xmlns:fx="http://javafx.com/fxml/1" fx:id="tabViewPane" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.SideBarController">
+  <tabs>
+    <Tab fx:id="projectTab" closable="false" text="Project">
+         <content>
+            <TreeView fx:id="projectTreeView" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+    </Tab>
+    <Tab fx:id="teamsTab" closable="false" text="Teams">
+      <content>
+        <ListView fx:id="teamsListView" />
+      </content>
+    </Tab>
+    <Tab fx:id="peopleTab" closable="false" text="People">
+      <content>
+        <ListView fx:id="peopleListView" />
+      </content>
+    </Tab>
+    <Tab fx:id="skillsTab" closable="false" text="Skills">
+      <content>
+        <ListView fx:id="skillsListView" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
