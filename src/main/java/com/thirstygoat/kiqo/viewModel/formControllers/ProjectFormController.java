@@ -1,5 +1,22 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateProjectCommand;
@@ -7,26 +24,11 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 /**
  * Created by Bradley, James on 13/03/15.
  */
-public class ProjectFormController implements Initializable {
+public class ProjectFormController implements Initializable, IFormController<Project> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     public String longName;
@@ -38,7 +40,7 @@ public class ProjectFormController implements Initializable {
     private boolean valid = false;
     private Stage stage;
     private Organisation organisation;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     // Begin FXML Injections
     @FXML
@@ -65,7 +67,7 @@ public class ProjectFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), project, organisation.getProjects());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
@@ -91,7 +93,8 @@ public class ProjectFormController implements Initializable {
 
     }
 
-    public void loadProject(final Project project) {
+    @Override
+    public void populateFields(final Project project) {
         this.project = project;
 
         if (project == null) {
@@ -195,15 +198,19 @@ public class ProjectFormController implements Initializable {
         });
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }
+    @Override
     public Command<?> getCommand() { return command; }
 
+    @Override
     public void setStage(final Stage stage) {
         this.stage = stage;
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }

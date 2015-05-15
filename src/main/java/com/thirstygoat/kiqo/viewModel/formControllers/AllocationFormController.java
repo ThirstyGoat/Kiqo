@@ -1,29 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateAllocationCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,10 +8,34 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
+
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateAllocationCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+
 /**
  * Created by Amy on 23/04/15.
  */
-public class AllocationFormController implements Initializable {
+public class AllocationFormController implements Initializable, IFormController<Allocation> {
     private Stage stage;
     private boolean valid;
     private Command<?> command;
@@ -43,7 +43,7 @@ public class AllocationFormController implements Initializable {
     private Project project;
     private Team team = null;
 
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     // Begin FXML Injections
     @FXML
@@ -70,11 +70,11 @@ public class AllocationFormController implements Initializable {
         Predicate<String> projectValidation;
         if(team == null) {
             projectValidation = s -> {
-                for (Team t : organisation.getTeams()) {
+                for (final Team t : organisation.getTeams()) {
                     if (t.getShortName().equals(teamTextField.getText())) {
                         team = t;
-                        LocalDate sd = startDatePicker.getValue();
-                        LocalDate ed = endDatePicker.getValue();
+                        final LocalDate sd = startDatePicker.getValue();
+                        final LocalDate ed = endDatePicker.getValue();
                         startDatePicker.setValue(null);
                         endDatePicker.setValue(null);
                         startDatePicker.setValue(sd);
@@ -88,11 +88,11 @@ public class AllocationFormController implements Initializable {
                     "Team must already exist"));
         } else {
             projectValidation = s -> {
-                for (Project t : organisation.getProjects()) {
+                for (final Project t : organisation.getProjects()) {
                     if (t.getShortName().equals(teamTextField.getText())) {
                         project = t;
-                        LocalDate sd = startDatePicker.getValue();
-                        LocalDate ed = endDatePicker.getValue();
+                        final LocalDate sd = startDatePicker.getValue();
+                        final LocalDate ed = endDatePicker.getValue();
                         startDatePicker.setValue(null);
                         endDatePicker.setValue(null);
                         startDatePicker.setValue(sd);
@@ -106,7 +106,7 @@ public class AllocationFormController implements Initializable {
                     "Project must already exist"));
         }
 
-        Predicate<LocalDate> endDateOverlapValidatorPredicate = localDate -> {
+        final Predicate<LocalDate> endDateOverlapValidatorPredicate = localDate -> {
             if (team == null) {
                 return true;
             }
@@ -128,25 +128,25 @@ public class AllocationFormController implements Initializable {
             return !dateRangesOverlap;
         };
 
-        Validator endDateOverlapValidator = Validator.createPredicateValidator(endDateOverlapValidatorPredicate,
+        final Validator endDateOverlapValidator = Validator.createPredicateValidator(endDateOverlapValidatorPredicate,
                 "This team is already allocated to a project during this period");
 
 
-        Predicate<LocalDate> startDateNullValidatorPredicate = localDate -> {
-            LocalDate edpv = endDatePicker.getValue();
+        final Predicate<LocalDate> startDateNullValidatorPredicate = localDate -> {
+            final LocalDate edpv = endDatePicker.getValue();
             endDatePicker.setValue(LocalDate.MIN);
             endDatePicker.setValue(edpv);
             return startDatePicker.getValue() != null;
         };
 
-        Validator startDateNullValidator = Validator.createPredicateValidator(startDateNullValidatorPredicate,
+        final Validator startDateNullValidator = Validator.createPredicateValidator(startDateNullValidatorPredicate,
                 "Start date must not be empty");
         // Create a validator for startDate that combines two validators
-        Validator startDateValidator = Validator.combine(startDateNullValidator);
+        final Validator startDateValidator = Validator.combine(startDateNullValidator);
 
         validationSupport.registerValidator(startDatePicker, startDateValidator);
 
-        Predicate<LocalDate> endDateBeforeValidatorPredicate = new Predicate<LocalDate>() {
+        final Predicate<LocalDate> endDateBeforeValidatorPredicate = new Predicate<LocalDate>() {
             @Override
             public boolean test(LocalDate localDate) {
                 if (localDate == null) {
@@ -159,10 +159,10 @@ public class AllocationFormController implements Initializable {
             }
         };
 
-        Validator endDateBeforeValidator = Validator.createPredicateValidator(endDateBeforeValidatorPredicate,
+        final Validator endDateBeforeValidator = Validator.createPredicateValidator(endDateBeforeValidatorPredicate,
                 "End date must not come before the start date");
 
-        Validator endDateValidator = Validator.combine(endDateBeforeValidator, endDateOverlapValidator);
+        final Validator endDateValidator = Validator.combine(endDateBeforeValidator, endDateOverlapValidator);
 
         validationSupport.registerValidator(endDatePicker, endDateValidator);
 
@@ -327,23 +327,24 @@ public class AllocationFormController implements Initializable {
         }
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() {
         return command;
     }
 
+    @Override
     public void setStage(Stage stage)  {
         this.stage = stage;
     }
 
-    public void setAllocation(Allocation allocation) throws RuntimeException {
+    @Override
+    public void populateFields(Allocation allocation) throws RuntimeException {
         this.allocation = allocation;
-//        if (project == null) {
-//            throw new RuntimeException("Project must not be null for Allocation dialog");
-//        }
 
         if (project == null) {
             teamLabel.setText("Project:");
@@ -385,6 +386,7 @@ public class AllocationFormController implements Initializable {
         this.team = team;
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }

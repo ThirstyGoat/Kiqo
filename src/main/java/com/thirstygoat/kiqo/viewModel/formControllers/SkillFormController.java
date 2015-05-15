@@ -1,5 +1,20 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateSkillCommand;
@@ -7,26 +22,11 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 /**
  * Created by james on 20/03/15.
  */
-public class SkillFormController implements Initializable {
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
+public class SkillFormController implements Initializable, IFormController<Skill> {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Skill skill;
@@ -35,7 +35,6 @@ public class SkillFormController implements Initializable {
     private boolean valid = false;
     private Stage stage;
     private Command<?> command;
-    private boolean shortNameModified = false;
     private Organisation organisation;
 
     // Begin FXML Injections
@@ -63,7 +62,7 @@ public class SkillFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), skill, organisation.getSkills());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
@@ -88,7 +87,8 @@ public class SkillFormController implements Initializable {
      * Sets the TextFields displayed in the dialog to the Skill that will be edited.
      * @param skill the Skill that is loaded
      */
-    public void loadSkill(final Skill skill) {
+    @Override
+    public void populateFields(final Skill skill) {
         this.skill = skill;
 
         if (skill == null) {
@@ -111,12 +111,6 @@ public class SkillFormController implements Initializable {
      */
     private void setShortNameHandler() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Auto populate short name text field
-            if (!Objects.equals(newValue, shortNameTextField.getText().substring(0,
-                    Math.min(shortNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                shortNameModified = true;
-            }
-
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
@@ -174,18 +168,22 @@ public class SkillFormController implements Initializable {
         return description;
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }
 
+    @Override
     public Command<?> getCommand() { return command; }
 
 }

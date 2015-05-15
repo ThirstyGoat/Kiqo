@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -21,6 +20,9 @@ import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
@@ -31,15 +33,12 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 
 /**
  * Created by james on 11/04/15.
  */
-public class ReleaseFormController implements Initializable {
+public class ReleaseFormController implements Initializable, IFormController<Release> {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private Organisation organisation;
     private Release release;
@@ -63,7 +62,7 @@ public class ReleaseFormController implements Initializable {
     private Stage stage;
     private Project project;
 
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -78,7 +77,7 @@ public class ReleaseFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> {
+        final Predicate<String> shortNameValidation = s -> {
             if (s.length() == 0) {
                 return false;
             }
@@ -91,12 +90,12 @@ public class ReleaseFormController implements Initializable {
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
                 "Short name must be unique and not empty."));
 
-        Predicate<String> projectValidation = s -> {
-            for (Project p : organisation.getProjects()) {
+        final Predicate<String> projectValidation = s -> {
+            for (final Project p : organisation.getProjects()) {
                 if (p.getShortName().equals(projectTextField.getText())) {
                     project = p;
                     // Redo validation for shortname text field
-                    String snt = shortNameTextField.getText();
+                    final String snt = shortNameTextField.getText();
                     shortNameTextField.setText("");
                     shortNameTextField.setText(snt);
                     return true;
@@ -203,10 +202,12 @@ public class ReleaseFormController implements Initializable {
         return true;
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() {
         return command;
     }
@@ -239,15 +240,18 @@ public class ReleaseFormController implements Initializable {
         }
     }
 
+    @Override
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }
 
-    public void setRelease(Release release) {
+    @Override
+    public void populateFields(Release release) {
         this.release = release;
 
         if (release == null) {
