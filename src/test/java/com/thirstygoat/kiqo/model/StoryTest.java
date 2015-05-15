@@ -27,7 +27,7 @@ public class StoryTest {
     }
 
     @Test
-    public void testEqualsShortName() throws Exception {
+    public void testEquals() throws Exception {
         story2.setShortName("Story 1");
         Assert.assertEquals("Stories should be equal", story1, story2);
     }

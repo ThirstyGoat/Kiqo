@@ -1,6 +1,11 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Created by leroy on 15/05/15.
@@ -8,18 +13,18 @@ import javafx.beans.property.*;
 public class Story extends Item {
     private static final int DEFAULT_PRIORITY = 0;
 
-    private StringProperty shortName;
-    private StringProperty longName;
-    private StringProperty description;
-    private ObjectProperty<Person> creator;
-    private ObjectProperty<Project> project;
-    private IntegerProperty priority;
+    private final StringProperty shortName;
+    private final StringProperty longName;
+    private final StringProperty description;
+    private final ObjectProperty<Person> creator;
+    private final ObjectProperty<Project> project;
+    private final IntegerProperty priority;
 
     /**
      * no-arg constructor for JavaBeans compliance
      */
     public Story() {
-        this("", "", "", null, null, DEFAULT_PRIORITY);
+        this("", "", "", null, null, Story.DEFAULT_PRIORITY);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -32,10 +37,12 @@ public class Story extends Item {
         this.priority = new SimpleIntegerProperty(priority);
     }
 
+    @Override
     public String getShortName() {
         return shortName.get();
     }
 
+    @Override
     public StringProperty shortNameProperty() {
         return shortName;
     }
@@ -106,20 +113,26 @@ public class Story extends Item {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        Story story = (Story) o;
+        final Story story = (Story) o;
 
-        if (!shortName.equals(story.shortName)) return false;
-        return project.equals(story.project);
+        if (!getShortName().equals(story.getShortName())) {
+            return false;
+        }
+        return getProject().equals(story.getProject());
 
     }
 
     @Override
     public int hashCode() {
-        int result = shortName.hashCode();
-        result = 31 * result + project.hashCode();
+        int result = getShortName().hashCode();
+        result = 31 * result + getProject().hashCode();
         return result;
     }
 }

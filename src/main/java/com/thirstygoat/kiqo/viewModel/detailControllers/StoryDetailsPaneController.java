@@ -1,12 +1,14 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Story;
 
 public class StoryDetailsPaneController implements Initializable {
     @FXML
@@ -26,7 +28,7 @@ public class StoryDetailsPaneController implements Initializable {
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
             descriptionLabel.textProperty().bind(story.descriptionProperty());
-            creatorLabel.textProperty().bind(story.creatorProperty().get());
+            // TODO creatorLabel.textProperty().bind(story.creatorProperty().get());
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
         } else {
             longNameLabel.textProperty().unbind();
