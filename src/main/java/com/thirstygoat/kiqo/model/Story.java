@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
  * Created by leroy on 15/05/15.
  */
 public class Story extends Item {
-    private int DEFAULT_PRIORITY = 0;
+    private static final int DEFAULT_PRIORITY = 0;
 
     private SimpleStringProperty shortName;
     private SimpleStringProperty longName;
