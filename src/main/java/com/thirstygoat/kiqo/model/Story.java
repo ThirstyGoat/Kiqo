@@ -12,20 +12,23 @@ public class Story extends Item {
     private StringProperty longName;
     private StringProperty description;
     private ObjectProperty<Person> creator;
+    private ObjectProperty<Project> project;
     private IntegerProperty priority;
 
     /**
      * no-arg constructor for JavaBeans compliance
      */
     public Story() {
-        this("", "", "", null, DEFAULT_PRIORITY);
+        this("", "", "", null, null, DEFAULT_PRIORITY);
     }
 
-    public Story(String shortName, String longName, String description, Person creator, Integer priority) {
+    public Story(String shortName, String longName, String description, Person creator, Project project,
+                 Integer priority) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
         this.creator = new SimpleObjectProperty<>(creator);
+        this.project = new SimpleObjectProperty<>(project);
         this.priority = new SimpleIntegerProperty(priority);
     }
 
@@ -77,6 +80,14 @@ public class Story extends Item {
         this.creator.set(creator);
     }
 
+    public void setProject(Project project) {
+        this.project.set(project);
+    }
+
+    public ObjectProperty<Project> projectProperty() {
+       return project;
+    }
+
     public int getPriority() {
         return priority.get();
     }
@@ -90,30 +101,21 @@ public class Story extends Item {
     }
 
     @Override
-    public int hashCode() {
-        return getShortName().hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Story story = (Story) o;
+
+        if (!shortName.equals(story.shortName)) return false;
+        return project.equals(story.project);
+
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Story)) {
-            return false;
-        }
-        final Story other = (Story) obj;
-        if (getShortName() == null) {
-            if (other.getShortName() != null) {
-                return false;
-            }
-        } else if (!getShortName().equals(other.getShortName())) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        int result = shortName.hashCode();
+        result = 31 * result + project.hashCode();
+        return result;
     }
-
 }

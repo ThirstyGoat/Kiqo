@@ -12,11 +12,12 @@ public class StoryTest {
     Story story2;
     Person creator1 = new Person();
     Person creator2 = new Person();
+    Project project1 = new Project();
 
     @Before
     public void setUp() throws Exception {
-        story1 = new Story("Story 1", "First story", "The first story to test", creator1, 0);
-        story2 = new Story("Story 2", "Second story", "The second story to test", creator2, 0);
+        story1 = new Story("Story 1", "First story", "The first story to test", creator1, project1, 0);
+        story2 = new Story("Story 2", "Second story", "The second story to test", creator2, project1, 0);
     }
 
     @Test
