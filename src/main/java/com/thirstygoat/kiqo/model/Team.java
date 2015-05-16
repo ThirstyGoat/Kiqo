@@ -29,7 +29,8 @@ public class Team extends Item {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Team() {
-        this("", "", null);
+        shortName = new SimpleStringProperty();
+        description = new SimpleStringProperty();
     }
 
     public Team(String shortName, String description, List<Person> teamMembers) {
