@@ -15,6 +15,7 @@ import java.util.*;
  * Created by samschofield and James on 14/05/15.
  */
 public class SideBarController implements Initializable {
+    private final ContextMenu contextMenu = new ContextMenu();
     @FXML
     private TreeView<Item> projectTreeView;
     @FXML
@@ -33,18 +34,8 @@ public class SideBarController implements Initializable {
     private Tab teamsTab;
     @FXML
     private TabPane tabViewPane;
-
     private MainController mainController;
     private Map<String, Control> tabListViewMap = new HashMap<>();
-    private Control selectedListView;
-    private final ContextMenu contextMenu = new ContextMenu();
-
-    public enum TabOption {
-        PROJECTS,
-        PEOPLE,
-        TEAMS,
-        SKILLS
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -157,7 +148,7 @@ public class SideBarController implements Initializable {
         listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
             @Override
             public ListCell<T> call(final ListView<T> arg0) {
-                final ListCell<T> listCell = new ListCell<T>() {
+                return new ListCell<T>() {
                     @Override
                     protected void updateItem(final T item, final boolean empty) {
                         // calling super here is very important
@@ -171,7 +162,6 @@ public class SideBarController implements Initializable {
                         }
                     }
                 };
-                return listCell;
             }
         });
     }
@@ -180,6 +170,7 @@ public class SideBarController implements Initializable {
         projectTreeView.setCellFactory(new Callback<TreeView<Item>, TreeCell<Item>>() {
             @Override
             public TreeCell<Item> call(TreeView<Item> param) {
+
                 return new TreeCell<Item>() {
                     @Override
                     protected void updateItem(Item item, boolean empty) {
@@ -229,5 +220,12 @@ public class SideBarController implements Initializable {
         this.mainController = mainController;
         initializeListViews();
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
+    }
+
+    public enum TabOption {
+        PROJECTS,
+        PEOPLE,
+        TEAMS,
+        SKILLS
     }
 }

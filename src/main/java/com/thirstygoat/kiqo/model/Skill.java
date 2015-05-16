@@ -23,29 +23,6 @@ public class Skill extends Item {
         this.description = new SimpleStringProperty(description);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Skill skill = (Skill) o;
-
-        if (!getShortName().equals(skill.getShortName())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
-    }
-
     /*
      * (non-Javadoc)
      *

@@ -29,8 +29,7 @@ public class Team extends Item {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Team() {
-        shortName = new SimpleStringProperty();
-        description = new SimpleStringProperty();
+        this("", "", null);
     }
 
     public Team(String shortName, String description, List<Person> teamMembers) {
@@ -150,42 +149,4 @@ public class Team extends Item {
         sb.append('}');
         return sb.toString();
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Team)) {
-            return false;
-        }
-        final Team other = (Team) obj;
-        if (getShortName() == null) {
-            if (other.getShortName() != null) {
-                return false;
-            }
-        } else if (!getShortName().equals(other.getShortName())) {
-            return false;
-        }
-        return true;
-    }
-
 }
