@@ -145,7 +145,7 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
 
-//                mainController.switchToProjectList();
+                mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
                 listShowProjectMenuItem.setDisable(true);
             }
         });
@@ -158,7 +158,7 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
 
-//                mainController.switchToTeamList();
+                mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
                 listShowTeamMenuItem.setDisable(true);
                 listShowTeamMenuItem.setSelected(true);
             }
@@ -172,7 +172,7 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
 
-//                mainController.switchToPersonList();
+                mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
                 listShowPersonMenuItem.setDisable(true);
                 listShowPersonMenuItem.setSelected(true);
             }
@@ -186,7 +186,7 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setSelected(false);
                 listShowPersonMenuItem.setDisable(false);
 
-//                mainController.switchToSkillList();
+                mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
                 listShowSkillMenuItem.setDisable(true);
             }
         });
@@ -197,13 +197,9 @@ public class MenuBarController implements Initializable {
      * the undoManager.
      */
     private void addUndoHandlers() {
-        undoMenuItem.setOnAction(event -> {
-            mainController.undo();
-        });
+        undoMenuItem.setOnAction(event -> mainController.undo());
 
-        redoMenuItem.setOnAction(event -> {
-            mainController.redo();
-        });
+        redoMenuItem.setOnAction(event -> mainController.redo());
     }
 
     /**

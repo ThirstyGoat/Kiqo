@@ -76,21 +76,25 @@ public class SideBarController implements Initializable {
 
             // Add the change listener on the appropriate TreeView/ListView
             if (newValue == projectTab) {
+                mainController.getMenuBarController().updateAfterPersonListSelected(true);
                 int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
                 projectTreeView.getSelectionModel().select(null);
                 projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
                 projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == peopleTab) {
+                mainController.getMenuBarController().updateAfterPersonListSelected(true);
                 int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
                 peopleListView.getSelectionModel().select(null);
                 peopleListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == teamsTab) {
+                mainController.getMenuBarController().updateAfterTeamListSelected(true);
                 int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
                 teamsListView.getSelectionModel().select(null);
                 teamsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 teamsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == skillsTab) {
+                mainController.getMenuBarController().updateAfterSkillListSelected(true);
                 int selectedIndex = skillsListView.getSelectionModel().selectedIndexProperty().get();
                 skillsListView.getSelectionModel().select(null);
                 skillsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);

@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javafx.beans.property.ObjectProperty;

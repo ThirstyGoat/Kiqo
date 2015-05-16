@@ -666,4 +666,8 @@ public class MainController implements Initializable {
     public SideBarController getSideBarController() {
         return sideBarController;
     }
+
+    public MenuBarController getMenuBarController() {
+        return menuBarController;
+    }
 }
