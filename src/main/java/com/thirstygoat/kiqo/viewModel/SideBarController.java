@@ -67,7 +67,6 @@ public class SideBarController implements Initializable {
 
         // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
-            System.out.println("selected " + newValue);
             // Remove the change listeners
             projectTreeView.getSelectionModel().selectedItemProperty().removeListener(treeViewChangeListener);
             peopleListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
@@ -76,7 +75,7 @@ public class SideBarController implements Initializable {
 
             // Add the change listener on the appropriate TreeView/ListView
             if (newValue == projectTab) {
-                mainController.getMenuBarController().updateAfterPersonListSelected(true);
+                mainController.getMenuBarController().updateAfterProjectListSelected(true);
                 int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
                 projectTreeView.getSelectionModel().select(null);
                 projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
