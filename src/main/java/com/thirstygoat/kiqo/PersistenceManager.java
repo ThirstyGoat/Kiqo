@@ -10,10 +10,8 @@ import java.io.Writer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.thirstygoat.kiqo.model.*;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -30,13 +28,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -119,10 +110,12 @@ public class PersistenceManager {
                 .addType(Skill.class)
                 .addType(Release.class)
                 .addType(Allocation.class)
+                .addType(Story.class)
                 .registerOn(gsonBuilder);
 
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(IntegerProperty.class, new IntegerPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
 
         if(isOldFile) {
@@ -191,6 +184,23 @@ public class PersistenceManager {
         @Override
         public JsonElement serialize(StringProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
             if (s != null && s.get() != null) {
+                return new JsonPrimitive(s.get());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class IntegerPropertyDeserializer implements JsonDeserializer<IntegerProperty>, JsonSerializer<IntegerProperty> {
+        @Override
+        public IntegerProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+            return new SimpleIntegerProperty(jsonElement.getAsInt());
+        }
+
+        @Override
+        public JsonElement serialize(IntegerProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
+            if (s != null) {
                 return new JsonPrimitive(s.get());
             } else {
                 return null;

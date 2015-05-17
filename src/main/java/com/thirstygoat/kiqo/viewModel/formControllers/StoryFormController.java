@@ -7,6 +7,8 @@ import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,6 +23,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
 public class StoryFormController implements Initializable, IFormController<Story> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Story story;
     private Person creator;
@@ -42,7 +46,6 @@ public class StoryFormController implements Initializable, IFormController<Story
     private boolean shortNameModified = false;
     private boolean valid = false;
     private Command<?> command;
-
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -60,8 +63,6 @@ public class StoryFormController implements Initializable, IFormController<Story
     private Button okButton;
     @FXML
     private Button cancelButton;
-
-    private final ValidationSupport validationSupport = new ValidationSupport();
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -100,6 +101,8 @@ public class StoryFormController implements Initializable, IFormController<Story
             shortNameTextField.setText(story.getShortName());
             descriptionTextField.setText(story.getDescription());
             creatorTextField.setText(story.getCreator().getShortName());
+            // Creator field isn't meant to be changeable
+            creatorTextField.setDisable(true);
             projectTextField.setText(story.getProject().getShortName());
             priorityTextField.setText(Integer.toString(story.getPriority()));
         }
@@ -113,7 +116,17 @@ public class StoryFormController implements Initializable, IFormController<Story
             if (project == null) {
                 return true;
             }
-            return  Utilities.shortnameIsUnique(shortNameTextField.getText(), story, project.getStories());
+            return Utilities.shortnameIsUnique(shortNameTextField.getText(), story, project.getStories());
+        };
+
+        final Predicate<String> personValidation = s -> {
+            for (final Person p : organisation.getPeople()) {
+                if (p.getShortName().equals(s)) {
+                    creator = p;
+                    return true;
+                }
+            }
+            return false;
         };
 
         final Predicate<String> projectValidation = s -> {
@@ -130,20 +143,29 @@ public class StoryFormController implements Initializable, IFormController<Story
             return false;
         };
 
+        final Predicate<String> priorityValidation = s -> {
+            try {
+                Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            return true;
+        };
+
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
                 "Short name must be unique and not empty."));
 
         validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name must not be empty.", Severity.ERROR));
+                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
-        validationSupport.registerValidator(creatorTextField,
-                Validator.createEmptyValidator("Creator must not be empty.",Severity.ERROR));
+        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(personValidation,
+                        "Person must already exist"));
 
         validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
                 "Project must already exist"));
 
         validationSupport.registerValidator(priorityTextField,
-                Validator.createEmptyValidator("Priority must be an integer.",Severity.ERROR));
+                Validator.createPredicateValidator(priorityValidation, "Priority must be an integer"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -302,7 +324,7 @@ public class StoryFormController implements Initializable, IFormController<Story
     public void setCommand() {
         if (story == null) {
             // new story command
-            story = new Story(longNameTextField.getText(), shortNameTextField.getText(), descriptionTextField.getText(), creator,
+            story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
                      project,Integer.parseInt(priorityTextField.getText()));
             command = new CreateStoryCommand(story);
         } else {
@@ -317,16 +339,17 @@ public class StoryFormController implements Initializable, IFormController<Story
             if (!descriptionTextField.getText().equals(story.getDescription())) {
                 changes.add(new EditCommand<>(story, "description", descriptionTextField.getText()));
             }
-            if (!creator.equals(story.getCreator())) {
-                changes.add(new EditCommand<>(story, "creator", creator));
-            }
+//            Creator can't be changed
+//            if (!creator.equals(story.getCreator())) {
+//                changes.add(new EditCommand<>(story, "creator", creator));
+//            }
             if (!project.equals(story.getProject())) {
                 changes.add(new MoveItemCommand<>(story, story.getProject().observableStories(), project.observableStories()));
                 changes.add(new EditCommand<>(story, "project", project));
             }
 
-            if (!priorityTextField.getText().equals(story.getPriority())) {
-                changes.add(new EditCommand<>(story, "priority", priorityTextField.getText()));
+            if (Integer.parseInt(priorityTextField.getText()) != story.getPriority()) {
+                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityTextField.getText())));
             }
 
             valid = !changes.isEmpty();

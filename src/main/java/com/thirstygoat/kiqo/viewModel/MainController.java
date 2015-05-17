@@ -158,6 +158,18 @@ public class MainController implements Initializable {
         }
     }
 
+    private void deleteStory(Story story) {
+        final DeleteStoryCommand command = new DeleteStoryCommand(story);
+        final String[] buttons = { "Delete Story", "Cancel" };
+        final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
+                "Are you sure you want to delete the skill " + story.getShortName() + "?", buttons);
+
+        if (result.equals("Delete Story")) {
+            doCommand(command);
+        }
+    }
+
+
     private void deleteSkill(Skill skill) {
         if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
@@ -273,6 +285,8 @@ public class MainController implements Initializable {
                 deleteTeam((Team) focusedObject);
             } else if (focusedObject instanceof Release) {
                 deleteRelease((Release) focusedObject);
+            } else if (focusedObject.getClass() == Story.class) {
+                deleteStory((Story) focusedObject);
             }
         });
     }
@@ -296,6 +310,8 @@ public class MainController implements Initializable {
             dialog((Team) focusedObject);
         } else if (focusedObject instanceof Release) {
             dialog((Release) focusedObject);
+        } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
+            dialog(focusedObject);
         }
     }
 
@@ -361,7 +377,7 @@ public class MainController implements Initializable {
     }
 
     public void newStory() {
-        if (selectedOrganisation != null) {
+        if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Story");
         }
     }

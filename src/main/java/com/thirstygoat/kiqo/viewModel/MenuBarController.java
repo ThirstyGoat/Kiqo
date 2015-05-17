@@ -223,6 +223,8 @@ public class MenuBarController implements Initializable {
             new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         newReleaseMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+        newStoryMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
                 KeyCombination.SHIFT_DOWN));

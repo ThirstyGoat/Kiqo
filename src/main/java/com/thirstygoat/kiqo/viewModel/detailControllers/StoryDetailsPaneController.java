@@ -31,6 +31,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
             descriptionLabel.textProperty().bind(story.descriptionProperty());
+            // This is some seriously cool binding
+            // Binding to a property of a property
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
         } else {
