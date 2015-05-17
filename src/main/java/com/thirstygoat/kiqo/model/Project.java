@@ -140,7 +140,6 @@ public class Project extends Item {
         return releases;
     }
 
-
     /**
      * @param releases list of releases associated with this project
      */
@@ -164,24 +163,6 @@ public class Project extends Item {
     public void setStories(final List<Story> stories) {
         stories.clear();
         stories.addAll(stories);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Project project = (Project) o;
-        return getShortName().equals(project.getShortName());
-    }
-
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
     }
 
     @Override

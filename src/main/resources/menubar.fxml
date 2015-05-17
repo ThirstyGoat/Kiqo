@@ -45,7 +45,6 @@
         <CheckMenuItem fx:id="listShowTeamMenuItem" mnemonicParsing="false" text="Team" />
         <CheckMenuItem fx:id="listShowPersonMenuItem" mnemonicParsing="false" text="People" />
         <CheckMenuItem fx:id="listShowSkillMenuItem" mnemonicParsing="false" text="Skills" />
-            <CheckMenuItem fx:id="listShowReleaseMenuItem" mnemonicParsing="false" text="Releases" />
       </items>
     </Menu>
   </menus>

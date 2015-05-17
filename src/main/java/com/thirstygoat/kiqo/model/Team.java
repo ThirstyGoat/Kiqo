@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javafx.beans.property.ObjectProperty;
@@ -150,42 +149,4 @@ public class Team extends Item {
         sb.append('}');
         return sb.toString();
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Team)) {
-            return false;
-        }
-        final Team other = (Team) obj;
-        if (getShortName() == null) {
-            if (other.getShortName() != null) {
-                return false;
-            }
-        } else if (!getShortName().equals(other.getShortName())) {
-            return false;
-        }
-        return true;
-    }
-
 }

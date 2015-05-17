@@ -1,6 +1,10 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import com.thirstygoat.kiqo.model.Story;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,7 +13,7 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StoryDetailsPaneController implements Initializable {
+public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -27,7 +31,7 @@ public class StoryDetailsPaneController implements Initializable {
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
             descriptionLabel.textProperty().bind(story.descriptionProperty());
-            // TODO creatorLabel.textProperty().bind(story.creatorProperty().get());
+            creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
         } else {
             longNameLabel.textProperty().unbind();
@@ -42,6 +46,11 @@ public class StoryDetailsPaneController implements Initializable {
             creatorLabel.setText(null);
             priorityLabel.setText(null);
         }
+    }
+
+    @Override
+    public void setMainController(MainController mainController) {
+        // we don't need the main controller for now
     }
 
     @Override
