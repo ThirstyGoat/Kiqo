@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;

@@ -24,9 +24,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -45,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 /**
@@ -78,14 +77,6 @@ public class MainController implements Initializable {
     private MenuBarController menuBarController;
     private Stage primaryStage;
     private double dividerPosition;
-
-    private Organisation selectedOrganisation;
-    private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private Person selectedPerson;
-    private Skill selectedSkill;
-    private Team selectedTeam;
-    private Release selectedRelease;
 
     private int savePosition = 0;
     private File lastSavedFile;
@@ -635,7 +626,7 @@ public class MainController implements Initializable {
             final Scene scene = new Scene(root);
             stage.setScene(scene);
             @SuppressWarnings("unchecked")
-            final IFormController<T> formController = (IFormController<T>) loader.getController();
+            final IFormController<T> formController = loader.getController();
             formController.setStage(stage);
             formController.setOrganisation(selectedOrganisationProperty.get());
             formController.populateFields(t);
@@ -669,7 +660,7 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisationProperty.get());
 
-            if (MainController.focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
                 allocationFormController.setProject(null);
                 allocationFormController.setTeam((Team) focusedItemProperty.getValue());
             } else if (focusedItemProperty.getValue().getClass().equals(Project.class)) {
