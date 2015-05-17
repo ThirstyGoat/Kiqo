@@ -28,6 +28,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem newStoryMenuItem;
+    @FXML
     private MenuItem generateStatusReportMenuItem;
     @FXML
     private MenuItem openMenuItem;
@@ -56,6 +58,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listShowReleaseMenuItem;
     @FXML
+    private CheckMenuItem listShowStoryMenuItem;
+    @FXML
     private MenuItem quitMenuItem;
 
     private MainController mainController;
@@ -76,6 +80,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setDisable(true);
         newSkillMenuItem.setDisable(true);
         newReleaseMenuItem.setDisable(true);
+       // newStoryMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editMenuItem.setDisable(true);
@@ -129,6 +134,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        newStoryMenuItem.setOnAction(event -> mainController.newStory());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation());
@@ -151,6 +157,9 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setDisable(false);
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
+//                listShowStoryMenuItem.setSelected(false);
+//                listShowStoryMenuItem.setDisable(false);
+
 
                 mainController.switchToProjectList();
                 listShowProjectMenuItem.setDisable(true);
@@ -166,6 +175,8 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setDisable(false);
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
+//                listShowStoryMenuItem.setSelected(false);
+//                listShowStoryMenuItem.setDisable(false);
 
                 mainController.switchToTeamList();
                 listShowTeamMenuItem.setDisable(true);
@@ -182,6 +193,8 @@ public class MenuBarController implements Initializable {
                 listShowSkillMenuItem.setDisable(false);
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
+//                listShowStoryMenuItem.setSelected(false);
+//                listShowStoryMenuItem.setDisable(false);
 
                 mainController.switchToPersonList();
                 listShowPersonMenuItem.setDisable(true);
@@ -198,6 +211,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowReleaseMenuItem.setSelected(false);
                 listShowReleaseMenuItem.setDisable(false);
+//                listShowStoryMenuItem.setSelected(false);
+//                listShowStoryMenuItem.setDisable(false);
 
                 mainController.switchToSkillList();
                 listShowSkillMenuItem.setDisable(true);
@@ -213,6 +228,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
+//                listShowStoryMenuItem.setSelected(false);
+//                listShowStoryMenuItem.setDisable(false);
 
                 mainController.switchToReleaseList();
                 listShowReleaseMenuItem.setDisable(true);
@@ -243,11 +260,11 @@ public class MenuBarController implements Initializable {
         newReleaseMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         newTeamMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
         newPersonMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
         newSkillMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
                 KeyCombination.SHIFT_DOWN));
@@ -323,6 +340,10 @@ public class MenuBarController implements Initializable {
         listShowReleaseMenuItem.selectedProperty().set(selected);
     }
 
+    public void updateAfterStoryListSelected(boolean selected) {
+        listShowStoryMenuItem.selectedProperty().set(selected);
+    }
+
     public void enableNewTeam() {
         newTeamMenuItem.setDisable(false);
     }
@@ -342,4 +363,8 @@ public class MenuBarController implements Initializable {
     public void disableNewRelease() {
         newReleaseMenuItem.setDisable(true);
     }
+
+    public void enableNewStory() {newStoryMenuItem.setDisable(false);}
+
+    public void disableNewStory() {newStoryMenuItem.setDisable(true);}
 }

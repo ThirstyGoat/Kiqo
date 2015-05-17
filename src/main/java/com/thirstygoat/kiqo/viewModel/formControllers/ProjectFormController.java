@@ -1,22 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateProjectCommand;
@@ -24,6 +7,21 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -88,7 +86,7 @@ public class ProjectFormController implements Initializable, IFormController<Pro
 
     private void setPrompts() {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
-        longNameTextField.setPromptText("Goats");
+        longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this project.");
 
     }

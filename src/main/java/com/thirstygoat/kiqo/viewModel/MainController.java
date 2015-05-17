@@ -1,6 +1,34 @@
 package com.thirstygoat.kiqo.viewModel;
 
 
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import javafx.util.Callback;
+import org.controlsfx.control.StatusBar;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,65 +37,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
-
-import org.controlsfx.control.StatusBar;
-
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
 
 /**
  * Main controller for the primary view
@@ -495,6 +464,7 @@ public class MainController implements Initializable {
         }
     }
 
+
     private void initialiseTabs() {
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == projectTab) {
@@ -580,12 +550,22 @@ public class MainController implements Initializable {
         }
     }
 
+    public void newStory() {
+        if (selectedOrganisation != null) {
+            dialog(null, "Story");
+        }
+    }
+
+
     public void newProject() {
         if (selectedOrganisation != null) {
             dialog(null, "Project");
 
             if (selectedOrganisation.getProjects().size() > 0) {
                 menuBarController.enableNewRelease();
+            }
+            if(selectedOrganisation.getProjects().size() > 0 && selectedOrganisation.getPeople().size() > 0) {
+                menuBarController.enableNewStory();
             }
         }
     }
@@ -893,7 +873,6 @@ public class MainController implements Initializable {
             formController.setStage(stage);
             formController.setOrganisation(selectedOrganisation);
             formController.populateFields(t);
-
             stage.showAndWait();
             if (formController.isValid()) {
                 doCommand(formController.getCommand());
@@ -939,6 +918,8 @@ public class MainController implements Initializable {
             }
         });
     }
+
+
 
     public Stage getPrimaryStage() {
         return primaryStage;

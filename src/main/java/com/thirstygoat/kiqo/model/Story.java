@@ -1,11 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 /**
  * Created by leroy on 15/05/15.
@@ -23,9 +18,9 @@ public class Story extends Item {
     /**
      * no-arg constructor for JavaBeans compliance
      */
-    public Story() {
-        this("", "", "", null, null, Story.DEFAULT_PRIORITY);
-    }
+   // public Story() {
+       // this("", "", "", null, null, Story.DEFAULT_PRIORITY);
+  //  }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
                  Integer priority) {
@@ -91,17 +86,11 @@ public class Story extends Item {
         this.project.set(project);
     }
 
-    public ObjectProperty<Project> projectProperty() {
-       return project;
-    }
+    public ObjectProperty<Project> projectProperty() { return project; }
 
-    public Project getProject() {
-        return project.get();
-    }
+    public Project getProject() { return project.get(); }
 
-    public int getPriority() {
-        return priority.get();
-    }
+    public int getPriority() { return priority.get();}
 
     public IntegerProperty priorityProperty() {
         return priority;
@@ -125,14 +114,12 @@ public class Story extends Item {
         if (!getShortName().equals(story.getShortName())) {
             return false;
         }
-        return getProject().equals(story.getProject());
+        return true;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getShortName().hashCode();
-        result = 31 * result + getProject().hashCode();
-        return result;
+        return getShortName().hashCode();
     }
 }
