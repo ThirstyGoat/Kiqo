@@ -156,6 +156,7 @@
             <configuration>
               <headerType>gui</headerType>
               <outfile>target/deploy/${project.artifactId}.exe</outfile>
+              <!-- The Linux script links to this filename; if you change it, change both. -->
               <jar>target/${project.artifactId}-${project.version}.jar</jar>
               <dontWrapJar>false</dontWrapJar>
               <errTitle>${project.artifactId}: Error</errTitle>
@@ -180,7 +181,7 @@
         </executions>
       </plugin>
       <plugin>
-        <!-- Packaging for Debian Linux (only a shell script) -->
+        <!-- Packaging for Debian Linux (a bash script) -->
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
         <executions>
