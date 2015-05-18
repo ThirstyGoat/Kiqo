@@ -29,8 +29,14 @@ public class Main extends Application {
     private BorderPane root;
     private MainController mainController;
 
-    public static void main( String[] args ) {
-        Main.setupLogging(Level.ALL);
+    public static void main(String[] args) {
+        Level level;
+        if (args.length > 0 && args[0].equals("-v")) {
+            level = Level.ALL;
+        } else {
+            level = Level.OFF;
+        }
+        Main.setupLogging(level);
 
         Application.launch(args);
     }
