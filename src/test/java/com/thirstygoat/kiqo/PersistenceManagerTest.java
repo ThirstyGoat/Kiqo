@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,6 +53,5 @@ public class PersistenceManagerTest {
         }
 
         final Organisation p = PersistenceManager.loadOrganisation(f);
-        System.out.println(p);
     }
 }
