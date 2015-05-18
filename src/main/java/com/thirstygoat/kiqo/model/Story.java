@@ -6,7 +6,9 @@ import javafx.beans.property.*;
  * Created by leroy on 15/05/15.
  */
 public class Story extends Item {
-    private static final int DEFAULT_PRIORITY = 0;
+    public static final int DEFAULT_PRIORITY = 0;
+    public static final int MAX_PRIORITY = 1000;
+    public static final int MIN_PRIORITY = -1000;
 
     private final StringProperty shortName;
     private final StringProperty longName;

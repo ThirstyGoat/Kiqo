@@ -72,6 +72,7 @@ public class StoryFormController implements Initializable, IFormController<Story
         setShortNameSuggester();
         setCreatorTextFieldSuggester();
         setProjectTextFieldSuggester();
+        priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
 
         setValidationSupport();
@@ -145,7 +146,10 @@ public class StoryFormController implements Initializable, IFormController<Story
 
         final Predicate<String> priorityValidation = s -> {
             try {
-                Integer.parseInt(s);
+                int i = Integer.parseInt(s);
+                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+                    return false;
+                }
             } catch (NumberFormatException e) {
                 return false;
             }
@@ -165,7 +169,8 @@ public class StoryFormController implements Initializable, IFormController<Story
                 "Project must already exist"));
 
         validationSupport.registerValidator(priorityTextField,
-                Validator.createPredicateValidator(priorityValidation, "Priority must be an integer"));
+                Validator.createPredicateValidator(priorityValidation, "Priority must be an integer between "
+                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
