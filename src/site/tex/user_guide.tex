@@ -90,6 +90,7 @@ Alternatively, use the keys \keys{\ctrl + L}.\footnote{On Mac,
 use the command key \keys{\cmd} in place of \keys{\ctrl}.}
 
 \section{Quick Start}
+
 \subsection{Creating a New Project}
 \begin{itemize}
   \item From the menu bar, use \menu{File > New... > Project}.
@@ -188,7 +189,7 @@ There are two ways of changing the view to show relevant information.
 
 \subsection{Project Allocation Maintenance}
 \begin{itemize}
-  \item Adds a link between project and teams, with associated dates.
+  \item Teams can be allocated to projects, with associated dates.
   \item In the project tab a team can be allocated to a project by clicking the 'Allocate Teams'.
   \item Select a team from the from the dropdown list in create Allocation dialog and choose a start and an end date.
   \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
@@ -200,6 +201,12 @@ The report generator gives the user the ability to generate reports in yaml form
 \begin{itemize}
   \item \menu{File > Generate > Status Report} Prompts the user for a valid save location on the local disk drive.
   \item Clicking \keys{Save} will generate the report and save it to the location set previously.
+\end{itemize}
+
+\subsection{Story Maintenance}
+\begin{itemize}
+  \item Stories can be added to a project and assigned a priority.
+  \item The priority must be a integer between 1000 and -1000, inclusive.
 \end{itemize}
 
 \appendix
@@ -224,18 +231,20 @@ The report generator gives the user the ability to generate reports in yaml form
     \toprule
     Action & Shortcut \\
     \midrule
-    Hide/Show List Pane  &  \keys{\ctrl + L} \\ 
     Create New Project & \keys{\ctrl + N} \\
-    Open Project & \keys{\ctrl + O} \\ 
-    Save Project & \keys{\ctrl + S} \\
-    SaveAs Project & \keys{\ctrl + \shift + S} \\
-    Undo & \keys{\ctrl + Z} \\
-    Redo & \keys{\ctrl + \shift + Z} \\
-    Create New Skill & \keys{\ctrl + K} \\
     Create New Release & \keys{\ctrl + R} \\
     Create New Team & \keys{\ctrl + T} \\
-    Edit & \keys{\ctrl + E} \\
-    Delete & \keys{\ctrl + D} \\
+    Create New Person & \keys{\ctrl + P} \\
+    Create New Skill & \keys{\ctrl + K} \\
+    Create New Story & \keys{\ctrl + Y} \\
+    Open Organisation & \keys{\ctrl + O} \\ 
+    Save Organisation & \keys{\ctrl + S} \\
+    Save Organisation As & \keys{\ctrl + \shift + S} \\
+    Undo & \keys{\ctrl + Z} \\
+    Redo & \keys{\ctrl + \shift + Z} \\
+    Edit Selected Item & \keys{\ctrl + E} \\
+    Delete Selected Item & \keys{\ctrl + D} \\
+    Hide/Show List Pane  &  \keys{\ctrl + L} \\ 
     Switch Tabs & \keys{\ctrl + 1-5} \\
     \bottomrule
   \end{tabular}
