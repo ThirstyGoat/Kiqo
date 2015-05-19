@@ -372,12 +372,23 @@ public class MainController implements Initializable {
 
     public void newRelease() {
         if (selectedOrganisationProperty.get() != null) {
+            // Check to make sure at least one project exists first, otherwise show warning dialog
+            if (selectedOrganisationProperty.get().getProjects().isEmpty()) {
+                GoatDialog.showAlertDialog(primaryStage, "Can't create Release", "Can't create Release",
+                        "No projects available, you must first have a project in order to create a Release.");
+                return;
+            }
             dialog(null, "Release");
         }
     }
 
     public void newStory() {
         if (selectedOrganisationProperty.get() != null) {
+            if (selectedOrganisationProperty.get().getProjects().isEmpty()) {
+                GoatDialog.showAlertDialog(primaryStage, "Can't create Story", "Can't create Story",
+                        "No projects available, you must first have a project in order to create a Story.");
+                return;
+            }
             dialog(null, "Story");
         }
     }
