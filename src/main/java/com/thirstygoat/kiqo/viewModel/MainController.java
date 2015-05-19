@@ -145,6 +145,7 @@ public class MainController implements Initializable {
         }
     }
 
+    // revert is not undoable -- just do it.
     private void revert() {
         Organisation organisation;
 
@@ -164,9 +165,10 @@ public class MainController implements Initializable {
             organisation.setSaveLocation(selectedOrganisation.getSaveLocation());
         }
 
-        // revert is not undoable -- just do it.
-        selectedOrganisationProperty.set(organisation);
         changesSaved.set(true);
+        undoManager.empty();
+        // undoManager.revert(savePosition);
+        selectedOrganisationProperty.set(organisation);
     }
 
     private void setStageTitleProperty() {

@@ -74,6 +74,22 @@ public class UndoManager {
     }
 
     /**
+     * Removes the necessary number of commands from the undo stack and clears the redo stack.
+     *
+     * @param position number of commands that should remain on undo stack
+     */
+    public void revert(int position) {
+        while (undoStack.size() > position) {
+            undoStack.pop();
+        }
+        redoStack.clear();
+
+        canUndoProperty.set(position > 0);
+        canRedoProperty.set(false);
+        shouldUpdateMenuProperty.set(true);
+    }
+
+    /**
      * @return The size of the undo stack
      */
     public int getUndoStackSize() {
