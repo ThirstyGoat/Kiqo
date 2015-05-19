@@ -52,7 +52,6 @@ import com.thirstygoat.kiqo.command.DeleteProjectCommand;
 import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
 import com.thirstygoat.kiqo.command.DeleteSkillCommand;
 import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.RevertCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
@@ -144,7 +143,6 @@ public class MainController implements Initializable {
                             "Revert functionality is disabled");
             revertSupported = false;
         }
-
     }
 
     private void revert() {
@@ -161,18 +159,14 @@ public class MainController implements Initializable {
             organisation = new Organisation();
         }
 
-        if (getSelectedOrganisation().getSaveLocation() != null) {
-            organisation.setSaveLocation(getSelectedOrganisation().getSaveLocation());
+        // reset to original saveLocation
+        if (selectedOrganisation.getSaveLocation() != null) {
+            organisation.setSaveLocation(selectedOrganisation.getSaveLocation());
         }
 
-        final Command<?> command = new RevertCommand(this, "selectedOrganisation", organisation, () -> {
-            changesSaved.set(true);
-        });
-        doCommand(command);
-
-//        if (selectedOrganisation.getSaveLocation() != null) {
-//            saveToDisk(organisation);
-//        }
+        // revert is not undoable -- just do it.
+        selectedOrganisationProperty.set(organisation);
+        changesSaved.set(true);
     }
 
     private void setStageTitleProperty() {
@@ -710,7 +704,7 @@ public class MainController implements Initializable {
             PersistenceManager.saveOrganisation(organisation.getSaveLocation(), organisation);
         } catch (final IOException e) {
             GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
-            return; // do not continue here
+            return; // do not continue
         }
         setLastSavedFile(organisation.getSaveLocation());
         savePosition = undoManager.getUndoStackSize();
