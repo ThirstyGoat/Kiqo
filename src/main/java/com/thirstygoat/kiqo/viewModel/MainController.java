@@ -1,16 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
@@ -24,36 +15,17 @@ import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.util.Callback;
-
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -62,50 +34,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CreateReleaseCommand;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.DetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.PersonFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ProjectFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ReleaseFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.SkillFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.TeamFormController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
-    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-    private static final String PRODUCT_NAME = "Kiqo";
-    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
-    public final ObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private final UndoManager undoManager = new UndoManager();
-    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -122,16 +57,17 @@ public class MainController implements Initializable {
     private SideBarController sideBarController;
     @FXML
     private MenuBarController menuBarController;
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
+    private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
+    private static final String PRODUCT_NAME = "Kiqo";
+    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    private final UndoManager undoManager = new UndoManager();
+
+    private final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private Stage primaryStage;
     private double dividerPosition;
-
-    private Organisation selectedOrganisation;
-    private ObjectProperty<Project> selectedProject = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private Person selectedPerson;
-    private Skill selectedSkill;
-    private Team selectedTeam;
-    private Release selectedRelease;
 
     private int savePosition = 0;
 
@@ -513,22 +449,6 @@ public class MainController implements Initializable {
                 MainController.LOGGER.log(Level.SEVERE, "Can't save status report", e);
             }
         }
-    }
-
-    public void switchToPersonList() {
-        tabViewPane.getSelectionModel().select(peopleTab);
-    }
-
-    public void switchToTeamList() {
-        tabViewPane.getSelectionModel().select(teamsTab);
-    }
-
-    public void switchToProjectList() {
-        tabViewPane.getSelectionModel().select(projectTab);
-    }
-
-    public void switchToReleaseList() {
-        tabViewPane.getSelectionModel().select(releasesTab);
     }
 
     public void undo() {

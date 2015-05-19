@@ -19,6 +19,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
     public ProjectsTreeItem(ObservableList<Project> element) {
         super();
         addChildren(element);
+
     }
 
     private void addChildren(ObservableList<Project> childItems) {
@@ -41,6 +42,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
                 treeItem.addChild("Releases", item.observableReleases());
                 int index = childItems.indexOf(item);
                 getChildren().add(index, treeItem);
+                treeItem.setExpanded(true);
 
                 // Add item tree item to map
                 treeItemMap.put(item, treeItem);

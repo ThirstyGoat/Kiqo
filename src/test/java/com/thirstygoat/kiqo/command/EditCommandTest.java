@@ -3,17 +3,14 @@ package com.thirstygoat.kiqo.command;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-
 /**
  * Tests EditCommand
  *
  * @author amy
  */
 public class EditCommandTest {
-    private static final class MockObject {
-        private final static int ORIGINAL_VALUE = 42;
-        private int value = MockObject.ORIGINAL_VALUE;
+    public static final class MockObject {
+        private int value = ORIGINAL_VALUE;
 
         /**
          * @return the value
@@ -31,7 +28,7 @@ public class EditCommandTest {
             this.value = value;
         }
     }
-
+    private final static int ORIGINAL_VALUE = 42;
     private final static int NEW_VALUE = 11;
 
     /**
@@ -43,7 +40,7 @@ public class EditCommandTest {
         final EditCommand<MockObject, Integer> editCommand = new EditCommand<MockObject, Integer>(mockObject, "value",
                 EditCommandTest.NEW_VALUE);
 
-        Assert.assertEquals("Field should not be modified before execution", MockObject.ORIGINAL_VALUE, mockObject.getValue());
+        Assert.assertEquals("Field should not be modified before execution", ORIGINAL_VALUE, mockObject.getValue());
         editCommand.execute();
         Assert.assertEquals("Field should be modified after execution", EditCommandTest.NEW_VALUE, mockObject.getValue());
     }
@@ -70,7 +67,7 @@ public class EditCommandTest {
         editCommand.execute();
         editCommand.undo();
 
-        Assert.assertEquals(MockObject.ORIGINAL_VALUE, mockObject.getValue());
+        Assert.assertEquals(ORIGINAL_VALUE, mockObject.getValue());
         editCommand.redo();
         Assert.assertEquals("Field should be modified after redo", EditCommandTest.NEW_VALUE, mockObject.getValue());
     }
@@ -88,6 +85,6 @@ public class EditCommandTest {
 
         Assert.assertEquals(EditCommandTest.NEW_VALUE, mockObject.getValue());
         editCommand.undo();
-        Assert.assertEquals("Field should be reverted after undo", MockObject.ORIGINAL_VALUE, mockObject.getValue());
+        Assert.assertEquals("Field should be reverted after undo", ORIGINAL_VALUE, mockObject.getValue());
     }
 }
