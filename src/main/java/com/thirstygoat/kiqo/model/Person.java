@@ -97,29 +97,6 @@ public class Person extends Item {
         return skills;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Person person = (Person) o;
-
-        if (!getShortName().equals(person.getShortName())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
-    }
-
     /**
      * To string method for a person. Will return the fields that are not set to null
      *

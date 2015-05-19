@@ -5,12 +5,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * Created by leroy on 10/04/15.
  */
-public class Release extends Item {
+public class Release extends Item implements Serializable {
     private final StringProperty shortName;
     private final StringProperty description;
     private final ObjectProperty<Project> project;
@@ -77,24 +78,5 @@ public class Release extends Item {
     public String toString() {
         return "Release{shortName=" + shortName + ", project=" + project.get().getShortName() + ", date=" + date + ", description="
                 + description + "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Release release = (Release) o;
-
-        return getShortName().equals(release.getShortName());
-    }
-
-    @Override
-    public int hashCode() {
-        return getShortName().hashCode();
     }
 }

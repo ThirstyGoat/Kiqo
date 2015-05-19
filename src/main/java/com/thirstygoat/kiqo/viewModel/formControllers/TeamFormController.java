@@ -8,6 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -45,7 +51,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 /**
  * Created by james on 27/03/15.
  */
-public class TeamFormController implements Initializable {
+public class TeamFormController implements Initializable, IFormController<Team> {
 
     private static final Logger LOGGER = Logger.getLogger(TeamFormController.class.getName());
     private final ArrayList<Person> devTeam = new ArrayList<>();
@@ -213,15 +219,17 @@ public class TeamFormController implements Initializable {
         }
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() {
         return command;
     }
 
-    public void setListSelectionViewSettings() {
+    private void setListSelectionViewSettings() {
         peopleListSelectionView.setSourceHeader(new Label("People Available:"));
         final BorderPane targetHeader = new BorderPane();
         targetHeader.setLeft(new Label("People Selected:"));
@@ -412,15 +420,17 @@ public class TeamFormController implements Initializable {
     }
 
 
+    @Override
     public void setStage(Stage stage)  {
         this.stage = stage;
     }
 
     /**
-     * Sets the team to be edited and populates fie lds if applicable
+     * Sets the team to be edited and populates fields if applicable
      * @param team Team to be edited
      */
-    public void setTeam(Team team) {
+    @Override
+    public void populateFields(Team team) {
         this.team = team;
 
         if (team == null) {
@@ -444,8 +454,10 @@ public class TeamFormController implements Initializable {
 
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         populatePeopleListView();
+        setListSelectionViewSettings();
     }
 }

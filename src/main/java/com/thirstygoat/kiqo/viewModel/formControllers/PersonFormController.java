@@ -1,14 +1,11 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,20 +17,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreatePersonCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by james on 20/03/15.
  */
-public class PersonFormController implements Initializable {
+public class PersonFormController implements Initializable, IFormController<Person> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
@@ -79,7 +81,7 @@ public class PersonFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), person, organisation.getPeople());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
@@ -148,7 +150,8 @@ public class PersonFormController implements Initializable {
      * Sets the TextFields displayed in the dialog to the Person that will be edited.
      * @param person the Person that is loaded
      */
-    public void setPerson(final Person person) {
+    @Override
+    public void populateFields(final Person person) {
         this.person = person;
 
         if (person == null) {
@@ -276,16 +279,20 @@ public class PersonFormController implements Initializable {
         });
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() { return command; }
 
+    @Override
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         setUpSkillsList();
