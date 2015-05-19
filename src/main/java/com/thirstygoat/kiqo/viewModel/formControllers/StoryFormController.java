@@ -173,12 +173,7 @@ public class StoryFormController implements Initializable, IFormController<Story
                                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // Then invalid, disable ok button
-                okButton.setDisable(true);
-            } else {
-                okButton.setDisable(false);
-            }
+            okButton.setDisable(newValue);
         });
     }
 
