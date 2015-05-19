@@ -384,9 +384,10 @@ public class MainController implements Initializable {
 
     public void newStory() {
         if (selectedOrganisationProperty.get() != null) {
-            if (selectedOrganisationProperty.get().getProjects().isEmpty()) {
+            if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
+                    selectedOrganisationProperty.get().getPeople().isEmpty()) {
                 GoatDialog.showAlertDialog(primaryStage, "Can't create Story", "Can't create Story",
-                        "No projects available, you must first have a project in order to create a Story.");
+                        "You must have at least one Project and one Person in order to create a Story.");
                 return;
             }
             dialog(null, "Story");
