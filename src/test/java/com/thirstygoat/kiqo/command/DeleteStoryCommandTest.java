@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Story;
@@ -13,13 +14,14 @@ import org.junit.Test;
 public class DeleteStoryCommandTest {
     private Story story;
     private Project project;
+    private Backlog backlog;
     private Person person;
     private DeleteStoryCommand command;
 
     @Before
     public void setup() {
         project = new Project("", "");
-        story = new Story("story1", "Story One", "descr", person, project, 9);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9);
         project.observableStories().add(story);
         command = new DeleteStoryCommand(story);
     }

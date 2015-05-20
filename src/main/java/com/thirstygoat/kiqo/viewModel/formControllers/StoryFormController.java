@@ -1,10 +1,7 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -42,6 +39,7 @@ public class StoryFormController implements Initializable, IFormController<Story
     private Story story;
     private Person creator;
     private Project project;
+    private Backlog backlog;
     private Organisation organisation;
     private boolean shortNameModified = false;
     private boolean valid = false;
@@ -325,7 +323,7 @@ public class StoryFormController implements Initializable, IFormController<Story
         if (story == null) {
             // new story command
             story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
-                     project,Integer.parseInt(priorityTextField.getText()));
+                     project, backlog, Integer.parseInt(priorityTextField.getText()));
             command = new CreateStoryCommand(story);
         } else {
             // edit command
