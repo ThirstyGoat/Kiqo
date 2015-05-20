@@ -73,7 +73,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = "Kiqo";
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(false);
+    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
     public boolean revertSupported = true;
     @FXML

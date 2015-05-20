@@ -27,6 +27,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
         for (Project item : childItems) {
             GoatTreeItem treeItem = new GoatTreeItem(item);
             treeItem.addChild("Releases", item.observableReleases());
+            treeItem.addChild("Backlogs", item.observableBacklogs());
             treeItem.addChild("Stories", item.observableStories());
             getChildren().add(treeItem);
 
