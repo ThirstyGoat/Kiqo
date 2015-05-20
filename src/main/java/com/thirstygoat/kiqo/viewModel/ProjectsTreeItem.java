@@ -1,72 +1,80 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Represents an item with children in a TreeView
  * @author Bradley Kirwan
  */
 public class ProjectsTreeItem extends TreeItem<Item> {
-    private static final Comparator<TreeItem<Item>> TREEITEM_COMPARATOR = (treeItem1, treeItem2) -> {
-        return Utilities.LEXICAL_COMPARATOR.compare(treeItem1.getValue(), treeItem2.getValue());
-    };
     private final Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
 
-    public ProjectsTreeItem(ObservableList<Project> element) {
+    public ProjectsTreeItem(ObservableList<Project> projects, SelectionModel<TreeItem<Item>> selectionModel) {
         super();
-        addChildren(element);
-        ProjectsTreeItem.sortChildren(this);
+        addChildren(projects, selectionModel);
     }
 
-    private void addChildren(ObservableList<Project> childProjects) {
-        // Add all children to the tree item
-        for (final Project project : childProjects) {
-            final GoatTreeItem projectTreeItem = new GoatTreeItem(project);
-            projectTreeItem.addChild("Releases", project.observableReleases());
-            getChildren().add(projectTreeItem);
-
-            // Add release tree item to map
-            treeItemMap.put(project, projectTreeItem);
-        }
-
+    private void addChildren(ObservableList<Project> childProjects, SelectionModel<TreeItem<Item>> selectionModel) {
+        // define change listener
         final ListChangeListener<Project> listener = c -> {
+            final ObservableList<? extends Project> newList = c.getList();
+            final ObservableList<TreeItem<Item>> children = getChildren();
+            final TreeItem<Item> selectedItem = selectionModel.getSelectedItem();
             while (c.next()) {
-                // get added projects and add them to this TreeItem
-                for (final Project project : c.getAddedSubList()) {
-                    final GoatTreeItem treeItem = new GoatTreeItem(project);
-                    treeItem.addChild("Releases", project.observableReleases());
-                    treeItem.setExpanded(true);
+                if (c.wasPermutated()) {
+                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                        children.set(i, treeItemMap.get(newList.get(i)));
+                        final int permutation = c.getPermutation(i);
+                        children.set(permutation, treeItemMap.get(newList.get(permutation)));
+                    }
+                } else if (c.wasUpdated()) {
+                    // update item
+                    final int i = c.getFrom();
+                    children.set(i, treeItemMap.get(newList.get(i)));
+                } else {
+                    // get added projects and add them to this TreeItem
+                    for (final Project project : c.getAddedSubList()) {
+                        addProject(project, newList.indexOf(project));
+                    }
+                    for (final Project project : c.getRemoved()) {
+                        children.remove(treeItemMap.get(project));
 
-                    final int index = childProjects.indexOf(project);
-                    getChildren().add(index, treeItem);
-                    // Add item tree item to map
-                    treeItemMap.put(project, treeItem);
-                }
-
-                for (final Project project : c.getRemoved()) {
-                    getChildren().remove(treeItemMap.get(project));
-
-                    // Remove item from item tree map
-                    treeItemMap.remove(project);
+                        // Remove item from item tree map
+                        treeItemMap.remove(project);
+                    }
                 }
             }
-            ProjectsTreeItem.sortChildren(this);
+            selectionModel.select(selectedItem);
         };
 
+        // add all children to the tree item
+        for (final Project project : childProjects) {
+            addProject(project, -1); // new item
+        }
         childProjects.addListener(listener);
     }
 
-    private static void sortChildren(TreeItem<Item> parent) {
-        parent.getChildren().sort(ProjectsTreeItem.TREEITEM_COMPARATOR);
+    private void addProject(Project project, int index) {
+        final GoatTreeItem projectTreeItem = new GoatTreeItem(project);
+        projectTreeItem.addChild("Releases", project.observableReleases());
+        if (index == -1) { // new item
+            getChildren().add(projectTreeItem);
+        } else {
+            getChildren().add(index, projectTreeItem);
+        }
+
+        projectTreeItem.setExpanded(true);
+
+        // Add release tree item to map
+        treeItemMap.put(project, projectTreeItem);
     }
 }
