@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.viewModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,8 +65,6 @@ public class MenuBarController implements Initializable {
     private CheckMenuItem listShowStoryMenuItem;
     @FXML
     private MenuItem quitMenuItem;
-
-
     private MainController mainController;
 
     @Override
@@ -89,7 +88,7 @@ public class MenuBarController implements Initializable {
         deleteMenuItem.setDisable(true);
         revertMenuItem.setDisable(true);
 
-            // listShowProjectMenuItem is disabled here, because it is the default list view.
+        // listShowProjectMenuItem is disabled here, because it is the default list view.
         listShowProjectMenuItem.setDisable(true);
         listShowProjectMenuItem.setSelected(true);
     }
@@ -102,11 +101,7 @@ public class MenuBarController implements Initializable {
     }
 
     private void setListenersOnChangesSaved() {
-        mainController.changesSaved.addListener((o, oldValue, newValue) -> {
-            if (mainController.revertSupported) {
-                revertMenuItem.setDisable(newValue);
-            }
-        });
+        revertMenuItem.disableProperty().bind(mainController.changesSavedProperty());
     }
 
     private void addEditDeleteShortcuts() {
@@ -254,40 +249,11 @@ public class MenuBarController implements Initializable {
     }
 
     public void setListenersOnUndoManager(UndoManager undoManager) {
-        undoManager.canUndoProperty.addListener((observable, oldValue, newValue) -> {
-            undoMenuItem.setDisable(!newValue);
-            if (newValue) {
-                // Update text to say (eg. Undo 'Create Project')
-                undoMenuItem.setText("Undo " + undoManager.getUndoType());
-            } else {
-                undoMenuItem.setText("Undo");
-            }
-        });
+        undoMenuItem.textProperty().bind(Bindings.concat("Undo ", undoManager.undoTypeProperty));
+        redoMenuItem.textProperty().bind(Bindings.concat("Redo ", undoManager.redoTypeProperty));
 
-        undoManager.canRedoProperty.addListener((observable, oldValue, newValue) -> {
-            redoMenuItem.setDisable(!newValue);
-            if (newValue) {
-                // Update text to say (eg. Redo 'Create Project');
-                redoMenuItem.setText("Redo " + undoManager.getRedoType());
-            } else {
-                redoMenuItem.setText("Redo");
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
-                }
-            }
-        });
-
-        undoManager.shouldUpdateMenuProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                if (undoManager.canUndoProperty.get()) {
-                    undoMenuItem.setText("Undo " + undoManager.getUndoType());
-                }
-                if (undoManager.canRedoProperty.get()) {
-                    redoMenuItem.setText("Redo " + undoManager.getRedoType());
-                }
-                undoManager.shouldUpdateMenuProperty.set(false);
-            }
-        });
+        undoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.undoTypeProperty));
+        redoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.redoTypeProperty));
     }
 
     public void updateAfterAnyObjectSelected(boolean enabled) {
