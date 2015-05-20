@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -16,6 +16,7 @@ public class Project extends Item {
     private final StringProperty shortName;
     private final StringProperty longName;
     private final ObservableList<Release> releases;
+    private final ObservableList<Story> stories;
     private final ObservableList<Allocation> allocations;
     private final StringProperty description;
 
@@ -24,6 +25,7 @@ public class Project extends Item {
      */
     public Project() {
         releases = FXCollections.observableArrayList();
+        stories = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
@@ -119,7 +121,7 @@ public class Project extends Item {
      * @return The ObservableList of Team Allocations
      */
     public List<Allocation> getAllocations() {
-        ArrayList<Allocation> allocations = new ArrayList<>();
+        final ArrayList<Allocation> allocations = new ArrayList<>();
         allocations.addAll(this.allocations);
         return allocations;
     }
@@ -128,8 +130,12 @@ public class Project extends Item {
         return releases;
     }
 
+    public ObservableList<Story> observableStories() {
+        return stories;
+    }
+
     public List<Release> getReleases() {
-        ArrayList<Release> releases = new ArrayList<>();
+        final List<Release> releases = new ArrayList<>();
         releases.addAll(this.releases);
         return releases;
     }
@@ -140,6 +146,23 @@ public class Project extends Item {
     public void setReleases(final List<Release> releases) {
         releases.clear();
         releases.addAll(releases);
+    }
+
+    /**
+     * @return list of stories associated with this project
+     */
+    public List<Story> getStories() {
+        final List<Story> stories = new ArrayList<>();
+        stories.addAll(this.stories);
+        return stories;
+    }
+
+    /**
+     * @param stories list of stories associated with this project
+     */
+    public void setStories(final List<Story> stories) {
+        stories.clear();
+        stories.addAll(stories);
     }
 
     @Override

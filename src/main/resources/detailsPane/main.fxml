@@ -25,6 +25,7 @@
         <fx:include fx:id="skillDetailsPane" source="skill.fxml" />
         <fx:include fx:id="teamDetailsPane" source="team.fxml" />
         <fx:include fx:id="releaseDetailsPane" source="release.fxml" />
+        <fx:include fx:id="storyDetailsPane" source="story.fxml" />
     </StackPane>
   </center>
 </BorderPane>

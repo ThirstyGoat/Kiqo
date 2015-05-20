@@ -14,6 +14,8 @@
             <MenuItem fx:id="newTeamMenuItem" mnemonicParsing="false" text="Team" />
             <MenuItem fx:id="newPersonMenuItem" mnemonicParsing="false" text="Person" />
             <MenuItem fx:id="newSkillMenuItem" mnemonicParsing="false" text="Skill" />
+            <MenuItem fx:id="newStoryMenuItem" mnemonicParsing="false" text="Story" />
+
           </items>
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false" />

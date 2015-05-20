@@ -29,6 +29,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem newStoryMenuItem;
+    @FXML
     private MenuItem revertMenuItem;
     @FXML
     private MenuItem generateStatusReportMenuItem;
@@ -56,6 +58,10 @@ public class MenuBarController implements Initializable {
     private CheckMenuItem listShowPersonMenuItem;
     @FXML
     private CheckMenuItem listShowSkillMenuItem;
+    @FXML
+    private CheckMenuItem listShowReleaseMenuItem;
+    @FXML
+    private CheckMenuItem listShowStoryMenuItem;
     @FXML
     private MenuItem quitMenuItem;
 
@@ -138,6 +144,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        newStoryMenuItem.setOnAction(event -> mainController.newStory());
         revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
@@ -224,13 +231,15 @@ public class MenuBarController implements Initializable {
         newProjectMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         newTeamMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
         newPersonMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
         newSkillMenuItem.setAccelerator(
-            new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
+                new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         newReleaseMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+        newStoryMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
                 KeyCombination.SHIFT_DOWN));
@@ -300,6 +309,11 @@ public class MenuBarController implements Initializable {
 
     public void updateAfterSkillListSelected(boolean selected) {
         listShowSkillMenuItem.selectedProperty().set(selected);
+    }
+
+
+    public void updateAfterStoryListSelected(boolean selected) {
+        listShowStoryMenuItem.selectedProperty().set(selected);
     }
 
     public void enableNewTeam() {

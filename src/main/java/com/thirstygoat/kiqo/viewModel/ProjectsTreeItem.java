@@ -27,6 +27,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
         for (Project item : childItems) {
             GoatTreeItem treeItem = new GoatTreeItem(item);
             treeItem.addChild("Releases", item.observableReleases());
+            treeItem.addChild("Stories", item.observableStories());
             getChildren().add(treeItem);
 
             // Add release tree item to map
@@ -40,6 +41,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
             for (Project item : c.getAddedSubList()) {
                 GoatTreeItem treeItem = new GoatTreeItem(item);
                 treeItem.addChild("Releases", item.observableReleases());
+                treeItem.addChild("Stories", item.observableStories());
                 int index = childItems.indexOf(item);
                 getChildren().add(index, treeItem);
                 treeItem.setExpanded(true);
