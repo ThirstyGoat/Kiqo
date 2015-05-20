@@ -56,11 +56,6 @@ public class ReleaseFormController implements Initializable, IFormController<Rel
     @FXML
     private Button cancelButton;
 
-
-    private final ValidationSupport validationSupport = new ValidationSupport();
-    private Stage stage;
-    private Project project;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
