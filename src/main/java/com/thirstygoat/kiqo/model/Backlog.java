@@ -18,6 +18,7 @@ public class Backlog extends Item {
     private StringProperty longName;
     private StringProperty description;
     private ObjectProperty<Person> productOwner;
+    private ObjectProperty<Project> project;
     private final ObservableList<Story> stories = FXCollections.observableArrayList();
 
     public Backlog() {
@@ -25,13 +26,16 @@ public class Backlog extends Item {
         this.longName = new SimpleStringProperty("");
         this.description = new SimpleStringProperty("");
         this.productOwner = new SimpleObjectProperty<>(null);
+        this.project = new SimpleObjectProperty<>(null);
     }
 
-    public Backlog(String shortName, String longName, String description, Person productOwner, List<Story> stories) {
+    public Backlog(String shortName, String longName, String description, Person productOwner,
+                   Project project, List<Story> stories) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
         this.productOwner = new SimpleObjectProperty<>(productOwner);
+        this.project = new SimpleObjectProperty<>(project);
         this.stories.addAll(stories);
     }
 
@@ -98,5 +102,17 @@ public class Backlog extends Item {
 
     public void setProductOwner(Person productOwner) {
         this.productOwner.set(productOwner);
+    }
+
+    public Project getProject() {
+        return project.get();
+    }
+
+    public ObjectProperty<Project> projectPropert() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project.set(project);
     }
 }
