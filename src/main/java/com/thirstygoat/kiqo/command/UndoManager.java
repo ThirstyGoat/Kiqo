@@ -1,11 +1,15 @@
 package com.thirstygoat.kiqo.command;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Manages the undo/redo feature
@@ -15,11 +19,9 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
+    public final StringProperty undoTypeProperty = new SimpleStringProperty("");
+    public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     private final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
-    public SimpleBooleanProperty canUndoProperty = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty canRedoProperty = new SimpleBooleanProperty(false);
-
-    public SimpleBooleanProperty shouldUpdateMenuProperty = new SimpleBooleanProperty(false);
 
     /**
      * Executes the command and adds it to the undo stack.
@@ -31,9 +33,9 @@ public class UndoManager {
     public <T> T doCommand(final Command<T> command) {
         undoStack.push(command);
         redoStack.clear();
-        canUndoProperty.set(true);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
+
+        updateUndoRedoTypes();
+
         UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
         return command.execute();
     }
@@ -45,9 +47,9 @@ public class UndoManager {
         final Command<?> command = redoStack.pop();
         command.redo();
         undoStack.push(command);
-        canUndoProperty.set(true);
-        canRedoProperty.set(redoStack.size() > 0);
-        shouldUpdateMenuProperty.set(true);
+
+        updateUndoRedoTypes();
+
         UndoManager.LOGGER.log(Level.INFO, "Redoing command %s", command);
     }
 
@@ -59,10 +61,15 @@ public class UndoManager {
         final Command<?> command = undoStack.pop();
         command.undo();
         redoStack.push(command);
-        canRedoProperty.set(true);
-        canUndoProperty.set(undoStack.size() > 0);
-        shouldUpdateMenuProperty.set(true);
+
+        updateUndoRedoTypes();
+
         UndoManager.LOGGER.log(Level.INFO, "Undoing command %s", command);
+    }
+
+    private void updateUndoRedoTypes() {
+        undoTypeProperty.set(getUndoType());
+        redoTypeProperty.set(getRedoType());
     }
 
     /**
@@ -71,9 +78,7 @@ public class UndoManager {
     public void empty() {
         undoStack.clear();
         redoStack.clear();
-        canUndoProperty.set(false);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
+        updateUndoRedoTypes();
     }
 
     /**
@@ -83,13 +88,11 @@ public class UndoManager {
      */
     public void revert(int position) {
         while (undoStack.size() > position) {
-            undoStack.pop();
+            final Command<?> command = undoStack.pop();
+            command.undo();
         }
         redoStack.clear();
-
-        canUndoProperty.set(position > 0);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
+        updateUndoRedoTypes();
     }
 
     /**
@@ -100,10 +103,16 @@ public class UndoManager {
     }
 
     public String getUndoType() {
+        if (undoStack.isEmpty()) {
+            return "";
+        }
         return undoStack.peek().getType();
     }
 
     public String getRedoType() {
+        if (redoStack.isEmpty()) {
+            return "";
+        }
         return redoStack.peek().getType();
     }
 }

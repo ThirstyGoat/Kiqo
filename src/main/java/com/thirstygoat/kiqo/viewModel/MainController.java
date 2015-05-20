@@ -73,7 +73,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = "Kiqo";
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(false);
+    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
     public boolean revertSupported = true;
     @FXML
@@ -112,28 +112,30 @@ public class MainController implements Initializable {
 
     // revert is not undoable -- just do it.
     private void revert() {
-        Organisation organisation;
-
-        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-            try {
-                organisation = PersistenceManager.loadOrganisation(lastSavedFile);
-            } catch (final FileNotFoundException ignored) {
-                GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
-                return;
-            }
-        } else {
-            organisation = new Organisation();
-        }
-
-        // reset to original saveLocation
-        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-            organisation.setSaveLocation(selectedOrganisationProperty().get().getSaveLocation());
-        }
-
+//        Organisation organisation;
+//
+//        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
+//            try {
+//                organisation = PersistenceManager.loadOrganisation(lastSavedFile);
+//            } catch (final FileNotFoundException ignored) {
+//                GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
+//                return;
+//            }
+//        } else {
+//            organisation = new Organisation();
+//        }
+//
+//        // reset to original saveLocation
+//        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
+//            organisation.setSaveLocation(selectedOrganisationProperty().get().getSaveLocation());
+//        }
+//
+//        changesSaved.set(true);
+//        undoManager.empty();
+//        // undoManager.revert(savePosition);
+//        selectedOrganisationProperty.set(organisation);
+        undoManager.revert(savePosition);
         changesSaved.set(true);
-        undoManager.empty();
-        // undoManager.revert(savePosition);
-        selectedOrganisationProperty.set(organisation);
     }
 
     private void setStageTitleProperty() {
@@ -324,7 +326,7 @@ public class MainController implements Initializable {
         } else if (focusedObject instanceof Team) {
             dialog(focusedObject);
         } else if (focusedObject instanceof Release) {
-            dialog((Release) focusedObject);
+            dialog(focusedObject);
         } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
             dialog(focusedObject);
             dialog(focusedObject);
@@ -369,8 +371,8 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            // Clear undo/redo stack
             undoManager.empty();
+//            undoManager.revert(savePosition);
         });
     }
 
