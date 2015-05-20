@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,7 +53,7 @@ public class PersistenceManager {
 
         try (final Writer writer = new FileWriter(filePath)) {
             final JsonElement jsonElement = PersistenceManager.gson.toJsonTree(organisation);
-            jsonElement.getAsJsonObject().addProperty("VERSION", 1.0);
+            jsonElement.getAsJsonObject().addProperty("VERSION", ApplicationInfo.getProperty("version"));
             PersistenceManager.gson.toJson(jsonElement, writer);
         }
         PersistenceManager.LOGGER.log(Level.INFO, "Saved organisation to %s", filePath);
