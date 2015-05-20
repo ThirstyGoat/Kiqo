@@ -31,6 +31,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 public class ProjectFormController implements Initializable, IFormController<Project> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ValidationSupport validationSupport = new ValidationSupport();
     public String longName;
     public String shortName;
     public String description;
@@ -40,8 +41,6 @@ public class ProjectFormController implements Initializable, IFormController<Pro
     private boolean valid = false;
     private Stage stage;
     private Organisation organisation;
-    private final ValidationSupport validationSupport = new ValidationSupport();
-
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;

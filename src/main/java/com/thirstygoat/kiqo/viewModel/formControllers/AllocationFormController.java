@@ -36,15 +36,13 @@ import com.thirstygoat.kiqo.model.Team;
  * Created by Amy on 23/04/15.
  */
 public class AllocationFormController implements Initializable, IFormController<Allocation> {
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private boolean valid;
     private Command<?> command;
     private Organisation organisation;
     private Project project;
     private Team team = null;
-
-    private final ValidationSupport validationSupport = new ValidationSupport();
-
     // Begin FXML Injections
     @FXML
     private TextField teamTextField;

@@ -109,10 +109,10 @@ public class AllocationsTableViewController implements Initializable {
                     // set background color
                     final LocalDate now = LocalDate.now();
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
-                    if (!mainController.getSelectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
+                    if (!mainController.selectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
                         row.getStyleClass().add("allocation-non-existent-team");
                         row.setTooltip(new Tooltip("This allocation belongs to a non-existent team."));
-                    } else if (!mainController.getSelectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
+                    } else if (!mainController.selectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
                         row.getStyleClass().add("allocation-non-existent-project");
                         row.setTooltip(new Tooltip("This allocation belongs to a non-existent project."));
                     } else if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
@@ -151,11 +151,11 @@ public class AllocationsTableViewController implements Initializable {
 
         setButtonDisabled();
 
-        mainController.getSelectedOrganisationProperty().getValue().getProjects().addListener((ListChangeListener<Project>) c -> {
+        mainController.selectedOrganisationProperty().getValue().getProjects().addListener((ListChangeListener<Project>) c -> {
             setButtonDisabled();
         });
 
-        mainController.getSelectedOrganisationProperty().getValue().getTeams().addListener((ListChangeListener<Team>) c -> {
+        mainController.selectedOrganisationProperty().getValue().getTeams().addListener((ListChangeListener<Team>) c -> {
             setButtonDisabled();
         });
     }
@@ -165,15 +165,15 @@ public class AllocationsTableViewController implements Initializable {
      * otherwise disable it
      */
     private void setButtonDisabled() {
-        final boolean areProjects = mainController.getSelectedOrganisationProperty().getValue().getProjects().size() > 0;
-        final boolean areTeams = mainController.getSelectedOrganisationProperty().getValue().getTeams().size() > 0;
+        final boolean areProjects = mainController.selectedOrganisationProperty().getValue().getProjects().size() > 0;
+        final boolean areTeams = mainController.selectedOrganisationProperty().getValue().getTeams().size() > 0;
         allocateTeamButton.setDisable(!(areProjects && areTeams));
     }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         // need to reset the listeners if the organisation changed i.e. load from json file
-        mainController.getSelectedOrganisationProperty().addListener((observable, oldValue, newValue) -> {
+        mainController.selectedOrganisationProperty().addListener((observable, oldValue, newValue) -> {
             setAllocationButtonListeners();
         });
         setAllocationButtonListeners();
@@ -195,14 +195,14 @@ public class AllocationsTableViewController implements Initializable {
             allocation.getEndDateProperty().addListener(listener);
         }
 
-        mainController.getSelectedOrganisationProperty().get().getTeams().addListener((ListChangeListener<Team>) c -> {
+        mainController.selectedOrganisationProperty().get().getTeams().addListener((ListChangeListener<Team>) c -> {
             c.next();
             if (!c.getAddedSubList().isEmpty() || !c.getRemoved().isEmpty()) {
                 initializeTable();
             }
         });
 
-        mainController.getSelectedOrganisationProperty().get().getProjects().addListener((ListChangeListener<Project>) c -> {
+        mainController.selectedOrganisationProperty().get().getProjects().addListener((ListChangeListener<Project>) c -> {
             c.next();
             if (!c.getAddedSubList().isEmpty() || !c.getRemoved().isEmpty()) {
                 initializeTable();

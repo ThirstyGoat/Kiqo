@@ -193,7 +193,7 @@ public class SideBarController implements Initializable {
             }
         });
 
-        TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects());
+        TreeItem<Item> root = new ProjectsTreeItem(mainController.selectedOrganisationProperty().get().getProjects());
         projectTreeView.setRoot(root);
         root.setExpanded(true);
 

@@ -59,6 +59,7 @@ public class TeamFormController implements Initializable, IFormController<Team> 
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
     private Team team;
@@ -66,8 +67,6 @@ public class TeamFormController implements Initializable, IFormController<Team> 
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private final ValidationSupport validationSupport = new ValidationSupport();
-
     // Begin FXML Injections
     @FXML
     private TextField shortNameTextField;

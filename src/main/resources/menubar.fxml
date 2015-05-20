@@ -20,6 +20,7 @@
         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save" />
         <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" text="Save As" />
+        <MenuItem fx:id="revertMenuItem" mnemonicParsing="false" text="Revert" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem fx:id="generateStatusReportMenuItem" mnemonicParsing="false" text="Generate Report" />
         <SeparatorMenuItem mnemonicParsing="false" />

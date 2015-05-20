@@ -18,12 +18,11 @@ import com.thirstygoat.kiqo.model.Organisation;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PersistenceManagerTest {
 
-    Organisation organisation = null;
-
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    Organisation organisation = null;
 
     /**
      * Tests that attempting to load a non-existent project file throws a {@link FileNotFoundException}.

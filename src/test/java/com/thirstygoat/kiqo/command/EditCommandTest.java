@@ -9,25 +9,6 @@ import org.junit.Test;
  * @author amy
  */
 public class EditCommandTest {
-    public static final class MockObject {
-        private int value = ORIGINAL_VALUE;
-
-        /**
-         * @return the value
-         */
-        public int getValue() {
-            return this.value;
-        }
-
-        /**
-         * @param value
-         *            the value to set
-         */
-        @SuppressWarnings("unused")
-        public void setValue(final int value) {
-            this.value = value;
-        }
-    }
     private final static int ORIGINAL_VALUE = 42;
     private final static int NEW_VALUE = 11;
 
@@ -86,5 +67,25 @@ public class EditCommandTest {
         Assert.assertEquals(EditCommandTest.NEW_VALUE, mockObject.getValue());
         editCommand.undo();
         Assert.assertEquals("Field should be reverted after undo", ORIGINAL_VALUE, mockObject.getValue());
+    }
+
+    public static final class MockObject {
+        private int value = ORIGINAL_VALUE;
+
+        /**
+         * @return the value
+         */
+        public int getValue() {
+            return this.value;
+        }
+
+        /**
+         * @param value
+         *            the value to set
+         */
+        @SuppressWarnings("unused")
+        public void setValue(final int value) {
+            this.value = value;
+        }
     }
 }

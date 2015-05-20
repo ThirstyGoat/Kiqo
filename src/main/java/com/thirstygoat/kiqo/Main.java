@@ -41,46 +41,6 @@ public class Main extends Application {
         Application.launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Kiqo");
-        this.primaryStage.setMinWidth(900);
-        this.primaryStage.setMinHeight(600);
-        final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
-        root = loader.load();
-        final Scene scene = new Scene(root);
-
-        scene.setOnDragOver(event -> {
-            final Dragboard db = event.getDragboard();
-            if (db.hasFiles()) {
-                event.acceptTransferModes(TransferMode.COPY);
-            } else {
-                event.consume();
-            }
-        });
-
-        scene.setOnDragDropped(event -> {
-            final Dragboard db = event.getDragboard();
-            final boolean success = false;
-            if (db.getFiles().size() > 1) {
-                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
-                        "Drag and drop only supports individual files.");
-            } else {
-                final File file = db.getFiles().get(0);
-                mainController.openOrganisation(file);
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        mainController = loader.getController();
-        mainController.setPrimaryStage(primaryStage);
-    }
-
     /**
      * Configure default logging behaviour for all classes in **this package** to print to stdout with a custom formatter, including intelligent string formatting.
      * @param level minimum logging level displayed
@@ -129,5 +89,45 @@ public class Main extends Application {
         logger.addHandler(handler);
 
         logger.log(Level.INFO, "Logger %s successfully started", logger.getName());
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Kiqo");
+        this.primaryStage.setMinWidth(900);
+        this.primaryStage.setMinHeight(600);
+        final FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
+        root = loader.load();
+        final Scene scene = new Scene(root);
+
+        scene.setOnDragOver(event -> {
+            final Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
+                event.consume();
+            }
+        });
+
+        scene.setOnDragDropped(event -> {
+            final Dragboard db = event.getDragboard();
+            final boolean success = false;
+            if (db.getFiles().size() > 1) {
+                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                        "Drag and drop only supports individual files.");
+            } else {
+                final File file = db.getFiles().get(0);
+                mainController.openOrganisation(file);
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        mainController = loader.getController();
+        mainController.setPrimaryStage(primaryStage);
     }
 }

@@ -40,11 +40,11 @@ import com.thirstygoat.kiqo.util.Utilities;
  */
 public class ReleaseFormController implements Initializable, IFormController<Release> {
     private final int SHORT_NAME_MAX_LENGTH = 20;
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;
     private Release release;
     private Command<?> command;
     private boolean valid = false;
-
     // Begin FXML Injections
     @FXML
     private TextField shortNameTextField;
@@ -58,11 +58,8 @@ public class ReleaseFormController implements Initializable, IFormController<Rel
     private Button okButton;
     @FXML
     private Button cancelButton;
-
     private Stage stage;
     private Project project;
-
-    private final ValidationSupport validationSupport = new ValidationSupport();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

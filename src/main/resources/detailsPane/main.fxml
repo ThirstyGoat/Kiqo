@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<BorderPane fx:id="detailsPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
