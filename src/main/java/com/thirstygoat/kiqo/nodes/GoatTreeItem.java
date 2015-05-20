@@ -19,12 +19,10 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
     protected final Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
 
     public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel) {
-        //structure
         super(new TreeNodeHeading(name));
-        addChildCollection(items);
-
-        // behaviour
+        // MUST add listener before adding children
         items.addListener(createChangeListener(selectionModel));
+        addChildCollection(items);
     }
 
     /**
