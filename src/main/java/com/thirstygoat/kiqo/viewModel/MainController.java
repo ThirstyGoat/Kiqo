@@ -409,6 +409,18 @@ public class MainController implements Initializable {
         }
     }
 
+    public void newBacklog() {
+        if (selectedOrganisationProperty.get() != null) {
+            if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
+                    selectedOrganisationProperty.get().getPeople().isEmpty()) {
+                GoatDialog.showAlertDialog(primaryStage, "Can't create Backlog", "Can't create Backlog",
+                        "You must have at least one Project and one Person in order to create a Backlog.");
+                return;
+            }
+            dialog(null, "Backlog");
+        }
+    }
+
     public void newStory() {
         if (selectedOrganisationProperty.get() != null) {
             if (selectedOrganisationProperty.get().getProjects().isEmpty() ||

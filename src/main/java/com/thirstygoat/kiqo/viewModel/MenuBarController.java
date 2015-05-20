@@ -145,6 +145,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        newBacklogMenuItem.setOnAction(event -> mainController.newBacklog());
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
         revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
