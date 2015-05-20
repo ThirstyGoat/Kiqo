@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.StoryTableViewController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <TableView fx:id="allocationsTableView" prefHeight="200" prefWidth="-1">
+        <columns>
+            <TableColumn fx:id="storyTableColumn" text="Story" />
+            <TableColumn fx:id="priorityTableColumn" text="Priority" />
+        </columns>
+      </TableView>
+       <Button fx:id="allocateStoryButton" mnemonicParsing="false" disable="true" text="Add Story" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+   </children>
+</GridPane>
