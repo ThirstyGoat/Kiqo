@@ -186,6 +186,10 @@ public class BacklogFormController implements Initializable, IFormController<Bac
                 stage.close();
             }
         });
+
+        cancelButton.setOnAction(event -> {
+            stage.close();
+        });
     }
 
     private void setCommand() {
