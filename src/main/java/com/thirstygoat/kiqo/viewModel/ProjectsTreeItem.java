@@ -42,6 +42,7 @@ public class ProjectsTreeItem extends TreeItem<Item> {
             for (Project item : c.getAddedSubList()) {
                 GoatTreeItem treeItem = new GoatTreeItem(item);
                 treeItem.addChild("Releases", item.observableReleases());
+                treeItem.addChild("Backlogs", item.observableBacklogs());
                 treeItem.addChild("Stories", item.observableStories());
                 int index = childItems.indexOf(item);
                 getChildren().add(index, treeItem);
