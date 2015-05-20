@@ -23,7 +23,7 @@ public class Project extends Item {
      * Dont use this if you are a person
      */
     public Project() {
-        releases = FXCollections.observableArrayList();
+        releases = FXCollections.observableArrayList(Item.getWatchStrategy());
         allocations = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
