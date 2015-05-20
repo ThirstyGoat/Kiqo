@@ -28,6 +28,7 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.model.TreeNodeHeading;
+import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
 import com.thirstygoat.kiqo.util.Utilities;
 
 
@@ -213,6 +214,7 @@ public class SideBarController implements Initializable {
 
         final TreeItem<Item> root = new ProjectsTreeItem(SideBarController.createSortedList(mainController.getSelectedOrganisationProperty().get().getProjects()), projectTreeView.getSelectionModel());
         projectTreeView.setRoot(root);
+        projectTreeView.setShowRoot(false);
         root.setExpanded(true);
 
         peopleListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
