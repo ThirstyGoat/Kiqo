@@ -1,13 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.Serializable;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.File;
-import java.io.Serializable;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Project class represents a software project
@@ -17,12 +18,12 @@ import java.io.Serializable;
 public class Organisation implements Serializable {
     private final Skill poSkill = new Skill("PO", "Product Owner");
     private final Skill smSkill = new Skill("SM", "Scrum Master");
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final ObservableList<Person> people = FXCollections.observableArrayList();
-    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
-    private final ObservableList<Team> teams = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects = FXCollections.observableArrayList(Item.getWatchStrategy());
+    private final ObservableList<Person> people = FXCollections.observableArrayList(Item.getWatchStrategy());
+    private final ObservableList<Skill> skills = FXCollections.observableArrayList(Item.getWatchStrategy());
+    private final ObservableList<Team> teams = FXCollections.observableArrayList(Item.getWatchStrategy());
     private transient File saveLocation;
-    private StringProperty organisationName = new SimpleStringProperty("Untitled");
+    private final StringProperty organisationName = new SimpleStringProperty("Untitled");
 
     public Organisation() {
         skills.add(poSkill);

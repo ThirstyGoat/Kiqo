@@ -1,14 +1,34 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Control;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.util.Callback;
 
-import java.net.URL;
-import java.util.*;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.TreeNodeHeading;
+import com.thirstygoat.kiqo.util.Utilities;
 
 
 /**
@@ -35,7 +55,7 @@ public class SideBarController implements Initializable {
     @FXML
     private TabPane tabViewPane;
     private MainController mainController;
-    private Map<String, Control> tabListViewMap = new HashMap<>();
+    private final Map<String, Control> tabListViewMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -53,11 +73,11 @@ public class SideBarController implements Initializable {
         tabListViewMap.put(skillsTab.getId(), skillsListView);
 
         // Create listeners for lists
-        ChangeListener<Item> listViewChangeListener = (o, oldValue, newValue) -> {
+        final ChangeListener<Item> listViewChangeListener = (o, oldValue, newValue) -> {
             mainController.focusedItemProperty.set(newValue);
         };
 
-        ChangeListener<TreeItem<Item>> treeViewChangeListener = (o, oldValue, newValue) -> {
+        final ChangeListener<TreeItem<Item>> treeViewChangeListener = (o, oldValue, newValue) -> {
             Item toShow = (newValue != null) ? newValue.getValue() : null;
             if (newValue != null && newValue.getValue().getClass() == TreeNodeHeading.class) {
                 toShow = null;
@@ -76,25 +96,25 @@ public class SideBarController implements Initializable {
             // Add the change listener on the appropriate TreeView/ListView
             if (newValue == projectTab) {
                 mainController.getMenuBarController().updateAfterProjectListSelected(true);
-                int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
+                final int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
                 projectTreeView.getSelectionModel().select(null);
                 projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
                 projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == peopleTab) {
                 mainController.getMenuBarController().updateAfterPersonListSelected(true);
-                int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
+                final int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
                 peopleListView.getSelectionModel().select(null);
                 peopleListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == teamsTab) {
                 mainController.getMenuBarController().updateAfterTeamListSelected(true);
-                int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
+                final int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
                 teamsListView.getSelectionModel().select(null);
                 teamsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 teamsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == skillsTab) {
                 mainController.getMenuBarController().updateAfterSkillListSelected(true);
-                int selectedIndex = skillsListView.getSelectionModel().selectedIndexProperty().get();
+                final int selectedIndex = skillsListView.getSelectionModel().selectedIndexProperty().get();
                 skillsListView.getSelectionModel().select(null);
                 skillsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 skillsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
@@ -124,7 +144,7 @@ public class SideBarController implements Initializable {
         deleteContextMenu.setOnAction(event -> mainController.deleteItem());
 
         for (final ListView<? extends Item> listView : listViews) {
-            initialiseListView(listView, contextMenu);
+            SideBarController.initialiseListView(listView, contextMenu);
         }
         setListViewListener();
     }
@@ -133,9 +153,10 @@ public class SideBarController implements Initializable {
      * sets a change listener on the selected item of the selected listView
      */
     private void setListViewListener() {
-        Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
+        final Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
         if (tabListViewMap.get(selectedTab.getId()).getClass() != TreeView.class) {
-            ListView<Item> castedListView = (ListView<Item>)tabListViewMap.get(selectedTab.getId());
+            @SuppressWarnings("unchecked")
+            final ListView<Item> castedListView = (ListView<Item>)tabListViewMap.get(selectedTab.getId());
             castedListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 mainController.focusedItemProperty.set(newValue);
             });
@@ -145,7 +166,7 @@ public class SideBarController implements Initializable {
     /**
      * Attaches cell factory and selection listener to the list view.
      */
-    private <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
+    private static <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
         // derived from example at
         // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
         listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
@@ -158,9 +179,6 @@ public class SideBarController implements Initializable {
                         super.updateItem(item, empty);
                         setText(empty ? "" : item.getShortName());
                         if (item != null) {
-                            item.shortNameProperty().addListener((observable, oldValue, newValue) -> {
-                                setText(newValue);
-                            });
                             setContextMenu(contextMenu);
                         }
                     }
@@ -193,15 +211,19 @@ public class SideBarController implements Initializable {
             }
         });
 
-        TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects());
+        final TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects());
         projectTreeView.setRoot(root);
         root.setExpanded(true);
 
-        peopleListView.setItems(mainController.selectedOrganisationProperty.get().getPeople());
-        teamsListView.setItems(mainController.selectedOrganisationProperty.get().getTeams());
-        skillsListView.setItems(mainController.selectedOrganisationProperty.get().getSkills());
+        peopleListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
+        teamsListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
+        skillsListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));
 
         show(TabOption.PROJECTS);
+    }
+
+    private static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
+        return new SortedList<E>(list, Utilities.LEXICAL_COMPARATOR);
     }
 
     public void show(TabOption tabOption) {
