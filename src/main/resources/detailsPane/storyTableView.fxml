@@ -14,7 +14,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TableView fx:id="allocationsTableView" prefHeight="200" prefWidth="-1">
+      <TableView fx:id="storyTableView" prefHeight="200" prefWidth="-1">
         <columns>
             <TableColumn fx:id="storyTableColumn" text="Story" />
             <TableColumn fx:id="priorityTableColumn" text="Priority" />
