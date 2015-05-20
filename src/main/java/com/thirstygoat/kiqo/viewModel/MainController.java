@@ -110,32 +110,8 @@ public class MainController implements Initializable {
         }
     }
 
-    // revert is not undoable -- just do it.
     private void revert() {
-//        Organisation organisation;
-//
-//        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-//            try {
-//                organisation = PersistenceManager.loadOrganisation(lastSavedFile);
-//            } catch (final FileNotFoundException ignored) {
-//                GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
-//                return;
-//            }
-//        } else {
-//            organisation = new Organisation();
-//        }
-//
-//        // reset to original saveLocation
-//        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-//            organisation.setSaveLocation(selectedOrganisationProperty().get().getSaveLocation());
-//        }
-//
-//        changesSaved.set(true);
-//        undoManager.empty();
-//        // undoManager.revert(savePosition);
-//        selectedOrganisationProperty.set(organisation);
         undoManager.revert(savePosition);
-        changesSaved.set(true);
     }
 
     private void setStageTitleProperty() {
@@ -192,7 +168,6 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-
             String deleteMessage = "There are no people with this skill.";
             final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
                 if (command.getPeopleWithSkill().size() > 0) {

@@ -1,13 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -21,7 +17,7 @@ public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
-    private final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
+    protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
 
     /**
      * Executes the command and adds it to the undo stack.
@@ -31,13 +27,14 @@ public class UndoManager {
      * @return return value from command.execute()
      */
     public <T> T doCommand(final Command<T> command) {
+        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
+        T result = command.execute();
         undoStack.push(command);
         redoStack.clear();
 
         updateUndoRedoTypes();
 
-        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
-        return command.execute();
+        return result;
     }
 
     /**
@@ -83,16 +80,22 @@ public class UndoManager {
 
     /**
      * Removes the necessary number of commands from the undo stack and clears the redo stack.
-     *
      * @param position number of commands that should remain on undo stack
      */
     public void revert(int position) {
-        while (undoStack.size() > position) {
-            final Command<?> command = undoStack.pop();
-            command.undo();
-        }
-        redoStack.clear();
-        updateUndoRedoTypes();
+        List<Command<?>> changes = new ArrayList<>();
+
+//        while (undoStack.size() > position) {
+//            final Command<?> command = undoStack.pop();
+//            changes.add(command);
+//        }
+//
+//        // RevertCommand Execute: undoes all the commands in changes
+        // RevertCommand Undo: Executes all the commands in changes
+        // RevertCommand Redo: undoes all the commands in changes
+
+        RevertCommand rv = new RevertCommand(this, position);
+        doCommand(rv);
     }
 
     /**
