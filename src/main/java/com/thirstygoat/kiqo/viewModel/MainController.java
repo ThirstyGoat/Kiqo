@@ -1,9 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
@@ -103,12 +100,9 @@ public class MainController implements Initializable {
 
     private void setLastSavedFile(File file) {
         try {
-            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
-            // Delete the tmp file upon exit of the application
-            lastSavedFile.deleteOnExit();
-            // Copy the opened file to the tmp file
-            Files.copy(file.toPath(), lastSavedFile.toPath());
-        } catch (final IOException e) {
+            final FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
+            Files.copy(file.toPath(), outputStream);
+        } catch (final IOException ignored) {
             GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
                     "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
                             "Revert functionality is disabled");
@@ -120,7 +114,7 @@ public class MainController implements Initializable {
     private void revert() {
         Organisation organisation;
 
-        if (selectedOrganisationProperty.get().getSaveLocation() != null) {
+        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
             try {
                 organisation = PersistenceManager.loadOrganisation(lastSavedFile);
             } catch (final FileNotFoundException ignored) {
@@ -132,8 +126,8 @@ public class MainController implements Initializable {
         }
 
         // reset to original saveLocation
-        if (selectedOrganisationProperty.get().getSaveLocation() != null) {
-            organisation.setSaveLocation(selectedOrganisationProperty.get().getSaveLocation());
+        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
+            organisation.setSaveLocation(selectedOrganisationProperty().get().getSaveLocation());
         }
 
         changesSaved.set(true);
