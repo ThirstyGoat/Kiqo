@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.viewModel;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 import com.google.gson.JsonSyntaxException;
@@ -21,11 +20,7 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -73,9 +68,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = "Kiqo";
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
-    public boolean revertSupported = true;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -95,29 +88,14 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private double dividerPosition;
 
-    private int savePosition = 0;
-    private File lastSavedFile;
-
-    private void setLastSavedFile(File file) {
-        try {
-            final FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
-            Files.copy(file.toPath(), outputStream);
-        } catch (final IOException ignored) {
-            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
-                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
-                            "Revert functionality is disabled");
-            revertSupported = false;
-        }
-    }
-
-    private void revert() {
-        undoManager.revert(savePosition);
+    public ReadOnlyBooleanProperty changesSavedProperty() {
+        return undoManager.changesSavedProperty();
     }
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
-        final StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
-        changesSaved.addListener((observable, oldValue, newValue) -> {
+        final StringProperty changesSavedAsterisk = new SimpleStringProperty(undoManager.changesSavedProperty().get() ? "" : "*");
+        undoManager.changesSavedProperty().addListener((observable, oldValue, newValue) -> {
             changesSavedAsterisk.set(newValue ? "" : "*");
         });
 
@@ -161,7 +139,6 @@ public class MainController implements Initializable {
             doCommand(command);
         }
     }
-
 
     private void deleteSkill(Skill skill) {
         if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
@@ -223,7 +200,6 @@ public class MainController implements Initializable {
     }
 
     private void deletePerson(Person person) {
-
         final VBox node = new VBox();
         node.setSpacing(10);
 
@@ -259,7 +235,6 @@ public class MainController implements Initializable {
         if (result.equals("Delete Release")) {
             doCommand(new DeleteReleaseCommand((Release) focusedItemProperty.get()));
         }
-
     }
 
     public void deleteItem() {
@@ -320,16 +295,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
-            lastSavedFile.deleteOnExit();
-        } catch (final IOException ignored) {
-            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
-                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
-                            "Revert functionality is disabled");
-            revertSupported = false;
-        }
-
         selectedOrganisationProperty.set(new Organisation());
 
         // enable menu items
@@ -434,11 +399,9 @@ public class MainController implements Initializable {
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
-            changesSaved.set(true);
             // Empty the undo/redo stack(s)
             undoManager.empty();
             // Store the organisation as it currently stands
-            setLastSavedFile(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -488,9 +451,7 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
             return; // do not continue
         }
-        setLastSavedFile(organisation.getSaveLocation());
-        savePosition = undoManager.getUndoStackSize();
-        changesSaved.set(true);
+        undoManager.markSavePosition();
     }
 
     public void setListVisible(boolean visible) {
@@ -528,20 +489,14 @@ public class MainController implements Initializable {
     }
 
     public void undo() {
-        // If the changes are already saved, and we undo something, then the changes are now not saved
         undoManager.undoCommand();
-        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void redo() {
-        // If the changes are already saved, and we redo something, then the changes are now not saved
         undoManager.redoCommand();
-        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void doCommand(Command<?> command) {
-        // set changes saved BEFORE executing the command so that the command is able to override changesSaved (eg. Revert)
-        changesSaved.set(false);
         undoManager.doCommand(command);
     }
 
@@ -579,7 +534,7 @@ public class MainController implements Initializable {
      * @return if the user clicked cancel or not
      */
     private boolean promptForUnsavedChanges() {
-        if (!changesSaved.get()) {
+        if (!undoManager.changesSavedProperty().get()) {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
@@ -599,12 +554,12 @@ public class MainController implements Initializable {
      * @return if the user clicked cancel or not
      */
     public boolean promptBeforeRevert() {
-        if (!changesSaved.get()) {
+        if (!undoManager.changesSavedProperty().get()) {
             final String[] options = {"Revert", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
                     "\"File > Save As\" before reverting or you will lose these changes.", options);
             if (response.equals("Revert")) {
-                revert();
+                undoManager.revert();
             } else {
                 // do nothing
                 return false;
@@ -624,7 +579,7 @@ public class MainController implements Initializable {
         mainBorderPane.setBottom(statusBar);
 
         // Set up listener for save status
-        changesSaved.addListener((observable, oldValue, newValue) -> {
+        undoManager.changesSavedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
                 statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);

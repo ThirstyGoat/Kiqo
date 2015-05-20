@@ -101,11 +101,7 @@ public class MenuBarController implements Initializable {
     }
 
     private void setListenersOnChangesSaved() {
-        mainController.changesSaved.addListener((o, oldValue, newValue) -> {
-            if (mainController.revertSupported) {
-                revertMenuItem.setDisable(newValue);
-            }
-        });
+        revertMenuItem.disableProperty().bind(mainController.changesSavedProperty());
     }
 
     private void addEditDeleteShortcuts() {

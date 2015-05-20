@@ -1,18 +1,12 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.viewModel.MainController;
-import javafx.beans.property.BooleanProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Wraps several Commands into an atomic unit. Similar to the idea of
- * transactions in database theory.
- *
- * @author bjk60
- *
+ * Command which (when executed) undoes changes up until the last save position.
+ * @author Bradley Kirwan
  */
 public class RevertCommand extends Command<Void> {
     private final UndoManager undoManager;
