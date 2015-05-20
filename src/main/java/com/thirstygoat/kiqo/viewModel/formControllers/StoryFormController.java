@@ -4,6 +4,8 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -41,7 +43,7 @@ public class StoryFormController implements Initializable, IFormController<Story
     private Project project;
     private Backlog backlog;
     private Organisation organisation;
-    private boolean shortNameModified = false;
+    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Command<?> command;
     // Begin FXML Injections
@@ -67,7 +69,8 @@ public class StoryFormController implements Initializable, IFormController<Story
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        setShortNameSuggester();
+        Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
+                shortNameModified);
         setCreatorTextFieldSuggester();
         setProjectTextFieldSuggester();
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
@@ -94,7 +97,7 @@ public class StoryFormController implements Initializable, IFormController<Story
             // We are editing an existing story
             stage.setTitle("Edit Story");
             okButton.setText("Done");
-            shortNameModified = true;
+            shortNameModified.set(true);
 
             longNameTextField.setText(story.getLongName());
             shortNameTextField.setText(story.getShortName());
@@ -212,7 +215,7 @@ public class StoryFormController implements Initializable, IFormController<Story
             // Auto populate short name text field
             if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
                     Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                shortNameModified = true;
+                shortNameModified.set(true);
             }
 
             // Restrict length of short name text field
@@ -294,21 +297,6 @@ public class StoryFormController implements Initializable, IFormController<Story
             if (newValue) {
                 // forces suggestion list to show
                 binding.setUserInput("");
-            }
-        });
-    }
-
-    /**
-     * Sets up the listener for changes in the long name, so that the short name
-     * can be populated with a suggestion
-     */
-    public void setShortNameSuggester() {
-        // Listen for changes in the long name, and populate the short name
-        // character by character up to specified characters
-        longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            final String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
-            if (!shortNameModified) {
-                shortNameTextField.setText(suggestedShortName);
             }
         });
     }

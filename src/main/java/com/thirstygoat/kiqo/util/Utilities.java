@@ -3,8 +3,10 @@ package com.thirstygoat.kiqo.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +15,7 @@ import javafx.collections.ObservableList;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
+import javafx.scene.control.TextField;
 
 /**
  * Created by bradley on 9/04/15.
@@ -112,6 +115,24 @@ public class Utilities {
         }
         new Object();
         return true;
+    }
+
+    /**
+     * Sets up the listener for changes in the source name, that the the target name can be populated with a suggestion
+     * @param source the source name
+     * @param target the target name
+     * @param suggestedLength the maximum length for a suggestion
+     * @param targetModified whether or not the target was modified
+     */
+    public static void setNameSuggester(TextField source, TextField target, int suggestedLength,
+                                        BooleanProperty targetModified) {
+        source.textProperty().addListener((observable, oldValue, newValue) -> {
+            final String suggestedName = newValue.substring(0, Math.min(newValue.length(),
+                    suggestedLength));
+            if (!targetModified.get()) {
+                target.setText(suggestedName);
+            }
+        });
     }
 
     /**
