@@ -1,4 +1,6 @@
-package com.thirstygoat.kiqo.model;
+package com.thirstygoat.kiqo.nodes;
+
+import com.thirstygoat.kiqo.model.Item;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

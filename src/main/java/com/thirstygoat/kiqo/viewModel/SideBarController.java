@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
@@ -27,8 +25,8 @@ import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.model.TreeNodeHeading;
 import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
+import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
 import com.thirstygoat.kiqo.util.Utilities;
 
 
@@ -212,20 +210,16 @@ public class SideBarController implements Initializable {
             }
         });
 
-        final TreeItem<Item> root = new ProjectsTreeItem(SideBarController.createSortedList(mainController.getSelectedOrganisationProperty().get().getProjects()), projectTreeView.getSelectionModel());
+        final TreeItem<Item> root = new ProjectsTreeItem(Utilities.createSortedList(mainController.getSelectedOrganisationProperty().get().getProjects()), projectTreeView.getSelectionModel());
         projectTreeView.setRoot(root);
         projectTreeView.setShowRoot(false);
         root.setExpanded(true);
 
-        peopleListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
-        teamsListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
-        skillsListView.setItems(SideBarController.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));
+        peopleListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
+        teamsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
+        skillsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));
 
         show(TabOption.PROJECTS);
-    }
-
-    private static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
-        return new SortedList<E>(list, Utilities.LEXICAL_COMPARATOR);
     }
 
     public void show(TabOption tabOption) {

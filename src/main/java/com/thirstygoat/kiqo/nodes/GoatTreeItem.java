@@ -9,31 +9,37 @@ import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
 import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.TreeNodeHeading;
 
 /**
- * Represents an item with children in a TreeView
+ * Represents a textual heading and a collection of items for display in a TreeView
  * @author Bradley Kirwan
+ * @param <E> Element type for the collection of items
  */
 public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
     protected final Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
-    protected final ListChangeListener<Item> changeListener;
 
     public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel) {
+        //structure
         super(new TreeNodeHeading(name));
-        changeListener = createChangeListener(selectionModel);
         addChildCollection(items);
-        items.addListener(changeListener);
+
+        // behaviour
+        items.addListener(createChangeListener(selectionModel));
     }
 
     /**
-     * @param item
-     * @return treeItem corresponding to this item
+     * Initialises a new TreeItem and adds children if required. Beware lack of type-checking (due to TreeView limitation); callers must ensure that item is an E.
+     * @param item value of new TreeItem (assumed to be an instance of type <E>)
+     * @return a new TreeItem to represent this item in a TreeView
      */
     protected TreeItem<Item> createTreeItem(final Item item) {
         return new TreeItem<Item>(item);
     }
 
+    /**
+     * Adds a collection as children to the textual heading TreeItem
+     * @param items items added as children to the textual heading TreeItem
+     */
     private void addChildCollection(ObservableList<? extends Item> items) {
         for (final Item item : items) {
             final TreeItem<Item> treeItem = createTreeItem(item);
@@ -49,7 +55,7 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
             final TreeItem<Item> selectedItem = selectionModel.getSelectedItem();
             while (c.next()) {
                 if (c.wasPermutated()) {
-                    // permute list order
+                    // permute list order to reflect backing list
                     for (int i = c.getFrom(); i < c.getTo(); ++i) {
                         children.set(i, treeItemMap.get(newList.get(i)));
                         final int permutation = c.getPermutation(i);

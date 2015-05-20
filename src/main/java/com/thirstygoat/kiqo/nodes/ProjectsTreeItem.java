@@ -7,9 +7,10 @@ import javafx.scene.control.TreeItem;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
- * Represents an item with children in a TreeView
+ * Represents a collection of Projects for display in a TreeView
  * @author Bradley Kirwan
  */
 public class ProjectsTreeItem extends GoatTreeItem<Project> {
@@ -23,7 +24,7 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
     @Override
     protected TreeItem<Item> createTreeItem(final Item item) {
         final TreeItem<Item> treeItem = new TreeItem<>(item);
-        treeItem.getChildren().add(new GoatTreeItem<Release>("Releases", ((Project) item).observableReleases(), selectionModel));
+        treeItem.getChildren().add(new GoatTreeItem<Release>("Releases", Utilities.createSortedList(((Project) item).observableReleases()), selectionModel));
         treeItem.setExpanded(true);
         return treeItem;
     }

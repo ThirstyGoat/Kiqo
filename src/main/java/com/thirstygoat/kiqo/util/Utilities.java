@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
@@ -19,10 +20,13 @@ import com.thirstygoat.kiqo.model.Person;
  * Created by bradley on 9/04/15.
  */
 public class Utilities {
-
     public static final Comparator<Item> LEXICAL_COMPARATOR = (item1, item2) -> {
         return item1.getShortName().compareToIgnoreCase(item2.getShortName());
     };
+
+    public static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
+        return new SortedList<E>(list, Utilities.LEXICAL_COMPARATOR);
+    }
 
     public static String concatenatePeopleList(List<Person> people, int max) {
         String list = "";
