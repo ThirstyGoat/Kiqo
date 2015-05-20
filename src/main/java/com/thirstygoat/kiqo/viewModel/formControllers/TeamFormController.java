@@ -1,5 +1,43 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateTeamCommand;
@@ -9,34 +47,13 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by james on 27/03/15.
  */
-public class TeamFormController implements Initializable {
+public class TeamFormController implements Initializable, IFormController<Team> {
 
+    private static final Logger LOGGER = Logger.getLogger(TeamFormController.class.getName());
     private final ArrayList<Person> devTeam = new ArrayList<>();
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
@@ -49,7 +66,7 @@ public class TeamFormController implements Initializable {
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     // Begin FXML Injections
     @FXML
@@ -90,7 +107,7 @@ public class TeamFormController implements Initializable {
 
     private void setValidationSupport() {
         // Validation for short name
-        Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), team, organisation.getTeams());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
@@ -202,15 +219,17 @@ public class TeamFormController implements Initializable {
         }
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public Command<?> getCommand() {
         return command;
     }
 
-    public void setListSelectionViewSettings() {
+    private void setListSelectionViewSettings() {
         peopleListSelectionView.setSourceHeader(new Label("People Available:"));
         final BorderPane targetHeader = new BorderPane();
         targetHeader.setLeft(new Label("People Selected:"));
@@ -242,13 +261,13 @@ public class TeamFormController implements Initializable {
                 // Remove person from role of PO/SM/DevTeam if applicable
                 if (productOwner == person) {
                     productOwner = null;
-                    System.out.println("removing " + person + " from po role");
+                    TeamFormController.LOGGER.log(Level.FINE, "removing %s from po role", person);
                 } else if (scrumMaster == person) {
                     scrumMaster = null;
-                    System.out.println("removing " + person + " from sm role");
+                    TeamFormController.LOGGER.log(Level.FINE, "removing %s from sm role", person);
                 } else if (devTeam.contains(person)) {
                     devTeam.remove(person);
-                    System.out.println("removing " + person + " from devteam role");
+                    TeamFormController.LOGGER.log(Level.FINE, "removing %s from devteam role", person);
                 }
             }
         });
@@ -323,11 +342,10 @@ public class TeamFormController implements Initializable {
         radioDev.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 devTeam.add(person);
-                System.out.println("Assigned " + person.getShortName() + " to Dev Role");
+                TeamFormController.LOGGER.log(Level.FINE, "assigned %s to devteam role", person);
             } else {
                 devTeam.remove(person);
-                System.out.println("Removed " + person.getShortName() + " from Dev Role");
-
+                TeamFormController.LOGGER.log(Level.FINE, "removed %s from devteam role", person);
             }
         });
     }
@@ -340,14 +358,14 @@ public class TeamFormController implements Initializable {
                 // If selected
                 scrumMaster = person;
                 smRadioButtons.stream().filter(rb -> rb != radioSm).forEach(rb -> rb.setSelected(false));
-                System.out.println("Assigned " + person.getShortName() + " to SM Role");
+                TeamFormController.LOGGER.log(Level.FINE, "assigned %s to sm role", person);
             } else {
                 if (radioSm.getToggleGroup().getSelectedToggle() == null) {
                     radioOther.setSelected(true);
                 }
                 if (scrumMaster == person) {
                     scrumMaster = null;
-                    System.out.println("Removed " + person.getShortName() + " from SM Role");
+                    TeamFormController.LOGGER.log(Level.FINE, "removed %s from sm role", person);
                 }
             }
         });
@@ -361,14 +379,14 @@ public class TeamFormController implements Initializable {
                 // If selected
                 productOwner = person;
                 poRadioButtons.stream().filter(rb -> rb != radioPo).forEach(rb -> rb.setSelected(false));
-                System.out.println("Assigned " + person.getShortName() + " to PO Role");
+                TeamFormController.LOGGER.log(Level.FINE, "assigned %s to po role", person);
             } else {
                 if (radioPo.getToggleGroup().getSelectedToggle() == null) {
                     radioOther.setSelected(true);
                 }
                 if (productOwner == person) {
                     productOwner = null;
-                    System.out.println("Removed " + person.getShortName() + " from PO Role");
+                    TeamFormController.LOGGER.log(Level.FINE, "removed %s from po role", person);
                 }
             }
         });
@@ -402,15 +420,17 @@ public class TeamFormController implements Initializable {
     }
 
 
+    @Override
     public void setStage(Stage stage)  {
         this.stage = stage;
     }
 
     /**
-     * Sets the team to be edited and populates fie lds if applicable
+     * Sets the team to be edited and populates fields if applicable
      * @param team Team to be edited
      */
-    public void setTeam(Team team) {
+    @Override
+    public void populateFields(Team team) {
         this.team = team;
 
         if (team == null) {
@@ -434,8 +454,10 @@ public class TeamFormController implements Initializable {
 
     }
 
+    @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         populatePeopleListView();
+        setListSelectionViewSettings();
     }
 }

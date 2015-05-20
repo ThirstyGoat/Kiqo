@@ -1,22 +1,28 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.util.Callback;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
 
 
 /**
@@ -25,8 +31,6 @@ import java.util.ResourceBundle;
 public class AllocationsTableViewController implements Initializable {
     private MainController mainController;
     private FirstColumnType type;
-    private boolean hasProject = false;
-    private boolean hasTeams = false;
     @FXML
     private TableView<Allocation> allocationsTableView;
     @FXML
@@ -161,8 +165,8 @@ public class AllocationsTableViewController implements Initializable {
      * otherwise disable it
      */
     private void setButtonDisabled() {
-        boolean areProjects = mainController.getSelectedOrganisationProperty().getValue().getProjects().size() > 0;
-        boolean areTeams = mainController.getSelectedOrganisationProperty().getValue().getTeams().size() > 0;
+        final boolean areProjects = mainController.getSelectedOrganisationProperty().getValue().getProjects().size() > 0;
+        final boolean areTeams = mainController.getSelectedOrganisationProperty().getValue().getTeams().size() > 0;
         allocateTeamButton.setDisable(!(areProjects && areTeams));
     }
 
@@ -177,7 +181,7 @@ public class AllocationsTableViewController implements Initializable {
 
     public void setItems(ObservableList<Allocation> items) {
         allocationsTableView.setItems(items);
-        ChangeListener<LocalDate> listener = (observable, oldValue, newValue) -> {
+        final ChangeListener<LocalDate> listener = (observable, oldValue, newValue) -> {
             // Refresh table view since dates have changed and background colours/tooltips need to update accordingly
 
 //            ObservableList<Allocation> tmpItems = allocationsTableView.getItems();
@@ -186,7 +190,7 @@ public class AllocationsTableViewController implements Initializable {
             initializeTable();
         };
 
-        for (Allocation allocation : items) {
+        for (final Allocation allocation : items) {
             allocation.getStartDateProperty().addListener(listener);
             allocation.getEndDateProperty().addListener(listener);
         }
@@ -207,11 +211,11 @@ public class AllocationsTableViewController implements Initializable {
 
         items.addListener((ListChangeListener<Allocation>) c -> {
             c.next();
-            for (Allocation a : c.getAddedSubList()) {
+            for (final Allocation a : c.getAddedSubList()) {
                 a.getStartDateProperty().addListener(listener);
                 a.getEndDateProperty().addListener(listener);
             }
-            for (Allocation a : c.getRemoved()) {
+            for (final Allocation a : c.getRemoved()) {
                 a.getStartDateProperty().removeListener(listener);
                 a.getEndDateProperty().removeListener(listener);
             }

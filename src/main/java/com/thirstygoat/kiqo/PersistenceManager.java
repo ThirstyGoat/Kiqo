@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -42,6 +44,7 @@ import com.thirstygoat.kiqo.model.Team;
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
  */
 public class PersistenceManager {
+    private static final Logger LOGGER = Logger.getLogger(PersistenceManager.class.getName());
     private static Gson gson;
     private static boolean isOldJSON = false;
     /**
@@ -61,7 +64,7 @@ public class PersistenceManager {
             jsonElement.getAsJsonObject().addProperty("VERSION", 1.0);
             PersistenceManager.gson.toJson(jsonElement, writer);
         }
-        System.out.println("Saved organisation.");
+        PersistenceManager.LOGGER.log(Level.INFO, "Saved organisation to %s", filePath);
     }
 
     /**

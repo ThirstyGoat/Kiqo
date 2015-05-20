@@ -2,6 +2,8 @@ package com.thirstygoat.kiqo.command;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -12,6 +14,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  *
  */
 public class UndoManager {
+    private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
     private final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
     public SimpleBooleanProperty canUndoProperty = new SimpleBooleanProperty(false);
     public SimpleBooleanProperty canRedoProperty = new SimpleBooleanProperty(false);
@@ -31,7 +34,7 @@ public class UndoManager {
         canUndoProperty.set(true);
         canRedoProperty.set(false);
         shouldUpdateMenuProperty.set(true);
-        System.out.println("Doing " + command.toString());
+        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
         return command.execute();
     }
 
@@ -45,7 +48,7 @@ public class UndoManager {
         canUndoProperty.set(true);
         canRedoProperty.set(redoStack.size() > 0);
         shouldUpdateMenuProperty.set(true);
-        System.out.println("Redoing " + command.toString());
+        UndoManager.LOGGER.log(Level.INFO, "Redoing command %s", command);
     }
 
     /**
@@ -59,7 +62,7 @@ public class UndoManager {
         canRedoProperty.set(true);
         canUndoProperty.set(undoStack.size() > 0);
         shouldUpdateMenuProperty.set(true);
-        System.out.println("Undoing " + command.toString());
+        UndoManager.LOGGER.log(Level.INFO, "Undoing command %s", command);
     }
 
     /**

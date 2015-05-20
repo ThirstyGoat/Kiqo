@@ -110,6 +110,7 @@ public class Utilities {
                 return false;
             }
         }
+        new Object();
         return true;
     }
 

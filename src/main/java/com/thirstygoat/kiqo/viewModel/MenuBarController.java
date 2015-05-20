@@ -57,9 +57,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listShowSkillMenuItem;
     @FXML
-    private CheckMenuItem listShowReleaseMenuItem;
-    @FXML
     private MenuItem quitMenuItem;
+
 
     private MainController mainController;
 
@@ -78,7 +77,6 @@ public class MenuBarController implements Initializable {
         newTeamMenuItem.setDisable(true);
         newPersonMenuItem.setDisable(true);
         newSkillMenuItem.setDisable(true);
-        newReleaseMenuItem.setDisable(true);
         undoMenuItem.setDisable(true);
         redoMenuItem.setDisable(true);
         editMenuItem.setDisable(true);
@@ -112,7 +110,6 @@ public class MenuBarController implements Initializable {
         final KeyCombination teamTabKey = new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN);
         final KeyCombination peopleTabKey = new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN);
         final KeyCombination skillTabKey = new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination releaseTabKey = new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.SHORTCUT_DOWN);
 
         mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
             @Override
@@ -122,15 +119,13 @@ public class MenuBarController implements Initializable {
                 } else if (deleteKey.match(event)) {
                     mainController.deleteItem();
                 } else if (projectTabKey.match(event)) {
-                    mainController.setSelectedTab(0);
+                    mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
                 } else if (teamTabKey.match(event)) {
-                    mainController.setSelectedTab(1);
+                    mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
                 } else if (peopleTabKey.match(event)) {
-                    mainController.setSelectedTab(2);
+                    mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
                 } else if (skillTabKey.match(event)) {
-                    mainController.setSelectedTab(3);
-                } else if (releaseTabKey.match(event)) {
-                    mainController.setSelectedTab(4);
+                    mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
                 }
             }
         });
@@ -164,10 +159,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
-                listShowReleaseMenuItem.setSelected(false);
-                listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToProjectList();
+                mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
                 listShowProjectMenuItem.setDisable(true);
             }
         });
@@ -179,10 +172,8 @@ public class MenuBarController implements Initializable {
                 listShowPersonMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
-                listShowReleaseMenuItem.setSelected(false);
-                listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToTeamList();
+                mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
                 listShowTeamMenuItem.setDisable(true);
                 listShowTeamMenuItem.setSelected(true);
             }
@@ -195,10 +186,8 @@ public class MenuBarController implements Initializable {
                 listShowTeamMenuItem.setDisable(false);
                 listShowSkillMenuItem.setSelected(false);
                 listShowSkillMenuItem.setDisable(false);
-                listShowReleaseMenuItem.setSelected(false);
-                listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToPersonList();
+                mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
                 listShowPersonMenuItem.setDisable(true);
                 listShowPersonMenuItem.setSelected(true);
             }
@@ -211,26 +200,9 @@ public class MenuBarController implements Initializable {
                 listShowTeamMenuItem.setDisable(false);
                 listShowPersonMenuItem.setSelected(false);
                 listShowPersonMenuItem.setDisable(false);
-                listShowReleaseMenuItem.setSelected(false);
-                listShowReleaseMenuItem.setDisable(false);
 
-                mainController.switchToSkillList();
+                mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
                 listShowSkillMenuItem.setDisable(true);
-            }
-        });
-        listShowReleaseMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listShowProjectMenuItem.setSelected(false);
-                listShowProjectMenuItem.setDisable(false);
-                listShowTeamMenuItem.setSelected(false);
-                listShowTeamMenuItem.setDisable(false);
-                listShowPersonMenuItem.setSelected(false);
-                listShowPersonMenuItem.setDisable(false);
-                listShowSkillMenuItem.setSelected(false);
-                listShowSkillMenuItem.setDisable(false);
-
-                mainController.switchToReleaseList();
-                listShowReleaseMenuItem.setDisable(true);
             }
         });
     }
@@ -240,13 +212,9 @@ public class MenuBarController implements Initializable {
      * the undoManager.
      */
     private void addUndoHandlers() {
-        undoMenuItem.setOnAction(event -> {
-            mainController.undo();
-        });
+        undoMenuItem.setOnAction(event -> mainController.undo());
 
-        redoMenuItem.setOnAction(event -> {
-            mainController.redo();
-        });
+        redoMenuItem.setOnAction(event -> mainController.redo());
     }
 
     /**
@@ -255,14 +223,14 @@ public class MenuBarController implements Initializable {
     private void addKeyboardShortcuts() {
         newProjectMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newReleaseMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         newTeamMenuItem.setAccelerator(
             new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
         newPersonMenuItem.setAccelerator(
             new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
         newSkillMenuItem.setAccelerator(
             new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
+        newReleaseMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
                 KeyCombination.SHIFT_DOWN));
@@ -334,10 +302,6 @@ public class MenuBarController implements Initializable {
         listShowSkillMenuItem.selectedProperty().set(selected);
     }
 
-    public void updateAfterReleasesListSelected(boolean selected) {
-        listShowReleaseMenuItem.selectedProperty().set(selected);
-    }
-
     public void enableNewTeam() {
         newTeamMenuItem.setDisable(false);
     }
@@ -350,12 +314,5 @@ public class MenuBarController implements Initializable {
         newSkillMenuItem.setDisable(false);
     }
 
-    public void enableNewRelease() {
-        newReleaseMenuItem.setDisable(false);
-    }
-
-    public void disableNewRelease() {
-        newReleaseMenuItem.setDisable(true);
-    }
 
 }
