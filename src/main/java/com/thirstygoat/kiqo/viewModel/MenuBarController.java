@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +11,8 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -28,6 +27,8 @@ public class MenuBarController implements Initializable {
     private MenuItem newSkillMenuItem;
     @FXML
     private MenuItem newReleaseMenuItem;
+    @FXML
+    private MenuItem newBacklogMenuItem;
     @FXML
     private MenuItem newStoryMenuItem;
     @FXML
@@ -238,6 +239,8 @@ public class MenuBarController implements Initializable {
                 new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         newReleaseMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+        newBacklogMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_DOWN));
         newStoryMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
