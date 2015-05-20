@@ -74,6 +74,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         setPrompts();
         setButtonHandlers();
         setProjectTextFieldSuggester();
+        setProductOwnerTextFieldSuggester();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
@@ -107,6 +108,16 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             return false;
         };
 
+        final Predicate<String> personValidation = s -> {
+            for (final Person p : organisation.getPeople()) {
+                if (p.getShortName().equals(s)) {
+                    productOwner = p;
+                    return true;
+                }
+            }
+            return false;
+        };
+
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
@@ -115,6 +126,9 @@ public class BacklogFormController implements Initializable, IFormController<Bac
 
         validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
                 "Project must already exist"));
+
+        validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(personValidation,
+                "Person must already exist"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
@@ -291,6 +305,44 @@ public class BacklogFormController implements Initializable, IFormController<Bac
                 binding.setUserInput("");
             }
         });
+    }
+
+    private void setProductOwnerTextFieldSuggester() {
+        // use a callback to get an up-to-date person list, instead of just whatever exists at initialisation.
+        // use a String converter so that the Product Owner's short name is used.
+        final AutoCompletionBinding<Person> binding = TextFields.bindAutoCompletion(productOwnerTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Person>>() {
+            @Override
+            public Collection<Person> call(AutoCompletionBinding.ISuggestionRequest request) {
+                // filter based on input string
+                final Collection<Person> persons = organisation.getPeople().stream()
+                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                        .collect(Collectors.toList());
+                return persons;
+            }
+        }, new StringConverter<Person>() {
+            @Override
+            public Person fromString(String string) {
+                for (final Person productOwner: organisation.getPeople()) {
+                    if (project.getShortName().equals(string)) {
+                        return productOwner;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public String toString(Person productOwner) {
+                return productOwner.getShortName();
+            }
+        });
+
+        productOwnerTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // forces suggestion list to show
+                binding.setUserInput("");
+            }
+        });
+
     }
 
     @Override
