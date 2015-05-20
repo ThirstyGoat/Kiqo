@@ -83,11 +83,35 @@ public class BacklogFormController implements Initializable, IFormController<Bac
 
     private void setValidationSupport() {
         // Validation for short name
-        final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
-                Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.getBacklogs());
+        final Predicate<String> shortNameValidation = s -> {
+            if (s.length() != 0) {
+                return false;
+            }
+            if (project == null) {
+                return true;
+            }
+            return Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.getBacklogs());
+        };
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
                 "Short name must be unique and not empty"));
+
+        final Predicate<String> projectValidation = s -> {
+            for (final Project p : organisation.getProjects()) {
+                if (p.getShortName().equals(projectTextField.getText())) {
+                    project = p;
+                    // Redo validation for shortname text field
+                    final String snt = shortNameTextField.getText();
+                    shortNameTextField.setText("");
+                    shortNameTextField.setText(snt);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+                "Project must already exist"));
 
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
