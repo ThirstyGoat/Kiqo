@@ -52,9 +52,9 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     private Command<?> command;
     // Begin FXML Injections
     @FXML
-    private TextField shortNameTextField;
-    @FXML
     private TextField longNameTextField;
+    @FXML
+    private TextField shortNameTextField;
     @FXML
     private TextField descriptionTextField;
     @FXML
@@ -76,7 +76,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         setProjectTextFieldSuggester();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
-        Platform.runLater(shortNameTextField::requestFocus);
+        Platform.runLater(longNameTextField::requestFocus);
 
         setValidationSupport();
     }
@@ -93,9 +93,6 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             return Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.getBacklogs());
         };
 
-        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
-                "Short name must be unique and not empty"));
-
         final Predicate<String> projectValidation = s -> {
             for (final Project p : organisation.getProjects()) {
                 if (p.getShortName().equals(projectTextField.getText())) {
@@ -110,11 +107,14 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             return false;
         };
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
-                "Project must already exist"));
-
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+                "Short name must be unique and not empty"));
+
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+                "Project must already exist"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
@@ -122,8 +122,8 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         longNameTextField.setPromptText("Paddock");
+        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         descriptionTextField.setPromptText("Describe this backlog");
     }
 
@@ -198,11 +198,11 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             command = new CreateBacklogCommand(backlog);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!shortNameTextField.getText().equals(backlog.getShortName())) {
-                changes.add(new EditCommand<>(backlog, "shortName", shortNameTextField.getText()));
-            }
             if (!longNameTextField.getText().equals(backlog.getLongName())) {
                 changes.add(new EditCommand<>(backlog, "longName", longNameTextField.getText()));
+            }
+            if (!shortNameTextField.getText().equals(backlog.getShortName())) {
+                changes.add(new EditCommand<>(backlog, "shortName", shortNameTextField.getText()));
             }
             if (!descriptionTextField.getText().equals(backlog.getDescription())) {
                 changes.add(new EditCommand<>(backlog, "description", descriptionTextField.getText()));

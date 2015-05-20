@@ -35,13 +35,13 @@
         <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
     </padding>
     <children>
-        <Label text="Short Name:" />
-        <Label text="Long Name:" GridPane.rowIndex="1" />
+        <Label text="Long Name:" />
+        <Label text="Short Name:" GridPane.rowIndex="1" />
         <Label text="Description:" GridPane.rowIndex="2" />
         <Label text="Project:" GridPane.rowIndex="3" />
         <Label text="Product Owner:" GridPane.rowIndex="4" />
-        <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
-        <TextField fx:id="longNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
+        <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="productOwnerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
