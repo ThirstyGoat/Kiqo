@@ -18,6 +18,7 @@ public class Project extends Item {
     private final ObservableList<Release> releases;
     private final ObservableList<Story> stories;
     private final ObservableList<Allocation> allocations;
+    private final ObservableList<Backlog> backlogs;
     private final StringProperty description;
 
     /**
@@ -26,6 +27,7 @@ public class Project extends Item {
     public Project() {
         releases = FXCollections.observableArrayList();
         stories = FXCollections.observableArrayList();
+        backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
@@ -134,6 +136,10 @@ public class Project extends Item {
         return stories;
     }
 
+    public ObservableList<Backlog> observableBacklogs() {
+        return backlogs;
+    }
+
     public List<Release> getReleases() {
         final List<Release> releases = new ArrayList<>();
         releases.addAll(this.releases);
@@ -163,6 +169,25 @@ public class Project extends Item {
     public void setStories(final List<Story> stories) {
         stories.clear();
         stories.addAll(stories);
+    }
+
+    /**
+     *
+     * @return list of backlogs associated with this project.
+     */
+    public List<Backlog> getBacklogs() {
+        final List<Backlog> backlogs = new ArrayList<>();
+        backlogs.addAll(this.backlogs);
+        return backlogs;
+    }
+
+    /**
+     *
+     * @param backlogs list of backlogs associated with this project
+     */
+    public void setBacklogs(final List<Backlog> backlogs) {
+        backlogs.clear();
+        backlogs.addAll(backlogs);
     }
 
     @Override
