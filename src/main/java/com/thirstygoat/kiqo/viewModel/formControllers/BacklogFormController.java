@@ -85,7 +85,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     private void setValidationSupport() {
         // Validation for short name
         final Predicate<String> shortNameValidation = s -> {
-            if (s.length() != 0) {
+            if (s.length() == 0) {
                 return false;
             }
             if (project == null) {
@@ -213,7 +213,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         if (backlog == null) {
             final Backlog b = new Backlog(shortNameTextField.getText(), longNameTextField.getText(),
                     descriptionTextField.getText(), productOwner, project, stories);
-            command = new CreateBacklogCommand(backlog);
+            command = new CreateBacklogCommand(b);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
             if (!longNameTextField.getText().equals(backlog.getLongName())) {
