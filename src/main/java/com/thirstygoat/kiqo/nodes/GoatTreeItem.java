@@ -22,10 +22,10 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         super(new TreeNodeHeading(name));
-        // MUST add listener before adding children
         treeItemComparator = (treeItem1, treeItem2) -> {
             return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
         };
+        // MUST add listener before adding children
         items.addListener(createChangeListener(selectionModel, treeItemComparator));
         addChildCollection(items);
     }
@@ -54,13 +54,12 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     private final ListChangeListener<Item> createChangeListener(SelectionModel<TreeItem<Item>> selectionModel, Comparator<TreeItem<Item>> treeItemComparator2) {
         return c -> {
-            final ObservableList<? extends Item> newList = c.getList();
             final TreeItem<Item> selectedItem = selectionModel.getSelectedItem();
             while (c.next()) {
                 // add items
                 for (final Item item : c.getAddedSubList()) {
                     final TreeItem<Item> treeItem = createTreeItem(item);
-                    getChildren().add(newList.indexOf(item), treeItem);
+                    getChildren().add(c.getList().indexOf(item), treeItem);
                     treeItemMap.put(item, treeItem);
                 }
                 // remove items
