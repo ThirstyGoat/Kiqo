@@ -25,7 +25,7 @@ public class Utilities {
     };
 
     public static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
-        return new SortedList<E>(list, Utilities.LEXICAL_COMPARATOR);
+        return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
     }
 
     public static String concatenatePeopleList(List<Person> people, int max) {
