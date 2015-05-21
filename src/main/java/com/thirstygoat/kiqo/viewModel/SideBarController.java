@@ -210,7 +210,7 @@ public class SideBarController implements Initializable {
             }
         });
 
-        final TreeItem<Item> root = new ProjectsTreeItem(Utilities.createSortedList(mainController.getSelectedOrganisationProperty().get().getProjects()), projectTreeView.getSelectionModel());
+        final TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects(), projectTreeView.getSelectionModel());
         projectTreeView.setRoot(root);
         projectTreeView.setShowRoot(false);
         root.setExpanded(true);

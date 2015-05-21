@@ -17,14 +17,14 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
     private final SelectionModel<TreeItem<Item>> selectionModel;
 
     public ProjectsTreeItem(ObservableList<Project> projects, SelectionModel<TreeItem<Item>> selectionModel) {
-        super("Projects", projects, selectionModel);
+        super("Projects", projects, selectionModel, Utilities.LEXICAL_COMPARATOR);
         this.selectionModel = selectionModel;
     }
 
     @Override
     protected TreeItem<Item> createTreeItem(final Item item) {
         final TreeItem<Item> treeItem = new TreeItem<>(item);
-        treeItem.getChildren().add(new GoatTreeItem<Release>("Releases", Utilities.createSortedList(((Project) item).observableReleases()), selectionModel));
+        treeItem.getChildren().add(new GoatTreeItem<Release>("Releases", ((Project) item).observableReleases(), selectionModel, Utilities.LEXICAL_COMPARATOR));
         treeItem.setExpanded(true);
         return treeItem;
     }

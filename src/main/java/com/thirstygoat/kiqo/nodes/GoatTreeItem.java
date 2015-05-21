@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.nodes;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +19,10 @@ import com.thirstygoat.kiqo.model.Item;
 public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
     protected final Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
 
-    public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel) {
+    public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         super(new TreeNodeHeading(name));
         // MUST add listener before adding children
-        items.addListener(createChangeListener(selectionModel));
+        items.addListener(createChangeListener(selectionModel, comparator));
         addChildCollection(items);
     }
 
@@ -46,37 +47,28 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
         }
     }
 
-    private final ListChangeListener<Item> createChangeListener(SelectionModel<TreeItem<Item>> selectionModel) {
+    private final ListChangeListener<Item> createChangeListener(SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
+        final Comparator<TreeItem<Item>> treeItemComparator = (treeItem1, treeItem2) -> {
+            System.out.println(String.format("comparing %s and %s", treeItem1, treeItem2));
+            return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
+        };
         return c -> {
             final ObservableList<? extends Item> newList = c.getList();
-            final ObservableList<TreeItem<Item>> children = getChildren();
             final TreeItem<Item> selectedItem = selectionModel.getSelectedItem();
             while (c.next()) {
-                if (c.wasPermutated()) {
-                    // permute list order to reflect backing list
-                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
-                        children.set(i, treeItemMap.get(newList.get(i)));
-                        final int permutation = c.getPermutation(i);
-                        children.set(permutation, treeItemMap.get(newList.get(permutation)));
-                    }
-                } else if (c.wasUpdated()) {
-                    // update items
-                    final int i = c.getFrom();
-                    children.set(i, treeItemMap.get(newList.get(i)));
-                } else {
-                    // add items
-                    for (final Item item : c.getAddedSubList()) {
-                        final TreeItem<Item> treeItem = createTreeItem(item);
-                        children.add(newList.indexOf(item), treeItem);
-                        treeItemMap.put(item, treeItem);
-                    }
-                    // remove items
-                    for (final Item item : c.getRemoved()) {
-                        children.remove(treeItemMap.get(item));
-                        treeItemMap.remove(item);
-                    }
+                // add items
+                for (final Item item : c.getAddedSubList()) {
+                    final TreeItem<Item> treeItem = createTreeItem(item);
+                    getChildren().add(newList.indexOf(item), treeItem);
+                    treeItemMap.put(item, treeItem);
+                }
+                // remove items
+                for (final Item item : c.getRemoved()) {
+                    getChildren().remove(treeItemMap.get(item));
+                    treeItemMap.remove(item);
                 }
             }
+            getChildren().sort(treeItemComparator);
             selectionModel.select(selectedItem);
         };
     }
