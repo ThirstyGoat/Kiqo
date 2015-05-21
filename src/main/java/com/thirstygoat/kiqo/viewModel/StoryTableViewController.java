@@ -4,7 +4,6 @@ import com.thirstygoat.kiqo.model.Story;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -23,8 +22,6 @@ public class StoryTableViewController implements Initializable {
     private TableColumn<Story, String> storyTableColumn;
     @FXML
     private TableColumn<Story, Number> priorityTableColumn;
-    @FXML
-    private Button allocateStoryButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
