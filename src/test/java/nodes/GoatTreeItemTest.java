@@ -170,7 +170,9 @@ public class GoatTreeItemTest {
 
     @Test
     public void test_replaceList() {
+        // fill up the existing list
         observableList.addAll(reservoir);
+        // replace it with an empty one (mimics "File > Load")
         observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
 
         Assert.assertTrue(observableList.isEmpty());
