@@ -20,7 +20,7 @@
                      <Label font="$x1" text="Allocations:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
                      <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
                      <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                     <Label fx:id="productOwner" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <Label fx:id="productOwnerLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      <fx:include fx:id="storyTableView" source="storyTableView.fxml" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
                  </children>
