@@ -49,7 +49,6 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     private final ListChangeListener<Item> createChangeListener(SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         final Comparator<TreeItem<Item>> treeItemComparator = (treeItem1, treeItem2) -> {
-            System.out.println(String.format("comparing %s and %s", treeItem1, treeItem2));
             return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
         };
         return c -> {
