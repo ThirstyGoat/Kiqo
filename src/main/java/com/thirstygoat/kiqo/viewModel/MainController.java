@@ -260,6 +260,24 @@ public class MainController implements Initializable {
 
     }
 
+    public void deleteBacklog(Backlog backlog) {
+        final VBox node = new VBox();
+        node.setSpacing(10);
+
+        final String deleteMessage = "Are you sure you want to remove the backlog: "
+                + backlog.getShortName();
+        node.getChildren().add(new Label(deleteMessage));
+
+        final String[] buttons = {"Delete Backlog", "Cancel"};
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Backlog",
+                "Are you sure? ", node, buttons);
+
+        if (result.equals("Delete Backlog")) {
+            doCommand(new DeleteBacklogCommand((Backlog) focusedItemProperty.get()));
+        }
+
+    }
+
     public void deleteItem() {
         Platform.runLater(() -> {
             final Item focusedObject = focusedItemProperty.get();
@@ -277,6 +295,9 @@ public class MainController implements Initializable {
                 deleteRelease((Release) focusedObject);
             } else if (focusedObject.getClass() == Story.class) {
                 deleteStory((Story) focusedObject);
+            }
+            else if (focusedObject.getClass() == Backlog.class) {
+                deleteBacklog((Backlog) focusedObject);
             }
         });
     }
@@ -302,6 +323,8 @@ public class MainController implements Initializable {
             dialog((Release) focusedObject);
         } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
             dialog(focusedObject);
+          }
+        else if (focusedObject.getClass() == Backlog.class) {
             dialog(focusedObject);
         }
     }
