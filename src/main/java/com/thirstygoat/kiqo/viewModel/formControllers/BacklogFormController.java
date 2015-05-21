@@ -5,7 +5,9 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -44,7 +46,8 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
-    private Project project;
+//    private Project project;
+    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private Backlog backlog;
     private Person productOwner;
     private boolean valid = false;
@@ -80,6 +83,14 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         Platform.runLater(longNameTextField::requestFocus);
 
         setValidationSupport();
+        setListeners();
+    }
+
+    private void setListeners() {
+        project.addListener(((observable, oldValue, newValue) -> {
+            storySelectionView.getTargetListView().getItems().clear();
+            setStoryListSelectionViewData();
+        }));
     }
 
     private void setValidationSupport() {
@@ -88,16 +99,16 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             if (s.length() == 0) {
                 return false;
             }
-            if (project == null) {
+            if (project.get() == null) {
                 return true;
             }
-            return Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.getBacklogs());
+            return Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.get().getBacklogs());
         };
 
         final Predicate<String> projectValidation = s -> {
             for (final Project p : organisation.getProjects()) {
                 if (p.getShortName().equals(projectTextField.getText())) {
-                    project = p;
+                    project.set(p);
                     // Redo validation for shortname text field
                     final String snt = shortNameTextField.getText();
                     shortNameTextField.setText("");
@@ -162,14 +173,17 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     private void setStoryListSelectionViewData() {
         final ObservableList<Story> sourceStories = FXCollections.observableArrayList();
 
-        sourceStories.addAll(project.getStories());
-        if (backlog != null) {
-            sourceStories.removeAll(backlog.getStories());
-            targetStories.addAll(backlog.getStories());
+        if (project.get() != null) {
+            sourceStories.addAll(project.get().getStories());
+            if (backlog != null) {
+                sourceStories.removeAll(backlog.getStories());
+                targetStories.addAll(backlog.getStories());
+            }
+
+            storySelectionView.getSourceListView().setItems(sourceStories);
+            storySelectionView.getTargetListView().setItems(targetStories);
         }
 
-        storySelectionView.getSourceListView().setItems(sourceStories);
-        storySelectionView.getTargetListView().setItems(targetStories);
     }
 
     @Override
@@ -191,7 +205,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             projectTextField.setText(backlog.getProject().getShortName());
             productOwnerTextField.setText(backlog.getProductOwner().getShortName());
         }
-
+        setStoryListSelectionViewData();
     }
 
     private void setButtonHandlers() {
@@ -212,7 +226,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
 
         if (backlog == null) {
             final Backlog b = new Backlog(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), productOwner, project, stories);
+                    descriptionTextField.getText(), productOwner, project.get(), stories);
             command = new CreateBacklogCommand(b);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -225,10 +239,10 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             if (!descriptionTextField.getText().equals(backlog.getDescription())) {
                 changes.add(new EditCommand<>(backlog, "description", descriptionTextField.getText()));
             }
-            if (!project.equals(backlog.getProject())) {
+            if (!project.get().equals(backlog.getProject())) {
                 changes.add(new MoveItemCommand<>(backlog, backlog.getProject().observableBacklogs(),
-                        project.observableBacklogs()));
-                changes.add(new EditCommand<>(backlog, "project", project));
+                        project.get().observableBacklogs()));
+                changes.add(new EditCommand<>(backlog, "project", project.get()));
             }
             if (!productOwner.equals(backlog.getProductOwner())) {
                 changes.add(new EditCommand<>(backlog, "productOwner", productOwner));
@@ -323,7 +337,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             @Override
             public Person fromString(String string) {
                 for (final Person productOwner: organisation.getPeople()) {
-                    if (project.getShortName().equals(string)) {
+                    if (project.get().getShortName().equals(string)) {
                         return productOwner;
                     }
                 }
@@ -363,6 +377,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+        setupStoriesList();
     }
 
 
