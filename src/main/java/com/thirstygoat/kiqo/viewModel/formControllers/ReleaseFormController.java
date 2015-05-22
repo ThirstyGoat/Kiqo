@@ -7,7 +7,6 @@ import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Created by james on 11/04/15.
  */
-public class ReleaseFormController implements Initializable, IFormController<Release> {
+public class ReleaseFormController extends FormController<Release> {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;

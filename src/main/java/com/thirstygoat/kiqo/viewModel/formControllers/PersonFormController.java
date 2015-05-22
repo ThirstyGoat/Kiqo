@@ -15,7 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,7 +34,7 @@ import java.util.function.Predicate;
 /**
  * Created by james on 20/03/15.
  */
-public class PersonFormController implements Initializable, IFormController<Person> {
+public class PersonFormController extends FormController<Person> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();

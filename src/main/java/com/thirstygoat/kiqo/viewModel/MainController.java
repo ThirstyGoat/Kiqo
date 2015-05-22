@@ -13,7 +13,7 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -703,7 +703,7 @@ public class MainController implements Initializable {
             final Scene scene = new Scene(root);
             stage.setScene(scene);
             @SuppressWarnings("unchecked")
-            final IFormController<T> formController = loader.getController();
+            final FormController<T> formController = loader.getController();
             formController.setStage(stage);
             formController.setOrganisation(selectedOrganisationProperty.get());
             formController.populateFields(t);

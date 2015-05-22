@@ -12,33 +12,26 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by lih18 on 20/05/15.
  */
-public class BacklogFormController implements Initializable, IFormController<Backlog> {
+public class BacklogFormController extends FormController<Backlog> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Story> targetStories = FXCollections.observableArrayList();
@@ -75,8 +68,6 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        setProjectTextFieldSuggester();
-        setProductOwnerTextFieldSuggester();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
@@ -299,87 +290,6 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         });
     }
 
-    private void setProjectTextFieldSuggester() {
-        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Project's short name is used.
-        final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
-            @Override
-            public Collection<Project> call(AutoCompletionBinding.ISuggestionRequest request) {
-                // filter based on input string
-                if(projectTextField.isFocused()) {
-                    final Collection<Project> projects = organisation.getProjects().stream()
-                            .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                            .collect(Collectors.toList());
-                    return projects;
-                } else {
-                    return null;
-                }
-
-            }
-
-        }, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String string) {
-                for (final Project project : organisation.getProjects()) {
-                    if (project.getShortName().equals(string)) {
-                        return project;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Project project) {
-                return project.getShortName();
-            }
-        });
-
-        projectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput(projectTextField.getText());
-            }
-        });
-    }
-
-    private void setProductOwnerTextFieldSuggester() {
-        // use a callback to get an up-to-date person list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Product Owner's short name is used.
-        final AutoCompletionBinding<Person> binding = TextFields.bindAutoCompletion(productOwnerTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Person>>() {
-            @Override
-            public Collection<Person> call(AutoCompletionBinding.ISuggestionRequest request) {
-                // filter based on input string
-                final Collection<Person> persons = organisation.getPeople().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return persons;
-            }
-        }, new StringConverter<Person>() {
-            @Override
-            public Person fromString(String string) {
-                for (final Person productOwner: organisation.getPeople()) {
-                    if (project.get().getShortName().equals(string)) {
-                        return productOwner;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Person productOwner) {
-                return productOwner.getShortName();
-            }
-        });
-
-        productOwnerTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput("");
-            }
-        });
-
-    }
-
     @Override
     public boolean isValid() {
         return valid;
@@ -399,8 +309,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         setupStoriesList();
+        setTextFieldSuggester(projectTextField, organisation.getProjects());
+        setTextFieldSuggester(productOwnerTextField, organisation.getPeople());
     }
-
-
-
 }

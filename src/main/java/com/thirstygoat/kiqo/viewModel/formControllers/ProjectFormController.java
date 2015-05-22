@@ -11,7 +11,6 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -19,7 +18,6 @@ import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import javax.rmi.CORBA.Util;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -29,7 +27,7 @@ import java.util.function.Predicate;
 /**
  * Created by Bradley, James on 13/03/15.
  */
-public class ProjectFormController implements Initializable, IFormController<Project> {
+public class ProjectFormController extends FormController<Project> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
