@@ -37,6 +37,7 @@ import com.thirstygoat.kiqo.util.Utilities;
  */
 public class SideBarController implements Initializable {
     private final ContextMenu contextMenu = new ContextMenu();
+    private final Map<String, Control> tabListViewMap = new HashMap<>();
     @FXML
     private TreeView<Item> projectTreeView;
     @FXML
@@ -56,7 +57,30 @@ public class SideBarController implements Initializable {
     @FXML
     private TabPane tabViewPane;
     private MainController mainController;
-    private final Map<String, Control> tabListViewMap = new HashMap<>();
+
+    /**
+     * Attaches cell factory and selection listener to the list view.
+     */
+    private static <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
+        // derived from example at
+        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
+        listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
+            @Override
+            public ListCell<T> call(final ListView<T> arg0) {
+                return new ListCell<T>() {
+                    @Override
+                    protected void updateItem(final T item, final boolean empty) {
+                        // calling super here is very important
+                        super.updateItem(item, empty);
+                        setText(empty ? "" : item.getShortName());
+                        if (item != null) {
+                            setContextMenu(contextMenu);
+                        }
+                    }
+                };
+            }
+        });
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -164,30 +188,6 @@ public class SideBarController implements Initializable {
         }
     }
 
-    /**
-     * Attaches cell factory and selection listener to the list view.
-     */
-    private static <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
-        // derived from example at
-        // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
-        listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
-            @Override
-            public ListCell<T> call(final ListView<T> arg0) {
-                return new ListCell<T>() {
-                    @Override
-                    protected void updateItem(final T item, final boolean empty) {
-                        // calling super here is very important
-                        super.updateItem(item, empty);
-                        setText(empty ? "" : item.getShortName());
-                        if (item != null) {
-                            setContextMenu(contextMenu);
-                        }
-                    }
-                };
-            }
-        });
-    }
-
     private void setListViewData() {
         projectTreeView.setCellFactory(new Callback<TreeView<Item>, TreeCell<Item>>() {
             @Override
@@ -217,7 +217,7 @@ public class SideBarController implements Initializable {
         projectTreeView.setShowRoot(false);
         root.setExpanded(true);
 
-        root.setItems(mainController.getSelectedOrganisationProperty().get().getProjects());
+        root.setItems(mainController.selectedOrganisationProperty().get().getProjects());
         peopleListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
         teamsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
         skillsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));

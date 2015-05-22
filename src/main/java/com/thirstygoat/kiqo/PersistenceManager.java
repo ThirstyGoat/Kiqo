@@ -178,13 +178,14 @@ public class PersistenceManager {
                 PersistenceManager.createGson(false);
             }
 
-            final ObservableList<? extends Object> observableList;
+            ObservableList observableList;
             if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
                 observableList = FXCollections.observableArrayList();
             }
             for (final JsonElement element : json.getAsJsonArray()) {
+                // TODO FIX GENERICS ISSUE
                 observableList.add(PersistenceManager.gson.fromJson(element, type));
             }
             return observableList;
