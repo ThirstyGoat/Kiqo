@@ -13,11 +13,8 @@ import com.thirstygoat.kiqo.util.Utilities;
  * @author Bradley Kirwan
  */
 public class ProjectsTreeItem extends GoatTreeItem<Project> {
-    private final SelectionModel<TreeItem<Item>> selectionModel;
-
     public ProjectsTreeItem(SelectionModel<TreeItem<Item>> selectionModel) {
         super("Projects", selectionModel, Utilities.LEXICAL_COMPARATOR);
-        this.selectionModel = selectionModel;
     }
 
     @Override

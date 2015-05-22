@@ -18,8 +18,8 @@ import com.thirstygoat.kiqo.model.Item;
  */
 public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
     protected final Map<Item, TreeItem<Item>> treeItemMap;
+    protected SelectionModel<TreeItem<Item>> selectionModel;
     private final Comparator<TreeItem<Item>> treeItemComparator;
-    private SelectionModel<TreeItem<Item>> selectionModel;
 
     public GoatTreeItem(String name, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         super(new TreeNodeHeading(name));
