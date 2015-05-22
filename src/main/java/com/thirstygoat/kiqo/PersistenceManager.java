@@ -31,6 +31,14 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -170,7 +178,12 @@ public class PersistenceManager {
                 PersistenceManager.createGson(false);
             }
 
-            final ObservableList<Object> observableList =  FXCollections.observableArrayList();
+            final ObservableList<? extends Object> observableList;
+            if (Item.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
+            } else {
+                observableList = FXCollections.observableArrayList();
+            }
             for (final JsonElement element : json.getAsJsonArray()) {
                 observableList.add(PersistenceManager.gson.fromJson(element, type));
             }
