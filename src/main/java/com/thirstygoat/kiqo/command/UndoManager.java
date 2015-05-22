@@ -20,8 +20,8 @@ public class UndoManager {
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
-    protected int savePosition = 0;
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
+    protected int savePosition = 0;
 
     /**
      * Executes the command and adds it to the undo stack.
@@ -78,7 +78,8 @@ public class UndoManager {
         undoStack.clear();
         redoStack.clear();
         updateUndoRedoTypes();
-        changesSavedProperty().set(true);
+        savePosition = 0;
+        checkChangesSaved();
     }
 
     /**

@@ -92,6 +92,10 @@ public class MainController implements Initializable {
         return undoManager.changesSavedProperty();
     }
 
+    protected void revert() {
+        undoManager.revert();
+    }
+
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
         final StringProperty changesSavedAsterisk = new SimpleStringProperty(undoManager.changesSavedProperty().get() ? "" : "*");
@@ -262,23 +266,24 @@ public class MainController implements Initializable {
         final Item focusedObject = focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Project) {
+        } else if (focusedObject.getClass() == Project.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Person) {
+        } else if (focusedObject.getClass() == Person.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Skill) {
-            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() || focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
+        } else if (focusedObject.getClass() == Skill.class) {
+            // Prohibit editing of PO/SM Skills
+            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() ||
+                    focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
             } else {
                 dialog(focusedObject);
             }
-        } else if (focusedObject instanceof Team) {
+        } else if (focusedObject.getClass() == Team.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Release) {
+        } else if (focusedObject.getClass() == Release.class) {
             dialog(focusedObject);
         } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
-            dialog(focusedObject);
             dialog(focusedObject);
         }
     }
@@ -312,7 +317,6 @@ public class MainController implements Initializable {
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             undoManager.empty();
-//            undoManager.revert(savePosition);
         });
     }
 
@@ -548,26 +552,6 @@ public class MainController implements Initializable {
         }
         return true;
     }
-
-    /**
-     * Prompt the user if they want to save unsaved changes
-     * @return if the user clicked cancel or not
-     */
-    public boolean promptBeforeRevert() {
-        if (!undoManager.changesSavedProperty().get()) {
-            final String[] options = {"Revert", "Cancel"};
-            final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
-                    "\"File > Save As\" before reverting or you will lose these changes.", options);
-            if (response.equals("Revert")) {
-                undoManager.revert();
-            } else {
-                // do nothing
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     /**
      * Set up the status bar for the application and monitor for changes in the

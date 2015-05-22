@@ -60,10 +60,6 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listShowSkillMenuItem;
     @FXML
-    private CheckMenuItem listShowReleaseMenuItem;
-    @FXML
-    private CheckMenuItem listShowStoryMenuItem;
-    @FXML
     private MenuItem quitMenuItem;
     private MainController mainController;
 
@@ -140,7 +136,7 @@ public class MenuBarController implements Initializable {
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
-        revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
+        revertMenuItem.setOnAction(event -> mainController.revert());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation(false));
@@ -215,7 +211,6 @@ public class MenuBarController implements Initializable {
      */
     private void addUndoHandlers() {
         undoMenuItem.setOnAction(event -> mainController.undo());
-
         redoMenuItem.setOnAction(event -> mainController.redo());
     }
 
@@ -275,11 +270,6 @@ public class MenuBarController implements Initializable {
 
     public void updateAfterSkillListSelected(boolean selected) {
         listShowSkillMenuItem.selectedProperty().set(selected);
-    }
-
-
-    public void updateAfterStoryListSelected(boolean selected) {
-        listShowStoryMenuItem.selectedProperty().set(selected);
     }
 
     public void enableNewTeam() {
