@@ -337,7 +337,7 @@ public class BacklogFormController implements Initializable, IFormController<Bac
         projectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // forces suggestion list to show
-                binding.setUserInput("");
+                binding.setUserInput(projectTextField.getText());
             }
         });
     }
