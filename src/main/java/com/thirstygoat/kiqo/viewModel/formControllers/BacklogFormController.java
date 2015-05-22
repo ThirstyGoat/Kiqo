@@ -2,15 +2,21 @@ package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -28,13 +34,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 
 /**
  * Created by lih18 on 20/05/15.
@@ -307,10 +306,15 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             @Override
             public Collection<Project> call(AutoCompletionBinding.ISuggestionRequest request) {
                 // filter based on input string
-                final Collection<Project> projects = organisation.getProjects().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return projects;
+                if(projectTextField.isFocused()) {
+                    final Collection<Project> projects = organisation.getProjects().stream()
+                            .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                            .collect(Collectors.toList());
+                    return projects;
+                } else {
+                    return null;
+                }
+
             }
 
         }, new StringConverter<Project>() {
