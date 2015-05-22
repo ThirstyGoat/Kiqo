@@ -23,8 +23,10 @@ import javafx.util.Callback;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatTreeItem;
 import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
 import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
 import com.thirstygoat.kiqo.util.Utilities;
@@ -210,11 +212,12 @@ public class SideBarController implements Initializable {
             }
         });
 
-        final TreeItem<Item> root = new ProjectsTreeItem(mainController.getSelectedOrganisationProperty().get().getProjects(), projectTreeView.getSelectionModel());
+        final GoatTreeItem<Project> root = new ProjectsTreeItem(projectTreeView.getSelectionModel());
         projectTreeView.setRoot(root);
         projectTreeView.setShowRoot(false);
         root.setExpanded(true);
 
+        root.setItems(mainController.getSelectedOrganisationProperty().get().getProjects());
         peopleListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
         teamsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
         skillsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));

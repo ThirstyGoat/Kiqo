@@ -17,17 +17,17 @@ import com.thirstygoat.kiqo.model.Item;
  * @param <E> Element type for the collection of items
  */
 public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
-    protected final Map<Item, TreeItem<Item>> treeItemMap = new HashMap<>();
+    protected final Map<Item, TreeItem<Item>> treeItemMap;
     private final Comparator<TreeItem<Item>> treeItemComparator;
+    private SelectionModel<TreeItem<Item>> selectionModel;
 
-    public GoatTreeItem(String name, ObservableList<E> items, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
+    public GoatTreeItem(String name, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         super(new TreeNodeHeading(name));
         treeItemComparator = (treeItem1, treeItem2) -> {
             return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
         };
-        // MUST add listener before adding children
-        items.addListener(createChangeListener(selectionModel, treeItemComparator));
-        addChildCollection(items);
+        treeItemMap = new HashMap<>();
+        this.selectionModel = selectionModel;
     }
 
     /**
@@ -43,7 +43,12 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
      * Adds a collection as children to the textual heading TreeItem
      * @param items items added as children to the textual heading TreeItem
      */
-    private void addChildCollection(ObservableList<? extends Item> items) {
+    public void setItems(ObservableList<? extends Item> items) {
+        // MUST add listener before adding children
+        getChildren().clear();
+        treeItemMap.clear();
+        final ListChangeListener<Item> changeListener = createChangeListener(selectionModel, treeItemComparator);
+        items.addListener(changeListener);
         for (final Item item : items) {
             final TreeItem<Item> treeItem = createTreeItem(item);
             getChildren().add(treeItem);

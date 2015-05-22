@@ -128,7 +128,8 @@ public class GoatTreeItemTest {
                 new MockObject("d")
         };
         observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
-        goatTreeItem = new GoatTreeItem<MockObject>("Tests", observableList, GoatTreeItemTest.selectionModel, GoatTreeItemTest.comparator);
+        goatTreeItem = new GoatTreeItem<MockObject>("Tests", GoatTreeItemTest.selectionModel, GoatTreeItemTest.comparator);
+        goatTreeItem.setItems(observableList);
     }
 
     @After
@@ -172,8 +173,9 @@ public class GoatTreeItemTest {
     public void test_replaceList() {
         // fill up the existing list
         observableList.addAll(reservoir);
-        // replace it with an empty one (mimics "File > Load")
+        // replace the list with a reference to an empty one (mimics "File > Load")
         observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
+        goatTreeItem.setItems(observableList);
 
         Assert.assertTrue(observableList.isEmpty());
         Assert.assertTrue(goatTreeItem.getChildren().isEmpty());
