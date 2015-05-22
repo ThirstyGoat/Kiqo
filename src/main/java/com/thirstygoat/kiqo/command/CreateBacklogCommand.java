@@ -15,12 +15,14 @@ public class CreateBacklogCommand extends Command<Backlog> {
     @Override
     public Backlog execute() {
         backlog.getProject().observableBacklogs().add(backlog);
+        backlog.getProject().observableStories().removeAll(backlog.getStories());
         return backlog;
     }
 
     @Override
     public void undo() {
-       backlog.getProject().observableBacklogs().remove(backlog);
+        backlog.getProject().observableBacklogs().remove(backlog);
+        backlog.getProject().observableStories().addAll(backlog.getStories());
     }
 
     @Override

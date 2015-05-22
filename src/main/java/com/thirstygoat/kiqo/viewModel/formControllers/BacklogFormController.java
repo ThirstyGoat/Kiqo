@@ -247,9 +247,26 @@ public class BacklogFormController implements Initializable, IFormController<Bac
             if (!productOwner.equals(backlog.getProductOwner())) {
                 changes.add(new EditCommand<>(backlog, "productOwner", productOwner));
             }
-            if (!(stories.containsAll(backlog.getStories())
-                    && backlog.getStories().containsAll(stories))) {
-                changes.add(new EditCommand<>(backlog, "stories", stories));
+
+            // Stories being added to the backlog
+            final ArrayList<Story> addedStories = new ArrayList(targetStories);
+            addedStories.removeAll(backlog.getStories());
+
+            // Stories being removed from the backlog
+            final ArrayList<Story> removedStories = new ArrayList(backlog.getStories());
+            removedStories.removeAll(targetStories);
+
+            if (!addedStories.isEmpty()) {
+                for (Story story : addedStories) {
+                    changes.add(new MoveItemCommand<>(story, project.get().observableStories(),
+                            backlog.observableStories()));
+                }
+            }
+            if (!removedStories.isEmpty()) {
+                for (Story story : removedStories) {
+                    changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
+                            project.get().observableStories()));
+                }
             }
 
             valid = !changes.isEmpty();
