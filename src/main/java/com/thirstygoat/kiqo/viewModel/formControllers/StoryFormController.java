@@ -10,21 +10,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -67,8 +61,6 @@ public class StoryFormController extends FormController<Story> {
         setButtonHandlers();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
-        setCreatorTextFieldSuggester();
-        setProjectTextFieldSuggester();
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
 
@@ -221,82 +213,6 @@ public class StoryFormController extends FormController<Story> {
         });
     }
 
-    private void setCreatorTextFieldSuggester() {
-        // use a callback to get an up-to-date creator list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Creator's short name is used.
-        final AutoCompletionBinding<Person> binding = TextFields.bindAutoCompletion(creatorTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Person>>() {
-            @Override
-            public Collection<Person> call(AutoCompletionBinding.ISuggestionRequest request) {
-                // filter based on input string
-                final Collection<Person> persons = organisation.getPeople().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return persons;
-            }
-        }, new StringConverter<Person>() {
-            @Override
-            public Person fromString(String string) {
-                for (final Person creator : organisation.getPeople()) {
-                    if (project.getShortName().equals(string)) {
-                        return creator;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Person creator) {
-                return creator.getShortName();
-            }
-        });
-
-        creatorTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput("");
-            }
-        });
-
-    }
-
-    private void setProjectTextFieldSuggester() {
-        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Project's short name is used.
-        final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
-            @Override
-            public Collection<Project> call(AutoCompletionBinding.ISuggestionRequest request) {
-                // filter based on input string
-                final Collection<Project> projects = organisation.getProjects().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return projects;
-            }
-
-        }, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String string) {
-                for (final Project project : organisation.getProjects()) {
-                    if (project.getShortName().equals(string)) {
-                        return project;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Project project) {
-                return project.getShortName();
-            }
-        });
-
-        projectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput("");
-            }
-        });
-    }
-
     @Override
     public boolean isValid() { return valid; }
 
@@ -347,6 +263,8 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+        setTextFieldSuggester(creatorTextField, organisation.getPeople());
+        setTextFieldSuggester(projectTextField, organisation.getProjects());
     }
 
 }

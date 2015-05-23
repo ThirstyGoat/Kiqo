@@ -190,6 +190,7 @@ public class ProjectFormController extends FormController<Project> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+
     }
     @Override
     public Command<?> getCommand() { return command; }
