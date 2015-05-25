@@ -25,6 +25,8 @@ public final class ReportGenerator {
     private static final String PERSON_COMMENT = "-   ### Person ###";
     private static final String RELEASE_COMMENT = "-   ### Release ###";
     private static final String SKILL_COMMENT = "-   ### Skill ###";
+    private static final String BACKLOG_COMMENT = "-   ### BACKLOG ###";
+    private static final String STORY_COMMENT = "-   ### STORY ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final String ALLOCATION_COMMENT = "-   ### Allocation ###";
@@ -129,8 +131,22 @@ public final class ReportGenerator {
         lines.add(ReportUtils.formattedLine("Short Name", project.getShortName()));
         lines.add(ReportUtils.formattedLine("Long Name", project.getLongName()));
         lines.add(ReportUtils.formattedLine("Description", null));
-        lines.add("Releases:");
+        lines.add("Backlogs:");
+        // DO BACKLOG STUFF
+        for (Backlog backlog : project.getBacklogs()) {
+            lines.add(ReportGenerator.BACKLOG_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateBacklogReport(backlog)));
+        }
 
+        // DO UNALLOCATED STORY STUFF
+        lines.add("Unallocated Stories:");
+        for(Story story : project.getStories()) {
+            lines.add(ReportGenerator.STORY_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
+
+        }
+
+        lines.add("Releases:");
         for (Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateReleaseReport(release)));
@@ -152,6 +168,34 @@ public final class ReportGenerator {
             }
         }
 
+        return lines;
+    }
+
+    /**
+     *  Generate backlog data.
+     */
+    private List<String> generateBacklogReport(Backlog backlog) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.formattedLine("Short Name", backlog.getShortName()));
+        lines.add(ReportUtils.formattedLine("Name", backlog.getLongName()));
+        lines.add(ReportUtils.formattedLine("Product Owner", backlog.getProductOwner().getShortName()));
+        lines.add(ReportUtils.formattedLine("Description", backlog.getDescription()));
+        for(Story story : backlog.getStories()) {
+            lines.add(ReportGenerator.STORY_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
+
+        }
+
+        return lines;
+    }
+
+    private List<String> generateStoryReport(Story story) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.formattedLine("Short Name", story.getShortName()));
+        lines.add(ReportUtils.formattedLine("Name", story.getLongName()));
+        lines.add(ReportUtils.formattedLine("Description", story.getDescription()));
+        lines.add(ReportUtils.formattedLine("Creator", story.getCreator().getShortName()));
+        lines.add(ReportUtils.formattedLine("Priority", story.getPriority()));
         return lines;
     }
 
@@ -243,8 +287,8 @@ public final class ReportGenerator {
      */
     private List<String> generateSkillReport(Skill skill) {
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("shortName", skill.getShortName()));
-        lines.add(ReportUtils.formattedLine("description", skill.getDescription()));
+        lines.add(ReportUtils.formattedLine("Short Name", skill.getShortName()));
+        lines.add(ReportUtils.formattedLine("Description", skill.getDescription()));
         return lines;
     }
 
