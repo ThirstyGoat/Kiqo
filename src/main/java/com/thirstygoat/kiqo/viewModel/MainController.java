@@ -123,7 +123,7 @@ public class MainController implements Initializable {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = { "Delete Story", "Cancel" };
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
-                "Are you sure you want to delete the skill " + story.getShortName() + "?", buttons);
+                "Are you sure you want to delete the story " + story.getShortName() + "?", buttons);
 
         if (result.equals("Delete Story")) {
             doCommand(command);
