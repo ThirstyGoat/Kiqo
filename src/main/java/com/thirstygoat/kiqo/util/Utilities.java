@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -31,7 +32,8 @@ public class Utilities {
         return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
     }
 
-    public static String concatenatePeopleList(List<Person> people, int max) {
+    public static String concatenateItemsList(List<? extends Item> people, int max) {
+
         String list = "";
         for (int i = 0; i < Math.min(people.size(), max)-1; i++) {
             list += people.get(i).getShortName() + ", ";
@@ -42,7 +44,6 @@ public class Utilities {
             final String others = (remaining % 2 == 0) ? "others" : "other";
             list += " and " + remaining + " " + others;
         }
-
         return list;
     }
 
