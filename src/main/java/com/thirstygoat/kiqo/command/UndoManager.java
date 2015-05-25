@@ -1,11 +1,13 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Manages the undo/redo feature
@@ -15,11 +17,11 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
-    private final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
-    public SimpleBooleanProperty canUndoProperty = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty canRedoProperty = new SimpleBooleanProperty(false);
-
-    public SimpleBooleanProperty shouldUpdateMenuProperty = new SimpleBooleanProperty(false);
+    public final StringProperty undoTypeProperty = new SimpleStringProperty("");
+    public final StringProperty redoTypeProperty = new SimpleStringProperty("");
+    protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
+    private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
+    protected int savePosition = 0;
 
     /**
      * Executes the command and adds it to the undo stack.
@@ -29,13 +31,14 @@ public class UndoManager {
      * @return return value from command.execute()
      */
     public <T> T doCommand(final Command<T> command) {
+        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
+        T result = command.execute();
         undoStack.push(command);
         redoStack.clear();
-        canUndoProperty.set(true);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
-        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
-        return command.execute();
+
+        updateUndoRedoTypes();
+        checkChangesSaved();
+        return result;
     }
 
     /**
@@ -45,10 +48,9 @@ public class UndoManager {
         final Command<?> command = redoStack.pop();
         command.redo();
         undoStack.push(command);
-        canUndoProperty.set(true);
-        canRedoProperty.set(redoStack.size() > 0);
-        shouldUpdateMenuProperty.set(true);
+        updateUndoRedoTypes();
         UndoManager.LOGGER.log(Level.INFO, "Redoing command %s", command);
+        checkChangesSaved();
     }
 
     /**
@@ -59,10 +61,14 @@ public class UndoManager {
         final Command<?> command = undoStack.pop();
         command.undo();
         redoStack.push(command);
-        canRedoProperty.set(true);
-        canUndoProperty.set(undoStack.size() > 0);
-        shouldUpdateMenuProperty.set(true);
+        updateUndoRedoTypes();
         UndoManager.LOGGER.log(Level.INFO, "Undoing command %s", command);
+        checkChangesSaved();
+    }
+
+    private void updateUndoRedoTypes() {
+        undoTypeProperty.set(getUndoType());
+        redoTypeProperty.set(getRedoType());
     }
 
     /**
@@ -71,39 +77,42 @@ public class UndoManager {
     public void empty() {
         undoStack.clear();
         redoStack.clear();
-        canUndoProperty.set(false);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
+        updateUndoRedoTypes();
+        savePosition = 0;
+        checkChangesSaved();
     }
 
     /**
-     * Removes the necessary number of commands from the undo stack and clears the redo stack.
-     *
-     * @param position number of commands that should remain on undo stack
+     * Creates and executes a RevertCommand to clear the undoStack up to a certain point
      */
-    public void revert(int position) {
-        while (undoStack.size() > position) {
-            undoStack.pop();
+    public void revert() {
+        doCommand(new RevertCommand(this, savePosition));
+    }
+
+    public BooleanProperty changesSavedProperty() {
+        return changesSavedProperty;
+    }
+
+    private void checkChangesSaved() {
+        // If the top of the undostack is a RevertCommand, then that means that the user has just Reverted to last
+        // saved version, therefore changes are saved - feels a little hacky - Bradley
+        if (!undoStack.isEmpty() && undoStack.peek().getClass() == RevertCommand.class) {
+            changesSavedProperty().set(true);
+            return;
         }
-        redoStack.clear();
-
-        canUndoProperty.set(position > 0);
-        canRedoProperty.set(false);
-        shouldUpdateMenuProperty.set(true);
-    }
-
-    /**
-     * @return The size of the undo stack
-     */
-    public int getUndoStackSize() {
-        return undoStack.size();
+        changesSavedProperty().set(undoStack.size() == savePosition);
     }
 
     public String getUndoType() {
-        return undoStack.peek().getType();
+        return undoStack.isEmpty() ? "" : undoStack.peek().getType();
     }
 
     public String getRedoType() {
-        return redoStack.peek().getType();
+        return redoStack.isEmpty() ? "" : redoStack.peek().getType();
+    }
+
+    public void markSavePosition() {
+        savePosition = undoStack.size();
+        changesSavedProperty.set(true);
     }
 }

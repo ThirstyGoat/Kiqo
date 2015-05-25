@@ -1,13 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.Serializable;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.File;
-import java.io.Serializable;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Project class represents a software project
@@ -15,16 +16,25 @@ import java.io.Serializable;
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Organisation implements Serializable {
-    private final Skill poSkill = new Skill("PO", "Product Owner");
-    private final Skill smSkill = new Skill("SM", "Scrum Master");
-    private final ObservableList<Project> projects = FXCollections.observableArrayList();
-    private final ObservableList<Person> people = FXCollections.observableArrayList();
-    private final ObservableList<Skill> skills = FXCollections.observableArrayList();
-    private final ObservableList<Team> teams = FXCollections.observableArrayList();
+    private final ObservableList<Project> projects;
+    private final ObservableList<Person> people;
+    private final ObservableList<Skill> skills;
+    private final ObservableList<Team> teams;
+    private final StringProperty organisationName;
+
+    private final Skill poSkill;
+    private final Skill smSkill;
+
     private transient File saveLocation;
-    private StringProperty organisationName = new SimpleStringProperty("Untitled");
 
     public Organisation() {
+        projects = FXCollections.observableArrayList(Item.getWatchStrategy());
+        people = FXCollections.observableArrayList(Item.getWatchStrategy());
+        skills = FXCollections.observableArrayList(Item.getWatchStrategy());
+        teams = FXCollections.observableArrayList(Item.getWatchStrategy());
+        organisationName = new SimpleStringProperty("Untitled");
+        poSkill = new Skill("PO", "Product Owner");
+        smSkill = new Skill("SM", "Scrum Master");
         skills.add(poSkill);
         skills.add(smSkill);
     }
@@ -41,7 +51,6 @@ public class Organisation implements Serializable {
     public Skill getSmSkill() {
         return smSkill;
     }
-
 
     /**
      *

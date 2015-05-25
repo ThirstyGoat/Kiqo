@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
@@ -70,51 +74,18 @@ public class MainController implements Initializable {
     private Stage primaryStage;
     private double dividerPosition;
 
-    private int savePosition = 0;
-    private File lastSavedFile;
-
-    private void setLastSavedFile(File file) {
-        try {
-            final FileOutputStream outputStream = new FileOutputStream(lastSavedFile);
-            Files.copy(file.toPath(), outputStream);
-        } catch (final IOException ignored) {
-            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
-                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
-                            "Revert functionality is disabled");
-            revertSupported = false;
-        }
+    public ReadOnlyBooleanProperty changesSavedProperty() {
+        return undoManager.changesSavedProperty();
     }
 
-    // revert is not undoable -- just do it.
-    private void revert() {
-        Organisation organisation;
-
-        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-            try {
-                organisation = PersistenceManager.loadOrganisation(lastSavedFile);
-            } catch (final FileNotFoundException ignored) {
-                GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong", "Could not find original file!");
-                return;
-            }
-        } else {
-            organisation = new Organisation();
-        }
-
-        // reset to original saveLocation
-        if (selectedOrganisationProperty().get().getSaveLocation() != null) {
-            organisation.setSaveLocation(selectedOrganisationProperty().get().getSaveLocation());
-        }
-
-        changesSaved.set(true);
-        undoManager.empty();
-        // undoManager.revert(savePosition);
-        selectedOrganisationProperty.set(organisation);
+    protected void revert() {
+        undoManager.revert();
     }
 
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
-        final StringProperty changesSavedAsterisk = new SimpleStringProperty(changesSaved.get() ? "" : "*");
-        changesSaved.addListener((observable, oldValue, newValue) -> {
+        final StringProperty changesSavedAsterisk = new SimpleStringProperty(undoManager.changesSavedProperty().get() ? "" : "*");
+        undoManager.changesSavedProperty().addListener((observable, oldValue, newValue) -> {
             changesSavedAsterisk.set(newValue ? "" : "*");
         });
 
@@ -159,13 +130,11 @@ public class MainController implements Initializable {
         }
     }
 
-
     private void deleteSkill(Skill skill) {
         if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                     "The Product Owner and Scrum Master skills cannot be deleted.");
         } else {
-
             String deleteMessage = "There are no people with this skill.";
             final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
                 if (command.getPeopleWithSkill().size() > 0) {
@@ -221,7 +190,6 @@ public class MainController implements Initializable {
     }
 
     private void deletePerson(Person person) {
-
         final VBox node = new VBox();
         node.setSpacing(10);
 
@@ -257,7 +225,6 @@ public class MainController implements Initializable {
         if (result.equals("Delete Release")) {
             doCommand(new DeleteReleaseCommand((Release) focusedItemProperty.get()));
         }
-
     }
 
     public void deleteBacklog(Backlog backlog) {
@@ -295,8 +262,7 @@ public class MainController implements Initializable {
                 deleteRelease((Release) focusedObject);
             } else if (focusedObject.getClass() == Story.class) {
                 deleteStory((Story) focusedObject);
-            }
-            else if (focusedObject.getClass() == Backlog.class) {
+            } else if (focusedObject.getClass() == Backlog.class) {
                 deleteBacklog((Backlog) focusedObject);
             }
         });
@@ -306,25 +272,26 @@ public class MainController implements Initializable {
         final Item focusedObject = focusedItemProperty.get();
         if (focusedObject == null) {
             // do nothing
-        } else if (focusedObject instanceof Project) {
+        } else if (focusedObject.getClass() == Project.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Person) {
+        } else if (focusedObject.getClass() == Person.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Skill) {
-            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() || focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
+        } else if (focusedObject.getClass() == Skill.class) {
+            // Prohibit editing of PO/SM Skills
+            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() ||
+                    focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
             } else {
                 dialog(focusedObject);
             }
-        } else if (focusedObject instanceof Team) {
+        } else if (focusedObject.getClass() == Team.class) {
             dialog(focusedObject);
-        } else if (focusedObject instanceof Release) {
-            dialog((Release) focusedObject);
+        } else if (focusedObject.getClass() == Release.class) {
+            dialog(focusedObject);
         } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
             dialog(focusedObject);
-          }
-        else if (focusedObject.getClass() == Backlog.class) {
+        } else if (focusedObject.getClass() == Backlog.class) {
             dialog(focusedObject);
         }
     }
@@ -341,16 +308,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            lastSavedFile = File.createTempFile("KIQO_LAST_SAVED_FILE", ".tmp");
-            lastSavedFile.deleteOnExit();
-        } catch (final IOException ignored) {
-            GoatDialog.showAlertDialog(primaryStage, "Error", "Something went wrong",
-                    "Either the disk is full, or read/write access is disabled in your tmp directory.\n" +
-                            "Revert functionality is disabled");
-            revertSupported = false;
-        }
-
         selectedOrganisationProperty.set(new Organisation());
 
         // enable menu items
@@ -367,7 +324,6 @@ public class MainController implements Initializable {
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            // Clear undo/redo stack
             undoManager.empty();
         });
     }
@@ -467,11 +423,9 @@ public class MainController implements Initializable {
         try {
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
-            changesSaved.set(true);
             // Empty the undo/redo stack(s)
             undoManager.empty();
             // Store the organisation as it currently stands
-            setLastSavedFile(filePath);
         } catch (JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
@@ -521,9 +475,7 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Save failed", "No can do.", "Somehow, that file didn't allow saving.");
             return; // do not continue
         }
-        setLastSavedFile(organisation.getSaveLocation());
-        savePosition = undoManager.getUndoStackSize();
-        changesSaved.set(true);
+        undoManager.markSavePosition();
     }
 
     public void setListVisible(boolean visible) {
@@ -561,20 +513,14 @@ public class MainController implements Initializable {
     }
 
     public void undo() {
-        // If the changes are already saved, and we undo something, then the changes are now not saved
         undoManager.undoCommand();
-        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void redo() {
-        // If the changes are already saved, and we redo something, then the changes are now not saved
         undoManager.redoCommand();
-        changesSaved.set(undoManager.getUndoStackSize() == savePosition);
     }
 
     public void doCommand(Command<?> command) {
-        // set changes saved BEFORE executing the command so that the command is able to override changesSaved (eg. Revert)
-        changesSaved.set(false);
         undoManager.doCommand(command);
     }
 
@@ -612,7 +558,7 @@ public class MainController implements Initializable {
      * @return if the user clicked cancel or not
      */
     private boolean promptForUnsavedChanges() {
-        if (!changesSaved.get()) {
+        if (!undoManager.changesSavedProperty().get()) {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
@@ -628,26 +574,6 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Prompt the user if they want to save unsaved changes
-     * @return if the user clicked cancel or not
-     */
-    public boolean promptBeforeRevert() {
-        if (!changesSaved.get()) {
-            final String[] options = {"Revert", "Cancel"};
-            final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
-                    "\"File > Save As\" before reverting or you will lose these changes.", options);
-            if (response.equals("Revert")) {
-                revert();
-            } else {
-                // do nothing
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    /**
      * Set up the status bar for the application and monitor for changes in the
      * save state
      */
@@ -657,7 +583,7 @@ public class MainController implements Initializable {
         mainBorderPane.setBottom(statusBar);
 
         // Set up listener for save status
-        changesSaved.addListener((observable, oldValue, newValue) -> {
+        undoManager.changesSavedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // If changes are saved, then update message to reflect that
                 statusBar.setText(MainController.ALL_CHANGES_SAVED_TEXT);

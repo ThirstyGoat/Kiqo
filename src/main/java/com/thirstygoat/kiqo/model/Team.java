@@ -21,8 +21,8 @@ public class Team extends Item {
     private final StringProperty description;
     private final ObjectProperty<Person> productOwner = new SimpleObjectProperty<>();
     private final ObjectProperty<Person> scrumMaster = new SimpleObjectProperty<>();
-    private final ObservableList<Person> teamMembers = FXCollections.observableArrayList();
-    private final ObservableList<Person> devTeam = FXCollections.observableArrayList();
+    private final ObservableList<Person> teamMembers = FXCollections.observableArrayList(Item.getWatchStrategy());
+    private final ObservableList<Person> devTeam = FXCollections.observableArrayList(Item.getWatchStrategy());
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -73,7 +73,7 @@ public class Team extends Item {
     }
 
     public List<Person> getTeamMembers() {
-        ArrayList<Person> teamMembers1 = new ArrayList<>();
+        final ArrayList<Person> teamMembers1 = new ArrayList<>();
         teamMembers1.addAll(teamMembers);
         return teamMembers1;
 //        return Collections.unmodifiableList(teamMembers);
@@ -109,7 +109,7 @@ public class Team extends Item {
     }
 
     public List<Person> getDevTeam() {
-        ArrayList<Person> devteam1 = new ArrayList<>();
+        final ArrayList<Person> devteam1 = new ArrayList<>();
         devteam1.addAll(devTeam);
         return devteam1;
 //        return Collections.unmodifiableList(devTeam);
@@ -121,7 +121,7 @@ public class Team extends Item {
     }
 
     public List<Allocation> getAllocations() {
-        ArrayList<Allocation> allocations1 = new ArrayList<>();
+        final ArrayList<Allocation> allocations1 = new ArrayList<>();
         allocations1.addAll(allocations);
         return allocations1;
 //        return Collections.unmodifiableList(allocations);

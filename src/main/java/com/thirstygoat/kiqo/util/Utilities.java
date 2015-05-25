@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
@@ -21,6 +23,13 @@ import javafx.scene.control.TextField;
  * Created by bradley on 9/04/15.
  */
 public class Utilities {
+    public static final Comparator<Item> LEXICAL_COMPARATOR = (item1, item2) -> {
+        return item1.getShortName().compareToIgnoreCase(item2.getShortName());
+    };
+
+    public static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
+        return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
+    }
 
     public static String concatenatePeopleList(List<Person> people, int max) {
         String list = "";
@@ -53,30 +62,30 @@ public class Utilities {
     }
 
     public static StringProperty commaSeparatedValuesProperty(ObservableList<? extends Item> list) {
-        StringProperty result = new SimpleStringProperty();
-        result.set(commaSeparatedValues(list));
+        final StringProperty result = new SimpleStringProperty();
+        result.set(Utilities.commaSeparatedValues(list));
 
         // Add listeners on each of the string properties within the observable list
         final ChangeListener<String> stringChangeListener =
-                (observable, oldValue, newValue) -> result.set(commaSeparatedValues(list));
+                (observable, oldValue, newValue) -> result.set(Utilities.commaSeparatedValues(list));
 
-        for (Item item : list) {
+        for (final Item item : list) {
             item.shortNameProperty().addListener(stringChangeListener);
         }
 
         list.addListener((ListChangeListener<Item>) c -> {
             c.next();
             // Remove shortNameProperty listeners on each of items removed from the list
-            for (Item item : c.getRemoved()) {
+            for (final Item item : c.getRemoved()) {
                 item.shortNameProperty().removeListener(stringChangeListener);
             }
 
             // Add shortNameProperty listener for each of the items added to the list
-            for (Item item : c.getAddedSubList()) {
+            for (final Item item : c.getAddedSubList()) {
                 item.shortNameProperty().addListener(stringChangeListener);
             }
 
-            result.set(commaSeparatedValues(list));
+            result.set(Utilities.commaSeparatedValues(list));
         });
 
         return result;
@@ -105,7 +114,7 @@ public class Utilities {
      * @return shortName is unique among items
      */
     public static boolean shortnameIsUnique(String shortName, Item item, Collection<? extends Item> items) {
-        for (Item i : items) {
+        for (final Item i : items) {
             if (item != null && i == item) {
                 continue;
             }
@@ -141,7 +150,7 @@ public class Utilities {
      * @return file name with extension stripped
      */
     public static String stripExtension(String line) {
-        int index = line.lastIndexOf('.');
+        final int index = line.lastIndexOf('.');
         if (index > 0) {
             return line.substring(0, index);
         }
