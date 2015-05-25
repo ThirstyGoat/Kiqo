@@ -52,7 +52,11 @@ public class ReportUtils {
      * @param value the object whose toString value with be places after the colon.
      * @return a string of "valueName: value".
      */
-    public static String formattedLine(String valueName, Object value) {
+    public static String valueLine(String valueName, Object value) {
         return valueName + ": " + (value == null || (value.getClass() == String.class && value.toString().equals("")) ? "~" : value.toString());
+    }
+
+    public static String collectionLine(String str, Boolean test) {
+        return str + (test ? " ~" : "");
     }
 }
