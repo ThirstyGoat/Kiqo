@@ -20,16 +20,16 @@ import java.util.List;
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT = "-   ### Project ###";
-    private static final String TEAM_COMMENT = "-   ### Team ###";
-    private static final String PERSON_COMMENT = "-   ### Person ###";
-    private static final String RELEASE_COMMENT = "-   ### Release ###";
-    private static final String SKILL_COMMENT = "-   ### Skill ###";
-    private static final String BACKLOG_COMMENT = "-   ### BACKLOG ###";
-    private static final String STORY_COMMENT = "-   ### STORY ###";
+    private static final String PROJECT_COMMENT = " -   ### Project ###";
+    private static final String TEAM_COMMENT = " -   ### Team ###";
+    private static final String PERSON_COMMENT = " -   ### Person ###";
+    private static final String RELEASE_COMMENT = " -   ### Release ###";
+    private static final String SKILL_COMMENT = " -   ### Skill ###";
+    private static final String BACKLOG_COMMENT = " -   ### BACKLOG ###";
+    private static final String STORY_COMMENT = " -   ### STORY ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
-    private static final String ALLOCATION_COMMENT = "-   ### Allocation ###";
+    private static final String ALLOCATION_COMMENT = " -   ### Allocation ###";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter titleFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     private final List<Team> teams;
@@ -289,7 +289,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));
         lines.add(ReportUtils.collectionLine("Skills:", person.getSkills().isEmpty()));
         for (Skill skill : person.getSkills()) {
-            lines.add("-" + ReportUtils.indent(INDENT_SIZE) + ReportUtils.valueLine("Short Name", skill.getShortName()));
+            lines.add(" -" + ReportUtils.indent(INDENT_SIZE) + ReportUtils.valueLine("Short Name", skill.getShortName()));
         }
         return lines;
     }
