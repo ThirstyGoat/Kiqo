@@ -18,18 +18,19 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
     @Override
     protected TreeItem<Item> createTreeItem(final Item item) {
         final TreeItem<Item> treeItem = new TreeItem<>(item);
-        final GoatTreeItem<Release> releases = new GoatTreeItem<>("Releases", selectionModel, Utilities.LEXICAL_COMPARATOR);
-        releases.setItems(((Project) item).observableReleases());
-
-        final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
-        stories.setItems(((Project) item).observableStories());
 
         final BacklogsTreeItem backlogs = new BacklogsTreeItem(selectionModel);
         backlogs.setItems(((Project) item).observableBacklogs());
 
-        treeItem.getChildren().add(releases);
-        treeItem.getChildren().add(stories);
+        final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
+        stories.setItems(((Project) item).observableStories());
+
+        final GoatTreeItem<Release> releases = new GoatTreeItem<>("Releases", selectionModel, Utilities.LEXICAL_COMPARATOR);
+        releases.setItems(((Project) item).observableReleases());
+
         treeItem.getChildren().add(backlogs);
+        treeItem.getChildren().add(stories);
+        treeItem.getChildren().add(releases);
 
         treeItem.setExpanded(true);
         return treeItem;
