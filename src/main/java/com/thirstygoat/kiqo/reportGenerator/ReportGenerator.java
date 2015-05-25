@@ -132,13 +132,14 @@ public final class ReportGenerator {
         lines.add(ReportUtils.formattedLine("Long Name", project.getLongName()));
         lines.add(ReportUtils.formattedLine("Description", null));
         lines.add("Backlogs:");
-        // DO BACKLOG STUFF
+
+        // Add backlogs to the report
         for (Backlog backlog : project.getBacklogs()) {
             lines.add(ReportGenerator.BACKLOG_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateBacklogReport(backlog)));
         }
 
-        // DO UNALLOCATED STORY STUFF
+        // Add unallocated stories that belong to this project to the report
         lines.add("Unallocated Stories:");
         for(Story story : project.getStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
@@ -146,6 +147,7 @@ public final class ReportGenerator {
 
         }
 
+        // Add releases associated to this project to the report
         lines.add("Releases:");
         for (Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);
@@ -189,6 +191,9 @@ public final class ReportGenerator {
         return lines;
     }
 
+    /**
+     * Generate story data.
+     */
     private List<String> generateStoryReport(Story story) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.formattedLine("Short Name", story.getShortName()));
