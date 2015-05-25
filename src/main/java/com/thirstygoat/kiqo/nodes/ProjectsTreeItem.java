@@ -1,12 +1,9 @@
 package com.thirstygoat.kiqo.nodes;
 
-import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
 
 /**
@@ -27,7 +24,10 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
         final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
         stories.setItems(((Project) item).observableStories());
 
-        final GoatTreeItem<Story> backlogs = new GoatTreeItem<>("Backlogs", selectionModel, Utilities.LEXICAL_COMPARATOR);
+//        final GoatTreeItem<Story> backlogs = new GoatTreeItem<>("Backlogs", selectionModel, Utilities.LEXICAL_COMPARATOR);
+//        backlogs.setItems(((Project) item).observableBacklogs());
+
+        final BacklogsTreeItem backlogs = new BacklogsTreeItem(selectionModel);
         backlogs.setItems(((Project) item).observableBacklogs());
 
         treeItem.getChildren().add(releases);

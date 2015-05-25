@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
@@ -23,6 +24,15 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     public GoatTreeItem(String name, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
         super(new TreeNodeHeading(name));
+        treeItemComparator = (treeItem1, treeItem2) -> {
+            return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
+        };
+        treeItemMap = new HashMap<>();
+        this.selectionModel = selectionModel;
+    }
+
+    public GoatTreeItem(Item item, SelectionModel<TreeItem<Item>> selectionModel, Comparator<Item> comparator) {
+        super(item);
         treeItemComparator = (treeItem1, treeItem2) -> {
             return comparator.compare(treeItem1.getValue(), treeItem2.getValue());
         };
