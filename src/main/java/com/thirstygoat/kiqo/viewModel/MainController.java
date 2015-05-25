@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.viewModel;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.google.gson.JsonSyntaxException;
@@ -35,10 +36,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -139,7 +136,7 @@ public class MainController implements Initializable {
             final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-                deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
+                deleteMessage += Utilities.concatenateItemsList((command.getPeopleWithSkill()), 5);
             }
             final String[] buttons = { "Delete Skill", "Cancel" };
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
@@ -161,7 +158,7 @@ public class MainController implements Initializable {
             checkbox = new CheckBox("Also delete the people belonging to this team");
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
                     "?\nCurrent team members:\n";
-            deleteMessage += Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
+            deleteMessage += Utilities.concatenateItemsList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             node.getChildren().add(checkbox);
         } else {
@@ -231,18 +228,46 @@ public class MainController implements Initializable {
         final VBox node = new VBox();
         node.setSpacing(10);
 
-        final String deleteMessage = "Are you sure you want to remove the backlog: "
-                + backlog.getShortName();
-        node.getChildren().add(new Label(deleteMessage));
+        CheckBox checkBox;
+
+        if (backlog.getStories().size() > 0) {
+            checkBox = new CheckBox("Also delete the stories allocated to this backlog");
+            String deleteMessage = "Are you sure you want to delete the backlog: " + backlog.getShortName() +
+                    "?\nCurrent stories:\n";
+            deleteMessage += Utilities.concatenateItemsList(backlog.getStories(), 5);
+            node.getChildren().add(new Label(deleteMessage));
+            node.getChildren().add(checkBox);
+        } else {
+            final String deleteMessage = "Are you sure you want to remove the backlog: "
+                    + backlog.getShortName() + "?\nThis backlog has no stories in it.";
+            node.getChildren().add(new Label(deleteMessage));
+            checkBox = null;
+        }
 
         final String[] buttons = {"Delete Backlog", "Cancel"};
         final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Backlog",
                 "Are you sure? ", node, buttons);
 
-        if (result.equals("Delete Backlog")) {
-            doCommand(new DeleteBacklogCommand((Backlog) focusedItemProperty.get()));
-        }
+        // change this because its hasn't been init yet
+        final boolean deleteStories = (checkBox != null) ? checkBox.selectedProperty().getValue() : false;
 
+        if (result.equals("Delete Backlog")) {
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+            if (deleteStories) {
+                DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
+                command.setDeleteMembers();
+                changes.add(command);
+            } else {
+                changes.add(new DeleteBacklogCommand(backlog));
+                // move all stories in backlog to stoies for project
+                for (Story story : backlog.getStories()) {
+                    MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
+                    backlog.getProject().observableStories());
+                    changes.add(command);
+                }
+            }
+            doCommand(new CompoundCommand("Delete Backlog", changes));
+        }
     }
 
     public void deleteItem() {
@@ -536,6 +561,7 @@ public class MainController implements Initializable {
     }
 
     /**
+    /*
      *
      * Saves the project to disk and marks project as saved.
      *
