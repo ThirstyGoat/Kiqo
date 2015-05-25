@@ -56,6 +56,12 @@ public class ReportUtils {
         return valueName + ": " + (value == null || (value.getClass() == String.class && value.toString().equals("")) ? "~" : value.toString());
     }
 
+    /**
+     * Generates a "str: ~" string if the test passes, otherwise "str: ".
+     * @param str the string to be placed before the colon.
+     * @param test the boolean value for to determine if the "~" should be added or not.
+     * @return a string of "str: ~" or "str: ".
+     */
     public static String collectionLine(String str, Boolean test) {
         return str + (test ? " ~" : "");
     }
