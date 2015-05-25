@@ -26,8 +26,14 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
 
         final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
         stories.setItems(((Project) item).observableStories());
+
+        final GoatTreeItem<Story> backlogs = new GoatTreeItem<>("Backlogs", selectionModel, Utilities.LEXICAL_COMPARATOR);
+        backlogs.setItems(((Project) item).observableBacklogs());
+
         treeItem.getChildren().add(releases);
         treeItem.getChildren().add(stories);
+        treeItem.getChildren().add(backlogs);
+
         treeItem.setExpanded(true);
         return treeItem;
     }
