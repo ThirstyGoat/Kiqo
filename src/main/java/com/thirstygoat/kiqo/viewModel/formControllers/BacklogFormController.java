@@ -229,11 +229,7 @@ public class BacklogFormController extends FormController<Backlog> {
             if (!descriptionTextField.getText().equals(backlog.getDescription())) {
                 changes.add(new EditCommand<>(backlog, "description", descriptionTextField.getText()));
             }
-            if (!project.get().equals(backlog.getProject())) {
-                changes.add(new MoveItemCommand<>(backlog, backlog.getProject().observableBacklogs(),
-                        project.get().observableBacklogs()));
-                changes.add(new EditCommand<>(backlog, "project", project.get()));
-            }
+
             if (!productOwner.equals(backlog.getProductOwner())) {
                 changes.add(new EditCommand<>(backlog, "productOwner", productOwner));
             }
@@ -250,12 +246,29 @@ public class BacklogFormController extends FormController<Backlog> {
                 for (Story story : addedStories) {
                     changes.add(new MoveItemCommand<>(story, project.get().observableStories(),
                             backlog.observableStories()));
+                    //story.setBacklog(backlog);
+                    changes.add(new EditCommand<>(story, "backlog", backlog));
                 }
             }
+
+            if (!project.get().equals(backlog.getProject())) {
+                changes.add(new MoveItemCommand<>(backlog, backlog.getProject().observableBacklogs(),
+                        project.get().observableBacklogs()));
+                changes.add(new EditCommand<>(backlog, "project", project.get()));
+                // If backlog moved to a different project we need to update the back references of the stories
+                // in that backlog.
+                for (Story story : backlog.observableStories()) {
+                    changes.add(new EditCommand<>(story, "project", project.get()));
+                    changes.add(new EditCommand<>(story, "backlog", backlog));
+                }
+            }
+
             if (!removedStories.isEmpty()) {
                 for (Story story : removedStories) {
                     changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
                             project.get().observableStories()));
+                    //story.setBacklog(null);
+                    changes.add(new EditCommand<>(story, "backlog", null));
                 }
             }
 

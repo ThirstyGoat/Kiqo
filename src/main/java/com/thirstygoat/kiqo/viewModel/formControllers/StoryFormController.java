@@ -242,7 +242,13 @@ public class StoryFormController extends FormController<Story> {
 //                changes.add(new EditCommand<>(story, "creator", creator));
 //            }
             if (!project.equals(story.getProject())) {
-                changes.add(new MoveItemCommand<>(story, story.getProject().observableStories(), project.observableStories()));
+                if (story.getBacklog() != null) {
+                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableStories()));
+                } else {
+                    changes.add(new MoveItemCommand<>(story, story.getProject().observableStories(), project.observableStories()));
+                }
+                // If story is changing projects, then it shouldn't be in any backlog
+                changes.add(new EditCommand<>(story, "backlog", null));
                 changes.add(new EditCommand<>(story, "project", project));
             }
 
