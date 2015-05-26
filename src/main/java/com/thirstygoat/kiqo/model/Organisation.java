@@ -2,6 +2,8 @@ package com.thirstygoat.kiqo.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -58,6 +60,20 @@ public class Organisation implements Serializable {
      */
     public ObservableList<Person> getPeople() {
         return people;
+    }
+
+    /**
+     *
+     * @return A list of people with the Product Owner (PO) skill
+     */
+    public List<Person> getEligiblePOs() {
+        List<Person> eligiblePOs = new ArrayList<>();
+        for (Person person : people) {
+            if (person.getSkills().contains(poSkill)) {
+                eligiblePOs.add(person);
+            }
+        }
+        return eligiblePOs;
     }
 
     /**

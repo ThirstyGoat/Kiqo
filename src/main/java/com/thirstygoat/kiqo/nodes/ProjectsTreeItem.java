@@ -1,10 +1,12 @@
 package com.thirstygoat.kiqo.nodes;
 
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
-
-import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Represents a collection of Projects for display in a TreeView
