@@ -84,7 +84,11 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
                 }
             }
             getChildren().sort(treeItemComparator);
-            selectionModel.select(selectedItem);
+            // prevents selecting a deleted item
+
+            if (treeItemMap.values().contains(selectedItem)) {
+                selectionModel.select(selectedItem);
+            }
         };
     }
 }
