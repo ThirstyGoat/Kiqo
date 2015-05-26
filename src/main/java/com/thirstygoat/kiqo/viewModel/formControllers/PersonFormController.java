@@ -251,32 +251,6 @@ public class PersonFormController extends FormController<Person> {
                 changes.add(new EditCommand<>(person, "skills", skills));
             }
 
-            if (person.getSkills().contains(organisation.getPoSkill()) && !skills.contains(organisation.getPoSkill())) {
-                // Then they have removed the PO skill from the person
-                // Remove from PO role for team they are in, and any backlogs they are PO in
-                if (person.getTeam() != null) {
-                    if (person.getTeam().getProductOwner() == person) {
-                        changes.add(new EditCommand<>(person.getTeam(), "productOwner", null));
-                    }
-                }
-
-                // We need to find out if this person is a Product Owner for a particular backlog
-                for (Project project : organisation.getProjects()) {
-                    for (Backlog backlog : project.observableBacklogs()) {
-                        if (backlog.getProductOwner() == person) {
-                            changes.add(new EditCommand<>(backlog, "productOwner", null));
-                        }
-                    }
-                }
-            }
-
-            if (person.getSkills().contains(organisation.getSmSkill()) && !skills.contains(organisation.getSmSkill())) {
-                // Then remove this person as Scrum Master for their team
-                if (person.getTeam() != null && person.getTeam().getScrumMaster() == person) {
-                    changes.add(new EditCommand<>(person.getTeam(), "scrumMaster", null));
-                }
-            }
-
             valid = !changes.isEmpty();
 
             command = new CompoundCommand("Edit Person", changes);

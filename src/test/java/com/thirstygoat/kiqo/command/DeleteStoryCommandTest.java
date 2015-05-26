@@ -22,29 +22,29 @@ public class DeleteStoryCommandTest {
     public void setup() {
         project = new Project("", "");
         story = new Story("story1", "Story One", "descr", person, project, backlog, 9);
-        project.observableStories().add(story);
+        project.observableUnallocatedStories().add(story);
         command = new DeleteStoryCommand(story);
     }
 
     @Test
     public void deleteStory_StoryRemovedFromProject() {
-        Assert.assertTrue(project.getStories().contains(story));
+        Assert.assertTrue(project.getUnallocatedStories().contains(story));
 
         command.execute();
 
-        Assert.assertFalse(project.getStories().contains(story));
+        Assert.assertFalse(project.getUnallocatedStories().contains(story));
     }
 
     @Test
     public void undoDeleteStory_StoryAddedBackToProject() {
-        Assert.assertTrue(project.getStories().contains(story));
+        Assert.assertTrue(project.getUnallocatedStories().contains(story));
 
         command.execute();
 
-        Assert.assertFalse(project.getStories().contains(story));
+        Assert.assertFalse(project.getUnallocatedStories().contains(story));
 
         command.undo();
 
-        Assert.assertTrue(project.getStories().contains(story));
+        Assert.assertTrue(project.getUnallocatedStories().contains(story));
     }
 }

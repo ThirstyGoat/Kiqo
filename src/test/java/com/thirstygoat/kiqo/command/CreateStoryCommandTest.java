@@ -27,11 +27,11 @@ public class CreateStoryCommandTest {
 
     @Test
     public void createStory_StoryAddedToProject() {
-        Assert.assertFalse(project.getStories().contains(story));
+        Assert.assertFalse(project.getUnallocatedStories().contains(story));
 
         command.execute();
 
-        Assert.assertTrue(project.getStories().contains(story));
+        Assert.assertTrue(project.getUnallocatedStories().contains(story));
     }
 
     @Test
@@ -39,6 +39,6 @@ public class CreateStoryCommandTest {
         command.execute();
         command.undo();
 
-        Assert.assertFalse(project.getStories().contains(story));
+        Assert.assertFalse(project.getUnallocatedStories().contains(story));
     }
 }

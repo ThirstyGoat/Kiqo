@@ -20,8 +20,8 @@ public class DeleteStoryCommand extends Command<Story> {
             index = story.getBacklog().getStories().indexOf(story);
             story.getBacklog().observableStories().remove(story);
         } else {
-            index = story.getProject().getStories().indexOf(story);
-            story.getProject().observableStories().remove(story);
+            index = story.getProject().getUnallocatedStories().indexOf(story);
+            story.getProject().observableUnallocatedStories().remove(story);
         }
         return story;
     }
@@ -32,7 +32,7 @@ public class DeleteStoryCommand extends Command<Story> {
         if (story.getBacklog() != null) {
             story.getBacklog().observableStories().add(index, story);
         } else {
-            story.getProject().observableStories().add(index, story);
+            story.getProject().observableUnallocatedStories().add(index, story);
         }
     }
 

@@ -139,8 +139,8 @@ public final class ReportGenerator {
         }
 
         // Add unallocated stories that belong to this project to the report
-        lines.add(ReportUtils.collectionLine("Unallocated Stories:", project.getStories().isEmpty()));
-        for(Story story : project.getStories()) {
+        lines.add(ReportUtils.collectionLine("Unallocated Stories:", project.getUnallocatedStories().isEmpty()));
+        for(Story story : project.getUnallocatedStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
 

@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Created by Carina on 20/05/2015.
@@ -15,14 +16,26 @@ public class CreateBacklogCommand extends Command<Backlog> {
     @Override
     public Backlog execute() {
         backlog.getProject().observableBacklogs().add(backlog);
-        backlog.getProject().observableStories().removeAll(backlog.getStories());
+
+        // Assign this backlog as the owner of each of the stories
+        for (Story story : backlog.getStories()) {
+            story.setBacklog(backlog);
+        }
+
+        // Remove all stories from unallocated stories in Project
+        backlog.getProject().observableUnallocatedStories().removeAll(backlog.getStories());
         return backlog;
     }
 
     @Override
     public void undo() {
         backlog.getProject().observableBacklogs().remove(backlog);
-        backlog.getProject().observableStories().addAll(backlog.getStories());
+
+        for (Story story : backlog.getStories()) {
+            story.setBacklog(null);
+        }
+
+        backlog.getProject().observableUnallocatedStories().addAll(backlog.getStories());
     }
 
     @Override

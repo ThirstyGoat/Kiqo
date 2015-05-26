@@ -166,7 +166,7 @@ public class BacklogFormController extends FormController<Backlog> {
         final ObservableList<Story> sourceStories = FXCollections.observableArrayList();
 
         if (project.get() != null) {
-            sourceStories.addAll(project.get().getStories());
+            sourceStories.addAll(project.get().getUnallocatedStories());
             if (backlog != null) {
                 sourceStories.removeAll(backlog.getStories());
                 targetStories.addAll(backlog.getStories());
@@ -237,20 +237,17 @@ public class BacklogFormController extends FormController<Backlog> {
             }
 
             // Stories being added to the backlog
-            final ArrayList<Story> addedStories = new ArrayList(targetStories);
+            final ArrayList<Story> addedStories = new ArrayList<>(targetStories);
             addedStories.removeAll(backlog.getStories());
 
             // Stories being removed from the backlog
-            final ArrayList<Story> removedStories = new ArrayList(backlog.getStories());
+            final ArrayList<Story> removedStories = new ArrayList<>(backlog.getStories());
             removedStories.removeAll(targetStories);
 
-            if (!addedStories.isEmpty()) {
-                for (Story story : addedStories) {
-                    changes.add(new MoveItemCommand<>(story, project.get().observableStories(),
-                            backlog.observableStories()));
-                    //story.setBacklog(backlog);
-                    changes.add(new EditCommand<>(story, "backlog", backlog));
-                }
+            for (Story story : addedStories) {
+                changes.add(new MoveItemCommand<>(story, project.get().observableUnallocatedStories(),
+                        backlog.observableStories()));
+                changes.add(new EditCommand<>(story, "backlog", backlog));
             }
 
             if (!project.get().equals(backlog.getProject())) {
@@ -265,13 +262,10 @@ public class BacklogFormController extends FormController<Backlog> {
                 }
             }
 
-            if (!removedStories.isEmpty()) {
-                for (Story story : removedStories) {
-                    changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
-                            project.get().observableStories()));
-                    //story.setBacklog(null);
-                    changes.add(new EditCommand<>(story, "backlog", null));
-                }
+            for (Story story : removedStories) {
+                changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
+                        project.get().observableUnallocatedStories()));
+                changes.add(new EditCommand<>(story, "backlog", null));
             }
 
             valid = !changes.isEmpty();

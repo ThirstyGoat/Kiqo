@@ -106,7 +106,7 @@ public class StoryFormController extends FormController<Story> {
             if (project == null) {
                 return true;
             }
-            return Utilities.shortnameIsUnique(shortNameTextField.getText(), story, project.getStories());
+            return Utilities.shortnameIsUnique(shortNameTextField.getText(), story, project.getUnallocatedStories());
         };
 
         final Predicate<String> personValidation = s -> {
@@ -243,9 +243,9 @@ public class StoryFormController extends FormController<Story> {
 //            }
             if (!project.equals(story.getProject())) {
                 if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableStories(), project.observableStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), project.observableUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
                 changes.add(new EditCommand<>(story, "backlog", null));

@@ -100,7 +100,7 @@ public class Story extends Item {
         this.project.set(project);
     }
 
-    ObjectProperty<Backlog> backlogPropert() {
+    ObjectProperty<Backlog> backlogProperty() {
         return backlog;
     }
 
