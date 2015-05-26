@@ -325,6 +325,6 @@ public class BacklogFormController extends FormController<Backlog> {
         this.organisation = organisation;
         setupStoriesList();
         setTextFieldSuggester(projectTextField, organisation.getProjects());
-        setTextFieldSuggester(productOwnerTextField, organisation.getPeople());
+        setTextFieldSuggester(productOwnerTextField, organisation.getEligiblePOs());
     }
 }
