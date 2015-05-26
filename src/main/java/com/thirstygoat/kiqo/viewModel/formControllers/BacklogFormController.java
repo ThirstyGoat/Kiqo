@@ -112,8 +112,10 @@ public class BacklogFormController extends FormController<Backlog> {
         final Predicate<String> personValidation = s -> {
             for (final Person p : organisation.getPeople()) {
                 if (p.getShortName().equals(s)) {
-                    productOwner = p;
-                    return true;
+                    if (p.getSkills().contains(organisation.getPoSkill())) {
+                        productOwner = p;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -129,7 +131,7 @@ public class BacklogFormController extends FormController<Backlog> {
                 "Project must already exist"));
 
         validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(personValidation,
-                "Person must already exist"));
+                "Person must already exist and have the PO skill"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
