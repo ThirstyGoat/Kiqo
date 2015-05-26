@@ -1,10 +1,5 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
@@ -36,6 +31,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -472,7 +474,7 @@ public class MainController implements Initializable {
      *
      * @param saveAs force user to select a save location
      */
-    public void saveOrganisation(boolean saveAs) {
+    public boolean saveOrganisation(boolean saveAs) {
         final Organisation organisation = selectedOrganisationProperty().get();
 
         // ask for save location
@@ -480,12 +482,15 @@ public class MainController implements Initializable {
             final File file = promptForSaveLocation(organisation.getSaveLocation());
             if (file != null) {
                 organisation.setSaveLocation(file);
+            } else {
+                return false;
             }
         }
 
         if (organisation.getSaveLocation() != null) { // if not cancelled
             saveToDisk(organisation);
         }
+        return true;
     }
 
     /**
@@ -589,7 +594,7 @@ public class MainController implements Initializable {
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
             if (response.equals("Save changes")) {
-                saveOrganisation(false);
+                return saveOrganisation(false);
             } else if (response.equals("Discard changes")) {
                 return true;
             } else {
