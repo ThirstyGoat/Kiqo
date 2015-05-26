@@ -288,7 +288,7 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
     }
 
     private void move(ListView<T> viewA, ListView<T> viewB) {
-        List<T> selectedItems = new ArrayList<T>(viewA.getSelectionModel()
+        List<T> selectedItems = new ArrayList<>(viewA.getSelectionModel()
                 .getSelectedItems());
         move(viewA, viewB, selectedItems);
     }

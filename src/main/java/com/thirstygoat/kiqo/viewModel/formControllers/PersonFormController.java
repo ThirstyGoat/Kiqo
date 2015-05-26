@@ -4,15 +4,15 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreatePersonCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -121,15 +121,12 @@ public class PersonFormController extends FormController<Person> {
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
-        skillsSelectionView.setCellFactories(view -> {
-            final ListCell<Skill> cell = new ListCell<Skill>() {
-                @Override
-                public void updateItem(Skill item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(item != null ? item.getShortName() : null);
-                }
-            };
-            return cell;
+        skillsSelectionView.setCellFactories(view -> new ListCell<Skill>() {
+            @Override
+            public void updateItem(Skill item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item != null ? item.getShortName() : null);
+            }
         });
     }
 
@@ -140,6 +137,33 @@ public class PersonFormController extends FormController<Person> {
         if (person != null) {
             sourceSkills.removeAll(person.getSkills());
             targetSkills.addAll(person.getSkills());
+
+            // NOTE THIS IS NOT DEAD CODE TODO
+//            // Listen for skills that are removed (if PO/SM skill is removed, warn that the person will be removed that
+//            // role if they are using it.
+//            ListChangeListener<Skill> targetSkillsChangedListener = c -> {
+//
+//                while (c.next()) {
+//                    if (c.getRemoved().contains(organisation.getPoSkill()) && c.getRemoved().contains(organisation.getSmSkill())) {
+//                        // Then the user has removed the PO skill
+//                        GoatDialog.showAlertDialog(stage, "PO & SM Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as PO/SM for any Teams/Backlogs" +
+//                                        " they are currently assigned to.");
+//                    } else if (c.getRemoved().contains(organisation.getPoSkill())) {
+//                        // Then the user has removed the PO skill
+//                        GoatDialog.showAlertDialog(stage, "PO Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as PO for any Teams/Backlogs" +
+//                                        " they are currently assigned as Product Owner for.");
+//                    } else if (c.getRemoved().contains(organisation.getSmSkill())) {
+//                        // Then the user has removed the SM skill
+//                        GoatDialog.showAlertDialog(stage, "SM Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as SM for any Teams" +
+//                                        " they are currently assigned as Scrum Master for.");
+//                    }
+//                }
+//            };
+//
+//            targetSkills.addListener(targetSkillsChangedListener);
         }
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
@@ -225,6 +249,32 @@ public class PersonFormController extends FormController<Person> {
             if (!(skills.containsAll(person.getSkills())
                     && person.getSkills().containsAll(skills))) {
                 changes.add(new EditCommand<>(person, "skills", skills));
+            }
+
+            if (person.getSkills().contains(organisation.getPoSkill()) && !skills.contains(organisation.getPoSkill())) {
+                // Then they have removed the PO skill from the person
+                // Remove from PO role for team they are in, and any backlogs they are PO in
+                if (person.getTeam() != null) {
+                    if (person.getTeam().getProductOwner() == person) {
+                        changes.add(new EditCommand<>(person.getTeam(), "productOwner", null));
+                    }
+                }
+
+                // We need to find out if this person is a Product Owner for a particular backlog
+                for (Project project : organisation.getProjects()) {
+                    for (Backlog backlog : project.observableBacklogs()) {
+                        if (backlog.getProductOwner() == person) {
+                            changes.add(new EditCommand<>(backlog, "productOwner", null));
+                        }
+                    }
+                }
+            }
+
+            if (person.getSkills().contains(organisation.getSmSkill()) && !skills.contains(organisation.getSmSkill())) {
+                // Then remove this person as Scrum Master for their team
+                if (person.getTeam() != null && person.getTeam().getScrumMaster() == person) {
+                    changes.add(new EditCommand<>(person.getTeam(), "scrumMaster", null));
+                }
             }
 
             valid = !changes.isEmpty();
