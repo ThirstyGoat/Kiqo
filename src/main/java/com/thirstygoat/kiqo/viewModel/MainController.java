@@ -389,12 +389,26 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @return true if someone in the organisation has the PO skill
+     */
+    private boolean someoneHasPoSkill() {
+        for (Person person : selectedOrganisationProperty.get().getPeople()) {
+            if (person.getSkills().contains(selectedOrganisationProperty.get().getPoSkill())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void newBacklog() {
         if (selectedOrganisationProperty.get() != null) {
             if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
-                    selectedOrganisationProperty.get().getPeople().isEmpty()) {
+                    selectedOrganisationProperty.get().getPeople().isEmpty() ||
+                    !someoneHasPoSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Can't create Backlog", "Can't create Backlog",
-                        "You must have at least one Project and one Person in order to create a Backlog.");
+                        "You must have at least one Project and one Person with the PO skill in order to create a Backlog.");
                 return;
             }
             dialog(null, "Backlog");
