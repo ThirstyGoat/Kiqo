@@ -14,6 +14,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -524,6 +525,46 @@ public class MainController implements Initializable {
     public void statusReport() {
         //stub method to show dialog for report
         // TODO show the dialog for report
+
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Report Generator");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/report.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final ReportFormController reportFormController = loader.getController();
+
+            reportFormController.setStage(stage);
+            reportFormController.setOrganisation(selectedOrganisationProperty.get());
+//            reportFormController.loadProject(project);
+
+            stage.showAndWait();
+            System.out.println("closing...");
+            // print report stuff
+//            if (reportFormController.isValid()) {
+//                if (reportFormController == null) {
+//                    // create and do command
+//                    final Command<?> command = reportFormController.getCommand();
+//                    doCommand(command);
+//                } else {
+//                    //editing
+//                    doCommand(projectFormController.getCommand());
+//                }
+//
+//            }
+        });
     }
 
     public void saveStatusReport() {
