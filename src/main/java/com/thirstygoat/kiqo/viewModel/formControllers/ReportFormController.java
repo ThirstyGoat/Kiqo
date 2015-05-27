@@ -65,29 +65,29 @@ public class ReportFormController implements Initializable {
 
     private void setListSelectionViewData(String newValue) {
         final ObservableList<Item> sourceList = FXCollections.observableArrayList();
-        if (newValue == "Project") {
+        if (newValue == "Projects") {
             sourceList.addAll(organisation.getProjects());
         } else if (newValue == "People") {
             sourceList.addAll(organisation.getPeople());
-        } else if (newValue == "Backlog") {
+        } else if (newValue == "Backlogs") {
             for (Project project : organisation.getProjects()) {
                 sourceList.addAll(project.getBacklogs());
             }
-        } else if (newValue == "Team") {
+        } else if (newValue == "Teams") {
             sourceList.addAll(organisation.getTeams());
         }
-
+        elementListSelectionView.setSourceHeader(new Label("Available " + newValue + ":"));
+        elementListSelectionView.setTargetHeader(new Label(newValue + " in the report:"));
         elementListSelectionView.getSourceListView().setItems(sourceList);
         elementListSelectionView.getTargetListView().setItems(targetList);
     }
 
     private void populateComboBox() {
-        levelComboBox.getItems().addAll("Project", "Team", "People", "Backlog");
+        levelComboBox.getItems().addAll("Projects", "Teams", "People", "Backlogs");
     }
 
     private void setListSelectionViewSettings() {
-        elementListSelectionView.setSourceHeader(new Label("Available items"));
-        elementListSelectionView.setTargetHeader(new Label("Items in the report"));
+
 
         elementListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 

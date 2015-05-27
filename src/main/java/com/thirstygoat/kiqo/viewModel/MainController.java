@@ -551,19 +551,8 @@ public class MainController implements Initializable {
 //            reportFormController.loadProject(project);
 
             stage.showAndWait();
-            System.out.println("closing...");
             // print report stuff
-//            if (reportFormController.isValid()) {
-//                if (reportFormController == null) {
-//                    // create and do command
-//                    final Command<?> command = reportFormController.getCommand();
-//                    doCommand(command);
-//                } else {
-//                    //editing
-//                    doCommand(projectFormController.getCommand());
-//                }
-//
-//            }
+
         });
     }
 
