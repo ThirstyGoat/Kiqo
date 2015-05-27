@@ -37,6 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -189,6 +190,32 @@ public class MainController implements Initializable {
     }
 
     private void deletePerson(Person person) {
+        // We need to make sure that this person isn't a PO of a backlog
+        boolean usingPoSkillInBacklog = false;
+        final List<Backlog> backlogsOwned = new ArrayList<>();
+
+        // Check if they are the PO of any backlogs
+        for (Project project : selectedOrganisationProperty().get().getProjects()) {
+            for (Backlog backlog : project.observableBacklogs()) {
+                if (backlog.getProductOwner() == person) {
+                    usingPoSkillInBacklog = true;
+                    backlogsOwned.add(backlog);
+                }
+            }
+        }
+
+        if (usingPoSkillInBacklog) {
+            GoatDialog.showAlertDialog(
+                    primaryStage,
+                    "Can't delete Person",
+                    "Can't delete Person",
+                    person.getShortName() + " is currently the PO of:\n" +
+                    Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
+                    Utilities.concatenateItemsList(backlogsOwned, 5)
+            );
+            return;
+        }
+
         final VBox node = new VBox();
         node.setSpacing(10);
 

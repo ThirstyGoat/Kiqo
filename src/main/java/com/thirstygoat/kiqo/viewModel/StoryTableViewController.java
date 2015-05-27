@@ -46,7 +46,6 @@ public class StoryTableViewController implements Initializable {
 
     public void setItems(ObservableList<Story> items) {
         storyTableView.setItems(items);
-
     }
 
     public void setMainController(MainController mainController) {

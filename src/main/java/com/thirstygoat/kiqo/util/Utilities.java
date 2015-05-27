@@ -41,10 +41,14 @@ public class Utilities {
         list += people.get(Math.min(people.size(), max)-1).getShortName();
         if (Math.min(people.size(), max) < people.size()) {
             final int remaining = people.size() - max;
-            final String others = (remaining % 2 == 0) ? "others" : "other";
+            final String others = pluralise(remaining, "other", "others");
             list += " and " + remaining + " " + others;
         }
         return list;
+    }
+
+    public static String pluralise(int count, String singular, String plural) {
+        return (count % 2 == 0) ? plural : plural;
     }
 
     public static String commaSeparatedValues(List<? extends Item> list) {

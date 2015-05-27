@@ -32,6 +32,8 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -56,8 +58,7 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
 
     static {
         StyleManager.getInstance().addUserAgentStylesheet(
-                ListSelectionView.class
-                        .getResource("listselectionview.css").toExternalForm()); //$NON-NLS-1$
+                ListSelectionView.class.getResource("listselectionview.css").toExternalForm()); //$NON-NLS-1$
     }
 
     private GridPane gridPane;
@@ -156,6 +157,14 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
         return gridPane;
     }
 
+    public Button getMoveToSourceButton() {
+        return moveToSource;
+    }
+
+    public Button getMoveToSourceAllButton() {
+        return moveToSourceAll;
+    }
+
     private VBox createButtonBox() {
         VBox box = new VBox(5);
         box.setFillWidth(true);
@@ -192,7 +201,6 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
         bindMoveAllButtonsToDataModel();
 
         moveToTarget.setOnAction(evt -> moveToTarget());
-
         moveToTargetAll.setOnAction(evt -> moveToTargetAll());
 
         moveToSource.setOnAction(evt -> moveToSource());
@@ -276,12 +284,12 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
         getSourceListView().getSelectionModel().clearSelection();
     }
 
-    private void moveToSource() {
+    public void moveToSource() {
         move(getTargetListView(), getSourceListView());
         getTargetListView().getSelectionModel().clearSelection();
     }
 
-    private void moveToSourceAll() {
+    public void moveToSourceAll() {
         move(getTargetListView(), getSourceListView(), new ArrayList<>(
                 getTargetListView().getItems()));
         getTargetListView().getSelectionModel().clearSelection();
@@ -294,10 +302,8 @@ public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>>
     }
 
     private void move(ListView<T> viewA, ListView<T> viewB, List<T> items) {
-        for (T item : items) {
-            viewA.getItems().remove(item);
-            viewB.getItems().add(item);
-        }
+        viewA.getItems().removeAll(items);
+        viewB.getItems().addAll(items);
     }
 
     /**

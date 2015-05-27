@@ -6,6 +6,8 @@ import javafx.util.Callback;
 
 import org.controlsfx.control.ListSelectionView;
 
+import java.util.function.Function;
+
 /**
  * Created by bradley on 26/03/15. Extends original ListSelectionView as authored in the ControlsFX library This class
  * allows a custom cell factory which is great.
@@ -13,6 +15,7 @@ import org.controlsfx.control.ListSelectionView;
  * @param <T> Type of item to be displayed in the listviews
  */
 public class GoatListSelectionView<T> extends ListSelectionView<T> {
+    public final GoatListSelectionViewSkin<T> skin;
     private ListView<T> sourceListView;
     private ListView<T> targetListView;
 
@@ -22,7 +25,7 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     public GoatListSelectionView() {
         super();
 
-        final GoatListSelectionViewSkin<T> skin = new GoatListSelectionViewSkin<T>(this) {
+        skin = new GoatListSelectionViewSkin<T>(this) {
             {
                 sourceListView = getSourceListView();
                 targetListView = getTargetListView();
