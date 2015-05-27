@@ -86,7 +86,8 @@ public final class ReportGenerator {
         report.append(ReportUtils.dashes());  // needed to represent the start of the yaml document
         report.append(reportTitle);
 
-        report.append("\n### LEVEL: " + items.iterator().next().getClass().getSimpleName() + " ###");
+        String className = items.iterator().next().getClass().getSimpleName();
+        report.append("\n### " + className.toUpperCase() + " REPORT ###\n" + className + "s:");
         for (Item item : items) {
             report.append("\n\n");
             report.append(String.join("\n", generateItemReport(item)));
