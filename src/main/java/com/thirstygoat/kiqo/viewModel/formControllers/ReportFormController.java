@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,7 +23,6 @@ import java.util.ResourceBundle;
  * Created by Carina and James on 27/05/15.
  */
 public class ReportFormController implements Initializable {
-
     private final ObservableList<Item> targetList = FXCollections.observableArrayList();
     private Stage stage;
     private Organisation organisation;
@@ -30,7 +30,7 @@ public class ReportFormController implements Initializable {
 
     // Begin FXML Injections
     @FXML
-    private ComboBox levelComboBox;
+    private ComboBox<String> levelComboBox;
     @FXML
     private GoatListSelectionView<Item> elementListSelectionView;
     @FXML
@@ -44,36 +44,41 @@ public class ReportFormController implements Initializable {
         setListeners();
         setListSelectionViewSettings();
 
-//        Platform.runLater(shortNameTextField::requestFocus);
+        Platform.runLater(levelComboBox::requestFocus);
     }
 
-
-
+    public ObservableList<Item> getTargetList() {
+        return targetList;
+    }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> stage.close());
-
         cancelButton.setOnAction(event -> stage.close());
     }
 
     private void setListeners() {
         levelComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
             elementListSelectionView.getTargetListView().getItems().clear();
-            setListSelectionViewData((String)newValue);
+            setListSelectionViewData(newValue);
+            if (newValue.equals("Organisation")) {
+                elementListSelectionView.setDisable(true);
+            } else {
+                elementListSelectionView.setDisable(false);
+            }
         }));
     }
 
     private void setListSelectionViewData(String newValue) {
         final ObservableList<Item> sourceList = FXCollections.observableArrayList();
-        if (newValue == "Projects") {
+        if (newValue.equals("Projects")) {
             sourceList.addAll(organisation.getProjects());
-        } else if (newValue == "People") {
+        } else if (newValue.equals("People")) {
             sourceList.addAll(organisation.getPeople());
-        } else if (newValue == "Backlogs") {
+        } else if (newValue.equals("Backlogs")) {
             for (Project project : organisation.getProjects()) {
                 sourceList.addAll(project.getBacklogs());
             }
-        } else if (newValue == "Teams") {
+        } else if (newValue.equals("Teams")) {
             sourceList.addAll(organisation.getTeams());
         }
         elementListSelectionView.setSourceHeader(new Label("Available " + newValue + ":"));
@@ -83,12 +88,11 @@ public class ReportFormController implements Initializable {
     }
 
     private void populateComboBox() {
-        levelComboBox.getItems().addAll("Projects", "Teams", "People", "Backlogs");
+        levelComboBox.getItems().addAll("Organisation", "Projects", "Teams", "People", "Backlogs");
+        levelComboBox.getSelectionModel().select(0);
     }
 
     private void setListSelectionViewSettings() {
-
-
         elementListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 
         elementListSelectionView.setCellFactories(view -> {
@@ -102,48 +106,6 @@ public class ReportFormController implements Initializable {
         });
     }
 
-
-
-//    private void setTargetPeopleCellFactory(ListView<Person> listView) {
-//        listView.setCellFactory(view -> new ListCell<Person>() {
-//            @Override
-//            public void updateItem(Person person, boolean empty) {
-//                super.updateItem(person, empty);
-//                if (person != null) {
-//
-//                  }
-//                }
-//
-//
-//        });
-//    }
-
-//    private void populatePeopleListView() {
-//        // all people observableList = project.getPeople();
-//        final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
-//        sourcePeople.addAll(organisation.getPeople());
-//
-//        // Remove all people from sourcePeople that are currently in a team
-//        organisation.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
-//
-//        organisation.getPeople().addListener((ListChangeListener<Person>) c -> {
-//            c.next();
-//            // We remove people from the sourcePeople that were removed from the project.
-//            // Note that this shouldn't actually be possible since undo/redo should be disabled
-//            sourcePeople.removeAll(c.getRemoved());
-//            targetPeople.removeAll(c.getRemoved());
-//            for (final Person person : c.getAddedSubList()) {
-//                if (person.getTeam() == team) {
-//                    targetPeople.add(person);
-//                } else {
-//                    sourcePeople.add(person);
-//                }
-//            }
-//        });
-//
-//        peopleListSelectionView.getSourceListView().setItems(sourcePeople);
-//        peopleListSelectionView.getTargetListView().setItems(targetPeople);
-//    }
 
     public void setStage(Stage stage)  {
         this.stage = stage;

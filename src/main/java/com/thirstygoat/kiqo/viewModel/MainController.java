@@ -38,6 +38,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -551,12 +552,16 @@ public class MainController implements Initializable {
 //            reportFormController.loadProject(project);
 
             stage.showAndWait();
-            // print report stuff
+            if (!reportFormController.getTargetList().isEmpty()) {
+                saveStatusReport(reportFormController.getTargetList());
+            } else {
+                saveStatusReport(null);
+            }
 
         });
     }
 
-    public void saveStatusReport() {
+    public void saveStatusReport(Collection<Item> list) {
         final String EXTENSION = ".yaml";
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
@@ -571,10 +576,15 @@ public class MainController implements Initializable {
         if (selectedFile != null) {
             try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisationProperty.get());
-                fileWriter.write(reportGenerator.generateReport());
+                if (list != null) {
+                    fileWriter.write(reportGenerator.generateReport(list));
+                } else {
+                    fileWriter.write(reportGenerator.generateReport());
+                }
             } catch (final IOException e) {
                 MainController.LOGGER.log(Level.SEVERE, "Can't save status report", e);
             }
+
         }
     }
 

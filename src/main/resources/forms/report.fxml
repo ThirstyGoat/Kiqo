@@ -11,7 +11,7 @@
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Team" />
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Generate Report" />
             </children>
             <padding>
                 <Insets right="35.0" />
@@ -33,7 +33,7 @@
             <children>
                 <Label text="Report Level:" />
                 <ComboBox fx:id="levelComboBox" GridPane.columnIndex="1" maxWidth="Infinity"/>
-                <GoatListSelectionView fx:id="elementListSelectionView" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+                <GoatListSelectionView fx:id="elementListSelectionView" GridPane.rowIndex="1" GridPane.columnSpan="2" disable="true"/>
             </children>
         </GridPane>
     </center>
