@@ -711,8 +711,6 @@ public class MainController implements Initializable {
         });
     }
 
-
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
