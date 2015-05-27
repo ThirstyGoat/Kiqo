@@ -33,16 +33,16 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT = " -   ### Project ###";
-    private static final String TEAM_COMMENT = " -   ### Team ###";
-    private static final String PERSON_COMMENT = " -   ### Person ###";
-    private static final String RELEASE_COMMENT = " -   ### Release ###";
-    private static final String SKILL_COMMENT = " -   ### Skill ###";
-    private static final String BACKLOG_COMMENT = " -   ### BACKLOG ###";
-    private static final String STORY_COMMENT = " -   ### STORY ###";
+    private static final String PROJECT_COMMENT =       " -   ### Project ###";
+    private static final String TEAM_COMMENT =          " -   ### Team ###";
+    private static final String PERSON_COMMENT =        " -   ### Person ###";
+    private static final String RELEASE_COMMENT =       " -   ### Release ###";
+    private static final String SKILL_COMMENT =         " -   ### Skill ###";
+    private static final String BACKLOG_COMMENT =       " -   ### Backlog ###";
+    private static final String STORY_COMMENT =         " -   ### Story ###";
+    private static final String ALLOCATION_COMMENT =    " -   ### Allocation ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
-    private static final String ALLOCATION_COMMENT = " -   ### Allocation ###";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter titleFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     private final List<Team> teams;
@@ -79,13 +79,29 @@ public final class ReportGenerator {
         report.append(ReportUtils.dashes());  // needed to represent the start of the yaml document
         report.append(generateHeader());
 
-        final String className = items.iterator().next().getClass().getSimpleName();
-        report.append("\n### " + className.toUpperCase() + " REPORT ###\n" + className + "s:");
+        final Class<?> type = items.iterator().next().getClass();
+        report.append("\n### " + type.getSimpleName().toUpperCase() + " REPORT ###\n" + ReportGenerator.pluraliseClassName(type) + ":");
         for (final Item item : items) {
             report.append("\n\n");
             report.append(String.join("\n", generateItemReport(item)));
         }
         return report.toString();
+    }
+
+    /**
+     * @param type
+     * @return
+     */
+    private static String pluraliseClassName(final Class<?> type) {
+        final String collectionLabel;
+        if (type == Person.class) {
+            collectionLabel = "People";
+        } else if (type == Story.class) {
+            collectionLabel = "Stories";
+        } else {
+            collectionLabel = type.getSimpleName() + "s";
+        }
+        return collectionLabel;
     }
 
     /**
