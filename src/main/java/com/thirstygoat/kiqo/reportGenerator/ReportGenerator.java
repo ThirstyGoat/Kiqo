@@ -80,8 +80,13 @@ public final class ReportGenerator {
 
     public String generateReport(Collection<? extends Item> items) {
         StringBuilder report = new StringBuilder();
+        final String reportTitle = HeadingBuilder.makeHeading(title,
+                ReportGenerator.WIDTH, HeadingBuilder.Style.JUMBO);
+
         report.append(ReportUtils.dashes());  // needed to represent the start of the yaml document
-        report.append("title");
+        report.append(reportTitle);
+
+        report.append("\n### LEVEL: " + items.iterator().next().getClass().getSimpleName() + " ###");
         for (Item item : items) {
             report.append("\n\n");
             report.append(String.join("\n", generateItemReport(item)));
@@ -350,8 +355,8 @@ public final class ReportGenerator {
 
 
     public static void main(String[] args) throws FileNotFoundException {
-        Organisation organisation = PersistenceManager.loadOrganisation(new File("/Users/samschofield/Desktop/demo.json"));
+        Organisation organisation = PersistenceManager.loadOrganisation(new File("./test.json"));
         ReportGenerator r = new ReportGenerator(organisation);
-        System.out.println(r.generateReport(organisation.getPeople()));
+        System.out.println(r.generateReport(organisation.getProjects()));
     }
 }
