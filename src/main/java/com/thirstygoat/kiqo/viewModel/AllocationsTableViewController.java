@@ -9,13 +9,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -57,8 +51,10 @@ public class AllocationsTableViewController implements Initializable {
         if (type.equals(FirstColumnType.PROJECT)) {
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
             teamTableColumn.setText("Project");
+            allocationsTableView.setPlaceholder(new Label("Team not allocated to any projects"));
         } else if (type.equals(FirstColumnType.TEAM)) {
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
+            allocationsTableView.setPlaceholder(new Label("No teams allocated to project"));
         }
 
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
