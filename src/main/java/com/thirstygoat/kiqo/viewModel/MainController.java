@@ -521,6 +521,11 @@ public class MainController implements Initializable {
         }
     }
 
+    public void statusReport() {
+        //stub method to show dialog for report
+        // TODO show the dialog for report
+    }
+
     public void saveStatusReport() {
         final String EXTENSION = ".yaml";
         final FileChooser fileChooser = new FileChooser();

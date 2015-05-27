@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +12,8 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -140,7 +139,7 @@ public class MenuBarController implements Initializable {
         newBacklogMenuItem.setOnAction(event -> mainController.newBacklog());
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
         revertMenuItem.setOnAction(event -> mainController.revert());
-        generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
+        generateStatusReportMenuItem.setOnAction(event -> mainController.statusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation(false));
         saveAsMenuItem.setOnAction(event -> mainController.saveOrganisation(true));
