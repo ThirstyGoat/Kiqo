@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +28,7 @@ public class ReportFormController implements Initializable {
     private Stage stage;
     private Organisation organisation;
     private boolean valid = false;
+    private Level level = Level.ORGANISATION;
 
     // Begin FXML Injections
     @FXML
@@ -52,7 +54,10 @@ public class ReportFormController implements Initializable {
     }
 
     private void setButtonHandlers() {
-        okButton.setOnAction(event -> stage.close());
+        okButton.setOnAction(event -> {
+                valid = true;
+                stage.close();
+                    });
         cancelButton.setOnAction(event -> stage.close());
     }
 
@@ -62,24 +67,39 @@ public class ReportFormController implements Initializable {
             setListSelectionViewData(newValue);
             if (newValue.equals("Organisation")) {
                 elementListSelectionView.setDisable(true);
+                okButton.setDisable(false);
             } else {
                 elementListSelectionView.setDisable(false);
+                okButton.setDisable(true);
             }
         }));
+
+        targetList.addListener((ListChangeListener<Item>) c -> {
+            if (level != Level.ORGANISATION) {
+                okButton.setDisable(targetList.isEmpty());
+            }
+
+        });
     }
 
     private void setListSelectionViewData(String newValue) {
         final ObservableList<Item> sourceList = FXCollections.observableArrayList();
-        if (newValue.equals("Projects")) {
+        if (newValue.equals("Organisation")) {
+            level = Level.ORGANISATION;
+        } else if (newValue.equals("Projects")) {
+            level = Level.PROJECTS;
             sourceList.addAll(organisation.getProjects());
+        } else if (newValue.equals("Teams")) {
+            level = Level.TEAMS;
+            sourceList.addAll(organisation.getTeams());
         } else if (newValue.equals("People")) {
+            level = Level.PEOPLE;
             sourceList.addAll(organisation.getPeople());
         } else if (newValue.equals("Backlogs")) {
+            level = Level.BACKLOGS;
             for (Project project : organisation.getProjects()) {
                 sourceList.addAll(project.getBacklogs());
             }
-        } else if (newValue.equals("Teams")) {
-            sourceList.addAll(organisation.getTeams());
         }
         elementListSelectionView.setSourceHeader(new Label("Available " + newValue + ":"));
         elementListSelectionView.setTargetHeader(new Label(newValue + " in the report:"));
@@ -106,6 +126,13 @@ public class ReportFormController implements Initializable {
         });
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
 
     public void setStage(Stage stage)  {
         this.stage = stage;
@@ -113,5 +140,13 @@ public class ReportFormController implements Initializable {
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+    }
+
+    public enum Level {
+        ORGANISATION,
+        PROJECTS,
+        TEAMS,
+        PEOPLE,
+        BACKLOGS
     }
 }

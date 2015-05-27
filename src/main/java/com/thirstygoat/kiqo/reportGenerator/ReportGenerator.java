@@ -219,20 +219,18 @@ public final class ReportGenerator {
         boolean hasAllocationHeader = false;
         final LocalDate now = LocalDate.now();
 
-        for (final Allocation allocation : project.getAllocations()) {
-            if (allocation.getStartDate().isBefore(now) && allocation.getEndDate().isAfter(now)) {
-                if (!hasAllocationHeader) {
-                    // print list header
-                    lines.add(ReportUtils.collectionLine("Team:", false));
-                    hasAllocationHeader = true;
-                }
-                final Team team = allocation.getTeam();
-                lines.add(ReportGenerator.TEAM_COMMENT);
-                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTeamReport(team)));
+        for (final Allocation allocation : project.getCurrentAllocations()) {
+            if (!hasAllocationHeader) {
+                // print list header
+                lines.add(ReportUtils.collectionLine("Currently Allocated Teams:", false));
+                hasAllocationHeader = true;
             }
+            final Team team = allocation.getTeam();
+            lines.add(ReportGenerator.TEAM_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTeamReport(team)));
         }
         if (!hasAllocationHeader) {
-            lines.add(ReportUtils.collectionLine("Team:", true));
+            lines.add(ReportUtils.collectionLine("Currently Allocated Teams:", true));
 
         }
 

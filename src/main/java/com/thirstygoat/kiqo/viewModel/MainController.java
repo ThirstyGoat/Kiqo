@@ -582,12 +582,13 @@ public class MainController implements Initializable {
 //            reportFormController.loadProject(project);
 
             stage.showAndWait();
-            if (!reportFormController.getTargetList().isEmpty()) {
-                saveStatusReport(reportFormController.getTargetList());
-            } else {
-                saveStatusReport(null);
+            if (reportFormController.isValid()) {
+                if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
+                    saveStatusReport(reportFormController.getTargetList());
+                } else {
+                    saveStatusReport(null);
+                }
             }
-
         });
     }
 
