@@ -15,22 +15,30 @@ public class Story extends Item {
     private final StringProperty description;
     private final ObjectProperty<Person> creator;
     private final ObjectProperty<Project> project;
+    private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
 
     /**
      * no-arg constructor for JavaBeans compliance
      */
-   // public Story() {
-       // this("", "", "", null, null, Story.DEFAULT_PRIORITY);
-  //  }
+    public Story() {
+    this.shortName = new SimpleStringProperty("");
+    this.longName = new SimpleStringProperty("");
+    this.description = new SimpleStringProperty("");
+    this.creator = new SimpleObjectProperty<>(null);
+    this.project = new SimpleObjectProperty<>(null);
+    this.backlog = new SimpleObjectProperty<>(null);
+    this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
+}
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Integer priority) {
+                 Backlog backlog, Integer priority) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
         this.creator = new SimpleObjectProperty<>(creator);
         this.project = new SimpleObjectProperty<>(project);
+        this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
     }
 
@@ -90,6 +98,18 @@ public class Story extends Item {
 
     public void setProject(Project project) {
         this.project.set(project);
+    }
+
+    ObjectProperty<Backlog> backlogProperty() {
+        return backlog;
+    }
+
+    public Backlog getBacklog() {
+        return backlog.get();
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog.set(backlog);
     }
 
     public int getPriority() { return priority.get();}

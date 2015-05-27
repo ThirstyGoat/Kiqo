@@ -15,13 +15,13 @@ public class CreateStoryCommand extends Command<Story> {
 
     @Override
     public Story execute() {
-        story.getProject().observableStories().add(story);
+        story.getProject().observableUnallocatedStories().add(story);
         return story;
     }
 
     @Override
     public void undo() {
-        story.getProject().observableStories().remove(story);
+        story.getProject().observableUnallocatedStories().remove(story);
     }
 
     @Override

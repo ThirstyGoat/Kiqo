@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
@@ -13,6 +10,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).
@@ -38,6 +38,8 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private AnchorPane releaseDetailsPane;
     @FXML
+    private AnchorPane backlogDetailsPane;
+    @FXML
     private Button editButton;
     @FXML
     private Button deleteButton;
@@ -53,6 +55,8 @@ public class MainDetailsPaneController implements Initializable {
     private TeamDetailsPaneController teamDetailsPaneController;
     @FXML
     private ReleaseDetailsPaneController releaseDetailsPaneController;
+    @FXML
+    private BacklogDetailsPaneController backlogDetailsPaneController;
 
     private MainController mainController;
     private Pane[] panes;
@@ -66,6 +70,7 @@ public class MainDetailsPaneController implements Initializable {
         panes = new Pane[] {
                 projectDetailsPane,
                 personDetailsPane,
+                backlogDetailsPane,
                 skillDetailsPane,
                 storyDetailsPane,
                 teamDetailsPane,
@@ -94,6 +99,8 @@ public class MainDetailsPaneController implements Initializable {
                 showReleaseDetailPane((Release) item);
             } else if (item instanceof Story) {
                 showStoryDetailPane((Story) item);
+            } else if (item instanceof Backlog) {
+                showBacklogDetailsPane((Backlog) item);
             }
         }
     }
@@ -142,6 +149,12 @@ public class MainDetailsPaneController implements Initializable {
         showOptionButtons();
     }
 
+    private void showBacklogDetailsPane(Backlog backlog) {
+        backlogDetailsPaneController.showDetails(backlog);
+        show(backlogDetailsPane);
+        showOptionButtons();
+    }
+
     /**
      * Shows the appropriate pane
      * @param pane Pane to be shown
@@ -164,5 +177,6 @@ public class MainDetailsPaneController implements Initializable {
         this.mainController = mainController;
         projectDetailsPaneController.setMainController(mainController);
         teamDetailsPaneController.setMainController(mainController);
+        backlogDetailsPaneController.setMainController(mainController);
     }
 }

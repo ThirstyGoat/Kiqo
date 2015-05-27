@@ -16,8 +16,9 @@ public class Project extends Item {
     private final StringProperty shortName;
     private final StringProperty longName;
     private final ObservableList<Release> releases;
-    private final ObservableList<Story> stories;
+    private final ObservableList<Story> unallocatedStories;
     private final ObservableList<Allocation> allocations;
+    private final ObservableList<Backlog> backlogs;
     private final StringProperty description;
 
     /**
@@ -25,7 +26,8 @@ public class Project extends Item {
      */
     public Project() {
         releases = FXCollections.observableArrayList(Item.getWatchStrategy());
-        stories = FXCollections.observableArrayList(Item.getWatchStrategy());
+        unallocatedStories = FXCollections.observableArrayList(Item.getWatchStrategy());
+        backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
@@ -130,8 +132,12 @@ public class Project extends Item {
         return releases;
     }
 
-    public ObservableList<Story> observableStories() {
-        return stories;
+    public ObservableList<Story> observableUnallocatedStories() {
+        return unallocatedStories;
+    }
+
+    public ObservableList<Backlog> observableBacklogs() {
+        return backlogs;
     }
 
     public List<Release> getReleases() {
@@ -149,20 +155,39 @@ public class Project extends Item {
     }
 
     /**
-     * @return list of stories associated with this project
+     * @return list of unallocatedStories associated with this project
      */
-    public List<Story> getStories() {
+    public List<Story> getUnallocatedStories() {
         final List<Story> stories = new ArrayList<>();
-        stories.addAll(this.stories);
+        stories.addAll(this.unallocatedStories);
         return stories;
     }
 
     /**
-     * @param stories list of stories associated with this project
+     * @param unallocatedStories list of unallocatedStories associated with this project
      */
-    public void setStories(final List<Story> stories) {
-        stories.clear();
-        stories.addAll(stories);
+    public void setUnallocatedStories(final List<Story> unallocatedStories) {
+        unallocatedStories.clear();
+        unallocatedStories.addAll(unallocatedStories);
+    }
+
+    /**
+     *
+     * @return list of backlogs associated with this project.
+     */
+    public List<Backlog> getBacklogs() {
+        final List<Backlog> backlogs = new ArrayList<>();
+        backlogs.addAll(this.backlogs);
+        return backlogs;
+    }
+
+    /**
+     *
+     * @param backlogs list of backlogs associated with this project
+     */
+    public void setBacklogs(final List<Backlog> backlogs) {
+        backlogs.clear();
+        backlogs.addAll(backlogs);
     }
 
     @Override

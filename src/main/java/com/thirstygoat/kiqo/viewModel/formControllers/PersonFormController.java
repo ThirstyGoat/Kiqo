@@ -4,16 +4,17 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreatePersonCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,7 +34,7 @@ import java.util.function.Predicate;
 /**
  * Created by james on 20/03/15.
  */
-public class PersonFormController implements Initializable, IFormController<Person> {
+public class PersonFormController extends FormController<Person> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
@@ -42,7 +43,7 @@ public class PersonFormController implements Initializable, IFormController<Pers
     private Organisation organisation;
     private Person person;
     private boolean valid = false;
-    private boolean shortNameModified = false;
+    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command<?> command;
     // Begin FXML Injections
     @FXML
@@ -71,7 +72,8 @@ public class PersonFormController implements Initializable, IFormController<Pers
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        setShortNameSuggester();
+        Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
+                shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
 
         setValidationSupport();
@@ -119,15 +121,12 @@ public class PersonFormController implements Initializable, IFormController<Pers
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
-        skillsSelectionView.setCellFactories(view -> {
-            final ListCell<Skill> cell = new ListCell<Skill>() {
-                @Override
-                public void updateItem(Skill item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(item != null ? item.getShortName() : null);
-                }
-            };
-            return cell;
+        skillsSelectionView.setCellFactories(view -> new ListCell<Skill>() {
+            @Override
+            public void updateItem(Skill item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item != null ? item.getShortName() : null);
+            }
         });
     }
 
@@ -138,6 +137,33 @@ public class PersonFormController implements Initializable, IFormController<Pers
         if (person != null) {
             sourceSkills.removeAll(person.getSkills());
             targetSkills.addAll(person.getSkills());
+
+            // NOTE THIS IS NOT DEAD CODE TODO
+//            // Listen for skills that are removed (if PO/SM skill is removed, warn that the person will be removed that
+//            // role if they are using it.
+//            ListChangeListener<Skill> targetSkillsChangedListener = c -> {
+//
+//                while (c.next()) {
+//                    if (c.getRemoved().contains(organisation.getPoSkill()) && c.getRemoved().contains(organisation.getSmSkill())) {
+//                        // Then the user has removed the PO skill
+//                        GoatDialog.showAlertDialog(stage, "PO & SM Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as PO/SM for any Teams/Backlogs" +
+//                                        " they are currently assigned to.");
+//                    } else if (c.getRemoved().contains(organisation.getPoSkill())) {
+//                        // Then the user has removed the PO skill
+//                        GoatDialog.showAlertDialog(stage, "PO Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as PO for any Teams/Backlogs" +
+//                                        " they are currently assigned as Product Owner for.");
+//                    } else if (c.getRemoved().contains(organisation.getSmSkill())) {
+//                        // Then the user has removed the SM skill
+//                        GoatDialog.showAlertDialog(stage, "SM Skill removed", "Warning",
+//                                person.getShortName() + " will be removed as SM for any Teams" +
+//                                        " they are currently assigned as Scrum Master for.");
+//                    }
+//                }
+//            };
+//
+//            targetSkills.addListener(targetSkillsChangedListener);
         }
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
@@ -160,7 +186,7 @@ public class PersonFormController implements Initializable, IFormController<Pers
             // We are editing an existing Person
             stage.setTitle("Edit Person");
             okButton.setText("Done");
-            shortNameModified = true;
+            shortNameModified.set(true);
 
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
@@ -254,25 +280,12 @@ public class PersonFormController implements Initializable, IFormController<Pers
             // Auto populate short name text field
             if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
                     Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                shortNameModified = true;
+                shortNameModified.set(true);
             }
 
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-            }
-        });
-    }
-
-    /**
-     * Sets up the listener for changes in the long name, so that the short name can be populated with a suggestion
-     */
-    public void setShortNameSuggester() {
-        // Listen for changes in the long name, and populate the short name character by character up to specified characters
-        longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            final String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
-            if (!shortNameModified) {
-                shortNameTextField.setText(suggestedShortName);
             }
         });
     }

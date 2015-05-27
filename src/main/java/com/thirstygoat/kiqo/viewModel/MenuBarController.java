@@ -30,6 +30,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem newBacklogMenuItem;
+    @FXML
     private MenuItem newStoryMenuItem;
     @FXML
     private MenuItem revertMenuItem;
@@ -135,6 +137,7 @@ public class MenuBarController implements Initializable {
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
         newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
+        newBacklogMenuItem.setOnAction(event -> mainController.newBacklog());
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
         revertMenuItem.setOnAction(event -> mainController.revert());
         generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
@@ -228,6 +231,8 @@ public class MenuBarController implements Initializable {
                 new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
         newReleaseMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+        newBacklogMenuItem.setAccelerator(
+                new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_DOWN));
         newStoryMenuItem.setAccelerator(
                 new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));

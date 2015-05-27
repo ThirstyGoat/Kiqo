@@ -8,8 +8,9 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -26,7 +27,7 @@ import java.util.function.Predicate;
 /**
  * Created by Bradley, James on 13/03/15.
  */
-public class ProjectFormController implements Initializable, IFormController<Project> {
+public class ProjectFormController extends FormController<Project> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
@@ -35,7 +36,7 @@ public class ProjectFormController implements Initializable, IFormController<Pro
     public String description;
     private Project project;
     private Command<?> command;
-    private boolean shortNameModified = false;
+    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Stage stage;
     private Organisation organisation;
@@ -53,10 +54,11 @@ public class ProjectFormController implements Initializable, IFormController<Pro
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        setShortNameHandler();
+        Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
+                shortNameModified);
         setPrompts();
         setButtonHandlers();
-        setShortNameSuggester();
+        setShortNameHandler();
         Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
 
         setValidationSupport();
@@ -102,7 +104,7 @@ public class ProjectFormController implements Initializable, IFormController<Pro
             // We are editing an existing project
             stage.setTitle("Edit Project");
             okButton.setText("Done");
-            shortNameModified = true;
+            shortNameModified.set(true);
 
             longNameTextField.setText(project.getLongName());
             shortNameTextField.setText(project.getShortName());
@@ -170,7 +172,7 @@ public class ProjectFormController implements Initializable, IFormController<Pro
                     // Set up short name suggester
                     if (!Objects.equals(newValue, longNameTextField.getText().substring(0, Math.min(
                             longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
-                        shortNameModified = true;
+                        shortNameModified.set(true);
                     }
 
                     // Restrict length of short name text field
@@ -184,20 +186,11 @@ public class ProjectFormController implements Initializable, IFormController<Pro
      * Sets up the listener for changes in the long name, so that the short name
      * can be populated with a suggestion
      */
-    public void setShortNameSuggester() {
-        // Listen for changes in the long name, and populate the short name
-        // character by character up to specified characters
-        longNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            final String suggestedShortName = newValue.substring(0, Math.min(newValue.length(), SHORT_NAME_SUGGESTED_LENGTH));
-            if (!shortNameModified) {
-                shortNameTextField.setText(suggestedShortName);
-            }
-        });
-    }
 
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+
     }
     @Override
     public Command<?> getCommand() { return command; }

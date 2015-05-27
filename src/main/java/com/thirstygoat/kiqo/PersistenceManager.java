@@ -122,6 +122,7 @@ public class PersistenceManager {
                 .addType(Skill.class)
                 .addType(Release.class)
                 .addType(Allocation.class)
+                .addType(Backlog.class)
                 .addType(Story.class)
                 .registerOn(gsonBuilder);
 

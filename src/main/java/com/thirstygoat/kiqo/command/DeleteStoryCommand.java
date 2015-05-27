@@ -16,15 +16,24 @@ public class DeleteStoryCommand extends Command<Story> {
 
     @Override
     public Story execute() {
-        index = story.getProject().getStories().indexOf(story);
-        story.getProject().observableStories().remove(story);
+        if (story.getBacklog() != null) {
+            index = story.getBacklog().getStories().indexOf(story);
+            story.getBacklog().observableStories().remove(story);
+        } else {
+            index = story.getProject().getUnallocatedStories().indexOf(story);
+            story.getProject().observableUnallocatedStories().remove(story);
+        }
         return story;
     }
 
     @Override
     public void undo() {
         // Add the story back to wherever it was
-        story.getProject().observableStories().add(index, story);
+        if (story.getBacklog() != null) {
+            story.getBacklog().observableStories().add(index, story);
+        } else {
+            story.getProject().observableUnallocatedStories().add(index, story);
+        }
     }
 
     @Override

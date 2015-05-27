@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.model.Story;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -15,6 +18,7 @@ import javafx.collections.transformation.SortedList;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
+import javafx.scene.control.TextField;
 
 /**
  * Created by bradley on 9/04/15.
@@ -28,7 +32,8 @@ public class Utilities {
         return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
     }
 
-    public static String concatenatePeopleList(List<Person> people, int max) {
+    public static String concatenateItemsList(List<? extends Item> people, int max) {
+
         String list = "";
         for (int i = 0; i < Math.min(people.size(), max)-1; i++) {
             list += people.get(i).getShortName() + ", ";
@@ -39,7 +44,6 @@ public class Utilities {
             final String others = (remaining % 2 == 0) ? "others" : "other";
             list += " and " + remaining + " " + others;
         }
-
         return list;
     }
 
@@ -121,6 +125,24 @@ public class Utilities {
         }
         new Object();
         return true;
+    }
+
+    /**
+     * Sets up the listener for changes in the source name, that the the target name can be populated with a suggestion
+     * @param source the source name
+     * @param target the target name
+     * @param suggestedLength the maximum length for a suggestion
+     * @param targetModified whether or not the target was modified
+     */
+    public static void setNameSuggester(TextField source, TextField target, int suggestedLength,
+                                        BooleanProperty targetModified) {
+        source.textProperty().addListener((observable, oldValue, newValue) -> {
+            final String suggestedName = newValue.substring(0, Math.min(newValue.length(),
+                    suggestedLength));
+            if (!targetModified.get()) {
+                target.setText(suggestedName);
+            }
+        });
     }
 
     /**

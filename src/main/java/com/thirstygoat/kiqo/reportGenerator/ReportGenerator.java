@@ -20,14 +20,16 @@ import java.util.List;
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT = "-   ### Project ###";
-    private static final String TEAM_COMMENT = "-   ### Team ###";
-    private static final String PERSON_COMMENT = "-   ### Person ###";
-    private static final String RELEASE_COMMENT = "-   ### Release ###";
-    private static final String SKILL_COMMENT = "-   ### Skill ###";
+    private static final String PROJECT_COMMENT = " -   ### Project ###";
+    private static final String TEAM_COMMENT = " -   ### Team ###";
+    private static final String PERSON_COMMENT = " -   ### Person ###";
+    private static final String RELEASE_COMMENT = " -   ### Release ###";
+    private static final String SKILL_COMMENT = " -   ### Skill ###";
+    private static final String BACKLOG_COMMENT = " -   ### BACKLOG ###";
+    private static final String STORY_COMMENT = " -   ### STORY ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
-    private static final String ALLOCATION_COMMENT = "-   ### Allocation ###";
+    private static final String ALLOCATION_COMMENT = " -   ### Allocation ###";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter titleFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
     private final List<Team> teams;
@@ -86,14 +88,14 @@ public final class ReportGenerator {
                 (organisation.getSaveLocation() == null ? "~" : organisation.getSaveLocation().toString()));
 
         // append all projects
-        lines.add("Projects:");
+        lines.add(ReportUtils.collectionLine("Projects:", organisation.getProjects().isEmpty()));
         for (final Project project:  organisation.getProjects()) {
             lines.add(PROJECT_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateProjectReport(project)));
         }
         // append all skills
         if (organisation.getSkills().size() > 0) {
-            lines.add("Skills:");
+            lines.add(ReportUtils.collectionLine("Skills:", organisation.getSkills().isEmpty()));
             for (Skill skill : organisation.getSkills()) {
                 lines.add(ReportGenerator.SKILL_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateSkillReport(skill)));
@@ -101,8 +103,8 @@ public final class ReportGenerator {
         }
 
         // append unallocated teams
+        lines.add(ReportUtils.collectionLine("Unallocated Teams:", teams.isEmpty()));
         if (teams.size() > 0) {
-            lines.add("Unallocated Teams: ");
             for (final Team team : new ArrayList<Team>(teams)) {
                 lines.add(ReportGenerator.TEAM_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTeamReport(team)));
@@ -110,13 +112,12 @@ public final class ReportGenerator {
         }
         // append unallocated people
         if (people.size() > 0) {
-            lines.add("Unallocated People: ");
+            lines.add(ReportUtils.collectionLine("Unallocated People:", organisation.getPeople().isEmpty()));
             for (final Person person : new ArrayList<Person>(people)) {
                 lines.add(ReportGenerator.PERSON_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(person)));
             }
         }
-
         return lines;
     }
 
@@ -126,11 +127,27 @@ public final class ReportGenerator {
     private List<String> generateProjectReport(Project project) {
         final List<String> lines = new LinkedList<>();
 
-        lines.add(ReportUtils.formattedLine("Short Name", project.getShortName()));
-        lines.add(ReportUtils.formattedLine("Long Name", project.getLongName()));
-        lines.add(ReportUtils.formattedLine("Description", null));
-        lines.add("Releases:");
+        lines.add(ReportUtils.valueLine("Short Name", project.getShortName()));
+        lines.add(ReportUtils.valueLine("Long Name", project.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", null));
 
+        // Add backlogs to the report
+        lines.add(ReportUtils.collectionLine("Backlogs:", project.getBacklogs().isEmpty()));
+        for (Backlog backlog : project.getBacklogs()) {
+            lines.add(ReportGenerator.BACKLOG_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateBacklogReport(backlog)));
+        }
+
+        // Add unallocated stories that belong to this project to the report
+        lines.add(ReportUtils.collectionLine("Unallocated Stories:", project.getUnallocatedStories().isEmpty()));
+        for(Story story : project.getUnallocatedStories()) {
+            lines.add(ReportGenerator.STORY_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
+
+        }
+
+        // Add releases associated to this project to the report
+        lines.add(ReportUtils.collectionLine("Releases:", project.getReleases().isEmpty()));
         for (Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateReleaseReport(release)));
@@ -139,11 +156,12 @@ public final class ReportGenerator {
         // only print teams that are currently allocated
         boolean hasAllocationHeader = false;
         final LocalDate now = LocalDate.now();
+
         for (final Allocation allocation : project.getAllocations()) {
             if (allocation.getStartDate().isBefore(now) && allocation.getEndDate().isAfter(now)) {
                 if (!hasAllocationHeader) {
                     // print list header
-                    lines.add("Teams: ");
+                    lines.add(ReportUtils.collectionLine("Team:", false));
                     hasAllocationHeader = true;
                 }
                 final Team team = allocation.getTeam();
@@ -151,7 +169,43 @@ public final class ReportGenerator {
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTeamReport(team)));
             }
         }
+        if (!hasAllocationHeader) {
+            lines.add(ReportUtils.collectionLine("Team:", true));
 
+        }
+
+        return lines;
+    }
+
+    /**
+     *  Generate backlog data.
+     */
+    private List<String> generateBacklogReport(Backlog backlog) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", backlog.getShortName()));
+        lines.add(ReportUtils.valueLine("Name", backlog.getLongName()));
+        lines.add(ReportUtils.valueLine("Product Owner", backlog.getProductOwner().getShortName()));
+        lines.add(ReportUtils.valueLine("Description", backlog.getDescription()));
+        lines.add(ReportUtils.collectionLine("Stories:", backlog.getStories().isEmpty()));
+        for(Story story : backlog.getStories()) {
+            lines.add(ReportGenerator.STORY_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
+
+        }
+
+        return lines;
+    }
+
+    /**
+     * Generate story data.
+     */
+    private List<String> generateStoryReport(Story story) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", story.getShortName()));
+        lines.add(ReportUtils.valueLine("Name", story.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", story.getDescription()));
+        lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
+        lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
         return lines;
     }
 
@@ -160,9 +214,9 @@ public final class ReportGenerator {
      */
     private List<String> generateReleaseReport(Release release) {
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("Short Name", release.getShortName()));
-        lines.add(ReportUtils.formattedLine("Description", release.getDescription()));
-        lines.add(ReportUtils.formattedLine("Date", release.getDate().format(formatter)));
+        lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", release.getDescription()));
+        lines.add(ReportUtils.valueLine("Date", release.getDate().format(formatter)));
 
         return lines;
     }
@@ -173,7 +227,7 @@ public final class ReportGenerator {
     private List<String> generateTeamReport(Team team) {
         teams.remove(team);
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("Short Name", team.getShortName()));
+        lines.add(ReportUtils.valueLine("Short Name", team.getShortName()));
 
         if (team.getProductOwner() != null) {
             lines.add("Product Owner:");
@@ -186,7 +240,7 @@ public final class ReportGenerator {
         }
 
         if (team.getDevTeam() != null) {
-            lines.add("Development Team:");
+            lines.add(ReportUtils.collectionLine("Development Team:", team.getDevTeam().isEmpty()));
             for (final Person person : team.getDevTeam()) {
                 lines.add(ReportGenerator.PERSON_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(person)));
@@ -194,13 +248,13 @@ public final class ReportGenerator {
         }
 
         if (team.getTeamMembers() != null) {
-            lines.add(ReportUtils.formattedLine("Other Team Members", null));
             // First we need to get the set of all team members and remove people who are either product owner,
             // scrum master or in the dev team.
             List<Person> otherTeamMembers = team.getTeamMembers();
             otherTeamMembers.removeIf(p -> p.equals(team.getProductOwner()));
             otherTeamMembers.removeIf(p -> p.equals(team.getScrumMaster()));
             otherTeamMembers.removeAll(team.getDevTeam());
+            lines.add(ReportUtils.collectionLine("Other Team Members:", otherTeamMembers.isEmpty()));
             for (final Person person : otherTeamMembers) {
                 lines.add(ReportGenerator.PERSON_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(person)));
@@ -211,10 +265,12 @@ public final class ReportGenerator {
         final LocalDate now = LocalDate.now();
         for (final Allocation allocation : team.getAllocations()) {
             if (allocation.getStartDate().isBefore(now) && allocation.getEndDate().isAfter(now)) {
+                lines.add(ReportUtils.collectionLine("Current Allocation:", false));
                 lines.add(ReportGenerator.ALLOCATION_COMMENT);
                 lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
             }
         }
+
         return lines;
     }
 
@@ -224,16 +280,16 @@ public final class ReportGenerator {
     private List<String> generatePersonReport(Person person) {
         people.remove(person);
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("Short Name", person.getShortName()));
-        lines.add(ReportUtils.formattedLine("Long Name", person.getLongName()));
-        lines.add(ReportUtils.formattedLine("Description", person.getDescription()));
-        lines.add(ReportUtils.formattedLine("User ID", person.getUserID()));
-        lines.add(ReportUtils.formattedLine("Email Address", person.getEmailAddress()));
-        lines.add(ReportUtils.formattedLine("Phone Number", person.getPhoneNumber()));
-        lines.add(ReportUtils.formattedLine("Department", person.getDepartment()));
-        lines.add("Skills:");
+        lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
+        lines.add(ReportUtils.valueLine("Long Name", person.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", person.getDescription()));
+        lines.add(ReportUtils.valueLine("User ID", person.getUserID()));
+        lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
+        lines.add(ReportUtils.valueLine("Phone Number", person.getPhoneNumber()));
+        lines.add(ReportUtils.valueLine("Department", person.getDepartment()));
+        lines.add(ReportUtils.collectionLine("Skills:", person.getSkills().isEmpty()));
         for (Skill skill : person.getSkills()) {
-            lines.add("-" + ReportUtils.indent(INDENT_SIZE) + ReportUtils.formattedLine("Short Name", skill.getShortName()));
+            lines.add(" -" + ReportUtils.indent(INDENT_SIZE) + ReportUtils.valueLine("Short Name", skill.getShortName()));
         }
         return lines;
     }
@@ -243,8 +299,8 @@ public final class ReportGenerator {
      */
     private List<String> generateSkillReport(Skill skill) {
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("shortName", skill.getShortName()));
-        lines.add(ReportUtils.formattedLine("description", skill.getDescription()));
+        lines.add(ReportUtils.valueLine("Short Name", skill.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", skill.getDescription()));
         return lines;
     }
 
@@ -253,9 +309,9 @@ public final class ReportGenerator {
      */
     private List<String> generateAllocationlReport(Allocation allocation) {
         final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.formattedLine("Current Allocation Project", allocation.getProject().getShortName()));
-        lines.add(ReportUtils.formattedLine("Current Allocation Start Date", allocation.getStartDate().format(formatter)));
-        lines.add(ReportUtils.formattedLine("Current Allocation End Date", allocation.getEndDate().format(formatter)));
+        lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
+        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(formatter)));
+        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(formatter)));
         return lines;
     }
 }

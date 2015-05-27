@@ -7,32 +7,23 @@ import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
-import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 
 /**
  * Created by james on 11/04/15.
  */
-public class ReleaseFormController implements Initializable, IFormController<Release> {
+public class ReleaseFormController extends FormController<Release> {
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;
@@ -60,7 +51,6 @@ public class ReleaseFormController implements Initializable, IFormController<Rel
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setShortNameLengthRestrictor();
-        setProjectTextFieldSuggester();
         setPrompts();
         Platform.runLater(shortNameTextField::requestFocus);
 
@@ -126,44 +116,6 @@ public class ReleaseFormController implements Initializable, IFormController<Rel
             // Restrict length of short name text field
             if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
                 shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
-            }
-        });
-    }
-
-    private void setProjectTextFieldSuggester() {
-        // use a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
-        // use a String converter so that the Project's short name is used.
-        final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(projectTextField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Project>>() {
-            @Override
-            public Collection<Project> call(ISuggestionRequest request) {
-                // filter based on input string
-                final Collection<Project> projects = organisation.getProjects().stream()
-                        .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                        .collect(Collectors.toList());
-                return projects;
-            }
-
-        }, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String string) {
-                for (final Project project : organisation.getProjects()) {
-                    if (project.getShortName().equals(string)) {
-                        return project;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Project project) {
-                return project.getShortName();
-            }
-        });
-
-        projectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput("");
             }
         });
     }
@@ -240,6 +192,7 @@ public class ReleaseFormController implements Initializable, IFormController<Rel
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+        setTextFieldSuggester(projectTextField, organisation.getProjects());
     }
 
     @Override

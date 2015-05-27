@@ -1,23 +1,19 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.IFormController;
-
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -32,29 +28,16 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-
+import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,10 +48,12 @@ public class MainController implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
-    private static final String PRODUCT_NAME = "Kiqo";
+    private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
+    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
+    public boolean revertSupported = true;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -137,7 +122,7 @@ public class MainController implements Initializable {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = { "Delete Story", "Cancel" };
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
-                "Are you sure you want to delete the skill " + story.getShortName() + "?", buttons);
+                "Are you sure you want to delete the story " + story.getShortName() + "?", buttons);
 
         if (result.equals("Delete Story")) {
             doCommand(command);
@@ -153,7 +138,7 @@ public class MainController implements Initializable {
             final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
                 if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
-                deleteMessage += Utilities.concatenatePeopleList((command.getPeopleWithSkill()), 5);
+                deleteMessage += Utilities.concatenateItemsList((command.getPeopleWithSkill()), 5);
             }
             final String[] buttons = { "Delete Skill", "Cancel" };
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
@@ -175,7 +160,7 @@ public class MainController implements Initializable {
             checkbox = new CheckBox("Also delete the people belonging to this team");
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
                     "?\nCurrent team members:\n";
-            deleteMessage += Utilities.concatenatePeopleList(team.getTeamMembers(), 5);
+            deleteMessage += Utilities.concatenateItemsList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             node.getChildren().add(checkbox);
         } else {
@@ -241,6 +226,52 @@ public class MainController implements Initializable {
         }
     }
 
+    public void deleteBacklog(Backlog backlog) {
+        final VBox node = new VBox();
+        node.setSpacing(10);
+
+        CheckBox checkBox;
+
+        if (backlog.getStories().size() > 0) {
+            checkBox = new CheckBox("Also delete the stories allocated to this backlog");
+            String deleteMessage = "Are you sure you want to delete the backlog: " + backlog.getShortName() +
+                    "?\nCurrent stories:\n";
+            deleteMessage += Utilities.concatenateItemsList(backlog.getStories(), 5);
+            node.getChildren().add(new Label(deleteMessage));
+            node.getChildren().add(checkBox);
+        } else {
+            final String deleteMessage = "Are you sure you want to remove the backlog: "
+                    + backlog.getShortName() + "?\nThis backlog has no stories in it.";
+            node.getChildren().add(new Label(deleteMessage));
+            checkBox = null;
+        }
+
+        final String[] buttons = {"Delete Backlog", "Cancel"};
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Backlog",
+                "Are you sure? ", node, buttons);
+
+        // change this because its hasn't been init yet
+        final boolean deleteStories = (checkBox != null) ? checkBox.selectedProperty().getValue() : false;
+
+        if (result.equals("Delete Backlog")) {
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+            if (deleteStories) {
+                DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
+                command.setDeleteMembers();
+                changes.add(command);
+            } else {
+                changes.add(new DeleteBacklogCommand(backlog));
+                // move all stories in backlog to stoies for project
+                for (Story story : backlog.getStories()) {
+                    MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
+                    backlog.getProject().observableUnallocatedStories());
+                    changes.add(command);
+                }
+            }
+            doCommand(new CompoundCommand("Delete Backlog", changes));
+        }
+    }
+
     public void deleteItem() {
         Platform.runLater(() -> {
             final Item focusedObject = focusedItemProperty.get();
@@ -258,6 +289,8 @@ public class MainController implements Initializable {
                 deleteRelease((Release) focusedObject);
             } else if (focusedObject.getClass() == Story.class) {
                 deleteStory((Story) focusedObject);
+            } else if (focusedObject.getClass() == Backlog.class) {
+                deleteBacklog((Backlog) focusedObject);
             }
         });
     }
@@ -284,6 +317,8 @@ public class MainController implements Initializable {
         } else if (focusedObject.getClass() == Release.class) {
             dialog(focusedObject);
         } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
+            dialog(focusedObject);
+        } else if (focusedObject.getClass() == Backlog.class) {
             dialog(focusedObject);
         }
     }
@@ -351,6 +386,19 @@ public class MainController implements Initializable {
                 return;
             }
             dialog(null, "Release");
+        }
+    }
+
+    public void newBacklog() {
+        if (selectedOrganisationProperty.get() != null) {
+            if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
+                    selectedOrganisationProperty.get().getPeople().isEmpty() ||
+                    selectedOrganisationProperty.get().getEligiblePOs().isEmpty()) {
+                GoatDialog.showAlertDialog(primaryStage, "Can't create Backlog", "Can't create Backlog",
+                        "You must have at least one Project and one Person with the PO skill in order to create a Backlog.");
+                return;
+            }
+            dialog(null, "Backlog");
         }
     }
 
@@ -427,7 +475,7 @@ public class MainController implements Initializable {
      *
      * @param saveAs force user to select a save location
      */
-    public void saveOrganisation(boolean saveAs) {
+    public boolean saveOrganisation(boolean saveAs) {
         final Organisation organisation = selectedOrganisationProperty().get();
 
         // ask for save location
@@ -435,12 +483,15 @@ public class MainController implements Initializable {
             final File file = promptForSaveLocation(organisation.getSaveLocation());
             if (file != null) {
                 organisation.setSaveLocation(file);
+            } else {
+                return false;
             }
         }
 
         if (organisation.getSaveLocation() != null) { // if not cancelled
             saveToDisk(organisation);
         }
+        return true;
     }
 
     /**
@@ -516,6 +567,7 @@ public class MainController implements Initializable {
     }
 
     /**
+    /*
      *
      * Saves the project to disk and marks project as saved.
      *
@@ -543,7 +595,7 @@ public class MainController implements Initializable {
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
             if (response.equals("Save changes")) {
-                saveOrganisation(false);
+                return saveOrganisation(false);
             } else if (response.equals("Discard changes")) {
                 return true;
             } else {
@@ -609,7 +661,7 @@ public class MainController implements Initializable {
             final Scene scene = new Scene(root);
             stage.setScene(scene);
             @SuppressWarnings("unchecked")
-            final IFormController<T> formController = loader.getController();
+            final FormController<T> formController = loader.getController();
             formController.setStage(stage);
             formController.setOrganisation(selectedOrganisationProperty.get());
             formController.populateFields(t);
