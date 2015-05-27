@@ -1,12 +1,16 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
+import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +39,7 @@ public final class ReportGenerator {
     private final List<Team> teams;
     private final List<Person> people;
     private final Organisation organisation;
-    // Create the header string for the report
+//     Create the header string for the report
     private final String[] title;
 
     /**
@@ -72,6 +76,35 @@ public final class ReportGenerator {
         report.append(String.join("\n", generateOrganisationReport(organisation)));  // report content
 
         return report.toString();
+    }
+
+    public String generateReport(Collection<? extends Item> items) {
+        StringBuilder report = new StringBuilder();
+        report.append(ReportUtils.dashes());  // needed to represent the start of the yaml document
+        report.append("title");
+        for (Item item : items) {
+            report.append("\n\n");
+            report.append(String.join("\n", generateItemReport(item)));
+        }
+        return report.toString();
+    }
+
+    private List<String> generateItemReport(Item item) {
+        final List<String> lines = new LinkedList<>();
+        if (item.getClass() == Project.class) {
+            lines.add(PROJECT_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateProjectReport((Project) item)));
+        } else if (item.getClass() == Team.class) {
+            lines.add(TEAM_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTeamReport((Team) item)));
+        } else if (item.getClass() == Person.class) {
+            lines.add(PERSON_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport((Person) item)));
+        } else if (item.getClass() == Backlog.class) {
+            lines.add(BACKLOG_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateBacklogReport((Backlog) item)));
+        }
+        return lines;
     }
 
     /**
@@ -313,5 +346,12 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(formatter)));
         lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(formatter)));
         return lines;
+    }
+
+
+    public static void main(String[] args) throws FileNotFoundException {
+        Organisation organisation = PersistenceManager.loadOrganisation(new File("/Users/samschofield/Desktop/demo.json"));
+        ReportGenerator r = new ReportGenerator(organisation);
+        System.out.println(r.generateReport(organisation.getPeople()));
     }
 }
