@@ -1,8 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Command to delete a person from a project.
@@ -14,7 +16,7 @@ public class DeletePersonCommand extends Command<Person> {
     private final Team team;
     private boolean isProductOwner = false;
     private boolean isScrumMaster = false;
-    private boolean inDevTeam = true;
+    private boolean inDevTeam = false;
 
     private int index;
 
@@ -22,9 +24,13 @@ public class DeletePersonCommand extends Command<Person> {
      * @param person Person to be deleted
      * @param organisation organisation to which the person belongs
      */
-    public DeletePersonCommand(final Person person, final Organisation organisation) {
+    public DeletePersonCommand(final Person person, final Organisation organisation) throws InvalidPersonDeletionException {
         this.person = person;
         this.organisation = organisation;
+
+        if (!canDeletePerson()) {
+            throw new InvalidPersonDeletionException(person);
+        }
         team = person.getTeam();
         if (team != null) {
             if (team.getProductOwner() == person) {
@@ -37,6 +43,11 @@ public class DeletePersonCommand extends Command<Person> {
                 inDevTeam = true;
             }
         }
+    }
+
+    private boolean canDeletePerson() {
+        // Return whether or not the person is PO of one or more backlogs
+        return !Utilities.isPersonPoOfBacklog(person, organisation);
     }
 
     @Override

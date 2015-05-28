@@ -1,8 +1,12 @@
 package com.thirstygoat.kiqo.command;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
@@ -14,41 +18,55 @@ import com.thirstygoat.kiqo.model.Team;
 public class DeleteTeamCommand extends Command<Team> {
     private final Organisation organisation;
     private final Team team;
-    // Hash map of people in the team to be deleted, and the index at which the person appears in people list of
-    // the organisation
-    private final Map<Integer, Person> teamMembers = new LinkedHashMap<>();
-
+    private final List<DeletePersonCommand> deletePersonCommands = new ArrayList<>();
     private int organisationIndex;
+    private boolean deleteTeamMembers = false;
 
     /**
-     *
      * @param team the team to be deleted
      * @param organisation the project to delete the team from
      */
     public DeleteTeamCommand(final Team team, final Organisation organisation) {
         this.organisation = organisation;
         this.team = team;
+
+        addDeletePersonCommands();
+    }
+
+    public boolean canDeleteTeamMembers() {
+        return !deletePersonCommands.isEmpty();
+    }
+
+    public void setDeleteTeamMembers(boolean deleteTeamMembers) {
+        this.deleteTeamMembers = deleteTeamMembers;
     }
 
     /**
      * Sets the members of the team to be deleted
      */
-    public void setDeleteMembers() {
-        for (final Person person : team.getTeamMembers()) {
-            teamMembers.put(organisation.getPeople().indexOf(person), person);
+    public void addDeletePersonCommands() {
+        // Add new delete people commands
+        for (Person person : team.getTeamMembers()) {
+            try {
+                deletePersonCommands.add(new DeletePersonCommand(person, organisation));
+            } catch (InvalidPersonDeletionException e) {
+                // Then one of the people can't be deleted
+                deletePersonCommands.clear();
+                break;
+            }
         }
     }
 
     @Override
     public Team execute() {
-        // Set team members' team field to null
-        for (final Person person : team.getTeamMembers()) {
-            person.setTeam(null);
-        }
-
-        // if setDeleteMembers was called, delete each team member
-        for (final Person person : teamMembers.values()) {
-            organisation.getPeople().remove(person);
+        // If we are deleting the team members as well, their team field can stay set to this team
+        if (deleteTeamMembers) {
+            deletePersonCommands.forEach(Command::execute);
+        } else {
+            // If we aren't deleting the team members, at the very least, we have to set their teams to null
+            for (Person person : team.getTeamMembers()) {
+                person.setTeam(null);
+            }
         }
 
         // delete the team
@@ -60,13 +78,13 @@ public class DeleteTeamCommand extends Command<Team> {
 
     @Override
     public void undo() {
-        // Set team members team field to this team
-        for (final Person person : team.getTeamMembers()) {
-            person.setTeam(team);
-        }
-
-        for (final Map.Entry<Integer, Person> entry : teamMembers.entrySet()) {
-            organisation.getPeople().add(entry.getKey(), entry.getValue());
+        if (deleteTeamMembers) {
+            deletePersonCommands.forEach(Command::undo);
+        } else {
+            // If the team members weren't deleted, we need to update their team to be this team now
+            for (Person person : team.getTeamMembers()) {
+                person.setTeam(team);
+            }
         }
 
         organisation.getTeams().add(organisationIndex, team);

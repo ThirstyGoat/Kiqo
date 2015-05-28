@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,8 +16,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
 import javafx.scene.control.TextField;
 
 /**
@@ -160,5 +158,17 @@ public class Utilities {
             return line.substring(0, index);
         }
         return line;
+    }
+
+    public static boolean isPersonPoOfBacklog(Person person, Organisation organisation) {
+        // Check if they are the PO of any backlogs
+        for (Project project : organisation.getProjects()) {
+            for (Backlog backlog : project.observableBacklogs()) {
+                if (backlog.getProductOwner() == person) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

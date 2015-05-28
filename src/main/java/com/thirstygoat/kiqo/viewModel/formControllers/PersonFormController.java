@@ -297,9 +297,7 @@ public class PersonFormController extends FormController<Person> {
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
     private void setCommand() {
