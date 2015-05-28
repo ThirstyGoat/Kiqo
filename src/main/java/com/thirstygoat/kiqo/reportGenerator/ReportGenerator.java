@@ -33,18 +33,18 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT =       " -   ### Project ###";
-    private static final String TEAM_COMMENT =          " -   ### Team ###";
-    private static final String PERSON_COMMENT =        " -   ### Person ###";
-    private static final String RELEASE_COMMENT =       " -   ### Release ###";
-    private static final String SKILL_COMMENT =         " -   ### Skill ###";
-    private static final String BACKLOG_COMMENT =       " -   ### Backlog ###";
-    private static final String STORY_COMMENT =         " -   ### Story ###";
-    private static final String ALLOCATION_COMMENT =    " -   ### Allocation ###";
+    private static final String PROJECT_COMMENT =       "-   ### Project ###";
+    private static final String TEAM_COMMENT =          "-   ### Team ###";
+    private static final String PERSON_COMMENT =        "-   ### Person ###";
+    private static final String RELEASE_COMMENT =       "-   ### Release ###";
+    private static final String SKILL_COMMENT =         "-   ### Skill ###";
+    private static final String BACKLOG_COMMENT =       "-   ### Backlog ###";
+    private static final String STORY_COMMENT =         "-   ### Story ###";
+    private static final String ALLOCATION_COMMENT =    "-   ### Allocation ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter TITLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
+    private static final DateTimeFormatter TITLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private final List<Team> teams;
     private final List<Person> people;
     private final Organisation organisation;
@@ -96,7 +96,7 @@ public final class ReportGenerator {
             "Organisation: " + organisation.organisationNameProperty().get(),
             "",
             "Generated " + LocalDateTime.now().format(ReportGenerator.TITLE_DATE_FORMATTER),
-            "by " + ApplicationInfo.getProperty("name") + ApplicationInfo.getProperty("version")
+            "by " + ApplicationInfo.getProperty("name") + " " + ApplicationInfo.getProperty("version")
         };
         return HeadingBuilder.makeHeading(title, ReportGenerator.WIDTH, HeadingBuilder.Style.JUMBO);
     }
@@ -294,19 +294,13 @@ public final class ReportGenerator {
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(person)));
         }
 
-        boolean hasAllocation = false;
-        final LocalDate now = LocalDate.now();
-        for (final Allocation allocation : team.getAllocations()) {
-            if (allocation.getStartDate().isBefore(now) && allocation.getEndDate().isAfter(now)) {
-                lines.add(ReportUtils.collectionLine("Current Allocation", false));
-                lines.add(ReportGenerator.ALLOCATION_COMMENT);
-                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationReport(allocation)));
-                hasAllocation = true;
-            }
-        }
-        if (!hasAllocation) {
-            // print key anyway
-            lines.add(ReportUtils.collectionLine("Current Allocation", true));
+        final LocalDate today = LocalDate.now();
+        final List<Allocation> allocations = team.getAllocations();
+        allocations.removeIf(a -> a.getStartDate().isBefore(today) && a.getEndDate().isAfter(today));
+        lines.add(ReportUtils.collectionLine("Current Allocation", allocations.isEmpty()));
+        for (final Allocation allocation : allocations) {
+            lines.add(ReportGenerator.ALLOCATION_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
         }
 
         return lines;
@@ -327,7 +321,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));
         lines.add(ReportUtils.collectionLine("Skills", person.getSkills().isEmpty()));
         for (final Skill skill : person.getSkills()) {
-            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + ReportUtils.valueLine("Short Name", skill.getShortName()));
+            lines.add("-" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + skill.getShortName());
         }
         return lines;
     }
@@ -345,7 +339,7 @@ public final class ReportGenerator {
     /**
      *  Generate skill data.
      */
-    private List<String> generateAllocationReport(Allocation allocation) {
+    private List<String> generateAllocationlReport(Allocation allocation) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
         lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
