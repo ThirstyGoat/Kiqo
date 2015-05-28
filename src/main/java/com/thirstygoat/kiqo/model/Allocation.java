@@ -33,6 +33,24 @@ public class Allocation {
 
     /**
      *
+     * @return true if allocation is current
+     */
+    public boolean isCurrent() {
+        final LocalDate now = LocalDate.now();
+        return getStartDate().isBefore(now.plusDays(1)) && getEndDate().isAfter(now);
+    }
+
+    /**
+     *
+     * @return true if allocation is in the future
+     */
+    public boolean isFuture() {
+        final LocalDate now = LocalDate.now();
+        return getStartDate().isAfter(now);
+    }
+
+    /**
+     *
      * @return startDate the start date for the allocation
      */
     public LocalDate getStartDate() {

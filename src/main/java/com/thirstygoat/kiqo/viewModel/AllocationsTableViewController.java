@@ -103,7 +103,6 @@ public class AllocationsTableViewController implements Initializable {
                     row.setContextMenu(contextMenu);
 
                     // set background color
-                    final LocalDate now = LocalDate.now();
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
                     if (!mainController.selectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
                         row.getStyleClass().add("allocation-non-existent-team");
@@ -111,10 +110,10 @@ public class AllocationsTableViewController implements Initializable {
                     } else if (!mainController.selectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
                         row.getStyleClass().add("allocation-non-existent-project");
                         row.setTooltip(new Tooltip("This allocation belongs to a non-existent project."));
-                    } else if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
+                    } else if (newValue.isCurrent()) {
                         row.getStyleClass().add("allocation-current");
                         row.setTooltip(new Tooltip("This allocation is currently in progress."));
-                    } else if (newValue.getStartDate().isAfter(now)) {
+                    } else if (newValue.isFuture()) {
                         row.getStyleClass().add("allocation-future");
                         row.setTooltip(new Tooltip("This allocation is scheduled for the future."));
                     } else {
