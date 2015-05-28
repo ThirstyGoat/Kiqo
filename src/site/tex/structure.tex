@@ -86,7 +86,8 @@
 % Removes the header from odd empty pages at the end of chapters
 \makeatletter
 \renewcommand{\cleardoublepage}{
-\clearpage\ifodd\c@page\else
+%\clearpage
+\ifodd\c@page\else
 \hbox{}
 \vspace*{\fill}
 \thispagestyle{empty}
