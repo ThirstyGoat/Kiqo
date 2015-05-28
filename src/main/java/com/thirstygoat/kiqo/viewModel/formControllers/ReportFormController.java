@@ -5,8 +5,8 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -67,19 +67,13 @@ public class ReportFormController implements Initializable {
             setListSelectionViewData(newValue);
             if (newValue.equals("Organisation")) {
                 elementListSelectionView.setDisable(true);
-                okButton.setDisable(false);
             } else {
                 elementListSelectionView.setDisable(false);
-                okButton.setDisable(true);
             }
         }));
 
-        targetList.addListener((ListChangeListener<Item>) c -> {
-            if (level != Level.ORGANISATION) {
-                okButton.setDisable(targetList.isEmpty());
-            }
-
-        });
+        okButton.disableProperty().bind(Bindings.isEmpty(targetList)
+                .and(Bindings.notEqual(levelComboBox.valueProperty(), "Organisation")));
     }
 
     private void setListSelectionViewData(String newValue) {
