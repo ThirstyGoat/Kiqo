@@ -257,6 +257,26 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <linkXref>true</linkXref>
+          <targetjdk>1.8</targetjdk>
+          <minimumtokencount>100</minimumtokencount>
+          <rulesets>
+            <ruleset>/rulesets/java/basic.xml</ruleset>
+            <ruleset>/rulesets/java/imports.xml</ruleset>
+            <ruleset>/rulesets/java/codesize.xml</ruleset>
+            <ruleset>/rulesets/java/design.xml</ruleset>
+            <ruleset>/rulesets/java/empty.xml</ruleset>
+            <ruleset>/rulesets/java/junit.xml</ruleset>
+            <ruleset>/rulesets/java/unusedcode.xml</ruleset>
+          </rulesets>
+          <includeXmlInSite>true</includeXmlInSite>
+          <sourceEncoding>utf-8</sourceEncoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.15</version>
         <configuration>
@@ -274,6 +294,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.10.3</version>
+<!--
         <reportSets>
           <reportSet>
             <id>default</id>
@@ -283,9 +304,7 @@
             </reports>
           </reportSet>
         </reportSets>
-        <configuration>
-          <excludePackageNames>com.*</excludePackageNames>
-        </configuration>
+-->
       </plugin>
     </plugins>
   </reporting>
