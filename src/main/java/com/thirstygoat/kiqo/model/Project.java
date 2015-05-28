@@ -137,7 +137,7 @@ public class Project extends Item {
         final LocalDate now = LocalDate.now();
         final ArrayList<Allocation> currentAllocations = new ArrayList<>();
         for (Allocation allocation : getAllocations()) {
-            if (allocation.getStartDate().isBefore(now.plusDays(1)) && allocation.getEndDate().isAfter(now)) {
+            if (allocation.isCurrent()) {
                 currentAllocations.add(allocation);
             }
         }
