@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.command;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
+import com.thirstygoat.kiqo.model.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by Bradley on 9/04/15.
@@ -38,7 +37,12 @@ public class DeletePersonCommandTest {
         organisation.getPeople().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -57,7 +61,12 @@ public class DeletePersonCommandTest {
         person.setTeam(team);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -78,7 +87,12 @@ public class DeletePersonCommandTest {
         team.setProductOwner(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -100,7 +114,12 @@ public class DeletePersonCommandTest {
         team.observableDevTeam().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -118,7 +137,12 @@ public class DeletePersonCommandTest {
         organisation.getPeople().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -141,7 +165,12 @@ public class DeletePersonCommandTest {
         person.setTeam(team);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -167,7 +196,12 @@ public class DeletePersonCommandTest {
         team.setProductOwner(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -195,7 +229,12 @@ public class DeletePersonCommandTest {
         team.observableDevTeam().add(person);
 
         // Create command
-        final DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        final DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException e) {
+            return;
+        }
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
@@ -207,5 +246,27 @@ public class DeletePersonCommandTest {
         Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person));
         Assert.assertThat(team.observableTeamMembers(), CoreMatchers.hasItem(person));
         Assert.assertThat(team.observableDevTeam(), CoreMatchers.hasItem(person));
+    }
+
+    @Test
+    public void deletePersonWhoIsProductOwnerOfBacklog_NotAllowed() {
+        Project project = new Project();
+        organisation.getProjects().add(project);
+        Person person = new Person();
+        List<Skill> skills = new ArrayList<>();
+        skills.add(organisation.getPoSkill());
+        person.setSkills(skills);
+
+        Backlog backlog = new Backlog("Short name", "Long name", "Description", person, project, new ArrayList<>());
+        project.observableBacklogs().add(backlog);
+
+        try {
+            DeletePersonCommand command = new DeletePersonCommand(person, organisation);
+        } catch (InvalidPersonDeletionException ignored) {
+            // Shouldn't be allowed to delete this person, since they are the PO of a backlog
+            Assert.assertTrue(true);
+            return;
+        }
+        Assert.assertTrue(false);
     }
 }

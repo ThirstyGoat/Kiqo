@@ -96,7 +96,7 @@ public class DeleteTeamCommandTest {
     public void deleteTeamWithMembersAndPeople_Success() {
         final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
-        command.setDeleteMembers();
+        command.setDeleteTeamMembers(true);
 
         command.execute();
 
@@ -149,7 +149,7 @@ public class DeleteTeamCommandTest {
     public void undoTeamWithMembersAndPeople_Success() {
         final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
-        command.setDeleteMembers();
+        command.setDeleteTeamMembers(true);
 
         command.execute();
         command.undo();
@@ -205,7 +205,7 @@ public class DeleteTeamCommandTest {
     public void redoTeamWithMembersAndPeople_Success() {
         final DeleteTeamCommand command = new DeleteTeamCommand(teamWithMembers, organisation);
 
-        command.setDeleteMembers();
+        command.setDeleteTeamMembers(true);
 
         command.execute();
         command.undo();

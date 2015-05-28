@@ -4,6 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
@@ -31,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for the primary view
@@ -152,66 +155,70 @@ public class MainController implements Initializable {
     }
 
     private void deleteTeam(Team team) {
+        final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisationProperty().get());
+
         final VBox node = new VBox();
         node.setSpacing(10);
 
-        CheckBox checkbox;
+        CheckBox checkbox = new CheckBox("Also delete the person belonging to this team");
 
         if (team.getTeamMembers().size() > 0) {
-            checkbox = new CheckBox("Also delete the people belonging to this team");
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
-                    "?\nCurrent team members:\n";
-            deleteMessage += Utilities.concatenateItemsList(team.getTeamMembers(), 5);
+                    "?\nMembers: " + Utilities.concatenateItemsList(team.getTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
-            node.getChildren().add(checkbox);
+            if (command.canDeleteTeamMembers()) {
+                node.getChildren().add(checkbox);
+            } else {
+                Label unableToDeletePeopleMessage = new Label("The members of this team can not be deleted as " +
+                        "one or more of them is PO of a backlog.");
+                unableToDeletePeopleMessage.setWrapText(true);
+                unableToDeletePeopleMessage.setStyle("-fx-font-style: italic");
+                node.getChildren().add(unableToDeletePeopleMessage);
+            }
         } else {
             final String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
                     "?\nThis team has nobody in it.";
             node.getChildren().add(new Label(deleteMessage));
-            checkbox = null;
         }
 
         final String[] buttons = { "Delete Team", "Cancel" };
         final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Team", "Are you sure?", node, buttons);
 
-        // change this because its hasn't been init yet
-        final boolean deletePeople = (checkbox != null) ? checkbox.selectedProperty().getValue() : false;
+        final boolean deletePeople = checkbox.selectedProperty().getValue();
 
         if (result.equals("Delete Team")) {
             // Then delete the team
             // The result of whether or not to delete the team members can be
             // fetched by deletePeople boolean
-            final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisationProperty.get());
             if (deletePeople) {
-                command.setDeleteMembers();
+                command.setDeleteTeamMembers(true);
             }
             doCommand(command);
         }
     }
 
     private void deletePerson(Person person) {
-        // We need to make sure that this person isn't a PO of a backlog
-        boolean usingPoSkillInBacklog = false;
-        final List<Backlog> backlogsOwned = new ArrayList<>();
+        DeletePersonCommand command;
+        try {
+            command = new DeletePersonCommand(person, selectedOrganisationProperty().get());
+        } catch (InvalidPersonDeletionException e) {
+            // Then this person can not be deleted since they are the owner of one or more backlogs
+            // Let us find out which backlogs they are PO of and alert them to this
 
-        // Check if they are the PO of any backlogs
-        for (Project project : selectedOrganisationProperty().get().getProjects()) {
-            for (Backlog backlog : project.observableBacklogs()) {
-                if (backlog.getProductOwner() == person) {
-                    usingPoSkillInBacklog = true;
-                    backlogsOwned.add(backlog);
-                }
+            final List<Backlog> backlogsOwned = new ArrayList<>();
+            // Check if they are the PO of any backlogs
+            for (Project project : selectedOrganisationProperty().get().getProjects()) {
+                backlogsOwned.addAll(project.observableBacklogs().stream()
+                        .filter(backlog -> backlog.getProductOwner() == person).collect(Collectors.toList()));
             }
-        }
 
-        if (usingPoSkillInBacklog) {
             GoatDialog.showAlertDialog(
                     primaryStage,
                     "Can't delete Person",
                     "Can't delete Person",
-                    person.getShortName() + " is currently the PO of:\n" +
-                    Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-                    Utilities.concatenateItemsList(backlogsOwned, 5)
+                    person.getShortName() + " is currently the PO of the following " +
+                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ":\n" +
+                            Utilities.concatenateItemsList(backlogsOwned, 5)
             );
             return;
         }
@@ -232,7 +239,7 @@ public class MainController implements Initializable {
                 "Are you sure? ", node, buttons);
 
         if (result.equals("Delete Person")) {
-            doCommand(new DeletePersonCommand((Person) focusedItemProperty.get(), selectedOrganisationProperty.get()));
+            doCommand(command);
         }
     }
 
