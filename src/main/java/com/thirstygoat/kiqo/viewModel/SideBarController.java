@@ -1,35 +1,22 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatTreeItem;
+import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
+import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.util.Callback;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import javafx.beans.value.ChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.util.Callback;
-
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatTreeItem;
-import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
-import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
-import com.thirstygoat.kiqo.util.Utilities;
 
 
 /**
@@ -110,6 +97,8 @@ public class SideBarController implements Initializable {
             mainController.focusedItemProperty.set(toShow);
         };
 
+
+
         // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
             // Remove the change listeners
@@ -120,18 +109,27 @@ public class SideBarController implements Initializable {
 
             // Add the change listener on the appropriate TreeView/ListView
             if (newValue == projectTab) {
+                if (mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
+                    mainController.focusedItemProperty.set(null);
+                }
                 mainController.getMenuBarController().updateAfterProjectListSelected(true);
                 final int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
                 projectTreeView.getSelectionModel().select(null);
                 projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
                 projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == peopleTab) {
+                if (mainController.selectedOrganisationProperty.get().getPeople().isEmpty()) {
+                    mainController.focusedItemProperty.set(null);
+                }
                 mainController.getMenuBarController().updateAfterPersonListSelected(true);
                 final int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
                 peopleListView.getSelectionModel().select(null);
                 peopleListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
                 peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == teamsTab) {
+                if (mainController.selectedOrganisationProperty.get().getTeams().isEmpty()) {
+                    mainController.focusedItemProperty.set(null);
+                }
                 mainController.getMenuBarController().updateAfterTeamListSelected(true);
                 final int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
                 teamsListView.getSelectionModel().select(null);
@@ -186,6 +184,15 @@ public class SideBarController implements Initializable {
                 mainController.focusedItemProperty.set(newValue);
             });
         }
+
+        mainController.selectedOrganisationProperty.get().getProjects().addListener((ListChangeListener<Project>) c -> {
+            if (tabViewPane.getSelectionModel().getSelectedItem() == projectTab
+                    && mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
+                mainController.focusedItemProperty.set(null);
+            }
+
+        });
+
     }
 
     private void setListViewData() {
