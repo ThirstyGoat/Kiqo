@@ -362,10 +362,4 @@ public final class ReportGenerator {
         }
         return collectionLabel;
     }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        final Organisation organisation = PersistenceManager.loadOrganisation(new File("./test.json"));
-        final ReportGenerator r = new ReportGenerator(organisation);
-        System.out.println(r.generateReport(organisation.getProjects()));
-    }
 }
