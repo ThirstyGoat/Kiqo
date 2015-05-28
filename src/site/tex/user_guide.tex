@@ -62,17 +62,15 @@
 %	TABLE OF CONTENTS
 %----------------------------------------------------------------------------------------
 
-%\thispagestyle{empty}
 \tableofcontents % Print the table of contents itself
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 1
 %----------------------------------------------------------------------------------------
-
 \chapter{Introduction}
-%\thispagestyle{empty}
+
 \section{Kiqo}
-Kiqo is a .... app that does ....
+... Insert Kiqo Stuff here ...
 
 \section{Window Layout}
 The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
@@ -83,21 +81,18 @@ The main Kiqo workspace is show in figure~\ref{fig:mainwindow}.
   \caption{The main Kiqo window.\label{fig:mainwindow}}
 \end{figure}
 
-\pagebreak
-By default, the main window is split into two panes.
-On the left is the list pane.
-On the right is the details pane.
-To display or hide the list pane, choose \menu{View > List}.
-Alternatively, use the keys \keys{\ctrl + L}.
+%\pagebreak
+By default, the main window is split into two panes. On the left is the sidebar. On the right is the details pane.
+To display or hide the sidebar, choose \menu{View > List}. Alternatively, use the keys \keys{\ctrl + L}.
 
-\subsection{List View}
+\subsection{Sidebar}
 There are three ways of changing the view to show relevant information.
 \begin{itemize}
   \item From the menu bar, use \menu{View > } and select the elmenet.
   \item From clicking the selection tabs shown in figure 1.3
   \item By using the keyboard shortcuts \key{\ctrl + 1-4}
 \end{itemize}
-The items shown in the list view are automatically sorted in alphabetical order.
+The items shown in the sidebar are automatically sorted in alphabetical order.
 
 \footnote{On Mac, use the command key \keys{\cmd} in place of \keys{\ctrl}.}
 
@@ -114,6 +109,9 @@ The items shown in the list view are automatically sorted in alphabetical order.
     \item To revert to the last save point use \menu{File > Revert}.
 \end{itemize}
 
+%----------------------------------------------------------------------------------------
+%	CHAPTER 2
+%----------------------------------------------------------------------------------------
 \chapter{Features}
 \section{Projects \& Releases}
 \subsection{Create a project}
@@ -137,19 +135,15 @@ The items shown in the list view are automatically sorted in alphabetical order.
     The release will be added to the project selected in the creation dialog.
     The releases for a project can be found under the projects releases heading in the tree view.
 
-\subsection{Release Maintenance}
-\begin{itemize}
-  \item Adding a new release to the project displays the release in the Release list view.
-    \textbf{Note:} Only the releases for the selected project are shown in the list view.
-\end{itemize}
-
 \section{People \& Skills}
 \subsection{People}
 A person can be created, saved and edited in the same way as a project
 \subsection{Skills}
 \begin{itemize}
-  \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the first skill is shown in the details pane, unless another skill in the list is selected.
-  \item Go to the skills selection pane in edit or create person and click the > arrow to add one skill to a person or >> to add all existing skills.
+  \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the
+  first skill is shown in the details pane, unless another skill in the list is selected.
+  \item Go to the skills selection pane in edit or create person and click the > arrow to add one skill to a person
+  or >> to add all existing skills.
   \item In the skills selection pane click the < arrow to remove one skill or << to remove all assigned skills.
 \end{itemize}
 
@@ -164,9 +158,11 @@ A person can be created, saved and edited in the same way as a project
 \begin{itemize}
   \item Adding a new team to the Project displays the team in the Teams list view.
   \item The members of the selected team are displayed in the team details pane.
-  \item In edit or create team, use the person selection pane and click the > arrow to add one person to a team or >> to add all available people.
+  \item In edit or create team, use the person selection pane and click the > arrow to add one person to a team
+  or >> to add all available people.
   \item In the person selection pane, click the < arrow to remove one person or << to remove all assigned people.
-  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Dev Team members. Only team members who posses the relevant skill may be nominated.
+  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Dev Team members. Only team members who
+   posses the relevant skill may be nominated.
 \end{itemize}
 
 \subsection{Project Allocation Maintenance}
@@ -206,10 +202,11 @@ The report generator gives the user the ability to generate reports in yaml form
 \end{itemize}
 
 
-
+%----------------------------------------------------------------------------------------
+%	CHAPTER 3
+%----------------------------------------------------------------------------------------
 \appendix
 \chapter{Appendix}
-
 
 \section{Keyboard Shortcuts}
 
@@ -262,7 +259,6 @@ The report generator gives the user the ability to generate reports in yaml form
 %  \caption{The details pane.\label{detailsPane}}
 %\end{figure}
 %
-%
 %\subsection{Revert}
 %Revert allows a user to discard all unsaved changes and go back to the state where the project was last saved.
 %If a project has not been saved then it reverts back to the state when it was last opened.
@@ -270,8 +266,6 @@ The report generator gives the user the ability to generate reports in yaml form
 %  \item \menu{File > Revert} Prompts the user to Save As before reverting the project's unsaved changes.
 %  \item Functionality exists to undo/redo a revert.
 %\end{itemize}
-%
-
 %
 %\appendix
 %\chapter{Appendix}
@@ -290,8 +284,4 @@ The report generator gives the user the ability to generate reports in yaml form
 %\subsection{Validation}
 %User inputs with red triangles in the top left hand corner (See Figure xyz) show that the field is being validated
 %
-
-%
-
-
 \end{document}
