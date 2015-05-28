@@ -33,14 +33,14 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT =       "-   ### Project ###";
-    private static final String TEAM_COMMENT =          "-   ### Team ###";
-    private static final String PERSON_COMMENT =        "-   ### Person ###";
-    private static final String RELEASE_COMMENT =       "-   ### Release ###";
-    private static final String SKILL_COMMENT =         "-   ### Skill ###";
-    private static final String BACKLOG_COMMENT =       "-   ### Backlog ###";
-    private static final String STORY_COMMENT =         "-   ### Story ###";
-    private static final String ALLOCATION_COMMENT =    "-   ### Allocation ###";
+    private static final String PROJECT_COMMENT =       " -  ### Project ###";
+    private static final String TEAM_COMMENT =          " -  ### Team ###";
+    private static final String PERSON_COMMENT =        " -  ### Person ###";
+    private static final String RELEASE_COMMENT =       " -  ### Release ###";
+    private static final String SKILL_COMMENT =         " -  ### Skill ###";
+    private static final String BACKLOG_COMMENT =       " -  ### Backlog ###";
+    private static final String STORY_COMMENT =         " -  ### Story ###";
+    private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -321,7 +321,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));
         lines.add(ReportUtils.collectionLine("Skills", person.getSkills().isEmpty()));
         for (final Skill skill : person.getSkills()) {
-            lines.add("-" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + skill.getShortName());
+            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + skill.getShortName());
         }
         return lines;
     }
