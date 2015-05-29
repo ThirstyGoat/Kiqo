@@ -56,9 +56,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
-    public boolean revertSupported = true;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -86,6 +84,10 @@ public class MainController implements Initializable {
         undoManager.revert();
     }
 
+    /**
+     * Sets the stage title and updates accordingly depending on the organisation
+     * selected, and whether or not changes have been saved.
+     */
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
         final StringProperty changesSavedAsterisk = new SimpleStringProperty(undoManager.changesSavedProperty().get() ? "" : "*");
@@ -108,8 +110,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * @param project organisation to be deleted
-     *
+     * Prompts to delete a project
+     * @param project Project to be deleted
      */
     private void deleteProject(Project project) {
         final DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisationProperty.get());
@@ -123,6 +125,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a story
+     * @param story Story to be deleted
+     */
     private void deleteStory(Story story) {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = { "Delete Story", "Cancel" };
@@ -134,6 +140,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a skill (Note that the PO & SM skills can not be deleted)
+     * @param skill Skill to be deleted
+     */
     private void deleteSkill(Skill skill) {
         if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
@@ -155,6 +165,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a team
+     * @param team Team to be deleted
+     */
     private void deleteTeam(Team team) {
         final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisationProperty().get());
 
@@ -198,6 +212,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a person
+     * @param person Person to be deleted
+     */
     private void deletePerson(Person person) {
         DeletePersonCommand command;
         try {
@@ -244,6 +262,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a release
+     * @param release Release to be deleted
+     */
     public void deleteRelease(Release release) {
        final VBox node = new VBox();
         node.setSpacing(10);
@@ -261,6 +283,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a backlog
+     * @param backlog Backlog to be deleted
+     */
     public void deleteBacklog(Backlog backlog) {
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -307,12 +333,13 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Convenience method to delete the currently selected Item
+     */
     public void deleteItem() {
         Platform.runLater(() -> {
             final Item focusedObject = focusedItemProperty.get();
-            if (focusedObject == null) {
-                // do nothing
-            } else if (focusedObject instanceof Project) {
+            if (focusedObject instanceof Project) {
                 deleteProject((Project) focusedObject);
             } else if (focusedObject instanceof Person) {
                 deletePerson((Person) focusedObject);
@@ -330,32 +357,21 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Convenience method to edit the currently selected Item
+     * (Note that the PO and SM skills can not be edited)
+     */
     public void editItem() {
         final Item focusedObject = focusedItemProperty.get();
-        if (focusedObject == null) {
-            // do nothing
-        } else if (focusedObject.getClass() == Project.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Person.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Skill.class) {
-            // Prohibit editing of PO/SM Skills
-            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() ||
-                    focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
+        if (focusedObject != null && focusedObject.getClass() == Skill.class) {
+            if (focusedObject == selectedOrganisationProperty().get().getPoSkill() ||
+                    focusedObject == selectedOrganisationProperty().get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
-            } else {
-                dialog(focusedObject);
+                return;
             }
-        } else if (focusedObject.getClass() == Team.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Release.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Backlog.class) {
-            dialog(focusedObject);
         }
+        dialog(focusedObject);
     }
 
     /**
@@ -372,17 +388,11 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisationProperty.set(new Organisation());
 
-        // enable menu items
-        menuBarController.enableNewTeam();
-        menuBarController.enableNewPerson();
-        menuBarController.enableNewSkill();
-
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
         focusedItemProperty.addListener((observable, oldValue, newValue) -> {
             MainController.LOGGER.log(Level.FINE, "Focus changed to %s", newValue);
             detailsPaneController.showDetailsPane(newValue);
-            menuBarController.updateAfterAnyObjectSelected(newValue != null);
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
@@ -530,8 +540,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Saves the organisation to its savelocation (assumed not to be null).
-     * @param organisation
+     * Saves the organisation to its save location (assumed not to be null).
+     * @param organisation Organisation to be saved
      */
     private void saveToDisk(final Organisation organisation) {
         // do the save
@@ -650,8 +660,6 @@ public class MainController implements Initializable {
     }
 
     /**
-    /*
-     *
      * Saves the project to disk and marks project as saved.
      *
      * @param existingFile initial directory and filename to suggest
@@ -683,12 +691,13 @@ public class MainController implements Initializable {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
-            if (response.equals("Save changes")) {
-                return saveOrganisation(false);
-            } else if (response.equals("Discard changes")) {
-                return true;
-            } else {
-                return false;
+            switch (response) {
+                case "Save changes":
+                    return saveOrganisation(false);
+                case "Discard changes":
+                    return true;
+                default:
+                    return false;
             }
         }
         return true;
@@ -829,9 +838,5 @@ public class MainController implements Initializable {
 
     public SideBarController getSideBarController() {
         return sideBarController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 }
