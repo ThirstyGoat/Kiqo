@@ -75,8 +75,11 @@ public class PersistenceManager {
      * @throws FileNotFoundException File does not exist, or insufficient permissions
      * @throws JsonIOException Internal JSON IO problem
      * @throws JsonSyntaxException Malformed JSON structure
+     * @throws ClassCastException Problem casting the JsonParsers return value to a JsonObject. For example
+     * if the JsonParser is parsing an empty file it will return a JsonNull object which cannot be cast to a JsonObject.
      */
-    public static Organisation loadOrganisation(final File file) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
+    public static Organisation loadOrganisation(final File file) throws JsonIOException, JsonSyntaxException,
+            ClassCastException, FileNotFoundException {
         Organisation organisation = null;
 
         if (PersistenceManager.gson == null) {

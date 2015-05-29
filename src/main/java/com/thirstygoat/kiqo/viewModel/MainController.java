@@ -488,7 +488,7 @@ public class MainController implements Initializable {
             // Empty the undo/redo stack(s)
             undoManager.empty();
             // Store the organisation as it currently stands
-        } catch (JsonSyntaxException | InvalidProjectException e) {
+        } catch (ClassCastException | JsonSyntaxException | InvalidProjectException e) {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "The JSON file you supplied is invalid.");
         } catch (final InvalidPersonException e) {
             GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
