@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.model.Story;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -26,6 +27,7 @@ public class StoryTableViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeTable();
+        storyTableView.setPlaceholder(new Label("No stories in backlog"));
     }
 
     private void initializeTable() {

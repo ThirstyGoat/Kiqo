@@ -15,6 +15,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -32,13 +33,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -55,9 +56,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    public final SimpleBooleanProperty changesSaved = new SimpleBooleanProperty(true);
     private final UndoManager undoManager = new UndoManager();
-    public boolean revertSupported = true;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -85,6 +84,10 @@ public class MainController implements Initializable {
         undoManager.revert();
     }
 
+    /**
+     * Sets the stage title and updates accordingly depending on the organisation
+     * selected, and whether or not changes have been saved.
+     */
     private void setStageTitleProperty() {
         // Add a listener to know when changes are saved, so that the title can be updated
         final StringProperty changesSavedAsterisk = new SimpleStringProperty(undoManager.changesSavedProperty().get() ? "" : "*");
@@ -107,8 +110,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * @param project organisation to be deleted
-     *
+     * Prompts to delete a project
+     * @param project Project to be deleted
      */
     private void deleteProject(Project project) {
         final DeleteProjectCommand command = new DeleteProjectCommand(project, selectedOrganisationProperty.get());
@@ -122,6 +125,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a story
+     * @param story Story to be deleted
+     */
     private void deleteStory(Story story) {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = { "Delete Story", "Cancel" };
@@ -133,6 +140,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a skill (Note that the PO & SM skills can not be deleted)
+     * @param skill Skill to be deleted
+     */
     private void deleteSkill(Skill skill) {
         if (skill == selectedOrganisationProperty.get().getPoSkill() || skill == selectedOrganisationProperty.get().getSmSkill()) {
             GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
@@ -154,6 +165,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a team
+     * @param team Team to be deleted
+     */
     private void deleteTeam(Team team) {
         final DeleteTeamCommand command = new DeleteTeamCommand(team, selectedOrganisationProperty().get());
 
@@ -197,6 +212,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a person
+     * @param person Person to be deleted
+     */
     private void deletePerson(Person person) {
         DeletePersonCommand command;
         try {
@@ -243,6 +262,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a release
+     * @param release Release to be deleted
+     */
     public void deleteRelease(Release release) {
        final VBox node = new VBox();
         node.setSpacing(10);
@@ -260,6 +283,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Prompts to delete a backlog
+     * @param backlog Backlog to be deleted
+     */
     public void deleteBacklog(Backlog backlog) {
         final VBox node = new VBox();
         node.setSpacing(10);
@@ -290,14 +317,14 @@ public class MainController implements Initializable {
         if (result.equals("Delete Backlog")) {
             final ArrayList<Command<?>> changes = new ArrayList<>();
             if (deleteStories) {
-                DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
+                final DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
                 command.setDeleteMembers();
                 changes.add(command);
             } else {
                 changes.add(new DeleteBacklogCommand(backlog));
                 // move all stories in backlog to stoies for project
-                for (Story story : backlog.getStories()) {
-                    MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
+                for (final Story story : backlog.getStories()) {
+                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
                     backlog.getProject().observableUnallocatedStories());
                     changes.add(command);
                 }
@@ -306,12 +333,13 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Convenience method to delete the currently selected Item
+     */
     public void deleteItem() {
         Platform.runLater(() -> {
             final Item focusedObject = focusedItemProperty.get();
-            if (focusedObject == null) {
-                // do nothing
-            } else if (focusedObject instanceof Project) {
+            if (focusedObject instanceof Project) {
                 deleteProject((Project) focusedObject);
             } else if (focusedObject instanceof Person) {
                 deletePerson((Person) focusedObject);
@@ -329,32 +357,21 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Convenience method to edit the currently selected Item
+     * (Note that the PO and SM skills can not be edited)
+     */
     public void editItem() {
         final Item focusedObject = focusedItemProperty.get();
-        if (focusedObject == null) {
-            // do nothing
-        } else if (focusedObject.getClass() == Project.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Person.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Skill.class) {
-            // Prohibit editing of PO/SM Skills
-            if (focusedObject == selectedOrganisationProperty.get().getPoSkill() ||
-                    focusedObject == selectedOrganisationProperty.get().getSmSkill()) {
+        if (focusedObject != null && focusedObject.getClass() == Skill.class) {
+            if (focusedObject == selectedOrganisationProperty().get().getPoSkill() ||
+                    focusedObject == selectedOrganisationProperty().get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
-            } else {
-                dialog(focusedObject);
+                return;
             }
-        } else if (focusedObject.getClass() == Team.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Release.class) {
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Story.class) { // think it's better to compare class like this?
-            dialog(focusedObject);
-        } else if (focusedObject.getClass() == Backlog.class) {
-            dialog(focusedObject);
         }
+        dialog(focusedObject);
     }
 
     /**
@@ -371,17 +388,11 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisationProperty.set(new Organisation());
 
-        // enable menu items
-        menuBarController.enableNewTeam();
-        menuBarController.enableNewPerson();
-        menuBarController.enableNewSkill();
-
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
         focusedItemProperty.addListener((observable, oldValue, newValue) -> {
             MainController.LOGGER.log(Level.FINE, "Focus changed to %s", newValue);
             detailsPaneController.showDetailsPane(newValue);
-            menuBarController.updateAfterAnyObjectSelected(newValue != null);
         });
 
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
@@ -529,8 +540,8 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Saves the organisation to its savelocation (assumed not to be null).
-     * @param organisation
+     * Saves the organisation to its save location (assumed not to be null).
+     * @param organisation Organisation to be saved
      */
     private void saveToDisk(final Organisation organisation) {
         // do the save
@@ -555,22 +566,70 @@ public class MainController implements Initializable {
         }
     }
 
-    public void saveStatusReport() {
-        final String EXTENSION = ".yaml";
+    /**
+     * Displays status report dialog
+     */
+    public void statusReport() {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Report Generator");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/report.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final ReportFormController reportFormController = loader.getController();
+
+            reportFormController.setStage(stage);
+            reportFormController.setOrganisation(selectedOrganisationProperty.get());
+//            reportFormController.loadProject(project);
+
+            stage.showAndWait();
+            if (reportFormController.isValid()) {
+                if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
+                    saveStatusReport(reportFormController.getTargetList());
+                } else {
+                    saveStatusReport(null);
+                }
+            }
+        });
+    }
+
+    public void saveStatusReport(Collection<Item> list) {
+        final String FILE_EXTENSION = ".yaml";
+
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + FILE_EXTENSION));
         final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(selectedOrganisationProperty.get().organisationNameProperty().get());
         }
 
-        final File selectedFile = fileChooser.showSaveDialog(primaryStage);
+        File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
+            if (!selectedFile.getName().endsWith(FILE_EXTENSION)) {
+                // append file extension if not already present
+                selectedFile = new File(selectedFile.getAbsolutePath() + FILE_EXTENSION);
+            }
             try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisationProperty.get());
-                fileWriter.write(reportGenerator.generateReport());
+                if (list != null) {
+                    fileWriter.write(reportGenerator.generateReport(list));
+                } else {
+                    fileWriter.write(reportGenerator.generateReport());
+                }
             } catch (final IOException e) {
                 MainController.LOGGER.log(Level.SEVERE, "Can't save status report", e);
             }
@@ -601,21 +660,25 @@ public class MainController implements Initializable {
     }
 
     /**
-    /*
-     *
      * Saves the project to disk and marks project as saved.
      *
      * @param existingFile initial directory and filename to suggest
      * @return file to save in (may be null if cancelled)
      */
     private File promptForSaveLocation(File existingFile) {
+        final String FILE_EXTENSION = ".json";
+
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
         }
-        final File file = fileChooser.showSaveDialog(primaryStage);
+        File file = fileChooser.showSaveDialog(primaryStage);
+        if (file != null && !file.getName().endsWith(FILE_EXTENSION)) {
+            // append file extension if not already present
+            file = new File(file.getAbsolutePath() + FILE_EXTENSION);
+        }
         return file;
     }
 
@@ -628,12 +691,13 @@ public class MainController implements Initializable {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
                     "Would you like to save the changes you have made to the project?", options);
-            if (response.equals("Save changes")) {
-                return saveOrganisation(false);
-            } else if (response.equals("Discard changes")) {
-                return true;
-            } else {
-                return false;
+            switch (response) {
+                case "Save changes":
+                    return saveOrganisation(false);
+                case "Discard changes":
+                    return true;
+                default:
+                    return false;
             }
         }
         return true;
@@ -680,7 +744,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "New " : "Edit " + type);
             final FXMLLoader loader = new FXMLLoader();
@@ -711,7 +775,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/allocation.fxml"));
@@ -745,8 +809,6 @@ public class MainController implements Initializable {
         });
     }
 
-
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -761,6 +823,10 @@ public class MainController implements Initializable {
         setStageTitleProperty();
     }
 
+    public MainDetailsPaneController getDetailsPaneController() {
+        return detailsPaneController;
+    }
+
     public void newOrganisation() {
         if (selectedOrganisationProperty.get() != null) {
             if(!promptForUnsavedChanges()) {
@@ -772,9 +838,5 @@ public class MainController implements Initializable {
 
     public SideBarController getSideBarController() {
         return sideBarController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 }

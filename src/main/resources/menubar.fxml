@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
-<MenuBar useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.MenuBarController">
+
+<MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="File">
       <items>
@@ -42,10 +44,14 @@
       <items>
         <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <CheckMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectMenuItem" />
-        <CheckMenuItem mnemonicParsing="false" text="Team" fx:id="listShowTeamMenuItem" />
-        <CheckMenuItem mnemonicParsing="false" text="People" fx:id="listShowPersonMenuItem" />
-        <CheckMenuItem mnemonicParsing="false" text="Skills" fx:id="listShowSkillMenuItem" />
+        <RadioMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectsMenuItem">
+          <toggleGroup>
+            <ToggleGroup fx:id="selectedTab" />
+          </toggleGroup>
+        </RadioMenuItem>
+        <RadioMenuItem mnemonicParsing="false" text="Team" toggleGroup="$selectedTab" fx:id="listShowTeamsMenuItem" />
+        <RadioMenuItem mnemonicParsing="false" text="People" toggleGroup="$selectedTab" fx:id="listShowPeopleMenuItem" />
+        <RadioMenuItem mnemonicParsing="false" text="Skills" toggleGroup="$selectedTab" fx:id="listShowSkillsMenuItem" />
       </items>
     </Menu>
   </menus>

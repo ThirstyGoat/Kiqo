@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +127,21 @@ public class Project extends Item {
         final ArrayList<Allocation> allocations = new ArrayList<>();
         allocations.addAll(this.allocations);
         return allocations;
+    }
+
+    /**
+     *
+     * @return List of allocations which are current
+     */
+    public List<Allocation> getCurrentAllocations()  {
+        final LocalDate now = LocalDate.now();
+        final ArrayList<Allocation> currentAllocations = new ArrayList<>();
+        for (Allocation allocation : getAllocations()) {
+            if (allocation.isCurrent()) {
+                currentAllocations.add(allocation);
+            }
+        }
+        return currentAllocations;
     }
 
     public ObservableList<Release> observableReleases() {

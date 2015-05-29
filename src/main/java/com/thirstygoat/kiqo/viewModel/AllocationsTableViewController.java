@@ -9,13 +9,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 
 import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -57,8 +51,10 @@ public class AllocationsTableViewController implements Initializable {
         if (type.equals(FirstColumnType.PROJECT)) {
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
             teamTableColumn.setText("Project");
+            allocationsTableView.setPlaceholder(new Label("Team not allocated to any projects"));
         } else if (type.equals(FirstColumnType.TEAM)) {
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
+            allocationsTableView.setPlaceholder(new Label("No teams allocated to project"));
         }
 
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
@@ -107,7 +103,6 @@ public class AllocationsTableViewController implements Initializable {
                     row.setContextMenu(contextMenu);
 
                     // set background color
-                    final LocalDate now = LocalDate.now();
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
                     if (!mainController.selectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
                         row.getStyleClass().add("allocation-non-existent-team");
@@ -115,10 +110,10 @@ public class AllocationsTableViewController implements Initializable {
                     } else if (!mainController.selectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
                         row.getStyleClass().add("allocation-non-existent-project");
                         row.setTooltip(new Tooltip("This allocation belongs to a non-existent project."));
-                    } else if (newValue.getStartDate().isBefore(now) && newValue.getEndDate().isAfter(now)) {
+                    } else if (newValue.isCurrent()) {
                         row.getStyleClass().add("allocation-current");
                         row.setTooltip(new Tooltip("This allocation is currently in progress."));
-                    } else if (newValue.getStartDate().isAfter(now)) {
+                    } else if (newValue.isFuture()) {
                         row.getStyleClass().add("allocation-future");
                         row.setTooltip(new Tooltip("This allocation is scheduled for the future."));
                     } else {

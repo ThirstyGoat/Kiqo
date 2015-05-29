@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.beans.binding.Bindings;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
     @FXML
@@ -54,13 +50,15 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
-    private CheckMenuItem listShowProjectMenuItem;
+    private RadioMenuItem listShowProjectsMenuItem;
     @FXML
-    private CheckMenuItem listShowTeamMenuItem;
+    private RadioMenuItem listShowTeamsMenuItem;
     @FXML
-    private CheckMenuItem listShowPersonMenuItem;
+    private RadioMenuItem listShowPeopleMenuItem;
     @FXML
-    private CheckMenuItem listShowSkillMenuItem;
+    private RadioMenuItem listShowSkillsMenuItem;
+    @FXML
+    private ToggleGroup selectedTab;
     @FXML
     private MenuItem quitMenuItem;
     private MainController mainController;
@@ -68,79 +66,55 @@ public class MenuBarController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         addMenuItemHandlers();
-        addUndoHandlers();
         addKeyboardShortcuts();
-        setMenuButtons();
     }
 
     /**
      * Disables menu buttons which should not be usable when application is initially started.
      */
     private void setMenuButtons() {
-        newTeamMenuItem.setDisable(true);
-        newPersonMenuItem.setDisable(true);
-        newSkillMenuItem.setDisable(true);
-        undoMenuItem.setDisable(true);
-        redoMenuItem.setDisable(true);
-        editMenuItem.setDisable(true);
-        deleteMenuItem.setDisable(true);
-        revertMenuItem.setDisable(true);
+        newTeamMenuItem.setDisable(false);
+        newPersonMenuItem.setDisable(false);
+        newSkillMenuItem.setDisable(false);
 
-        // listShowProjectMenuItem is disabled here, because it is the default list view.
-        listShowProjectMenuItem.setDisable(true);
-        listShowProjectMenuItem.setSelected(true);
-    }
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-        addEditDeleteShortcuts();
-
-        setListenersOnChangesSaved();
-    }
-
-    private void setListenersOnChangesSaved() {
         revertMenuItem.disableProperty().bind(mainController.changesSavedProperty());
-    }
 
-    private void addEditDeleteShortcuts() {
-        final KeyCombination editKey = new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination deleteKey = new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination projectTabKey = new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination teamTabKey = new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination peopleTabKey = new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN);
-        final KeyCombination skillTabKey = new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN);
+        editMenuItem.disableProperty().bind(Bindings.isNull(mainController.focusedItemProperty));
+        deleteMenuItem.disableProperty().bind(Bindings.isNull(mainController.focusedItemProperty));
 
-        mainController.getPrimaryStage().getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (editKey.match(event)) {
-                    mainController.editItem();
-                } else if (deleteKey.match(event)) {
-                    mainController.deleteItem();
-                } else if (projectTabKey.match(event)) {
-                    mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
-                } else if (teamTabKey.match(event)) {
-                    mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
-                } else if (peopleTabKey.match(event)) {
-                    mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
-                } else if (skillTabKey.match(event)) {
-                    mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
-                }
+        mainController.getSideBarController().selectedTabProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == SideBarController.TabOption.PROJECTS) {
+                selectedTab.selectToggle(listShowProjectsMenuItem);
+            } else if (newValue == SideBarController.TabOption.TEAMS) {
+                selectedTab.selectToggle(listShowTeamsMenuItem);
+            } else if (newValue == SideBarController.TabOption.PEOPLE) {
+                selectedTab.selectToggle(listShowPeopleMenuItem);
+            } else if (newValue == SideBarController.TabOption.SKILLS) {
+                selectedTab.selectToggle(listShowSkillsMenuItem);
             }
         });
     }
 
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+        setMenuButtons();
+    }
+
     private void addMenuItemHandlers() {
-        newProjectMenuItem.setOnAction(event -> mainController.newProject());
         newOrganisationMenuItem.setOnAction(event -> mainController.newOrganisation());
+        newProjectMenuItem.setOnAction(event -> mainController.newProject());
+        newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         newTeamMenuItem.setOnAction(event -> mainController.newTeam());
         newPersonMenuItem.setOnAction(event -> mainController.newPerson());
         newSkillMenuItem.setOnAction(event -> mainController.newSkill());
-        newReleaseMenuItem.setOnAction(event -> mainController.newRelease());
         newBacklogMenuItem.setOnAction(event -> mainController.newBacklog());
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
+
+        undoMenuItem.setOnAction(event -> mainController.undo());
+        redoMenuItem.setOnAction(event -> mainController.redo());
         revertMenuItem.setOnAction(event -> mainController.revert());
-        generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
+
+        generateStatusReportMenuItem.setOnAction(event -> mainController.statusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation(false));
         saveAsMenuItem.setOnAction(event -> mainController.saveOrganisation(true));
@@ -149,103 +123,53 @@ public class MenuBarController implements Initializable {
         editMenuItem.setOnAction(event -> mainController.editItem());
         deleteMenuItem.setOnAction(event -> mainController.deleteItem());
 
+
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
         });
-        listShowProjectMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listShowTeamMenuItem.setSelected(false);
-                listShowTeamMenuItem.setDisable(false);
-                listShowPersonMenuItem.setSelected(false);
-                listShowPersonMenuItem.setDisable(false);
-                listShowSkillMenuItem.setSelected(false);
-                listShowSkillMenuItem.setDisable(false);
 
+        selectedTab.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == listShowProjectsMenuItem) {
                 mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
-                listShowProjectMenuItem.setDisable(true);
-            }
-        });
-        listShowTeamMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listShowProjectMenuItem.setSelected(false);
-                listShowProjectMenuItem.setDisable(false);
-                listShowPersonMenuItem.setSelected(false);
-                listShowPersonMenuItem.setDisable(false);
-                listShowSkillMenuItem.setSelected(false);
-                listShowSkillMenuItem.setDisable(false);
-
+            } else if (newValue == listShowTeamsMenuItem) {
                 mainController.getSideBarController().show(SideBarController.TabOption.TEAMS);
-                listShowTeamMenuItem.setDisable(true);
-                listShowTeamMenuItem.setSelected(true);
-            }
-        });
-        listShowPersonMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listShowProjectMenuItem.setSelected(false);
-                listShowProjectMenuItem.setDisable(false);
-                listShowTeamMenuItem.setSelected(false);
-                listShowTeamMenuItem.setDisable(false);
-                listShowSkillMenuItem.setSelected(false);
-                listShowSkillMenuItem.setDisable(false);
-
+            } else if (newValue == listShowPeopleMenuItem) {
                 mainController.getSideBarController().show(SideBarController.TabOption.PEOPLE);
-                listShowPersonMenuItem.setDisable(true);
-                listShowPersonMenuItem.setSelected(true);
-            }
-        });
-        listShowSkillMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listShowProjectMenuItem.setSelected(false);
-                listShowProjectMenuItem.setDisable(false);
-                listShowTeamMenuItem.setSelected(false);
-                listShowTeamMenuItem.setDisable(false);
-                listShowPersonMenuItem.setSelected(false);
-                listShowPersonMenuItem.setDisable(false);
-
+            } else if (newValue == listShowSkillsMenuItem) {
                 mainController.getSideBarController().show(SideBarController.TabOption.SKILLS);
-                listShowSkillMenuItem.setDisable(true);
             }
         });
     }
 
     /**
-     * Set the undo/redo item handlers, and also set their state depending on
-     * the undoManager.
-     */
-    private void addUndoHandlers() {
-        undoMenuItem.setOnAction(event -> mainController.undo());
-        redoMenuItem.setOnAction(event -> mainController.redo());
-    }
-
-    /**
-     * Sets the hotkeys
+     * Sets the keyboard shortcuts for MenuItems
      */
     private void addKeyboardShortcuts() {
-        newProjectMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newTeamMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
-        newPersonMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
-        newSkillMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
-        newReleaseMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
-        newBacklogMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_DOWN));
-        newStoryMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
+        newProjectMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+        newTeamMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_DOWN));
+        newPersonMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+        newSkillMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.K, KeyCombination.SHORTCUT_DOWN));
+        newReleaseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN));
+        newBacklogMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_DOWN));
+        newStoryMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN,
-                KeyCombination.SHIFT_DOWN));
+        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
-        listToggleCheckMenuItem.setAccelerator(
-                new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+        listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
 
         // Undo/redo
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
-        redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN,
-                KeyCombination.SHIFT_DOWN));
+        redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
+
+        // Tab switching
+        listShowProjectsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.SHORTCUT_DOWN));
+        listShowTeamsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.SHORTCUT_DOWN));
+        listShowPeopleMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.SHORTCUT_DOWN));
+        listShowSkillsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.SHORTCUT_DOWN));
+
+        // Edit/delete buttons
+        editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
+        deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
     }
 
     public void setListenersOnUndoManager(UndoManager undoManager) {
@@ -255,39 +179,4 @@ public class MenuBarController implements Initializable {
         undoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.undoTypeProperty));
         redoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.redoTypeProperty));
     }
-
-    public void updateAfterAnyObjectSelected(boolean enabled) {
-        editMenuItem.setDisable(!enabled);
-        deleteMenuItem.setDisable(!enabled);
-    }
-
-    public void updateAfterProjectListSelected(boolean selected) {
-        listShowProjectMenuItem.selectedProperty().set(selected);
-    }
-
-    public void updateAfterTeamListSelected(boolean selected) {
-        listShowTeamMenuItem.selectedProperty().set(selected);
-    }
-
-    public void updateAfterPersonListSelected(boolean selected) {
-        listShowPersonMenuItem.selectedProperty().set(selected);
-    }
-
-    public void updateAfterSkillListSelected(boolean selected) {
-        listShowSkillMenuItem.selectedProperty().set(selected);
-    }
-
-    public void enableNewTeam() {
-        newTeamMenuItem.setDisable(false);
-    }
-
-    public void enableNewPerson() {
-        newPersonMenuItem.setDisable(false);
-    }
-
-    public void enableNewSkill() {
-        newSkillMenuItem.setDisable(false);
-    }
-
-
 }
