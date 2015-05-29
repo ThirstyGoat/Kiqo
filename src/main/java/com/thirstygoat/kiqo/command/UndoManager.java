@@ -22,6 +22,7 @@ public class UndoManager {
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
 
     /**
@@ -36,6 +37,9 @@ public class UndoManager {
         final T result = command.execute();
         undoStack.push(command);
         if (command.getClass() != RevertCommand.class) {
+            if (undoStack.size() < savePosition) { // behind saveposition
+                canRevertProperty.set(false);
+            }
             redoStack.clear();
         }
 
