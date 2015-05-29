@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public abstract class FormController<T> implements Initializable {
     /**
      *
-     * @param stage used for stage.close() on OK and Cancel
+     * @param stage used for stage.close() on OK and Cancel`
      */
     public abstract void setStage(Stage stage);
     /**

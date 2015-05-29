@@ -4,7 +4,6 @@ import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
@@ -32,18 +31,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import org.controlsfx.control.StatusBar;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Main controller for the primary view
@@ -290,14 +286,14 @@ public class MainController implements Initializable {
         if (result.equals("Delete Backlog")) {
             final ArrayList<Command<?>> changes = new ArrayList<>();
             if (deleteStories) {
-                DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
+                final DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
                 command.setDeleteMembers();
                 changes.add(command);
             } else {
                 changes.add(new DeleteBacklogCommand(backlog));
                 // move all stories in backlog to stoies for project
-                for (Story story : backlog.getStories()) {
-                    MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
+                for (final Story story : backlog.getStories()) {
+                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
                     backlog.getProject().observableUnallocatedStories());
                     changes.add(command);
                 }
@@ -555,10 +551,50 @@ public class MainController implements Initializable {
         }
     }
 
-    public void saveStatusReport() {
-        final String EXTENSION = ".yaml";
+    public void statusReport() {
+        //stub method to show dialog for report
+        // TODO show the dialog for report
+
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Report Generator");
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/report.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final ReportFormController reportFormController = loader.getController();
+
+            reportFormController.setStage(stage);
+            reportFormController.setOrganisation(selectedOrganisationProperty.get());
+//            reportFormController.loadProject(project);
+
+            stage.showAndWait();
+            if (reportFormController.isValid()) {
+                if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
+                    saveStatusReport(reportFormController.getTargetList());
+                } else {
+                    saveStatusReport(null);
+                }
+            }
+        });
+    }
+
+    public void saveStatusReport(Collection<Item> list) {
+        final String FILE_EXTENSION = ".yaml";
+
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + EXTENSION));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + FILE_EXTENSION));
         final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
@@ -568,9 +604,17 @@ public class MainController implements Initializable {
         final File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
+            if (!selectedFile.getName().endsWith(FILE_EXTENSION)) {
+                // append file extension if not already present
+                selectedFile = new File(selectedFile.getAbsolutePath() + FILE_EXTENSION);
+            }
             try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisationProperty.get());
-                fileWriter.write(reportGenerator.generateReport());
+                if (list != null) {
+                    fileWriter.write(reportGenerator.generateReport(list));
+                } else {
+                    fileWriter.write(reportGenerator.generateReport());
+                }
             } catch (final IOException e) {
                 MainController.LOGGER.log(Level.SEVERE, "Can't save status report", e);
             }
@@ -609,13 +653,19 @@ public class MainController implements Initializable {
      * @return file to save in (may be null if cancelled)
      */
     private File promptForSaveLocation(File existingFile) {
+        final String FILE_EXTENSION = ".json";
+
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
         }
-        final File file = fileChooser.showSaveDialog(primaryStage);
+        File file = fileChooser.showSaveDialog(primaryStage);
+        if (file != null && !file.getName().endsWith(FILE_EXTENSION)) {
+            // append file extension if not already present
+            file = new File(file.getAbsolutePath() + FILE_EXTENSION);
+        }
         return file;
     }
 
@@ -680,7 +730,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "New " : "Edit " + type);
             final FXMLLoader loader = new FXMLLoader();
@@ -711,7 +761,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/allocation.fxml"));
@@ -745,8 +795,6 @@ public class MainController implements Initializable {
         });
     }
 
-
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -759,6 +807,10 @@ public class MainController implements Initializable {
         sideBarController.setMainController(this);
 
         setStageTitleProperty();
+    }
+
+    public MainDetailsPaneController getDetailsPaneController() {
+        return detailsPaneController;
     }
 
     public void newOrganisation() {
