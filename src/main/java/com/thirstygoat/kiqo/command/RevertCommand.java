@@ -9,52 +9,48 @@ import java.util.ListIterator;
  * @author Bradley Kirwan
  */
 public class RevertCommand extends Command<Void> {
-    private final UndoManager undoManager;
-    private final int position;
-    private List<Command<?>> commands = new ArrayList<>();
+    private final List<Command<?>> commands = new ArrayList<>();
 
     /**
+     *
      * @param undoManager UndoManager
+     * @param position save position in undo stack
      */
     public RevertCommand(final UndoManager undoManager, final int position) {
-        this.undoManager = undoManager;
-        this.position = position;
+        int diff = position - undoManager.undoStack.size();
+        // only one of these while loops will be executed
+        // depending on whether revert takes us forwards or backwards
+        while (diff < 0) {
+            final Command<?> command = undoManager.undoStack.pop();
+            commands.add(command);
+            diff++;
+        }
+        while (diff > 0) {
+            final Command<?> command = undoManager.redoStack.pop();
+            commands.add(new UndoCommand(command));
+            diff--;
+        }
     }
 
     @Override
     public Void execute() {
-        while (undoManager.undoStack.size() > position) {
-            Command<?> command = undoManager.undoStack.pop();
+        for (final Command<?> command : commands) {
             command.undo();
-            commands.add(command);
         }
         return null;
     }
 
     @Override
-    public String toString() {
-        return "Revert";
-    }
-
-    @Override
     public void undo() {
-        ListIterator<Command<?>> li = commands.listIterator(commands.size());
+        final ListIterator<Command<?>> li = commands.listIterator(commands.size());
         while (li.hasPrevious()) {
-            Command<?> command = li.previous();
-            undoManager.undoStack.push(command);
-            command.execute();
+            final Command<?> command = li.previous();
+            command.execute(); // or redo?
         }
-    }
-
-    @Override
-    public void redo() {
-        commands.clear();
-        super.redo();
     }
 
     @Override
     public String getType() {
         return "Revert";
     }
-    
 }

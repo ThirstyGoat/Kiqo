@@ -5,9 +5,6 @@ import java.util.NoSuchElementException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.UndoManager;
-
 /**
  * Tests the UndoManager class
  *
@@ -21,22 +18,17 @@ public class UndoManagerTest {
 
         @Override
         public final Void execute() {
-            this.done = true;
+            done = true;
             return null;
         }
 
         public boolean isDone() {
-            return this.done;
-        }
-
-        @Override
-        public void redo() {
-            this.done = true;
+            return done;
         }
 
         @Override
         public void undo() {
-            this.done = false;
+            done = false;
         }
 
         @Override

@@ -18,10 +18,10 @@ public abstract class Command<T> {
     public abstract T execute();
 
     /**
-     * Redoes the command. The default implementation re-executes the original
+     * Re-executes the command. DO NOT OVERRIDE THIS METHOD as it is depended upon to be equivalent to execute (ie. execute must not be a precondition of redo).
      * command. Note the lack of a return value, unlike #execute().
      */
-    public void redo() {
+    public final void redo() {
         this.execute();
     }
 

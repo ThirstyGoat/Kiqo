@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +33,11 @@ public class UndoManager {
      */
     public <T> T doCommand(final Command<T> command) {
         UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
-        T result = command.execute();
+        final T result = command.execute();
         undoStack.push(command);
-        redoStack.clear();
+        if (command.getClass() != RevertCommand.class) {
+            redoStack.clear();
+        }
 
         updateUndoRedoTypes();
         checkChangesSaved();
