@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
@@ -87,7 +86,14 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
             // prevents selecting a deleted item
 
             if (treeItemMap.values().contains(selectedItem)) {
+                // select previously-selected item if not deleted
                 selectionModel.select(selectedItem);
+            } else if (selectionModel.selectedItemProperty().equals(this) && !getChildren().isEmpty()) {
+                // if first child deleted but more remain, select first remaining child
+                selectionModel.select(getChildren().get(0));
+            } else {
+                // else select tree node heading if that was the last child
+                selectionModel.select(this);
             }
         };
     }
