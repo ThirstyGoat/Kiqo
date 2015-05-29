@@ -117,7 +117,7 @@ There are three ways of changing the view to show relevant information.
 %----------------------------------------------------------------------------------------
 \chapter{Items}
 \section{Organisation}
-An organisation is the root element of the heirachy. An organisation contains projects, teams, people and skills.
+An organisation is the root element of the heirachy. An organisation contains projects, teams, people, skills, backlogs and stories.
 A new organisation is automatically loaded when kiqo is initailly opened. An existing organisation can also be loaded
 from a .json file. To create a new organisation use \menu{File > New > Organisation}. An organisation can be saved using
 either \menu{File > Save} or \keys{ctrl + S}.
@@ -146,8 +146,13 @@ either \menu{File > Save} or \keys{ctrl + S}.
 
 \section{People \& Skills}
 \subsection{People}
-A person can be created, saved and edited in the same way as a project
+A person can be created, saved and edited in the same way as a project.
 \subsection{Skills}
+New skills can be created, edited and deleted, however there are two important skills which cannot be modified: 
+\begin{enumerate}
+  \item The Product Owner (PO) skill - The product owner skill is required
+  \item The Scrum Master (SM) skill -
+\end{itemize}
 \begin{itemize}
   \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the
   first skill is shown in the details pane, unless another skill in the list is selected.
@@ -177,6 +182,7 @@ A person can be created, saved and edited in the same way as a project
 \subsection{Project Allocation}
 \begin{itemize}
   \item Teams can be allocated to projects, with associated dates.
+    A team can only be allocated to one project at a time, so allocations may not overlap.
   \item In the project tab a team can be allocated to a project by clicking the 'Allocate Teams'.
   \item Select a team from the from the dropdown list in create Allocation dialog and choose a start and an end date.
   \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
@@ -191,10 +197,10 @@ A person can be created, saved and edited in the same way as a project
 \end{itemize}
 
 \subsection{Backlog}
+
 \begin{itemize}
-\item Backlogs can be created when there is an existing project and product owner.
-\item A dialog prompts a user when they attempt to create a backlog without these.
-\item Validation exists within the backlog form to ensure a project and product owner are assigned to a backlog.
+\item Backlogs can be created when there is an existing project and at least one person with the product owner skill.
+\item The owner of a backlog must have the product owner skill. 
 \item Stories can be added to a backlog.
 \end{itemize}
 
