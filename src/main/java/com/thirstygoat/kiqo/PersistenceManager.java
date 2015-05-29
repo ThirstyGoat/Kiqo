@@ -76,7 +76,8 @@ public class PersistenceManager {
      * @throws JsonIOException Internal JSON IO problem
      * @throws JsonSyntaxException Malformed JSON structure
      */
-    public static Organisation loadOrganisation(final File file) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
+    public static Organisation loadOrganisation(final File file) throws JsonIOException, JsonSyntaxException,
+            ClassCastException, FileNotFoundException {
         Organisation organisation = null;
 
         if (PersistenceManager.gson == null) {
