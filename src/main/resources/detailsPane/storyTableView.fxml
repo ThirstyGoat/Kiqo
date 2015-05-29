@@ -18,7 +18,7 @@
       <TableView fx:id="storyTableView" prefHeight="200" prefWidth="-1">
         <columns>
             <TableColumn fx:id="storyTableColumn" text="Story" />
-            <TableColumn fx:id="priorityTableColumn" text="Priority" />
+            <TableColumn fx:id="priorityTableColumn" text="Priority" maxWidth="80" minWidth="80"/>
         </columns>
       </TableView>
    </children>
