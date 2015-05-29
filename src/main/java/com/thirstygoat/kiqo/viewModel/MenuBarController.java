@@ -114,7 +114,7 @@ public class MenuBarController implements Initializable {
         redoMenuItem.setOnAction(event -> mainController.redo());
         revertMenuItem.setOnAction(event -> mainController.revert());
 
-        generateStatusReportMenuItem.setOnAction(event -> mainController.saveStatusReport());
+        generateStatusReportMenuItem.setOnAction(event -> mainController.statusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
         saveMenuItem.setOnAction(event -> mainController.saveOrganisation(false));
         saveAsMenuItem.setOnAction(event -> mainController.saveOrganisation(true));

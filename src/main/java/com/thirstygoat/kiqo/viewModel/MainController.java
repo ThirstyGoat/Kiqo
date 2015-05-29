@@ -566,10 +566,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Displays status report dialog
+     */
     public void statusReport() {
-        //stub method to show dialog for report
-        // TODO show the dialog for report
-
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.setTitle("Report Generator");

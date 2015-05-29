@@ -134,7 +134,6 @@ public class SideBarController implements Initializable {
                 if (mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
                     mainController.focusedItemProperty.set(null);
                 }
-                mainController.getMenuBarController().updateAfterProjectListSelected(true);
                 selectedTabProperty.set(TabOption.PROJECTS);
                 final int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
                 projectTreeView.getSelectionModel().select(null);
@@ -144,7 +143,6 @@ public class SideBarController implements Initializable {
                 if (mainController.selectedOrganisationProperty.get().getPeople().isEmpty()) {
                     mainController.focusedItemProperty.set(null);
                 }
-                mainController.getMenuBarController().updateAfterPersonListSelected(true);
                 selectedTabProperty.set(TabOption.PEOPLE);
                 final int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
                 peopleListView.getSelectionModel().select(null);
@@ -154,7 +152,6 @@ public class SideBarController implements Initializable {
                 if (mainController.selectedOrganisationProperty.get().getTeams().isEmpty()) {
                     mainController.focusedItemProperty.set(null);
                 }
-                mainController.getMenuBarController().updateAfterTeamListSelected(true);
                 selectedTabProperty.set(TabOption.TEAMS);
                 final int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
                 teamsListView.getSelectionModel().select(null);
