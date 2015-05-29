@@ -4,6 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.PersistenceManager;
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.model.*;
@@ -14,6 +15,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -37,9 +39,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for the primary view
@@ -601,7 +606,7 @@ public class MainController implements Initializable {
             fileChooser.setInitialFileName(selectedOrganisationProperty.get().organisationNameProperty().get());
         }
 
-        final File selectedFile = fileChooser.showSaveDialog(primaryStage);
+        File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(FILE_EXTENSION)) {
