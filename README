@@ -11,7 +11,7 @@ Linux:      Kiqo.sh (Please preserve file structure, as moving the jar will case
 The program can also be executed by opening the .jar file included.
 Alternatively the .jar file can be executed from the command line using the following command:
 
-	java -jar Kiqo.jar
+	java -jar Kiqo-3.0.jar
 
 
 Building from Source
