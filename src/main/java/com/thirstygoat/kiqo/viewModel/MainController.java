@@ -93,6 +93,7 @@ public class MainController implements Initializable {
         }
         // Empty the undo/redo stack(s)
         undoManager.empty();
+        undoManager.changesSavedProperty().setValue(true);
     }
 
     /**
