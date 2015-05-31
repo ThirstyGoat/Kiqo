@@ -47,6 +47,7 @@ public class PersistenceManager {
     private static final Logger LOGGER = Logger.getLogger(PersistenceManager.class.getName());
     private static Gson gson;
     private static boolean isOldJSON = false;
+    private static String revertVersion;
     /**
      * Saves the given Organisation to the given filepath as organisation_shortname.json FILE PATH MUST BE VALID
      *
@@ -59,12 +60,21 @@ public class PersistenceManager {
             PersistenceManager.createGson(false);
         }
 
+
         try (final Writer writer = new FileWriter(filePath)) {
             final JsonElement jsonElement = PersistenceManager.gson.toJsonTree(organisation);
             jsonElement.getAsJsonObject().addProperty("VERSION", ApplicationInfo.getProperty("version"));
             PersistenceManager.gson.toJson(jsonElement, writer);
+            revertVersion = gson.toJson(jsonElement);
         }
         PersistenceManager.LOGGER.log(Level.INFO, "Saved organisation to %s", filePath);
+    }
+
+    public static Organisation revert() {
+        final JsonParser parser = new JsonParser();
+        final JsonObject jsonObject = (JsonObject) parser.parse(revertVersion);
+        final JsonElement version = jsonObject.get("VERSION");
+        return PersistenceManager.gson.fromJson(jsonObject, Organisation.class);
     }
 
     /**
@@ -93,6 +103,7 @@ public class PersistenceManager {
             final JsonObject jsonObject = (JsonObject) parser.parse(br);
             final JsonElement version = jsonObject.get("VERSION");
             organisation = PersistenceManager.gson.fromJson(jsonObject, Organisation.class);
+            revertVersion = gson.toJson(jsonObject);
 
             // loading old json file
             if(version == null) {

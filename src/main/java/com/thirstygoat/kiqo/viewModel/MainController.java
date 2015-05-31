@@ -81,7 +81,12 @@ public class MainController implements Initializable {
     }
 
     protected void revert() {
-        undoManager.revert();
+//        undoManager.revert();
+        File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
+        selectedOrganisationProperty.set(PersistenceManager.revert());
+        selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
+        // Empty the undo/redo stack(s)
+        undoManager.empty();
     }
 
     /**
