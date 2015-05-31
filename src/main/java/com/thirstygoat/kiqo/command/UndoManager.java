@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.command;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +11,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 /**
  * Manages the undo/redo feature
@@ -21,6 +26,7 @@ public class UndoManager {
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
+    protected final ObservableList<Command<?>> saveUndoStack = FXCollections.observableArrayList();
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
@@ -107,7 +113,20 @@ public class UndoManager {
             changesSavedProperty().set(true);
             return;
         }
-        changesSavedProperty().set(undoStack.size() == savePosition);
+
+        // because there aren't equal methods for
+        boolean unsavedChanges = true;
+        if (saveUndoStack.size() == undoStack.size()) {
+            for (int i = 0; i < undoStack.size(); i++) {
+                if (saveUndoStack.get(i) != undoStack.poll()) {
+                    unsavedChanges = false;
+                    break;
+                }
+            }
+        } else {
+            unsavedChanges = false;
+        }
+        changesSavedProperty.setValue(unsavedChanges);
     }
 
     public String getUndoType() {
@@ -120,6 +139,7 @@ public class UndoManager {
 
     public void markSavePosition() {
         savePosition = undoStack.size();
+        saveUndoStack.setAll(undoStack);
         changesSavedProperty.set(true);
     }
 }
