@@ -95,6 +95,22 @@ public class Utilities {
     }
 
     /**
+     * Convenience method for checking short name uniqueness across multiple collections
+     * @param shortName
+     * @param item
+     * @param collections
+     * @return
+     */
+    public static boolean shortnameIsUniqueMultiple(String shortName, Item item, Collection<Collection<? extends Item>> collections) {
+        for (Collection<? extends Item> collection : collections) {
+            if (!shortnameIsUnique(shortName, item, collection)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Checks whether the given shortname is unique among the given Collection.
      * @param shortName Short Name to be checked
      * @param items items among which the name must be unique

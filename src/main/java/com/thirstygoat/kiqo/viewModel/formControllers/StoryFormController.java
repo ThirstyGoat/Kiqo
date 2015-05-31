@@ -16,9 +16,11 @@ import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -106,7 +108,11 @@ public class StoryFormController extends FormController<Story> {
             if (project == null) {
                 return true;
             }
-            return Utilities.shortnameIsUnique(shortNameTextField.getText(), story, project.getUnallocatedStories());
+            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
+            existingBacklogs.add(project.getUnallocatedStories());
+            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+
+            return Utilities.shortnameIsUniqueMultiple(shortNameTextField.getText(), story, existingBacklogs);
         };
 
         final Predicate<String> personValidation = s -> {
