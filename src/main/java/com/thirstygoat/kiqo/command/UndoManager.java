@@ -116,9 +116,10 @@ public class UndoManager {
 
         // because there aren't equal methods for
         boolean unsavedChanges = true;
+        ArrayList<Command<?>> temp = new ArrayList<>(undoStack);
         if (saveUndoStack.size() == undoStack.size()) {
             for (int i = 0; i < undoStack.size(); i++) {
-                if (saveUndoStack.get(i) != undoStack.poll()) {
+                if (saveUndoStack.get(i) != temp.get(i)) {
                     unsavedChanges = false;
                     break;
                 }
