@@ -82,9 +82,15 @@ public class MainController implements Initializable {
 
     protected void revert() {
 //        undoManager.revert();
+
         File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
-        selectedOrganisationProperty.set(PersistenceManager.revert());
-        selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
+        // If there is no save location then it has never been saved before so we can just set it to a new Org
+        if (tempSaveLocation != null) {
+            selectedOrganisationProperty.set(PersistenceManager.revert());
+            selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
+        } else {
+            selectedOrganisationProperty.set(new Organisation());
+        }
         // Empty the undo/redo stack(s)
         undoManager.empty();
     }
