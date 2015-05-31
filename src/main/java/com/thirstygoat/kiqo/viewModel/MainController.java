@@ -693,6 +693,25 @@ public class MainController implements Initializable {
         return file;
     }
 
+     /**
+     * Prompt the user if they want to save unsaved changes
+     * @return if the user clicked cancel or not
+     */
+    public boolean promptBeforeRevert() {
+        if (!undoManager.changesSavedProperty().get()) {
+            final String[] options = {"Revert", "Cancel"};
+            final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
+                    "\"File > Save As\" before reverting or you will lose these changes.", options);
+            if (response.equals("Revert")) {
+                revert();
+            } else {
+                // do nothing
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Prompt the user if they want to save unsaved changes
      * @return if the user clicked cancel or not
