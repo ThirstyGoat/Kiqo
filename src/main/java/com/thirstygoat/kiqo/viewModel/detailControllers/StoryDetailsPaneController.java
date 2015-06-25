@@ -1,13 +1,21 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Story;
+
+import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -24,6 +32,12 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Label creatorLabel;
     @FXML
     private Label priorityLabel;
+    @FXML
+    private ListView<String> acListView;
+    @FXML
+    private Button addACButton;
+    @FXML
+    private Button removeACButton;
 
 
     public void showDetails(final Story story) {
@@ -35,6 +49,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // Binding to a property of a property
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
+
+            AcceptanceCriteria ac = new AcceptanceCriteria();
+            acListView.setItems(ac.criteria);
         } else {
             longNameLabel.textProperty().unbind();
             shortNameLabel.textProperty().unbind();
