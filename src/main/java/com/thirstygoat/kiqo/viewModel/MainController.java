@@ -80,20 +80,21 @@ public class MainController implements Initializable {
         return undoManager.changesSavedProperty();
     }
 
-    protected void revert() {
-//        undoManager.revert();
-        File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
-        // If there is no save location then it has never been saved before so we can just set it to a new Org
-        if (tempSaveLocation != null) {
-            selectedOrganisationProperty.set(PersistenceManager.revert());
-            selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
-        } else {
-            selectedOrganisationProperty.set(new Organisation());
-        }
-        // Empty the undo/redo stack(s)
-        undoManager.empty();
-        undoManager.changesSavedProperty().setValue(true);
-    }
+    //TODO remove this
+//    protected void revert() {
+////        undoManager.revert();
+//        File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
+//        // If there is no save location then it has never been saved before so we can just set it to a new Org
+//        if (tempSaveLocation != null) {
+//            selectedOrganisationProperty.set(PersistenceManager.revert());
+//            selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
+//        } else {
+//            selectedOrganisationProperty.set(new Organisation());
+//        }
+//        // Empty the undo/redo stack(s)
+//        undoManager.empty();
+//        undoManager.changesSavedProperty().setValue(true);
+//    }
 
     /**
      * Sets the stage title and updates accordingly depending on the organisation
@@ -703,7 +704,7 @@ public class MainController implements Initializable {
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Revert Project", "You have unsaved changes.",
                     "\"File > Save As\" before reverting or you will lose these changes.", options);
             if (response.equals("Revert")) {
-                revert();
+                undoManager.revert();
             } else {
                 // do nothing
                 return false;
