@@ -1,5 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +15,16 @@ import java.util.List;
  */
 public class AcceptanceCriteria {
 
-    public ObservableList<String> criteria;
+    public StringProperty criteria;
+    public BooleanProperty done;
 
-    public AcceptanceCriteria() {
-        criteria = FXCollections.observableArrayList();
-        criteria.addAll(Arrays.asList("A", "B", "C"));
+    public AcceptanceCriteria(String critera) {
+        this.criteria = new SimpleStringProperty(critera);
+        this.done = new SimpleBooleanProperty(false);
+    }
+
+    public void setCriteria(String criteria) {
+        this.criteria.setValue(criteria);
     }
 
 }

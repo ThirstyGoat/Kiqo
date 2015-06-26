@@ -50,8 +50,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
 
-            AcceptanceCriteria ac = new AcceptanceCriteria();
-            acListView.setItems(ac.criteria);
         } else {
             longNameLabel.textProperty().unbind();
             shortNameLabel.textProperty().unbind();
