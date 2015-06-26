@@ -120,6 +120,7 @@ public class UndoManager {
         while (revertStack.size() > 0) {
             doCommand(revertStack.pop());
         }
+        branchPosition = undoStack.size();
         updateUndoRedoTypes();
     }
 
@@ -148,6 +149,7 @@ public class UndoManager {
         } else {
             unsavedChanges = false;
         }
+
         changesSavedProperty.setValue(unsavedChanges);
     }
 

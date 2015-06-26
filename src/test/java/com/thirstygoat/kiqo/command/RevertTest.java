@@ -234,4 +234,37 @@ public class RevertTest extends TestCase {
         }
     }
 
+    /**
+     *
+     * do do do save undo undo revert do do revert
+     */
+    public void testBranchRevertAndGoPastSavePos() {
+        undoManager.markSavePosition();
+        Skill newSkill = new Skill("10", "");
+        Skill newSkill2 = new Skill("11", "");
+        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+
+        undoManager.undoCommand();
+        undoManager.undoCommand();
+
+        undoManager.revert();
+
+        undoManager.doCommand(newSkillCommand);
+        undoManager.doCommand(newSkillCommand2);
+
+        undoManager.revert();
+
+        assertTrue(undoManager.undoStack.size() == 10);
+        assertTrue(undoManager.redoStack.size() == 0);
+        assertTrue(undoManager.revertStack.size() == 0);
+
+        System.out.println("undo: " + undoManager.undoStack.size());
+        System.out.println("redo: " + undoManager.redoStack.size());
+        System.out.println("revert: " + undoManager.revertStack.size());
+        for (int i = 9; i > 0; i--) {
+            assertTrue(((CreateSkillCommand)undoManager.undoStack.pop()).skill.getShortName().equals(String.valueOf(i)));
+        }
+    }
+
 }
