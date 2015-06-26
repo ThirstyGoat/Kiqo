@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.model.Skill;
  *
  */
 public class CreateSkillCommand extends Command<Skill> {
-    private final Skill skill;
+    protected final Skill skill;
     private final Organisation organisation;
 
     /**

@@ -23,7 +23,9 @@ public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
-    protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
+    protected final Deque<Command<?>> undoStack = new ArrayDeque<>();
+    protected final Deque<Command<?>> redoStack = new ArrayDeque<>();
+    protected final Deque<Command<?>> revertStack = new ArrayDeque<>();
     protected final ObservableList<Command<?>> saveUndoStack = FXCollections.observableArrayList();
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
@@ -78,6 +80,7 @@ public class UndoManager {
         checkChangesSaved();
         if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
             branchPosition = undoStack.size();
+            revertStack.push(command);
         }
     }
 
@@ -101,7 +104,23 @@ public class UndoManager {
      * Creates and executes a RevertCommand to clear the undoStack up to a certain point
      */
     public void revert() {
-        doCommand(new RevertCommand(this, savePosition));
+//        doCommand(new RevertCommand(this));
+        int diff = savePosition - undoStack.size();
+        // only one of these while loops will be executed
+        // depending on whether revert takes us forwards or backwards
+        redoStack.clear();
+        while (diff < 0) {
+            final Command<?> command = undoStack.pop();
+            command.undo();
+            diff++;
+        }
+        while (undoStack.size() > branchPosition) {
+            undoStack.pop().undo();
+        }
+        while (revertStack.size() > 0) {
+            doCommand(revertStack.pop());
+        }
+        updateUndoRedoTypes();
     }
 
     public BooleanProperty changesSavedProperty() {
@@ -143,6 +162,7 @@ public class UndoManager {
     public void markSavePosition() {
         savePosition = undoStack.size();
         branchPosition = undoStack.size();
+        revertStack.clear();
         saveUndoStack.setAll(undoStack);
         changesSavedProperty.set(true);
     }
