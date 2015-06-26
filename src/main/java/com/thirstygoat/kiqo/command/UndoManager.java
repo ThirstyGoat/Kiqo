@@ -76,6 +76,9 @@ public class UndoManager {
         updateUndoRedoTypes();
         UndoManager.LOGGER.log(Level.INFO, "Undoing command %s", command);
         checkChangesSaved();
+        if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
+            branchPosition = undoStack.size();
+        }
     }
 
     private void updateUndoRedoTypes() {
@@ -139,6 +142,7 @@ public class UndoManager {
 
     public void markSavePosition() {
         savePosition = undoStack.size();
+        branchPosition = undoStack.size();
         saveUndoStack.setAll(undoStack);
         changesSavedProperty.set(true);
     }

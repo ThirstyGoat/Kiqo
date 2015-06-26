@@ -1,15 +1,7 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-import java.util.Date;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
-
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +10,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.io.File;
+import java.util.Date;
+import java.util.logging.*;
 
 /**
  * Main entry point for application
@@ -48,7 +41,7 @@ public class Main extends Application {
     private static void setupLogging(Level level) {
         // set up logging for this package
         final Logger logger = Logger.getLogger(Main.class.getPackage().getName());
-        logger.setLevel(level);
+        logger.setLevel(Level.OFF);
         final Formatter formatter = new SimpleFormatter() {
             /**
              * If record has parameters, uses record's original message as a format string.
