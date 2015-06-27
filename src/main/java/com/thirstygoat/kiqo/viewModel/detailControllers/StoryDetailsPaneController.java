@@ -97,6 +97,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             }
         });
         acListView.getItems().add(textArea);
+        //todo: work out why it only works for the 2nd item onwards
+        textArea.requestFocus();
     }
 
     private void deleteAC() {
@@ -108,6 +110,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private void editAC() {
         if (acListView.getSelectionModel().getSelectedItem() != null) {
             acListView.getSelectionModel().getSelectedItem().setEditable(true);
+            acListView.getSelectionModel().getSelectedItem().requestFocus();
         }
     }
 
