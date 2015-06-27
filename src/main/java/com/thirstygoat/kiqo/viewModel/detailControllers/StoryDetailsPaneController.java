@@ -11,12 +11,15 @@ import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,11 +36,13 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Label priorityLabel;
     @FXML
-    private ListView<String> acListView;
+    private ListView<TextArea> acListView;
     @FXML
     private Button addACButton;
     @FXML
     private Button removeACButton;
+    @FXML
+    private Button editACButton;
 
 
     public void showDetails(final Story story) {
@@ -63,6 +68,41 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             creatorLabel.setText(null);
             priorityLabel.setText(null);
         }
+
+        addACButton.setOnAction(event -> addAC());
+        removeACButton.setOnAction(event -> deleteAC());
+        editACButton.setOnAction(event -> editAC());
+    }
+
+    private void addAC() {
+        TextArea textArea = new TextArea();
+        textArea.setPromptText("Acceptance Criteria");
+        textArea.setWrapText(true);
+        textArea.setPrefRowCount(1);
+        textArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                textArea.setPrefRowCount(textArea.getText().split("\n").length);
+            }
+        });
+
+        textArea.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    textArea.setEditable(false);
+                }
+            }
+        });
+        acListView.getItems().add(textArea);
+    }
+
+    private void deleteAC() {
+        acListView.getItems().remove(acListView.getSelectionModel().getSelectedItem());
+    }
+
+    private void editAC() {
+        acListView.getSelectionModel().getSelectedItem().setEditable(true);
     }
 
     @Override
