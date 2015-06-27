@@ -91,6 +91,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
                     textArea.setEditable(false);
+                } else {
+                    acListView.getSelectionModel().select(textArea);
                 }
             }
         });
@@ -98,11 +100,15 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteAC() {
-        acListView.getItems().remove(acListView.getSelectionModel().getSelectedItem());
+        if (acListView.getSelectionModel().getSelectedItem() != null) {
+            acListView.getItems().remove(acListView.getSelectionModel().getSelectedItem());
+        }
     }
 
     private void editAC() {
-        acListView.getSelectionModel().getSelectedItem().setEditable(true);
+        if (acListView.getSelectionModel().getSelectedItem() != null) {
+            acListView.getSelectionModel().getSelectedItem().setEditable(true);
+        }
     }
 
     @Override
