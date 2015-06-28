@@ -22,6 +22,7 @@ public class CreateAllocationCommand extends Command<Allocation> {
     public Allocation execute() {
         project.observableAllocations().add(allocation);
         team.observableAllocations().add(allocation);
+
         return null;
     }
 

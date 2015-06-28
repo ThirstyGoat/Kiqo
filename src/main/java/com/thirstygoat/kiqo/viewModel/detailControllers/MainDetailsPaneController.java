@@ -173,10 +173,11 @@ public class MainDetailsPaneController implements Initializable {
         deleteButton.setVisible(true);
     }
 
-        public void setMainController(MainController mainController) {
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
         projectDetailsPaneController.setMainController(mainController);
         teamDetailsPaneController.setMainController(mainController);
         backlogDetailsPaneController.setMainController(mainController);
+        storyDetailsPaneController.setMainController(mainController);
     }
 }

@@ -1,6 +1,9 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
+import com.thirstygoat.kiqo.command.DeleteAcceptanceCriteriaCommand;
+import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Story;
 
 import java.awt.*;
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -20,11 +24,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
+
+    private MainController mainController;
+    private Story story;
+
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -36,7 +45,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Label priorityLabel;
     @FXML
-    private ListView<TextArea> acListView;
+    private ListView<AcceptanceCriteria> acListView;
     @FXML
     private Button addACButton;
     @FXML
@@ -46,6 +55,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
 
     public void showDetails(final Story story) {
+        this.story = story;
         if (story != null) {
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
@@ -69,54 +79,47 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
         }
 
-        addACButton.setOnAction(event -> addAC());
+        acListView.setCellFactory(new Callback<ListView<AcceptanceCriteria>, ListCell<AcceptanceCriteria>>() {
+            @Override
+            public ListCell<AcceptanceCriteria> call(ListView<AcceptanceCriteria> param) {
+                return new ListCell<AcceptanceCriteria>() {
+                    @Override
+                    protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
+                        // calling super here is very important
+                        setText(empty ? "" : item.criteria.getValue());
+                        super.updateItem(item, empty);
+                    }
+                };
+            }
+        });
+
+        acListView.setItems(story.getAcceptanceCriteria());
+        addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
-        editACButton.setOnAction(event -> editAC());
-    }
-
-    private void addAC() {
-        TextArea textArea = new TextArea();
-        textArea.setPromptText("Acceptance Criteria");
-        textArea.setWrapText(true);
-        textArea.setPrefRowCount(1);
-        textArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                textArea.setPrefRowCount(textArea.getText().split("\n").length);
-            }
-        });
-
-        textArea.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue) {
-                    textArea.setEditable(false);
-                } else {
-                    acListView.getSelectionModel().select(textArea);
-                }
-            }
-        });
-        acListView.getItems().add(textArea);
-        //todo: work out why it only works for the 2nd item onwards
-        textArea.requestFocus();
+        editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
     }
 
     private void deleteAC() {
-        if (acListView.getSelectionModel().getSelectedItem() != null) {
-            acListView.getItems().remove(acListView.getSelectionModel().getSelectedItem());
-        }
-    }
+        System.out.println(acListView.getItems());
 
-    private void editAC() {
-        if (acListView.getSelectionModel().getSelectedItem() != null) {
-            acListView.getSelectionModel().getSelectedItem().setEditable(true);
-            acListView.getSelectionModel().getSelectedItem().requestFocus();
+        final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
+
+        final DeleteAcceptanceCriteriaCommand command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
+
+        final String[] buttons = {"Delete Acceptance Criteria", "Cancel"};
+        final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
+                "Delete Acceptance Criteria", "Are you sure?",
+                "Are you sure you want to delete the acceptance criteria on this story" + "?", buttons);
+
+        if (result.equals("Delete Acceptance Criteria")) {
+            mainController.doCommand(command);
         }
     }
 
     @Override
     public void setMainController(MainController mainController) {
         // we don't need the main controller for now
+        this.mainController = mainController;
     }
 
     @Override

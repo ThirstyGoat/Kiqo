@@ -15,16 +15,23 @@ import java.util.List;
  */
 public class AcceptanceCriteria {
 
-    public StringProperty criteria;
-    public BooleanProperty done;
+    public final StringProperty criteria;
 
-    public AcceptanceCriteria(String critera) {
-        this.criteria = new SimpleStringProperty(critera);
-        this.done = new SimpleBooleanProperty(false);
+
+    public AcceptanceCriteria(String criteria) {
+        this.criteria = new SimpleStringProperty(criteria);
     }
 
+    /**
+     * For introspection
+     * @param criteria
+     */
     public void setCriteria(String criteria) {
         this.criteria.setValue(criteria);
+    }
+
+    public String getCriteria() {
+        return criteria.get();
     }
 
 }

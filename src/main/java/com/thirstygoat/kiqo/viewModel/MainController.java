@@ -13,6 +13,7 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
@@ -483,6 +484,18 @@ public class MainController implements Initializable {
         }
     }
 
+    public void createAC() {
+        if (selectedOrganisationProperty.get() != null) {
+            acceptanceCriteriaDialog(null);
+        }
+    }
+
+    public void editAC(AcceptanceCriteria acceptanceCriteria) {
+        if (selectedOrganisationProperty.get() != null) {
+            acceptanceCriteriaDialog(acceptanceCriteria);
+        }
+    }
+
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 
@@ -835,6 +848,40 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (allocationFormController.isValid()) {
                 doCommand(allocationFormController.getCommand());
+            }
+        });
+    }
+
+    private void acceptanceCriteriaDialog(AcceptanceCriteria acceptanceCriteria) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/acceptanceCriteria.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final AcceptanceCriteriaFormController acceptanceCriteriaFormController = loader.getController();
+            acceptanceCriteriaFormController.setStage(stage);
+            acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
+
+            acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
+
+
+            acceptanceCriteriaFormController.populateFields(acceptanceCriteria);
+
+            stage.showAndWait();
+            if (acceptanceCriteriaFormController.isValid()) {
+                doCommand(acceptanceCriteriaFormController.getCommand());
             }
         });
     }
