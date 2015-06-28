@@ -86,7 +86,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                     @Override
                     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
                         // calling super here is very important
-                        setText(empty ? "" : item.criteria.getValue());
+
+                        if (!empty) {
+                            textProperty().bind(item.criteria);
+                        }
                         super.updateItem(item, empty);
                     }
                 };
@@ -100,10 +103,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteAC() {
-        System.out.println(acListView.getItems());
-
         final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
-
         final DeleteAcceptanceCriteriaCommand command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
 
         final String[] buttons = {"Delete Acceptance Criteria", "Cancel"};

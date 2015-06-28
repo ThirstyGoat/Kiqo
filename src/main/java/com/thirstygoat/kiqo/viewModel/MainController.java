@@ -875,10 +875,7 @@ public class MainController implements Initializable {
             acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
 
             acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
-
-
             acceptanceCriteriaFormController.populateFields(acceptanceCriteria);
-
             stage.showAndWait();
             if (acceptanceCriteriaFormController.isValid()) {
                 doCommand(acceptanceCriteriaFormController.getCommand());
