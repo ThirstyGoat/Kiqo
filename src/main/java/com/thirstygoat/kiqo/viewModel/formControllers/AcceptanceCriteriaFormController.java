@@ -4,6 +4,8 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -45,6 +47,14 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         Platform.runLater(acTextArea::requestFocus);
+        okButton.setDisable(true);
+        acTextArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                okButton.setDisable(newValue.length() < 1);
+                valid = newValue.length() > 0;
+            }
+        });
     }
 
     private void setButtonHandlers() {
@@ -54,7 +64,12 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
                 stage.close();
             }
         });
-        cancelButton.setOnAction(event -> stage.close());
+        cancelButton.setOnAction(event -> cancel());
+    }
+
+    private void cancel() {
+        valid = false;
+        stage.close();
     }
 
     private void setCommand() {
@@ -75,7 +90,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     @Override
     public boolean isValid() {
-        return acTextArea.getText().length() > 0;
+        return valid;
     }
 
     @Override

@@ -95,7 +95,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 };
             }
         });
-
         acListView.setItems(story.getAcceptanceCriteria());
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
