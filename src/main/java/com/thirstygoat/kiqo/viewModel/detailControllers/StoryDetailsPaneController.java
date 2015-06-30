@@ -79,6 +79,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
                         if (!empty) {
                             textProperty().bind(item.criteria);
+                        } else {
+                            // clear
+                            textProperty().unbind();
+                            textProperty().setValue("");
                         }
                         super.updateItem(item, empty);
                     }
