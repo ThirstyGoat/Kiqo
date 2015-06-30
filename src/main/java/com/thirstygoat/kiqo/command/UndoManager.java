@@ -122,6 +122,8 @@ public class UndoManager {
         }
         branchPosition = undoStack.size();
         updateUndoRedoTypes();
+
+        checkChangesSaved();
     }
 
     public BooleanProperty changesSavedProperty() {
