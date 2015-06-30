@@ -16,6 +16,7 @@ import com.thirstygoat.kiqo.command.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
@@ -72,21 +73,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         acListView.setCellFactory(new Callback<ListView<AcceptanceCriteria>, ListCell<AcceptanceCriteria>>() {
             @Override
             public ListCell<AcceptanceCriteria> call(ListView<AcceptanceCriteria> param) {
-                return new ListCell<AcceptanceCriteria>() {
-                    @Override
-                    protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
-                        // calling super here is very important
-
-                        if (!empty) {
-                            textProperty().bind(item.criteria);
-                        } else {
-                            // clear
-                            textProperty().unbind();
-                            textProperty().setValue("");
-                        }
-                        super.updateItem(item, empty);
-                    }
-                };
+                return new AcceptanceCriteriaListCell(param);
             }
         });
         acListView.setItems(story.getAcceptanceCriteria());
@@ -94,7 +81,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
     }
-
+    
     private void deleteAC() {
         final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
         final DeleteAcceptanceCriteriaCommand command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
