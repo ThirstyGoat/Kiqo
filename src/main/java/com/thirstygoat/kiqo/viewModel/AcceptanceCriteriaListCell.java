@@ -58,7 +58,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                relocateToPoint(new Point2D( event.getSceneX(), event.getSceneY()));
+//                relocateToPoint(new Point2D( event.getSceneX(), event.getSceneY()));
                 event.consume();
             }
         };
@@ -69,15 +69,34 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
 
+                int originalindex = listView.getSelectionModel().getSelectedIndex();
                 // TODO retrieve actual AC
-                listView.getItems().add(getIndex(), new AcceptanceCriteria(
-                        ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-                        ));
+//                System.out.println(originalindex);
+//                System.out.println(getIndex());
+                if(getIndex() > originalindex) {
+                    listView.getItems().add(getIndex() + 1, new AcceptanceCriteria(
+                            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+                    ));
+                } else {
+                    listView.getItems().add(getIndex(), new AcceptanceCriteria(
+                            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+                    ));
+                }
+//                listView.getItems().remove(originalindex);
                 event.setDropCompleted(true);
 
                 event.consume();
             }
         };
+
+        EventHandler<DragEvent> mContextDragDone = new EventHandler<DragEvent>() {
+
+            @Override
+            public void handle(DragEvent event) {
+            }
+        };
+        handle.setOnDragDropped(mContextDragDropped);
+        handle.setOnDragOver(mContextDragOver);
 
         handle.setOnDragDetected(new EventHandler<MouseEvent>() {
 
@@ -88,16 +107,18 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
                 getParent().setOnDragOver(mContextDragOver);
                 getParent().setOnDragDropped(mContextDragDropped);
+                getParent().setOnDragDone(mContextDragDone);
 
                 // begin drag ops
 //                listView.getItems().remove(getUserData())); // TODO remove AC
-                dragOffset = new Point2D(event.getX(), event.getY());
-                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
+//                dragOffset = new Point2D(event.getX(), event.getY());
+//                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
 
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
                 container.addData("criteria", ac.getCriteria());
                 content.put(DragContainer.DATA_FORMAT, container);
+                listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
                 getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
 
                 event.consume();
