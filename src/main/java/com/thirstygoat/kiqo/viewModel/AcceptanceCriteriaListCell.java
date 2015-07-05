@@ -14,6 +14,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
@@ -27,22 +30,22 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     @Override
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
         // calling super here is very important
-
         if (!empty) {
             final BorderPane borderPane = new BorderPane();
-
+//
             final Node handle = createHandle(item);
             borderPane.setLeft(handle);
 
-            final Label label = new Label();
-            label.textProperty().bind(item.criteria);
-            label.setAlignment(Pos.BASELINE_LEFT);
-            borderPane.setCenter(label);
+            Text criteria = new Text();
+            criteria.textProperty().bind(item.criteria);
+            criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(120));
+            borderPane.setCenter(criteria);
 
-            // borderPane.setRight(accept/reject node);
+            Text state = new Text("PASS");
+            state.setTextAlignment(TextAlignment.RIGHT);
+            borderPane.setRight(state);
 
             setGraphic(borderPane);
-
         } else {
             // clear
             setGraphic(null);
@@ -51,7 +54,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     }
 
     private Node createHandle(AcceptanceCriteria ac) {
-        Label handle = new Label("H");
+        Label handle = new Label("-");
         int tempIndex;
         
         EventHandler<DragEvent> mContextDragOver = new EventHandler<DragEvent>() {
