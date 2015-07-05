@@ -35,4 +35,26 @@ public class AcceptanceCriteria implements Serializable {
         return criteria.get();
     }
 
+    @Override
+    public String toString() {
+        return "AcceptanceCriteria{" +
+                "criteria=" + criteria +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AcceptanceCriteria that = (AcceptanceCriteria) o;
+
+        return criteria.get().equals(that.criteria.get());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return criteria.hashCode();
+    }
 }

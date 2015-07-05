@@ -52,6 +52,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
     private Node createHandle(AcceptanceCriteria ac) {
         Label handle = new Label("H");
+        int tempIndex;
         
         EventHandler<DragEvent> mContextDragOver = new EventHandler<DragEvent>() {
             // dragover to handle node dragging in the right pane view
@@ -69,22 +70,20 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
 
-                int originalindex = listView.getSelectionModel().getSelectedIndex();
-                // TODO retrieve actual AC
-//                System.out.println(originalindex);
-//                System.out.println(getIndex());
-                if(getIndex() > originalindex) {
-                    listView.getItems().add(getIndex() + 1, new AcceptanceCriteria(
-                            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-                    ));
-                } else {
-                    listView.getItems().add(getIndex(), new AcceptanceCriteria(
-                            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-                    ));
-                }
-//                listView.getItems().remove(originalindex);
-                event.setDropCompleted(true);
+                AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
+                        ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+                );
 
+                // TODO retrieve actual AC
+
+                if (getIndex() > listView.getSelectionModel().getSelectedIndex()) {
+                    if (getIndex() < listView.getItems().size()) {
+                        listView.getItems().add(getIndex() + 1, acceptanceCriteria);
+                    }
+                } else {
+                    listView.getItems().add(getIndex(), acceptanceCriteria);
+                }
+                event.setDropCompleted(true);
                 event.consume();
             }
         };
@@ -93,6 +92,14 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
             @Override
             public void handle(DragEvent event) {
+                // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
+                AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
+                        ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+                );
+                int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
+                if (!listView.getItems().contains(acceptanceCriteria)) {
+                    listView.getItems().add(prevIndex, acceptanceCriteria);
+                }
             }
         };
         handle.setOnDragDropped(mContextDragDropped);
@@ -104,7 +111,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             public void handle(MouseEvent event) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-
                 getParent().setOnDragOver(mContextDragOver);
                 getParent().setOnDragDropped(mContextDragDropped);
                 getParent().setOnDragDone(mContextDragDone);
@@ -117,6 +123,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
                 container.addData("criteria", ac.getCriteria());
+                container.addData("index", listView.getSelectionModel().getSelectedIndex());
                 content.put(DragContainer.DATA_FORMAT, container);
                 listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
                 getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
