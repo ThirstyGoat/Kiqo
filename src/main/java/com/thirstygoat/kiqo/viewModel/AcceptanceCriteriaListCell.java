@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -14,6 +14,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -41,9 +42,53 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(120));
             borderPane.setCenter(criteria);
 
-            Text state = new Text("PASS");
-            state.setTextAlignment(TextAlignment.RIGHT);
+            // Place holder
+//            Text state = new Text("PASS");
+//            state.setTextAlignment(TextAlignment.RIGHT);
+//            borderPane.setRight(state);
+
+            // Combobox
+            ObservableList<String> states = FXCollections.observableArrayList(
+                    "Accepted",
+                    "Rejected",
+                    "None"
+            );
+            ComboBox<String> state = new ComboBox<>(states);
             borderPane.setRight(state);
+
+            // Toggle group
+//            ToggleGroup state = new ToggleGroup();
+//
+//            ToggleButton accept = new ToggleButton("Y");
+//            accept.setToggleGroup(state);
+//
+//            ToggleButton reject = new ToggleButton("N");
+//            reject.setToggleGroup(state);
+//
+//            ToggleButton none = new ToggleButton("-");
+//            none.setToggleGroup(state);
+//            none.setSelected(true);
+//
+//            HBox p = new HBox();
+//            p.getChildren().addAll(accept, none, reject);
+//            borderPane.setRight(p);
+
+            // Toggle group radio buttons
+//            ToggleGroup state = new ToggleGroup();
+//
+//            RadioButton accept = new RadioButton();
+//            accept.setToggleGroup(state);
+//
+//            RadioButton reject = new RadioButton();
+//            reject.setToggleGroup(state);
+//
+//            RadioButton none = new RadioButton();
+//            none.setToggleGroup(state);
+//            none.setSelected(true);
+//
+//            HBox p = new HBox();
+//            p.getChildren().addAll(accept, none, reject);
+//            borderPane.setRight(p);
 
             setGraphic(borderPane);
         } else {
