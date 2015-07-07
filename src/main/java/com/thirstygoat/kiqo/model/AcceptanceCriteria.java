@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,10 +18,11 @@ import java.util.List;
 public class AcceptanceCriteria implements Serializable {
 
     public final StringProperty criteria;
-
+    private State state;
 
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
+        this.state = State.NEITHER;
     }
 
     /**
@@ -33,6 +35,14 @@ public class AcceptanceCriteria implements Serializable {
 
     public String getCriteria() {
         return criteria.get();
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     @Override
@@ -48,7 +58,6 @@ public class AcceptanceCriteria implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         AcceptanceCriteria that = (AcceptanceCriteria) o;
-
         return criteria.get().equals(that.criteria.get());
 
     }
@@ -56,5 +65,44 @@ public class AcceptanceCriteria implements Serializable {
     @Override
     public int hashCode() {
         return criteria.hashCode();
+    }
+
+    /**
+     * Enum for the state of the acceptance criteria
+     */
+    public enum State {
+        ACCEPTED("Accepted"),
+        REJECTED("Rejected"),
+        NEITHER("Neither");
+
+        private String label;
+
+        State(String label) {
+            this.label = label;
+        }
+
+        /**
+         * Converts the string to uppercase so that it will match the enum we are looking for
+         * so we can take the string value from the combo box used for setting state
+         */
+        public static State getEnum(String val) {
+            return State.valueOf(val.toUpperCase());
+        }
+
+        /**
+         * Used so the combo box can be filled more easily
+         * @return Arraylist of filled with the labels for each enum
+         */
+        public static ArrayList<String> getStringValues() {
+            ArrayList<String> vals = new ArrayList<>();
+            for (State state : State.values()) {
+                vals.add(state.toString());
+            }
+            return vals;
+        }
+
+        public String toString() {
+            return label;
+        }
     }
 }

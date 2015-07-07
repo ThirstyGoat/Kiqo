@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -48,13 +50,13 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 //            borderPane.setRight(state);
 
             // Combobox
-            ObservableList<String> states = FXCollections.observableArrayList(
-                    "Accepted",
-                    "Rejected",
-                    "None"
-            );
+            ObservableList<String> states = FXCollections.observableArrayList(AcceptanceCriteria.State.getStringValues());
             ChoiceBox<String> state = new ChoiceBox<>(states);
             state.setMaxWidth(85);
+            state.valueProperty().addListener((observable, oldValue, newValue) -> {
+                item.setState(AcceptanceCriteria.State.getEnum(newValue));
+            });
+            state.valueProperty().setValue(item.getState().toString());
             borderPane.setRight(state);
 
 
