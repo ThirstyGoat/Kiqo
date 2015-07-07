@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -115,26 +116,35 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 event.consume();
             }
         };
+
+        EventHandler<DragEvent> mContextDragEntered = new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                event.acceptTransferModes(TransferMode.ANY);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                listView.getItems().add(getIndex(), acceptanceCriteria);
+                event.consume();
+            }
+        };
+
+        EventHandler<DragEvent> mContextDragExit = new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                event.acceptTransferModes(TransferMode.ANY);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                listView.getItems().remove(acceptanceCriteria);
+                event.consume();
+            }
+        };
+
         EventHandler<DragEvent> mContextDragDropped = new EventHandler<DragEvent>() {
 
             @Override
             public void handle(DragEvent event) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-
-                AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
-                        ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-                );
-
-                // TODO retrieve actual AC
-
-                if (getIndex() > listView.getSelectionModel().getSelectedIndex()) {
-                    if (getIndex() < listView.getItems().size()) {
-                        listView.getItems().add(getIndex() + 1, acceptanceCriteria);
-                    }
-                } else {
-                    listView.getItems().add(getIndex(), acceptanceCriteria);
-                }
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                listView.getItems().add(getIndex(), acceptanceCriteria);
                 event.setDropCompleted(true);
                 event.consume();
             }
@@ -145,19 +155,19 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             @Override
             public void handle(DragEvent event) {
                 // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-                AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
-                        ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-                );
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (!listView.getItems().contains(acceptanceCriteria)) {
                     listView.getItems().add(prevIndex, acceptanceCriteria);
                 }
             }
         };
-        handle.setOnDragDropped(mContextDragDropped);
-        handle.setOnDragOver(mContextDragOver);
-
-        handle.setOnDragDetected(new EventHandler<MouseEvent>() {
+        this.setOnDragDropped(mContextDragDropped);
+        this.setOnDragOver(mContextDragOver);
+        this.setOnDragEntered(mContextDragEntered);
+        this.setOnDragExited(mContextDragExit);
+        this.setOnDragDetected(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
@@ -175,16 +185,25 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
                 container.addData("criteria", ac.getCriteria());
+                container.addData("state", ac.getState());
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());
                 content.put(DragContainer.DATA_FORMAT, container);
                 listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
                 getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
-
                 event.consume();
             }
         });
         
         return handle;
+    }
+
+    private AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
+        AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
+                ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+        );
+        AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
+        acceptanceCriteria.setState(state);
+        return acceptanceCriteria;
     }
 
     private void relocateToPoint(Point2D p) {
