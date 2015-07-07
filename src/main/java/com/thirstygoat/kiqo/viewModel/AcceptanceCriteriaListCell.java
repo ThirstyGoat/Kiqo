@@ -39,7 +39,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
             Text criteria = new Text();
             criteria.textProperty().bind(item.criteria);
-            criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(120));
+            criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
             borderPane.setCenter(criteria);
 
             // Place holder
@@ -53,8 +53,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                     "Rejected",
                     "None"
             );
-            ComboBox<String> state = new ComboBox<>(states);
+            ChoiceBox<String> state = new ChoiceBox<>(states);
+            state.setMaxWidth(85);
             borderPane.setRight(state);
+
 
             // Toggle group
 //            ToggleGroup state = new ToggleGroup();
