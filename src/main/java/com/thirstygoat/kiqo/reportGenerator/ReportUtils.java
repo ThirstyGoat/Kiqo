@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,13 +48,29 @@ public class ReportUtils {
 
     /**
      * Generates a "valueName: value" string.
-     * This method invokers the toString method of value if available or replaces an empty string with '~'.
+     * This method invokes the toString method of value if available or replaces an empty string with '~'.
      * @param valueName the string to be placed before the colon.
-     * @param value the object whose toString value with be places after the colon.
+     * @param value the object whose toString value will be placed after the colon.
      * @return a string of "valueName: value".
      */
     public static String valueLine(String valueName, Object value) {
         return valueName + ": " + (value == null || (value.getClass() == String.class && value.toString().equals("")) ? "~" : value.toString());
+    }
+
+    /**
+     * Generates a list of strings representing a literal string which may contain newline characters
+     * and other special characters.
+     * @param valueName the string to be placed before the colon.
+     * @param value the object whose toString value will be placed after the colon in an indented literal block.
+     * @return a list of strings.
+     */
+    public static List<String> valueLiteral(String valueName, Object value) {
+        final List<String> lines = new ArrayList<>();
+        lines.add(valueName + ": |");
+        for(String line : value.toString().split(System.getProperty("line.separator"))) {
+            lines.add("  " + line);
+        }
+        return lines;
     }
 
     /**
