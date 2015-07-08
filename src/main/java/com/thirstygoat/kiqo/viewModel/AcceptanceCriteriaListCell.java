@@ -105,8 +105,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
     private Node createHandle(AcceptanceCriteria ac) {
         Label handle = new Label("-");
-        int tempIndex;
-        
+
+        // Called when the dragged item is over another cell
         EventHandler<DragEvent> mContextDragOver = new EventHandler<DragEvent>() {
             // dragover to handle node dragging in the right pane view
             @Override
@@ -117,6 +117,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             }
         };
 
+        // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -127,6 +128,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             }
         };
 
+        // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -137,6 +139,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             }
         };
 
+        // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = new EventHandler<DragEvent>() {
 
             @Override
@@ -150,6 +153,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             }
         };
 
+        // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = new EventHandler<DragEvent>() {
 
             @Override
