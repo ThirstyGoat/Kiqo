@@ -113,6 +113,17 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
 //                relocateToPoint(new Point2D( event.getSceneX(), event.getSceneY()));
+
+                // hard coding the auto-scroll
+                // Todo get rid of hard coding 178 and 375 values
+                int buffer = 20;
+                if (event.getSceneY() < 178 + buffer) {
+                    int scrollTo = Integer.max(0, getIndex() - 1);
+                    listView.scrollTo(scrollTo);
+                } else if (event.getSceneY() > 375 - buffer) {
+                    int scrollTo = Integer.max(0, getIndex() + 1);
+                    listView.scrollTo(scrollTo);
+                }
                 event.consume();
             }
         };
