@@ -134,7 +134,9 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-                listView.getItems().add(getIndex(), acceptanceCriteria);
+                if (getIndex() < listView.getItems().size()) {
+                    listView.getItems().add(getIndex(), acceptanceCriteria);
+                }
                 event.consume();
             }
         };
