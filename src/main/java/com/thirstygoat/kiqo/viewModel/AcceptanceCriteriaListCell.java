@@ -116,13 +116,25 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
                 int buffer = 20;
                 double yPos = getParent().sceneToLocal(event.getSceneX(), event.getSceneY()).getY();
-                if (yPos < buffer) {
-                    int scrollTo = Integer.max(0, getIndex() - 1);
-                    listView.scrollTo(scrollTo);
-                } else if (yPos > listView.getHeight() - buffer) {
-                    int scrollTo = Integer.max(0, getIndex() + 1);
-                    listView.scrollTo(scrollTo);
+
+                if (getIndex() > 0 && getIndex() < listView.getItems().size() - 1) {
+                    if (yPos < buffer) {
+                        listView.scrollTo(getIndex() - 1);
+                    } else if (yPos > listView.getHeight() - buffer) {
+                        listView.scrollTo(getIndex());
+                    }
                 }
+
+//                if (yPos < buffer) {
+//                    int scrollTo = Integer.max(0, getIndex() - 1);
+//                    System.out.println("up");
+//                    listView.scrollTo(scrollTo);
+//                } else if (yPos > listView.getHeight() - buffer) {
+//                    System.out.println("down");
+//
+//                    int scrollTo = Integer.min(listView.getItems().size() - 1, getIndex() + 1);
+//                    listView.scrollTo(scrollTo);
+//                }
                 event.consume();
             }
         };
@@ -131,6 +143,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         EventHandler<DragEvent> mContextDragEntered = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
                 if (getIndex() < listView.getItems().size()) {
@@ -144,6 +157,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         EventHandler<DragEvent> mContextDragExit = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
                 listView.getItems().remove(acceptanceCriteria);
