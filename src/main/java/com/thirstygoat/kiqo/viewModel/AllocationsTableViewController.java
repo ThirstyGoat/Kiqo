@@ -1,9 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,12 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 
 /**
@@ -35,10 +35,20 @@ public class AllocationsTableViewController implements Initializable {
     private TableColumn<Allocation, LocalDate> endDateTableColumn;
     @FXML
     private Button allocateTeamButton;
+    @FXML
+    private Button deleteAllocationButton;
+    @FXML
+    private Button editAllocationButton;
 
     public void init(FirstColumnType type) {
         this.type = type;
         allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
+        deleteAllocationButton.setOnAction(event -> deleteAllocation());
+        editAllocationButton.setOnAction(event -> mainController.editAllocation(allocationsTableView.getSelectionModel().getSelectedItem()));
+        //also needs to be bound to make sure that the table view is still focused too
+        // at the moment it the delete button remains on if the tableview loses focus
+        deleteAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
+        editAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
         initializeTable();
     }
 
@@ -72,7 +82,6 @@ public class AllocationsTableViewController implements Initializable {
             return endDateCellFactory;
         });
 
-        allocationsTableView.setEditable(true);
 
         startDateTableColumn.setOnEditCommit(event -> {
             final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
@@ -87,21 +96,14 @@ public class AllocationsTableViewController implements Initializable {
         // fixes ghost column issue and resizing
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        final ContextMenu contextMenu = new ContextMenu();
-        final MenuItem deleteMenuItem = new MenuItem("Delete Allocation");
-        contextMenu.getItems().addAll(deleteMenuItem);
-
         allocationsTableView.setRowFactory(param -> {
 
             final TableRow<Allocation> row = new TableRow<>();
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
-                    row.setContextMenu(null);
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-past", "allocation-future");
                     row.setTooltip(null);
                 } else {
-                    row.setContextMenu(contextMenu);
-
                     // set background color
                     row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
                     if (!mainController.selectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
@@ -125,21 +127,6 @@ public class AllocationsTableViewController implements Initializable {
             return row;
         });
 
-        deleteMenuItem.setOnAction(event -> {
-            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
-
-            final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
-
-            final String[] buttons = {"Delete Allocation", "Cancel"};
-            final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
-                    "Delete Project", "Are you sure?",
-                    "Are you sure you want to delete the allocation on this project for team " +
-                            selectedAllocation.getTeam().getShortName() + "?", buttons);
-
-            if (result.equals("Delete Allocation")) {
-                mainController.doCommand(command);
-            }
-        });
     }
 
     private void setAllocationButtonListeners() {
@@ -153,6 +140,22 @@ public class AllocationsTableViewController implements Initializable {
         mainController.selectedOrganisationProperty().getValue().getTeams().addListener((ListChangeListener<Team>) c -> {
             setButtonDisabled();
         });
+    }
+
+    private void deleteAllocation() {
+            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+
+            final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
+
+            final String[] buttons = {"Delete Allocation", "Cancel"};
+            final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
+                    "Delete Project", "Are you sure?",
+                    "Are you sure you want to delete the allocation on this project for team " +
+                            selectedAllocation.getTeam().getShortName() + "?", buttons);
+
+            if (result.equals("Delete Allocation")) {
+                mainController.doCommand(command);
+            }
     }
 
     /**
@@ -179,9 +182,6 @@ public class AllocationsTableViewController implements Initializable {
         final ChangeListener<LocalDate> listener = (observable, oldValue, newValue) -> {
             // Refresh table view since dates have changed and background colours/tooltips need to update accordingly
 
-//            ObservableList<Allocation> tmpItems = allocationsTableView.getItems();
-//            allocationsTableView.setItems(null);
-//            allocationsTableView.setItems(tmpItems);
             initializeTable();
         };
 

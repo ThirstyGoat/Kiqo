@@ -484,6 +484,12 @@ public class MainController implements Initializable {
         }
     }
 
+    public void editAllocation(Allocation allocation) {
+        if (selectedOrganisationProperty.get() != null) {
+            allocationDialog(allocation);
+        }
+    }
+
     public void createAC() {
         if (selectedOrganisationProperty.get() != null) {
             acceptanceCriteriaDialog(null);
