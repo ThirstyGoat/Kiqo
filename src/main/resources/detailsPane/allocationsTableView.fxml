@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
-
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.AllocationsTableViewController">
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.AllocationsTableViewController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -20,6 +18,12 @@
             <TableColumn fx:id="endDateTableColumn" text="End Date" />
         </columns>
       </TableView>
-       <Button fx:id="allocateTeamButton" mnemonicParsing="false" disable="true" text="Add Allocation" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+      <HBox alignment="BOTTOM_RIGHT" spacing="5.0" GridPane.rowIndex="1">
+         <children>
+             <Button fx:id="allocateTeamButton" disable="true" mnemonicParsing="false" text="+"  />
+            <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false" text="-" />
+            <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false" text="Edit" />
+         </children>
+      </HBox>
    </children>
 </GridPane>
