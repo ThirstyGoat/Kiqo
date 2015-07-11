@@ -1,14 +1,23 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +25,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,6 +34,29 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
+    private final class StateButtonHandler implements EventHandler<ActionEvent> {
+        private static final int IMAGE_SIZE = 20;
+        private final ObjectProperty<State> state;
+        private final Map<State, Image> images = new HashMap<>();
+
+        private StateButtonHandler(ImageView imageView, ObjectProperty<State> state) {            
+            final ClassLoader classLoader = getClass().getClassLoader();
+            images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+            images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+            images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+            
+            this.state = state;
+            this.state.addListener((observable, oldValue, newValue) -> imageView.setImage(images.get(newValue)));
+            imageView.setImage(images.get(state.get()));
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            // increment state
+            int newIndex = (state.get().ordinal() + 1) % State.values().length;
+            state.set(State.values()[newIndex]);
+        }
+    }
 
     private Point2D dragOffset = new Point2D(0, 0);
     private ListView<AcceptanceCriteria> listView;
@@ -37,20 +71,23 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         if (!empty) {
             final BorderPane borderPane = new BorderPane();
 //
-            final Node handle = createHandle(item);
+            final Node handle = new Label("-");
             borderPane.setLeft(handle);
+            
+            initialiseDragAndDrop(item);
 
             Text criteria = new Text();
             criteria.textProperty().bind(item.criteria);
             criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
             borderPane.setCenter(criteria);
 
-            // Place holder
-//            Text state = new Text("PASS");
-//            state.setTextAlignment(TextAlignment.RIGHT);
-//            borderPane.setRight(state);
+            final ImageView imageView = new ImageView();
+            Button stateButton = new Button("", imageView);
+            
+            stateButton.setOnAction(new StateButtonHandler(imageView, item.state));
+            borderPane.setRight(stateButton);
 
-            // Combobox
+            /* Combobox
             ObservableList<String> states = FXCollections.observableArrayList(AcceptanceCriteria.State.getStringValues());
             ChoiceBox<String> state = new ChoiceBox<>(states);
             state.setMaxWidth(85);
@@ -59,9 +96,9 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             });
             state.valueProperty().setValue(item.getState().toString());
             borderPane.setRight(state);
+            */
 
-
-            // Toggle group
+            /* Toggle group
 //            ToggleGroup state = new ToggleGroup();
 //
 //            ToggleButton accept = new ToggleButton("Y");
@@ -77,8 +114,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 //            HBox p = new HBox();
 //            p.getChildren().addAll(accept, none, reject);
 //            borderPane.setRight(p);
-
-            // Toggle group radio buttons
+*/
+            /* Toggle group radio buttons
 //            ToggleGroup state = new ToggleGroup();
 //
 //            RadioButton accept = new RadioButton();
@@ -94,7 +131,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 //            HBox p = new HBox();
 //            p.getChildren().addAll(accept, none, reject);
 //            borderPane.setRight(p);
-
+*/
             setGraphic(borderPane);
         } else {
             // clear
@@ -102,8 +139,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         }
         super.updateItem(item, empty);
     }
-
-    private Node createHandle(AcceptanceCriteria ac) {
+    
+    private Node initialiseDragAndDrop(AcceptanceCriteria ac) {
         Label handle = new Label("-");
 
         // Called when the dragged item is over another cell
@@ -112,10 +149,9 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-//                relocateToPoint(new Point2D( event.getSceneX(), event.getSceneY()));
 
                 // hard coding the auto-scroll
-                // Todo get rid of hard coding 178 and 375 values
+                // TODO get rid of hard coding 178 and 375 values
                 int buffer = 20;
                 if (event.getSceneY() < 178 + buffer) {
                     int scrollTo = Integer.max(0, getIndex() - 1);
@@ -158,7 +194,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-                listView.getItems().add(getIndex(), acceptanceCriteria);
+                final int index = Math.min(getIndex(), listView.getItems().size() - 1);
+                listView.getItems().add(index, acceptanceCriteria);
                 event.setDropCompleted(true);
                 event.consume();
             }
@@ -193,10 +230,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragDone(mContextDragDone);
 
                 // begin drag ops
-//                listView.getItems().remove(getUserData())); // TODO remove AC
-//                dragOffset = new Point2D(event.getX(), event.getY());
-//                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
-
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
                 container.addData("criteria", ac.getCriteria());
@@ -212,22 +245,12 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         return handle;
     }
 
-    private AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
+    private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
         AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
                 ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
         );
         AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
         acceptanceCriteria.setState(state);
         return acceptanceCriteria;
-    }
-
-    private void relocateToPoint(Point2D p) {
-        // relocates the object to a point that has been converted to scene coordinates
-        Point2D localCoords = getParent().sceneToLocal(p);
-        relocate ((int) (localCoords.getX() - dragOffset .getX()), (int) (localCoords.getY() - dragOffset.getY()));
-    }
-    
-    private void doStuff(AcceptanceCriteria ac, Point2D p) {
-        System.out.println(ac.getCriteria() + " moved to " + p.toString());
     }
 }

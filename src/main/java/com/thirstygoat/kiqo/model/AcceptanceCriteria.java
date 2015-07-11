@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -18,11 +20,11 @@ import java.util.List;
 public class AcceptanceCriteria implements Serializable {
 
     public final StringProperty criteria;
-    private State state;
+    public final ObjectProperty<State> state;
 
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
-        this.state = State.NEITHER;
+        this.state = new SimpleObjectProperty(State.NEITHER);
     }
 
     /**
@@ -38,17 +40,18 @@ public class AcceptanceCriteria implements Serializable {
     }
 
     public void setState(State state) {
-        this.state = state;
+        this.state.set(state);
     }
 
     public State getState() {
-        return state;
+        return state.get();
     }
 
     @Override
     public String toString() {
         return "AcceptanceCriteria{" +
-                "criteria=" + criteria +
+                "criteria=" + criteria.get() +
+                "state=" + state.get() +
                 '}';
     }
 
