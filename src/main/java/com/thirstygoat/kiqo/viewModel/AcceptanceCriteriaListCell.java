@@ -119,9 +119,9 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
                 if (getIndex() > 0 && getIndex() < listView.getItems().size() - 1) {
                     if (yPos < buffer) {
-                        listView.scrollTo(getIndex() - 1);
+                        listView.scrollTo(getIndex() - 2);
                     } else if (yPos > listView.getHeight() - buffer) {
-                        listView.scrollTo(getIndex());
+                        listView.scrollTo(getIndex() - 4);
                     }
                 }
 
@@ -148,6 +148,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
                 if (getIndex() < listView.getItems().size()) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
+                } else {
+                    listView.getItems().add(acceptanceCriteria);
                 }
                 event.consume();
             }
@@ -173,7 +175,11 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-                listView.getItems().add(getIndex(), acceptanceCriteria);
+                if (getIndex() < listView.getItems().size()) {
+                    listView.getItems().add(getIndex(), acceptanceCriteria);
+                } else {
+                    listView.getItems().add(acceptanceCriteria);
+                }
                 event.setDropCompleted(true);
                 event.consume();
             }
