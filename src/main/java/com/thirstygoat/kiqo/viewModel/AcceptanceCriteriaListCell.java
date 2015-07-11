@@ -110,7 +110,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-                if (getIndex() < listView.getItems().size()) {
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
                 }
                 event.consume();
@@ -139,7 +140,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-                if (getIndex() < listView.getItems().size()) {
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
                 }
                 event.setDropCompleted(true);
