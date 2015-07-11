@@ -124,17 +124,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                         listView.scrollTo(getIndex() - 4);
                     }
                 }
-
-//                if (yPos < buffer) {
-//                    int scrollTo = Integer.max(0, getIndex() - 1);
-//                    System.out.println("up");
-//                    listView.scrollTo(scrollTo);
-//                } else if (yPos > listView.getHeight() - buffer) {
-//                    System.out.println("down");
-//
-//                    int scrollTo = Integer.min(listView.getItems().size() - 1, getIndex() + 1);
-//                    listView.scrollTo(scrollTo);
-//                }
                 event.consume();
             }
         };
@@ -194,7 +183,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
 
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
-                if (!listView.getItems().contains(acceptanceCriteria)) {
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                if (listSize > listView.getItems().size()) {
                     listView.getItems().add(prevIndex, acceptanceCriteria);
                 }
             }
@@ -223,6 +213,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 container.addData("criteria", ac.getCriteria());
                 container.addData("state", ac.getState());
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());
+                container.addData("listSize", listView.getItems().size());
                 content.put(DragContainer.DATA_FORMAT, container);
                 listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
                 getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
