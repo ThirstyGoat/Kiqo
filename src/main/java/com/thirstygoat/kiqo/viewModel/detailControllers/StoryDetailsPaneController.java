@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -76,7 +78,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 return new AcceptanceCriteriaListCell(param);
             }
         });
+        removeACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
+        editACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
         acListView.setItems(story.getAcceptanceCriteria());
+
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
