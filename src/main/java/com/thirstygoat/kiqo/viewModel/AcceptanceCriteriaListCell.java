@@ -7,9 +7,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -60,13 +58,9 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
         // calling super here is very important
         if (!empty) {
-            final BorderPane borderPane = new BorderPane();
-//
-            final Node handle = new Label("-");
-            borderPane.setLeft(handle);
-            
             initialiseDragAndDrop(item);
-
+            
+            final BorderPane borderPane = new BorderPane();
             Text criteria = new Text();
             criteria.textProperty().bind(item.criteria);
             criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
@@ -78,51 +72,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             stateButton.setOnAction(new StateButtonHandler(imageView, item.state));
             borderPane.setRight(stateButton);
 
-            /* Combobox
-            ObservableList<String> states = FXCollections.observableArrayList(AcceptanceCriteria.State.getStringValues());
-            ChoiceBox<String> state = new ChoiceBox<>(states);
-            state.setMaxWidth(85);
-            state.valueProperty().addListener((observable, oldValue, newValue) -> {
-                item.setState(AcceptanceCriteria.State.getEnum(newValue));
-            });
-            state.valueProperty().setValue(item.getState().toString());
-            borderPane.setRight(state);
-            */
-
-            /* Toggle group
-//            ToggleGroup state = new ToggleGroup();
-//
-//            ToggleButton accept = new ToggleButton("Y");
-//            accept.setToggleGroup(state);
-//
-//            ToggleButton reject = new ToggleButton("N");
-//            reject.setToggleGroup(state);
-//
-//            ToggleButton none = new ToggleButton("-");
-//            none.setToggleGroup(state);
-//            none.setSelected(true);
-//
-//            HBox p = new HBox();
-//            p.getChildren().addAll(accept, none, reject);
-//            borderPane.setRight(p);
-*/
-            /* Toggle group radio buttons
-//            ToggleGroup state = new ToggleGroup();
-//
-//            RadioButton accept = new RadioButton();
-//            accept.setToggleGroup(state);
-//
-//            RadioButton reject = new RadioButton();
-//            reject.setToggleGroup(state);
-//
-//            RadioButton none = new RadioButton();
-//            none.setToggleGroup(state);
-//            none.setSelected(true);
-//
-//            HBox p = new HBox();
-//            p.getChildren().addAll(accept, none, reject);
-//            borderPane.setRight(p);
-*/
             setGraphic(borderPane);
         } else {
             // clear
@@ -131,9 +80,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         super.updateItem(item, empty);
     }
     
-    private Node initialiseDragAndDrop(AcceptanceCriteria ac) {
-        Label handle = new Label("-");
-
+    private void initialiseDragAndDrop(AcceptanceCriteria ac) {
         // Called when the dragged item is over another cell
         EventHandler<DragEvent> mContextDragOver = new EventHandler<DragEvent>() {
             // dragover to handle node dragging in the right pane view
@@ -242,8 +189,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 event.consume();
             }
         });
-        
-        return handle;
     }
 
     private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
