@@ -91,13 +91,13 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 int buffer = 20;
                 double yPos = getParent().sceneToLocal(event.getSceneX(), event.getSceneY()).getY();
 
-                if (getIndex() > 0 && getIndex() < listView.getItems().size() - 1) {
+//                if (getIndex() > 0 && getIndex() < listView.getItems().size() - 1) {
                     if (yPos < buffer) {
                         listView.scrollTo(getIndex() - 2);
                     } else if (yPos > listView.getHeight() - buffer) {
                         listView.scrollTo(getIndex() - 3);
                     }
-                }
+//                }
                 event.consume();
             }
         };
@@ -113,6 +113,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
+                } else {
+                    listView.getItems().add(acceptanceCriteria);
                 }
                 event.consume();
             }
@@ -143,6 +145,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
+                } else {
+                    listView.getItems().add(acceptanceCriteria);
                 }
                 event.setDropCompleted(true);
                 event.consume();
