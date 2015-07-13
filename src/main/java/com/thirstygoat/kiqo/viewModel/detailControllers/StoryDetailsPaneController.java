@@ -27,7 +27,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
     private MainController mainController;
     private Story story;
-
+    private Map<State, Image> images;
+    
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -74,13 +75,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
         }
 
-        final Map<State, Image> images = new HashMap<>();
-        final int IMAGE_SIZE = 20;
-        final ClassLoader classLoader = getClass().getClassLoader();
-        images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-        images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-        images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-        
         acListView.setCellFactory(new Callback<ListView<AcceptanceCriteria>, ListCell<AcceptanceCriteria>>() {
             @Override
             public ListCell<AcceptanceCriteria> call(ListView<AcceptanceCriteria> param) {
@@ -113,12 +107,16 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
     @Override
     public void setMainController(MainController mainController) {
-        // we don't need the main controller for now
         this.mainController = mainController;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        images = new HashMap<>();
+        final int IMAGE_SIZE = 20;
+        final ClassLoader classLoader = getClass().getClassLoader();
+        images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+        images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+        images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
     }
 }
