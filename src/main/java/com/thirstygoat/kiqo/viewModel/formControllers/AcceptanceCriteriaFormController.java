@@ -50,13 +50,13 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         okButton.setDisable(true);
         acTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.trim().length() < 1);
-            valid = newValue.trim().length() > 0;
         });
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            if (isValid()) {
+            valid = acTextArea.getText().trim().length() > 0;
+            if (valid) {
                 setCommand();
                 stage.close();
             }
@@ -79,8 +79,6 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
             if (!acceptanceCriteria.equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
-
-            valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Allocation", changes);
         }
     }
