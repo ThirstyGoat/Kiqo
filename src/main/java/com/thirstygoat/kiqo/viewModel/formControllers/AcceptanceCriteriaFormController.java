@@ -48,12 +48,9 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         setButtonHandlers();
         Platform.runLater(acTextArea::requestFocus);
         okButton.setDisable(true);
-        acTextArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                okButton.setDisable(newValue.length() < 1);
-                valid = newValue.length() > 0;
-            }
+        acTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().length() < 1);
+            valid = newValue.trim().length() > 0;
         });
     }
 
@@ -74,7 +71,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     private void setCommand() {
         if (acceptanceCriteria == null) {
-            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText());
+            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim());
             command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
         } else {
             // edit command
