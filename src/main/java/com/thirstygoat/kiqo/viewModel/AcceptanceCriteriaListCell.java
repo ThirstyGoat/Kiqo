@@ -76,9 +76,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     }
     
     private void initialiseDragAndDrop(AcceptanceCriteria ac) {
+
         // Called when the dragged item is over another cell
-
-
         EventHandler<DragEvent> mContextDragOver = event -> {
             event.acceptTransferModes(TransferMode.ANY);
             int buffer = 20;
@@ -140,9 +139,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
             int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
             int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
-            DragContainer container = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT));
-
-
 
             if (listSize > listView.getItems().size()) {
                 listView.getItems().add(prevIndex, acceptanceCriteria);
@@ -153,11 +149,15 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         this.setOnDragOver(mContextDragOver);
         this.setOnDragEntered(mContextDragEntered);
         this.setOnDragExited(mContextDragExit);
+
         this.setOnDragDetected(event -> {
-            getParent().setOnDragOver(null);
-            getParent().setOnDragDropped(null);
-            getParent().setOnDragOver(mContextDragOver);
-            getParent().setOnDragDropped(mContextDragDropped);
+            // Todo Im not sure we need these anymore?
+//            getParent().setOnDragOver(null);
+//            getParent().setOnDragDropped(null);
+//            getParent().setOnDragOver(mContextDragOver);
+//            getParent().setOnDragDropped(mContextDragDropped);
+
+            // We do need this one or onDragDone wont be called
             getParent().setOnDragDone(mContextDragDone);
 
             // begin drag ops
@@ -165,11 +165,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             DragContainer container = new DragContainer();
             container.addData("criteria", ac.getCriteria());
             container.addData("state", ac.getState());
-
-//                container.addData("index", getIndex());
             container.addData("listSize", listView.getItems().size());
             content.put(DragContainer.DATA_FORMAT, container);
-//                listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
 
             if (getIndex() == listView.getSelectionModel().getSelectedIndex()) {
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());
@@ -177,7 +174,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 listView.getSelectionModel().clearSelection();
                 getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
             }
-
             event.consume();
         });
     }
