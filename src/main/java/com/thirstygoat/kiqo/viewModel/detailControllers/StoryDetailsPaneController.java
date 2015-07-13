@@ -1,21 +1,23 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.util.Callback;
 
 import com.thirstygoat.kiqo.command.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
@@ -72,12 +74,20 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
         }
 
+        final Map<State, Image> images = new HashMap<>();
+        final int IMAGE_SIZE = 20;
+        final ClassLoader classLoader = getClass().getClassLoader();
+        images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+        images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+        images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+        
         acListView.setCellFactory(new Callback<ListView<AcceptanceCriteria>, ListCell<AcceptanceCriteria>>() {
             @Override
             public ListCell<AcceptanceCriteria> call(ListView<AcceptanceCriteria> param) {
-                return new AcceptanceCriteriaListCell(param);
+                return new AcceptanceCriteriaListCell(param, images);
             }
         });
+        
         removeACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
         editACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
         acListView.setItems(story.getAcceptanceCriteria());

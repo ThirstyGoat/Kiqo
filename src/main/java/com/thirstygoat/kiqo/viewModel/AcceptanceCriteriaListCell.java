@@ -24,16 +24,9 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private final class StateButtonHandler implements EventHandler<ActionEvent> {
-        private static final int IMAGE_SIZE = 20;
         private final ObjectProperty<State> state;
-        private final Map<State, Image> images = new HashMap<>();
 
-        private StateButtonHandler(ImageView imageView, ObjectProperty<State> state) {            
-            final ClassLoader classLoader = getClass().getClassLoader();
-            images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-            images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-            images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-            
+        private StateButtonHandler(ImageView imageView, ObjectProperty<State> state, Map<State, Image> images) {                        
             this.state = state;
             this.state.addListener((observable, oldValue, newValue) -> imageView.setImage(images.get(newValue)));
             imageView.setImage(images.get(state.get()));
@@ -49,9 +42,11 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
     private Point2D dragOffset = new Point2D(0, 0);
     private ListView<AcceptanceCriteria> listView;
+    private final Map<State, Image> images;
     
-    public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView) {
+    public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
         this.listView = listView;
+        this.images = images;
     }
     
     @Override
@@ -69,7 +64,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             final ImageView imageView = new ImageView();
             Button stateButton = new Button("", imageView);
             
-            stateButton.setOnAction(new StateButtonHandler(imageView, item.state));
+            stateButton.setOnAction(new StateButtonHandler(imageView, item.state, images));
             borderPane.setRight(stateButton);
 
             setGraphic(borderPane);
