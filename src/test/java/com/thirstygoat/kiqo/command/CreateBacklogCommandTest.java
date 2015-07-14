@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Backlog.Scale;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import org.junit.Assert;
@@ -16,12 +17,13 @@ public class CreateBacklogCommandTest {
 
     private Backlog backlog;
     private Project project;
+    private Scale scale;
     private CreateBacklogCommand command;
 
     @Before
     public void setup() {
         project = new Project("proj", "Project");
-        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>() );
+        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>(), scale);
         command = new CreateBacklogCommand(backlog);
     }
 

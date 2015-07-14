@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Backlog.Scale;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
@@ -42,6 +43,7 @@ public class BacklogFormController extends FormController<Backlog> {
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private Backlog backlog;
     private Person productOwner;
+    private Scale scale;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command<?> command;
@@ -218,7 +220,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
         if (backlog == null) {
             final Backlog b = new Backlog(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), productOwner, project.get(), stories);
+                    descriptionTextField.getText(), productOwner, project.get(), stories, scale);
             command = new CreateBacklogCommand(b);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
