@@ -128,9 +128,12 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
             if (getIndex() < listSize) {
 //                listView.getItems().add(getIndex(), acceptanceCriteria);
-                undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
+                if (prevIndex != getIndex()) {
+                    undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
+                }
             } else {
-                listView.getItems().add(acceptanceCriteria);
+                undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex,
+                        listView.getItems(), listView.getItems().size() - 1));
             }
             event.setDropCompleted(true);
             event.consume();
