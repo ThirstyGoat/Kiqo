@@ -66,7 +66,7 @@ public class Backlog extends Item {
     }
 
     /*
-    * Enum for the stories scale
+    * Estimation scale
     * */
     public enum Scale {
         FIBONACCI("Fibonacci", new String[] {"0", "1", "2", "3", "5", "8", "13", "20", "40", "100", "∞"}),
@@ -76,27 +76,27 @@ public class Backlog extends Item {
         private String label;
         private String[] estimates;
 
-        Scale(String label, String[] estimates) {
+        private Scale(String label, String[] estimates) {
             this.label = label;
             this.estimates = estimates;
         }
 
         /**
-         * Converts the scale string to uppercase so it will match the enum that exists in order to
-         * take the string value from the combo box used for setting scale.
-         * 
+         * Return the scale with the given label
+         * @param label label of a Scale
+         * @return scale with the given label
+         * @throws RuntimeException if label does not belong to any Scale
          */
-        public static Scale getEnum(String str) {
+        public static Scale getEnum(String label) {
             for (Scale scale: Scale.values()) {
-                if (str.equals(scale.label)) {
+                if (scale.label.equals(label)) {
                     return scale;
                 }
             }
-            throw new RuntimeException("Scale " + str + " does not exist.");
+            throw new RuntimeException("Scale " + label + " does not exist.");
         }
 
-        /*
-        * Necessary to easily fill the combo box
+        /**
         * @return Arraylist filled with the labels for each enum
         */
         public static ArrayList<String> getStrings() {
