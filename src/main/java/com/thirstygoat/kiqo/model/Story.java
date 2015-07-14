@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Created by leroy on 15/05/15.
@@ -17,19 +19,21 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
+    private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
 
     /**
      * no-arg constructor for JavaBeans compliance
      */
     public Story() {
-    this.shortName = new SimpleStringProperty("");
-    this.longName = new SimpleStringProperty("");
-    this.description = new SimpleStringProperty("");
-    this.creator = new SimpleObjectProperty<>(null);
-    this.project = new SimpleObjectProperty<>(null);
-    this.backlog = new SimpleObjectProperty<>(null);
-    this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
-}
+        this.shortName = new SimpleStringProperty("");
+        this.longName = new SimpleStringProperty("");
+        this.description = new SimpleStringProperty("");
+        this.creator = new SimpleObjectProperty<>(null);
+        this.project = new SimpleObjectProperty<>(null);
+        this.backlog = new SimpleObjectProperty<>(null);
+        this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
+        this.acceptanceCriteria = FXCollections.observableArrayList();
+    }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
                  Backlog backlog, Integer priority) {
@@ -40,6 +44,7 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
+        this.acceptanceCriteria = FXCollections.observableArrayList();
     }
 
     @Override
@@ -120,6 +125,10 @@ public class Story extends Item {
 
     public IntegerProperty priorityProperty() {
         return priority;
+    }
+
+    public ObservableList<AcceptanceCriteria> getAcceptanceCriteria() {
+        return acceptanceCriteria;
     }
 
 }

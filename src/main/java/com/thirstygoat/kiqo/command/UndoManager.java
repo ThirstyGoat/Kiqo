@@ -21,6 +21,8 @@ import java.util.logging.Logger;
  */
 public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
+    private static UndoManager instance;
+
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     protected final Deque<Command<?>> undoStack = new ArrayDeque<>();
@@ -31,6 +33,16 @@ public class UndoManager {
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
     protected int branchPosition = 0;
+
+
+    public static UndoManager getUndoManager() {
+        if (instance == null) {
+            instance = new UndoManager();
+        }
+        return instance;
+    }
+
+    private UndoManager() {}
 
     /**
      * Executes the command and adds it to the undo stack.
