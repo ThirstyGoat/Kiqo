@@ -19,7 +19,7 @@ public class RevertTest {
     @Before
     public void setUp() throws Exception {
         organisation = new Organisation();
-        undoManager = new UndoManager();
+        undoManager = UndoManager.getUndoManager();
         for (int i = 0; i < 10; i++) {
             Skill skill = new Skill(String.valueOf(i), String.valueOf(i));
             Command<Skill> command1 = new CreateSkillCommand(skill, organisation);
