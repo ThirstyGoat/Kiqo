@@ -19,6 +19,7 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
+    private final StringProperty estimate;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
 
     /**
@@ -33,10 +34,11 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.estimate = new SimpleStringProperty("");
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority) {
+                 Backlog backlog, Integer priority, String estimate) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -45,6 +47,7 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.estimate = new SimpleStringProperty(estimate);
     }
 
     @Override
@@ -131,4 +134,15 @@ public class Story extends Item {
         return acceptanceCriteria;
     }
 
+    public String getEstimate() {
+        return estimate.get();
+    }
+
+    public void setEstimate(String estimate) {
+        this.estimate.set(estimate);
+    }
+
+    public StringProperty estimateProperty() {
+        return estimate;
+    }
 }
