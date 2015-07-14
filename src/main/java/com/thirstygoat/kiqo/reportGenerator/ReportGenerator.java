@@ -1,7 +1,8 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,19 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
 
 
 /**
@@ -59,6 +47,22 @@ public final class ReportGenerator {
         teams.addAll(organisation.getTeams());
         people = new ArrayList<Person>();
         people.addAll(organisation.getPeople());
+    }
+
+    /**
+     * @param type resource from which to retrieve the name
+     * @return string representing pluralised class name e.g. "People", "Skills"
+     */
+    private static String pluraliseClassName(final Class<?> type) {
+        final String collectionLabel;
+        if (type == Person.class) {
+            collectionLabel = "People";
+        } else if (type == Story.class) {
+            collectionLabel = "Stories";
+        } else {
+            collectionLabel = type.getSimpleName() + "s";
+        }
+        return collectionLabel;
     }
 
     /**
@@ -184,6 +188,7 @@ public final class ReportGenerator {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
 
+
         }
 
         // Add releases associated to this project to the report
@@ -222,6 +227,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Name", backlog.getLongName()));
         lines.add(ReportUtils.valueLine("Product Owner", backlog.getProductOwner().getShortName()));
         lines.add(ReportUtils.valueLine("Description", backlog.getDescription()));
+        lines.add(ReportUtils.valueLine("Scale", backlog.getScale().toString()));
         lines.add(ReportUtils.collectionLine("Stories", backlog.getStories().isEmpty()));
         for(final Story story : backlog.getStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
@@ -242,6 +248,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", story.getDescription()));
         lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
         lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
+        lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
         return lines;
     }
 
@@ -345,21 +352,5 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
         lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
         return lines;
-    }
-
-    /**
-     * @param type resource from which to retrieve the name
-     * @return string representing pluralised class name e.g. "People", "Skills"
-     */
-    private static String pluraliseClassName(final Class<?> type) {
-        final String collectionLabel;
-        if (type == Person.class) {
-            collectionLabel = "People";
-        } else if (type == Story.class) {
-            collectionLabel = "Stories";
-        } else {
-            collectionLabel = type.getSimpleName() + "s";
-        }
-        return collectionLabel;
     }
 }
