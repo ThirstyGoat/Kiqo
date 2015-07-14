@@ -2,6 +2,8 @@ package com.thirstygoat.kiqo.viewModel;
 
 
 import java.util.Map;
+
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.beans.property.ObjectProperty;
@@ -24,32 +26,22 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
-    private final class StateButtonHandler implements EventHandler<ActionEvent> {
-        private final ObjectProperty<State> state;
-
-
-        private StateButtonHandler(ImageView imageView, ObjectProperty<State> state, Map<State, Image> images) {                        
-            this.state = state;
-            this.state.addListener((observable, oldValue, newValue) -> imageView.setImage(images.get(newValue)));
-            imageView.setImage(images.get(state.get()));
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            // increment state
-            int newIndex = (state.get().ordinal() + 1) % State.values().length;
-            state.set(State.values()[newIndex]);
-        }
-    }
-
+    private final Map<State, Image> images;
     private Point2D dragOffset = new Point2D(0, 0);
     private ListView<AcceptanceCriteria> listView;
-    private final Map<State, Image> images;
     private UndoManager undoManager = UndoManager.getUndoManager();
-    
     public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
         this.listView = listView;
         this.images = images;
+    }
+    
+    private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
+        AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
+                ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
+        );
+        AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
+        acceptanceCriteria.setState(state);
+        return acceptanceCriteria;
     }
     
     @Override
@@ -179,12 +171,29 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         });
     }
 
-    private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
-        AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
-                ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-        );
-        AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
-        acceptanceCriteria.setState(state);
-        return acceptanceCriteria;
+    public final class StateButtonHandler implements EventHandler<ActionEvent> {
+        private final ObjectProperty<State> state;
+
+        private StateButtonHandler(ImageView imageView, ObjectProperty<State> state, Map<State, Image> images) {
+            this.state = state;
+            this.state.addListener((observable, oldValue, newValue) -> imageView.setImage(images.get(newValue)));
+            imageView.setImage(images.get(state.get()));
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            // increment state
+            int newIndex = (state.get().ordinal() + 1) % State.values().length;
+            final EditCommand<StateButtonHandler, State> command = new EditCommand<>(this, "state", State.values()[newIndex]);
+            undoManager.doCommand(command);
+        }
+
+        public State getState() {
+            return state.get();
+        }
+
+        public void setState(State state) {
+            this.state.set(state);
+        }
     }
 }
