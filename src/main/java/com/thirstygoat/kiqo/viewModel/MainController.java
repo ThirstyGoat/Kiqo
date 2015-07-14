@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +58,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private final UndoManager undoManager = new UndoManager();
+    private final UndoManager undoManager = UndoManager.getUndoManager();
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -535,6 +536,8 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
         } catch (final FileNotFoundException e) {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
+        } catch (final Exception e) {
+            GoatDialog.showAlertDialog(primaryStage, "Ahhhhhh", "Nope.", "Something broke, Probably we forgot to return the shortname property of an Item.");
         }
 
         if(PersistenceManager.getIsOldJSON()) {

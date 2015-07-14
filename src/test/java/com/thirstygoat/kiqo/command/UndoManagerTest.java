@@ -43,7 +43,8 @@ public class UndoManagerTest {
      */
     @Test(expected = NoSuchElementException.class)
     public void testFailedRedo() {
-        final UndoManager undoManager = new UndoManager();
+        final UndoManager undoManager = UndoManager.getUndoManager();
+        undoManager.empty();
         undoManager.redoCommand();
     }
 
@@ -53,7 +54,8 @@ public class UndoManagerTest {
      */
     @Test(expected = NoSuchElementException.class)
     public void testFailedUndo() {
-        final UndoManager undoManager = new UndoManager();
+        final UndoManager undoManager = UndoManager.getUndoManager();
+        undoManager.empty();
         undoManager.undoCommand();
     }
 
@@ -62,7 +64,7 @@ public class UndoManagerTest {
      */
     @Test
     public void testRedo() {
-        final UndoManager undoManager = new UndoManager();
+        final UndoManager undoManager = UndoManager.getUndoManager();
         final MockCommand cmd = new MockCommand();
         undoManager.doCommand(cmd);
         Assert.assertTrue("Command should be executed", cmd.isDone());
@@ -77,7 +79,7 @@ public class UndoManagerTest {
      */
     @Test
     public void testUndo() {
-        final UndoManager undoManager = new UndoManager();
+        final UndoManager undoManager = UndoManager.getUndoManager();
         final MockCommand cmd = new MockCommand();
         undoManager.doCommand(cmd);
         Assert.assertTrue("Command should be executed", cmd.isDone());

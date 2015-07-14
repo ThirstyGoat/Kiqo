@@ -23,6 +23,8 @@ import javafx.collections.ObservableList;
  */
 public class UndoManager {
     private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
+    private static UndoManager instance;
+
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
     protected final Deque<Command<?>> undoStack = new ArrayDeque<>(), redoStack = new ArrayDeque<>();
@@ -30,6 +32,16 @@ public class UndoManager {
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
+
+
+    public static UndoManager getUndoManager() {
+        if (instance == null) {
+            instance = new UndoManager();
+        }
+        return instance;
+    }
+
+    private UndoManager() {}
 
     /**
      * Executes the command and adds it to the undo stack.

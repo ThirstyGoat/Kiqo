@@ -1,12 +1,14 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.util.HashMap;
-import java.util.Map;
 
+import java.util.Map;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -14,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -25,6 +26,7 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private final class StateButtonHandler implements EventHandler<ActionEvent> {
         private final ObjectProperty<State> state;
+
 
         private StateButtonHandler(ImageView imageView, ObjectProperty<State> state, Map<State, Image> images) {                        
             this.state = state;
@@ -43,6 +45,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private Point2D dragOffset = new Point2D(0, 0);
     private ListView<AcceptanceCriteria> listView;
     private final Map<State, Image> images;
+    private UndoManager undoManager = UndoManager.getUndoManager();
     
     public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
         this.listView = listView;
@@ -92,7 +95,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-            System.out.println("enter");
+//            System.out.println("enter");
             ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
             event.acceptTransferModes(TransferMode.ANY);
             AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
@@ -107,7 +110,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-            System.out.println("exit");
+//            System.out.println("exit");
             ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
             event.acceptTransferModes(TransferMode.ANY);
             AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
@@ -117,13 +120,15 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-            System.out.println("drop");
+//            System.out.println("drop");
             getParent().setOnDragOver(null);
             getParent().setOnDragDropped(null);
             AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
             int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+            int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
             if (getIndex() < listSize) {
-                listView.getItems().add(getIndex(), acceptanceCriteria);
+//                listView.getItems().add(getIndex(), acceptanceCriteria);
+                undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
             } else {
                 listView.getItems().add(acceptanceCriteria);
             }
@@ -134,7 +139,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            System.out.println("done");
+//            System.out.println("done");
             AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
 
             int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
@@ -149,15 +154,11 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         this.setOnDragOver(mContextDragOver);
         this.setOnDragEntered(mContextDragEntered);
         this.setOnDragExited(mContextDragExit);
+        setCursor(Cursor.HAND);
 
         this.setOnDragDetected(event -> {
-            // Todo Im not sure we need these anymore?
-//            getParent().setOnDragOver(null);
-//            getParent().setOnDragDropped(null);
-//            getParent().setOnDragOver(mContextDragOver);
-//            getParent().setOnDragDropped(mContextDragDropped);
-
             // We do need this one or onDragDone wont be called
+            setCursor(Cursor.CLOSED_HAND);
             getParent().setOnDragDone(mContextDragDone);
 
             // begin drag ops
@@ -172,7 +173,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());
                 listView.getItems().remove(getIndex());
                 listView.getSelectionModel().clearSelection();
-                getParent().startDragAndDrop(TransferMode.ANY).setContent(content);
+                getParent().startDragAndDrop(TransferMode.MOVE).setContent(content);
             }
             event.consume();
         });

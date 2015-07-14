@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by samschofield on 25/06/15.
  */
-public class AcceptanceCriteria implements Serializable {
+public class AcceptanceCriteria extends Item {
 
     public final StringProperty criteria;
     public final ObjectProperty<State> state;
@@ -68,6 +68,16 @@ public class AcceptanceCriteria implements Serializable {
     @Override
     public int hashCode() {
         return criteria.hashCode();
+    }
+
+    @Override
+    public String getShortName() {
+        return criteria.getName();
+    }
+
+    @Override
+    public StringProperty shortNameProperty() {
+        return criteria;
     }
 
     /**
