@@ -58,7 +58,8 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            if (acTextArea.getText().length() > 0) {
+            valid = acTextArea.getText().trim().length() > 0;
+            if (valid) {
                 setCommand();
                 stage.close();
             }
@@ -89,7 +90,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     private void setCommand() {
         if (acceptanceCriteria == null) {
-            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText());
+            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim());
             command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
         } else {
             // edit command
@@ -97,8 +98,6 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
             if (!acceptanceCriteria.equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
-
-            valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Allocation", changes);
         }
     }
