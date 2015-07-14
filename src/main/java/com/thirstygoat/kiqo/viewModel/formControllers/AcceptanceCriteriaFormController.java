@@ -4,10 +4,13 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
@@ -47,24 +50,36 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         Platform.runLater(acTextArea::requestFocus);
-        okButton.setDisable(true);
-        acTextArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                okButton.setDisable(newValue.length() < 1);
-                valid = newValue.length() > 0;
-            }
+        okButton.disableProperty().bind(Bindings.equal(acTextArea.textProperty().length(), 0));
+        acTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            valid = newValue.length() > 0;
         });
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            if (isValid()) {
+            if (acTextArea.getText().length() > 0) {
                 setCommand();
                 stage.close();
             }
         });
         cancelButton.setOnAction(event -> cancel());
+
+        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
+        // Shift+Enter should create new line in the text area
+
+        acTextArea.setOnKeyPressed(event -> {
+            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
+            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
+            if (shiftEnter.match(event)) {
+                // force new line
+                acTextArea.appendText("\n");
+                event.consume();
+            } else if (enter.match(event)) {
+                event.consume();
+                okButton.fire();
+            }
+        });
     }
 
     private void cancel() {
