@@ -50,9 +50,10 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         Platform.runLater(acTextArea::requestFocus);
-        okButton.disableProperty().bind(Bindings.equal(acTextArea.textProperty().length(), 0));
+        okButton.setDisable(true);
         acTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            valid = newValue.length() > 0;
+            valid = newValue.trim().length() > 0;
+            okButton.setDisable(!valid);
         });
     }
 
