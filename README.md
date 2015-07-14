@@ -26,3 +26,15 @@ From the source directory run the command:
 This will produce an executable jar in the ./target directory which can be run
 using the same commands as the JAR above. The Mac OS X, Windows and Linux executables
 will be placed in ./target/deploy.
+
+Auxiliary Resources
+---------------
+To produce the auxiliary resources, run the command:
+
+	mvn site
+
+Javadoc for application code is in `/target/site/apidocs`
+Javadoc for test code is in `/target/site/apidocs`
+Unit test reports are in `/target/surefire-reports`
+
+These reports and others can be viewed on the Maven-generated "website" based at `/target/site/index.html`
