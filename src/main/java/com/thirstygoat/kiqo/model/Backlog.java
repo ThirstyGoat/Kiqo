@@ -69,14 +69,16 @@ public class Backlog extends Item {
     * Enum for the stories scale
     * */
     public enum Scale {
-        FIBONACCI("Fibonacci"),
-        TSHIRT_SIZE("T-Shirt Size"),
-        DOG_BREEDS("Dog Breeds");
+        FIBONACCI("Fibonacci", new String[] {"0", "1", "2", "3", "5", "8", "13", "20", "40", "100", "∞"}),
+        TSHIRT_SIZE("T-Shirt Size", new String[] {"XS", "S", "M", "L", "XL", "XXL", "∞"}),
+        DOG_BREEDS("Dog Breeds", new String[] {"Chihuahua", "Jack Russell", "Beagle", "Labrador", "German Shepherd", "Great Dane"});
 
         private String label;
+        private String[] estimates;
 
-        Scale(String label) {
+        Scale(String label, String[] estimates) {
             this.label = label;
+            this.estimates = estimates;
         }
 
         /**
@@ -108,6 +110,10 @@ public class Backlog extends Item {
         @Override
         public String toString() {
             return label;
+        }
+        
+        public String[] getEstimates() {
+            return estimates;
         }
     }
 
