@@ -113,7 +113,7 @@ public class AllocationFormController extends FormController<Allocation> {
                 final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
 
                 if(startDatePicker.getValue() != null) {
-                    if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue()))) {
+                    if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue())) && !a.equals(allocation)) {
                         dateRangesOverlap = true;
                         break;
                     }
@@ -341,17 +341,6 @@ public class AllocationFormController extends FormController<Allocation> {
     public void populateFields(Allocation allocation) throws RuntimeException {
         this.allocation = allocation;
 
-        if (project == null) {
-            teamLabel.setText("Project:");
-            setTextFieldAutoCompletionBindingProject();
-        } else if (team == null) {
-            teamLabel.setText("Team:");
-            setTextFieldAutoCompletionBindingTeam();
-        }
-        setPrompts();
-        setValidationSupport();
-
-
 
         if (allocation == null) {
             // We are creating a new allocation (for an existing project)
@@ -362,10 +351,27 @@ public class AllocationFormController extends FormController<Allocation> {
             stage.setTitle("Edit Allocation");
             okButton.setText("Save");
 
-            teamTextField.setText(allocation.getTeam().getShortName());
+            if (project == null) {
+                ;
+            }  else {
+                teamTextField.setText(allocation.getTeam().getShortName());
+            }
+
             startDatePicker.setValue(allocation.getStartDate());
             endDatePicker.setValue(allocation.getEndDate());
         }
+
+        if (project == null) {
+            teamLabel.setText("Project:");
+            setTextFieldAutoCompletionBindingProject();
+        } else if (team == null) {
+            teamLabel.setText("Team:");
+            setTextFieldAutoCompletionBindingTeam();
+        }
+
+        setPrompts();
+        setValidationSupport();
+
     }
 
     /**

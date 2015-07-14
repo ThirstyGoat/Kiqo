@@ -13,6 +13,7 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
@@ -38,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +58,7 @@ public class MainController implements Initializable {
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
-    private final UndoManager undoManager = new UndoManager();
+    private final UndoManager undoManager = UndoManager.getUndoManager();
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -484,6 +486,24 @@ public class MainController implements Initializable {
         }
     }
 
+    public void editAllocation(Allocation allocation) {
+        if (selectedOrganisationProperty.get() != null) {
+            allocationDialog(allocation);
+        }
+    }
+
+    public void createAC() {
+        if (selectedOrganisationProperty.get() != null) {
+            acceptanceCriteriaDialog(null);
+        }
+    }
+
+    public void editAC(AcceptanceCriteria acceptanceCriteria) {
+        if (selectedOrganisationProperty.get() != null) {
+            acceptanceCriteriaDialog(acceptanceCriteria);
+        }
+    }
+
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 
@@ -517,6 +537,8 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Person Invalid", "No can do.", "An invalid person was found.");
         } catch (final FileNotFoundException e) {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
+        } catch (final Exception e) {
+            GoatDialog.showAlertDialog(primaryStage, "Ahhhhhh", "Nope.", "Something broke, Probably we forgot to return the shortname property of an Item.");
         }
 
         if(PersistenceManager.getIsOldJSON()) {
@@ -836,6 +858,37 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (allocationFormController.isValid()) {
                 doCommand(allocationFormController.getCommand());
+            }
+        });
+    }
+
+    private void acceptanceCriteriaDialog(AcceptanceCriteria acceptanceCriteria) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/acceptanceCriteria.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final AcceptanceCriteriaFormController acceptanceCriteriaFormController = loader.getController();
+            acceptanceCriteriaFormController.setStage(stage);
+            acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
+
+            acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
+            acceptanceCriteriaFormController.populateFields(acceptanceCriteria);
+            stage.showAndWait();
+            if (acceptanceCriteriaFormController.isValid()) {
+                doCommand(acceptanceCriteriaFormController.getCommand());
             }
         });
     }

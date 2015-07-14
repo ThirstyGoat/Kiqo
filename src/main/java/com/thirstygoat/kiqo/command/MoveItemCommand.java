@@ -1,8 +1,11 @@
 package com.thirstygoat.kiqo.command;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Item;
+import javafx.collections.ObservableList;
 
 /**
  * Created by samschofield on 25/04/15.
@@ -11,8 +14,10 @@ import com.thirstygoat.kiqo.model.Item;
  */
 public class MoveItemCommand<T extends Item> extends Command<Void> {
     private final T item;
-    private final Collection<? super T> position;
-    private final Collection<? super T> destination;
+    private final List<? super T> position;
+    private final List<? super T> destination;
+    private final int posIndex;
+    private final int destIndex;
 
 
     /**
@@ -21,10 +26,32 @@ public class MoveItemCommand<T extends Item> extends Command<Void> {
      * @param position The current position of the item
      * @param destination The desired destination for the item
      */
-    public MoveItemCommand(final T item, final Collection<? super T> position, final Collection<? super T> destination) {
+    public MoveItemCommand(final T item, final List<? super T> position, final List<? super T> destination) {
         this.item = item;
         this.position = position;
         this.destination = destination;
+        this.posIndex = -1;
+        this.destIndex = -1;
+
+        if (!position.contains(item)) {
+            throw new RuntimeException("Item not found in position collection");
+        }
+    }
+
+    /**
+     *
+     * @param item item to move
+     * @param position list that item is in
+     * @param posIndex index of item in the collection it is in
+     * @param destination list item will be moved to
+     * @param destIndex index that the item will be positioned at in the list it is moved to
+     */
+    public MoveItemCommand(final T item, final List<? super T> position, final int posIndex, final List<? super T> destination, final int destIndex) {
+        this.item = item;
+        this.position = position;
+        this.destination = destination;
+        this.posIndex = posIndex;
+        this.destIndex = destIndex;
 
         if (!position.contains(item)) {
             throw new RuntimeException("Item not found in position collection");
@@ -33,15 +60,28 @@ public class MoveItemCommand<T extends Item> extends Command<Void> {
 
     @Override
     public Void execute() {
-        position.remove(item);
-        destination.add(item);
+        if (posIndex != -1 && destIndex != -1) {
+            // position and destination are the same list in the same state
+            if (destination.get(posIndex).equals(item)) {
+                destination.remove(posIndex);
+            }
+            destination.add(destIndex, item);
+        } else {
+            position.remove(item);
+            destination.add(item);
+        }
         return null;
     }
 
     @Override
     public void undo() {
-        destination.remove(item);
-        position.add(item);
+        if (posIndex != -1 && destIndex != -1) {
+            destination.remove(item);
+            position.add(posIndex, item);
+        } else {
+            destination.remove(item);
+            position.add(item);
+        }
     }
 
     @Override

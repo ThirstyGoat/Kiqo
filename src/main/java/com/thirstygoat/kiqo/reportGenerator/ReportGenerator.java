@@ -11,16 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 
 
@@ -41,6 +32,7 @@ public final class ReportGenerator {
     private static final String BACKLOG_COMMENT =       " -  ### Backlog ###";
     private static final String STORY_COMMENT =         " -  ### Story ###";
     private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
+    private static final String AC_COMMENT =            " - ";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -242,6 +234,26 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", story.getDescription()));
         lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
         lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
+
+        // Add unallocated stories that belong to this project to the report
+        lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
+        for(final AcceptanceCriteria acceptanceCriteria : story.getAcceptanceCriteria()) {
+            lines.add(ReportGenerator.AC_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
+
+        }
+
+        return lines;
+    }
+
+    /**
+     *  Generate acceptance criteria data.
+     */
+    private List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
+        final List<String> lines = new ArrayList<String>();
+        lines.addAll(ReportUtils.valueLiteral("Criteria", acceptanceCriteria.getCriteria()));
+        lines.add(ReportUtils.valueLine("State", acceptanceCriteria.getState()));
+
         return lines;
     }
 
