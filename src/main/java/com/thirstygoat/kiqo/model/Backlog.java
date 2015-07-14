@@ -29,7 +29,6 @@ public class Backlog extends Item {
         this.productOwner = new SimpleObjectProperty<>(null);
         this.project = new SimpleObjectProperty<>(null);
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
-
     }
 
     public Backlog(String shortName, String longName, String description, Person productOwner,
@@ -71,8 +70,8 @@ public class Backlog extends Item {
     * */
     public enum Scale {
         FIBONACCI("Fibonacci"),
-        TSHIRTSIZE("T-Shirt Size"),
-        DOGBREEDS("Dog Breeds"),;
+        TSHIRT_SIZE("T-Shirt Size"),
+        DOG_BREEDS("Dog Breeds");
 
         private String label;
 
@@ -83,9 +82,15 @@ public class Backlog extends Item {
         /**
          * Converts the scale string to uppercase so it will match the enum that exists in order to
          * take the string value from the combo box used for setting scale.
+         * 
          */
         public static Scale getEnum(String str) {
-            return Scale.valueOf(str.toUpperCase());
+            for (Scale scale: Scale.values()) {
+                if (str.equals(scale.label)) {
+                    return scale;
+                }
+            }
+            throw new RuntimeException("Scale " + str + " does not exist.");
         }
 
         /*
@@ -100,6 +105,7 @@ public class Backlog extends Item {
             return strs;
         }
 
+        @Override
         public String toString() {
             return label;
         }
