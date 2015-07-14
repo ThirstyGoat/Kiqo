@@ -17,6 +17,7 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
+    private final StringProperty estimate;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -29,10 +30,11 @@ public class Story extends Item {
     this.project = new SimpleObjectProperty<>(null);
     this.backlog = new SimpleObjectProperty<>(null);
     this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
+    this.estimate = new SimpleStringProperty("");
 }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority) {
+                 Backlog backlog, Integer priority, String estimate) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -40,6 +42,7 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
+        this.estimate = new SimpleStringProperty(estimate);
     }
 
     @Override
@@ -122,4 +125,15 @@ public class Story extends Item {
         return priority;
     }
 
+    public String getEstimate() {
+        return estimate.get();
+    }
+
+    public void setEstimate(String estimate) {
+        this.estimate.set(estimate);
+    }
+
+    public StringProperty estimateProperty() {
+        return estimate;
+    }
 }
