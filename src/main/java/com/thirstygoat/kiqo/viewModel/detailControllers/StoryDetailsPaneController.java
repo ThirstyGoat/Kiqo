@@ -1,17 +1,14 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.util.Callback;
 
@@ -75,15 +72,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
         }
 
-        acListView.setCellFactory(new Callback<ListView<AcceptanceCriteria>, ListCell<AcceptanceCriteria>>() {
-            @Override
-            public ListCell<AcceptanceCriteria> call(ListView<AcceptanceCriteria> param) {
-                return new AcceptanceCriteriaListCell(param, images);
-            }
-        });
+        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
         
-        removeACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
-        editACButton.disableProperty().bind(Bindings.isNull(acListView.getSelectionModel().selectedItemProperty()));
+        removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
+        editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).greaterThan(1));
         acListView.setItems(story.getAcceptanceCriteria());
 
         addACButton.setOnAction(event -> mainController.createAC());
@@ -92,17 +84,19 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
     
     private void deleteAC() {
-        final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
-        final DeleteAcceptanceCriteriaCommand command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
-
-        final String[] buttons = {"Delete Acceptance Criteria", "Cancel"};
-        final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
-                "Delete Acceptance Criteria", "Are you sure?",
-                "Are you sure you want to delete the acceptance criteria on this story" + "?", buttons);
-
-        if (result.equals("Delete Acceptance Criteria")) {
-            mainController.doCommand(command);
+        Command command;
+        if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
+            // Then we have to deal with a multi AC deletion
+            List<Command<?>> commands = new ArrayList<>();
+            for (AcceptanceCriteria ac : acListView.getSelectionModel().getSelectedItems()) {
+                commands.add(new DeleteAcceptanceCriteriaCommand(ac, story));
+            }
+            command = new CompoundCommand("Delete Acceptance Criteria", commands);
+        } else {
+            final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
+            command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
         }
+        mainController.doCommand(command);
     }
 
     @Override
@@ -118,5 +112,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
+
+        acListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 }
