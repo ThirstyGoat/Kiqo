@@ -10,6 +10,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -66,7 +67,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             Text criteria = new Text();
             criteria.textProperty().bind(item.criteria);
             criteria.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
-            borderPane.setCenter(criteria);
+            borderPane.setLeft(criteria);
+            BorderPane.setAlignment(criteria, Pos.CENTER_LEFT);
 
             final ImageView imageView = new ImageView();
             Button stateButton = new Button("", imageView);

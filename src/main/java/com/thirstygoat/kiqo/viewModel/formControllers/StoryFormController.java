@@ -293,5 +293,4 @@ public class StoryFormController extends FormController<Story> {
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
     }
-
 }
