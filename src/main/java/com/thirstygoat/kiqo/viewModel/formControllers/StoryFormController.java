@@ -6,8 +6,10 @@ import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.controlsfx.validation.Severity;
@@ -50,7 +52,9 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private  TextField projectTextField;
     @FXML
-    private TextField priorityTextField ;
+    private TextField priorityTextField;
+    @FXML
+    private ComboBox<Scale> estimationScaleComboBox;
     @FXML
     private Button okButton;
     @FXML
@@ -73,6 +77,14 @@ public class StoryFormController extends FormController<Story> {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this story.");
+
+        // Populate Estimation Scale ComboBox
+        estimationScaleComboBox.setItems(FXCollections.observableArrayList(
+                Scale.FIBONACCI,
+                Scale.TSHIRT_SIZE,
+                Scale.DOG_BREEDS
+        ));
+        estimationScaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
 
     @Override
@@ -97,6 +109,7 @@ public class StoryFormController extends FormController<Story> {
             creatorTextField.setDisable(true);
             projectTextField.setText(story.getProject().getShortName());
             priorityTextField.setText(Integer.toString(story.getPriority()));
+            estimationScaleComboBox.getSelectionModel().select(story.getScale());
         }
     }
     private void setValidationSupport() {
@@ -194,9 +207,7 @@ public class StoryFormController extends FormController<Story> {
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
 
@@ -229,7 +240,7 @@ public class StoryFormController extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
-                     project, backlog, Integer.parseInt(priorityTextField.getText()), "0", Scale.FIBONACCI); //TODO IMPLEMENT ME PROPERLY
+                     project, backlog, Integer.parseInt(priorityTextField.getText()), "0", estimationScaleComboBox.getValue());
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -260,6 +271,10 @@ public class StoryFormController extends FormController<Story> {
 
             if (Integer.parseInt(priorityTextField.getText()) != story.getPriority()) {
                 changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityTextField.getText())));
+            }
+
+            if (estimationScaleComboBox.getValue() != story.getScale()) {
+                changes.add(new EditCommand<>(story, "scale", estimationScaleComboBox.getValue()));
             }
 
             valid = !changes.isEmpty();
