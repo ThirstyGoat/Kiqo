@@ -46,7 +46,7 @@
         <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="productOwnerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <ComboBox fx:id="scaleComboBox" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <ComboBox fx:id="scaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="6" />
     </children>
    </GridPane>
