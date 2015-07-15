@@ -234,6 +234,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", story.getDescription()));
         lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
         lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
+        lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
 
         // Add unallocated stories that belong to this project to the report
         lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
