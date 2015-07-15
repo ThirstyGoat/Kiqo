@@ -42,6 +42,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Button removeACButton;
     @FXML
     private Button editACButton;
+    @FXML
+    private CheckBox isReadyCheckBox;
 
 
     @Override
@@ -79,6 +81,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
+        // todo Add validations to this
+        isReadyCheckBox.selectedProperty().bind(story.isReadyProperty());
     }
     
     private void deleteAC() {
