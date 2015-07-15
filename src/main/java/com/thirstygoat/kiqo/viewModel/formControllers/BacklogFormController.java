@@ -88,19 +88,7 @@ public class BacklogFormController extends FormController<Backlog> {
     /**
      * 
      */
-    private void initialiseScaleCombobox() {
-//        scaleComboBox.setConverter(new StringConverter<Scale>() {
-//            @Override
-//            public Scale fromString(String str) {
-//                return Scale.getEnum(str);
-//            }
-//
-//            @Override
-//            public String toString(Scale s) {
-//                return s.toString();
-//            }
-//        });
-        
+    private void initialiseScaleCombobox() {        
         scaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         scaleComboBox.setValue(Scale.FIBONACCI); // default scale
     }
