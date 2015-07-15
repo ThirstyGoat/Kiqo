@@ -20,6 +20,7 @@ public class RevertTest {
     public void setUp() throws Exception {
         organisation = new Organisation();
         undoManager = UndoManager.getUndoManager();
+        undoManager.empty();
         for (int i = 0; i < 10; i++) {
             Skill skill = new Skill(String.valueOf(i), String.valueOf(i));
             Command<Skill> command1 = new CreateSkillCommand(skill, organisation);
@@ -33,8 +34,8 @@ public class RevertTest {
     @Test
     public void testBasicRevertFlag() {
         undoManager.revert();
-        Assert.assertTrue(undoManager.savePosition == 0);
-        Assert.assertTrue(undoManager.branchPosition == 0);
+        Assert.assertEquals(0, undoManager.savePosition);
+        Assert.assertEquals(0, undoManager.branchPosition);
     }
 
     /**
@@ -49,8 +50,8 @@ public class RevertTest {
         undoManager.undoCommand();
         undoManager.undoCommand();
         undoManager.revert();
-        Assert.assertTrue(undoManager.savePosition == 10);
-        Assert.assertTrue(undoManager.branchPosition == 10);
+        Assert.assertEquals(10, undoManager.savePosition);
+        Assert.assertEquals(10, undoManager.branchPosition);
     }
 
 
@@ -69,7 +70,7 @@ public class RevertTest {
         Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
         undoManager.doCommand(newSkillCommand);
         undoManager.doCommand(newSkillCommand2);
-        Assert.assertTrue(undoManager.branchPosition == 7);
+        Assert.assertEquals(7, undoManager.branchPosition);
     }
 
     /**
@@ -91,7 +92,7 @@ public class RevertTest {
         undoManager.undoCommand();
         undoManager.undoCommand();
         undoManager.undoCommand();
-        Assert.assertTrue(undoManager.branchPosition == 6);
+        Assert.assertEquals(6, undoManager.branchPosition);
     }
 
     /**
@@ -100,8 +101,8 @@ public class RevertTest {
     @Test
     public void testBasicRevert() {
         undoManager.revert();
-        Assert.assertTrue(undoManager.undoStack.size() == 0);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
+        Assert.assertEquals(0, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
     }
 
     /**
@@ -118,17 +119,19 @@ public class RevertTest {
         undoManager.doCommand(newSkillCommand2);
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 10);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(10, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 9; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
     /**
      * Test revert when saved, undone commands then reverted
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBasicRevertBeforeSavePos() throws NoSuchFieldException, IllegalAccessException {
@@ -137,18 +140,20 @@ public class RevertTest {
         undoManager.undoCommand();
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 10);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(10, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 9; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
     /**
      * Test revert when saved, undone commands then do commands then revert
      * do do do save undo undo do revert
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBranchRevert() throws NoSuchFieldException, IllegalAccessException {
@@ -168,18 +173,20 @@ public class RevertTest {
 
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 10);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(10, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 9; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
     /**
      * Test revert when saved, undone commands then do commands then revert
      * do do do save undo undo do do undo do revert
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBranchBranchRevert() throws NoSuchFieldException, IllegalAccessException {
@@ -206,18 +213,20 @@ public class RevertTest {
 
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 10);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(10, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 9; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
     /**
      *
      * do do do save undo undo save do do revert
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBranchRevertWithSaves() throws NoSuchFieldException, IllegalAccessException {
@@ -237,18 +246,20 @@ public class RevertTest {
 
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 8);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(8, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 7; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
     /**
      *
      * do do do save undo undo revert do do revert
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBranchRevertAndGoPastSavePos() throws NoSuchFieldException, IllegalAccessException {
@@ -268,12 +279,12 @@ public class RevertTest {
 
         undoManager.revert();
 
-        Assert.assertTrue(undoManager.undoStack.size() == 10);
-        Assert.assertTrue(undoManager.redoStack.size() == 0);
-        Assert.assertTrue(undoManager.revertStack.size() == 0);
+        Assert.assertEquals(10, undoManager.undoStack.size());
+        Assert.assertEquals(0, undoManager.redoStack.size());
+        Assert.assertEquals(0, undoManager.revertStack.size());
 
         for (int i = 9; i > 0; i--) {
-            Assert.assertTrue(getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName().equals(String.valueOf(i)));
+            Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
     }
 
@@ -281,7 +292,7 @@ public class RevertTest {
      * Helper function to get the private Skill field from a CreateSkillCommand.
      *
      */
-    private Skill getPrivateSkill(CreateSkillCommand createSkillCommand) throws NoSuchFieldException, IllegalAccessException {
+    private static Skill getPrivateSkill(CreateSkillCommand createSkillCommand) throws NoSuchFieldException, IllegalAccessException {
         Field privateSkill = createSkillCommand.getClass().getDeclaredField("skill");
         privateSkill.setAccessible(true);
         return (Skill) privateSkill.get(createSkillCommand);
