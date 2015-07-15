@@ -721,7 +721,7 @@ public class MainController implements Initializable {
         if (!undoManager.changesSavedProperty().get()) {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
-                    "Would you like to save the changes you have made to the project?", options);
+                    "Would you like to save the changes you have made to the organisation?", options);
             switch (response) {
                 case "Save changes":
                     return saveOrganisation(false);
