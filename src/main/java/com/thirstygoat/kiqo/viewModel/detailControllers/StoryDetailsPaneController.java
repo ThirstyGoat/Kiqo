@@ -82,7 +82,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
         // todo Add validations to this
-        isReadyCheckBox.selectedProperty().bind(story.isReadyProperty());
+        isReadyCheckBox.setOnAction(event -> story.setIsReady(isReadyCheckBox.isSelected()));
     }
     
     private void deleteAC() {
