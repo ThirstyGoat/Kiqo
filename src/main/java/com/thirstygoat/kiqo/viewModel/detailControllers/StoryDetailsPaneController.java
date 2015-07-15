@@ -112,7 +112,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         images.put(State.ACCEPTED, new Image(classLoader.getResourceAsStream("images/acceptedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         images.put(State.REJECTED, new Image(classLoader.getResourceAsStream("images/rejectedState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
-
         acListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 }
