@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
 import java.util.*;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import javafx.beans.binding.Bindings;
@@ -10,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-
 import com.thirstygoat.kiqo.command.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
