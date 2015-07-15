@@ -123,7 +123,7 @@ public class Backlog extends Item {
         this.project.set(project);
     }
 
-    public ObjectProperty<Project> projectPropert() {
+    public ObjectProperty<Project> projectProperty() {
         return project;
     }
 
