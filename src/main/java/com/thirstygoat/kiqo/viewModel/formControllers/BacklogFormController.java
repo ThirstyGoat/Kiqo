@@ -45,7 +45,6 @@ public class BacklogFormController extends FormController<Backlog> {
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private Backlog backlog;
     private Person productOwner;
-    private Scale scale;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command<?> command;
@@ -85,12 +84,9 @@ public class BacklogFormController extends FormController<Backlog> {
         setListeners();
     }
 
-    /**
-     * 
-     */
-    private void initialiseScaleCombobox() {        
+    private void initialiseScaleCombobox() {
         scaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
-        scaleComboBox.setValue(Scale.FIBONACCI); // default scale
+        scaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
 
     private void setListeners() {
@@ -149,7 +145,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
         validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(personValidation,
                 "Person must already exist and have the PO skill"));
-        
+
         validationSupport.registerValidator(scaleComboBox,
                 Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
@@ -216,7 +212,7 @@ public class BacklogFormController extends FormController<Backlog> {
             descriptionTextField.setText(backlog.getDescription());
             projectTextField.setText(backlog.getProject().getShortName());
             productOwnerTextField.setText(backlog.getProductOwner().getShortName());
-            scaleComboBox.setValue(scale);
+            scaleComboBox.setValue(backlog.getScale());
         }
         setStoryListSelectionViewData();
     }
@@ -239,7 +235,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
         if (backlog == null) {
             final Backlog b = new Backlog(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), productOwner, project.get(), stories, scale);
+                    descriptionTextField.getText(), productOwner, project.get(), stories, scaleComboBox.getValue());
             command = new CreateBacklogCommand(b);
         } else {
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -255,6 +251,10 @@ public class BacklogFormController extends FormController<Backlog> {
 
             if (!productOwner.equals(backlog.getProductOwner())) {
                 changes.add(new EditCommand<>(backlog, "productOwner", productOwner));
+            }
+
+            if (scaleComboBox.getValue() != backlog.getScale()) {
+                changes.add(new EditCommand<>(backlog, "scale", scaleComboBox.getValue()));
             }
 
             // Stories being added to the backlog

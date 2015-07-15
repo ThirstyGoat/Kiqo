@@ -79,11 +79,7 @@ public class StoryFormController extends FormController<Story> {
         descriptionTextField.setPromptText("Describe this story.");
 
         // Populate Estimation Scale ComboBox
-        estimationScaleComboBox.setItems(FXCollections.observableArrayList(
-                Scale.FIBONACCI,
-                Scale.TSHIRT_SIZE,
-                Scale.DOG_BREEDS
-        ));
+        estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
 
@@ -179,6 +175,9 @@ public class StoryFormController extends FormController<Story> {
         validationSupport.registerValidator(priorityTextField,
                 Validator.createPredicateValidator(priorityValidation, "Priority must be an integer between "
                                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+
+        validationSupport.registerValidator(estimationScaleComboBox,
+                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
