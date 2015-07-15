@@ -229,7 +229,7 @@ public class StoryFormController extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
-                     project, backlog, Integer.parseInt(priorityTextField.getText()), "0"); //TODO IMPLEMENT ME PROPERLY
+                     project, backlog, Integer.parseInt(priorityTextField.getText()), "0", Scale.FIBONACCI); //TODO IMPLEMENT ME PROPERLY
             command = new CreateStoryCommand(story);
         } else {
             // edit command
