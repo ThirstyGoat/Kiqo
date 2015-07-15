@@ -15,10 +15,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
@@ -40,7 +42,6 @@ public class BacklogFormController extends FormController<Backlog> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
-//    private Project project;
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private Backlog backlog;
     private Person productOwner;
@@ -48,6 +49,7 @@ public class BacklogFormController extends FormController<Backlog> {
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command<?> command;
+    
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -60,6 +62,8 @@ public class BacklogFormController extends FormController<Backlog> {
     @FXML
     private TextField productOwnerTextField;
     @FXML
+    private ComboBox<Scale> scaleComboBox;
+    @FXML
     private GoatListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
@@ -68,15 +72,37 @@ public class BacklogFormController extends FormController<Backlog> {
 
     @Override
     public void initialize(final URL location, ResourceBundle resources) {
+        initialiseScaleCombobox();
+        
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
-
+        
         setValidationSupport();
         setListeners();
+    }
+
+    /**
+     * 
+     */
+    private void initialiseScaleCombobox() {
+        scaleComboBox.setConverter(new StringConverter<Scale>() {
+            @Override
+            public Scale fromString(String str) {
+                return str.equals("") ? null : Scale.getEnum(str);
+            }
+
+            @Override
+            public String toString(Scale s) {
+                return s == null ? "" : s.toString();
+            }
+        });
+        
+        scaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
+        scaleComboBox.setValue(Scale.NONE); // default is blank
     }
 
     private void setListeners() {
@@ -135,6 +161,9 @@ public class BacklogFormController extends FormController<Backlog> {
 
         validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(personValidation,
                 "Person must already exist and have the PO skill"));
+        
+        validationSupport.registerValidator(scaleComboBox,
+                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
@@ -199,6 +228,7 @@ public class BacklogFormController extends FormController<Backlog> {
             descriptionTextField.setText(backlog.getDescription());
             projectTextField.setText(backlog.getProject().getShortName());
             productOwnerTextField.setText(backlog.getProductOwner().getShortName());
+            scaleComboBox.setValue(scale);
         }
         setStoryListSelectionViewData();
     }
