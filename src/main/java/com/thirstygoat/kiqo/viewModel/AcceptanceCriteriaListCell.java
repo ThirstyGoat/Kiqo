@@ -43,6 +43,18 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         acceptanceCriteria.setState(state);
         return acceptanceCriteria;
     }
+
+    /**
+     * Determines if an event contains an AC (to prevent dragging of files etc into the listview)
+     */
+    private static boolean sourceIsAcceptanceCriteria(DragEvent event) {
+        try {
+            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
     @Override
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
@@ -88,61 +100,70 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
 //            System.out.println("enter");
-            ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
-            event.acceptTransferModes(TransferMode.ANY);
-            AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-            int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
-            if (getIndex() < listSize) {
-                listView.getItems().add(getIndex(), acceptanceCriteria);
-            } else {
-                listView.getItems().add(acceptanceCriteria);
+            if (sourceIsAcceptanceCriteria(event)) {
+                ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
+                event.acceptTransferModes(TransferMode.ANY);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                if (getIndex() < listSize) {
+                    listView.getItems().add(getIndex(), acceptanceCriteria);
+                } else {
+                    listView.getItems().add(acceptanceCriteria);
+                }
             }
             event.consume();
         };
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
+            if (sourceIsAcceptanceCriteria(event)) {
 //            System.out.println("exit");
-            ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
-            event.acceptTransferModes(TransferMode.ANY);
-            AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-            listView.getItems().remove(acceptanceCriteria);
+                ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
+                event.acceptTransferModes(TransferMode.ANY);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                listView.getItems().remove(acceptanceCriteria);
+            }
             event.consume();
         };
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
+            if (sourceIsAcceptanceCriteria(event)) {
 //            System.out.println("drop");
-            getParent().setOnDragOver(null);
-            getParent().setOnDragDropped(null);
-            AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
-            int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
-            int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
-            if (getIndex() < listSize) {
+                getParent().setOnDragOver(null);
+                getParent().setOnDragDropped(null);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
+                if (getIndex() < listSize) {
 //                listView.getItems().add(getIndex(), acceptanceCriteria);
-                if (prevIndex != getIndex()) {
-                    undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
+                    if (prevIndex != getIndex()) {
+                        undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
+                    }
+                } else {
+                    undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex,
+                            listView.getItems(), listView.getItems().size() - 1));
                 }
-            } else {
-                undoManager.doCommand(new MoveItemCommand<>(acceptanceCriteria, listView.getItems(), prevIndex,
-                        listView.getItems(), listView.getItems().size() - 1));
+                event.setDropCompleted(true);
             }
-            event.setDropCompleted(true);
             event.consume();
         };
 
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
+            if (sourceIsAcceptanceCriteria(event)) {
 //            System.out.println("done");
-            AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
 
-            int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
-            int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
+                int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
+                int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
-            if (listSize > listView.getItems().size()) {
-                listView.getItems().add(prevIndex, acceptanceCriteria);
+                if (listSize > listView.getItems().size()) {
+                    listView.getItems().add(prevIndex, acceptanceCriteria);
+                }
             }
+            event.consume();
         };
 
         this.setOnDragDropped(mContextDragDropped);
