@@ -4,27 +4,14 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Amy on 23/04/15.
@@ -96,10 +83,10 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!acceptanceCriteria.equals(acTextArea.getText())) {
+            if (!acceptanceCriteria.getShortName().equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
-            command = new CompoundCommand("Edit Allocation", changes);
+            command = new CompoundCommand("Edit AC", changes);
         }
     }
 

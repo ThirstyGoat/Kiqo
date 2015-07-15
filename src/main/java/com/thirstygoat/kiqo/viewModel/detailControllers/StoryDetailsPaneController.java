@@ -73,7 +73,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
         
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
-        editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).greaterThan(1));
+        editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
         acListView.setItems(story.getAcceptanceCriteria());
 
         addACButton.setOnAction(event -> mainController.createAC());
