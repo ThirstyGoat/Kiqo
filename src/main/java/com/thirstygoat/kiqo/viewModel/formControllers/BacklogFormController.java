@@ -88,7 +88,6 @@ public class BacklogFormController extends FormController<Backlog> {
      * 
      */
     private void initialiseScaleCombobox() {
-        // Populate Estimation Scale ComboBox
         scaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         scaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
