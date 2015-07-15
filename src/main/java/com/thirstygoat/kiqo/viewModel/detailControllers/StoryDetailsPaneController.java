@@ -57,6 +57,5 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 }
