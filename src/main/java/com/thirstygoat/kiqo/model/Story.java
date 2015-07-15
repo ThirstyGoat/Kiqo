@@ -20,6 +20,7 @@ public class Story extends Item {
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
+    private final BooleanProperty isReady;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -33,10 +34,11 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.isReady = new SimpleBooleanProperty(false);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority) {
+                 Backlog backlog, int priority, boolean isReady) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -45,6 +47,7 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.isReady = new SimpleBooleanProperty(isReady);
     }
 
     @Override
@@ -97,9 +100,13 @@ public class Story extends Item {
         return creator;
     }
 
-    public ObjectProperty<Project> projectProperty() { return project; }
+    public ObjectProperty<Project> projectProperty() { 
+        return project; 
+    }
 
-    public Project getProject() { return project.get(); }
+    public Project getProject() { 
+        return project.get(); 
+    }
 
     public void setProject(Project project) {
         this.project.set(project);
@@ -117,7 +124,9 @@ public class Story extends Item {
         this.backlog.set(backlog);
     }
 
-    public int getPriority() { return priority.get();}
+    public int getPriority() { 
+        return priority.get();
+    }
 
     public void setPriority(int priority) {
         this.priority.set(priority);
@@ -131,4 +140,15 @@ public class Story extends Item {
         return acceptanceCriteria;
     }
 
+    public boolean getIsReady() { 
+        return isReady.get(); 
+    }
+
+    public void setIsReady(boolean isReady) { 
+        this.isReady.set(isReady); 
+    }
+
+    public BooleanProperty isReadyProperty() { 
+        return isReady; 
+    }
 }
