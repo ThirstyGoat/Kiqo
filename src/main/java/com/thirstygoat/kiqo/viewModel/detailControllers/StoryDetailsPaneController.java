@@ -121,7 +121,12 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         storyEstimateSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() <= story.getScale().getEstimates().length)
                 // change the label
-                storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue())]);
+            if (newValue.intValue() > 0) {
+                storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue())-1]);
+            } else {
+                storyEstimateSliderLabel.setText("");
+            }
+
         });
 
         storyEstimateSlider.setOnMouseReleased(event -> {
@@ -131,24 +136,35 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             }
         });
     }
+    // if the slider was 0 and going back to the fib the max doesnt change
 
     private void setScale() {
+        // set initial slider value based off story model
         storyEstimateSlider.setValue(story.getEstimate());
-        storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(int) storyEstimateSlider.getValue()]);
+        // set initial label for slider
+        if (storyEstimateSlider.getValue() > 0) {
+            storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(int) storyEstimateSlider.getValue() - 1]);
+        }
+
+        // listener for if the scale changes within the story
         story.scaleProperty().addListener((observable1, oldValue1, newValue1) -> {
             double oldMax = storyEstimateSlider.getMax();
             double newMax = story.getScale().getEstimates().length;
-//            int newPos = (int) ((storyEstimateSlider.getValue() / oldMax) * newMax); Will be used later
+            double val = storyEstimateSlider.getValue();
 
-            if (storyEstimateSlider.getValue() > newMax - 1) {
-                storyEstimateSlider.setValue(newMax - 1);
+            if (val > newMax) {
+                // set new value to be newMax if slider val > newMax
+                storyEstimateSlider.setValue(newMax);
             }
-            storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(int) storyEstimateSlider.getValue()]);
-            storyEstimateSlider.setMax(newMax - 1);
+            if (val > 0) {
+                // if new slider value is greater than 0 (null value for est) set label
+                storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(int) storyEstimateSlider.getValue() - 1]);
+            }
+            storyEstimateSlider.setMax(newMax);
         });
 
+        // set the slider to match what the model has (for redo/undo stuff)
         story.estimateProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
             storyEstimateSlider.setValue(newValue.intValue());
         });
     }

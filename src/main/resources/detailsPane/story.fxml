@@ -36,12 +36,12 @@
                   <Label font="$x1" text="Estimate:" GridPane.rowIndex="5" />
                   <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
-                        <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="609.0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="11.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="609.0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Slider>
-                        <Label fx:id="storyEstimateSliderLabel" alignment="CENTER_RIGHT" text="Label" />
+                        <Label fx:id="storyEstimateSliderLabel" alignment="CENTER_RIGHT" text="" />
                      </children>
                   </VBox>
 
