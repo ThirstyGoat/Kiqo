@@ -221,7 +221,6 @@
           <reportSet>
             <reports>
               <report>index</report>
-              <report>help</report>
               <report>project-team</report>
               <report>modules</report>
               <report>plugins</report>
