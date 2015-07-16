@@ -1,7 +1,8 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,8 +12,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).

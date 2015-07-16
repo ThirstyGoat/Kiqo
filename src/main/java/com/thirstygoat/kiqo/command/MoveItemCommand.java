@@ -1,11 +1,8 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.Collection;
 import java.util.List;
 
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Item;
-import javafx.collections.ObservableList;
 
 /**
  * Created by samschofield on 25/04/15.

@@ -1,13 +1,17 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.*;
-import org.hamcrest.CoreMatchers;
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Created by Bradley on 9/04/15.

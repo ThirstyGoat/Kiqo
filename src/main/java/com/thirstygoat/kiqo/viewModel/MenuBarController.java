@@ -1,16 +1,20 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.UndoManager;
 
 public class MenuBarController implements Initializable {
     @FXML

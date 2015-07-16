@@ -32,8 +32,6 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;

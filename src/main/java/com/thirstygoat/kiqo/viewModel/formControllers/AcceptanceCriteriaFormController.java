@@ -1,30 +1,26 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.viewModel.MainController;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.stage.Stage;
+
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateAcceptanceCriteriaCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.viewModel.MainController;
 
 /**
  * Created by Amy on 23/04/15.

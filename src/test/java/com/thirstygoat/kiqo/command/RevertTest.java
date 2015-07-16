@@ -1,12 +1,13 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Skill;
+import java.lang.reflect.Field;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
 
 
 /**

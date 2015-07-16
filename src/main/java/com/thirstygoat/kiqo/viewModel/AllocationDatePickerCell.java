@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.viewModel;
 import java.time.LocalDate;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
 
 import com.thirstygoat.kiqo.model.Allocation;

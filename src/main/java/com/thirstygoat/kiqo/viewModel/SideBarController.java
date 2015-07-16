@@ -1,17 +1,5 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.nodes.GoatTreeItem;
-import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
-import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
-import com.thirstygoat.kiqo.util.Utilities;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.util.Callback;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +10,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
@@ -35,6 +24,16 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.Callback;
+
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.nodes.GoatTreeItem;
+import com.thirstygoat.kiqo.nodes.ProjectsTreeItem;
+import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by samschofield and James on 14/05/15.

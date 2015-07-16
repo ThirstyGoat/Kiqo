@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
+import java.time.LocalDate;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import java.time.LocalDate;
 
 /**
  * Created by samschofield on 21/04/15.

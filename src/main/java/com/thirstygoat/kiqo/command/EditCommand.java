@@ -1,13 +1,13 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
 
 /**
  * Overwrites a field value

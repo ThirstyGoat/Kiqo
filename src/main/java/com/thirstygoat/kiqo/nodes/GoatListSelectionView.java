@@ -6,8 +6,6 @@ import javafx.util.Callback;
 
 import org.controlsfx.control.ListSelectionView;
 
-import java.util.function.Function;
-
 /**
  * Created by bradley on 26/03/15. Extends original ListSelectionView as authored in the ControlsFX library This class
  * allows a custom cell factory which is great.
