@@ -76,43 +76,11 @@ public class AcceptanceCriteria extends Item {
     }
 
     /**
-     * Enum for the state of the acceptance criteria.
+     * Represents the state of acceptance.
      */
     public enum State {
-        ACCEPTED("Accepted"),
-        REJECTED("Rejected"),
-        NEITHER("Neither");
-
-        private String label;
-
-        State(String label) {
-            this.label = label;
-        }
-
-        /**
-         * Converts the string to uppercase to match an enum name.
-         * @param val label of one of the States
-         * @return State that matches the label
-         */
-        public static State getEnum(String val) {
-            return State.valueOf(val.toUpperCase());
-        }
-
-        /**
-         * Creates a list of strings representing the values of the enum.
-         * @return list of filled with the labels for each enum
-         */
-        public static List<String> getStringValues() {
-            List<String> vals = new ArrayList<>();
-            for (State state : State.values()) {
-                vals.add(state.toString());
-            }
-            return vals;
-        }
-
-        @Override
-        public String toString() {
-            return label;
-        }
+        ACCEPTED,
+        REJECTED,
+        NEITHER;
     }
 }
