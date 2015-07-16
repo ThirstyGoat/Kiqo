@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.viewModel.formControllers;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.StoryDialogViewModel;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,11 +19,8 @@ import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -69,8 +67,6 @@ public class StoryFormController extends FormController<Story> {
                 shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
-
-        setValidationSupport();
     }
 
     private void setPrompts() {
@@ -110,70 +106,76 @@ public class StoryFormController extends FormController<Story> {
     }
     private void setValidationSupport() {
     // Validation for short name
-        final Predicate<String> shortNameValidation = s -> {
-            if (s.length() == 0) {
-                return false;
-            }
-            if (project == null) {
-                return true;
-            }
-            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
-            existingBacklogs.add(project.getUnallocatedStories());
-            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+        // checks that length of the shortName isn't 0 and that it its unique
+//        final Predicate<String> shortNameValidation = s -> {
+//            if (s.length() == 0) {
+//                return false;
+//            }
+//            if (project == null) {
+//                return true;
+//            }
+//            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
+//            existingBacklogs.add(project.getUnallocatedStories());
+//            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+//
+//            return Utilities.shortnameIsUniqueMultiple(shortNameTextField.getText(), story, existingBacklogs);
+//        };
+//`
+//        final Predicate<String> personValidation = s -> {
+//            for (final Person p : organisation.getPeople()) {
+//                if (p.getShortName().equals(s)) {
+//                    creator = p;
+//                    return true;
+//                }
+//            }
+//            return false;
+//        };
+//
+//        final Predicate<String> projectValidation = s -> {
+//            for (final Project p : organisation.getProjects()) {
+//                if (p.getShortName().equals(projectTextField.getText())) {
+//                    project = p;
+//                    // Redo validation for shortname text field
+//                    final String snt = shortNameTextField.getText();
+//                    shortNameTextField.setText("");
+//                    shortNameTextField.setText(snt);
+//                    return true;
+//                }
+//            }
+//            return false;
+//        };
+//
+//        final Predicate<String> priorityValidation = s -> {
+//            try {
+//                int i = Integer.parseInt(s);
+//                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+//                    return false;
+//                }
+//            } catch (NumberFormatException e) {
+//                return false;
+//            }
+//            return true;
+//        };
 
-            return Utilities.shortnameIsUniqueMultiple(shortNameTextField.getText(), story, existingBacklogs);
-        };
-
-        final Predicate<String> personValidation = s -> {
-            for (final Person p : organisation.getPeople()) {
-                if (p.getShortName().equals(s)) {
-                    creator = p;
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        final Predicate<String> projectValidation = s -> {
-            for (final Project p : organisation.getProjects()) {
-                if (p.getShortName().equals(projectTextField.getText())) {
-                    project = p;
-                    // Redo validation for shortname text field
-                    final String snt = shortNameTextField.getText();
-                    shortNameTextField.setText("");
-                    shortNameTextField.setText(snt);
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        final Predicate<String> priorityValidation = s -> {
-            try {
-                int i = Integer.parseInt(s);
-                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
-            }
-            return true;
-        };
-
-        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
-                "Short name must be unique and not empty."));
+        validationSupport.registerValidator(shortNameTextField,
+                Validator.createPredicateValidator(StoryDialogViewModel.getShortNameValidation(project, story, shortNameTextField.getText()),
+                        "Short name must be unique and not empty."));
 
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
-        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(personValidation,
-                        "Person must already exist"));
+        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
+                StoryDialogViewModel.getExistenceValidation(organisation.getPeople()),
+                "Person must already exist"));
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
+                StoryDialogViewModel.getExistenceValidation(organisation.getProjects()),
                 "Project must already exist"));
 
         validationSupport.registerValidator(priorityTextField,
-                Validator.createPredicateValidator(priorityValidation, "Priority must be an integer between "
+                Validator.createPredicateValidator(
+                        StoryDialogViewModel.getPriorityValidation(), "Priority must be an integer between "
                                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         validationSupport.registerValidator(estimationScaleComboBox,
@@ -291,5 +293,6 @@ public class StoryFormController extends FormController<Story> {
         this.organisation = organisation;
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
+        setValidationSupport();
     }
 }
