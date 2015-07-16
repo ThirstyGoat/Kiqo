@@ -334,7 +334,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
         lines.add(ReportUtils.valueLine("Long Name", person.getLongName()));
         lines.add(ReportUtils.valueLine("Description", person.getDescription()));
-        lines.add(ReportUtils.valueLine("User ID", person.getUserID()));
+        lines.add(ReportUtils.valueLine("User ID", person.getUserId()));
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
         lines.add(ReportUtils.valueLine("Phone Number", person.getPhoneNumber()));
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));

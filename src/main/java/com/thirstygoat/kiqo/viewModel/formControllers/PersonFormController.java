@@ -200,7 +200,7 @@ public class PersonFormController extends FormController<Person> {
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
             descriptionTextField.setText(person.getDescription());
-            userIDTextField.setText(person.getUserID());
+            userIDTextField.setText(person.getUserId());
             emailTextField.setText(person.getEmailAddress());
             phoneTextField.setText(person.getPhoneNumber());
             departmentTextField.setText(person.getDepartment());
@@ -328,7 +328,7 @@ public class PersonFormController extends FormController<Person> {
             if (!descriptionTextField.getText().equals(person.getDescription())) {
                 changes.add(new EditCommand<>(person, "description", descriptionTextField.getText()));
             }
-            if (!userIDTextField.getText().equals(person.getUserID())) {
+            if (!userIDTextField.getText().equals(person.getUserId())) {
                 changes.add(new EditCommand<>(person, "userID", userIDTextField.getText()));
             }
             if (!emailTextField.getText().equals(person.getEmailAddress())) {

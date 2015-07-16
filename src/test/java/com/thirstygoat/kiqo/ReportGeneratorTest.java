@@ -40,7 +40,7 @@ public class ReportGeneratorTest{
         person.setShortName("shortname");
         person.setLongName("longname");
         person.setDescription("des");
-        person.setUserID("123456asdf");
+        person.setUserId("123456asdf");
         person.setEmailAddress("asd@asd.com");
         person.setDepartment("awesome department");
         person.getSkills().add(skill);
