@@ -1,18 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.beans.property.BooleanProperty;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by samschofield on 25/06/15.
@@ -24,13 +18,10 @@ public class AcceptanceCriteria extends Item {
 
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
-        this.state = new SimpleObjectProperty(State.NEITHER);
+        this.state = new SimpleObjectProperty<>(State.NEITHER);
     }
 
-    /**
-     * For introspection
-     * @param criteria
-     */
+    // for introspection
     public void setCriteria(String criteria) {
         this.criteria.setValue(criteria);
     }
@@ -49,18 +40,22 @@ public class AcceptanceCriteria extends Item {
 
     @Override
     public String toString() {
-        return "AcceptanceCriteria{" +
-                "criteria=" + criteria.get() +
-                "state=" + state.get() +
-                '}';
+        return "AcceptanceCriteria{" 
+                + "criteria=" + criteria.get() 
+                + "state=" + state.get() 
+                + '}';
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
-        AcceptanceCriteria that = (AcceptanceCriteria) o;
+        AcceptanceCriteria that = (AcceptanceCriteria) obj;
         return criteria.get().equals(that.criteria.get());
 
     }
@@ -81,7 +76,7 @@ public class AcceptanceCriteria extends Item {
     }
 
     /**
-     * Enum for the state of the acceptance criteria
+     * Enum for the state of the acceptance criteria.
      */
     public enum State {
         ACCEPTED("Accepted"),
@@ -95,25 +90,27 @@ public class AcceptanceCriteria extends Item {
         }
 
         /**
-         * Converts the string to uppercase so that it will match the enum we are looking for
-         * so we can take the string value from the combo box used for setting state
+         * Converts the string to uppercase to match an enum name.
+         * @param val label of one of the States
+         * @return State that matches the label
          */
         public static State getEnum(String val) {
             return State.valueOf(val.toUpperCase());
         }
 
         /**
-         * Used so the combo box can be filled more easily
-         * @return Arraylist of filled with the labels for each enum
+         * Creates a list of strings representing the values of the enum.
+         * @return list of filled with the labels for each enum
          */
-        public static ArrayList<String> getStringValues() {
-            ArrayList<String> vals = new ArrayList<>();
+        public static List<String> getStringValues() {
+            List<String> vals = new ArrayList<>();
             for (State state : State.values()) {
                 vals.add(state.toString());
             }
             return vals;
         }
 
+        @Override
         public String toString() {
             return label;
         }
