@@ -33,7 +33,7 @@ public class PersistenceManagerTest {
     public void testLoad_fileNotFound() throws Exception {
         thrown.expect(FileNotFoundException.class);
 
-        final Organisation p = PersistenceManager.loadOrganisation(new File("a/non/existent/file/path"));
+        PersistenceManager.loadOrganisation(new File("a/non/existent/file/path"));
     }
 
     /**
@@ -51,6 +51,6 @@ public class PersistenceManagerTest {
             fw.write("{"); // lone opening brace == bad json
         }
 
-        final Organisation p = PersistenceManager.loadOrganisation(f);
+        PersistenceManager.loadOrganisation(f);
     }
 }

@@ -191,17 +191,17 @@ public class PersistenceManager {
     /**
      * Custom Deserializer for ObservableLists
      */
-    private static class ObservableListDeserializer implements JsonDeserializer<ObservableList> {
+    private static class ObservableListDeserializer implements JsonDeserializer<ObservableList<?>> {
 
         @Override
-        public ObservableList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public ObservableList<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             final Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
                 PersistenceManager.createGson(false);
             }
 
-            ObservableList observableList;
+            ObservableList<?> observableList;
             if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
@@ -249,9 +249,9 @@ public class PersistenceManager {
         }
     }
 
-    private static class ObjectPropertyDeserializer implements JsonDeserializer<ObjectProperty>, JsonSerializer<ObjectProperty> {
+    private static class ObjectPropertyDeserializer implements JsonDeserializer<ObjectProperty<?>>, JsonSerializer<ObjectProperty<?>> {
         @Override
-        public ObjectProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+        public ObjectProperty<?> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
             final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
@@ -261,7 +261,7 @@ public class PersistenceManager {
         }
 
         @Override
-        public JsonElement serialize(ObjectProperty o, Type type, JsonSerializationContext jsonSerializationContext) {
+        public JsonElement serialize(ObjectProperty<?> o, Type type, JsonSerializationContext jsonSerializationContext) {
             final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (o != null && o.get() != null) {
                 if (PersistenceManager.gson == null) {

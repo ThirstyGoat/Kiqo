@@ -89,7 +89,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
     
     private void deleteAC() {
-        Command command;
+        Command<?> command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
             List<Command<?>> commands = new ArrayList<>();
