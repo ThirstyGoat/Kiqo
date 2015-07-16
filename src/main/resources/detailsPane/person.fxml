@@ -25,7 +25,7 @@
             <Label font="$x1" text="Description:" GridPane.rowIndex="7" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="userIDLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="userIdLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="emailLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="phoneLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="departmentLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />

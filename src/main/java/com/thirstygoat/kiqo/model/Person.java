@@ -48,13 +48,13 @@ public class Person extends Item {
      * @param department a department the person works in
      * @param skills list of skills the person has
      */
-    public Person(String shortName, String longName, String description, String userID, String emailAddress, String phoneNumber,
+    public Person(String shortName, String longName, String description, String userId, String emailAddress, String phoneNumber,
             String department, List<Skill> skills) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
 
-        this.userId = new SimpleStringProperty(userID);
+        this.userId = new SimpleStringProperty(userId);
         this.emailAddress = new SimpleStringProperty(emailAddress);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.department = new SimpleStringProperty(department);
@@ -75,7 +75,7 @@ public class Person extends Item {
         return description;
     }
 
-    public StringProperty userIDProperty() {
+    public StringProperty userIdProperty() {
         return userId;
     }
 
