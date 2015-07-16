@@ -18,7 +18,7 @@ public class DeleteStoryCommandTest {
     @Before
     public void setup() {
         project = new Project("", "");
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, "0", Scale.FIBONACCI);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, 0, Scale.FIBONACCI);
         project.observableUnallocatedStories().add(story);
         command = new DeleteStoryCommand(story);
     }

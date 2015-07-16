@@ -1,12 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.*;
-import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +22,7 @@ public class DeleteAcceptanceCriteriaCommandTest {
     public void setup() {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, "0", Scale.FIBONACCI); //TODO FIX MY LAST PARAMETER
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, 0, Scale.FIBONACCI); //TODO FIX MY LAST PARAMETER
         acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of AC's in the story");
         story.getAcceptanceCriteria().add(acceptanceCriteria);
         command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);

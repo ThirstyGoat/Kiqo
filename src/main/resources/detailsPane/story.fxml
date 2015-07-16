@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
@@ -19,18 +19,31 @@
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="creatorLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ListView fx:id="acListView" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6" prefHeight="200"/>
-              <HBox GridPane.columnIndex="1" GridPane.rowIndex="7" alignment="CENTER_RIGHT">
-                  <Button fx:id="addACButton" text="+" />
-                  <Button fx:id="removeACButton" text="-" />
-                  <Button fx:id="editACButton" text="Edit" />
+            <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                 <children>
+                     <Button fx:id="addACButton" text="+" />
+                     <Button fx:id="removeACButton" text="-" />
+                     <Button fx:id="editACButton" text="Edit" />
+                 </children>
               </HBox>
+                  <Label font="$x1" text="Estimate:" GridPane.rowIndex="5" />
+                  <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <children>
+                        <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="609.0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Slider>
+                        <Label fx:id="storyEstimateSliderLabel" alignment="CENTER_RIGHT" text="Label" />
+                     </children>
+                  </VBox>
 
 
           </children>
@@ -39,8 +52,15 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
           </rowConstraints>
         </GridPane>
       </content>
