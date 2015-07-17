@@ -48,28 +48,27 @@ public class StoryFormViewModelTest {
         Assert.assertTrue("Unique short name not recognised as valid.", predicate.test("unique"));
         Assert.assertFalse("Must be unique within project.", predicate.test(storyName));
     }
+    
+    @Test
+    public void testLongNameValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getLongNameValidation();
 
-    // TODO do we need validation on long name and description?
-//    @Test
-//    public void testLongNameValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getLongNameValidation();
-//
-//        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.longNameProperty().get()));
-//        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-//        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
-//    }
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.longNameProperty().get()));
+        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
+        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
+    }
 
-//    @Test
-//    public void testDescriptionValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getDescriptionValidation();
-//
-//        Assert.assertTrue("Description should be valid by default.", predicate.test(storyFormViewModel.descriptionProperty().get()));
-//        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-//        Assert.assertTrue("Empty string not recognised as valid.", predicate.test(""));
-//    }
-//
+    @Test
+    public void testDescriptionValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getDescriptionValidation();
+
+        Assert.assertTrue("Description should be valid by default.", predicate.test(storyFormViewModel.descriptionProperty().get()));
+        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
+        Assert.assertTrue("Empty string not recognised as valid.", predicate.test(""));
+    }
+
 //    @Test
 //    public void testCreatorValidation() {
 //        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();

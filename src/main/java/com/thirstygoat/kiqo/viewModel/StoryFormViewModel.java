@@ -54,6 +54,18 @@ public class StoryFormViewModel extends FormController<Story> {
         };
     }
 
+    public Predicate<String> getLongNameValidation() {
+        return s -> {
+            return s != null && !s.isEmpty();
+        };
+    }
+    
+    public Predicate<String> getDescriptionValidation() {
+        return s -> {
+            return true;
+        };
+    }
+    
     public Predicate<String> getCreatorValidation() {
         return s -> {
             for (final Person p : organisation.getPeople()) {
