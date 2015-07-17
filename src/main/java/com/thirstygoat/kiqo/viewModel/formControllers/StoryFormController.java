@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.StoryDialogViewModel;
+import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,7 +20,6 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -26,15 +27,11 @@ import java.util.ResourceBundle;
  * Created by Carina on 15/05/2015.
  */
 public class StoryFormController extends FormController<Story> {
+    private StoryFormViewModel viewModel;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
-    private Story story;
-    private Person creator;
-    private Project project;
-    private Backlog backlog;
-    private Organisation organisation;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Command<?> command;
@@ -60,6 +57,9 @@ public class StoryFormController extends FormController<Story> {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        System.out.println("First");
+        viewModel = new StoryFormViewModel();
+        bindFields();
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
@@ -67,6 +67,17 @@ public class StoryFormController extends FormController<Story> {
                 shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
+
+    }
+
+    private void bindFields() {
+        shortNameTextField.textProperty().bind(viewModel.storyShortNameProperty());
+        longNameTextField.textProperty().bind(viewModel.storyLongNameProperty());
+        descriptionTextField.textProperty().bind(viewModel.storyDescriptionProperty());
+        estimationScaleComboBox.valueProperty().bind(viewModel.storyEstimateProperty());
+        projectTextField.textProperty().bind(viewModel.projectNameProperty());
+//        priorityTextField.textProperty().bind(viewModel.storyPriorityProperty());
+
     }
 
     private void setPrompts() {
@@ -81,7 +92,6 @@ public class StoryFormController extends FormController<Story> {
 
     @Override
     public void populateFields(final Story story) {
-        this.story = story;
 
         if (story == null) {
             // Then we are creating a new one
@@ -105,6 +115,7 @@ public class StoryFormController extends FormController<Story> {
         }
     }
     private void setValidationSupport() {
+        System.out.println("Hello");
     // Validation for short name
         // checks that length of the shortName isn't 0 and that it its unique
 //        final Predicate<String> shortNameValidation = s -> {
@@ -157,33 +168,33 @@ public class StoryFormController extends FormController<Story> {
 //            return true;
 //        };
 
-        validationSupport.registerValidator(shortNameTextField,
-                Validator.createPredicateValidator(StoryDialogViewModel.getShortNameValidation(project, story, shortNameTextField.getText()),
-                        "Short name must be unique and not empty."));
+            validationSupport.registerValidator(shortNameTextField,
+                    Validator.createPredicateValidator(viewModel.getShortNameValidation(),
+                            "Short name must be unique and not empty."));
 
-        validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+            validationSupport.registerValidator(longNameTextField,
+                    Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
-        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
-                StoryDialogViewModel.getExistenceValidation(organisation.getPeople()),
-                "Person must already exist"));
+            validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
+                    viewModel.getPersonValidation(),
+                    "Person must already exist"));
 
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
-                StoryDialogViewModel.getExistenceValidation(organisation.getProjects()),
-                "Project must already exist"));
+            validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
+                    viewModel.getProjectValidation(),
+                    "Project must already exist"));
 
-        validationSupport.registerValidator(priorityTextField,
-                Validator.createPredicateValidator(
-                        StoryDialogViewModel.getPriorityValidation(), "Priority must be an integer between "
-                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+            validationSupport.registerValidator(priorityTextField,
+                    Validator.createPredicateValidator(
+                            viewModel.getPriorityValidation(), "Priority must be an integer between "
+                                    + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-        validationSupport.registerValidator(estimationScaleComboBox,
-                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
+            validationSupport.registerValidator(estimationScaleComboBox,
+                    Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
-        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(newValue);
-        });
+            validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+                okButton.setDisable(newValue);
+            });
     }
 
     /**
@@ -238,59 +249,19 @@ public class StoryFormController extends FormController<Story> {
     public Command<?> getCommand() { return command; }
 
     public void setCommand() {
-        if (story == null) {
-            // new story command
-            story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
-                     project, backlog, Integer.parseInt(priorityTextField.getText()), 0, estimationScaleComboBox.getValue());
-            command = new CreateStoryCommand(story);
-        } else {
-            // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!longNameTextField.getText().equals(story.getLongName())) {
-                changes.add(new EditCommand<>(story, "longName", longNameTextField.getText()));
-            }
-            if (!shortNameTextField.getText().equals(story.getShortName())) {
-                changes.add(new EditCommand<>(story, "shortName", shortNameTextField.getText()));
-            }
-            if (!descriptionTextField.getText().equals(story.getDescription())) {
-                changes.add(new EditCommand<>(story, "description", descriptionTextField.getText()));
-            }
-//            Creator can't be changed
-//            if (!creator.equals(story.getCreator())) {
-//                changes.add(new EditCommand<>(story, "creator", creator));
-//            }
-            if (!project.equals(story.getProject())) {
-                if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableUnallocatedStories()));
-                } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), project.observableUnallocatedStories()));
-                }
-                // If story is changing projects, then it shouldn't be in any backlog
-                changes.add(new EditCommand<>(story, "backlog", null));
-                changes.add(new EditCommand<>(story, "project", project));
-            }
+        viewModel.setCommand();
 
-            if (Integer.parseInt(priorityTextField.getText()) != story.getPriority()) {
-                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityTextField.getText())));
-            }
-
-            if (estimationScaleComboBox.getValue() != story.getScale()) {
-                changes.add(new EditCommand<>(story, "scale", estimationScaleComboBox.getValue()));
-            }
-
-            valid = !changes.isEmpty();
-            command = new CompoundCommand("Edit Release", changes);
-        }
     }
 
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
+
     }
 
     @Override
     public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
+        viewModel.setOrganisation(organisation);
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setValidationSupport();
