@@ -30,14 +30,14 @@ public class StoryFormViewModel extends FormController<Story> {
     private Command<?> command;
     private boolean valid = false;
 
-    private StringProperty shortNameProperty = new SimpleStringProperty();
-    private StringProperty longNameProperty = new SimpleStringProperty();
-    private StringProperty descriptionProperty = new SimpleStringProperty();
-    private StringProperty creatorProperty = new SimpleStringProperty();
-    private StringProperty priorityProperty = new SimpleStringProperty();
-    private StringProperty projectNameProperty = new SimpleStringProperty();
+    private StringProperty shortNameProperty = new SimpleStringProperty("");
+    private StringProperty longNameProperty = new SimpleStringProperty("");
+    private StringProperty descriptionProperty = new SimpleStringProperty("");
+    protected StringProperty creatorProperty = new SimpleStringProperty("");
+    private StringProperty priorityProperty = new SimpleStringProperty("");
+    private StringProperty projectNameProperty = new SimpleStringProperty("");
 
-    private ObjectProperty<Scale> storyEstimate = new SimpleObjectProperty<>();
+    private ObjectProperty<Scale> storyEstimate = new SimpleObjectProperty<>(null);
 
 
 
