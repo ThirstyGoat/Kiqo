@@ -38,63 +38,63 @@ public class StoryFormViewModel extends FormController<Story> {
 
     // Validation for short name
     // checks that length of the shortName isn't 0 and that it its unique
-        public Predicate<String> getShortNameValidation() {
-            return s -> {
-                if (s.length() == 0 || s.length() > 20) {
-                    return false;
-                }
-                if (project == null) {
+    public Predicate<String> getShortNameValidation() {
+        return s -> {
+            if (s.length() == 0 || s.length() > 20) {
+                return false;
+            }
+            if (project == null) {
+                return true;
+            }
+            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
+            existingBacklogs.add(project.getUnallocatedStories());
+            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+
+            return Utilities.shortnameIsUniqueMultiple(s, story, existingBacklogs);
+        };
+    }
+
+    public Predicate<String> getCreatorValidation() {
+        return s -> {
+            for (final Person p : organisation.getPeople()) {
+                if (p.getShortName().equals(s)) {
+                    creator = p;
                     return true;
                 }
-                Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
-                existingBacklogs.add(project.getUnallocatedStories());
-                existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+            }
+            return false;
+        };
+    }
 
-                return Utilities.shortnameIsUniqueMultiple(s, story, existingBacklogs);
-            };
-        }
-
-        public Predicate<String> getCreatorValidation() {
-            return s -> {
-                for (final Person p : organisation.getPeople()) {
-                    if (p.getShortName().equals(s)) {
-                        creator = p;
-                        return true;
-                    }
+    public Predicate<String> getProjectValidation() {
+        return s -> {
+            for (final Project p : organisation.getProjects()) {
+                if (p.getShortName().equals(projectNameProperty.get())) {
+                    project = p;
+                    // Redo validation for shortname text field
+                    final String snt = shortNameProperty.get();
+                    shortNameProperty.setValue("");
+                    shortNameProperty.setValue(snt);
+                    return true;
                 }
-                return false;
-            };
-        }
+            }
+            return false;
+        };
+    }
 
-        public Predicate<String> getProjectValidation() {
-            return s -> {
-                for (final Project p : organisation.getProjects()) {
-                    if (p.getShortName().equals(projectNameProperty.get())) {
-                        project = p;
-                        // Redo validation for shortname text field
-                        final String snt = shortNameProperty.get();
-                        shortNameProperty.setValue("");
-                        shortNameProperty.setValue(snt);
-                        return true;
-                    }
-                }
-                return false;
-            };
-        }
-
-        public Predicate<String> getPriorityValidation() {
-            return s -> {
-                try {
-                    int i = Integer.parseInt(s);
-                    if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
-                        return false;
-                    }
-                } catch (NumberFormatException e) {
+    public Predicate<String> getPriorityValidation() {
+        return s -> {
+            try {
+                int i = Integer.parseInt(s);
+                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
                     return false;
                 }
-                return true;
-            };
-        }
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            return true;
+        };
+    }
 
     public StringProperty shortNameProperty() {
         return shortNameProperty;
@@ -148,8 +148,6 @@ public class StoryFormViewModel extends FormController<Story> {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
                     project, backlog, Integer.parseInt(priorityProperty.getValue()), scaleObjectProperty.getValue(), 0);
-//            Story(String shortName, String longName, String description, Person creator, Project project,
-//                    Backlog backlog, Integer priority, Scale scale, Integer estimate) {
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -163,10 +161,8 @@ public class StoryFormViewModel extends FormController<Story> {
             if (!descriptionProperty.getValue().equals(story.getDescription())) {
                 changes.add(new EditCommand<>(story, "description", descriptionProperty.getValue()));
             }
-//            Creator can't be changed
-//            if (!creator.equals(story.getCreator())) {
-//                changes.add(new EditCommand<>(story, "creator", creator));
-//            }
+            // creator can't be changed
+            
             if (!project.equals(story.getProject())) {
                 if (story.getBacklog() != null) {
                     changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableUnallocatedStories()));
