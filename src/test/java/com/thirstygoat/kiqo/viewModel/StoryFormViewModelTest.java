@@ -86,7 +86,7 @@ public class StoryFormViewModelTest {
         Backlog backlog1 = new Backlog("backlog in the same project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
         Backlog backlog2 = new Backlog("backlog not in project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
         project.setBacklogs(Arrays.asList(backlog1));
-        storyDialogViewModel.projectProperty().set(project);
+        storyDialogViewModel.projectProperty().set(project); // TODO requires "protected ObjectProperty<Project> projectProperty"
        
         // Backlog belongs to selected project
         Assert.assertTrue("Valid backlog should be recognised as valid.", predicate.test(backlog1.getShortName()));
