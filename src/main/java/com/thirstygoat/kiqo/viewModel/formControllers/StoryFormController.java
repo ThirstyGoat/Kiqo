@@ -76,7 +76,6 @@ public class StoryFormController extends FormController<Story> {
         estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleObjectProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
-
     }
 
     private void setPrompts() {
@@ -91,6 +90,7 @@ public class StoryFormController extends FormController<Story> {
 
     @Override
     public void populateFields(final Story story) {
+        viewModel.setStory(story);
 
         if (story == null) {
             // Then we are creating a new one
@@ -174,7 +174,7 @@ public class StoryFormController extends FormController<Story> {
                     Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
             validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
-                    viewModel.getPersonValidation(),
+                    viewModel.getCreatorValidation(),
                     "Person must already exist"));
 
 

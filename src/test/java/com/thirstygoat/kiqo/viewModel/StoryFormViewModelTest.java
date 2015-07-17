@@ -1,36 +1,44 @@
-//package com.thirstygoat.kiqo.viewModel;
-//
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.function.Predicate;
-//
-//import com.thirstygoat.kiqo.model.*;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//public class StoryFormViewModelTest {
-//
-//    @Test
-//    public void testShortNameValidation() {
-//        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyDialogViewModel.getShortNameValidation();
-//
-//        Assert.assertFalse("Must not be valid initially.", predicate.test(storyDialogViewModel.shortNameProperty().get()));
-//        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-//        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
-//        Assert.assertFalse("Must not be longer than 20 characters.", predicate.test("This name is longer than 20 characters."));
-//
-//        // uniqueness within project
-//        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
-//        Project project = new Project("project shortName", "longName");
-//        final String sharedShortName = "story shortName";
-//        Story story = new Story(sharedShortName, "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
-//        project.setUnallocatedStories(Arrays.asList(story));
-//        Assert.assertTrue("Unique short name not recognised as valid.", predicate.test("story shortName unique"));
-//        Assert.assertFalse("Must be unique within project.", predicate.test(sharedShortName));
-//    }
-//
+package com.thirstygoat.kiqo.viewModel;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.Predicate;
+
+import com.thirstygoat.kiqo.model.*;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class StoryFormViewModelTest {
+
+    @Test
+    public void testShortNameValidation() throws NoSuchFieldException, IllegalAccessException {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getShortNameValidation();
+
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyDialogViewModel.shortNameProperty().get()));
+        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
+        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
+        Assert.assertFalse("Must not be longer than 20 characters.", predicate.test("This name is longer than 20 characters."));
+
+        // uniqueness within project
+        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Project project = new Project("project shortName", "longName");
+        final String sharedShortName = "story shortName";
+        Story story = new Story(sharedShortName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0);
+        project.setUnallocatedStories(new ArrayList<Story>(Arrays.asList(story)));
+
+        // Because otherwise the project is null so will always return false
+        Field privateProject = storyDialogViewModel.getClass().getDeclaredField("project");
+        privateProject.setAccessible(true);
+        privateProject.set(storyDialogViewModel, project);
+
+        Assert.assertTrue("Unique short name not recognised as valid.", predicate.test("unique"));
+        Assert.assertFalse("Must be unique within project.", predicate.test(sharedShortName));
+    }
+
+    //Todo do we need validation on long name and description?
 //    @Test
 //    public void testLongNameValidation() {
 //        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
@@ -40,7 +48,7 @@
 //        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
 //        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
 //    }
-//
+
 //    @Test
 //    public void testDescriptionValidation() {
 //        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
@@ -54,7 +62,7 @@
 //    @Test
 //    public void testCreatorValidation() {
 //        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyDialogViewModel.getPersonValidation();
+//        Predicate<String> predicate = storyDialogViewModel.getCreatorValidation();
 //
 //        Assert.assertFalse("Must not be valid initially.", predicate.test(storyDialogViewModel.creatorProperty().get()));
 //        Assert.assertFalse("Must not be null.", predicate.test(null));
@@ -126,4 +134,4 @@
 //
 //        Assert.fail("Not yet implemented");
 //    }
-//}
+}

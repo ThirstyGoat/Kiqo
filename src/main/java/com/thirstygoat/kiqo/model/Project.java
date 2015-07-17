@@ -183,8 +183,8 @@ public class Project extends Item {
      * @param unallocatedStories list of unallocatedStories associated with this project
      */
     public void setUnallocatedStories(final List<Story> unallocatedStories) {
-        unallocatedStories.clear();
-        unallocatedStories.addAll(unallocatedStories);
+        this.unallocatedStories.clear();
+        this.unallocatedStories.addAll(unallocatedStories);
     }
 
     /**

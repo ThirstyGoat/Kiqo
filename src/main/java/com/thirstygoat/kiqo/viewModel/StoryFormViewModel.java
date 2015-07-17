@@ -30,7 +30,6 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty shortNameProperty = new SimpleStringProperty("");
     private StringProperty longNameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
-    protected StringProperty creatorProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
     private ObjectProperty<Scale> scaleObjectProperty = new SimpleObjectProperty<>();
@@ -41,8 +40,7 @@ public class StoryFormViewModel extends FormController<Story> {
     // checks that length of the shortName isn't 0 and that it its unique
         public Predicate<String> getShortNameValidation() {
             return s -> {
-                System.out.println(s);
-                if (s.length() == 0) {
+                if (s.length() == 0 || s.length() > 20) {
                     return false;
                 }
                 if (project == null) {
@@ -52,11 +50,11 @@ public class StoryFormViewModel extends FormController<Story> {
                 existingBacklogs.add(project.getUnallocatedStories());
                 existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
 
-                return Utilities.shortnameIsUniqueMultiple(shortNameProperty.get(), story, existingBacklogs);
+                return Utilities.shortnameIsUniqueMultiple(s, story, existingBacklogs);
             };
         }
 
-        public Predicate<String> getPersonValidation() {
+        public Predicate<String> getCreatorValidation() {
             return s -> {
                 for (final Person p : organisation.getPeople()) {
                     if (p.getShortName().equals(s)) {
@@ -120,6 +118,10 @@ public class StoryFormViewModel extends FormController<Story> {
 
     public ObjectProperty<Scale> scaleObjectProperty() {
         return scaleObjectProperty;
+    }
+
+    public void setStory(Story story) {
+        this.story = story;
     }
 
     @Override
