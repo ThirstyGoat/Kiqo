@@ -4,10 +4,7 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -36,8 +33,7 @@ public class StoryFormViewModel extends FormController<Story> {
     protected StringProperty creatorProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-
-    private ObjectProperty<Scale> storyEstimate = new SimpleObjectProperty<>(null);
+    private ObjectProperty<Scale> scaleObjectProperty = new SimpleObjectProperty<>();
 
 
 
@@ -122,8 +118,8 @@ public class StoryFormViewModel extends FormController<Story> {
         return projectNameProperty;
     }
 
-    public ObjectProperty<Scale> storyEstimateProperty() {
-        return storyEstimate;
+    public ObjectProperty<Scale> scaleObjectProperty() {
+        return scaleObjectProperty;
     }
 
     @Override
@@ -149,7 +145,9 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    project, backlog, Integer.parseInt(priorityProperty.getValue()), 0, storyEstimate.getValue());
+                    project, backlog, Integer.parseInt(priorityProperty.getValue()), scaleObjectProperty.getValue(), 0);
+//            Story(String shortName, String longName, String description, Person creator, Project project,
+//                    Backlog backlog, Integer priority, Scale scale, Integer estimate) {
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -182,8 +180,8 @@ public class StoryFormViewModel extends FormController<Story> {
                 changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityProperty.getValue())));
             }
 
-            if (storyEstimate.getValue() != story.getScale()) {
-                changes.add(new EditCommand<>(story, "scale", storyEstimate.getValue()));
+            if (scaleObjectProperty.getValue() != story.getScale()) {
+                changes.add(new EditCommand<>(story, "scale", scaleObjectProperty.getValue()));
             }
 
             valid = !changes.isEmpty();

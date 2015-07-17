@@ -57,7 +57,6 @@ public class StoryFormController extends FormController<Story> {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        System.out.println("First");
         viewModel = new StoryFormViewModel();
         bindFields();
         setShortNameHandler();
@@ -71,12 +70,12 @@ public class StoryFormController extends FormController<Story> {
     }
 
     private void bindFields() {
-        shortNameTextField.textProperty().bind(viewModel.storyShortNameProperty());
-        longNameTextField.textProperty().bind(viewModel.storyLongNameProperty());
-        descriptionTextField.textProperty().bind(viewModel.storyDescriptionProperty());
-        estimationScaleComboBox.valueProperty().bind(viewModel.storyEstimateProperty());
-        projectTextField.textProperty().bind(viewModel.projectNameProperty());
-//        priorityTextField.textProperty().bind(viewModel.storyPriorityProperty());
+        shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
+        longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleObjectProperty());
+        projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
+        priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
 
     }
 
@@ -115,7 +114,6 @@ public class StoryFormController extends FormController<Story> {
         }
     }
     private void setValidationSupport() {
-        System.out.println("Hello");
     // Validation for short name
         // checks that length of the shortName isn't 0 and that it its unique
 //        final Predicate<String> shortNameValidation = s -> {
@@ -246,7 +244,7 @@ public class StoryFormController extends FormController<Story> {
     public boolean isValid() { return valid; }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command<?> getCommand() { return viewModel.getCommand(); }
 
     public void setCommand() {
         viewModel.setCommand();

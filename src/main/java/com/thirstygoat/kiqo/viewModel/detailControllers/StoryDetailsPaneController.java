@@ -63,7 +63,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
 
-            setScale();
+//            setScale();
 
         } else {
             longNameLabel.textProperty().unbind();
