@@ -30,12 +30,12 @@ public class StoryFormViewModel extends FormController<Story> {
     private Command<?> command;
     private boolean valid = false;
 
-    private StringProperty storyShortName = new SimpleStringProperty();
-    private StringProperty storyLongName = new SimpleStringProperty();
-    private StringProperty storyDescription = new SimpleStringProperty();
-    private StringProperty storyCreator = new SimpleStringProperty();
-    private StringProperty storyPriority = new SimpleStringProperty();
-    private StringProperty projectName = new SimpleStringProperty();
+    private StringProperty shortNameProperty = new SimpleStringProperty();
+    private StringProperty longNameProperty = new SimpleStringProperty();
+    private StringProperty descriptionProperty = new SimpleStringProperty();
+    private StringProperty creatorProperty = new SimpleStringProperty();
+    private StringProperty priorityProperty = new SimpleStringProperty();
+    private StringProperty projectNameProperty = new SimpleStringProperty();
 
     private ObjectProperty<Scale> storyEstimate = new SimpleObjectProperty<>();
 
@@ -45,6 +45,7 @@ public class StoryFormViewModel extends FormController<Story> {
     // checks that length of the shortName isn't 0 and that it its unique
         public Predicate<String> getShortNameValidation() {
             return s -> {
+                System.out.println(s);
                 if (s.length() == 0) {
                     return false;
                 }
@@ -55,7 +56,7 @@ public class StoryFormViewModel extends FormController<Story> {
                 existingBacklogs.add(project.getUnallocatedStories());
                 existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
 
-                return Utilities.shortnameIsUniqueMultiple(storyShortName.get(), story, existingBacklogs);
+                return Utilities.shortnameIsUniqueMultiple(shortNameProperty.get(), story, existingBacklogs);
             };
         }
 
@@ -74,12 +75,12 @@ public class StoryFormViewModel extends FormController<Story> {
         public Predicate<String> getProjectValidation() {
             return s -> {
                 for (final Project p : organisation.getProjects()) {
-                    if (p.getShortName().equals(projectName.get())) {
+                    if (p.getShortName().equals(projectNameProperty.get())) {
                         project = p;
                         // Redo validation for shortname text field
-                        final String snt = storyShortName.get();
-                        storyShortName.setValue("");
-                        storyShortName.setValue(snt);
+                        final String snt = shortNameProperty.get();
+                        shortNameProperty.setValue("");
+                        shortNameProperty.setValue(snt);
                         return true;
                     }
                 }
@@ -101,24 +102,24 @@ public class StoryFormViewModel extends FormController<Story> {
             };
         }
 
-    public StringProperty storyShortNameProperty() {
-        return storyShortName;
+    public StringProperty shortNamePropertyProperty() {
+        return shortNameProperty;
     }
 
-    public StringProperty storyLongNameProperty() {
-        return storyLongName;
+    public StringProperty longNamePropertyProperty() {
+        return longNameProperty;
     }
 
-    public StringProperty storyDescriptionProperty() {
-        return storyDescription;
+    public StringProperty descriptionPropertyProperty() {
+        return descriptionProperty;
     }
 
-    public StringProperty storyPriorityProperty() {
-        return storyPriority;
+    public StringProperty priorityPropertyProperty() {
+        return priorityProperty;
     }
 
-    public StringProperty projectNameProperty() {
-        return projectName;
+    public StringProperty projectNamePropertyProperty() {
+        return projectNameProperty;
     }
 
     public ObjectProperty<Scale> storyEstimateProperty() {
@@ -147,20 +148,20 @@ public class StoryFormViewModel extends FormController<Story> {
     public void setCommand() {
         if (story == null) {
             // new story command
-            story = new Story(storyShortName.getValue(), storyLongName.getValue(), storyDescription.getValue(), creator,
-                    project, backlog, Integer.parseInt(storyPriority.getValue()), 0, storyEstimate.getValue());
+            story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
+                    project, backlog, Integer.parseInt(priorityProperty.getValue()), 0, storyEstimate.getValue());
             command = new CreateStoryCommand(story);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!storyLongName.getValue().equals(story.getLongName())) {
-                changes.add(new EditCommand<>(story, "longName", storyLongName.getValue()));
+            if (!longNameProperty.getValue().equals(story.getLongName())) {
+                changes.add(new EditCommand<>(story, "longName", longNameProperty.getValue()));
             }
-            if (!storyShortName.getValue().equals(story.getShortName())) {
-                changes.add(new EditCommand<>(story, "shortName", storyShortName.getValue()));
+            if (!shortNameProperty.getValue().equals(story.getShortName())) {
+                changes.add(new EditCommand<>(story, "shortName", shortNameProperty.getValue()));
             }
-            if (!storyDescription.getValue().equals(story.getDescription())) {
-                changes.add(new EditCommand<>(story, "description", storyDescription.getValue()));
+            if (!descriptionProperty.getValue().equals(story.getDescription())) {
+                changes.add(new EditCommand<>(story, "description", descriptionProperty.getValue()));
             }
 //            Creator can't be changed
 //            if (!creator.equals(story.getCreator())) {
@@ -177,8 +178,8 @@ public class StoryFormViewModel extends FormController<Story> {
                 changes.add(new EditCommand<>(story, "project", project));
             }
 
-            if (Integer.parseInt(storyPriority.getValue()) != story.getPriority()) {
-                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(storyPriority.getValue())));
+            if (Integer.parseInt(priorityProperty.getValue()) != story.getPriority()) {
+                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityProperty.getValue())));
             }
 
             if (storyEstimate.getValue() != story.getScale()) {
