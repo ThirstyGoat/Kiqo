@@ -102,23 +102,23 @@ public class StoryFormViewModel extends FormController<Story> {
             };
         }
 
-    public StringProperty shortNamePropertyProperty() {
+    public StringProperty shortNameProperty() {
         return shortNameProperty;
     }
 
-    public StringProperty longNamePropertyProperty() {
+    public StringProperty longNameProperty() {
         return longNameProperty;
     }
 
-    public StringProperty descriptionPropertyProperty() {
+    public StringProperty descriptionProperty() {
         return descriptionProperty;
     }
 
-    public StringProperty priorityPropertyProperty() {
+    public StringProperty priorityProperty() {
         return priorityProperty;
     }
 
-    public StringProperty projectNamePropertyProperty() {
+    public StringProperty projectNameProperty() {
         return projectNameProperty;
     }
 
