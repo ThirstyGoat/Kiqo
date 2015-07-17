@@ -2,9 +2,9 @@ package com.thirstygoat.kiqo.viewModel.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,20 +14,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -266,6 +261,10 @@ public class BacklogFormController extends FormController<Backlog> {
             removedStories.removeAll(targetStories);
 
             for (Story story : addedStories) {
+                if (story.getScale() != backlog.getScale()) {
+                    changes.add(new EditCommand<>(story, "estimate", 0));
+                    changes.add(new EditCommand<>(story, "scale", backlog.getScale()));
+                }
                 changes.add(new MoveItemCommand<>(story, project.get().observableUnallocatedStories(),
                         backlog.observableStories()));
                 changes.add(new EditCommand<>(story, "backlog", backlog));
@@ -296,8 +295,29 @@ public class BacklogFormController extends FormController<Backlog> {
     }
 
     private boolean validate() {
+        List<Story> conflicts = new ArrayList<>();
+        // add any story without the same scale to the array
+        for (Story story : targetStories) {
+            if (story.getScale() != backlog.getScale()) {
+                conflicts.add(story);
+            }
+        }
         if (validationSupport.isInvalid()) {
             return false;
+        } else if (!conflicts.isEmpty()) {
+            final String[] options = {"Okay", "Cancel"};
+            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
+                    "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
+
+            final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales",
+                    query,
+                    options);
+
+            if (result.equals("Okay")) {
+                valid = true;
+            } else {
+                return false;
+            }
         } else {
             valid = true;
         }
