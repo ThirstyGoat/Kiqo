@@ -62,6 +62,14 @@ public class StoryFormViewModelTest {
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Assert.assertTrue("Valid creator not recognised as valid.", predicate.test(creator.getShortName()));
     }
+    
+    @Test
+    public void testProjectValidation() {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getProjectValidation();
+        
+        Assert.fail("Not yet implemented");
+    }
 
     @Test
     public void testBacklogValidation() {
@@ -85,5 +93,37 @@ public class StoryFormViewModelTest {
         
         // Backlog does not belong to selected project
         Assert.assertFalse("Backlog must belong to selected project.", predicate.test(backlog2.getShortName()));
+    }
+    
+    @Test
+    public void testPriorityValidation() {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getPriorityValidation();
+        
+        Assert.fail("Not yet implemented");
+    }
+    
+    @Test
+    public void testAcceptanceCriteriaValidation() {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getAcceptanceCriteriaValidation();
+        
+        Assert.fail("Not yet implemented");
+    }
+
+    @Test
+    public void testScaleValidation() {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getScaleValidation();
+        
+        Assert.fail("Not yet implemented");
+    }
+    
+    @Test
+    public void testEstimateValidation() {
+        StoryFormViewModel storyDialogViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyDialogViewModel.getEstimateValidation();
+        
+        Assert.fail("Not yet implemented");
     }
 }
