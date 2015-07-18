@@ -202,8 +202,8 @@ public class Project extends Item {
      * @param backlogs list of backlogs associated with this project
      */
     public void setBacklogs(final List<Backlog> backlogs) {
-        backlogs.clear();
-        backlogs.addAll(backlogs);
+        this.backlogs.clear();
+        this.backlogs.addAll(backlogs);
     }
 
     @Override
