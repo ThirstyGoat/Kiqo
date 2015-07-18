@@ -46,7 +46,7 @@ public class Utilities {
     }
 
     public static String pluralise(int count, String singular, String plural) {
-        return (count % 2 == 0) ? plural : plural;
+        return (count == 1) ? singular : plural;
     }
 
     public static String commaSeparatedValues(List<? extends Item> list) {
