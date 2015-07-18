@@ -114,57 +114,6 @@ public class StoryFormController extends FormController<Story> {
         }
     }
     private void setValidationSupport() {
-    // Validation for short name
-        // checks that length of the shortName isn't 0 and that it its unique
-//        final Predicate<String> shortNameValidation = s -> {
-//            if (s.length() == 0) {
-//                return false;
-//            }
-//            if (project == null) {
-//                return true;
-//            }
-//            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
-//            existingBacklogs.add(project.getUnallocatedStories());
-//            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
-//
-//            return Utilities.shortnameIsUniqueMultiple(shortNameTextField.getText(), story, existingBacklogs);
-//        };
-//`
-//        final Predicate<String> personValidation = s -> {
-//            for (final Person p : organisation.getPeople()) {
-//                if (p.getShortName().equals(s)) {
-//                    creator = p;
-//                    return true;
-//                }
-//            }
-//            return false;
-//        };
-//
-//        final Predicate<String> projectValidation = s -> {
-//            for (final Project p : organisation.getProjects()) {
-//                if (p.getShortName().equals(projectTextField.getText())) {
-//                    project = p;
-//                    // Redo validation for shortname text field
-//                    final String snt = shortNameTextField.getText();
-//                    shortNameTextField.setText("");
-//                    shortNameTextField.setText(snt);
-//                    return true;
-//                }
-//            }
-//            return false;
-//        };
-//
-//        final Predicate<String> priorityValidation = s -> {
-//            try {
-//                int i = Integer.parseInt(s);
-//                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
-//                    return false;
-//                }
-//            } catch (NumberFormatException e) {
-//                return false;
-//            }
-//            return true;
-//        };
 
             validationSupport.registerValidator(shortNameTextField,
                     Validator.createPredicateValidator(viewModel.getShortNameValidation(),
