@@ -60,7 +60,7 @@ public class StoryFormViewModel extends FormController<Story> {
     
     /** 
      * Validation for short name.
-     * Checks that length of the shortName isn't 0 and that it its unique.
+     * Checks that length of the shortName isn't 0 or greater than 20 and that it its unique.
      * 
      * @return predicate for determining validity
      */
@@ -83,19 +83,37 @@ public class StoryFormViewModel extends FormController<Story> {
         };
     }
 
+    /**
+     * Validation for long name
+     * Checks that the long name isn't empty
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getLongNameValidation() {
         return s -> {
             return s != null && !s.isEmpty();
         };
     }
-    
+
+    /**
+     * Validation for description
+     * Always valid as description isn't required and has no constraints
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getDescriptionValidation() {
         return s -> {
             // always valid
             return true;
         };
     }
-    
+
+    /**
+     * Validation for creator
+     * Checks that the creator exists within the organisation and is set
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getCreatorValidation() {
         return s -> {
             for (final Person p : organisation.getPeople()) {
@@ -108,6 +126,12 @@ public class StoryFormViewModel extends FormController<Story> {
         };
     }
 
+    /**
+     * Validation for project
+     * Checks that the project exists and is set
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getProjectValidation() {
         return s -> {
             return projectProperty.get() != null;
@@ -124,7 +148,13 @@ public class StoryFormViewModel extends FormController<Story> {
 //            return false;
         };
     }
-    
+
+    /**
+     * Validation for backlog
+     *
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getBacklogValidation() {
         return s -> {
             // TODO implement validation
@@ -132,6 +162,12 @@ public class StoryFormViewModel extends FormController<Story> {
         };
     }
 
+    /**
+     * Validation for priority
+     *
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getPriorityValidation() {
         return s -> {
             try {
@@ -145,14 +181,26 @@ public class StoryFormViewModel extends FormController<Story> {
             return true;
         };
     }
-    
+
+    /**
+     * Validation for scale
+     *
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getScaleValidation() {
         return s -> {
             // TODO implement validation
             return false;
         };
     }
-    
+
+    /**
+     * Validation for estimate
+     *
+     *
+     * @return predicate for determining validity
+     */
     public Predicate<String> getEstimateValidation() {
         return s -> {
             // TODO implement validation
