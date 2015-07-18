@@ -146,11 +146,14 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // make slider look tidy
             storyEstimateSlider.setValue(0);
             storyEstimateSlider.setMax(1);
+            // bind for if they return to null via revert/undo
             storyEstimateSlider.disableProperty().bind(Bindings.isNull(story.scaleProperty()));
         } else {
             // set initial slider value based off story model
             storyEstimateSlider.setValue(story.getEstimate());
             storyEstimateSlider.setMax(story.getScale().getEstimates().length);
+            storyEstimateSlider.disableProperty().unbind();
+            storyEstimateSlider.setDisable(false);
             // set initial label for slider, value of 0 is null
             if (storyEstimateSlider.getValue() > 0) {
                 storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(int) storyEstimateSlider.getValue() - 1]);
