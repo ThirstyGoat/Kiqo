@@ -36,14 +36,8 @@ public class StoryFormViewModelTest {
         organisation.getProjects().add(project);
         storyFormViewModel.setOrganisation(organisation);
         
-        // workaround so that project field gets set
+        // set project field
         storyFormViewModel.projectNameProperty().set(projectName);
-        storyFormViewModel.getProjectValidation().test(storyFormViewModel.projectNameProperty().get());
-        
-        // Because otherwise the project is null so will always return false
-//        Field privateProject = storyFormViewModel.getClass().getDeclaredField("project");
-//        privateProject.setAccessible(true);
-//        privateProject.set(storyFormViewModel, project);
 
         Assert.assertTrue("Unique short name not recognised as valid.", predicate.test("unique"));
         Assert.assertFalse("Must be unique within project.", predicate.test(storyName));
@@ -81,15 +75,36 @@ public class StoryFormViewModelTest {
         Assert.assertFalse("Must not be null.", predicate.test(null));
 
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Assert.assertFalse("Creator must exist in organisation.", predicate.test(creator.getShortName()));
+        organisation.getPeople().add(creator);
         Assert.assertTrue("Valid creator not recognised as valid.", predicate.test(creator.getShortName()));
     }
 
     @Test
     public void testProjectValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Organisation organisation = new Organisation();
+        storyFormViewModel.setOrganisation(organisation);
+        
         Predicate<String> predicate = storyFormViewModel.getProjectValidation();
-
-        Assert.fail("Not yet implemented");
+        
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.projectNameProperty().get()));
+        Assert.assertFalse("Must not be null.", predicate.test(null));
+        Assert.assertFalse("Must not be empty.", predicate.test(""));
+        
+        final String projectName = "project shortName";
+        
+        Assert.assertFalse("Project must exist.", predicate.test(projectName));
+        
+        Project project = new Project(projectName, "longName");
+        // must set projectNameProperty so that projectProperty gets set.
+        storyFormViewModel.projectNameProperty().set(projectName);
+        Assert.assertFalse("Project must exist in organisation.", predicate.test(projectName));
+        
+        organisation.getProjects().add(project);
+        storyFormViewModel.projectNameProperty().set("");
+        storyFormViewModel.projectNameProperty().set(projectName);
+        Assert.assertTrue("Valid project not recognised as valid.", predicate.test(projectName));
     }
 
     @Test
@@ -114,7 +129,6 @@ public class StoryFormViewModelTest {
         storyFormViewModel.setOrganisation(organisation);
         
         storyFormViewModel.projectNameProperty().set(projectName);
-        storyFormViewModel.getProjectValidation().test(projectName);
 
         // Backlog belongs to selected project
         Assert.assertTrue("Valid backlog should be recognised as valid.", predicate.test(backlog1.getShortName()));

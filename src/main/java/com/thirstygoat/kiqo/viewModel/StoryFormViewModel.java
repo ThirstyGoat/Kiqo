@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 
 import javafx.beans.property.*;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class StoryFormViewModel extends FormController<Story> {
     private Story story;
     private Person creator;
-    private Project project;
+    private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
     private Backlog backlog;
     private Organisation organisation;
     private Command<?> command;
@@ -36,10 +37,27 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty backlogNameProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
-    private StringProperty estimateProperty = new SimpleStringProperty();
+    private IntegerProperty estimateProperty = new SimpleIntegerProperty();
 
+    public StoryFormViewModel() {
+        projectNameProperty.bindBidirectional(projectProperty, new StringConverter<Project>() {
+            @Override
+            public Project fromString(String shortName) {
+                for (final Project p : organisation.getProjects()) {
+                    if (p.getShortName().equals(shortName)) {
+                        return p;
+                    }
+                }
+                return null;
+            }
 
-
+            @Override
+            public String toString(Project project) {
+                return project != null ? project.getShortName() : "";
+            }
+        });
+    }
+    
     /** 
      * Validation for short name.
      * Checks that length of the shortName isn't 0 and that it its unique.
@@ -51,14 +69,17 @@ public class StoryFormViewModel extends FormController<Story> {
             if (s.length() == 0 || s.length() > 20) {
                 return false;
             }
+
+            final Project project = projectProperty.get();
             if (project == null) {
                 return true;
+            } else {
+                Collection<Collection<? extends Item>> existingStories = new ArrayList<>();
+                existingStories.add(project.getUnallocatedStories());
+                existingStories.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+    
+                return Utilities.shortnameIsUniqueMultiple(s, story, existingStories);
             }
-            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
-            existingBacklogs.add(project.getUnallocatedStories());
-            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
-
-            return Utilities.shortnameIsUniqueMultiple(s, story, existingBacklogs);
         };
     }
 
@@ -89,17 +110,18 @@ public class StoryFormViewModel extends FormController<Story> {
 
     public Predicate<String> getProjectValidation() {
         return s -> {
-            for (final Project p : organisation.getProjects()) {
-                if (p.getShortName().equals(projectNameProperty.get())) {
-                    project = p;
-                    // Force re-validation for shortname
-                    final String snt = shortNameProperty.get();
-                    shortNameProperty.setValue("");
-                    shortNameProperty.setValue(snt);
-                    return true;
-                }
-            }
-            return false;
+            return projectProperty.get() != null;
+//            for (final Project p : organisation.getProjects()) {
+//                if (p.getShortName().equals(projectNameProperty.get())) {
+//                    project = p;
+//                    // Force re-validation for shortname
+//                    final String snt = shortNameProperty.get();
+//                    shortNameProperty.setValue("");
+//                    shortNameProperty.setValue(snt);
+//                    return true;
+//                }
+//            }
+//            return false;
         };
     }
     
@@ -158,6 +180,10 @@ public class StoryFormViewModel extends FormController<Story> {
         return projectNameProperty;
     }
     
+    public ObjectProperty<Project> projectProperty() {
+        return projectProperty;
+    }
+    
     public StringProperty backlogNameProperty() {
         return backlogNameProperty;
     }
@@ -170,7 +196,7 @@ public class StoryFormViewModel extends FormController<Story> {
         return scaleProperty;
     }
 
-    public StringProperty estimateProperty() {
+    public IntegerProperty estimateProperty() {
         return estimateProperty;
     }
     
@@ -201,7 +227,7 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    project, backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), 0);
+                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue());
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -217,15 +243,15 @@ public class StoryFormViewModel extends FormController<Story> {
             }
             // creator can't be changed
             
-            if (!project.equals(story.getProject())) {
+            if (!projectProperty.get().equals(story.getProject())) {
                 if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), projectProperty.get().observableUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), project.observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), projectProperty.get().observableUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
                 changes.add(new EditCommand<>(story, "backlog", null));
-                changes.add(new EditCommand<>(story, "project", project));
+                changes.add(new EditCommand<>(story, "project", projectProperty.get()));
             }
 
             if (Integer.parseInt(priorityProperty.getValue()) != story.getPriority()) {
