@@ -73,7 +73,7 @@ public class StoryFormController extends FormController<Story> {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
         longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
-        estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleObjectProperty());
+        estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
     }

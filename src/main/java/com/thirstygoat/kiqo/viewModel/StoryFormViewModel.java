@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+
 import javafx.beans.property.*;
 import javafx.stage.Stage;
 
@@ -30,14 +31,21 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty shortNameProperty = new SimpleStringProperty("");
     private StringProperty longNameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
-    private StringProperty priorityProperty = new SimpleStringProperty("");
+    private StringProperty creatorNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleObjectProperty = new SimpleObjectProperty<>();
+    private StringProperty backlogNameProperty = new SimpleStringProperty("");
+    private StringProperty priorityProperty = new SimpleStringProperty("");
+    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
+    private StringProperty estimateProperty = new SimpleStringProperty();
 
 
 
-    // Validation for short name
-    // checks that length of the shortName isn't 0 and that it its unique
+    /** 
+     * Validation for short name.
+     * Checks that length of the shortName isn't 0 and that it its unique.
+     * 
+     * @return predicate for determining validity
+     */
     public Predicate<String> getShortNameValidation() {
         return s -> {
             if (s.length() == 0 || s.length() > 20) {
@@ -62,6 +70,7 @@ public class StoryFormViewModel extends FormController<Story> {
     
     public Predicate<String> getDescriptionValidation() {
         return s -> {
+            // always valid
             return true;
         };
     }
@@ -83,13 +92,20 @@ public class StoryFormViewModel extends FormController<Story> {
             for (final Project p : organisation.getProjects()) {
                 if (p.getShortName().equals(projectNameProperty.get())) {
                     project = p;
-                    // Redo validation for shortname text field
+                    // Force re-validation for shortname
                     final String snt = shortNameProperty.get();
                     shortNameProperty.setValue("");
                     shortNameProperty.setValue(snt);
                     return true;
                 }
             }
+            return false;
+        };
+    }
+    
+    public Predicate<String> getBacklogValidation() {
+        return s -> {
+            // TODO implement validation
             return false;
         };
     }
@@ -107,6 +123,20 @@ public class StoryFormViewModel extends FormController<Story> {
             return true;
         };
     }
+    
+    public Predicate<String> getScaleValidation() {
+        return s -> {
+            // TODO implement validation
+            return false;
+        };
+    }
+    
+    public Predicate<String> getEstimateValidation() {
+        return s -> {
+            // TODO implement validation
+            return false;
+        };
+    }
 
     public StringProperty shortNameProperty() {
         return shortNameProperty;
@@ -119,19 +149,31 @@ public class StoryFormViewModel extends FormController<Story> {
     public StringProperty descriptionProperty() {
         return descriptionProperty;
     }
-
-    public StringProperty priorityProperty() {
-        return priorityProperty;
+    
+    public StringProperty creatorNameProperty() {
+        return creatorNameProperty;
     }
 
     public StringProperty projectNameProperty() {
         return projectNameProperty;
     }
-
-    public ObjectProperty<Scale> scaleObjectProperty() {
-        return scaleObjectProperty;
+    
+    public StringProperty backlogNameProperty() {
+        return backlogNameProperty;
     }
 
+    public StringProperty priorityProperty() {
+        return priorityProperty;
+    }
+
+    public ObjectProperty<Scale> scaleProperty() {
+        return scaleProperty;
+    }
+
+    public StringProperty estimateProperty() {
+        return estimateProperty;
+    }
+    
     public void setStory(Story story) {
         this.story = story;
     }
@@ -159,7 +201,7 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    project, backlog, Integer.parseInt(priorityProperty.getValue()), scaleObjectProperty.getValue(), 0);
+                    project, backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), 0);
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -190,8 +232,8 @@ public class StoryFormViewModel extends FormController<Story> {
                 changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityProperty.getValue())));
             }
 
-            if (scaleObjectProperty.getValue() != story.getScale()) {
-                changes.add(new EditCommand<>(story, "scale", scaleObjectProperty.getValue()));
+            if (scaleProperty.getValue() != story.getScale()) {
+                changes.add(new EditCommand<>(story, "scale", scaleProperty.getValue()));
             }
 
             valid = !changes.isEmpty();

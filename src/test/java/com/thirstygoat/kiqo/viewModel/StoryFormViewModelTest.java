@@ -69,79 +69,81 @@ public class StoryFormViewModelTest {
         Assert.assertTrue("Empty string not recognised as valid.", predicate.test(""));
     }
 
-//    @Test
-//    public void testCreatorValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getCreatorValidation();
-//
-//        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.creatorProperty().get()));
-//        Assert.assertFalse("Must not be null.", predicate.test(null));
-//
-//        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
-//        Assert.assertTrue("Valid creator not recognised as valid.", predicate.test(creator.getShortName()));
-//    }
-//
-//    @Test
-//    public void testProjectValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getProjectValidation();
-//
-//        Assert.fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    public void testBacklogValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getBacklogValidation();
-//
-//        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.backlogProperty().get()));
-//        Assert.assertFalse("Must not be null.", predicate.test(null));
-//
-//        // Setup objects for testing cases in which backlog belongs to project and does not belong to a project.
-//        Organisation organisation = new Organisation();
-//        Project project = new Project("project shortName", "longName");
-//        Person productOwner = new Person("person PO", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getPoSkill()));
-//        Backlog backlog1 = new Backlog("backlog in the same project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
-//        Backlog backlog2 = new Backlog("backlog not in project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
-//        project.setBacklogs(Arrays.asList(backlog1));
-//        storyFormViewModel.projectProperty().set(project); // TODO requires "protected ObjectProperty<Project> projectProperty"
-//
-//        // Backlog belongs to selected project
-//        Assert.assertTrue("Valid backlog should be recognised as valid.", predicate.test(backlog1.getShortName()));
-//
-//        // Backlog does not belong to selected project
-//        Assert.assertFalse("Backlog must belong to selected project.", predicate.test(backlog2.getShortName()));
-//    }
-//
-//    @Test
-//    public void testPriorityValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getPriorityValidation();
-//
-//        Assert.fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    public void testAcceptanceCriteriaValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getAcceptanceCriteriaValidation();
-//
-//        Assert.fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    public void testScaleValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getScaleValidation();
-//
-//        Assert.fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    public void testEstimateValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getEstimateValidation();
-//
-//        Assert.fail("Not yet implemented");
-//    }
+    @Test
+    public void testCreatorValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Organisation organisation = new Organisation();
+        storyFormViewModel.setOrganisation(organisation);
+        
+        Predicate<String> predicate = storyFormViewModel.getCreatorValidation();
+        
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.creatorNameProperty().get()));
+        Assert.assertFalse("Must not be null.", predicate.test(null));
+
+        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Assert.assertTrue("Valid creator not recognised as valid.", predicate.test(creator.getShortName()));
+    }
+
+    @Test
+    public void testProjectValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getProjectValidation();
+
+        Assert.fail("Not yet implemented");
+    }
+
+    @Test
+    public void testBacklogValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getBacklogValidation();
+
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.backlogNameProperty().get()));
+        Assert.assertFalse("Must not be null.", predicate.test(null));
+
+        // Setup objects for testing cases in which backlog belongs to project and does not belong to a project.
+        final String projectName = "project shortName";
+        
+        Organisation organisation = new Organisation();
+        Project project = new Project(projectName, "longName");
+        Person productOwner = new Person("person PO", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getPoSkill()));
+        Backlog backlog1 = new Backlog("backlog in the same project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
+        Backlog backlog2 = new Backlog("backlog not in project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
+        project.setBacklogs(Arrays.asList(backlog1));
+        
+        organisation.getProjects().add(project);
+        storyFormViewModel.setOrganisation(organisation);
+        
+        storyFormViewModel.projectNameProperty().set(projectName);
+        storyFormViewModel.getProjectValidation().test(projectName);
+
+        // Backlog belongs to selected project
+        Assert.assertTrue("Valid backlog should be recognised as valid.", predicate.test(backlog1.getShortName()));
+
+        // Backlog does not belong to selected project
+        Assert.assertFalse("Backlog must belong to selected project.", predicate.test(backlog2.getShortName()));
+    }
+
+    @Test
+    public void testPriorityValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getPriorityValidation();
+
+        Assert.fail("Not yet implemented");
+    }
+
+    @Test
+    public void testScaleValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getScaleValidation();
+
+        Assert.fail("Not yet implemented");
+    }
+
+    @Test
+    public void testEstimateValidation() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Predicate<String> predicate = storyFormViewModel.getEstimateValidation();
+
+        Assert.fail("Not yet implemented");
+    }
 }
