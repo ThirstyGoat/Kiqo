@@ -1,14 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.lang.reflect.Field;
+import com.thirstygoat.kiqo.model.*;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
-
-import com.thirstygoat.kiqo.model.*;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class StoryFormViewModelTest {
 
@@ -138,26 +136,14 @@ public class StoryFormViewModelTest {
     }
 
     @Test
-    public void testPriorityValidation() {
+    public void testPriorityValidation() throws NoSuchFieldException, IllegalAccessException {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
         Predicate<String> predicate = storyFormViewModel.getPriorityValidation();
 
-        Assert.fail("Not yet implemented");
-    }
+        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.priorityProperty().get()));
+        Assert.assertFalse("Must not be null.", predicate.test(null));
 
-    @Test
-    public void testScaleValidation() {
-        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getScaleValidation();
-
-        Assert.fail("Not yet implemented");
-    }
-
-    @Test
-    public void testEstimateValidation() {
-        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getEstimateValidation();
-
-        Assert.fail("Not yet implemented");
+        Assert.assertFalse("Value must be higher than story.MIN_PRIORITY", predicate.test(Integer.toString(Story.MIN_PRIORITY - 1)));
+        Assert.assertFalse("Value must be smaller than story.MAX_PRIORITY", predicate.test(Integer.toString(Story.MAX_PRIORITY + 1)));
     }
 }

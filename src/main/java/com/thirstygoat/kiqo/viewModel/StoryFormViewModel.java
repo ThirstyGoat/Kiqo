@@ -4,7 +4,6 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
-
 import javafx.beans.property.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -179,32 +178,6 @@ public class StoryFormViewModel extends FormController<Story> {
                 return false;
             }
             return true;
-        };
-    }
-
-    /**
-     * Validation for scale
-     *
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getScaleValidation() {
-        return s -> {
-            // TODO implement validation
-            return false;
-        };
-    }
-
-    /**
-     * Validation for estimate
-     *
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getEstimateValidation() {
-        return s -> {
-            // TODO implement validation
-            return false;
         };
     }
 
