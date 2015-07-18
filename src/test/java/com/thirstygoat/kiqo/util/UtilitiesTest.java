@@ -81,7 +81,6 @@ public class UtilitiesTest {
 
         // Test with one monkey.
         String string1 = Utilities.pluralise(1, "Monkey", "Monkeys");
-        System.out.println(string1);
         Assert.assertTrue("Should be singular.", string1.equals("Monkey"));
 
         // Test with more than one monkey.
@@ -102,11 +101,11 @@ public class UtilitiesTest {
 
     @Test
     public void testCommaSeparatedValues() throws Exception {
-        List threeWiseMonkeys = Arrays.asList("see no evil", "hear no evil", "speak no evil");
+        List threeWiseMonkeys = Arrays.asList(new Skill("see no evil", ""), new Skill("hear no evil", ""), new Skill("speak no evil", ""));
         String proverb = Utilities.commaSeparatedValues(threeWiseMonkeys);
         Assert.assertTrue(proverb.equals("see no evil, hear no evil, speak no evil"));
 
-        List oneValue = Arrays.asList("Banana");
+        List oneValue = Arrays.asList(new Skill("Banana", ""));
         String string = Utilities.commaSeparatedValues(oneValue);
         Assert.assertTrue("Should return a single value with no commas because there are no other values seperate.",
                 string.equals("Banana"));
