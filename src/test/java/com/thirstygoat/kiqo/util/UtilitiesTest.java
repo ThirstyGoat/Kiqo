@@ -62,15 +62,15 @@ public class UtilitiesTest {
                 + " in which case it should return \" and 1 other\".";
         List<Item> itemsSingle = Arrays.asList(skill1);
         Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 1).equals("skill1"));
-        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 0).equals("and 1 other"));
-        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, -1).equals("and 1 other"));
+        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 0).equals(", and 1 other"));
+        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, -1).equals(", and 1 other"));
 
         List<Item> itemsMulti = Arrays.asList(skill1, skill2, skill3);
         Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 3).equals("skill1, skill2, skill3"));
         Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 2).equals("skill1, skill2, and 1 other"));
-        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 1).equals("skill1 and 2 others"));
-        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 0).equals("and 3 others"));
-        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, -1).equals("and 3 others"));
+        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 1).equals("skill1, and 2 others"));
+        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 0).equals(", and 3 others"));
+        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, -1).equals(", and 3 others"));
     }
 
     @Test
