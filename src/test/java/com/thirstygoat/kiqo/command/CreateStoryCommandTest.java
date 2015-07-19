@@ -21,7 +21,7 @@ public class CreateStoryCommandTest {
     public void setup() {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, 0, Scale.FIBONACCI);
         command = new CreateStoryCommand(story);
     }
 

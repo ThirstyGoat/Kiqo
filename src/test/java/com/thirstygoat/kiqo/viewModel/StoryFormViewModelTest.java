@@ -26,7 +26,7 @@ public class StoryFormViewModelTest {
         
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project(projectName, "longName");
-        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0);
+        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
         project.setUnallocatedStories(new ArrayList<Story>(Arrays.asList(story)));
         
         Organisation organisation = new Organisation();

@@ -115,33 +115,33 @@ public class StoryFormController extends FormController<Story> {
     }
     private void setValidationSupport() {
 
-            validationSupport.registerValidator(shortNameTextField,
-                    Validator.createPredicateValidator(viewModel.getShortNameValidation(),
-                            "Short name must be unique and not empty."));
+        validationSupport.registerValidator(shortNameTextField,
+                Validator.createPredicateValidator(viewModel.getShortNameValidation(),
+                        "Short name must be unique and not empty."));
 
-            validationSupport.registerValidator(longNameTextField,
-                    Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+        validationSupport.registerValidator(longNameTextField,
+                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
-            validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
-                    viewModel.getCreatorValidation(),
-                    "Person must already exist"));
+        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
+                viewModel.getCreatorValidation(),
+                "Person must already exist"));
 
 
-            validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
-                    viewModel.getProjectValidation(),
-                    "Project must already exist"));
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
+                viewModel.getProjectValidation(),
+                "Project must already exist"));
 
-            validationSupport.registerValidator(priorityTextField,
-                    Validator.createPredicateValidator(
-                            viewModel.getPriorityValidation(), "Priority must be an integer between "
-                                    + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+        validationSupport.registerValidator(priorityTextField,
+                Validator.createPredicateValidator(
+                        viewModel.getPriorityValidation(), "Priority must be an integer between "
+                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-            validationSupport.registerValidator(estimationScaleComboBox,
-                    Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
+        validationSupport.registerValidator(estimationScaleComboBox,
+                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
-            validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
-                okButton.setDisable(newValue);
-            });
+        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue);
+        });
     }
 
     /**
