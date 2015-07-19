@@ -91,15 +91,10 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void populateFields(final Story story) {
         viewModel.setStory(story);
+        okButton.setText("Done");
 
-        if (story == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Story");
-            okButton.setText("Done");
-        } else {
+        if (story != null) {
             // We are editing an existing story
-            stage.setTitle("Edit Story");
-            okButton.setText("Done");
             shortNameModified.set(true);
 
             longNameTextField.setText(story.getLongName());

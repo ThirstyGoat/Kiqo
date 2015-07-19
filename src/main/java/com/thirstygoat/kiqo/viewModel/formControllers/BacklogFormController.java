@@ -194,12 +194,8 @@ public class BacklogFormController extends FormController<Backlog> {
         this.backlog = backlog;
         okButton.setText("Done");
 
-        if (backlog == null) {
-            // We are creating a new backlog
-            stage.setTitle("Create Backlog");
-        } else {
+        if (backlog != null) {
             // We are editing an existing backlog
-            stage.setTitle("Edit Backlog");
             shortNameModified.set(true);
 
             shortNameTextField.setText(backlog.getShortName());
