@@ -146,4 +146,20 @@ public class StoryFormViewModelTest {
         Assert.assertFalse("Value must be higher than story.MIN_PRIORITY", predicate.test(Integer.toString(Story.MIN_PRIORITY - 1)));
         Assert.assertFalse("Value must be smaller than story.MAX_PRIORITY", predicate.test(Integer.toString(Story.MAX_PRIORITY + 1)));
     }
+
+    @Test
+    public void testCreatorEditability() {
+        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Project project = new Project("shortName", "longName");
+        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0);
+
+        Assert.assertTrue("Creator field should be editable by default.", storyFormViewModel.getCreatorEditable().get());
+
+        storyFormViewModel.setStory(null);
+        Assert.assertTrue("Creator field should be editable for a new story.", storyFormViewModel.getCreatorEditable().get());
+
+        storyFormViewModel.setStory(story);
+        Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
+    }
 }
