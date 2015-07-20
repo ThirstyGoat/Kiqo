@@ -3,6 +3,9 @@ package com.thirstygoat.kiqo.model;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+
+import java.util.Collection;
 
 /**
  * Created by leroy on 15/05/15.
@@ -22,6 +25,7 @@ public class Story extends Item {
     private final ObjectProperty<Scale> scale;
     private final IntegerProperty estimate;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
+    private final ObservableSet<Story> dependencies;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -37,10 +41,11 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(null);
         this.estimate = new SimpleIntegerProperty(0);
+        this.dependencies = FXCollections.observableSet();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, Scale scale, Integer estimate) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, Collection<Story> dependencies) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -51,6 +56,8 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(scale);
         this.estimate = new SimpleIntegerProperty(estimate);
+        this.dependencies = FXCollections.observableSet();
+        this.dependencies.addAll(dependencies);
     }
 
     @Override
