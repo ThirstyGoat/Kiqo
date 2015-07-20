@@ -4,7 +4,10 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -33,10 +36,11 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty descriptionProperty = new SimpleStringProperty("");
     private StringProperty creatorNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private StringProperty backlogNameProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
+    private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
@@ -58,14 +62,36 @@ public class StoryFormViewModel extends FormController<Story> {
             }
         });
     }
+    
+    private void setStoryListProperties() {
+        targetStoriesProperty.get().clear();
+        sourceStoriesProperty.get().clear();
+        if (story != null) {
+            if (projectProperty.get() != null) {
+                targetStoriesProperty.get().addAll(story.getDependencies());
+                if (backlog != null) { 
+                    sourceStoriesProperty.get().addAll(backlog.getStories());
+                } else {
+                    sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
+                }
+            }
+            sourceStoriesProperty.get().removeAll(story.getDependencies());
+            sourceStoriesProperty.get().remove(story); // cannot depend on itself
+        }
+        if (story != null) {
+            sourceStoriesProperty.get().remove(story);
+        }
+    }
 
     /**
      * Sets all properties to be that of model. So for example if you change the story using,
      * setStory(), and you want to update the text fields with the new stories data, then you
      * should call this method.
      */
-
-    public void reloadFromModel() {
+    private void reloadFromModel() {
+        targetStoriesProperty.set(FXCollections.observableArrayList());
+        sourceStoriesProperty.set(FXCollections.observableArrayList());
+        
         if (story != null) {
             shortNameProperty.set(story.getShortName());
             longNameProperty.set(story.getLongName());
@@ -77,13 +103,16 @@ public class StoryFormViewModel extends FormController<Story> {
             estimateProperty.set(story.getEstimate());
 
             creatorEditable.set(false);
-
-            if (story.getBacklog() != null) {
-                backlogNameProperty.set(story.getBacklog().getShortName());
-            } else {
-                backlogNameProperty.set("");
-            }
         }
+
+        setStoryListProperties();
+        setListeners();
+    }
+
+    private void setListeners() {
+        projectProperty.addListener(((observable, oldValue, newValue) -> {
+            setStoryListProperties();
+        }));
     }
 
     /** 
@@ -233,10 +262,6 @@ public class StoryFormViewModel extends FormController<Story> {
     public ObjectProperty<Project> projectProperty() {
         return projectProperty;
     }
-    
-    public StringProperty backlogNameProperty() {
-        return backlogNameProperty;
-    }
 
     public StringProperty priorityProperty() {
         return priorityProperty;
@@ -248,6 +273,14 @@ public class StoryFormViewModel extends FormController<Story> {
 
     public IntegerProperty estimateProperty() {
         return estimateProperty;
+    }
+    
+    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() { 
+        return targetStoriesProperty;
+    }
+
+    public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { 
+        return sourceStoriesProperty;
     }
 
     public BooleanProperty getCreatorEditable () {
@@ -315,6 +348,19 @@ public class StoryFormViewModel extends FormController<Story> {
 
             if (scaleProperty.getValue() != story.getScale()) {
                 changes.add(new EditCommand<>(story, "scale", scaleProperty.getValue()));
+            }
+            
+//            // Stories being added as dependencies
+//            final ArrayList<Story> addedStories = new ArrayList<>(targetStoriesProperty.get());
+//            addedStories.removeAll(story.getDependencies());
+//
+//            // Stories being removed as dependencies
+//            final ArrayList<Story> removedStories = new ArrayList<>(story.getDependencies());
+//            removedStories.removeAll(targetStoriesProperty.get());
+
+            if (!(targetStoriesProperty.get().containsAll(story.getDependencies())
+                    && story.getDependencies().containsAll(targetStoriesProperty.get()))) {
+                changes.add(new EditCommand<>(story, "dependencies", targetStoriesProperty.get()));
             }
 
             valid = !changes.isEmpty();

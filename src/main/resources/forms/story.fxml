@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.nodes.GoatListSelectionView?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.formControllers.StoryFormController">
     <bottom>
@@ -37,7 +38,6 @@
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
             <children>
-
                 <Label text="Name:" />
                 <Label text="Short Name:" GridPane.rowIndex="1" />
                 <Label text="Description:" GridPane.rowIndex="2" />
@@ -52,6 +52,7 @@
                 <TextField fx:id="priorityTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Estimation Scale:" GridPane.rowIndex="6" />
             <ComboBox fx:id="estimationScaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="7" />
             </children>
         </GridPane>
     </center>

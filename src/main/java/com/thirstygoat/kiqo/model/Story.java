@@ -1,11 +1,17 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.beans.property.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
-
-import java.util.Collection;
 
 /**
  * Created by leroy on 15/05/15.
@@ -174,7 +180,18 @@ public class Story extends Item {
         return estimate;
     }
 
-    public ObservableList<Story> getDependencies() {
+    public List<Story> getDependencies() {
+        List<Story> list = new ArrayList<>();
+        list.addAll(this.dependencies);
+        return list;
+    }
+    
+    public void setDependencies(List<Story> dependencies) {
+        this.dependencies.clear();
+        this.dependencies.addAll(dependencies);
+    }
+    
+    public ObservableList<Story> observableDependencies() {
         return this.dependencies;
     }
 }

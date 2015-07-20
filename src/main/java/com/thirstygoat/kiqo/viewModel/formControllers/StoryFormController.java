@@ -4,8 +4,10 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -15,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -51,6 +54,8 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
     @FXML
+    private GoatListSelectionView<Story> storySelectionView;
+    @FXML
     private Button okButton;
     @FXML
     private Button cancelButton;
@@ -76,6 +81,8 @@ public class StoryFormController extends FormController<Story> {
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
+        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
+        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
 
         creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
     }
@@ -187,13 +194,11 @@ public class StoryFormController extends FormController<Story> {
 
     public void setCommand() {
         viewModel.setCommand();
-
     }
 
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
-
     }
 
     @Override

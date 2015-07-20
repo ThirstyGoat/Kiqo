@@ -61,7 +61,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // This is some seriously cool binding
             // Binding to a property of a property
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
-            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.getDependencies()));
+            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.observableDependencies()));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
 
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
