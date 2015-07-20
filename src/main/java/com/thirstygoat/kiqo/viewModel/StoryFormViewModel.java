@@ -38,6 +38,8 @@ public class StoryFormViewModel extends FormController<Story> {
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
 
+    private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
+
     public StoryFormViewModel() {
         projectNameProperty.bindBidirectional(projectProperty, new StringConverter<Project>() {
             @Override
@@ -56,7 +58,34 @@ public class StoryFormViewModel extends FormController<Story> {
             }
         });
     }
-    
+
+    /**
+     * Sets all properties to be that of model. So for example if you change the story using,
+     * setStory(), and you want to update the text fields with the new stories data, then you
+     * should call this method.
+     */
+
+    public void reloadFromModel() {
+        if (story != null) {
+            shortNameProperty.set(story.getShortName());
+            longNameProperty.set(story.getLongName());
+            descriptionProperty.set(story.getDescription());
+            creatorNameProperty.set(story.getCreator().getShortName());
+            projectNameProperty.set(story.getProject().getShortName());
+            priorityProperty.set(Integer.toString(story.getPriority()));
+            scaleProperty.set(story.getScale());
+            estimateProperty.set(story.getEstimate());
+
+            creatorEditable.set(false);
+
+            if (story.getBacklog() != null) {
+                backlogNameProperty.set(story.getBacklog().getShortName());
+            } else {
+                backlogNameProperty.set("");
+            }
+        }
+    }
+
     /** 
      * Validation for short name.
      * Checks that length of the shortName isn't 0 or greater than 20 and that it its unique.
@@ -220,9 +249,14 @@ public class StoryFormViewModel extends FormController<Story> {
     public IntegerProperty estimateProperty() {
         return estimateProperty;
     }
-    
+
+    public BooleanProperty getCreatorEditable () {
+        return creatorEditable;
+    }
+
     public void setStory(Story story) {
         this.story = story;
+        reloadFromModel();
     }
 
     @Override

@@ -177,17 +177,12 @@ public class PersonFormController extends FormController<Person> {
     @Override
     public void populateFields(final Person person) {
         this.person = person;
+        okButton.setText("Done");
 
         setSkillsListSelectionViewData();
 
-        if (person == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Person");
-            okButton.setText("Done");
-        } else {
+        if (person != null) {
             // We are editing an existing Person
-            stage.setTitle("Edit Person");
-            okButton.setText("Done");
             shortNameModified.set(true);
 
             longNameTextField.setText(person.getLongName());

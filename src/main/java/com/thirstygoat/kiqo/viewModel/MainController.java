@@ -782,9 +782,7 @@ public class MainController implements Initializable {
      * @param t must not be null
      */
     private <T> void dialog(T t) {
-        final String[] fullname = t.getClass().getName().split("\\.");
-        final String name = fullname[fullname.length - 1];
-        dialog(t, name);
+        dialog(t, t.getClass().getSimpleName());
     }
 
     /**
@@ -799,7 +797,7 @@ public class MainController implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
-            stage.setTitle(t == null ? "New " : "Edit " + type);
+            stage.setTitle(t == null ? "Create " + type : "Edit " + type);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
             Pane root;

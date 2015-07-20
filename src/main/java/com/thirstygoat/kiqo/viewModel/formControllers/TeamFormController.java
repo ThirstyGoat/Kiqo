@@ -416,16 +416,10 @@ public class TeamFormController extends FormController<Team> {
     @Override
     public void populateFields(Team team) {
         this.team = team;
+        okButton.setText("Done");
 
-        if (team == null) {
-            // Then we are creating a new team
-            stage.setTitle("Create Team");
-            okButton.setText("Done");
-        } else {
+        if (team != null) {
             // We are editing an existing team
-            stage.setTitle("Edit Team");
-            okButton.setText("Done");
-
             // Populate fields with existing data
             shortNameTextField.setText(team.getShortName());
             descriptionTextField.setText(team.getDescription());

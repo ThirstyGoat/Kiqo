@@ -58,7 +58,6 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         viewModel = new StoryFormViewModel();
-        bindFields();
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
@@ -76,6 +75,9 @@ public class StoryFormController extends FormController<Story> {
         estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
+        creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
+
+        creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
     }
 
     private void setPrompts() {
@@ -91,28 +93,16 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void populateFields(final Story story) {
         viewModel.setStory(story);
+        okButton.setText("Done");
+        bindFields();
 
-        if (story == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Story");
-            okButton.setText("Done");
-        } else {
+        if (story != null) {
             // We are editing an existing story
-            stage.setTitle("Edit Story");
-            okButton.setText("Done");
             shortNameModified.set(true);
-
-            longNameTextField.setText(story.getLongName());
-            shortNameTextField.setText(story.getShortName());
-            descriptionTextField.setText(story.getDescription());
-            creatorTextField.setText(story.getCreator().getShortName());
-            // Creator field isn't meant to be changeable
-            creatorTextField.setDisable(true);
             projectTextField.setText(story.getProject().getShortName());
-            priorityTextField.setText(Integer.toString(story.getPriority()));
-            estimationScaleComboBox.getSelectionModel().select(story.getScale());
         }
     }
+
     private void setValidationSupport() {
 
         validationSupport.registerValidator(shortNameTextField,

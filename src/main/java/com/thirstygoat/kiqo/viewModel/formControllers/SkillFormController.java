@@ -87,16 +87,10 @@ public class SkillFormController extends FormController<Skill> {
     @Override
     public void populateFields(final Skill skill) {
         this.skill = skill;
+        okButton.setText("Done");
 
-        if (skill == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Skill");
-            okButton.setText("Done");
-        } else {
+        if (skill != null) {
             // We are editing an existing skill
-            stage.setTitle("Edit Skill");
-            okButton.setText("Done");
-
             shortNameTextField.setText(skill.getShortName());
             descriptionTextField.setText(skill.getDescription());
 
