@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,29 +52,5 @@ public class PersistenceManagerTest {
         }
 
         final Organisation p = PersistenceManager.loadOrganisation(f);
-    }
-
-    /**
-     * Tests that persistence manager handles scales okay.
-     *
-     * @throws Exception Exception
-     */
-    @Test
-    public void test_scalePersistence() throws Exception {
-        // Set scale and save to temporary file
-        ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource("scaletest.json").getFile());
-        Organisation orgBefore = PersistenceManager.loadOrganisation(f);
-        Project proj = orgBefore.getProjects().get(0);
-        Backlog backlog = proj.getBacklogs().get(0);
-        backlog.setScale(Scale.TSHIRT_SIZE);
-        final File tmp = testFolder.newFile("test.json");
-        PersistenceManager.saveOrganisation(tmp, orgBefore);
-
-        // Load temporary file and check that scale has persisted
-        Organisation orgAfter = PersistenceManager.loadOrganisation(tmp);
-        proj = orgAfter.getProjects().get(0);
-        backlog = proj.getBacklogs().get(0);
-        Assert.assertTrue(backlog.getScale().equals(Scale.TSHIRT_SIZE));
     }
 }
