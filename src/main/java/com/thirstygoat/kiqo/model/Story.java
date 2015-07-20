@@ -25,7 +25,7 @@ public class Story extends Item {
     private final ObjectProperty<Scale> scale;
     private final IntegerProperty estimate;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
-    private final ObservableSet<Story> dependencies;
+    private final ObservableList<Story> dependencies;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -41,7 +41,7 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(null);
         this.estimate = new SimpleIntegerProperty(0);
-        this.dependencies = FXCollections.observableSet();
+        this.dependencies = FXCollections.observableArrayList();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -56,12 +56,8 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(scale);
         this.estimate = new SimpleIntegerProperty(estimate);
-        this.dependencies = FXCollections.observableSet();
+        this.dependencies = FXCollections.observableArrayList();
         this.dependencies.addAll(dependencies);
-    }
-
-    public ObservableSet<Story> getDependencies() {
-        return this.dependencies;
     }
 
     @Override
@@ -176,5 +172,9 @@ public class Story extends Item {
 
     public IntegerProperty estimateProperty() {
         return estimate;
+    }
+
+    public ObservableList<Story> getDependencies() {
+        return this.dependencies;
     }
 }

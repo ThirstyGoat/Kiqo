@@ -18,7 +18,7 @@
             <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Dependent Stories" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Dependent Stories:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
             <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
             <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
