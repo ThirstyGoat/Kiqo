@@ -60,6 +60,10 @@ public class Story extends Item {
         this.dependencies.addAll(dependencies);
     }
 
+    public ObservableSet<Story> getDependencies() {
+        return this.dependencies;
+    }
+
     @Override
     public String getShortName() {
         return shortName.get();
