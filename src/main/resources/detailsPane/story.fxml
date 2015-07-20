@@ -18,23 +18,25 @@
             <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Dependent Stories" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="creatorLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <Label fx:id="dependenciesLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="10">
                  <children>
                      <Button fx:id="addACButton" text="+" />
                      <Button fx:id="removeACButton" text="-" />
                      <Button fx:id="editACButton" text="Edit" />
                  </children>
               </HBox>
-                  <Label font="$x1" text="Estimate:" GridPane.rowIndex="6" GridPane.valignment="TOP" />
-                  <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <Label font="$x1" text="Estimate:" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                  <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <children>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <children>
@@ -49,8 +51,8 @@
                         <HBox />
                      </children>
                   </HBox>
-                  <Label fx:id="storyScaleLabel" minWidth="117.0" prefHeight="16.0" prefWidth="599.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label font="$x1" text="Scale:" GridPane.rowIndex="5" />
+                  <Label fx:id="storyScaleLabel" minWidth="117.0" prefHeight="16.0" prefWidth="599.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label font="$x1" text="Scale:" GridPane.rowIndex="6" />
 
 
           </children>

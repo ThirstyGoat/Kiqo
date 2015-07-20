@@ -4,8 +4,10 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +31,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Label descriptionLabel;
     @FXML
     private Label creatorLabel;
+    @FXML
+    private Label dependenciesLabel;
     @FXML
     private Label priorityLabel;
     @FXML
@@ -57,6 +61,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // This is some seriously cool binding
             // Binding to a property of a property
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
+            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.dependenciesProperty()));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
 
             // need to unbind in case the selected story has changed and therefore we wont try and bind to a bound property
