@@ -2,14 +2,17 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
 import java.util.*;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
+
+import com.thirstygoat.kiqo.command.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import com.thirstygoat.kiqo.command.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
@@ -80,9 +83,39 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
 
+        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (story.getIsReady() != newValue) {
+                Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                UndoManager.getUndoManager().doCommand(command);
+            }
+        });
 
-        // todo Add validations to this
-        isReadyCheckBox.setOnAction(event -> story.setIsReady(isReadyCheckBox.isSelected()));
+        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
+            isReadyCheckBox.setSelected(newValue);
+        });
+
+        // Story must have at least one AC
+        // Story must have non-null estimate
+        // Story must be in a backlog
+
+        BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
+        BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
+        // TODO Add Binding for estimate being non null
+
+        // Bind the disable property
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding));
+
+        isReadyCheckBox.disabledProperty().addListener((observable, oldValue, newValue) -> {
+            // Check if checkbox is now disabled
+            if (newValue) {
+                // Check if the checkbox is checked
+                if (isReadyCheckBox.isSelected()) {
+                    // Then we need to uncheck ready checkbox
+                    isReadyCheckBox.setSelected(false);
+                }
+            }
+        });
+
     }
     
     private void deleteAC() {

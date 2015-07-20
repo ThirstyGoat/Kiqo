@@ -112,7 +112,7 @@ public class Story extends Item {
         this.project.set(project);
     }
 
-    ObjectProperty<Backlog> backlogProperty() {
+    public ObjectProperty<Backlog> backlogProperty() {
         return backlog;
     }
 
