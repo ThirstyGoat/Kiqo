@@ -156,19 +156,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { return sourceStoriesProperty;}
 
-
-    private void reloadFromModel() {
-        targetStoriesProperty.set(FXCollections.observableArrayList());
-        sourceStoriesProperty.set(FXCollections.observableArrayList());
-        if (backlog != null) {
-            // We are editing an existing backlog
-            shortNameProperty.set(backlog.getShortName());
-            longNameProperty.set(backlog.getLongName());
-            descriptionProperty.set(backlog.getDescription());
-            projectNameProperty().set(backlog.getProject().getShortName());
-            productOwnerNameProperty.set(backlog.getProductOwner().getShortName());
-            scaleProperty.setValue(backlog.getScale());
-        }
+    private void setStoryListProperties() {
         if (projectProperty.get() != null) {
             sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
             if (backlog != null) {
@@ -176,7 +164,35 @@ public class BacklogFormViewModel extends FormController<Backlog> {
                 targetStoriesProperty.get().addAll(backlog.getStories());
             }
         }
+    }
 
+    private void setListeners() {
+        projectProperty.addListener(((observable, oldValue, newValue) -> {
+            targetStoriesProperty.get().clear();
+            sourceStoriesProperty.get().clear();
+            setStoryListProperties();
+        }));
+    }
+
+    private void reloadFromModel() {
+        targetStoriesProperty.set(FXCollections.observableArrayList());
+        sourceStoriesProperty.set(FXCollections.observableArrayList());
+
+        if (backlog != null) {
+            // We are editing an existing backlog
+            shortNameProperty.set(backlog.getShortName());
+            longNameProperty.set(backlog.getLongName());
+            descriptionProperty.set(backlog.getDescription());
+            productOwnerNameProperty.set(backlog.getProductOwner().getShortName());
+            scaleProperty.setValue(backlog.getScale());
+
+            if (backlog.getProject() != null) {
+                projectProperty.set(backlog.getProject());
+            }
+        }
+
+        setStoryListProperties();
+        setListeners();
     }
 
     public void setBacklog(Backlog backlog) {
