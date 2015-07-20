@@ -171,8 +171,11 @@ public class StoryFormViewModelTest {
 
     @Test
     public void testCreatorEditability() {
+        Organisation organisation = new Organisation();
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
+        storyFormViewModel.setOrganisation(organisation);
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        organisation.getPeople().add(creator);
         Project project = new Project("shortName", "longName");
         Story story = new Story("shortName", "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
 
@@ -181,8 +184,7 @@ public class StoryFormViewModelTest {
         storyFormViewModel.setStory(null);
         Assert.assertTrue("Creator field should be editable for a new story.", storyFormViewModel.getCreatorEditable().get());
 
-        // TODO FIX NEXT TWO LINES
-//        storyFormViewModel.setStory(story);
+        storyFormViewModel.setStory(story);
         Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
     }
 
