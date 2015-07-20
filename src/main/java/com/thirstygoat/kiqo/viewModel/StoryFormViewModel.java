@@ -24,7 +24,6 @@ public class StoryFormViewModel extends FormController<Story> {
     private Story story;
     private ObjectProperty<Person> creatorProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
-    private Backlog backlog;
     private Organisation organisation;
     private Command<?> command;
     private boolean valid = false;
@@ -34,7 +33,6 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty descriptionProperty = new SimpleStringProperty("");
     private StringProperty creatorNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private StringProperty backlogNameProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
@@ -163,7 +161,6 @@ public class StoryFormViewModel extends FormController<Story> {
      * setStory(), and you want to update the text fields with the new stories data, then you
      * should call this method.
      */
-
     public void reloadFromModel() {
         if (story != null) {
             shortNameProperty.set(story.getShortName());
@@ -176,26 +173,7 @@ public class StoryFormViewModel extends FormController<Story> {
             estimateProperty.set(story.getEstimate());
 
             creatorEditable.set(false);
-
-            if (story.getBacklog() != null) {
-                backlogNameProperty.set(story.getBacklog().getShortName());
-            } else {
-                backlogNameProperty.set("");
-            }
         }
-    }
-
-    /**
-     * Validation for backlog
-     *
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getBacklogValidation() {
-        return s -> {
-            // TODO implement validation
-            return false;
-        };
     }
 
     public StringProperty shortNameProperty() {
@@ -222,10 +200,6 @@ public class StoryFormViewModel extends FormController<Story> {
         return projectProperty;
     }
     
-    public StringProperty backlogNameProperty() {
-        return backlogNameProperty;
-    }
-
     public StringProperty priorityProperty() { return priorityProperty; }
 
     public ObjectProperty<Scale> scaleProperty() {
@@ -300,7 +274,7 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creatorProperty.get(),
-                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()),estimateProperty.getValue(), scaleProperty.getValue());
+                    projectProperty.get(), null, Integer.parseInt(priorityProperty.getValue()),estimateProperty.getValue(), scaleProperty.getValue());
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -347,6 +321,5 @@ public class StoryFormViewModel extends FormController<Story> {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
-
 
 }
