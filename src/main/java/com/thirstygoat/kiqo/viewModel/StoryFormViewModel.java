@@ -282,7 +282,7 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue());
+                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), new ArrayList<>());
             command = new CreateStoryCommand(story);
         } else {
             // edit command

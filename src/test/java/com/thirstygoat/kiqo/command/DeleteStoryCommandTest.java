@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 /**
  * Created by leroy on 15/05/2015
  */
@@ -18,7 +20,7 @@ public class DeleteStoryCommandTest {
     @Before
     public void setup() {
         project = new Project("", "");
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, new ArrayList<>());
         project.observableUnallocatedStories().add(story);
         command = new DeleteStoryCommand(story);
     }
