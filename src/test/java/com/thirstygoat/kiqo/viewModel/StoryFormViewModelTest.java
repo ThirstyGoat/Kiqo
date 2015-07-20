@@ -152,7 +152,7 @@ public class StoryFormViewModelTest {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project("shortName", "longName");
-        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0);
+        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
 
         Assert.assertTrue("Creator field should be editable by default.", storyFormViewModel.getCreatorEditable().get());
 

@@ -1,17 +1,17 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.BacklogFormViewModel;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -21,25 +21,18 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 /**
  * Created by lih18 on 20/05/15.
  */
 public class BacklogFormController extends FormController<Backlog> {
+    private BacklogFormViewModel viewModel;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
-    private final ObservableList<Story> targetStories = FXCollections.observableArrayList();
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
-    private Organisation organisation;
-    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
-    private Backlog backlog;
-    private Person productOwner;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command<?> command;
@@ -66,17 +59,14 @@ public class BacklogFormController extends FormController<Backlog> {
 
     @Override
     public void initialize(final URL location, ResourceBundle resources) {
+        viewModel = new BacklogFormViewModel();
         initialiseScaleCombobox();
-        
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
-        
-        setValidationSupport();
-        setListeners();
     }
 
     private void initialiseScaleCombobox() {
@@ -84,61 +74,36 @@ public class BacklogFormController extends FormController<Backlog> {
         scaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
 
-    private void setListeners() {
-        project.addListener(((observable, oldValue, newValue) -> {
-            storySelectionView.getTargetListView().getItems().clear();
-            setStoryListSelectionViewData();
-        }));
+    private void bindFields() {
+        shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
+        longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
+        productOwnerTextField.textProperty().bindBidirectional(viewModel.productOwnerNameProperty());
+        scaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
+        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
+        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
     }
 
+//    private void setListeners() {
+//        project.addListener(((observable, oldValue, newValue) -> {
+//            storySelectionView.getTargetListView().getItems().clear();
+//            setStoryListSelectionViewData();
+//        }));
+//    }
+
     private void setValidationSupport() {
-        // Validation for short name
-        final Predicate<String> shortNameValidation = s -> {
-            if (s.length() == 0) {
-                return false;
-            }
-            if (project.get() == null) {
-                return true;
-            }
-            return Utilities.shortnameIsUnique(shortNameTextField.getText(), backlog, project.get().getBacklogs());
-        };
-
-        final Predicate<String> projectValidation = s -> {
-            for (final Project p : organisation.getProjects()) {
-                if (p.getShortName().equals(projectTextField.getText())) {
-                    project.set(p);
-                    // Redo validation for shortname text field
-                    final String snt = shortNameTextField.getText();
-                    shortNameTextField.setText("");
-                    shortNameTextField.setText(snt);
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        final Predicate<String> personValidation = s -> {
-            for (final Person p : organisation.getPeople()) {
-                if (p.getShortName().equals(s)) {
-                    if (p.getSkills().contains(organisation.getPoSkill())) {
-                        productOwner = p;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
 
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
 
-        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
+        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(viewModel.getShortNameValidation(),
                 "Short name must be unique and not empty"));
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(viewModel.getProjectValidation(),
                 "Project must already exist"));
 
-        validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(personValidation,
+        validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(viewModel.getProductOwnerValidation(),
                 "Person must already exist and have the PO skill"));
 
         validationSupport.registerValidator(scaleComboBox,
@@ -173,39 +138,12 @@ public class BacklogFormController extends FormController<Backlog> {
         });
     }
 
-    private void setStoryListSelectionViewData() {
-        final ObservableList<Story> sourceStories = FXCollections.observableArrayList();
-
-        if (project.get() != null) {
-            sourceStories.addAll(project.get().getUnallocatedStories());
-            if (backlog != null) {
-                sourceStories.removeAll(backlog.getStories());
-                targetStories.addAll(backlog.getStories());
-            }
-
-            storySelectionView.getSourceListView().setItems(sourceStories);
-            storySelectionView.getTargetListView().setItems(targetStories);
-        }
-
-    }
 
     @Override
     public void populateFields(final Backlog backlog) {
-        this.backlog = backlog;
+        viewModel.setBacklog(backlog);
         okButton.setText("Done");
-
-        if (backlog != null) {
-            // We are editing an existing backlog
-            shortNameModified.set(true);
-
-            shortNameTextField.setText(backlog.getShortName());
-            longNameTextField.setText(backlog.getLongName());
-            descriptionTextField.setText(backlog.getDescription());
-            projectTextField.setText(backlog.getProject().getShortName());
-            productOwnerTextField.setText(backlog.getProductOwner().getShortName());
-            scaleComboBox.setValue(backlog.getScale());
-        }
-        setStoryListSelectionViewData();
+        bindFields();
     }
 
     private void setButtonHandlers() {
@@ -215,110 +153,51 @@ public class BacklogFormController extends FormController<Backlog> {
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event ->  stage.close());
     }
 
     private void setCommand() {
-        final ArrayList<Story> stories = new ArrayList<>();
-        stories.addAll(targetStories);
-
-        if (backlog == null) {
-            final Backlog b = new Backlog(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), productOwner, project.get(), stories, scaleComboBox.getValue());
-            command = new CreateBacklogCommand(b);
-        } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!longNameTextField.getText().equals(backlog.getLongName())) {
-                changes.add(new EditCommand<>(backlog, "longName", longNameTextField.getText()));
-            }
-            if (!shortNameTextField.getText().equals(backlog.getShortName())) {
-                changes.add(new EditCommand<>(backlog, "shortName", shortNameTextField.getText()));
-            }
-            if (!descriptionTextField.getText().equals(backlog.getDescription())) {
-                changes.add(new EditCommand<>(backlog, "description", descriptionTextField.getText()));
-            }
-
-            if (!productOwner.equals(backlog.getProductOwner())) {
-                changes.add(new EditCommand<>(backlog, "productOwner", productOwner));
-            }
-
-            if (scaleComboBox.getValue() != backlog.getScale()) {
-                changes.add(new EditCommand<>(backlog, "scale", scaleComboBox.getValue()));
-            }
-
-            // Stories being added to the backlog
-            final ArrayList<Story> addedStories = new ArrayList<>(targetStories);
-            addedStories.removeAll(backlog.getStories());
-
-            // Stories being removed from the backlog
-            final ArrayList<Story> removedStories = new ArrayList<>(backlog.getStories());
-            removedStories.removeAll(targetStories);
-
-            for (Story story : addedStories) {
-                if (story.getScale() != backlog.getScale()) {
-                    changes.add(new EditCommand<>(story, "estimate", 0));
-                    changes.add(new EditCommand<>(story, "scale", backlog.getScale()));
-                }
-                changes.add(new MoveItemCommand<>(story, project.get().observableUnallocatedStories(),
-                        backlog.observableStories()));
-                changes.add(new EditCommand<>(story, "backlog", backlog));
-            }
-
-            if (!project.get().equals(backlog.getProject())) {
-                changes.add(new MoveItemCommand<>(backlog, backlog.getProject().observableBacklogs(),
-                        project.get().observableBacklogs()));
-                changes.add(new EditCommand<>(backlog, "project", project.get()));
-                // If backlog moved to a different project we need to update the back references of the stories
-                // in that backlog.
-                for (Story story : backlog.observableStories()) {
-                    changes.add(new EditCommand<>(story, "project", project.get()));
-                    changes.add(new EditCommand<>(story, "backlog", backlog));
-                }
-            }
-
-            for (Story story : removedStories) {
-                changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
-                        project.get().observableUnallocatedStories()));
-                changes.add(new EditCommand<>(story, "backlog", null));
-            }
-
-            valid = !changes.isEmpty();
-
-            command = new CompoundCommand("Edit Backlog", changes);
-        }
+        viewModel.setCommand();
     }
 
     private boolean validate() {
-        List<Story> conflicts = new ArrayList<>();
-        // add any story without the same scale to the array
-        for (Story story : targetStories) {
-            if (story.getScale() != backlog.getScale()) {
-                conflicts.add(story);
-            }
-        }
+
         if (validationSupport.isInvalid()) {
             return false;
-        } else if (!conflicts.isEmpty()) {
-            final String[] options = {"Okay", "Cancel"};
-            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
-                    "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
-
-            final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales",
-                    query,
-                    options);
-
-            if (result.equals("Okay")) {
-                valid = true;
-            } else {
-                return false;
-            }
         } else {
             valid = true;
         }
         setCommand();
         return true;
+
+//        List<Story> conflicts = new ArrayList<>();
+//                // add any story without the same scale to the array
+//                for (Story story : targetStories) {
+//                    if (story.getScale() != backlog.getScale()) {
+//                        conflicts.add(story);
+//            }
+//        }
+//        if (validationSupport.isInvalid()) {
+//            return false;
+//        } else if (!conflicts.isEmpty()) {
+//            final String[] options = {"Okay", "Cancel"};
+//            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
+//                    "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
+//
+//            final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales",
+//                    query,
+//                    options);
+//
+//            if (result.equals("Okay")) {
+//                valid = true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            valid = true;
+//        }
+//        setCommand();
+//        return true;
     }
 
     private void setShortNameHandler() {
@@ -343,7 +222,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
     @Override
     public Command<?> getCommand() {
-        return command;
+        return viewModel.getCommand() ;
     }
 
     @Override
@@ -353,9 +232,10 @@ public class BacklogFormController extends FormController<Backlog> {
 
     @Override
     public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
+        viewModel.setOrganisation(organisation);
         setupStoriesList();
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setTextFieldSuggester(productOwnerTextField, organisation.getEligiblePOs());
+        setValidationSupport();
     }
 }

@@ -238,9 +238,7 @@ public class StoryFormViewModel extends FormController<Story> {
         return backlogNameProperty;
     }
 
-    public StringProperty priorityProperty() {
-        return priorityProperty;
-    }
+    public StringProperty priorityProperty() { return priorityProperty; }
 
     public ObjectProperty<Scale> scaleProperty() {
         return scaleProperty;
