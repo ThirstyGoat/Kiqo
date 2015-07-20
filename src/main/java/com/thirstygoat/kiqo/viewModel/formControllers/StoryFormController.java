@@ -13,9 +13,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import org.controlsfx.validation.Severity;
@@ -155,6 +154,24 @@ public class StoryFormController extends FormController<Story> {
         return true;
     }
 
+    private void setupStoriesList() {
+        storySelectionView.setSourceHeader(new Label("Stories Available:"));
+        storySelectionView.setTargetHeader(new Label("Dependencies"));
+
+        storySelectionView.setPadding(new Insets(0, 0, 0, 0));
+
+        storySelectionView.setCellFactories(view -> {
+            final ListCell<Story> cell = new ListCell<Story>() {
+                @Override
+                public void updateItem(Story item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(item != null ? item.getShortName() : null);
+                }
+            };
+            return cell;
+        });
+    }
+
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
@@ -204,6 +221,7 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void setOrganisation(Organisation organisation) {
         viewModel.setOrganisation(organisation);
+        setupStoriesList();
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setValidationSupport();
