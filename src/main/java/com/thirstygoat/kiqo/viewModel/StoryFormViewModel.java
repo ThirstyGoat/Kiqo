@@ -161,20 +161,7 @@ public class StoryFormViewModel extends FormController<Story> {
      * @return predicate for determining validity
      */
     public Predicate<String> getProjectValidation() {
-        return s -> {
-            return projectProperty.get() != null;
-//            for (final Project p : organisation.getProjects()) {
-//                if (p.getShortName().equals(projectNameProperty.get())) {
-//                    project = p;
-//                    // Force re-validation for shortname
-//                    final String snt = shortNameProperty.get();
-//                    shortNameProperty.setValue("");
-//                    shortNameProperty.setValue(snt);
-//                    return true;
-//                }
-//            }
-//            return false;
-        };
+        return Utilities.createEmptyValidation(projectProperty);
     }
 
     /**
@@ -208,6 +195,10 @@ public class StoryFormViewModel extends FormController<Story> {
             }
             return true;
         };
+    }
+
+    public Predicate<Scale> getScaleValidation() {
+        return Utilities.createEmptyValidation(scaleProperty);
     }
 
     public StringProperty shortNameProperty() {
@@ -327,4 +318,6 @@ public class StoryFormViewModel extends FormController<Story> {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+
+
 }

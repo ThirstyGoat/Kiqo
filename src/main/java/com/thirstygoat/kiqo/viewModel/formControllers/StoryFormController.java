@@ -27,10 +27,10 @@ import java.util.ResourceBundle;
  * Created by Carina on 15/05/2015.
  */
 public class StoryFormController extends FormController<Story> {
-    private StoryFormViewModel viewModel;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private StoryFormViewModel viewModel;
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
@@ -109,8 +109,9 @@ public class StoryFormController extends FormController<Story> {
                 Validator.createPredicateValidator(viewModel.getShortNameValidation(),
                         "Short name must be unique and not empty."));
 
-        validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+            validationSupport.registerValidator(longNameTextField,
+                    Validator.createPredicateValidator(viewModel.getLongNameValidation(),
+                            "Long name must not be empty"));
 
         validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
                 viewModel.getCreatorValidation(),
@@ -127,7 +128,8 @@ public class StoryFormController extends FormController<Story> {
                                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         validationSupport.registerValidator(estimationScaleComboBox,
-                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
+                Validator.createPredicateValidator(viewModel.getScaleValidation(),
+                        "Estimation Scale must not be empty", Severity.ERROR));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
