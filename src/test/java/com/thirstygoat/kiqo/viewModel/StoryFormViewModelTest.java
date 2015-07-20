@@ -163,4 +163,25 @@ public class StoryFormViewModelTest {
         storyFormViewModel.setStory(story);
         Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
     }
+
+    @Test
+    public void testHasCyclicDependencies() {
+        StoryFormViewModel viewModel = new StoryFormViewModel();
+
+        Story a = new Story();
+        a.setShortName("A");
+        Story b = new Story();
+        b.setShortName("b");
+        Story c = new Story();
+        c.setShortName("c");
+
+        viewModel.setStory(a);
+
+        // Small cyclic dependency
+        a.getDependencies().add(b);
+        b.getDependencies().add(c);
+        c.getDependencies().add(a);
+        Assert.fail("not implemented yet");
+//        Assert.assertTrue(viewModel.hasCyclicDependency());
+    }
 }

@@ -14,6 +14,7 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -366,6 +367,25 @@ public class StoryFormViewModel extends FormController<Story> {
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Release", changes);
         }
+    }
+
+    /**
+     * @return if the story being created has any cyclic dependencies
+     */
+    public boolean hasCyclicDependency() {
+
+        return false;
+    }
+
+    private Story findLeaf(Story story) {
+        // TODO finish doing things
+        if (story.getDependencies().size() == 0) {
+            return story;
+        } else {
+            story = findLeaf(story.getDependencies().get(0));
+
+        }
+        return null;
     }
 
     @Override
