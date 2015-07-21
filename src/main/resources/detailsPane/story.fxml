@@ -18,7 +18,7 @@
             <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Dependent Stories:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Dependencies:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
             <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
             <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -35,7 +35,7 @@
                      <Button fx:id="editACButton" text="Edit" />
                  </children>
               </HBox>
-                  <Label font="$x1" text="Estimate:" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                  <Label font="$x1" text="Estimate:" GridPane.rowIndex="7" GridPane.valignment="TOP"/>
                   <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <children>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
@@ -53,8 +53,6 @@
                   </HBox>
                   <Label fx:id="storyScaleLabel" minWidth="117.0" prefHeight="16.0" prefWidth="599.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label font="$x1" text="Scale:" GridPane.rowIndex="6" />
-
-
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
@@ -63,14 +61,15 @@
           <rowConstraints>
             <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints maxHeight="26.0" minHeight="10.0" prefHeight="15.0" />
-                  <RowConstraints maxHeight="47.0" minHeight="36.0" prefHeight="47.0" />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints maxHeight="26.0" minHeight="10.0" prefHeight="15.0" />
+            <RowConstraints maxHeight="47.0" minHeight="36.0" prefHeight="47.0" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
           </rowConstraints>
         </GridPane>
       </content>
