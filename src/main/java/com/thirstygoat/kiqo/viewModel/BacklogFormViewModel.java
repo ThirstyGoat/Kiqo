@@ -15,6 +15,7 @@ import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -216,6 +217,17 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     }
 
+    public List<Story> getConflictingScales() {
+    // add any story without the same scale to the array
+    List<Story> conflicts = new ArrayList<>();
+
+    for (Story story : targetStoriesProperty.get()) {
+        if (story.getScale() != scaleProperty().get()) {
+            conflicts.add(story);
+        }
+    }
+        return conflicts;
+    }
 
     @Override
     public Command<?> getCommand() { return command; }
@@ -257,13 +269,18 @@ public class BacklogFormViewModel extends FormController<Backlog> {
             removedStories.removeAll(targetStoriesProperty.get());
 
             for (Story story : addedStories) {
-                if (story.getScale() != backlog.getScale()) {
+                if (story.getScale() != scaleProperty().get()) {
                     changes.add(new EditCommand<>(story, "estimate", 0));
-                    changes.add(new EditCommand<>(story, "scale", backlog.getScale()));
+                    changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
                 }
                 changes.add(new MoveItemCommand<>(story, projectProperty.get().observableUnallocatedStories(),
                         backlog.observableStories()));
                 changes.add(new EditCommand<>(story, "backlog", backlog));
+            }
+            // get the remaining stories and change their scales - might be a better way to do this rather than 2 loops
+            for (Story story : backlog.getStories()) {
+                changes.add(new EditCommand<>(story, "estimate", 0));
+                changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
             }
 
             if (!projectProperty.get().equals(backlog.getProject())) {

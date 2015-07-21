@@ -5,6 +5,7 @@ import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.BacklogFormViewModel;
@@ -21,6 +22,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -28,10 +30,10 @@ import java.util.ResourceBundle;
  * Created by lih18 on 20/05/15.
  */
 public class BacklogFormController extends FormController<Backlog> {
-    private BacklogFormViewModel viewModel;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private BacklogFormViewModel viewModel;
     private Stage stage;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
@@ -112,6 +114,10 @@ public class BacklogFormController extends FormController<Backlog> {
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
         });
+
+//        scaleComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            System.out.println(newValue);
+//        });
     }
 
     private void setPrompts() {
@@ -153,7 +159,7 @@ public class BacklogFormController extends FormController<Backlog> {
             }
         });
 
-        cancelButton.setOnAction(event ->  stage.close());
+        cancelButton.setOnAction(event -> stage.close());
     }
 
     private void setCommand() {
@@ -161,43 +167,26 @@ public class BacklogFormController extends FormController<Backlog> {
     }
 
     private boolean validate() {
-
+        List<Story> conflicts = viewModel.getConflictingScales();
         if (validationSupport.isInvalid()) {
             return false;
+        } else if (!conflicts.isEmpty()) {
+            final String[] options = {"Okay", "Cancel"};
+            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
+                    "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
+
+            final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales", query, options);
+
+            if (result.equals("Okay")) {
+                valid = true;
+            } else {
+                return false;
+            }
         } else {
             valid = true;
         }
         setCommand();
         return true;
-
-//        List<Story> conflicts = new ArrayList<>();
-//                // add any story without the same scale to the array
-//                for (Story story : targetStories) {
-//                    if (story.getScale() != backlog.getScale()) {
-//                        conflicts.add(story);
-//            }
-//        }
-//        if (validationSupport.isInvalid()) {
-//            return false;
-//        } else if (!conflicts.isEmpty()) {
-//            final String[] options = {"Okay", "Cancel"};
-//            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
-//                    "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
-//
-//            final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales",
-//                    query,
-//                    options);
-//
-//            if (result.equals("Okay")) {
-//                valid = true;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            valid = true;
-//        }
-//        setCommand();
-//        return true;
     }
 
     private void setShortNameHandler() {

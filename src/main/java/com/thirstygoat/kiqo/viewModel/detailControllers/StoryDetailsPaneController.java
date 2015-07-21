@@ -129,7 +129,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             if (newValue.intValue() > 0) {
                 storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue())-1]);
             } else {
-                storyEstimateSliderLabel.setText("");
+                storyEstimateSliderLabel.setText("-");
             }
         });
 
@@ -142,6 +142,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void setScale() {
+        System.out.println(story.shortNameProperty().get() + ", " + story.estimateProperty().get() + ", " + story.scaleProperty().get());
         if (story.getScale() == null) {
             // make slider look tidy
             storyEstimateSlider.setValue(0);

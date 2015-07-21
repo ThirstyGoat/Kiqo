@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Predicate;
 
 public class StoryFormViewModelTest {
 
@@ -160,7 +159,7 @@ public class StoryFormViewModelTest {
         Assert.assertFalse("Must not be null.",
                 storyFormViewModel.priorityValidation().validProperty().get());
 
-        storyFormViewModel.priorityProperty().set(Integer.toString(Story.MIN_PRIORITY -1));
+        storyFormViewModel.priorityProperty().set(Integer.toString(Story.MIN_PRIORITY - 1));
         Assert.assertFalse("Value must be higher than story.MIN_PRIORITY",
                 storyFormViewModel.priorityValidation().validProperty().get());
 
@@ -174,7 +173,7 @@ public class StoryFormViewModelTest {
         Organisation organisation = new Organisation();
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
         storyFormViewModel.setOrganisation(organisation);
-        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<>());
         organisation.getPeople().add(creator);
         Project project = new Project("shortName", "longName");
         Story story = new Story("shortName", "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
