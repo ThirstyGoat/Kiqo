@@ -5,16 +5,17 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
-import de.saxsys.mvvmfx.utils.validation.*;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.*;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -189,9 +190,7 @@ public class StoryFormViewModel extends FormController<Story> {
         return longNameValidator.getValidationStatus();
     }
 
-    public ValidationStatus descriptionValidation() {
-        return descriptionValidator.getValidationStatus();
-    }
+    public ValidationStatus descriptionValidation() { return descriptionValidator.getValidationStatus(); }
 
     public ValidationStatus creatorValidation() {
         return creatorValidator.getValidationStatus();
