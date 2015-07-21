@@ -95,29 +95,24 @@ public class BacklogFormController extends FormController<Backlog> {
 //    }
 
     private void setValidationSupport() {
-
         validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
+                Validator.createPredicateValidator(viewModel.getLongNameValidation(), "Long name must not be empty"));
 
-        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(viewModel.getShortNameValidation(),
-                "Short name must be unique and not empty"));
+        validationSupport.registerValidator(shortNameTextField, 
+                Validator.createPredicateValidator(viewModel.getShortNameValidation(), "Short name must be unique and not empty"));
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(viewModel.getProjectValidation(),
-                "Project must already exist"));
+        validationSupport.registerValidator(projectTextField, 
+                Validator.createPredicateValidator(viewModel.getProjectValidation(), "Project must already exist"));
 
-        validationSupport.registerValidator(productOwnerTextField, Validator.createPredicateValidator(viewModel.getProductOwnerValidation(),
-                "Person must already exist and have the PO skill"));
+        validationSupport.registerValidator(productOwnerTextField, 
+                Validator.createPredicateValidator(viewModel.getProductOwnerValidation(), "Person must already exist and have the PO skill"));
 
         validationSupport.registerValidator(scaleComboBox,
-                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
+                Validator.createPredicateValidator(viewModel.getScaleValidation(), "Estimation Scale must not be empty"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
         });
-
-//        scaleComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            System.out.println(newValue);
-//        });
     }
 
     private void setPrompts() {

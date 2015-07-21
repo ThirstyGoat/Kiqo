@@ -120,9 +120,8 @@ public class BacklogFormViewModel extends FormController<Backlog> {
         };
     }
 
-    public Predicate<Scale> getScalevalidation() {
+    public Predicate<Scale> getScaleValidation() {
         return Utilities.createEmptyValidation(scaleProperty);
-
     }
 
     public StringProperty shortNameProperty() { return shortNameProperty; }
