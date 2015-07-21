@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.viewModel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,8 +42,15 @@ public class BacklogFormViewModelTest {
     }
 
     @Test
-    public void testLongNameProperty()  {
+    public void testLongNameValidation() {
+        BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
+        Predicate<String> predicate = backlogFormViewModel.getLongNameValidation();
 
+        Assert.assertFalse("Must not be valid initially.", 
+                predicate.test(backlogFormViewModel.longNameProperty().get()));
+
+        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
+        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
     }
 
     @Test
