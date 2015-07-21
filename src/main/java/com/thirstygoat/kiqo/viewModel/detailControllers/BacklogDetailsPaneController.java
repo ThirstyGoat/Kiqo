@@ -3,7 +3,11 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.viewModel.StoryTableViewModel;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,6 +24,7 @@ import com.thirstygoat.kiqo.viewModel.StoryTableViewController;
  */
 public class BacklogDetailsPaneController implements Initializable, IDetailsPaneController<Backlog> {
     private MainController mainController;
+    private StoryTableViewModel storyTableViewModel = new StoryTableViewModel();
 
     @FXML
     private Label shortNameLabel;
@@ -45,19 +50,19 @@ public class BacklogDetailsPaneController implements Initializable, IDetailsPane
             longNameLabel.textProperty().bind(backlog.longNameProperty());
             descriptionLabel.textProperty().bind(backlog.descriptionProperty());
             productOwnerLabel.textProperty().bind(Bindings.select(backlog.productOwnerProperty(), "shortName"));
-            storyTableViewController.setItems(backlog.observableStories());
+            storyTableViewModel.setStories(backlog.observableStories());
+            storyTableViewController.setViewModel(storyTableViewModel);
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);
             descriptionLabel.setText(null);
             productOwnerLabel.setText(null);
-            storyTableViewController.setItems(null);
+            storyTableViewModel.setStories(null);
         }
     }
 
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        storyTableViewController.setMainController(mainController);
     }
 }
