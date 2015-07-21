@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.*;
+import javafx.collections.FXCollections;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -167,21 +168,28 @@ public class StoryFormViewModelTest {
     @Test
     public void testHasCyclicDependencies() {
         StoryFormViewModel viewModel = new StoryFormViewModel();
+        viewModel.setOrganisation(new Organisation());
+        viewModel.targetStoriesProperty().set(FXCollections.observableArrayList());
 
-        Story a = new Story();
-        a.setShortName("A");
-        Story b = new Story();
-        b.setShortName("b");
-        Story c = new Story();
-        c.setShortName("c");
-
-        viewModel.setStory(a);
+        Story a = setUpStory("A");
+        Story b = setUpStory("B");
+        Story c = setUpStory("C");
 
         // Small cyclic dependency
-        a.getDependencies().add(b);
-        b.getDependencies().add(c);
-        c.getDependencies().add(a);
-        Assert.fail("not implemented yet");
-//        Assert.assertTrue(viewModel.hasCyclicDependency());
+        viewModel.setStory(a); // this is the story we are setting the dependencies for
+        // b -> c
+        b.observableDependencies().add(c);
+
+        viewModel.targetStoriesProperty().get().add(b); // dependency to be added to current story a -> b -> c
+        Assert.assertFalse(viewModel.hasCyclicDependency());
+
+        c.observableDependencies().add(a); // a -> b -> c -> a
+        Assert.assertTrue(viewModel.hasCyclicDependency());
+    }
+
+    private Story setUpStory(String shortName) {
+        Person creator = new Person("Creator", "", "", "", "", "", "", new ArrayList<>());
+        Project project = new Project("Project", "");
+        return new Story(shortName, "", "", creator, project, new Backlog(), 0, Scale.FIBONACCI, 0, new ArrayList<>());
     }
 }
