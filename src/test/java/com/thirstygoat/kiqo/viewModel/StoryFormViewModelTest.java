@@ -59,7 +59,7 @@ public class StoryFormViewModelTest {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
 
         Assert.assertFalse("Must not be valid initially.",
-                storyFormViewModel.shortNameValidation().validProperty().get());
+                storyFormViewModel.longNameValidation().validProperty().get());
 
         storyFormViewModel.longNameProperty().set("Billy Goat");
         Assert.assertTrue("Valid input not recognised as valid.",
