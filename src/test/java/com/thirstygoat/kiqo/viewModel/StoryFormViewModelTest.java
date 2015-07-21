@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -165,6 +168,22 @@ public class StoryFormViewModelTest {
         Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
     }
 
+//    @Test
+//    public void testShownDependencies() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+//        // Test creation of new story
+//        StoryFormViewModel viewModel = new StoryFormViewModel();
+//        viewModel.setOrganisation(new Organisation());
+//
+//        Method setStoryListProperties = viewModel.getClass().getDeclaredMethod("setStoryListProperties");
+//        setStoryListProperties.setAccessible(true);
+//        setStoryListProperties.invoke(viewModel);
+//
+//        // Test edit of story not in backlog
+//
+//
+//        // Test edit of story in backlog
+//    }
+
     @Test
     public void testHasCyclicDependencies() {
         StoryFormViewModel viewModel = new StoryFormViewModel();
@@ -185,6 +204,8 @@ public class StoryFormViewModelTest {
 
         c.observableDependencies().add(a); // a -> b -> c -> a
         Assert.assertTrue(viewModel.hasCyclicDependency());
+
+
     }
 
     private Story setUpStory(String shortName) {

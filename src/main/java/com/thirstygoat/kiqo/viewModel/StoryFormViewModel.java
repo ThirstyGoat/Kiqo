@@ -6,6 +6,8 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -60,6 +62,10 @@ public class StoryFormViewModel extends FormController<Story> {
                 return project != null ? project.getShortName() : "";
             }
         });
+
+        projectProperty.addListener((observable, oldValue, newValue) -> {
+            setStoryListProperties();
+        });
     }
     
     private void setStoryListProperties() {
@@ -68,17 +74,18 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story != null) {
             if (projectProperty.get() != null) {
                 targetStoriesProperty.get().addAll(story.getDependencies());
-                if (backlog != null) { 
-                    sourceStoriesProperty.get().addAll(backlog.getStories());
+                if (story.getBacklog() != null) {
+                    sourceStoriesProperty.get().addAll(story.getBacklog().getStories());
                 } else {
                     sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
                 }
             }
             sourceStoriesProperty.get().removeAll(story.getDependencies());
             sourceStoriesProperty.get().remove(story); // cannot depend on itself
-        }
-        if (story != null) {
-            sourceStoriesProperty.get().remove(story);
+        } else {
+            if (projectProperty.get() != null) {
+                sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
+            }
         }
     }
 
