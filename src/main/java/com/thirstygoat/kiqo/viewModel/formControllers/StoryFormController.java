@@ -69,7 +69,6 @@ public class StoryFormController extends FormController<Story> {
                 shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
-
     }
 
     private void bindFields() {

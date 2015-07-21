@@ -9,6 +9,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -79,6 +80,14 @@ public class StoryFormViewModel extends FormController<Story> {
                 } else {
                     sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
                 }
+
+                ArrayList<Story> toRemove = new ArrayList<>();
+                for (Story story : sourceStoriesProperty.get()) {
+                    if (checkCyclicDependency(story)) {
+                        toRemove.add(story);
+                    }
+                }
+                sourceStoriesProperty.get().removeAll(toRemove);
             }
             sourceStoriesProperty.get().removeAll(story.getDependencies());
             sourceStoriesProperty.get().remove(story); // cannot depend on itself
