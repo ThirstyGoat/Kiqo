@@ -33,7 +33,7 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(null);
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(false);
     }
 
@@ -46,7 +46,7 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(isReady);
     }
 

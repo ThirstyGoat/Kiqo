@@ -195,7 +195,9 @@ public class PersistenceManager {
             }
 
             ObservableList observableList;
-            if (Item.class.isAssignableFrom((Class<?>) type)) {
+            if (AcceptanceCriteria.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+            } else if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
                 observableList = FXCollections.observableArrayList();

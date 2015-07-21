@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 import com.thirstygoat.kiqo.command.*;
 import javafx.beans.binding.Bindings;
@@ -98,12 +99,21 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         // Story must have non-null estimate
         // Story must be in a backlog
 
+        Callable<Boolean> checkACReady = () -> {
+            for (AcceptanceCriteria ac : story.getAcceptanceCriteria()) {
+                if (ac.getState() != State.ACCEPTED) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
         BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
         BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
-        // TODO Add Binding for estimate being non null
+        BooleanBinding unReadyAC = Bindings.not(Bindings.createBooleanBinding(checkACReady, story.getAcceptanceCriteria()));
 
         // Bind the disable property
-        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding));
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(unReadyAC));
 
         isReadyCheckBox.disabledProperty().addListener((observable, oldValue, newValue) -> {
             // Check if checkbox is now disabled

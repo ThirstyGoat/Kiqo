@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Callback;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,10 @@ public class AcceptanceCriteria extends Item {
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
         this.state = new SimpleObjectProperty(State.NEITHER);
+    }
+
+    public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.shortNameProperty(), p.state};
     }
 
     public String getCriteria() {
