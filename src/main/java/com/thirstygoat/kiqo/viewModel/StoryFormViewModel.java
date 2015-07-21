@@ -27,7 +27,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private Story story;
     private Person creator;
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
-    private Backlog backlog;
+    private Backlog backlog; // not a property because not editable from form
     private Organisation organisation;
     private Command<?> command;
     private boolean valid = false;
@@ -102,6 +102,7 @@ public class StoryFormViewModel extends FormController<Story> {
             priorityProperty.set(Integer.toString(story.getPriority()));
             scaleProperty.set(story.getScale());
             estimateProperty.set(story.getEstimate());
+            backlog = story.getBacklog();
 
             creatorEditable.set(false);
         }
@@ -192,18 +193,12 @@ public class StoryFormViewModel extends FormController<Story> {
      */
     public Predicate<String> getProjectValidation() {
         return s -> {
+            // Force re-validation for shortname
+            final String snt = shortNameProperty.get();
+            shortNameProperty.setValue("");
+            shortNameProperty.setValue(snt);
+            
             return projectProperty.get() != null;
-//            for (final Project p : organisation.getProjects()) {
-//                if (p.getShortName().equals(projectNameProperty.get())) {
-//                    project = p;
-//                    // Force re-validation for shortname
-//                    final String snt = shortNameProperty.get();
-//                    shortNameProperty.setValue("");
-//                    shortNameProperty.setValue(snt);
-//                    return true;
-//                }
-//            }
-//            return false;
         };
     }
 
