@@ -142,7 +142,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void setScale() {
-        System.out.println(story.shortNameProperty().get() + ", " + story.estimateProperty().get() + ", " + story.scaleProperty().get());
         if (story.getScale() == null) {
             // make slider look tidy
             storyEstimateSlider.setValue(0);
