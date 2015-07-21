@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import javafx.beans.property.ObjectProperty;
@@ -42,22 +43,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
 
     public BacklogFormViewModel() {
-        projectNameProperty.bindBidirectional(projectProperty, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String shortName) {
-                for (final Project p : organisation.getProjects()) {
-                    if (p.getShortName().equals(shortName)) {
-                        return p;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Project project) {
-                return project != null ? project.getShortName() : "";
-            }
-        });
+        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
     }
 
     /**

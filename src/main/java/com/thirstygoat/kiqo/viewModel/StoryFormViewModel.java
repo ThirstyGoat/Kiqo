@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import de.saxsys.mvvmfx.utils.validation.*;
@@ -49,40 +50,6 @@ public class StoryFormViewModel extends FormController<Story> {
     private CompositeValidator formValidator;
 
     public StoryFormViewModel() {
-        projectNameProperty.bindBidirectional(projectProperty, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String shortName) {
-                for (final Project p : organisation.getProjects()) {
-                    if (p.getShortName().equals(shortName)) {
-                        return p;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(Project project) {
-                return project != null ? project.getShortName() : "";
-            }
-        });
-
-        creatorNameProperty.bindBidirectional(creatorProperty, new StringConverter<Person>() {
-            @Override
-            public String toString(Person person) {
-                return person != null ? person.getShortName() : "";
-            }
-
-            @Override
-            public Person fromString(String shortName) {
-                for (final Person person : organisation.getPeople()) {
-                    if (person.getShortName().equals(shortName)) {
-                        return person;
-                    }
-                }
-                return null;
-            }
-        });
-
         shortNameValidator = new FunctionBasedValidator<>(shortNameProperty,
             // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
             s -> {
@@ -259,7 +226,8 @@ public class StoryFormViewModel extends FormController<Story> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-
+        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
+        creatorNameProperty.bindBidirectional(creatorProperty, StringConverters.personStringConverter(organisation));
     }
 
     @Override
