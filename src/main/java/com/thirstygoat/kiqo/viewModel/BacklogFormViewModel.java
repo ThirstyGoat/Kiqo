@@ -12,7 +12,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -119,6 +118,11 @@ public class BacklogFormViewModel extends FormController<Backlog> {
         return s -> {
             return projectProperty.get() != null;
         };
+    }
+
+    public Predicate<Scale> getScalevalidation() {
+        return Utilities.createEmptyValidation(scaleProperty);
+
     }
 
     public StringProperty shortNameProperty() { return shortNameProperty; }
