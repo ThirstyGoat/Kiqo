@@ -126,4 +126,8 @@ public class Backlog extends Item {
     public ObjectProperty<Project> projectProperty() {
         return project;
     }
+
+    public ObjectProperty<Scale> scaleProperty() {
+        return scale;
+    }
 }
