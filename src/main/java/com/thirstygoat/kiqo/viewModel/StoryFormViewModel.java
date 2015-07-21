@@ -6,16 +6,16 @@ import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -62,6 +62,10 @@ public class StoryFormViewModel extends FormController<Story> {
                 return project != null ? project.getShortName() : "";
             }
         });
+
+        projectProperty.addListener((observable, oldValue, newValue) -> {
+            setStoryListProperties();
+        });
     }
     
     private void setStoryListProperties() {
@@ -70,17 +74,18 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story != null) {
             if (projectProperty.get() != null) {
                 targetStoriesProperty.get().addAll(story.getDependencies());
-                if (backlog != null) { 
-                    sourceStoriesProperty.get().addAll(backlog.getStories());
+                if (story.getBacklog() != null) {
+                    sourceStoriesProperty.get().addAll(story.getBacklog().getStories());
                 } else {
                     sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
                 }
             }
             sourceStoriesProperty.get().removeAll(story.getDependencies());
             sourceStoriesProperty.get().remove(story); // cannot depend on itself
-        }
-        if (story != null) {
-            sourceStoriesProperty.get().remove(story);
+        } else {
+            if (projectProperty.get() != null) {
+                sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
+            }
         }
     }
 
@@ -311,7 +316,7 @@ public class StoryFormViewModel extends FormController<Story> {
         if (story == null) {
             // new story command
             story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), new ArrayList<>());
+                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), targetStoriesProperty.get());
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -368,19 +373,37 @@ public class StoryFormViewModel extends FormController<Story> {
      * @return if the story being created has any cyclic dependencies
      */
     public boolean hasCyclicDependency() {
-
+        for (Story dependency : targetStoriesProperty.get()) {
+            if (checkCyclicDependency(dependency)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    private Story findLeaf(Story story) {
-        // TODO finish doing things
-        if (story.getDependencies().size() == 0) {
-            return story;
-        } else {
-            story = findLeaf(story.getDependencies().get(0));
+    /**
+     * Performs a depth first search on the given dependency to see if it can reach itself
+     * No need to worry about cycles up further up the graph because we check for cycles before they can be added
+     * @param dependency the dependency to check
+     * @return boolean true if a cycle has been found
+     */
+    private boolean checkCyclicDependency(Story dependency) {
+        Stack<Node> stack = new Stack<>();
+        stack.push(new Node(dependency));
 
+        while (!stack.empty()) {
+            Node n = stack.pop();
+            if (n.label.equals(story.getShortName())) {
+                return true;
+            }
+            if (!n.visited) {
+                n.visited = true;
+                for (Story d : n.dependencies) {
+                    stack.push(new Node(d));
+                }
+            }
         }
-        return null;
+        return false;
     }
 
     @Override
@@ -389,5 +412,24 @@ public class StoryFormViewModel extends FormController<Story> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    private class Node {
+        public String label;
+        public boolean visited;
+        public List<Story> dependencies;
+
+        public Node(Story dependency) {
+            this.label = dependency.getShortName();
+            this.dependencies = dependency.getDependencies();
+            this.visited = false;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "label='" + label + '\'' +
+                    '}';
+        }
     }
 }
