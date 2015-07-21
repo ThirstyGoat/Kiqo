@@ -109,7 +109,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
         validationSupport.registerValidator(scaleComboBox,
                 Validator.createPredicateValidator(viewModel.getScaleValidation(), "Estimation Scale must not be empty"));
-
+        
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue);
         });
