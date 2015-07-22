@@ -97,7 +97,7 @@ public class StoryFormViewModel extends FormController<Story> {
 
         projectValidator = new FunctionBasedValidator<>(projectProperty,
             // Checks that the project exists and is set
-            Utilities.createEmptyValidation(projectProperty),
+            Utilities.createEmptyValidation(),
             ValidationMessage.error("Project must already exist"));
 
         priorityValidator = new FunctionBasedValidator<>(priorityProperty,
@@ -116,7 +116,7 @@ public class StoryFormViewModel extends FormController<Story> {
                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         scaleValidator = new FunctionBasedValidator<>(scaleProperty,
-            Utilities.createEmptyValidation(scaleProperty),
+            Utilities.createEmptyValidation(),
             ValidationMessage.error("Estimation Scale must not be empty"));
 
         formValidator = new CompositeValidator();

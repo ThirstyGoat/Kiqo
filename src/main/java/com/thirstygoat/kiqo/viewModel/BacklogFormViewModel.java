@@ -5,6 +5,7 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -120,7 +121,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     public Predicate<Scale> getScaleValidation() {
-        return Utilities.createEmptyValidation(scaleProperty);
+        return Utilities.createEmptyValidation();
     }
 
     public StringProperty shortNameProperty() { return shortNameProperty; }

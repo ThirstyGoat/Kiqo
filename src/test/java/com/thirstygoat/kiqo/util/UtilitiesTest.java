@@ -178,15 +178,10 @@ public class UtilitiesTest {
 
     @Test
     public void testEmptyValidation() {
-        ObjectProperty<String> objectProperty = new SimpleObjectProperty<>();
-        Predicate<ObjectProperty<String>> predicate = Utilities.createEmptyValidation(objectProperty);
+        Predicate<String> predicate = Utilities.createEmptyValidation();
 
         Assert.assertFalse("Initially should be null.", predicate.test(null));
-
-        objectProperty.set("has value");
-        Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test(objectProperty));
-
-        objectProperty.set(null);
+        Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test("has value"));
         Assert.assertFalse("Should be null.", predicate.test(null));
 
     }
