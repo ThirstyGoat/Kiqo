@@ -60,7 +60,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
             if (project == null) {
                 return true;
             }
-            return Utilities.shortnameIsUnique(s, null, project.getBacklogs());
+            return Utilities.shortnameIsUnique(s, backlog != null ? backlog : null, project.getBacklogs());
         };
     }
 
@@ -286,9 +286,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
             }
 
             for (Story story : removedStories) {
-                changes.add(new MoveItemCommand<>(story, backlog.observableStories(),
-                        projectProperty.get().observableUnallocatedStories()));
-                changes.add(new EditCommand<>(story, "backlog", null));
+                changes.add(new RemoveStoryFromBacklogCommand(story, backlog));
             }
 
             valid = !changes.isEmpty();
