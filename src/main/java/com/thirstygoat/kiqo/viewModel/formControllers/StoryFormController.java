@@ -7,7 +7,6 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,7 +15,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -29,10 +29,10 @@ import java.util.ResourceBundle;
  * Created by Carina on 15/05/2015.
  */
 public class StoryFormController extends FormController<Story> {
-    private StoryFormViewModel viewModel;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private StoryFormViewModel viewModel;
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
@@ -58,6 +58,8 @@ public class StoryFormController extends FormController<Story> {
     private Button okButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Hyperlink storyCycleHyperLink;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -69,6 +71,8 @@ public class StoryFormController extends FormController<Story> {
                 shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
+        setStoryCycleHyperLinkInfo();
+
     }
 
     private void bindFields() {
@@ -126,13 +130,13 @@ public class StoryFormController extends FormController<Story> {
                     viewModel.getProjectValidation(),
                     "Project must already exist"));
 
-            validationSupport.registerValidator(priorityTextField,
-                    Validator.createPredicateValidator(
-                            viewModel.getPriorityValidation(), "Priority must be an integer between "
-                                    + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+        validationSupport.registerValidator(priorityTextField,
+                Validator.createPredicateValidator(
+                        viewModel.getPriorityValidation(), "Priority must be an integer between "
+                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-            validationSupport.registerValidator(estimationScaleComboBox,
-                    Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
+        validationSupport.registerValidator(estimationScaleComboBox,
+                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
 
             validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
                 okButton.setDisable(newValue);
@@ -153,6 +157,23 @@ public class StoryFormController extends FormController<Story> {
         return true;
     }
 
+    private void setStoryCycleHyperLinkInfo() {
+        Label label = new Label();
+        label.setText("Only the stories that will not create a dependency loop are shown");
+        label.setPadding(new Insets(10, 10, 10, 10));
+        PopOver readyWhyPopOver = new PopOver(label);
+        readyWhyPopOver.setDetachable(false);
+
+        storyCycleHyperLink.setOnAction((e) -> {
+            readyWhyPopOver.show(storyCycleHyperLink);
+        });
+        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide(Duration.millis(0));
+            }
+        });
+    }
+
     private void setupStoriesList() {
         storySelectionView.setSourceHeader(new Label("Stories Available:"));
         storySelectionView.setTargetHeader(new Label("Dependencies"));
@@ -170,7 +191,6 @@ public class StoryFormController extends FormController<Story> {
             return cell;
         });
     }
-
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {

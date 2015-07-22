@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import com.thirstygoat.kiqo.nodes.GoatListSelectionView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.thirstygoat.kiqo.nodes.GoatListSelectionView?>
-
+<?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.formControllers.StoryFormController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
@@ -53,6 +51,11 @@
             <Label text="Estimation Scale:" GridPane.rowIndex="6" />
             <ComboBox fx:id="estimationScaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <Hyperlink fx:id="storyCycleHyperLink" text="Why can't I see all stories?" GridPane.columnIndex="0" GridPane.rowIndex="8">
+                <font>
+                    <Font size="10.0" />
+                </font>
+            </Hyperlink>
             </children>
         </GridPane>
     </center>
