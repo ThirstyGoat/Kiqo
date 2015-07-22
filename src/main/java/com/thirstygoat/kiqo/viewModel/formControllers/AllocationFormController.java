@@ -314,7 +314,9 @@ public class AllocationFormController extends FormController<Allocation> {
             if (!startDatePicker.getValue().equals(allocation.getStartDate())) {
                 changes.add(new EditCommand<>(allocation, "startDate", startDatePicker.getValue()));
             }
-            if (!endDatePicker.getValue().equals(allocation.getEndDate())) {
+            if (endDatePicker.getValue() == null && !allocation.getEndDate().equals(LocalDate.MAX)) {
+                changes.add(new EditCommand<>(allocation, "endDate", LocalDate.MAX));
+            } else if (!endDatePicker.getValue().equals(allocation.getEndDate())) {
                 changes.add(new EditCommand<>(allocation, "endDate", endDatePicker.getValue()));
             }
             valid = !changes.isEmpty();
