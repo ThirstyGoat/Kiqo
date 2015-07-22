@@ -1,13 +1,20 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.controlsfx.validation.Severity;
@@ -15,12 +22,8 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -29,12 +32,8 @@ public class StoryFormController extends FormController<Story> {
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private StoryFormViewModel viewModel;
     private Stage stage;
-    private Story story;
-    private Person creator;
-    private Project project;
-    private Backlog backlog;
-    private Organisation organisation;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Command<?> command;
@@ -50,7 +49,9 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private  TextField projectTextField;
     @FXML
-    private TextField priorityTextField ;
+    private TextField priorityTextField;
+    @FXML
+    private ComboBox<Scale> estimationScaleComboBox;
     @FXML
     private Button okButton;
     @FXML
@@ -58,6 +59,7 @@ public class StoryFormController extends FormController<Story> {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        viewModel = new StoryFormViewModel();
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
@@ -66,110 +68,52 @@ public class StoryFormController extends FormController<Story> {
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
 
-        setValidationSupport();
+    }
+
+    private void bindFields() {
+        shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
+        longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
+        projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
+        priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
+        creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
+
+        creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
+        okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
     }
 
     private void setPrompts() {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this story.");
+
+        // Populate Estimation Scale ComboBox
+        estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
+        estimationScaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
     }
 
     @Override
     public void populateFields(final Story story) {
-        this.story = story;
+        viewModel.setStory(story);
+        okButton.setText("Done");
+        bindFields();
 
-        if (story == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Story");
-            okButton.setText("Done");
-        } else {
+        if (story != null) {
             // We are editing an existing story
-            stage.setTitle("Edit Story");
-            okButton.setText("Done");
             shortNameModified.set(true);
-
-            longNameTextField.setText(story.getLongName());
-            shortNameTextField.setText(story.getShortName());
-            descriptionTextField.setText(story.getDescription());
-            creatorTextField.setText(story.getCreator().getShortName());
-            // Creator field isn't meant to be changeable
-            creatorTextField.setDisable(true);
             projectTextField.setText(story.getProject().getShortName());
-            priorityTextField.setText(Integer.toString(story.getPriority()));
         }
     }
+
     private void setValidationSupport() {
-    // Validation for short name
-        final Predicate<String> shortNameValidation = s -> {
-            if (s.length() == 0) {
-                return false;
-            }
-            if (project == null) {
-                return true;
-            }
-            Collection<Collection<? extends Item>> existingBacklogs = new ArrayList<>();
-            existingBacklogs.add(project.getUnallocatedStories());
-            existingBacklogs.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
-
-            return Utilities.shortnameIsUniqueMultiple(shortNameTextField.getText(), story, existingBacklogs);
-        };
-
-        final Predicate<String> personValidation = s -> {
-            for (final Person p : organisation.getPeople()) {
-                if (p.getShortName().equals(s)) {
-                    creator = p;
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        final Predicate<String> projectValidation = s -> {
-            for (final Project p : organisation.getProjects()) {
-                if (p.getShortName().equals(projectTextField.getText())) {
-                    project = p;
-                    // Redo validation for shortname text field
-                    final String snt = shortNameTextField.getText();
-                    shortNameTextField.setText("");
-                    shortNameTextField.setText(snt);
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        final Predicate<String> priorityValidation = s -> {
-            try {
-                int i = Integer.parseInt(s);
-                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
-            }
-            return true;
-        };
-
-        validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
-                "Short name must be unique and not empty."));
-
-        validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
-
-        validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(personValidation,
-                        "Person must already exist"));
-
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
-                "Project must already exist"));
-
-        validationSupport.registerValidator(priorityTextField,
-                Validator.createPredicateValidator(priorityValidation, "Priority must be an integer between "
-                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
-
-        validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(newValue);
-        });
+        ValidationVisualizer visualizer = new ControlsFxVisualizer();
+        visualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
+        visualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
+        visualizer.initVisualization(viewModel.creatorValidation(), creatorTextField, true);
+        visualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
+        visualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
+        visualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
 
     /**
@@ -194,9 +138,7 @@ public class StoryFormController extends FormController<Story> {
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
 
@@ -223,60 +165,24 @@ public class StoryFormController extends FormController<Story> {
     public boolean isValid() { return valid; }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command<?> getCommand() { return viewModel.getCommand(); }
 
     public void setCommand() {
-        if (story == null) {
-            // new story command
-            story = new Story(shortNameTextField.getText(), longNameTextField.getText(), descriptionTextField.getText(), creator,
-                     project, backlog, Integer.parseInt(priorityTextField.getText()), false);
-            command = new CreateStoryCommand(story);
-        } else {
-            // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!longNameTextField.getText().equals(story.getLongName())) {
-                changes.add(new EditCommand<>(story, "longName", longNameTextField.getText()));
-            }
-            if (!shortNameTextField.getText().equals(story.getShortName())) {
-                changes.add(new EditCommand<>(story, "shortName", shortNameTextField.getText()));
-            }
-            if (!descriptionTextField.getText().equals(story.getDescription())) {
-                changes.add(new EditCommand<>(story, "description", descriptionTextField.getText()));
-            }
-//            Creator can't be changed
-//            if (!creator.equals(story.getCreator())) {
-//                changes.add(new EditCommand<>(story, "creator", creator));
-//            }
-            if (!project.equals(story.getProject())) {
-                if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), project.observableUnallocatedStories()));
-                } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), project.observableUnallocatedStories()));
-                }
-                // If story is changing projects, then it shouldn't be in any backlog
-                changes.add(new EditCommand<>(story, "backlog", null));
-                changes.add(new EditCommand<>(story, "project", project));
-            }
+        viewModel.setCommand();
 
-            if (Integer.parseInt(priorityTextField.getText()) != story.getPriority()) {
-                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityTextField.getText())));
-            }
-
-            valid = !changes.isEmpty();
-            command = new CompoundCommand("Edit Release", changes);
-        }
     }
 
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
+
     }
 
     @Override
     public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
+        viewModel.setOrganisation(organisation);
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
+        setValidationSupport();
     }
-
 }

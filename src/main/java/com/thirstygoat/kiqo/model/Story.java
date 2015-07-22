@@ -19,6 +19,8 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
+    private final IntegerProperty estimate;
+    private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
     private final BooleanProperty isReady;
 
@@ -35,10 +37,12 @@ public class Story extends Item {
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
         this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(false);
+        this.estimate = new SimpleIntegerProperty(0);
+        this.scale = new SimpleObjectProperty<>(null);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, int priority, boolean isReady) {
+                 Backlog backlog, Integer priority, boolean isReady, Integer estimate, Scale scale) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -48,6 +52,8 @@ public class Story extends Item {
         this.priority = new SimpleIntegerProperty(priority);
         this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(isReady);
+        this.estimate = new SimpleIntegerProperty(estimate);
+        this.scale = new SimpleObjectProperty<>(scale);
     }
 
     @Override
@@ -138,6 +144,30 @@ public class Story extends Item {
 
     public ObservableList<AcceptanceCriteria> getAcceptanceCriteria() {
         return acceptanceCriteria;
+    }
+
+    public Integer getEstimate() {
+        return estimate.get();
+    }
+
+    public void setEstimate(Integer estimate) {
+        this.estimate.set(estimate);
+    }
+
+    public IntegerProperty estimateProperty() {
+        return estimate;
+    }
+
+    public Scale getScale() {
+        return scale.get();
+    }
+
+    public void setScale(Scale scale) {
+        this.scale.setValue(scale);
+    }
+
+    public ObjectProperty<Scale> scaleProperty() {
+        return scale;
     }
 
     public boolean getIsReady() { 
