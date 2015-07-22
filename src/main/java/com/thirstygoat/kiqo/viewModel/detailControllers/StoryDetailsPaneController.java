@@ -116,10 +116,11 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
         BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
+        BooleanBinding noEstimateBinding = Bindings.equal(story.estimateProperty(), 0);
 
         // Bind the disable property
-        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding));
-        readyWhy.visibleProperty().bind(nullBacklogBinding.or(emptyACBinding));
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding));
+        readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
     }
@@ -135,7 +136,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         readyWhy.setOnAction((e) -> {
             text.setValue("To mark this Story as Ready, it must:\n\n" +
                             (story.getBacklog() != null ? "✓" : "✘") + " belong to a Backlog\n" +
-                            (true ? "✓" : "✘") + " be estimated\n" + // TODO Add once estimation is merged
+                            (story.getEstimate() != 0 ? "✓" : "✘") + " be estimated\n" +
                             (!story.getAcceptanceCriteria().isEmpty() ? "✓" : "✘") + " have Acceptance Criteria");
             readyWhyPopOver.show(readyWhy);
         });

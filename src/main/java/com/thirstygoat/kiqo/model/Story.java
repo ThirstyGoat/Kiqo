@@ -42,7 +42,7 @@ public class Story extends Item {
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, boolean isReady, Integer estimate, Scale scale) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
