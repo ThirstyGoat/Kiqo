@@ -1,13 +1,16 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
 
 /**
 * Created by Carina Blair on 21/07/2015.
@@ -109,7 +112,16 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void testScaleValidation() {
-        Assert.fail();
-    }
+        BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
+        Organisation organisation = new Organisation();
+        backlogFormViewModel.setOrganisation(organisation);
 
+        Predicate<Scale> predicate = backlogFormViewModel.getScaleValidation();
+        Assert.assertFalse("Must not be valid initially.", predicate.test(backlogFormViewModel.scaleProperty().get()));
+        Assert.assertFalse("Must not be null.", predicate.test(null));
+        
+        for (Scale scale : Scale.values()) {
+            Assert.assertTrue("Valid scale " + scale.name() + " not recognised as valid.", predicate.test(scale));
+        }
+    }
 }
