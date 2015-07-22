@@ -91,6 +91,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
+
+        // Disable storyEstimateSlider if there are no acceptance criteria.
+        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
     
     private void deleteAC() {
