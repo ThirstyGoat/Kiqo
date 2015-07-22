@@ -1,16 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-
-import java.util.Arrays;
-import java.util.function.Predicate;
-
+import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 /**
 * Created by Carina Blair on 21/07/2015.
@@ -36,6 +32,11 @@ public class BacklogFormViewModelTest {
         Person productOwner = new Person("shortName", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getPoSkill()));
         Project project = new Project(projectName, "longName");
 
+        Backlog backlog = new Backlog(backlogName, "longName","description",productOwner, project, new ArrayList<Story>(),Scale.FIBONACCI);
+        project.observableBacklogs().add(backlog);
+        organisation.getProjects().add(project);
+        organisation.getPeople().add(productOwner);
+        backlogFormViewModel.setOrganisation(organisation);
         // set project field
         backlogFormViewModel.projectNameProperty().set(projectName);
 
