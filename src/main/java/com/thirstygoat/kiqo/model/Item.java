@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.Serializable;
-
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
+
+import java.io.Serializable;
 
 /**
  * Represents an object in the model.

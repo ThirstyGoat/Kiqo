@@ -38,7 +38,7 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(false);
         this.estimate = new SimpleIntegerProperty(0);
-        this.scale = new SimpleObjectProperty<>(null);
+        this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,

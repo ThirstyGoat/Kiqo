@@ -1,14 +1,13 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ReleaseDetailsPaneController implements Initializable, IDetailsPaneController<Release> {
     @FXML

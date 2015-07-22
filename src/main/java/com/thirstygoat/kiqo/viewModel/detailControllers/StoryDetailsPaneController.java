@@ -72,6 +72,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we wont try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
+//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
             setScale();
 
         } else {
@@ -123,6 +124,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
+
+        // Disable storyEstimateSlider if there are no acceptance criteria.
+        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
 
     private void setIsReadyCheckBoxInfo() {
@@ -148,7 +152,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteAC() {
-        Command command;
+        Command<?> command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
             List<Command<?>> commands = new ArrayList<>();

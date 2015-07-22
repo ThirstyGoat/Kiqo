@@ -83,7 +83,6 @@ public class EditCommandTest {
          * @param value
          *            the value to set
          */
-        @SuppressWarnings("unused")
         public void setValue(final int value) {
             this.value = value;
         }

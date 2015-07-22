@@ -13,10 +13,10 @@ public class Allocation {
     private final Project project;
 
     private final ObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
-    private ObjectProperty<LocalDate> endDate = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate> endDate = new SimpleObjectProperty<>();
 
     /**
-     * Creates a new allocation, checks that the start date is before the end date
+     * Creates a new allocation, checks that the start date is before the end date.
      *
      * @param team the team for the allocation
      * @param startDate the start date for the allocation
@@ -32,7 +32,7 @@ public class Allocation {
     }
 
     /**
-     *
+     * Calculates whether this allocation is currently in effect, according to the system time.
      * @return true if allocation is current
      */
     public boolean isCurrent() {
@@ -41,7 +41,7 @@ public class Allocation {
     }
 
     /**
-     *
+     * Calculates whether this allocation will start in the future, according to the system time.
      * @return true if allocation is in the future
      */
     public boolean isFuture() {
@@ -49,10 +49,6 @@ public class Allocation {
         return getStartDate().isAfter(now);
     }
 
-    /**
-     *
-     * @return startDate the start date for the allocation
-     */
     public LocalDate getStartDate() {
         return startDate.get();
     }
@@ -65,13 +61,8 @@ public class Allocation {
         return startDate;
     }
 
-    /**
-     *
-     * @return endDate the end date for the allocation
-     */
     public LocalDate getEndDate() {
-        // If your IDE says endDate can not be null, lies.
-        return (endDate == null) ? null : endDate.get();
+        return endDate.get();
     }
 
     public void setEndDate(LocalDate date) {
@@ -83,11 +74,6 @@ public class Allocation {
     }
 
     public ObjectProperty<LocalDate> getEndDateProperty() {
-        // Since the end date can be null (ie. an allocation has no definite end date, we need to at least
-        // create the property
-        if (endDate == null) {
-            endDate = new SimpleObjectProperty<>();
-        }
         return endDate;
     }
 
@@ -124,11 +110,7 @@ public class Allocation {
             return false;
         }
         final Allocation other = (Allocation) obj;
-        if (endDate == null) {
-            if (other.endDate != null) {
-                return false;
-            }
-        } else if (!endDate.equals(other.endDate)) {
+        if (!endDate.get().equals(other.endDate.get())) {
             return false;
         }
         if (project == null) {

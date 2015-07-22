@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.nodes;
 
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;

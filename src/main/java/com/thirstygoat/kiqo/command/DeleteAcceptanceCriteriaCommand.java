@@ -1,8 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.*;
-
-import java.util.Map;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Command to delete a acceptanceCriteria from a project.

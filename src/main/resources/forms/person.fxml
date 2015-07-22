@@ -47,7 +47,7 @@
         <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
         <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <TextField fx:id="departmentTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <TextField fx:id="userIDTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextField fx:id="userIdTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <TextField fx:id="phoneTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
         <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />

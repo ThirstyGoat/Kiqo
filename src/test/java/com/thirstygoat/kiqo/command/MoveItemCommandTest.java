@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.StringProperty;
 import junit.framework.TestCase;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 25/04/15.

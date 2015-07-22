@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Carina on 25/03/2015.
@@ -20,7 +19,7 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
     @FXML
     private Label longNameLabel;
     @FXML
-    private Label userIDLabel;
+    private Label userIdLabel;
     @FXML
     private Label emailLabel;
     @FXML
@@ -42,7 +41,7 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
         if (person != null) {
             shortNameLabel.textProperty().bind(person.shortNameProperty());
             longNameLabel.textProperty().bind(person.longNameProperty());
-            userIDLabel.textProperty().bind(person.userIDProperty());
+            userIdLabel.textProperty().bind(person.userIdProperty());
             emailLabel.textProperty().bind(person.emailAddressProperty());
             phoneLabel.textProperty().bind(person.phoneNumberProperty());
             departmentLabel.textProperty().bind(person.departmentProperty());
@@ -51,7 +50,7 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);
-            userIDLabel.setText(null);
+            userIdLabel.setText(null);
             emailLabel.setText(null);
             phoneLabel.setText(null);
             departmentLabel.setText(null);

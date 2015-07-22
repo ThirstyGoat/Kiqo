@@ -12,10 +12,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -53,7 +50,7 @@ public class PersonFormController extends FormController<Person> {
     @FXML
     private TextField descriptionTextField;
     @FXML
-    private TextField userIDTextField;
+    private TextField userIdTextField;
     @FXML
     private TextField emailTextField;
     @FXML
@@ -104,7 +101,7 @@ public class PersonFormController extends FormController<Person> {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this person");
-        userIDTextField.setPromptText("Identify this person!");
+        userIdTextField.setPromptText("Identify this person!");
         emailTextField.setPromptText("hello@example.com");
         phoneTextField.setPromptText("A phone number would be good too.");
         departmentTextField.setPromptText("What department do they work for?");
@@ -161,7 +158,7 @@ public class PersonFormController extends FormController<Person> {
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
             descriptionTextField.setText(person.getDescription());
-            userIDTextField.setText(person.getUserID());
+            userIdTextField.setText(person.getUserId());
             emailTextField.setText(person.getEmailAddress());
             phoneTextField.setText(person.getPhoneNumber());
             departmentTextField.setText(person.getDepartment());
@@ -274,7 +271,7 @@ public class PersonFormController extends FormController<Person> {
 
         if (person == null) {
             final Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), userIDTextField.getText(), emailTextField.getText(),
+                    descriptionTextField.getText(), userIdTextField.getText(), emailTextField.getText(),
                     phoneTextField.getText(), departmentTextField.getText(), skills);
             command = new CreatePersonCommand(p, organisation);
         } else {
@@ -289,8 +286,8 @@ public class PersonFormController extends FormController<Person> {
             if (!descriptionTextField.getText().equals(person.getDescription())) {
                 changes.add(new EditCommand<>(person, "description", descriptionTextField.getText()));
             }
-            if (!userIDTextField.getText().equals(person.getUserID())) {
-                changes.add(new EditCommand<>(person, "userID", userIDTextField.getText()));
+            if (!userIdTextField.getText().equals(person.getUserId())) {
+                changes.add(new EditCommand<>(person, "userId", userIdTextField.getText()));
             }
             if (!emailTextField.getText().equals(person.getEmailAddress())) {
                 changes.add(new EditCommand<>(person, "emailAddress", emailTextField.getText()));

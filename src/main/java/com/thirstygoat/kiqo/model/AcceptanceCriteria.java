@@ -19,7 +19,7 @@ public class AcceptanceCriteria extends Item {
 
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
-        this.state = new SimpleObjectProperty(State.NEITHER);
+        this.state = new SimpleObjectProperty<>(State.NEITHER);
     }
 
     public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
@@ -34,6 +34,7 @@ public class AcceptanceCriteria extends Item {
      * For introspection
      * @param criteria
      */
+    // for introspection
     public void setCriteria(String criteria) {
         this.criteria.setValue(criteria);
     }
@@ -48,18 +49,22 @@ public class AcceptanceCriteria extends Item {
 
     @Override
     public String toString() {
-        return "AcceptanceCriteria{" +
-                "criteria=" + criteria.get() +
-                "state=" + state.get() +
-                '}';
+        return "AcceptanceCriteria{" 
+                + "criteria=" + criteria.get() 
+                + "state=" + state.get() 
+                + '}';
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
-        AcceptanceCriteria that = (AcceptanceCriteria) o;
+        AcceptanceCriteria that = (AcceptanceCriteria) obj;
         return criteria.get().equals(that.criteria.get());
 
     }
@@ -80,41 +85,11 @@ public class AcceptanceCriteria extends Item {
     }
 
     /**
-     * Enum for the state of the acceptance criteria
+     * Represents the state of acceptance.
      */
     public enum State {
-        ACCEPTED("Accepted"),
-        REJECTED("Rejected"),
-        NEITHER("Neither");
-
-        private String label;
-
-        State(String label) {
-            this.label = label;
-        }
-
-        /**
-         * Converts the string to uppercase so that it will match the enum we are looking for
-         * so we can take the string value from the combo box used for setting state
-         */
-        public static State getEnum(String val) {
-            return State.valueOf(val.toUpperCase());
-        }
-
-        /**
-         * Used so the combo box can be filled more easily
-         * @return Arraylist of filled with the labels for each enum
-         */
-        public static ArrayList<String> getStringValues() {
-            ArrayList<String> vals = new ArrayList<>();
-            for (State state : State.values()) {
-                vals.add(state.toString());
-            }
-            return vals;
-        }
-
-        public String toString() {
-            return label;
-        }
+        ACCEPTED,
+        REJECTED,
+        NEITHER;
     }
 }

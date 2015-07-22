@@ -3,8 +3,6 @@ package com.thirstygoat.kiqo.util;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.Assert;
@@ -178,15 +176,10 @@ public class UtilitiesTest {
 
     @Test
     public void testEmptyValidation() {
-        ObjectProperty<String> objectProperty = new SimpleObjectProperty<>();
-        Predicate<ObjectProperty<String>> predicate = Utilities.createEmptyValidation(objectProperty);
+        Predicate<String> predicate = Utilities.createEmptyValidation();
 
         Assert.assertFalse("Initially should be null.", predicate.test(null));
-
-        objectProperty.set("has value");
-        Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test(objectProperty));
-
-        objectProperty.set(null);
+        Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test("has value"));
         Assert.assertFalse("Should be null.", predicate.test(null));
 
     }

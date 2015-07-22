@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 

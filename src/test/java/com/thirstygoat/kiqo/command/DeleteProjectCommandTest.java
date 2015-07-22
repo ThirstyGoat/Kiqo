@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
 
 /**
  * Created by Bradley on 23/04/15.

@@ -107,6 +107,8 @@ public class RevertTest {
 
     /**
      * Test revert when saved, done commands then reverted
+     * @throws NoSuchFieldException 
+     * @throws IllegalAccessException 
      */
     @Test
     public void testBasicRevertPastSavePos() throws NoSuchFieldException, IllegalAccessException {

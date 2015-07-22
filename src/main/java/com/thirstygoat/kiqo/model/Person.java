@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model class for Person. Created by james on 17/03/15.
@@ -15,7 +15,7 @@ public class Person extends Item {
     private final StringProperty shortName;
     private final StringProperty longName;
     private final StringProperty description;
-    private final StringProperty userID;
+    private final StringProperty userId;
     private final StringProperty emailAddress;
     private final StringProperty phoneNumber;
     private final StringProperty department;
@@ -29,7 +29,7 @@ public class Person extends Item {
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
         description = new SimpleStringProperty();
-        userID = new SimpleStringProperty();
+        userId = new SimpleStringProperty();
         emailAddress = new SimpleStringProperty();
         phoneNumber = new SimpleStringProperty();
         department = new SimpleStringProperty();
@@ -42,19 +42,19 @@ public class Person extends Item {
      * @param shortName a unique short name for the person
      * @param longName a long/full name for the person
      * @param description a description for the person
-     * @param userID a userID for the person
+     * @param userId a userId for the person
      * @param emailAddress a email address for the person
      * @param phoneNumber a phone number for the person
      * @param department a department the person works in
      * @param skills list of skills the person has
      */
-    public Person(String shortName, String longName, String description, String userID, String emailAddress, String phoneNumber,
+    public Person(String shortName, String longName, String description, String userId, String emailAddress, String phoneNumber,
             String department, List<Skill> skills) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
 
-        this.userID = new SimpleStringProperty(userID);
+        this.userId = new SimpleStringProperty(userId);
         this.emailAddress = new SimpleStringProperty(emailAddress);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.department = new SimpleStringProperty(department);
@@ -75,8 +75,8 @@ public class Person extends Item {
         return description;
     }
 
-    public StringProperty userIDProperty() {
-        return userID;
+    public StringProperty userIdProperty() {
+        return userId;
     }
 
     public StringProperty emailAddressProperty() {
@@ -105,7 +105,7 @@ public class Person extends Item {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Person{shortName='" + getShortName() + "\', longName='" + getLongName() + "\'");
         stringBuilder.append(", description='" + getDescription() + "\'");
-        stringBuilder.append(", userID='" + getUserID() + "\'");
+        stringBuilder.append(", userId='" + getUserId() + "\'");
         stringBuilder.append(", emailAddress='" + getEmailAddress() + "\'");
         stringBuilder.append(", phoneNumber='" + getPhoneNumber() + "\'");
         stringBuilder.append(", department='" + getDepartment() + "\'");
@@ -138,12 +138,12 @@ public class Person extends Item {
         this.description.set(description);
     }
 
-    public String getUserID() {
-        return userID.get();
+    public String getUserId() {
+        return userId.get();
     }
 
-    public void setUserID(String userID) {
-        this.userID.set(userID);
+    public void setUserId(String userId) {
+        this.userId.set(userId);
     }
 
     public String getEmailAddress() {

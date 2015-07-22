@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Story;
 
 

@@ -42,7 +42,6 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
 
     public BacklogFormViewModel() {
-        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
     }
 
     /**
@@ -54,14 +53,14 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     public Predicate<String> getShortNameValidation() {
         return s -> {
-            if (s.length() == 0) {
+            if (s.length() == 0|| s.length() > 20) {
                 return false;
             }
             final Project project = projectProperty.get();
             if (project == null) {
                 return true;
             }
-                return Utilities.shortnameIsUnique(s, backlog, project.getBacklogs());
+            return Utilities.shortnameIsUnique(s, null, project.getBacklogs());
         };
     }
 
@@ -121,7 +120,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     public Predicate<Scale> getScaleValidation() {
-        return Utilities.createEmptyValidation(scaleProperty);
+        return Utilities.createEmptyValidation();
     }
 
     public StringProperty shortNameProperty() { return shortNameProperty; }
@@ -198,6 +197,8 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
+
 
     }
 

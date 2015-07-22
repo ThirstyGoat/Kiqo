@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.util;
 
 import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -192,11 +191,10 @@ public class Utilities {
 
 
     /**
-     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not
-     * @param objectProperty
+     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not. 
      * @return predicate that checks for null values
      */
-    public static Predicate createEmptyValidation(ObjectProperty<? extends Object> objectProperty) {
-        return o -> objectProperty.get() != null;
+    public static <T extends Object> Predicate<T> createEmptyValidation() {
+        return (T o) -> o != null;
     }
 }
