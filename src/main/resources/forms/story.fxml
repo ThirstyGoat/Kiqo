@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.viewModel.formControllers.StoryFormController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.formControllers.StoryFormController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
@@ -27,6 +27,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints />
                 <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             </rowConstraints>
             <padding>
                 <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
@@ -34,17 +36,19 @@
             <children>
 
                 <Label text="Name:" />
-                <Label text="Short Name:" GridPane.rowIndex="1"/>
-                <Label text="Description:" GridPane.rowIndex="2"/>
+                <Label text="Short Name:" GridPane.rowIndex="1" />
+                <Label text="Description:" GridPane.rowIndex="2" />
                 <Label text="Creator:" GridPane.rowIndex="3" />
                 <Label text="Project:" GridPane.rowIndex="4" />
                 <Label text="Priority:" GridPane.rowIndex="5" />
-                <TextField fx:id="longNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <TextField fx:id="longNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <TextField fx:id="creatorTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <TextField fx:id="priorityTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Estimation Scale:" GridPane.rowIndex="6" />
+            <ComboBox fx:id="estimationScaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             </children>
         </GridPane>
     </center>

@@ -1,14 +1,14 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
+import java.util.ArrayList;
 
 /**
  * Created by Carina on 20/05/2015.
@@ -16,12 +16,13 @@ import com.thirstygoat.kiqo.model.Project;
 public class DeleteBacklogCommandTest {
     private Backlog backlog;
     private Project project;
+    private Scale scale;
     private DeleteBacklogCommand command;
 
     @Before
     public void setup() {
         project = new Project("proj", "Project");
-        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>() );
+        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>(), scale);
         project.observableBacklogs().add(backlog);
         command = new DeleteBacklogCommand(backlog);
     }

@@ -1,5 +1,39 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.Main;
+import com.thirstygoat.kiqo.PersistenceManager;
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
+import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import org.controlsfx.control.StatusBar;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,70 +46,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-
-import org.controlsfx.control.StatusBar;
-
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.DeleteBacklogCommand;
-import com.thirstygoat.kiqo.command.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.DeleteStoryCommand;
-import com.thirstygoat.kiqo.command.DeleteTeamCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
-import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
 
 /**
  * Main controller for the primary view
@@ -811,9 +781,7 @@ public class MainController implements Initializable {
      * @param t must not be null
      */
     private <T> void dialog(T t) {
-        final String[] fullname = t.getClass().getName().split("\\.");
-        final String name = fullname[fullname.length - 1];
-        dialog(t, name);
+        dialog(t, t.getClass().getSimpleName());
     }
 
     /**
@@ -828,7 +796,7 @@ public class MainController implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
-            stage.setTitle(t == null ? "New " : "Edit " + type);
+            stage.setTitle(t == null ? "Create " + type : "Edit " + type);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
             Pane root;

@@ -1,13 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -183,8 +183,8 @@ public class Project extends Item {
      * @param unallocatedStories list of unallocatedStories associated with this project
      */
     public void setUnallocatedStories(final List<Story> unallocatedStories) {
-        unallocatedStories.clear();
-        unallocatedStories.addAll(unallocatedStories);
+        this.unallocatedStories.clear();
+        this.unallocatedStories.addAll(unallocatedStories);
     }
 
     /**
@@ -202,8 +202,8 @@ public class Project extends Item {
      * @param backlogs list of backlogs associated with this project
      */
     public void setBacklogs(final List<Backlog> backlogs) {
-        backlogs.clear();
-        backlogs.addAll(backlogs);
+        this.backlogs.clear();
+        this.backlogs.addAll(backlogs);
     }
 
     @Override

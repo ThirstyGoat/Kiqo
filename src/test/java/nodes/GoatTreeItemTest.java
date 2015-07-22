@@ -1,21 +1,19 @@
 package nodes;
 
-import java.util.Comparator;
-
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.nodes.GoatTreeItem;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.nodes.GoatTreeItem;
+import java.util.Comparator;
 
 public class GoatTreeItemTest {
     private static class MockObject extends Item {

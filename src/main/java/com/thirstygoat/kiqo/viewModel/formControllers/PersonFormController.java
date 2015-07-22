@@ -1,12 +1,13 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreatePersonCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,29 +15,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * Created by james on 20/03/15.
@@ -184,17 +174,12 @@ public class PersonFormController extends FormController<Person> {
     @Override
     public void populateFields(final Person person) {
         this.person = person;
+        okButton.setText("Done");
 
         setSkillsListSelectionViewData();
 
-        if (person == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Person");
-            okButton.setText("Done");
-        } else {
+        if (person != null) {
             // We are editing an existing Person
-            stage.setTitle("Edit Person");
-            okButton.setText("Done");
             shortNameModified.set(true);
 
             longNameTextField.setText(person.getLongName());

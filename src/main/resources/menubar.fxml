@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
-
 <MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="File">

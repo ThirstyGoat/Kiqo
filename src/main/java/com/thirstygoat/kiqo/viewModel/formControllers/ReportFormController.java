@@ -1,8 +1,9 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -16,10 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Carina and James on 27/05/15.

@@ -1,15 +1,13 @@
 package com.thirstygoat.kiqo.util;
 
-import java.util.Comparator;
-
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
+import java.util.Comparator;
 
 /**
  * Created by samschofield on 20/05/15.

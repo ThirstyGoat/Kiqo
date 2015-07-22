@@ -1,23 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.CreateProjectCommand;
@@ -25,6 +7,22 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -97,15 +95,10 @@ public class ProjectFormController extends FormController<Project> {
     @Override
     public void populateFields(final Project project) {
         this.project = project;
+        okButton.setText("Done");
 
-        if (project == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Project");
-            okButton.setText("Done");
-        } else {
+        if (project != null) {
             // We are editing an existing project
-            stage.setTitle("Edit Project");
-            okButton.setText("Done");
             shortNameModified.set(true);
 
             longNameTextField.setText(project.getLongName());
