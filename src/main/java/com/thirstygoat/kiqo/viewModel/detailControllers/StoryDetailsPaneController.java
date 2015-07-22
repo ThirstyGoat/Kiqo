@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 
@@ -207,8 +208,13 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
-                EditCommand<Story, Integer> editCommand = new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue());
-                UndoManager.getUndoManager().doCommand(editCommand);
+                List<Command<?>> commands = new ArrayList<>();
+                if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
+                    commands.add(new EditCommand<>(story, "isReady", false));
+                }
+                commands.add(new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue()));
+                CompoundCommand command = new CompoundCommand("Edit Estimation", commands);
+                UndoManager.getUndoManager().doCommand(command);
             }
         });
     }
