@@ -1,12 +1,11 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.time.LocalDate;
-
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.nodes.GoatDialog;
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.nodes.GoatDialog;
+import java.time.LocalDate;
 
 /**
  * Created by bradley on 30/04/15.

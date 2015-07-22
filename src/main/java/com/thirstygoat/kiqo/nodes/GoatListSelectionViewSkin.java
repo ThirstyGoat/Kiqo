@@ -26,13 +26,7 @@
  */
 package com.thirstygoat.kiqo.nodes;
 
-import static java.util.Objects.requireNonNull;
-import static javafx.scene.control.SelectionMode.MULTIPLE;
-import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sun.javafx.css.StyleManager;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -41,16 +35,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-
+import javafx.scene.layout.*;
 import org.controlsfx.control.ListSelectionView;
 
-import com.sun.javafx.css.StyleManager;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
+import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 public class GoatListSelectionViewSkin<T> extends SkinBase<ListSelectionView<T>> {
 

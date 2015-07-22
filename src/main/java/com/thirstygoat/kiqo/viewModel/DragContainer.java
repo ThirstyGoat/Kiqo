@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import javafx.scene.input.DataFormat;
 import javafx.util.Pair;
 
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DragContainer implements Serializable {
 	private static final long serialVersionUID = -1890998765646621338L;

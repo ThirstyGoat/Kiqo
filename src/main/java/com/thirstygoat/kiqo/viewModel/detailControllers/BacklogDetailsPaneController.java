@@ -1,16 +1,15 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.viewModel.MainController;
+import com.thirstygoat.kiqo.viewModel.StoryTableViewController;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.viewModel.MainController;
-import com.thirstygoat.kiqo.viewModel.StoryTableViewController;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 /**

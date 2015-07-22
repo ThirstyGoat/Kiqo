@@ -1,8 +1,8 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.List;
-
 import com.thirstygoat.kiqo.model.Item;
+
+import java.util.List;
 
 /**
  * Created by samschofield on 25/04/15.

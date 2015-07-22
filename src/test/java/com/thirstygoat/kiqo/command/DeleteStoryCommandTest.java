@@ -1,13 +1,5 @@
 package com.thirstygoat.kiqo.command;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;

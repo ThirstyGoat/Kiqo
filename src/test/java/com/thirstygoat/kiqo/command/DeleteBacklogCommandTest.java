@@ -1,19 +1,14 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Scale;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
+import java.util.ArrayList;
 
 /**
  * Created by Carina on 20/05/2015.

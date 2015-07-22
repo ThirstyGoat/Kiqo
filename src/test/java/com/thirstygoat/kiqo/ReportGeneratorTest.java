@@ -1,21 +1,14 @@
 package com.thirstygoat.kiqo;
 
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by Carina on 3/05/2015
