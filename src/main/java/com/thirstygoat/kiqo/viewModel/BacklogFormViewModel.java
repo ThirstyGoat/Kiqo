@@ -98,7 +98,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     public Predicate<String> getProductOwnerValidation() {
         return s -> {
             for (final Person p : organisation.getPeople()) {
-                if (p.getSkills().contains(organisation.getPoSkill())) {
+                if (p.getShortName().equals(s) && p.getSkills().contains(organisation.getPoSkill())) {
                     productOwner = p;
                     return true;
                 }
@@ -120,7 +120,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     public Predicate<Scale> getScaleValidation() {
-        return Utilities.createEmptyValidation();
+        return Utilities.emptinessPredicate();
     }
 
     public StringProperty shortNameProperty() { return shortNameProperty; }

@@ -176,7 +176,7 @@ public class UtilitiesTest {
 
     @Test
     public void testEmptyValidation() {
-        Predicate<String> predicate = Utilities.createEmptyValidation();
+        Predicate<String> predicate = Utilities.emptinessPredicate();
 
         Assert.assertFalse("Initially should be null.", predicate.test(null));
         Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test("has value"));

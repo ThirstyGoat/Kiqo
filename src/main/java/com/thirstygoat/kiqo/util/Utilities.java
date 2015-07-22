@@ -194,7 +194,7 @@ public class Utilities {
      * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not. 
      * @return predicate that checks for null values
      */
-    public static <T extends Object> Predicate<T> createEmptyValidation() {
-        return (T o) -> o != null;
+    public static <T extends Object> Predicate<T> emptinessPredicate() {
+        return (T o) -> o != null && !(o.toString().isEmpty());
     }
 }
