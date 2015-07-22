@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +23,12 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  * Created by bradley on 9/04/15.
  */
@@ -33,23 +41,41 @@ public class Utilities {
         return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
     }
 
-    public static String concatenateItemsList(List<? extends Item> people, int max) {
+    /**
+     * Given a list of Items, returns a comma separated list of those items shortName.
+     * @param items A list of items.
+     * @param max The maximum number of items to print.
+     * @return
+     */
+    public static String concatenateItemsList(List<? extends Item> items, int max) {
 
         String list = "";
-        for (int i = 0; i < Math.min(people.size(), max)-1; i++) {
-            list += people.get(i).getShortName() + ", ";
+
+        // The true maximum can never be greater than the number of items.
+        // So if max is greater than items.size() we make items.size() the new max.
+        max = (max < items.size()) ? max: items.size();
+
+        // If max is negative, then for our purposes it may as well be zero.
+        // This prevents errors that occur from subtracting negative numbers.
+        max = (max < 0) ? 0 : max;
+
+        List<Item> itemsToPrint = new ArrayList<>();
+        for (int i = 0; i < max; i++) {
+            itemsToPrint.add(items.get(i));
         }
-        list += people.get(Math.min(people.size(), max)-1).getShortName();
-        if (Math.min(people.size(), max) < people.size()) {
-            final int remaining = people.size() - max;
+
+        list += commaSeparatedValues(itemsToPrint);
+        if (max < items.size()) {
+            final int remaining = items.size() - max;
             final String others = pluralise(remaining, "other", "others");
-            list += " and " + remaining + " " + others;
+            // Use the Oxford comma.
+            list += ", and " + remaining + " " + others;
         }
         return list;
     }
 
     public static String pluralise(int count, String singular, String plural) {
-        return (count % 2 == 0) ? plural : plural;
+        return (count == 1) ? singular : plural;
     }
 
     public static String commaSeparatedValues(List<? extends Item> list) {
@@ -116,21 +142,6 @@ public class Utilities {
     /**
      * Checks whether the given shortname is unique among the given Collection.
      * @param shortName Short Name to be checked
-     * @param items items among which the name must be unique
-     * @return shortName is unique among items
-     */
-    public static boolean shortnameIsUnique(String shortName, Collection<? extends Item> items) {
-        // copy all the shortnames into a new list
-        final Collection<String> list = new ArrayList<>();
-        list.addAll(items.stream().map(Item::getShortName).collect(Collectors.toList()));
-
-        // now for the actual check
-        return !list.contains(shortName);
-    }
-
-    /**
-     * Checks whether the given shortname is unique among the given Collection.
-     * @param shortName Short Name to be checked
      * @param item Item being changed
      * @param items items among which the name must be unique
      * @return shortName is unique among items
@@ -189,5 +200,14 @@ public class Utilities {
             }
         }
         return false;
+    }
+
+
+    /**
+     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not. 
+     * @return predicate that checks for null values
+     */
+    public static <T extends Object> Predicate<T> createEmptyValidation() {
+        return (T o) -> o != null;
     }
 }

@@ -8,6 +8,10 @@ import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by leroy on 15/05/2015
@@ -22,7 +26,7 @@ public class DeleteStoryCommandTest {
     @Before
     public void setup() {
         project = new Project("", "");
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, 0 , Scale.FIBONACCI);
         project.observableUnallocatedStories().add(story);
         command = new DeleteStoryCommand(story);
     }

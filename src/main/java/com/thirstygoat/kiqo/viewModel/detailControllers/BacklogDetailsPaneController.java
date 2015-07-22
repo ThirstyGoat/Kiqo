@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import com.thirstygoat.kiqo.model.Backlog;
@@ -30,7 +29,7 @@ public class BacklogDetailsPaneController implements Initializable, IDetailsPane
     @FXML
     private Label productOwnerLabel;
     @FXML
-    private Button allocateStoryButton;
+    private Label scaleLabel;
     @FXML
     private StoryTableViewController storyTableViewController;
 
@@ -46,12 +45,15 @@ public class BacklogDetailsPaneController implements Initializable, IDetailsPane
             descriptionLabel.textProperty().bind(backlog.descriptionProperty());
             productOwnerLabel.textProperty().bind(Bindings.select(backlog.productOwnerProperty(), "shortName"));
             storyTableViewController.setItems(backlog.observableStories());
+            scaleLabel.textProperty().bind(backlog.scaleProperty().asString());
+
         } else {
             shortNameLabel.setText(null);
             longNameLabel.setText(null);
             descriptionLabel.setText(null);
             productOwnerLabel.setText(null);
             storyTableViewController.setItems(null);
+            scaleLabel.textProperty().unbind();
         }
     }
 

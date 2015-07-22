@@ -97,15 +97,10 @@ public class ProjectFormController extends FormController<Project> {
     @Override
     public void populateFields(final Project project) {
         this.project = project;
+        okButton.setText("Done");
 
-        if (project == null) {
-            // Then we are creating a new one
-            stage.setTitle("Create Project");
-            okButton.setText("Done");
-        } else {
+        if (project != null) {
             // We are editing an existing project
-            stage.setTitle("Edit Project");
-            okButton.setText("Done");
             shortNameModified.set(true);
 
             longNameTextField.setText(project.getLongName());

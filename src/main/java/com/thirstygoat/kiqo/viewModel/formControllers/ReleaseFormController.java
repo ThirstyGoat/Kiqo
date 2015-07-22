@@ -204,17 +204,13 @@ public class ReleaseFormController extends FormController<Release> {
     @Override
     public void populateFields(Release release) {
         this.release = release;
+        okButton.setText("Done");
 
         if (release == null) {
             // create a release
-            stage.setTitle("Create Release");
-            okButton.setText("Done");
             releaseDatePicker.setPromptText("dd/mm/yyyy");
         } else {
             // edit an existing release
-            stage.setTitle("Edit Release");
-            okButton.setText("Done");
-
             shortNameTextField.setText(release.getShortName());
             projectTextField.setText(release.getProject().getShortName());
             releaseDatePicker.setValue(release.getDate());

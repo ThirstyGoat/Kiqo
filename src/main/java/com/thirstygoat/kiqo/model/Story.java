@@ -24,6 +24,8 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
+    private final IntegerProperty estimate;
+    private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
 
     /**
@@ -38,10 +40,12 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.estimate = new SimpleIntegerProperty(0);
+        this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority) {
+                 Backlog backlog, Integer priority, Integer estimate, Scale scale) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -50,6 +54,8 @@ public class Story extends Item {
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
         this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.estimate = new SimpleIntegerProperty(estimate);
+        this.scale = new SimpleObjectProperty<>(scale);
     }
 
     @Override
@@ -102,9 +108,13 @@ public class Story extends Item {
         return creator;
     }
 
-    public ObjectProperty<Project> projectProperty() { return project; }
+    public ObjectProperty<Project> projectProperty() {
+        return project;
+    }
 
-    public Project getProject() { return project.get(); }
+    public Project getProject() {
+        return project.get();
+    }
 
     public void setProject(Project project) {
         this.project.set(project);
@@ -122,7 +132,9 @@ public class Story extends Item {
         this.backlog.set(backlog);
     }
 
-    public int getPriority() { return priority.get();}
+    public int getPriority() {
+        return priority.get();
+    }
 
     public void setPriority(int priority) {
         this.priority.set(priority);
@@ -134,6 +146,30 @@ public class Story extends Item {
 
     public ObservableList<AcceptanceCriteria> getAcceptanceCriteria() {
         return acceptanceCriteria;
+    }
+
+    public Integer getEstimate() {
+        return estimate.get();
+    }
+
+    public void setEstimate(Integer estimate) {
+        this.estimate.set(estimate);
+    }
+
+    public IntegerProperty estimateProperty() {
+        return estimate;
+    }
+
+    public Scale getScale() {
+        return scale.get();
+    }
+
+    public void setScale(Scale scale) {
+        this.scale.setValue(scale);
+    }
+
+    public ObjectProperty<Scale> scaleProperty() {
+        return scale;
     }
 
 }

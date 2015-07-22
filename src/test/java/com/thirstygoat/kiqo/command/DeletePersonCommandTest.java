@@ -3,6 +3,9 @@ package com.thirstygoat.kiqo.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
+import com.thirstygoat.kiqo.model.*;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +18,9 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bradley on 9/04/15.
@@ -259,11 +265,13 @@ public class DeletePersonCommandTest {
         Project project = new Project();
         organisation.getProjects().add(project);
         Person person = new Person();
+
         List<Skill> skills = new ArrayList<>();
         skills.add(organisation.getPoSkill());
         person.setSkills(skills);
 
-        Backlog backlog = new Backlog("Short name", "Long name", "Description", person, project, new ArrayList<>());
+
+        Backlog backlog = new Backlog("Short name", "Long name", "Description", person, project, new ArrayList<>(), Scale.FIBONACCI);
         project.observableBacklogs().add(backlog);
 
         try {
