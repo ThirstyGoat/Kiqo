@@ -3,10 +3,12 @@ package com.thirstygoat.kiqo.viewModel.detailControllers;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.When;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -62,6 +64,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we wont try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
+//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
             setScale();
 
         } else {

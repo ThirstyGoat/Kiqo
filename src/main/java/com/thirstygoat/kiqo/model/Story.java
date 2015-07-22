@@ -36,7 +36,7 @@ public class Story extends Item {
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
         this.acceptanceCriteria = FXCollections.observableArrayList();
         this.estimate = new SimpleIntegerProperty(0);
-        this.scale = new SimpleObjectProperty<>(null);
+        this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
