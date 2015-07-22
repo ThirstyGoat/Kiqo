@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.viewModel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,7 +53,7 @@ public class BacklogFormViewModelTest {
     }
 
     @Test
-    public void testDescriptionProperty() {
+    public void testDescriptionValidation() {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
         Predicate<String> predicate = backlogFormViewModel.getDescriptionValidation();
 
@@ -64,7 +63,7 @@ public class BacklogFormViewModelTest {
     }
 
     @Test
-    public void testProductOwnerTest() {
+    public void testProductOwnerValidation() {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
         Organisation organisation = new Organisation();
         backlogFormViewModel.setOrganisation(organisation);
@@ -110,7 +109,7 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void testScaleValidation() {
-
+        Assert.fail();
     }
 
 }

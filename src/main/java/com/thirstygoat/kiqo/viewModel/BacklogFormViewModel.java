@@ -42,7 +42,6 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
 
     public BacklogFormViewModel() {
-        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
     }
 
     /**
@@ -54,7 +53,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     public Predicate<String> getShortNameValidation() {
         return s -> {
-            if (s.length() == 0) {
+            if (s.length() == 0|| s.length() > 20) {
                 return false;
             }
             final Project project = projectProperty.get();
@@ -198,6 +197,8 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
+
 
     }
 
