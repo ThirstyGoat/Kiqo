@@ -191,8 +191,6 @@ public final class ReportGenerator {
         for(final Story story : project.getUnallocatedStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
-
-
         }
 
         // Add releases associated to this project to the report
@@ -236,7 +234,6 @@ public final class ReportGenerator {
         for(final Story story : backlog.getStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
-
         }
 
         return lines;
@@ -251,15 +248,21 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Name", story.getLongName()));
         lines.add(ReportUtils.valueLine("Description", story.getDescription()));
         lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
+        
+        lines.add(ReportUtils.collectionLine("Dependencies", story.getDependencies().isEmpty()));
+        for (final Story dependency : story.getDependencies()) {
+            lines.add(" - " + dependency.getShortName());
+        }
+        
         lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
         lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
+        
 
         // Add unallocated stories that belong to this project to the report
         lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
         for (final AcceptanceCriteria acceptanceCriteria : story.getAcceptanceCriteria()) {
             lines.add(ReportGenerator.AC_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
-
         }
 
         return lines;
