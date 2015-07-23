@@ -10,31 +10,32 @@
 }
 
 .allocation-past {
-	-fx-background-color: #5ad8ff;
+	-fx-background-color: #62c1ff;
 }
 
 .allocation-current {
-	-fx-background-color: #24c339;
+	-fx-background-color: #45c34b;
 }
 
 .allocation-future {
-	-fx-background-color: #ffb429;
+	-fx-background-color: #ffc145;
 }
 
-.allocation-non-existent-project:selected, .allocation-non-existent-team:selected {
+.table-view:focused .allocation-non-existent-project:selected,
+.table-view:focused .allocation-non-existent-team:selected {
     -fx-background-color: #E13030;
 }
 
-.allocation-past:selected {
-    -fx-background-color: #E1D7D0;
+.table-view:focused .allocation-past:selected {
+    -fx-background-color: #437ca5;
 }
 
-.allocation-current:selected {
-    -fx-background-color: #26A53B;
+.table-view:focused .allocation-current:selected {
+    -fx-background-color: #328737;
 }
 
-.allocation-future:selected {
-    -fx-background-color: #E1A41F;
+.table-view:focused .allocation-future:selected {
+    -fx-background-color: #b28430;
 }
 
 .table-view .column-header#teamTableColumn .label {
