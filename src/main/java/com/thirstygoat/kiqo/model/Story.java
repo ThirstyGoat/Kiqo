@@ -78,6 +78,18 @@ public class Story extends Item {
         }, tasks));
     }
 
+    public ObservableList<Task> observableTasks() {
+        return tasks;
+    }
+
+    public FloatProperty taskHoursProperty() {
+        return taskHours;
+    }
+
+    public Float getTaskHours() {
+        return taskHours.get();
+    }
+
     @Override
     public String getShortName() {
         return shortName.get();
