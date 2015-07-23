@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.NoSuchElementException;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.NoSuchElementException;
 
 /**
  * Tests the UndoManager class

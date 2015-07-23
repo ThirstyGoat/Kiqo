@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
+
 
 /**
  * Created by samschofield on 17/07/15.
@@ -169,6 +171,16 @@ public class UtilitiesTest {
 
     @Test
     public void testIsPersonPoOfBacklog() throws Exception {
+
+    }
+
+    @Test
+    public void testEmptyValidation() {
+        Predicate<String> predicate = Utilities.createEmptyValidation();
+
+        Assert.assertFalse("Initially should be null.", predicate.test(null));
+        Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test("has value"));
+        Assert.assertFalse("Should be null.", predicate.test(null));
 
     }
 }

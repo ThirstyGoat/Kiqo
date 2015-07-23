@@ -7,6 +7,8 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,7 +21,6 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.net.URL;
 import java.util.Objects;
@@ -87,6 +88,7 @@ public class StoryFormController extends FormController<Story> {
         storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
 
         creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
+        okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
     }
 
     private void setPrompts() {
@@ -113,34 +115,13 @@ public class StoryFormController extends FormController<Story> {
     }
 
     private void setValidationSupport() {
-
-            validationSupport.registerValidator(shortNameTextField,
-                    Validator.createPredicateValidator(viewModel.getShortNameValidation(),
-                            "Short name must be unique and not empty."));
-
-            validationSupport.registerValidator(longNameTextField,
-                    Validator.createEmptyValidator("Long name must not be empty", Severity.ERROR));
-
-            validationSupport.registerValidator(creatorTextField, Validator.createPredicateValidator(
-                    viewModel.getCreatorValidation(),
-                    "Person must already exist"));
-
-
-            validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(
-                    viewModel.getProjectValidation(),
-                    "Project must already exist"));
-
-        validationSupport.registerValidator(priorityTextField,
-                Validator.createPredicateValidator(
-                        viewModel.getPriorityValidation(), "Priority must be an integer between "
-                                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
-
-        validationSupport.registerValidator(estimationScaleComboBox,
-                Validator.createEmptyValidator("Estimation Scale must not be empty", Severity.ERROR));
-
-            validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
-                okButton.setDisable(newValue);
-            });
+        ValidationVisualizer visualizer = new ControlsFxVisualizer();
+        visualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
+        visualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
+        visualizer.initVisualization(viewModel.creatorValidation(), creatorTextField, true);
+        visualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
+        visualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
+        visualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
 
     /**

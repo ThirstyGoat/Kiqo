@@ -11,10 +11,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.thirstygoat.kiqo.PersistenceManager;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
-
 /**
  * Created by james, amy on 6/5/15.
  *
@@ -255,7 +251,9 @@ public final class ReportGenerator {
         }
         
         lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
+        lines.add(ReportUtils.valueLine("Scale", story.getScale()));
         lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
+        lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
         
 
         // Add unallocated stories that belong to this project to the report
@@ -349,7 +347,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
         lines.add(ReportUtils.valueLine("Long Name", person.getLongName()));
         lines.add(ReportUtils.valueLine("Description", person.getDescription()));
-        lines.add(ReportUtils.valueLine("User ID", person.getUserID()));
+        lines.add(ReportUtils.valueLine("User ID", person.getUserId()));
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
         lines.add(ReportUtils.valueLine("Phone Number", person.getPhoneNumber()));
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));

@@ -39,7 +39,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -538,7 +537,7 @@ public class MainController implements Initializable {
         } catch (final FileNotFoundException e) {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
         } catch (final Exception e) {
-            GoatDialog.showAlertDialog(primaryStage, "Ahhhhhh", "Nope.", "Something broke, Probably we forgot to return the shortname property of an Item.");
+            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "You are probably trying to load a pre-release organisation.");
         }
 
         if(PersistenceManager.getIsOldJSON()) {
@@ -743,7 +742,7 @@ public class MainController implements Initializable {
         if (!undoManager.changesSavedProperty().get()) {
             final String[] options = {"Save changes", "Discard changes", "Cancel"};
             final String response = GoatDialog.createBasicButtonDialog(primaryStage, "Save Project", "You have unsaved changes.",
-                    "Would you like to save the changes you have made to the project?", options);
+                    "Would you like to save the changes you have made to the organisation?", options);
             switch (response) {
                 case "Save changes":
                     return saveOrganisation(false);

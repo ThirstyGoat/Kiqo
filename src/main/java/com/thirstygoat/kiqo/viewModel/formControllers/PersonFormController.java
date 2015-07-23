@@ -12,10 +12,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -53,7 +50,7 @@ public class PersonFormController extends FormController<Person> {
     @FXML
     private TextField descriptionTextField;
     @FXML
-    private TextField userIDTextField;
+    private TextField userIdTextField;
     @FXML
     private TextField emailTextField;
     @FXML
@@ -104,7 +101,7 @@ public class PersonFormController extends FormController<Person> {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this person");
-        userIDTextField.setPromptText("Identify this person!");
+        userIdTextField.setPromptText("Identify this person!");
         emailTextField.setPromptText("hello@example.com");
         phoneTextField.setPromptText("A phone number would be good too.");
         departmentTextField.setPromptText("What department do they work for?");
@@ -137,33 +134,6 @@ public class PersonFormController extends FormController<Person> {
         if (person != null) {
             sourceSkills.removeAll(person.getSkills());
             targetSkills.addAll(person.getSkills());
-
-            // NOTE THIS IS NOT DEAD CODE TODO
-//            // Listen for skills that are removed (if PO/SM skill is removed, warn that the person will be removed that
-//            // role if they are using it.
-//            ListChangeListener<Skill> targetSkillsChangedListener = c -> {
-//
-//                while (c.next()) {
-//                    if (c.getRemoved().contains(organisation.getPoSkill()) && c.getRemoved().contains(organisation.getSmSkill())) {
-//                        // Then the user has removed the PO skill
-//                        GoatDialog.showAlertDialog(stage, "PO & SM Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as PO/SM for any Teams/Backlogs" +
-//                                        " they are currently assigned to.");
-//                    } else if (c.getRemoved().contains(organisation.getPoSkill())) {
-//                        // Then the user has removed the PO skill
-//                        GoatDialog.showAlertDialog(stage, "PO Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as PO for any Teams/Backlogs" +
-//                                        " they are currently assigned as Product Owner for.");
-//                    } else if (c.getRemoved().contains(organisation.getSmSkill())) {
-//                        // Then the user has removed the SM skill
-//                        GoatDialog.showAlertDialog(stage, "SM Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as SM for any Teams" +
-//                                        " they are currently assigned as Scrum Master for.");
-//                    }
-//                }
-//            };
-//
-//            targetSkills.addListener(targetSkillsChangedListener);
         }
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
@@ -188,7 +158,7 @@ public class PersonFormController extends FormController<Person> {
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
             descriptionTextField.setText(person.getDescription());
-            userIDTextField.setText(person.getUserID());
+            userIdTextField.setText(person.getUserId());
             emailTextField.setText(person.getEmailAddress());
             phoneTextField.setText(person.getPhoneNumber());
             departmentTextField.setText(person.getDepartment());
@@ -254,7 +224,7 @@ public class PersonFormController extends FormController<Person> {
         });
 
         skillsSelectionView.skin.getMoveToSourceAllButton().setOnAction(event -> {
-            if (targetListView.getSelectionModel().getSelectedItems().contains(poSkill)) {
+            if (targetListView.getItems().contains(poSkill)) {
                 // Then they are trying to remove the PO skill
                 if (poOfTeam || finalUsingPoSkillInBacklog) {
                     // Then they are a product owner, and owner of 1 or more backlogs
@@ -301,7 +271,7 @@ public class PersonFormController extends FormController<Person> {
 
         if (person == null) {
             final Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
-                    descriptionTextField.getText(), userIDTextField.getText(), emailTextField.getText(),
+                    descriptionTextField.getText(), userIdTextField.getText(), emailTextField.getText(),
                     phoneTextField.getText(), departmentTextField.getText(), skills);
             command = new CreatePersonCommand(p, organisation);
         } else {
@@ -316,8 +286,8 @@ public class PersonFormController extends FormController<Person> {
             if (!descriptionTextField.getText().equals(person.getDescription())) {
                 changes.add(new EditCommand<>(person, "description", descriptionTextField.getText()));
             }
-            if (!userIDTextField.getText().equals(person.getUserID())) {
-                changes.add(new EditCommand<>(person, "userID", userIDTextField.getText()));
+            if (!userIdTextField.getText().equals(person.getUserId())) {
+                changes.add(new EditCommand<>(person, "userId", userIdTextField.getText()));
             }
             if (!emailTextField.getText().equals(person.getEmailAddress())) {
                 changes.add(new EditCommand<>(person, "emailAddress", emailTextField.getText()));

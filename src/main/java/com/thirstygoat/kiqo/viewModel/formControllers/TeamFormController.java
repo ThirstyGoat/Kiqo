@@ -255,8 +255,6 @@ public class TeamFormController extends FormController<Team> {
                 }
             }
         });
-
-
     }
 
     private void setTargetPeopleCellFactory(ListView<Person> listView) {
@@ -429,7 +427,6 @@ public class TeamFormController extends FormController<Team> {
             scrumMaster = team.getScrumMaster();
             devTeam.addAll(team.getDevTeam().stream().collect(Collectors.toList()));
         }
-
     }
 
     @Override

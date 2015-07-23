@@ -1,13 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

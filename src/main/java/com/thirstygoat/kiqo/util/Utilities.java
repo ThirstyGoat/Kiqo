@@ -1,12 +1,5 @@
 package com.thirstygoat.kiqo.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,8 +8,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-
 import javafx.scene.control.TextField;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by bradley on 9/04/15.
@@ -189,5 +187,14 @@ public class Utilities {
             }
         }
         return false;
+    }
+
+
+    /**
+     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not. 
+     * @return predicate that checks for null values
+     */
+    public static <T extends Object> Predicate<T> createEmptyValidation() {
+        return (T o) -> o != null;
     }
 }

@@ -18,9 +18,9 @@ public class Backlog extends Item {
     private StringProperty shortName;
     private StringProperty longName;
     private StringProperty description;
-    private ObjectProperty <Scale> scale;
     private ObjectProperty<Person> productOwner;
     private ObjectProperty<Project> project;
+    private ObjectProperty <Scale> scale;
 
     public Backlog() {
         this.shortName = new SimpleStringProperty("");
@@ -125,5 +125,9 @@ public class Backlog extends Item {
 
     public ObjectProperty<Project> projectProperty() {
         return project;
+    }
+
+    public ObjectProperty<Scale> scaleProperty() {
+        return scale;
     }
 }

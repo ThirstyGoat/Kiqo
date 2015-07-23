@@ -2,9 +2,14 @@ package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,9 +18,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -26,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public class StoryFormViewModel extends FormController<Story> {
     private Story story;
-    private Person creator;
+    private ObjectProperty<Person> creatorProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
     private Backlog backlog; // not a property because not editable from form
     private Organisation organisation;
@@ -46,27 +53,87 @@ public class StoryFormViewModel extends FormController<Story> {
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
+    private FunctionBasedValidator shortNameValidator;
+    private FunctionBasedValidator longNameValidator;
+    private FunctionBasedValidator descriptionValidator;
+    private FunctionBasedValidator creatorValidator;
+    private FunctionBasedValidator projectValidator;
+    private FunctionBasedValidator priorityValidator;
+    private FunctionBasedValidator scaleValidator;
+    private CompositeValidator formValidator;
+
     public StoryFormViewModel() {
-        projectNameProperty.bindBidirectional(projectProperty, new StringConverter<Project>() {
-            @Override
-            public Project fromString(String shortName) {
-                for (final Project p : organisation.getProjects()) {
-                    if (p.getShortName().equals(shortName)) {
-                        return p;
+        shortNameValidator = new FunctionBasedValidator<>(shortNameProperty,
+            // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
+            s -> {
+                if (s.length() == 0 || s.length() > 20) {
+                    return false;
+                }
+
+                final Project project = projectProperty.get();
+                if (project == null) {
+                    return true;
+                } else {
+                    Collection<Collection<? extends Item>> existingStories = new ArrayList<>();
+                    existingStories.add(project.getUnallocatedStories());
+                    existingStories.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+
+                    return Utilities.shortnameIsUniqueMultiple(s, story, existingStories);
+                }
+            },
+            ValidationMessage.error("Short name must be unique and not empty"));
+
+        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
+            // Checks that the long name isn't empty
+            s -> s != null && !s.isEmpty(),
+            ValidationMessage.error("Long name must not be empty"));
+
+        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
+            // Always valid as description isn't required and has no constraints
+            s -> true,
+            ValidationMessage.error(""));
+
+        creatorValidator = new FunctionBasedValidator<>(creatorNameProperty,
+            // Checks that the creator exists within the organisation and is set
+            s -> {
+                if (organisation != null) {
+                    for (final Person p : organisation.getPeople()) {
+                        if (p.getShortName().equals(s)) {
+                            return true;
+                        }
                     }
                 }
-                return null;
-            }
+                return false;
+            },
+            ValidationMessage.error("Person must already exist"));
 
-            @Override
-            public String toString(Project project) {
-                return project != null ? project.getShortName() : "";
-            }
-        });
+        projectValidator = new FunctionBasedValidator<>(projectProperty,
+            // Checks that the project exists and is set
+            Utilities.createEmptyValidation(),
+            ValidationMessage.error("Project must already exist"));
 
-        projectProperty.addListener((observable, oldValue, newValue) -> {
-            setStoryListProperties();
-        });
+        priorityValidator = new FunctionBasedValidator<>(priorityProperty,
+            s -> {
+                try {
+                    int i = Integer.parseInt(s);
+                    if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+                        return false;
+                    }
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+                return true;
+            },
+            ValidationMessage.error("Priority must be an integer between "
+                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+
+        scaleValidator = new FunctionBasedValidator<>(scaleProperty,
+            Utilities.createEmptyValidation(),
+            ValidationMessage.error("Estimation Scale must not be empty"));
+
+        formValidator = new CompositeValidator();
+        formValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
+                projectValidator, priorityValidator, scaleValidator);
     }
     
     private void setStoryListProperties() {
@@ -125,130 +192,6 @@ public class StoryFormViewModel extends FormController<Story> {
         setListeners();
     }
 
-    private void setListeners() {
-        projectProperty.addListener(((observable, oldValue, newValue) -> {
-            setStoryListProperties();
-        }));
-    }
-
-    /** 
-     * Validation for short name.
-     * Checks that length of the shortName isn't 0 or greater than 20 and that it its unique.
-     * 
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getShortNameValidation() {
-        return s -> {
-            if (s.length() == 0 || s.length() > 20) {
-                return false;
-            }
-
-            final Project project = projectProperty.get();
-            if (project == null) {
-                return true;
-            } else {
-                Collection<Collection<? extends Item>> existingStories = new ArrayList<>();
-                existingStories.add(project.getUnallocatedStories());
-                existingStories.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
-    
-                return Utilities.shortnameIsUniqueMultiple(s, story, existingStories);
-            }
-        };
-    }
-
-    /**
-     * Validation for long name
-     * Checks that the long name isn't empty
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getLongNameValidation() {
-        return s -> {
-            return s != null && !s.isEmpty();
-        };
-    }
-
-    /**
-     * Validation for description
-     * Always valid as description isn't required and has no constraints
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getDescriptionValidation() {
-        return s -> {
-            // always valid
-            return true;
-        };
-    }
-
-    /**
-     * Validation for creator
-     * Checks that the creator exists within the organisation and is set
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getCreatorValidation() {
-        return s -> {
-            for (final Person p : organisation.getPeople()) {
-                if (p.getShortName().equals(s)) {
-                    creator = p;
-                    return true;
-                }
-            }
-            return false;
-        };
-    }
-
-    /**
-     * Validation for project
-     * Checks that the project exists and is set
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getProjectValidation() {
-        return s -> {
-            // Force re-validation for shortname
-            final String snt = shortNameProperty.get();
-            shortNameProperty.setValue("");
-            shortNameProperty.setValue(snt);
-            
-            return projectProperty.get() != null;
-        };
-    }
-
-    /**
-     * Validation for backlog
-     *
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getBacklogValidation() {
-        return s -> {
-            // TODO implement validation
-            return false;
-        };
-    }
-
-    /**
-     * Validation for priority
-     *
-     *
-     * @return predicate for determining validity
-     */
-    public Predicate<String> getPriorityValidation() {
-        return s -> {
-            try {
-                int i = Integer.parseInt(s);
-                if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
-            }
-            return true;
-        };
-    }
-
     public StringProperty shortNameProperty() {
         return shortNameProperty;
     }
@@ -272,10 +215,8 @@ public class StoryFormViewModel extends FormController<Story> {
     public ObjectProperty<Project> projectProperty() {
         return projectProperty;
     }
-
-    public StringProperty priorityProperty() {
-        return priorityProperty;
-    }
+    
+    public StringProperty priorityProperty() { return priorityProperty; }
 
     public ObjectProperty<Scale> scaleProperty() {
         return scaleProperty;
@@ -297,6 +238,36 @@ public class StoryFormViewModel extends FormController<Story> {
         return creatorEditable;
     }
 
+    public ValidationStatus shortNameValidation() {
+        return shortNameValidator.getValidationStatus();
+    }
+
+    public ValidationStatus longNameValidation() {
+        return longNameValidator.getValidationStatus();
+    }
+
+    public ValidationStatus descriptionValidation() { return descriptionValidator.getValidationStatus(); }
+
+    public ValidationStatus creatorValidation() {
+        return creatorValidator.getValidationStatus();
+    }
+
+    public ValidationStatus projectValidation() {
+        return projectValidator.getValidationStatus();
+    }
+
+    public ValidationStatus priorityValidation() {
+        return priorityValidator.getValidationStatus();
+    }
+
+    public ValidationStatus scaleValidation() {
+        return scaleValidator.getValidationStatus();
+    }
+
+    public ValidationStatus formValidation() {
+        return formValidator.getValidationStatus();
+    }
+
     public void setStory(Story story) {
         this.story = story;
         reloadFromModel();
@@ -310,7 +281,8 @@ public class StoryFormViewModel extends FormController<Story> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-
+        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
+        creatorNameProperty.bindBidirectional(creatorProperty, StringConverters.personStringConverter(organisation));
     }
 
     @Override
@@ -324,8 +296,8 @@ public class StoryFormViewModel extends FormController<Story> {
     public void setCommand() {
         if (story == null) {
             // new story command
-            story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creator,
-                    projectProperty.get(), backlog, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), targetStoriesProperty.get());
+            story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creatorProperty.get(),
+                    projectProperty.get(), null, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), false);
             command = new CreateStoryCommand(story);
         } else {
             // edit command
@@ -441,4 +413,5 @@ public class StoryFormViewModel extends FormController<Story> {
                     '}';
         }
     }
+
 }

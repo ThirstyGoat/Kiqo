@@ -1,44 +1,17 @@
 package com.thirstygoat.kiqo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.google.gson.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import java.io.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -145,6 +118,7 @@ public class PersistenceManager {
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(IntegerProperty.class, new IntegerPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(BooleanProperty.class, new BooleanPropertyDeserializer());
 
         if(isOldFile) {
             gsonBuilder.registerTypeAdapter(Organisation.class, new OrganisationDeserializer());
@@ -184,10 +158,10 @@ public class PersistenceManager {
     /**
      * Custom Deserializer for ObservableLists
      */
-    private static class ObservableListDeserializer implements JsonDeserializer<ObservableList> {
+    private static class ObservableListDeserializer implements JsonDeserializer<ObservableList<?>> {
 
         @Override
-        public ObservableList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public ObservableList<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             final Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
@@ -195,7 +169,9 @@ public class PersistenceManager {
             }
 
             ObservableList observableList;
-            if (Item.class.isAssignableFrom((Class<?>) type)) {
+            if (AcceptanceCriteria.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+            } else if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
                 observableList = FXCollections.observableArrayList();
@@ -242,9 +218,26 @@ public class PersistenceManager {
         }
     }
 
-    private static class ObjectPropertyDeserializer implements JsonDeserializer<ObjectProperty>, JsonSerializer<ObjectProperty> {
+    private static class BooleanPropertyDeserializer implements JsonDeserializer<BooleanProperty>, JsonSerializer<BooleanProperty> {
+
         @Override
-        public ObjectProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+        public BooleanProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            return new SimpleBooleanProperty(jsonElement.getAsBoolean());
+        }
+
+        @Override
+        public JsonElement serialize(BooleanProperty booleanProperty, Type type, JsonSerializationContext jsonSerializationContext) {
+            if (booleanProperty != null) {
+                return new JsonPrimitive(booleanProperty.get());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class ObjectPropertyDeserializer implements JsonDeserializer<ObjectProperty<?>>, JsonSerializer<ObjectProperty<?>> {
+        @Override
+        public ObjectProperty<?> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
             final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
@@ -254,7 +247,7 @@ public class PersistenceManager {
         }
 
         @Override
-        public JsonElement serialize(ObjectProperty o, Type type, JsonSerializationContext jsonSerializationContext) {
+        public JsonElement serialize(ObjectProperty<?> o, Type type, JsonSerializationContext jsonSerializationContext) {
             final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
             if (o != null && o.get() != null) {
                 if (PersistenceManager.gson == null) {

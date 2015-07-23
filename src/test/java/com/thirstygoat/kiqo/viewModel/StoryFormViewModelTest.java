@@ -10,19 +10,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Predicate;
 
 public class StoryFormViewModelTest {
 
     @Test
     public void testShortNameValidation() throws NoSuchFieldException, IllegalAccessException {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getShortNameValidation();
 
-        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.shortNameProperty().get()));
-        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
-        Assert.assertFalse("Must not be longer than 20 characters.", predicate.test("This name is longer than 20 characters."));
+        Assert.assertFalse("Must not be valid initially.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
+
+        storyFormViewModel.shortNameProperty().set("Billy Goat");
+        Assert.assertTrue("Valid input not recognised as valid.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
+
+        storyFormViewModel.shortNameProperty().set("");
+        Assert.assertFalse("Must not be an empty string.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
+
+        storyFormViewModel.shortNameProperty().set("This name is longer than 20 characters.");
+        Assert.assertFalse("Must not be longer than 20 characters.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
 
         // validating uniqueness within project requires model data
         final String projectName = "project shortName";
@@ -30,8 +38,8 @@ public class StoryFormViewModelTest {
         
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project(projectName, "longName");
-        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, new ArrayList<>());
-        project.setUnallocatedStories(new ArrayList<Story>(Arrays.asList(story)));
+        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false);
+        project.setUnallocatedStories(new ArrayList<>(Arrays.asList(story)));
         
         Organisation organisation = new Organisation();
         organisation.getPeople().add(creator);
@@ -41,28 +49,45 @@ public class StoryFormViewModelTest {
         // set project field
         storyFormViewModel.projectNameProperty().set(projectName);
 
-        Assert.assertTrue("Unique short name not recognised as valid.", predicate.test("unique"));
-        Assert.assertFalse("Must be unique within project.", predicate.test(storyName));
+        storyFormViewModel.shortNameProperty().set("unique");
+        Assert.assertTrue("Unique short name not recognised as valid.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
+
+        storyFormViewModel.shortNameProperty().set(storyName);
+        Assert.assertFalse("Must be unique within project.",
+                storyFormViewModel.shortNameValidation().validProperty().get());
     }
     
     @Test
     public void testLongNameValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getLongNameValidation();
 
-        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.longNameProperty().get()));
-        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-        Assert.assertFalse("Must not be an empty string.", predicate.test(""));
+        Assert.assertFalse("Must not be valid initially.",
+                storyFormViewModel.longNameValidation().validProperty().get());
+
+        storyFormViewModel.longNameProperty().set("Billy Goat");
+        Assert.assertTrue("Valid input not recognised as valid.",
+                storyFormViewModel.longNameValidation().validProperty().get());
+
+        storyFormViewModel.longNameProperty().set("");
+        Assert.assertFalse("Must not be an empty string.",
+                storyFormViewModel.longNameValidation().validProperty().get());
     }
 
     @Test
     public void testDescriptionValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getDescriptionValidation();
 
-        Assert.assertTrue("Description should be valid by default.", predicate.test(storyFormViewModel.descriptionProperty().get()));
-        Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
-        Assert.assertTrue("Empty string not recognised as valid.", predicate.test(""));
+        Assert.assertTrue("Description should be valid by default.",
+                storyFormViewModel.descriptionValidation().validProperty().get());
+
+        storyFormViewModel.descriptionProperty().set("Billy Goat");
+        Assert.assertTrue("Valid input not recognised as valid.",
+                storyFormViewModel.descriptionValidation().validProperty().get());
+
+        storyFormViewModel.descriptionProperty().set("");
+        Assert.assertTrue("Empty string should be recognised as valid.",
+                storyFormViewModel.descriptionValidation().validProperty().get());
     }
 
     @Test
@@ -71,15 +96,24 @@ public class StoryFormViewModelTest {
         Organisation organisation = new Organisation();
         storyFormViewModel.setOrganisation(organisation);
         
-        Predicate<String> predicate = storyFormViewModel.getCreatorValidation();
-        
-        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.creatorNameProperty().get()));
-        Assert.assertFalse("Must not be null.", predicate.test(null));
+        Assert.assertFalse("Must not be valid initially.",
+                storyFormViewModel.creatorValidation().validProperty().get());
 
-        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
-        Assert.assertFalse("Creator must exist in organisation.", predicate.test(creator.getShortName()));
-        organisation.getPeople().add(creator);
-        Assert.assertTrue("Valid creator not recognised as valid.", predicate.test(creator.getShortName()));
+        storyFormViewModel.creatorNameProperty().set(null);
+        Assert.assertFalse("Must not be null.",
+                storyFormViewModel.creatorValidation().validProperty().get());
+
+        Person creator1 = new Person("person1 shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        Person creator2 = new Person("person2 shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        organisation.getPeople().add(creator2);
+
+        storyFormViewModel.creatorNameProperty().set(creator1.getShortName());
+        Assert.assertFalse("Creator must exist in organisation.",
+                storyFormViewModel.creatorValidation().validProperty().get());
+
+        storyFormViewModel.creatorNameProperty().set(creator2.getShortName());
+        Assert.assertTrue("Valid creator not recognised as valid.",
+                storyFormViewModel.creatorValidation().validProperty().get());
     }
 
     @Test
@@ -88,76 +122,66 @@ public class StoryFormViewModelTest {
         Organisation organisation = new Organisation();
         storyFormViewModel.setOrganisation(organisation);
         
-        Predicate<String> predicate = storyFormViewModel.getProjectValidation();
-        
-        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.projectNameProperty().get()));
-        Assert.assertFalse("Must not be null.", predicate.test(null));
-        Assert.assertFalse("Must not be empty.", predicate.test(""));
+        Assert.assertFalse("Must not be valid initially.",
+                storyFormViewModel.projectValidation().validProperty().get());
+
+        storyFormViewModel.projectProperty().set(null);
+        Assert.assertFalse("Must not be null.",
+                storyFormViewModel.projectValidation().validProperty().get());
+
+        storyFormViewModel.projectNameProperty().set("");
+        Assert.assertFalse("Must not be empty.",
+                storyFormViewModel.projectValidation().validProperty().get());
         
         final String projectName = "project shortName";
-        
-        Assert.assertFalse("Project must exist.", predicate.test(projectName));
+
+        storyFormViewModel.projectNameProperty().set(projectName);
+        Assert.assertFalse("Project must exist.",
+                storyFormViewModel.projectValidation().validProperty().get());
         
         Project project = new Project(projectName, "longName");
         // must set projectNameProperty so that projectProperty gets set.
         storyFormViewModel.projectNameProperty().set(projectName);
-        Assert.assertFalse("Project must exist in organisation.", predicate.test(projectName));
+        Assert.assertFalse("Project must exist in organisation.",
+                storyFormViewModel.projectValidation().validProperty().get());
         
         organisation.getProjects().add(project);
         storyFormViewModel.projectNameProperty().set("");
         storyFormViewModel.projectNameProperty().set(projectName);
-        Assert.assertTrue("Valid project not recognised as valid.", predicate.test(projectName));
+        Assert.assertTrue("Valid project not recognised as valid.",
+                storyFormViewModel.projectValidation().validProperty().get());
     }
 
-    /* Pretty sure you can't set the backlog from the story anyway (this is all from the backlog end) */
-//    @Test
-//    public void testBacklogValidation() {
-//        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-//        Predicate<String> predicate = storyFormViewModel.getBacklogValidation();
-//
-//        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.backlogNameProperty().get()));
-//        Assert.assertFalse("Must not be null.", predicate.test(null));
-//
-//        // Setup objects for testing cases in which backlog belongs to project and does not belong to a project.
-//        final String projectName = "project shortName";
-//        
-//        Organisation organisation = new Organisation();
-//        Project project = new Project(projectName, "longName");
-//        Person productOwner = new Person("person PO", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getPoSkill()));
-//        Backlog backlog1 = new Backlog("backlog in the same project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
-//        Backlog backlog2 = new Backlog("backlog not in project", "longName", "description", productOwner, project, new ArrayList<>(), Scale.FIBONACCI);
-//        project.setBacklogs(Arrays.asList(backlog1));
-//        
-//        organisation.getProjects().add(project);
-//        storyFormViewModel.setOrganisation(organisation);
-//        
-//        storyFormViewModel.projectNameProperty().set(projectName);
-//
-//        // Backlog belongs to selected project
-//        Assert.assertTrue("Valid backlog should be recognised as valid.", predicate.test(backlog1.getShortName()));
-//
-//        // Backlog does not belong to selected project
-//        Assert.assertFalse("Backlog must belong to selected project.", predicate.test(backlog2.getShortName()));
-//    }
-
     @Test
-    public void testPriorityValidation() throws NoSuchFieldException, IllegalAccessException {
+    public void testBacklogValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getPriorityValidation();
+        Predicate<String> predicate = storyFormViewModel.getBacklogValidation();
 
-        Assert.assertFalse("Must not be valid initially.", predicate.test(storyFormViewModel.priorityProperty().get()));
-        Assert.assertFalse("Must not be null.", predicate.test(null));
+        Assert.assertFalse("Must not be valid initially.",
+                storyFormViewModel.priorityValidation().validProperty().get());
 
-        Assert.assertFalse("Value must be higher than story.MIN_PRIORITY", predicate.test(Integer.toString(Story.MIN_PRIORITY - 1)));
-        Assert.assertFalse("Value must be smaller than story.MAX_PRIORITY", predicate.test(Integer.toString(Story.MAX_PRIORITY + 1)));
+        storyFormViewModel.priorityProperty().set(null);
+        Assert.assertFalse("Must not be null.",
+                storyFormViewModel.priorityValidation().validProperty().get());
+
+        storyFormViewModel.priorityProperty().set(Integer.toString(Story.MIN_PRIORITY - 1));
+        Assert.assertFalse("Value must be higher than story.MIN_PRIORITY",
+                storyFormViewModel.priorityValidation().validProperty().get());
+
+        storyFormViewModel.priorityProperty().set(Integer.toString(Story.MAX_PRIORITY + 1));
+        Assert.assertFalse("Value must be smaller than story.MAX_PRIORITY",
+                storyFormViewModel.priorityValidation().validProperty().get());
     }
 
     @Test
     public void testCreatorEditability() {
+        Organisation organisation = new Organisation();
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
+        storyFormViewModel.setOrganisation(organisation);
+        Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<>());
+        organisation.getPeople().add(creator);
         Project project = new Project("shortName", "longName");
-        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, new ArrayList<>());
+        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false);
 
         Assert.assertTrue("Creator field should be editable by default.", storyFormViewModel.getCreatorEditable().get());
 
@@ -166,51 +190,5 @@ public class StoryFormViewModelTest {
 
         storyFormViewModel.setStory(story);
         Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
-    }
-
-//    @Test
-//    public void testShownDependencies() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-//        // Test creation of new story
-//        StoryFormViewModel viewModel = new StoryFormViewModel();
-//        viewModel.setOrganisation(new Organisation());
-//
-//        Method setStoryListProperties = viewModel.getClass().getDeclaredMethod("setStoryListProperties");
-//        setStoryListProperties.setAccessible(true);
-//        setStoryListProperties.invoke(viewModel);
-//
-//        // Test edit of story not in backlog
-//
-//
-//        // Test edit of story in backlog
-//    }
-
-    @Test
-    public void testHasCyclicDependencies() {
-        StoryFormViewModel viewModel = new StoryFormViewModel();
-        viewModel.setOrganisation(new Organisation());
-        viewModel.targetStoriesProperty().set(FXCollections.observableArrayList());
-
-        Story a = setUpStory("A");
-        Story b = setUpStory("B");
-        Story c = setUpStory("C");
-
-        // Small cyclic dependency
-        viewModel.setStory(a); // this is the story we are setting the dependencies for
-        // b -> c
-        b.observableDependencies().add(c);
-
-        viewModel.targetStoriesProperty().get().add(b); // dependency to be added to current story a -> b -> c
-        Assert.assertFalse(viewModel.hasCyclicDependency());
-
-        c.observableDependencies().add(a); // a -> b -> c -> a
-        Assert.assertTrue(viewModel.hasCyclicDependency());
-
-
-    }
-
-    private Story setUpStory(String shortName) {
-        Person creator = new Person("Creator", "", "", "", "", "", "", new ArrayList<>());
-        Project project = new Project("Project", "");
-        return new Story(shortName, "", "", creator, project, new Backlog(), 0, Scale.FIBONACCI, 0, new ArrayList<>());
     }
 }

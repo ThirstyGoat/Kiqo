@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.nodes;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a textual heading and a collection of items for display in a TreeView

@@ -1,5 +1,8 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
+import java.net.URL;
+import java.util.*;
+
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
@@ -9,13 +12,18 @@ import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
-import java.net.URL;
-import java.util.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
@@ -49,6 +57,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Button removeACButton;
     @FXML
     private Button editACButton;
+    @FXML
+    private CheckBox isReadyCheckBox;
+    @FXML
+    private Hyperlink readyWhy;
 
 
     @Override
@@ -67,6 +79,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
+//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
             setScale();
 
         } else {
@@ -93,10 +106,69 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
+
+        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (story.getIsReady() != newValue) {
+                Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                UndoManager.getUndoManager().doCommand(command);
+            }
+        });
+        isReadyCheckBox.setSelected(story.getIsReady());
+        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
+            isReadyCheckBox.setSelected(newValue);
+        });
+
+        // Story must have at least one AC
+        // Story must have non-null estimate
+        // Story must be in a backlog
+
+        BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
+        BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
+        BooleanBinding noEstimateBinding = Bindings.equal(story.estimateProperty(), 0);
+
+        // Bind the disable property
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding));
+        readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
+
+        setIsReadyCheckBoxInfo();
+
+        // Disable storyEstimateSlider if there are no acceptance criteria.
+        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
-    
+
+    private void setIsReadyCheckBoxInfo() {
+        final Text bulletA = new Text("○ ");
+        final Text bulletB = new Text("○ ");
+        final Text bulletC = new Text("○ ");
+
+        final Text belongToABacklog = new Text("belong to a backlog\n");
+        final Text beEstimated = new Text("be estimated\n");
+        final Text haveAcceptanceCriteria = new Text("have Acceptance Criteria");
+
+        belongToABacklog.strikethroughProperty().bind(Bindings.isNotNull(story.backlogProperty()));
+        beEstimated.strikethroughProperty().bind(Bindings.notEqual(0, story.estimateProperty()));
+        haveAcceptanceCriteria.strikethroughProperty().bind(Bindings.isNotEmpty(story.getAcceptanceCriteria()));
+
+        TextFlow tf = new TextFlow(
+                new Text("To mark this Story as Ready, it must:\n\n"),
+                bulletA, belongToABacklog,
+                bulletB, beEstimated,
+                bulletC, haveAcceptanceCriteria);
+
+        tf.setPadding(new Insets(10));
+        PopOver readyWhyPopOver = new PopOver(tf);
+        readyWhyPopOver.setDetachable(false);
+
+        readyWhy.setOnAction((e) -> readyWhyPopOver.show(readyWhy));
+        readyWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide();
+            }
+        });
+    }
+
     private void deleteAC() {
-        Command command;
+        Command<?> command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
             List<Command<?>> commands = new ArrayList<>();
@@ -108,6 +180,17 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
             command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
         }
+
+        // Check if they are deleting all of the ACs, and if the story is marked as ready
+        // If so, then the command executed must mark the story as no longer ready
+        if (acListView.getSelectionModel().getSelectedItems().size() == acListView.getItems().size() &&
+                story.getIsReady()) {
+            List<Command<?>> changes = new ArrayList<>();
+            changes.add(command);
+            changes.add(new EditCommand<>(story, "isReady", false));
+            command = new CompoundCommand("Delete AC", changes);
+        }
+
         mainController.doCommand(command);
     }
 
@@ -134,14 +217,19 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             if (newValue.intValue() > 0) {
                 storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue())-1]);
             } else {
-                storyEstimateSliderLabel.setText("");
+                storyEstimateSliderLabel.setText("-");
             }
         });
 
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
-                EditCommand<Story, Integer> editCommand = new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue());
-                UndoManager.getUndoManager().doCommand(editCommand);
+                List<Command<?>> commands = new ArrayList<>();
+                if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
+                    commands.add(new EditCommand<>(story, "isReady", false));
+                }
+                commands.add(new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue()));
+                CompoundCommand command = new CompoundCommand("Edit Estimation", commands);
+                UndoManager.getUndoManager().doCommand(command);
             }
         });
     }

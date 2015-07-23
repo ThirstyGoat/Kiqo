@@ -2,10 +2,10 @@ package com.thirstygoat.kiqo;
 
 
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ReportGeneratorTest{
         person.setShortName("shortname");
         person.setLongName("longname");
         person.setDescription("des");
-        person.setUserID("123456asdf");
+        person.setUserId("123456asdf");
         person.setEmailAddress("asd@asd.com");
         person.setDepartment("awesome department");
         person.getSkills().add(skill);

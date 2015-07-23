@@ -28,10 +28,11 @@ public class Story extends Item {
     private final ObjectProperty<Project> project;
     private final ObjectProperty<Backlog> backlog;
     private final IntegerProperty priority;
-    private final ObjectProperty<Scale> scale;
     private final IntegerProperty estimate;
+    private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
     private final ObservableList<Story> dependencies;
+    private final BooleanProperty isReady;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -44,14 +45,15 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(null);
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
-        this.scale = new SimpleObjectProperty<>(null);
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+        this.isReady = new SimpleBooleanProperty(false);
         this.estimate = new SimpleIntegerProperty(0);
         this.dependencies = FXCollections.observableArrayList();
+        this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, Scale scale, Integer estimate, Collection<Story> dependencies) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -59,9 +61,10 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
-        this.scale = new SimpleObjectProperty<>(scale);
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+        this.isReady = new SimpleBooleanProperty(isReady);
         this.estimate = new SimpleIntegerProperty(estimate);
+        this.scale = new SimpleObjectProperty<>(scale);
         this.dependencies = FXCollections.observableArrayList();
         this.dependencies.addAll(dependencies);
     }
@@ -116,19 +119,19 @@ public class Story extends Item {
         return creator;
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<Project> projectProperty() { 
+        return project; 
     }
 
-    public Project getProject() {
-        return project.get();
+    public Project getProject() { 
+        return project.get(); 
     }
 
     public void setProject(Project project) {
         this.project.set(project);
     }
 
-    ObjectProperty<Backlog> backlogProperty() {
+    public ObjectProperty<Backlog> backlogProperty() {
         return backlog;
     }
 
@@ -140,7 +143,7 @@ public class Story extends Item {
         this.backlog.set(backlog);
     }
 
-    public int getPriority() {
+    public int getPriority() { 
         return priority.get();
     }
 
@@ -156,6 +159,18 @@ public class Story extends Item {
         return acceptanceCriteria;
     }
 
+    public Integer getEstimate() {
+        return estimate.get();
+    }
+
+    public void setEstimate(Integer estimate) {
+        this.estimate.set(estimate);
+    }
+
+    public IntegerProperty estimateProperty() {
+        return estimate;
+    }
+
     public Scale getScale() {
         return scale.get();
     }
@@ -168,12 +183,12 @@ public class Story extends Item {
         return scale;
     }
 
-    public Integer getEstimate() {
-        return estimate.get();
+    public boolean getIsReady() { 
+        return isReady.get(); 
     }
 
-    public void setEstimate(Integer estimate) {
-        this.estimate.set(estimate);
+    public void setIsReady(boolean isReady) { 
+        this.isReady.set(isReady); 
     }
 
     public IntegerProperty estimateProperty() {
@@ -193,5 +208,9 @@ public class Story extends Item {
     
     public ObservableList<Story> observableDependencies() {
         return this.dependencies;
+    }
+    
+    public BooleanProperty isReadyProperty() { 
+        return isReady; 
     }
 }

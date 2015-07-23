@@ -3,9 +3,12 @@ package com.thirstygoat.kiqo.viewModel;
 
 import java.util.Map;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,12 +26,10 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import java.util.Map;
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private final Map<State, Image> images;
-    private Point2D dragOffset = new Point2D(0, 0);
     private ListView<AcceptanceCriteria> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
     public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {

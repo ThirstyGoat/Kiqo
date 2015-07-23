@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,7 +8,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.util.Utilities;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bradley on 27/03/15.

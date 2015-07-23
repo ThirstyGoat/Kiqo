@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.model.Organisation;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,8 +13,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.model.Organisation;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 // Methods are run in alphabetical order
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -33,7 +36,7 @@ public class PersistenceManagerTest {
     public void testLoad_fileNotFound() throws Exception {
         thrown.expect(FileNotFoundException.class);
 
-        final Organisation p = PersistenceManager.loadOrganisation(new File("a/non/existent/file/path"));
+        PersistenceManager.loadOrganisation(new File("a/non/existent/file/path"));
     }
 
     /**
@@ -51,6 +54,6 @@ public class PersistenceManagerTest {
             fw.write("{"); // lone opening brace == bad json
         }
 
-        final Organisation p = PersistenceManager.loadOrganisation(f);
+        PersistenceManager.loadOrganisation(f);
     }
 }
