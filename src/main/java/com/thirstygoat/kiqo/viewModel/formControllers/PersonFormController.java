@@ -134,33 +134,6 @@ public class PersonFormController extends FormController<Person> {
         if (person != null) {
             sourceSkills.removeAll(person.getSkills());
             targetSkills.addAll(person.getSkills());
-
-            // NOTE THIS IS NOT DEAD CODE TODO
-//            // Listen for skills that are removed (if PO/SM skill is removed, warn that the person will be removed that
-//            // role if they are using it.
-//            ListChangeListener<Skill> targetSkillsChangedListener = c -> {
-//
-//                while (c.next()) {
-//                    if (c.getRemoved().contains(organisation.getPoSkill()) && c.getRemoved().contains(organisation.getSmSkill())) {
-//                        // Then the user has removed the PO skill
-//                        GoatDialog.showAlertDialog(stage, "PO & SM Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as PO/SM for any Teams/Backlogs" +
-//                                        " they are currently assigned to.");
-//                    } else if (c.getRemoved().contains(organisation.getPoSkill())) {
-//                        // Then the user has removed the PO skill
-//                        GoatDialog.showAlertDialog(stage, "PO Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as PO for any Teams/Backlogs" +
-//                                        " they are currently assigned as Product Owner for.");
-//                    } else if (c.getRemoved().contains(organisation.getSmSkill())) {
-//                        // Then the user has removed the SM skill
-//                        GoatDialog.showAlertDialog(stage, "SM Skill removed", "Warning",
-//                                person.getShortName() + " will be removed as SM for any Teams" +
-//                                        " they are currently assigned as Scrum Master for.");
-//                    }
-//                }
-//            };
-//
-//            targetSkills.addListener(targetSkillsChangedListener);
         }
 
         skillsSelectionView.getSourceListView().setItems(sourceSkills);
@@ -251,7 +224,7 @@ public class PersonFormController extends FormController<Person> {
         });
 
         skillsSelectionView.skin.getMoveToSourceAllButton().setOnAction(event -> {
-            if (targetListView.getSelectionModel().getSelectedItems().contains(poSkill)) {
+            if (targetListView.getItems().contains(poSkill)) {
                 // Then they are trying to remove the PO skill
                 if (poOfTeam || finalUsingPoSkillInBacklog) {
                     // Then they are a product owner, and owner of 1 or more backlogs

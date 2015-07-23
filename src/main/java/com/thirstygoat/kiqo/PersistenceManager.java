@@ -118,6 +118,7 @@ public class PersistenceManager {
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(IntegerProperty.class, new IntegerPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(BooleanProperty.class, new BooleanPropertyDeserializer());
 
         if(isOldFile) {
             gsonBuilder.registerTypeAdapter(Organisation.class, new OrganisationDeserializer());
@@ -167,8 +168,10 @@ public class PersistenceManager {
                 PersistenceManager.createGson(false);
             }
 
-            ObservableList<?> observableList;
-            if (Item.class.isAssignableFrom((Class<?>) type)) {
+            ObservableList observableList;
+            if (AcceptanceCriteria.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+            } else if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
                 observableList = FXCollections.observableArrayList();
@@ -209,6 +212,23 @@ public class PersistenceManager {
         public JsonElement serialize(IntegerProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
             if (s != null) {
                 return new JsonPrimitive(s.get());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class BooleanPropertyDeserializer implements JsonDeserializer<BooleanProperty>, JsonSerializer<BooleanProperty> {
+
+        @Override
+        public BooleanProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            return new SimpleBooleanProperty(jsonElement.getAsBoolean());
+        }
+
+        @Override
+        public JsonElement serialize(BooleanProperty booleanProperty, Type type, JsonSerializationContext jsonSerializationContext) {
+            if (booleanProperty != null) {
+                return new JsonPrimitive(booleanProperty.get());
             } else {
                 return null;
             }

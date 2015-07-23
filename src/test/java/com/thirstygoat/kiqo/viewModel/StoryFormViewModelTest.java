@@ -34,8 +34,8 @@ public class StoryFormViewModelTest {
         
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project(projectName, "longName");
-        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
-        project.setUnallocatedStories(new ArrayList<Story>(Arrays.asList(story)));
+        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false);
+        project.setUnallocatedStories(new ArrayList<>(Arrays.asList(story)));
         
         Organisation organisation = new Organisation();
         organisation.getPeople().add(creator);
@@ -176,7 +176,7 @@ public class StoryFormViewModelTest {
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<>());
         organisation.getPeople().add(creator);
         Project project = new Project("shortName", "longName");
-        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, 0, Scale.FIBONACCI);
+        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false);
 
         Assert.assertTrue("Creator field should be editable by default.", storyFormViewModel.getCreatorEditable().get());
 

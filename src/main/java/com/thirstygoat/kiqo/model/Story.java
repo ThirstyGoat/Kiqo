@@ -22,6 +22,7 @@ public class Story extends Item {
     private final IntegerProperty estimate;
     private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
+    private final BooleanProperty isReady;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -34,13 +35,14 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(null);
         this.backlog = new SimpleObjectProperty<>(null);
         this.priority = new SimpleIntegerProperty(DEFAULT_PRIORITY);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+        this.isReady = new SimpleBooleanProperty(false);
         this.estimate = new SimpleIntegerProperty(0);
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, Integer estimate, Scale scale) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -48,7 +50,8 @@ public class Story extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.backlog = new SimpleObjectProperty<>(backlog);
         this.priority = new SimpleIntegerProperty(priority);
-        this.acceptanceCriteria = FXCollections.observableArrayList();
+        this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+        this.isReady = new SimpleBooleanProperty(isReady);
         this.estimate = new SimpleIntegerProperty(estimate);
         this.scale = new SimpleObjectProperty<>(scale);
     }
@@ -103,19 +106,19 @@ public class Story extends Item {
         return creator;
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<Project> projectProperty() { 
+        return project; 
     }
 
-    public Project getProject() {
-        return project.get();
+    public Project getProject() { 
+        return project.get(); 
     }
 
     public void setProject(Project project) {
         this.project.set(project);
     }
 
-    ObjectProperty<Backlog> backlogProperty() {
+    public ObjectProperty<Backlog> backlogProperty() {
         return backlog;
     }
 
@@ -127,7 +130,7 @@ public class Story extends Item {
         this.backlog.set(backlog);
     }
 
-    public int getPriority() {
+    public int getPriority() { 
         return priority.get();
     }
 
@@ -167,4 +170,15 @@ public class Story extends Item {
         return scale;
     }
 
+    public boolean getIsReady() { 
+        return isReady.get(); 
+    }
+
+    public void setIsReady(boolean isReady) { 
+        this.isReady.set(isReady); 
+    }
+
+    public BooleanProperty isReadyProperty() { 
+        return isReady; 
+    }
 }
