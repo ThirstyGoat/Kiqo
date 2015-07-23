@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 
@@ -20,6 +19,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
@@ -131,20 +132,29 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void setIsReadyCheckBoxInfo() {
-        StringProperty text = new SimpleStringProperty();
-        Label label = new Label();
-        label.textProperty().bind(text);
-        label.setPadding(new Insets(10, 10, 10, 10));
-        PopOver readyWhyPopOver = new PopOver(label);
+        final Text bulletA = new Text("○ ");
+        final Text bulletB = new Text("○ ");
+        final Text bulletC = new Text("○ ");
+
+        final Text belongToABacklog = new Text("belong to a backlog\n");
+        final Text beEstimated = new Text("be estimated\n");
+        final Text haveAcceptanceCriteria = new Text("have Acceptance Criteria");
+
+        belongToABacklog.strikethroughProperty().bind(Bindings.isNotNull(story.backlogProperty()));
+        beEstimated.strikethroughProperty().bind(Bindings.notEqual(0, story.estimateProperty()));
+        haveAcceptanceCriteria.strikethroughProperty().bind(Bindings.isNotEmpty(story.getAcceptanceCriteria()));
+
+        TextFlow tf = new TextFlow(
+                new Text("To mark this Story as Ready, it must:\n\n"),
+                bulletA, belongToABacklog,
+                bulletB, beEstimated,
+                bulletC, haveAcceptanceCriteria);
+
+        tf.setPadding(new Insets(10));
+        PopOver readyWhyPopOver = new PopOver(tf);
         readyWhyPopOver.setDetachable(false);
 
-        readyWhy.setOnAction((e) -> {
-            text.setValue("To mark this Story as Ready, it must:\n\n" +
-                            (story.getBacklog() != null ? "✓" : "✘") + " belong to a Backlog\n" +
-                            (story.getEstimate() != 0 ? "✓" : "✘") + " be estimated\n" +
-                            (!story.getAcceptanceCriteria().isEmpty() ? "✓" : "✘") + " have Acceptance Criteria");
-            readyWhyPopOver.show(readyWhy);
-        });
+        readyWhy.setOnAction((e) -> readyWhyPopOver.show(readyWhy));
         readyWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 readyWhyPopOver.hide();
