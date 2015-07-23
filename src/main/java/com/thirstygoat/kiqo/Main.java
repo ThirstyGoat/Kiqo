@@ -131,7 +131,7 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
-        if (file.exists()) {
+        if (file != null && file.exists()) {
             mainController.openOrganisation(file);
         }
     }
