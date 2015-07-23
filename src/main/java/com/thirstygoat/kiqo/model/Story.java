@@ -1,8 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import java.util.stream.Collectors;
 
 /**
  * Created by leroy on 15/05/15.
@@ -23,6 +27,8 @@ public class Story extends Item {
     private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
     private final BooleanProperty isReady;
+    private final ObservableList<Task> tasks;
+    private final FloatProperty taskHours;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -39,6 +45,9 @@ public class Story extends Item {
         this.isReady = new SimpleBooleanProperty(false);
         this.estimate = new SimpleIntegerProperty(0);
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
+        this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
+        this.taskHours = new SimpleFloatProperty();
+        setTasksListener();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -54,6 +63,19 @@ public class Story extends Item {
         this.isReady = new SimpleBooleanProperty(isReady);
         this.estimate = new SimpleIntegerProperty(estimate);
         this.scale = new SimpleObjectProperty<>(scale);
+        this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
+        this.taskHours = new SimpleFloatProperty();
+        setTasksListener();
+    }
+
+    private void setTasksListener() {
+        taskHours.bind(Bindings.createDoubleBinding(() -> {
+            double totalVal = 0;
+            for (Task task : tasks) {
+                totalVal += task.getEstime();
+            }
+            return totalVal;
+        }, tasks));
     }
 
     @Override

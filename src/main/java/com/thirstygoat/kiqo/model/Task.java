@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.util.Callback;
 
 /**
  * Created by samschofield on 23/07/15.
@@ -57,5 +59,9 @@ public class Task extends Item {
     @Override
     public StringProperty shortNameProperty() {
         return description;
+    }
+
+    public static Callback<Task, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
     }
 }
