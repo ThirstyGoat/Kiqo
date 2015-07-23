@@ -3,10 +3,7 @@ package com.thirstygoat.kiqo.model;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by leroy on 15/05/15.
@@ -72,7 +69,7 @@ public class Story extends Item {
         taskHours.bind(Bindings.createDoubleBinding(() -> {
             double totalVal = 0;
             for (Task task : tasks) {
-                totalVal += task.getEstime();
+                totalVal += task.getEstimate();
             }
             return totalVal;
         }, tasks));
@@ -166,6 +163,10 @@ public class Story extends Item {
 
     public ObservableList<AcceptanceCriteria> getAcceptanceCriteria() {
         return acceptanceCriteria;
+    }
+
+    public ObservableList<Task> getTask() {
+        return tasks;
     }
 
     public Integer getEstimate() {

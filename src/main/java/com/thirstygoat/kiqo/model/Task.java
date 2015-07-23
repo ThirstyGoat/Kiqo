@@ -39,7 +39,7 @@ public class Task extends Item {
         return estimate;
     }
 
-    public float getEstime() {
+    public float getEstimate() {
         return estimate.get();
     }
 
