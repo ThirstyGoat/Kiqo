@@ -10,7 +10,7 @@
 }
 
 .allocation-past {
-	-fx-background-color: seashell;
+	-fx-background-color: #5ad8ff;
 }
 
 .allocation-current {
@@ -21,10 +21,23 @@
 	-fx-background-color: #ffb429;
 }
 
-.table-view:focused .table-row-cell:filled:focused:selected {
-	-fx-background-color: -fx-focus-color;
+.allocation-non-existent-project:selected, .allocation-non-existent-team:selected {
+    -fx-background-color: #E13030;
+}
+
+.allocation-past:selected {
+    -fx-background-color: #E1D7D0;
+}
+
+.allocation-current:selected {
+    -fx-background-color: #26A53B;
+}
+
+.allocation-future:selected {
+    -fx-background-color: #E1A41F;
 }
 
 .table-view .column-header#teamTableColumn .label {
 	-fx-alignment: CENTER_LEFT;
 }
+
