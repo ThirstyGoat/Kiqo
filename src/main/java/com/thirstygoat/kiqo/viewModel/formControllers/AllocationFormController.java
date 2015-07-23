@@ -353,9 +353,7 @@ public class AllocationFormController extends FormController<Allocation> {
             stage.setTitle("Edit Allocation");
             okButton.setText("Save");
 
-            if (project == null) {
-                ;
-            }  else {
+            if (project != null) {
                 teamTextField.setText(allocation.getTeam().getShortName());
             }
 
