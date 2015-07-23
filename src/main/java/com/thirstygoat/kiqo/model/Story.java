@@ -65,6 +65,9 @@ public class Story extends Item {
         setTasksListener();
     }
 
+    /**
+     * binds the taskHours property to the sum of estimates for each task for the story
+     */
     private void setTasksListener() {
         taskHours.bind(Bindings.createDoubleBinding(() -> {
             double totalVal = 0;
@@ -73,6 +76,18 @@ public class Story extends Item {
             }
             return totalVal;
         }, tasks));
+    }
+
+    public ObservableList<Task> observableTasks() {
+        return tasks;
+    }
+
+    public FloatProperty taskHoursProperty() {
+        return taskHours;
+    }
+
+    public Float getTaskHours() {
+        return taskHours.get();
     }
 
     @Override
