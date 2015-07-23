@@ -78,8 +78,13 @@ public class BacklogFormViewModelTest {
         Assert.assertFalse("Must not be null.", predicate.test(null));
 
         Person productOwner = new Person("shortName", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getPoSkill()));
-        Assert.assertFalse("Product Owner must exist in organisation.", predicate.test(productOwner.getShortName()));
         organisation.getPeople().add(productOwner);
+        Assert.assertTrue("Product Owner must exist in organisation.", predicate.test(productOwner.getShortName()));
+
+        Person testPerson = new Person("notPO", "longName", "description", "userId", "email", "phone", "dept", Arrays.asList(organisation.getSmSkill()));
+        organisation.getPeople().add(testPerson);
+        Assert.assertFalse("Person must have Product Owner skill", predicate.test(testPerson.getShortName()));
+
         Assert.assertTrue("Valid Product Owner not recognised as valid.", predicate.test(productOwner.getShortName()));
     }
 
