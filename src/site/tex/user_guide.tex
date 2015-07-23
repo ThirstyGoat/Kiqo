@@ -148,11 +148,12 @@ either \menu{File > Save} or \keys{ctrl + S}.
 \subsection{People}
 A person can be created, saved and edited in the same way as a project.
 \subsection{Skills}
-New skills can be created, edited and deleted, however there are two important skills which cannot be modified: 
-\begin{enumerate}
-  \item The Product Owner (PO) skill - The product owner skill is required
-  \item The Scrum Master (SM) skill -
+There are two important skills which cannot be modified: 
+\begin{itemize}
+  \item The Product Owner (PO) skill
+  \item The Scrum Master (SM) skill
 \end{itemize}
+New skills can be created, edited and deleted.
 \begin{itemize}
   \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the
   first skill is shown in the details pane, unless another skill in the list is selected.
@@ -175,14 +176,13 @@ New skills can be created, edited and deleted, however there are two important s
   \item In edit or create team, use the person selection pane and click the > arrow to add one person to a team
   or >> to add all available people.
   \item In the person selection pane, click the < arrow to remove one person or << to remove all assigned people.
-  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Dev Team members. Only team members who
-   posses the relevant skill may be nominated.
+  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Development Team members. Only team members who
+   possess the relevant skill may be nominated.
 \end{itemize}
 
 \subsection{Project Allocation}
 \begin{itemize}
-  \item Teams can be allocated to projects, with associated dates.
-    A team can only be allocated to one project at a time, so allocations may not overlap.
+  \item Teams can be allocated to projects. A team can only be allocated to one project at a time.
   \item In the project tab a team can be allocated to a project by clicking the 'Allocate Teams'.
   \item Select a team from the from the dropdown list in create Allocation dialog and choose a start and an end date.
   \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
@@ -193,25 +193,23 @@ New skills can be created, edited and deleted, however there are two important s
 \subsection{Story}
 \begin{itemize}
   \item Stories can be added to a project and assigned a priority.
-  \item The priority must be a integer between 1000 and -1000, inclusive.
+  \item The priority must be an integer between 1000 and -1000, inclusive.
 \end{itemize}
-
-\subsection{Estimation}
 Stories can be estimated using anyone of the following inbuilt scales:
 \begin{itemize}
 \item Pseudo-Fibonnaci \textit{Default}
 \item T-Shirt Sizes
 \item Dog Breeds
 \end{itemize}
-The estimation slider can be dragged to add/update the estimation.
-Note that the estimation scale used for each story must be the same within a single backlog. Stories within a backlog
-that use a different estimation scale, will have their scale changed to that of the backlog, and the estimation unset.
-
-\subsection{Acceptance Criteria}
-Acceptance criteria can be added to a story and be assigned a state of readiness to help the user in determining if the
-story is ready to begin or not. The readiness can be one of three states (ready/not ready/undetermined).
+\subsubsection{Estimation}
+The estimation slider can be dragged to change the estimation.
+The estimation scale used for each story must be the same within a single backlog. Stories within a backlog
+that use a different estimation scale will have their scale changed to that of the backlog, and the estimation unset.
+\subsubsection{Acceptance Criteria}
+Acceptance criteria can be added to a story and be assigned a state of readiness to help the user determine whether the
+story is ready to begin. The readiness can be one of three states (ready/not ready/undetermined).
 \begin{itemize}
-  \item To create an acceptance critera, inside the story detail pane, press the \menu{+} button under the acceptance critera table
+  \item To create an acceptance criteria, inside the story detail pane, press the \menu{+} button under the acceptance critera table
   view.
   \item To change the readiness state of the acceptance critera, a toggle button on the right hand side of the tableview
   can be pressed repeatedly to alter the state.
@@ -259,8 +257,9 @@ The report generator gives the user the ability to generate reports in yaml form
 \section{Undo, Redo, Revert}
 \paragraph{}
 Selecting \menu{Edit > Undo} will undo the last operation made to the organisation. It is important to note that any
-new changes made after \textit{undoing} changes, will empty the \texti{redo-able} operations. Be sure to save
-your organisation often to avoid unrecoverable changes.
+new changes made after \textit{undoing} changes, will empty the
+\textit{redo-able} operations. Be sure to save your organisation often to avoid
+unrecoverable changes.
 
 \paragraph{}
 \menu{Edit > Redo} will redo the last operation that has been \textit{undone}.
