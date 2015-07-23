@@ -4,7 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailsPane.StoryDetailsPaneController">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>

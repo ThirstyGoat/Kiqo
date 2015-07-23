@@ -12,11 +12,12 @@ import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
+import com.thirstygoat.kiqo.viewModel.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -32,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
+
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;

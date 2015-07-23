@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.util;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+
 import javafx.util.StringConverter;
 
 /**
@@ -46,6 +48,20 @@ public class StringConverters {
                     }
                 }
                 return null;
+            }
+        };
+    }
+
+    public static StringConverter<Scale> scaleStringConverter() {
+        return new StringConverter<Scale>() {
+            @Override
+            public Scale fromString(String string) {
+                return Scale.getEnum(string);
+            }
+    
+            @Override
+            public String toString(Scale scale) {
+                return scale != null ? scale.toString() : "";
             }
         };
     }

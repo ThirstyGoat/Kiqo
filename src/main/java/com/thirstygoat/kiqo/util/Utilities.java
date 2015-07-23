@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.util;
 
 import com.thirstygoat.kiqo.model.*;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,6 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,10 +1,14 @@
-package com.thirstygoat.kiqo.viewModel.detailControllers;
+package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
+
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -38,8 +42,6 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private AnchorPane releaseDetailsPane;
     @FXML
-    private AnchorPane backlogDetailsPane;
-    @FXML
     private Button editButton;
     @FXML
     private Button deleteButton;
@@ -55,11 +57,12 @@ public class MainDetailsPaneController implements Initializable {
     private TeamDetailsPaneController teamDetailsPaneController;
     @FXML
     private ReleaseDetailsPaneController releaseDetailsPaneController;
-    @FXML
-    private BacklogDetailsPaneController backlogDetailsPaneController;
 
     private MainController mainController;
     private Pane[] panes;
+    
+    private Pane backlogDetailsPane;
+    private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -67,6 +70,13 @@ public class MainDetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
+        
+        
+        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
+        backlogDetailsPane = (Pane) viewTuple.getView();
+        stackPane.getChildren().add(backlogDetailsPane);
+        backlogDetailsPaneViewModel = viewTuple.getViewModel();
+        
         panes = new Pane[] {
                 projectDetailsPane,
                 personDetailsPane,
@@ -150,7 +160,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showBacklogDetailsPane(Backlog backlog) {
-        backlogDetailsPaneController.showDetails(backlog);
+        backlogDetailsPaneViewModel.load(backlog, mainController.selectedOrganisationProperty.get());
         show(backlogDetailsPane);
         showOptionButtons();
     }
@@ -177,7 +187,6 @@ public class MainDetailsPaneController implements Initializable {
         this.mainController = mainController;
         projectDetailsPaneController.setMainController(mainController);
         teamDetailsPaneController.setMainController(mainController);
-        backlogDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
     }
 }

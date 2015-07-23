@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel.detailControllers;
+package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;

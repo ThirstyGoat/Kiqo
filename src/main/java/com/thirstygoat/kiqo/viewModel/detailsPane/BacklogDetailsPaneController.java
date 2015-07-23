@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel.detailControllers;
+package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.viewModel.MainController;
@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
  * Created by Bradley on 25/03/2015.
  *
  */
+@Deprecated
 public class BacklogDetailsPaneController implements Initializable, IDetailsPaneController<Backlog> {
     private MainController mainController;
     private StoryTableViewModel storyTableViewModel = new StoryTableViewModel();

@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel.detailControllers;
+package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.viewModel.AllocationsTableViewController;
