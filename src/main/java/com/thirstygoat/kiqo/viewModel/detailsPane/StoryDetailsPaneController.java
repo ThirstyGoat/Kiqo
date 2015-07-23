@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.viewModel.detailControllers;
+package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;

@@ -95,6 +95,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
      *
      * @return predicate for determining validity
      */
+
     public Predicate<String> getProductOwnerValidation() {
         return s -> {
             for (final Person p : organisation.getPeople()) {
