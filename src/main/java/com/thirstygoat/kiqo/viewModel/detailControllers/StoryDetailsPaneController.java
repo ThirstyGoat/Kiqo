@@ -8,6 +8,7 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
@@ -46,6 +47,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private ListView<AcceptanceCriteria> acListView;
     @FXML
+    private ListView<Task> taskListView;
+    @FXML
     private Slider storyEstimateSlider;
     @FXML
     private Button addACButton;
@@ -53,6 +56,12 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Button removeACButton;
     @FXML
     private Button editACButton;
+    @FXML
+    private Button addTaskButton;
+    @FXML
+    private Button removeTaskButton;
+    @FXML
+    private Button editTaskButton;
     @FXML
     private CheckBox isReadyCheckBox;
     @FXML
@@ -101,6 +110,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
 
+        addTaskButton.setOnAction(event -> mainController.createTask());
+        removeTaskButton.setOnAction(event -> deleteTask());
+        editTaskButton.setOnAction(event -> mainController.editTask(taskListView.getSelectionModel().getSelectedItem()));
+
         isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (story.getIsReady() != newValue) {
                 Command<?> command = new EditCommand<>(story, "isReady", newValue);
@@ -128,6 +141,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
+    }
+
+    private void deleteTask() {
+
     }
 
     private void setIsReadyCheckBoxInfo() {

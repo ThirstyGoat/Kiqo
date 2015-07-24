@@ -13,10 +13,7 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
-import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
+import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -503,6 +500,18 @@ public class MainController implements Initializable {
         }
     }
 
+    public void createTask() {
+        if (selectedOrganisationProperty.get() != null) {
+            taskDialog(null);
+        }
+    }
+
+    public void editTask(Task task) {
+        if (selectedOrganisationProperty.get() != null) {
+            taskDialog(task);
+        }
+    }
+
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 
@@ -886,6 +895,38 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (acceptanceCriteriaFormController.isValid()) {
                 doCommand(acceptanceCriteriaFormController.getCommand());
+            }
+        });
+    }
+
+    private void taskDialog(Task task) {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainController.class.getClassLoader().getResource("forms/task.fxml"));
+            Pane root;
+            try {
+                root = loader.load();
+            } catch (final IOException e) {
+                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
+                e.printStackTrace();
+                return;
+            }
+            final Scene scene = new Scene(root);
+            stage.setScene(scene);
+            final TaskFormController taskFormController = loader.getController();
+            taskFormController.setStage(stage);
+            taskFormController.setOrganisation(selectedOrganisationProperty.get());
+
+            taskFormController.setStory((Story) focusedItemProperty.getValue());
+            taskFormController.populateFields(task);
+            stage.showAndWait();
+            if (taskFormController.isValid()) {
+                doCommand(taskFormController.getCommand());
             }
         });
     }
