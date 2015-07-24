@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.detailsPane;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 
@@ -8,8 +7,10 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +21,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
@@ -36,6 +39,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Label descriptionLabel;
     @FXML
     private Label creatorLabel;
+    @FXML
+    private Label dependenciesLabel;
     @FXML
     private Label priorityLabel;
     @FXML
@@ -56,6 +61,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private CheckBox isReadyCheckBox;
     @FXML
     private Hyperlink readyWhy;
+    @FXML
+    private Hyperlink estimateWhy;
 
 
     @Override
@@ -68,9 +75,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // This is some seriously cool binding
             // Binding to a property of a property
             creatorLabel.textProperty().bind(Bindings.select(story.creatorProperty(), "shortName"));
+            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.observableDependencies()));
             priorityLabel.textProperty().bind(Bindings.convert(story.priorityProperty()));
 
-            // need to unbind in case the selected story has changed and therefore we wont try and bind to a bound property
+            // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
 //            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
@@ -125,26 +133,36 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
+        setEstimateHyperlink();
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
 
     private void setIsReadyCheckBoxInfo() {
-        StringProperty text = new SimpleStringProperty();
-        Label label = new Label();
-        label.textProperty().bind(text);
-        label.setPadding(new Insets(10, 10, 10, 10));
-        PopOver readyWhyPopOver = new PopOver(label);
+        final Text bulletA = new Text("○ ");
+        final Text bulletB = new Text("○ ");
+        final Text bulletC = new Text("○ ");
+
+        final Text belongToABacklog = new Text("belong to a backlog\n");
+        final Text beEstimated = new Text("be estimated\n");
+        final Text haveAcceptanceCriteria = new Text("have Acceptance Criteria");
+
+        belongToABacklog.strikethroughProperty().bind(Bindings.isNotNull(story.backlogProperty()));
+        beEstimated.strikethroughProperty().bind(Bindings.notEqual(0, story.estimateProperty()));
+        haveAcceptanceCriteria.strikethroughProperty().bind(Bindings.isNotEmpty(story.getAcceptanceCriteria()));
+
+        TextFlow tf = new TextFlow(
+                new Text("To mark this Story as Ready, it must:\n\n"),
+                bulletA, belongToABacklog,
+                bulletB, beEstimated,
+                bulletC, haveAcceptanceCriteria);
+
+        tf.setPadding(new Insets(10));
+        PopOver readyWhyPopOver = new PopOver(tf);
         readyWhyPopOver.setDetachable(false);
 
-        readyWhy.setOnAction((e) -> {
-            text.setValue("To mark this Story as Ready, it must:\n\n" +
-                            (story.getBacklog() != null ? "✓" : "✘") + " belong to a Backlog\n" +
-                            (story.getEstimate() != 0 ? "✓" : "✘") + " be estimated\n" +
-                            (!story.getAcceptanceCriteria().isEmpty() ? "✓" : "✘") + " have Acceptance Criteria");
-            readyWhyPopOver.show(readyWhy);
-        });
+        readyWhy.setOnAction((e) -> readyWhyPopOver.show(readyWhy));
         readyWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 readyWhyPopOver.hide();
@@ -217,6 +235,33 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 UndoManager.getUndoManager().doCommand(command);
             }
         });
+    }
+
+    private void setEstimateHyperlink() {
+        Text bulletA = new Text("○ ");
+        Text haveAcceptanceCriteria = new Text("have Acceptance Criteria");
+        haveAcceptanceCriteria.strikethroughProperty().bind(Bindings.isNotEmpty(story.getAcceptanceCriteria()));
+
+        TextFlow tf = new TextFlow(
+                new Text("To estimate this Story, it must:\n\n"),
+                bulletA, haveAcceptanceCriteria);
+
+        tf.setPadding(new Insets(10));
+        PopOver estimateWhyPopOver = new PopOver(tf);
+        estimateWhyPopOver.setDetachable(false);
+
+        estimateWhy.setOnAction((e) -> estimateWhyPopOver.show(estimateWhy));
+        estimateWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                estimateWhyPopOver.hide();
+            }
+        });
+
+        estimateWhy.visibleProperty().bind(storyEstimateSlider.disabledProperty());
+        estimateWhy.managedProperty().bind(storyEstimateSlider.disabledProperty());
+
+        storyEstimateSliderLabel.visibleProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
+        storyEstimateSliderLabel.managedProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
     }
 
     private void setScale() {

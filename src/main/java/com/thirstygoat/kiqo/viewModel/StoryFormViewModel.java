@@ -5,17 +5,21 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
+
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -26,6 +30,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private Story story;
     private ObjectProperty<Person> creatorProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Backlog> backlogProperty = new SimpleObjectProperty<>();
     private Organisation organisation;
     private Command<?> command;
     private boolean valid = false;
@@ -38,6 +43,8 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty priorityProperty = new SimpleStringProperty("");
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
+    private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
@@ -123,13 +130,45 @@ public class StoryFormViewModel extends FormController<Story> {
         formValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
+    
+    private void setStoryListProperties() {
+        targetStoriesProperty.get().clear();
+        sourceStoriesProperty.get().clear();
+        if (story != null) {
+            if (projectProperty.get() != null) {
+                targetStoriesProperty.get().addAll(story.getDependencies());
+                if (story.getBacklog() != null) {
+                    sourceStoriesProperty.get().addAll(story.getBacklog().getStories());
+                } else {
+                    sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
+                }
+
+                ArrayList<Story> toRemove = new ArrayList<>();
+                for (Story story : sourceStoriesProperty.get()) {
+                    if (checkCyclicDependency(story)) {
+                        toRemove.add(story);
+                    }
+                }
+                sourceStoriesProperty.get().removeAll(toRemove);
+            }
+            sourceStoriesProperty.get().removeAll(story.getDependencies());
+            sourceStoriesProperty.get().remove(story); // cannot depend on itself
+        } else {
+            if (projectProperty.get() != null) {
+                sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
+            }
+        }
+    }
 
     /**
      * Sets all properties to be that of model. So for example if you change the story using,
      * setStory(), and you want to update the text fields with the new stories data, then you
      * should call this method.
      */
-    public void reloadFromModel() {
+    private void reloadFromModel() {
+        targetStoriesProperty.set(FXCollections.observableArrayList());
+        sourceStoriesProperty.set(FXCollections.observableArrayList());
+        
         if (story != null) {
             shortNameProperty.set(story.getShortName());
             longNameProperty.set(story.getLongName());
@@ -139,9 +178,19 @@ public class StoryFormViewModel extends FormController<Story> {
             priorityProperty.set(Integer.toString(story.getPriority()));
             scaleProperty.set(story.getScale());
             estimateProperty.set(story.getEstimate());
+            backlogProperty.set(story.getBacklog());
 
             creatorEditable.set(false);
         }
+
+        setStoryListProperties();
+        setListeners();
+    }
+
+    private void setListeners() {
+        projectProperty.addListener(((observable, oldValue, newValue) -> {
+            setStoryListProperties();
+        }));
     }
 
     public StringProperty shortNameProperty() {
@@ -163,6 +212,8 @@ public class StoryFormViewModel extends FormController<Story> {
     public StringProperty projectNameProperty() {
         return projectNameProperty;
     }
+
+    public ObjectProperty<Backlog> backlogProperty() { return backlogProperty; }
     
     public ObjectProperty<Project> projectProperty() {
         return projectProperty;
@@ -176,6 +227,14 @@ public class StoryFormViewModel extends FormController<Story> {
 
     public IntegerProperty estimateProperty() {
         return estimateProperty;
+    }
+    
+    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() { 
+        return targetStoriesProperty;
+    }
+
+    public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { 
+        return sourceStoriesProperty;
     }
 
     public BooleanProperty getCreatorEditable () {
@@ -275,10 +334,60 @@ public class StoryFormViewModel extends FormController<Story> {
             if (scaleProperty.getValue() != story.getScale()) {
                 changes.add(new EditCommand<>(story, "scale", scaleProperty.getValue()));
             }
+            
+//            // Stories being added as dependencies
+//            final ArrayList<Story> addedStories = new ArrayList<>(targetStoriesProperty.get());
+//            addedStories.removeAll(story.getDependencies());
+//
+//            // Stories being removed as dependencies
+//            final ArrayList<Story> removedStories = new ArrayList<>(story.getDependencies());
+//            removedStories.removeAll(targetStoriesProperty.get());
+
+            if (!(targetStoriesProperty.get().containsAll(story.getDependencies())
+                    && story.getDependencies().containsAll(targetStoriesProperty.get()))) {
+                changes.add(new EditCommand<>(story, "dependencies", targetStoriesProperty.get()));
+            }
 
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Release", changes);
         }
+    }
+
+    /**
+     * @return if the story being created has any cyclic dependencies
+     */
+    public boolean hasCyclicDependency() {
+        for (Story dependency : targetStoriesProperty.get()) {
+            if (checkCyclicDependency(dependency)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Performs a depth first search on the given dependency to see if it can reach itself
+     * No need to worry about cycles up further up the graph because we check for cycles before they can be added
+     * @param dependency the dependency to check
+     * @return boolean true if a cycle has been found
+     */
+    private boolean checkCyclicDependency(Story dependency) {
+        Stack<Node> stack = new Stack<>();
+        stack.push(new Node(dependency));
+
+        while (!stack.empty()) {
+            Node n = stack.pop();
+            if (n.label.equals(story.getShortName())) {
+                return true;
+            }
+            if (!n.visited) {
+                n.visited = true;
+                for (Story d : n.dependencies) {
+                    stack.push(new Node(d));
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -287,6 +396,25 @@ public class StoryFormViewModel extends FormController<Story> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    private class Node {
+        public String label;
+        public boolean visited;
+        public List<Story> dependencies;
+
+        public Node(Story dependency) {
+            this.label = dependency.getShortName();
+            this.dependencies = dependency.getDependencies();
+            this.visited = false;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "label='" + label + '\'' +
+                    '}';
+        }
     }
 
 }

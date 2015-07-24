@@ -4,19 +4,23 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
@@ -51,9 +55,13 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
     @FXML
+    private GoatListSelectionView<Story> storySelectionView;
+    @FXML
     private Button okButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Hyperlink storyCycleHyperLink;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -65,7 +73,8 @@ public class StoryFormController extends FormController<Story> {
                 shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
-
+        setStoryCycleHyperLinkInfo();
+        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
     }
 
     private void bindFields() {
@@ -76,6 +85,8 @@ public class StoryFormController extends FormController<Story> {
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
+        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
+        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
 
         creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
@@ -128,6 +139,40 @@ public class StoryFormController extends FormController<Story> {
         return true;
     }
 
+    private void setStoryCycleHyperLinkInfo() {
+        Label label = new Label();
+        label.setText("Only the stories that will not create a dependency loop are shown");
+        label.setPadding(new Insets(10, 10, 10, 10));
+        PopOver readyWhyPopOver = new PopOver(label);
+        readyWhyPopOver.setDetachable(false);
+
+        storyCycleHyperLink.setOnAction((e) -> {
+            readyWhyPopOver.show(storyCycleHyperLink);
+        });
+        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide(Duration.millis(0));
+            }
+        });
+    }
+
+    private void setupStoriesList() {
+        storySelectionView.setSourceHeader(new Label("Stories Available:"));
+        storySelectionView.setTargetHeader(new Label("Dependencies"));
+
+        storySelectionView.setPadding(new Insets(0, 0, 0, 0));
+
+        storySelectionView.setCellFactories(view -> {
+            final ListCell<Story> cell = new ListCell<Story>() {
+                @Override
+                public void updateItem(Story item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(item != null ? item.getShortName() : null);
+                }
+            };
+            return cell;
+        });
+    }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
@@ -167,18 +212,17 @@ public class StoryFormController extends FormController<Story> {
 
     public void setCommand() {
         viewModel.setCommand();
-
     }
 
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
-
     }
 
     @Override
     public void setOrganisation(Organisation organisation) {
         viewModel.setOrganisation(organisation);
+        setupStoriesList();
         setTextFieldSuggester(creatorTextField, organisation.getPeople());
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setValidationSupport();

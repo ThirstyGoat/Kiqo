@@ -1,11 +1,16 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.*;
+import javafx.collections.FXCollections;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class StoryFormViewModelTest {
 
@@ -149,7 +154,7 @@ public class StoryFormViewModelTest {
     }
 
     @Test
-    public void testPriorityValidation() throws NoSuchFieldException, IllegalAccessException {
+    public void testBacklogValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
 
         Assert.assertFalse("Must not be valid initially.",
@@ -185,23 +190,5 @@ public class StoryFormViewModelTest {
 
         storyFormViewModel.setStory(story);
         Assert.assertFalse("Creator field should be not be editable for an existing story.", storyFormViewModel.getCreatorEditable().get());
-    }
-
-    @Test
-    public void testScaleValidation() {
-        StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-
-        Scale workingScale = Scale.FIBONACCI;
-
-        Assert.assertFalse("Must not be valid initially.",
-                storyFormViewModel.scaleValidation().validProperty().get());
-
-        storyFormViewModel.scaleProperty().set(null);
-        Assert.assertFalse("Must not be null.",
-                storyFormViewModel.scaleValidation().validProperty().get());
-
-        storyFormViewModel.scaleProperty().set(workingScale);
-        Assert.assertTrue("Valid scale not recognised as valid.",
-                storyFormViewModel.scaleValidation().validProperty().get());
     }
 }

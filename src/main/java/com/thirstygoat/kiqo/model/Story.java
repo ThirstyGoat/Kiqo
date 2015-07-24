@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +26,7 @@ public class Story extends Item {
     private final IntegerProperty estimate;
     private final ObjectProperty<Scale> scale;
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
+    private final ObservableList<Story> dependencies;
     private final BooleanProperty isReady;
 
     /**
@@ -38,6 +43,7 @@ public class Story extends Item {
         this.acceptanceCriteria = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
         this.isReady = new SimpleBooleanProperty(false);
         this.estimate = new SimpleIntegerProperty(0);
+        this.dependencies = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
     }
 
@@ -54,6 +60,8 @@ public class Story extends Item {
         this.isReady = new SimpleBooleanProperty(isReady);
         this.estimate = new SimpleIntegerProperty(estimate);
         this.scale = new SimpleObjectProperty<>(scale);
+        this.dependencies = FXCollections.observableArrayList();
+        this.dependencies.addAll(dependencies);
     }
 
     @Override
@@ -178,6 +186,21 @@ public class Story extends Item {
         this.isReady.set(isReady); 
     }
 
+    public List<Story> getDependencies() {
+        List<Story> list = new ArrayList<>();
+        list.addAll(this.dependencies);
+        return list;
+    }
+    
+    public void setDependencies(List<Story> dependencies) {
+        this.dependencies.clear();
+        this.dependencies.addAll(dependencies);
+    }
+    
+    public ObservableList<Story> observableDependencies() {
+        return this.dependencies;
+    }
+    
     public BooleanProperty isReadyProperty() { 
         return isReady; 
     }
