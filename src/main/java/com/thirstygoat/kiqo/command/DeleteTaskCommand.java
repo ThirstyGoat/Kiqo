@@ -22,14 +22,14 @@ public class DeleteTaskCommand extends Command<Task> {
 
     @Override
     public Task execute() {
-        storyIndex = story.getTask().indexOf(task);
-        story.getTask().remove(task);
+        storyIndex = story.observableTasks().indexOf(task);
+        story.observableTasks().remove(task);
         return task;
     }
 
     @Override
     public void undo() {
-        story.getTask().add(storyIndex, task);
+        story.observableTasks().add(storyIndex, task);
     }
     @Override
     public String toString() {return "<Delete Task: \"" + task.getShortName() + "\">";}

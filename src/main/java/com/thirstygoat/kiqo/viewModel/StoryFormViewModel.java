@@ -126,7 +126,7 @@ public class StoryFormViewModel extends FormController<Story> {
 
     /**
      * Sets all properties to be that of model. So for example if you change the story using,
-     * setStory(), and you want to update the text fields with the new stories data, then you
+     * setTask(), and you want to update the text fields with the new stories data, then you
      * should call this method.
      */
     public void reloadFromModel() {

@@ -921,12 +921,13 @@ public class MainController implements Initializable {
             final TaskFormController taskFormController = loader.getController();
             taskFormController.setStage(stage);
             taskFormController.setOrganisation(selectedOrganisationProperty.get());
-
             taskFormController.setStory((Story) focusedItemProperty.getValue());
             taskFormController.populateFields(task);
             stage.showAndWait();
+
             if (taskFormController.isValid()) {
                 doCommand(taskFormController.getCommand());
+                System.out.println(((Story) focusedItemProperty.getValue()).observableTasks());
             }
         });
     }

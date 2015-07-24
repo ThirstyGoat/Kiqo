@@ -3,9 +3,10 @@ package com.thirstygoat.kiqo.viewModel.formControllers;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
+import com.thirstygoat.kiqo.viewModel.TaskFormViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -14,9 +15,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -27,9 +28,11 @@ public class TaskFormController extends FormController<Task> {
     private boolean valid;
     private Command<?> command;
     private Organisation organisation;
+    private TaskFormViewModel viewModel;
     private Story story;
     private Task task;
     private MainController mainController;
+    private final ValidationSupport validationSupport = new ValidationSupport();
 
     // Begin FXML Injections
     @FXML
@@ -45,16 +48,20 @@ public class TaskFormController extends FormController<Task> {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setButtonHandlers();
+        bindFields();
         Platform.runLater(name::requestFocus);
-        okButton.setDisable(true);
+    }
+
+    private void bindFields() {
+        viewModel = new TaskFormViewModel();
+        name.textProperty().bindBidirectional(viewModel.shortNameProperty());
+        estimate.textProperty().bindBidirectional(viewModel.estimateProperty());
+        description.textProperty().bindBidirectional(viewModel.descriptionProperty());
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            valid = description.getText().trim().length() > 0;
-            if (valid) {
-                setCommand();
+            if (validate()) {
                 stage.close();
             }
         });
@@ -83,17 +90,7 @@ public class TaskFormController extends FormController<Task> {
     }
 
     private void setCommand() {
-        if (task == null) {
-            task = new Task(description.getText().trim(), "", (float) 0.0);
-            command = new CreateTaskCommand(task, story);
-        } else {
-            // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!task.getShortName().equals(description.getText())) {
-                changes.add(new EditCommand<>(task, "criteria", description.getText()));
-            }
-            command = new CompoundCommand("Edit AC", changes);
-        }
+        viewModel.setCommand();
     }
 
     @Override
@@ -103,7 +100,7 @@ public class TaskFormController extends FormController<Task> {
 
     @Override
     public Command<?> getCommand() {
-        return command;
+        return viewModel.getCommand();
     }
 
     @Override
@@ -116,18 +113,28 @@ public class TaskFormController extends FormController<Task> {
         this.task = task;
         if (task == null) {
             // We are creating a new allocation (for an existing project)
-            stage.setTitle("Create Acceptance Criteria");
-            okButton.setText("Create Acceptance Criteria");
+            stage.setTitle("Create Task");
+            okButton.setText("Create Task");
         } else {
             // edit an existing allocation
-            stage.setTitle("Edit Acceptance Criteria");
+            stage.setTitle("Edit Task");
             okButton.setText("Save");
             description.setText(task.getShortName());
         }
     }
+    private void setValidationSupport() {
+        ValidationVisualizer visualizer = new ControlsFxVisualizer();
+        visualizer.initVisualization(viewModel.nameValidation(), name, true);
+        visualizer.initVisualization(viewModel.estimationValidation(), estimate, true);
+        visualizer.initVisualization(viewModel.descriptionValidation(), description, true);
+    }
 
     public void setStory(Story story) {
-        this.story = story;
+        viewModel.setStory(story);
+
+        setValidationSupport();
+        setButtonHandlers();
+        okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
     }
 
     @Override
@@ -137,5 +144,15 @@ public class TaskFormController extends FormController<Task> {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    private boolean validate() {
+        if (validationSupport.isInvalid()) {
+            return false;
+        } else {
+            valid = true;
+        }
+        setCommand();
+        return true;
     }
 }

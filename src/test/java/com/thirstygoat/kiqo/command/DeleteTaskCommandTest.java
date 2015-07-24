@@ -24,30 +24,30 @@ public class DeleteTaskCommandTest {
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
         story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
         task = new Task("task1", "descr", 0f );
-        story.getTask().add(task);
+        story.observableTasks().add(task);
         command = new DeleteTaskCommand(task, story);
     }
 
     @Test
     public void deleteTask() {
-        Assert.assertTrue(story.getTask().contains(task));
+        Assert.assertTrue(story.observableTasks().contains(task));
 
         command.execute();
 
-        Assert.assertFalse(story.getTask().contains(task));
+        Assert.assertFalse(story.observableTasks().contains(task));
     }
 
     @Test
     public void undoDeleteTask() {
-        Assert.assertTrue(story.getTask().contains(task));
+        Assert.assertTrue(story.observableTasks().contains(task));
 
         command.execute();
 
-        Assert.assertFalse(story.getTask().contains(task));
+        Assert.assertFalse(story.observableTasks().contains(task));
 
         command.undo();
 
-        Assert.assertTrue(story.getTask().contains(task));
+        Assert.assertTrue(story.observableTasks().contains(task));
     }
 }
 

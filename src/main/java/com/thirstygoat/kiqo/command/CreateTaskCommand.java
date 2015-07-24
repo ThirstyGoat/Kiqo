@@ -18,13 +18,13 @@ public class CreateTaskCommand extends Command<Task> {
 
     @Override
     public Task execute() {
-        story.getTask().add(task);
+        story.observableTasks().add(task);
         return task;
     }
 
     @Override
     public void undo() {
-        story.getTask().remove(task);
+        story.observableTasks().remove(task);
     }
 
    @Override

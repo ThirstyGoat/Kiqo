@@ -11,6 +11,7 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
+import com.thirstygoat.kiqo.viewModel.TaskListCell;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,7 +22,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
-import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
@@ -101,7 +101,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         }
 
         acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
-        
+        taskListView.setCellFactory(param -> new TaskListCell(param));
+
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
         acListView.setItems(story.getAcceptanceCriteria());
@@ -109,6 +110,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
+
+        removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
+        editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
+        taskListView.setItems(story.observableTasks());
 
         addTaskButton.setOnAction(event -> mainController.createTask());
         removeTaskButton.setOnAction(event -> deleteTask());
@@ -211,6 +216,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         initSlider();
         acListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        taskListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initSlider() {

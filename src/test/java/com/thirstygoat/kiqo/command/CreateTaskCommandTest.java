@@ -32,11 +32,11 @@ public class CreateTaskCommandTest {
      */
     @Test
     public void createTask() {
-        Assert.assertFalse(story.getTask().contains(task));
+        Assert.assertFalse(story.observableTasks().contains(task));
 
         command.execute();
 
-        Assert.assertTrue(story.getTask().contains(task));
+        Assert.assertTrue(story.observableTasks().contains(task));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class CreateTaskCommandTest {
         command.execute();
         command.undo();
 
-        Assert.assertFalse(story.getTask().contains(task));
+        Assert.assertFalse(story.observableTasks().contains(task));
     }
 
 
