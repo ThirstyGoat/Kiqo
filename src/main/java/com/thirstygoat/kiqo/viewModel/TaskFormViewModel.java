@@ -64,7 +64,7 @@ public class TaskFormViewModel extends FormController<Task> {
         estimateValidator = new FunctionBasedValidator<>(estimateProperty,
                 // Always valid as description isn't required and has no constraints
                 s -> {
-                    return s.matches("^([+-]?\\d*\\.?\\d*)$");
+                    return s.matches("^([+-]?\\d*\\.?\\d*)$") && s.length() > 0;
                 },
                 ValidationMessage.error("Estimate must be a number"));
 
@@ -146,7 +146,11 @@ public class TaskFormViewModel extends FormController<Task> {
 
     public void setCommand() {
         if (task == null) {
-            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), Float.parseFloat(estimateProperty.get()));
+            float estimate = 0;
+            if (!estimateProperty().get().trim().equals("")) {
+                estimate = Float.parseFloat(estimateProperty.get());
+            }
+            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate);
             command = new CreateTaskCommand(task, this.story);
         } else {
             // edit command

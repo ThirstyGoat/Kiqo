@@ -76,4 +76,20 @@ public class Task extends Item {
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        return shortName.get().equals(task.shortName.get());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return shortName.hashCode();
+    }
 }

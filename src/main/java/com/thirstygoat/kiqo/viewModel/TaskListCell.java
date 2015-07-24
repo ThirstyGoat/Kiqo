@@ -46,8 +46,8 @@ public class TaskListCell extends ListCell<Task> {
      */
     private static boolean sourceIsTask(DragEvent event) {
         try {
-            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("description");
-            return true;
+            String type = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("type");
+            return type.equals("TASK");
         } catch (Exception e) {
             return false;
         }
@@ -100,7 +100,6 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-//            System.out.println("enter");
             if (sourceIsTask(event)) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
@@ -118,11 +117,10 @@ public class TaskListCell extends ListCell<Task> {
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
             if (sourceIsTask(event)) {
-//            System.out.println("exit");
                 ((TaskListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                Task acceptanceCriteria = getTask(event);
-                listView.getItems().remove(acceptanceCriteria);
+                Task t = getTask(event);
+                listView.getItems().remove(t);
             }
             event.consume();
         };
@@ -130,14 +128,13 @@ public class TaskListCell extends ListCell<Task> {
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
             if (sourceIsTask(event)) {
-//            System.out.println("drop");
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                Task acceptanceCriteria = getTask(event);
+                Task t = getTask(event);
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
-//                listView.getItems().add(getIndex(), acceptanceCriteria);
+//                listView.getItems().add(getIndex(), t);
                     if (prevIndex != getIndex()) {
                         undoManager.doCommand(new MoveItemCommand<>(task, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
                     }
@@ -154,14 +151,13 @@ public class TaskListCell extends ListCell<Task> {
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
             if (sourceIsTask(event)) {
-//            System.out.println("done");
-                Task acceptanceCriteria = getTask(event);
+                Task t = getTask(event);
 
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
                 if (listSize > listView.getItems().size()) {
-                    listView.getItems().add(prevIndex, acceptanceCriteria);
+                    listView.getItems().add(prevIndex, t);
                 }
             }
             event.consume();
@@ -182,6 +178,8 @@ public class TaskListCell extends ListCell<Task> {
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
             container.addData("name", task.getShortName());
+
+            container.addData("type", "TASK");
             container.addData("description", task.getDescription());
             container.addData("estimate", task.getEstimate());
             container.addData("listSize", listView.getItems().size());

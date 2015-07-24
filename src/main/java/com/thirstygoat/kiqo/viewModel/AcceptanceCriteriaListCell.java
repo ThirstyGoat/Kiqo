@@ -52,8 +52,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
      */
     private static boolean sourceIsAcceptanceCriteria(DragEvent event) {
         try {
-            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria");
-            return true;
+            String type = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("type");
+            return type.equals("AC");
         } catch (Exception e) {
             return false;
         }
@@ -186,6 +186,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             // begin drag ops
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
+            container.addData("type", "AC");
             container.addData("criteria", ac.getCriteria());
             container.addData("state", ac.getState());
             container.addData("listSize", listView.getItems().size());
