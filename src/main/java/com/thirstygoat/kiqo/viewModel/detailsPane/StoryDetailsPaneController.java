@@ -260,6 +260,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         estimateWhy.visibleProperty().bind(storyEstimateSlider.disabledProperty());
         estimateWhy.managedProperty().bind(storyEstimateSlider.disabledProperty());
 
+        storyEstimateSlider.visibleProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty()));
+        storyEstimateSlider.managedProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty()));
+
         storyEstimateSliderLabel.visibleProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
         storyEstimateSliderLabel.managedProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
     }
