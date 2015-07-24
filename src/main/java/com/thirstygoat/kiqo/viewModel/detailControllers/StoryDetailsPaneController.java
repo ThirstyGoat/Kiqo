@@ -149,7 +149,20 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteTask() {
+        Command<?> command;
+        if (taskListView.getSelectionModel().getSelectedItems().size() > 1) {
+            // Then we have to deal with a multi AC deletion
+            List<Command<?>> commands = new ArrayList<>();
+            for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
+                commands.add(new DeleteTaskCommand(task, story));
+            }
+            command = new CompoundCommand("Delete Task", commands);
+        } else {
+            final Task task = taskListView.getSelectionModel().getSelectedItem();
+            command = new DeleteTaskCommand(task, story);
+        }
 
+        mainController.doCommand(command);
     }
 
     private void setIsReadyCheckBoxInfo() {
