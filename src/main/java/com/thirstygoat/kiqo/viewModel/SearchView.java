@@ -1,33 +1,73 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.viewModel.SearchViewModel;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Searchable;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.scene.control.Button;
+import javafx.beans.binding.Bindings;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
-import javax.naming.directory.SearchResult;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 
 /**
  * Created by leroy on 24/07/15.
  */
-public class SearchView implements FxmlView<SearchViewModel> {
-    //@FXML
-    Button searchButton;
-
-    //@FXML
-
-    //@FXML
-    ListView<SearchResult> searchResults;
+public class SearchView implements FxmlView<SearchViewModel>, Initializable {
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private ListView<Searchable> searchResultsListView;
 
     @InjectViewModel
     private SearchViewModel viewModel;
 
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        viewModel.queryProperty().bind(searchTextField.textProperty());
+        searchResultsListView.setItems(viewModel.getResults());
+        searchTextField.setOnKeyReleased(event -> {
+            viewModel.getSearchCommand().execute();
+        });
+
+        searchResultsListView.setCellFactory(new Callback<ListView<Searchable>, ListCell<Searchable>>() {
+            @Override
+            public ListCell<Searchable> call(ListView<Searchable> param) {
+                return new ListCell<Searchable>() {
+                    @Override
+                    protected void updateItem(Searchable item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            Item searchResultItem = (Item) item;
+                            setText(searchResultItem.getShortName());
+                            setGraphic(null);
+                        } else {
+                            setText("");
+                            setGraphic(null);
+                        }
+                    }
+                };
+            }
+        });
+
+        searchResultsListView.visibleProperty().bind(Bindings.size(viewModel.getResults()).greaterThan(0));
+        searchResultsListView.managedProperty().bind(Bindings.size(viewModel.getResults()).greaterThan(0));
+
+        viewModel.getResults().addListener((ListChangeListener<? super Searchable>) c -> {
+            if (viewModel.getResults().size() > 0) {
+                searchResultsListView.getScene().getWindow().setHeight(200);
+            } else {
+                searchResultsListView.getScene().getWindow().setHeight(45);
+            }
+        });
     }
 
-    //@FXML //Method that is called if the button is clicked
-    public void searchAction() {
-        viewModel.getSearchCommand().execute();
-    }
+
 }

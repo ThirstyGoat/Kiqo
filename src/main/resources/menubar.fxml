@@ -24,6 +24,9 @@
         <MenuItem mnemonicParsing="false" text="Save As" fx:id="saveAsMenuItem" />
         <MenuItem mnemonicParsing="false" text="Revert" fx:id="revertMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem mnemonicParsing="false" text="Search" fx:id="searchMenuItem" />
+
+        <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Generate Report" fx:id="generateStatusReportMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
@@ -52,5 +55,7 @@
         <RadioMenuItem mnemonicParsing="false" text="Skills" toggleGroup="$selectedTab" fx:id="listShowSkillsMenuItem" />
       </items>
     </Menu>
+
   </menus>
+
 </MenuBar>

@@ -17,13 +17,15 @@ import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormCont
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
-
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -33,7 +35,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
-
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -921,5 +922,21 @@ public class MainController implements Initializable {
 
     public SideBarController getSideBarController() {
         return sideBarController;
+    }
+
+    public void search() {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Report Generator");
+            stage.initOwner(primaryStage);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+            ViewTuple<SearchView, SearchViewModel> viewTuple = FluentViewLoader.fxmlView(SearchView.class).load();
+            Parent root = viewTuple.getView();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+           primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> stage.close());
+        });
     }
 }

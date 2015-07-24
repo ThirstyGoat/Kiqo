@@ -35,6 +35,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem revertMenuItem;
     @FXML
+    private MenuItem searchMenuItem;
+    @FXML
     private MenuItem generateStatusReportMenuItem;
     @FXML
     private MenuItem openMenuItem;
@@ -116,6 +118,7 @@ public class MenuBarController implements Initializable {
         undoMenuItem.setOnAction(event -> mainController.undo());
         redoMenuItem.setOnAction(event -> mainController.redo());
         revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
+        searchMenuItem.setOnAction(event -> mainController.search());
 
         generateStatusReportMenuItem.setOnAction(event -> mainController.statusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));

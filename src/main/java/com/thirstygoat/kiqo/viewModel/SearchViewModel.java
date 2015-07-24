@@ -1,11 +1,12 @@
 package com.thirstygoat.kiqo.viewModel;
 
+import com.thirstygoat.kiqo.model.Search;
+import com.thirstygoat.kiqo.model.Searchable;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -15,33 +16,43 @@ import javafx.collections.ObservableList;
  * Created by leroy on 24/07/15.
  */
 public class SearchViewModel implements ViewModel {
-        // Note this is an mvvmFX command. It is for executing tasks and is different from our command.
-        // See: https://github.com/sialcasa/mvvmFX/wiki/Commands for more information.
-        private Command searchCommand;
-        // Precondition for searching.
-        private BooleanProperty precondition;
-        private StringProperty searchString = new SimpleStringProperty("");
+    private Command searchCommand;
+    private BooleanProperty precondition;
+    private StringProperty query = new SimpleStringProperty("");
+    private ObservableList<Searchable> results = FXCollections.observableArrayList();
 
-        // <String> for now, but will probably be changed to something like <? implements Searchable>
-        private ObservableList<String> results = FXCollections.observableArrayList();
 
-        public SearchViewModel() {
-                // Note: Search command has a .getProgress() property. Maybe this could be bound to a progress bar?
-                searchCommand = new DelegateCommand(() -> new Action() {
-                        @Override
-                        protected void action() throws Exception {
-                                search();
-                        }
-                }, precondition, true); // true means a new thread will be created for the action.
+    public SearchViewModel() {
 
-                // precondition.bind(...); // Some preconditions for searchCommand.isExecutable() property.
-        }
+        // Note: Search command has a .getProgress() property. Maybe this could be bound to a progress bar?
+        searchCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                    search();
+            }
+        }, precondition, false); // true means a new thread will be created for the action.
 
-        private void search() {
-                // TODO Search for stuff and and update ViewModel properties.
-        }
+    }
 
-        public Command getSearchCommand() {
-                return searchCommand;
-        }
+    public String getQuery() {
+        return query.get();
+    }
+
+    public StringProperty queryProperty() {
+        return query;
+    }
+
+    public ObservableList<Searchable> getResults() {
+        return results;
+    }
+
+    private void search() {
+        Search search = new Search(query.get());
+        results.clear();
+        results.addAll(search.execute());
+    }
+
+    public Command getSearchCommand() {
+        return searchCommand;
+    }
 }

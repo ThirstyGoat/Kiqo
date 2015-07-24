@@ -21,10 +21,15 @@ public class SearchableItems {
         return instance;
     }
 
+    public static void clear() {
+        getInstance().searchableItems.clear();
+    }
+
     public void addSearchable(Searchable item) {
         searchableItems.add(item);
     }
 
+    //TODO make readonly
     public ObservableList<Searchable> getSearchables() {
         return searchableItems;
     }
