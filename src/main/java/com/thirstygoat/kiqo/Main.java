@@ -89,7 +89,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
         this.primaryStage.setMinWidth(900);
-        this.primaryStage.setMinHeight(600);
+        this.primaryStage.setMinHeight(650);
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();

@@ -89,11 +89,7 @@
                      <content>
                         <GridPane mouseTransparent="false" vgap="10.0">
                            <children>
-                              <Label text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" fx:id="x11" />
-                                 </font>
-                              </Label>
+                              <Label text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP"/>
                               <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                               <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
@@ -102,8 +98,8 @@
                                     <Button fx:id="editACButton" text="Edit" />
                                  </children>
                               </HBox>
-                              <Label font="$x11" text="Tasks" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-                              <ListView fx:id="taskListView1" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <Label font="$x1" text="Tasks" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                              <ListView fx:id="taskListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                               <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <children>
                                     <Button fx:id="addTaskButton" text="+" />
