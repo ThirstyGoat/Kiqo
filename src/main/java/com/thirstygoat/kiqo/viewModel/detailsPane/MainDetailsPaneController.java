@@ -2,13 +2,11 @@ package com.thirstygoat.kiqo.viewModel.detailsPane;
 
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
-
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -86,6 +84,7 @@ public class MainDetailsPaneController implements Initializable {
                 teamDetailsPane,
                 releaseDetailsPane,
         };
+        clear();
     }
 
     /**
