@@ -18,16 +18,25 @@ import java.util.logging.*;
  * Main entry point for application
  */
 public class Main extends Application {
+    private static File file = null;
     private Stage primaryStage;
     private BorderPane root;
     private MainController mainController;
 
     public static void main(String[] args) {
-        Level level;
-        if (args.length > 0 && args[0].equals("-v")) {
-            level = Level.ALL;
-        } else {
-            level = Level.OFF;
+        Level level = Level.OFF;
+        if (args.length > 0 ) {
+            for (String arg : args) {
+                if (arg.equals("-v")) {
+                    level = Level.ALL;
+                } else if (arg.matches("(.*)\\.json")) {
+                    file = new File(arg);
+                    if (!file.exists()) {
+                        System.out.println("Invalid file path");
+                        System.exit(1);
+                    }
+                }
+            }
         }
         Main.setupLogging(level);
 
@@ -88,8 +97,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
-        this.primaryStage.setMinWidth(900);
-        this.primaryStage.setMinHeight(600);
+        this.primaryStage.setMinWidth(1100);
+        this.primaryStage.setMinHeight(650);
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
@@ -122,5 +131,8 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
+        if (file != null && file.exists()) {
+            mainController.openOrganisation(file);
+        }
     }
 }

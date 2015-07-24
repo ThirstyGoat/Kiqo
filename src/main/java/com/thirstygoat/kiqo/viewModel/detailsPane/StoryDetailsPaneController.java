@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.viewModel.detailsPane;
 
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.*;
+
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
@@ -7,13 +11,16 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
-import java.net.URL;
-import java.util.*;
+import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
@@ -45,6 +52,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Button removeACButton;
     @FXML
     private Button editACButton;
+    @FXML
+    private CheckBox isReadyCheckBox;
+    @FXML
+    private Hyperlink readyWhy;
 
 
     @Override
@@ -90,10 +101,57 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
 
+        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (story.getIsReady() != newValue) {
+                Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                UndoManager.getUndoManager().doCommand(command);
+            }
+        });
+        isReadyCheckBox.setSelected(story.getIsReady());
+        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
+            isReadyCheckBox.setSelected(newValue);
+        });
+
+        // Story must have at least one AC
+        // Story must have non-null estimate
+        // Story must be in a backlog
+
+        BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
+        BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
+        BooleanBinding noEstimateBinding = Bindings.equal(story.estimateProperty(), 0);
+
+        // Bind the disable property
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding));
+        readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
+
+        setIsReadyCheckBoxInfo();
+
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
-    
+
+    private void setIsReadyCheckBoxInfo() {
+        StringProperty text = new SimpleStringProperty();
+        Label label = new Label();
+        label.textProperty().bind(text);
+        label.setPadding(new Insets(10, 10, 10, 10));
+        PopOver readyWhyPopOver = new PopOver(label);
+        readyWhyPopOver.setDetachable(false);
+
+        readyWhy.setOnAction((e) -> {
+            text.setValue("To mark this Story as Ready, it must:\n\n" +
+                            (story.getBacklog() != null ? "✓" : "✘") + " belong to a Backlog\n" +
+                            (story.getEstimate() != 0 ? "✓" : "✘") + " be estimated\n" +
+                            (!story.getAcceptanceCriteria().isEmpty() ? "✓" : "✘") + " have Acceptance Criteria");
+            readyWhyPopOver.show(readyWhy);
+        });
+        readyWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide();
+            }
+        });
+    }
+
     private void deleteAC() {
         Command<?> command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
@@ -107,6 +165,17 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             final AcceptanceCriteria acceptanceCriteria = acListView.getSelectionModel().getSelectedItem();
             command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
         }
+
+        // Check if they are deleting all of the ACs, and if the story is marked as ready
+        // If so, then the command executed must mark the story as no longer ready
+        if (acListView.getSelectionModel().getSelectedItems().size() == acListView.getItems().size() &&
+                story.getIsReady()) {
+            List<Command<?>> changes = new ArrayList<>();
+            changes.add(command);
+            changes.add(new EditCommand<>(story, "isReady", false));
+            command = new CompoundCommand("Delete AC", changes);
+        }
+
         mainController.doCommand(command);
     }
 
@@ -139,8 +208,13 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
-                EditCommand<Story, Integer> editCommand = new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue());
-                UndoManager.getUndoManager().doCommand(editCommand);
+                List<Command<?>> commands = new ArrayList<>();
+                if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
+                    commands.add(new EditCommand<>(story, "isReady", false));
+                }
+                commands.add(new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue()));
+                CompoundCommand command = new CompoundCommand("Edit Estimation", commands);
+                UndoManager.getUndoManager().doCommand(command);
             }
         });
     }

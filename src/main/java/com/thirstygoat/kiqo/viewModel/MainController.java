@@ -539,7 +539,7 @@ public class MainController implements Initializable {
         } catch (final FileNotFoundException e) {
             GoatDialog.showAlertDialog(primaryStage, "File Not Found", "No can do.", "Somehow, the file you tried to open was not found.");
         } catch (final Exception e) {
-            GoatDialog.showAlertDialog(primaryStage, "Ahhhhhh", "Nope.", "Something broke, Probably we forgot to return the shortname property of an Item.");
+            GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "You are probably trying to load a pre-release organisation.");
         }
 
         if(PersistenceManager.getIsOldJSON()) {
