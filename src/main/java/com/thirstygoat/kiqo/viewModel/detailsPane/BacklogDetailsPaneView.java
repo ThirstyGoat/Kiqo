@@ -6,10 +6,15 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,6 +56,8 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     private TableColumn<Story, String> shortNameTableColumn;
     @FXML
     private CheckBox highlightCheckBox;
+    @FXML
+    private Hyperlink highlightHyperLink;
 
     private Label placeHolder = new Label();
 
@@ -63,6 +70,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         descriptionLabel.textProperty().bind(backlogDetailsPaneViewModel.descriptionProperty());
         productOwnerLabel.textProperty().bind(backlogDetailsPaneViewModel.productOwnerStringProperty());
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleStringProperty());
+        setHyperlink();
 
 
 
@@ -79,6 +87,53 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             backlogDetailsPaneViewModel.highlightStoryStateProperty().set(newValue);
         });
+    }
+
+    private void setHyperlink() {
+        PopOver popOver = new PopOver();
+
+        HBox greenHbox = new HBox();
+        HBox orangeHbox = new HBox();
+        HBox redHbox = new HBox();
+        HBox transparentHbox = new HBox();
+
+        VBox vb = new VBox();
+
+        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox, transparentHbox);
+        vb.setSpacing(2);
+        greenHbox.setAlignment(Pos.CENTER_LEFT);
+        orangeHbox.setAlignment(Pos.CENTER_LEFT);
+        redHbox.setAlignment(Pos.CENTER_LEFT);
+        transparentHbox.setAlignment(Pos.CENTER_LEFT);
+        greenHbox.setSpacing(5);
+        orangeHbox.setSpacing(5);
+        redHbox.setSpacing(5);
+        transparentHbox.setSpacing(5);
+
+        Rectangle g = new Rectangle(10, 10);
+        Rectangle o = new Rectangle(10, 10);
+        Rectangle r = new Rectangle(10, 10);
+        Rectangle t = new Rectangle(10, 10);
+
+        g.setFill(Color.GREEN);
+        o.setFill(Color.ORANGE);
+        r.setFill(Color.RED);
+        t.setFill(Color.TRANSPARENT);
+        t.setStroke(Color.GREY);  // maybe grey
+
+        greenHbox.getChildren().addAll(g, new Label("Story is ready"));
+        orangeHbox.getChildren().addAll(o, new Label("Story is ready to be estimated"));
+        redHbox.getChildren().addAll(r, new Label("Story has a one or more dependencies with higher priority"));
+        transparentHbox.getChildren().addAll(t, new Label("Story can be marked as ready"));
+
+        vb.setPadding(new Insets(10));
+
+        popOver.setContentNode(vb);
+
+        highlightHyperLink.setOnAction(e -> popOver.show(highlightHyperLink));
+        highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
+
+        highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
     }
 
     private void setStoryCellFactory() {

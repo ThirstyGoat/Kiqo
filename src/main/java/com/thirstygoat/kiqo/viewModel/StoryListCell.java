@@ -49,7 +49,6 @@ public class StoryListCell extends TableCell<Story, String> {
     }
 
     public static Color getColor(Story story) {
-        System.out.println("called");
         for (Story s : story.getDependencies()) {
             if (s.getPriority() < story.getPriority()) {
                 return Color.RED;
@@ -81,9 +80,6 @@ public class StoryListCell extends TableCell<Story, String> {
             hbox.setPadding(new Insets(0, 0, 0, 5));
 
             badge.fillProperty().bind(getBadgeColor(story));
-            badge.fillProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("changed rect color");
-            });
 
             badge.visibleProperty().bind(vm.highlightStoryStateProperty());
             badge.managedProperty().bind(vm.highlightStoryStateProperty());
