@@ -188,23 +188,34 @@ New skills can be created, edited and deleted.
   \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
   \item Delete an allocation by right clicking on its row and selecting 'Delete Allocation'.
 \end{itemize}
-\section{Stories \& Backlogs}
+\section{Backlogs \& Stories}
 
-\subsection{Story}
+\subsection{Backlogs}
+
+\begin{itemize}
+\item Backlogs can be created when there is an existing project and at least one person with the product owner skill.
+\item The owner of a backlog must have the product owner skill. 
+\item Stories can be added to a backlog.
+\end{itemize}
+
+\subsection{Stories}
+
 \begin{itemize}
   \item Stories can be added to a project and assigned a priority.
   \item The priority must be an integer between 1000 and -1000, inclusive.
 \end{itemize}
-Stories can be estimated using anyone of the following inbuilt scales:
+
+\subsubsection{Estimation}
+Stories can be estimated according to any one of these scales:
 \begin{itemize}
 \item Pseudo-Fibonnaci \textit{Default}
 \item T-Shirt Sizes
 \item Dog Breeds
 \end{itemize}
-\subsubsection{Estimation}
-The estimation slider can be dragged to change the estimation.
-The estimation scale used for each story must be the same within a single backlog. Stories within a backlog
-that use a different estimation scale will have their scale changed to that of the backlog, and the estimation unset.
+The estimation scale is the same for all stories in a backlog.
+share its backlog. Stories within a backlog that use a different estimation
+scale will have their scale changed to that of the backlog, and the estimation unset.
+
 \subsubsection{Acceptance Criteria}
 Acceptance criteria can be added to a story and be assigned a state of readiness to help the user determine whether the
 story is ready to begin. The readiness can be one of three states (ready/not ready/undetermined).
@@ -218,20 +229,24 @@ story is ready to begin. The readiness can be one of three states (ready/not rea
   dropped at that location and the order of the acceptance critera changed.
 \end{itemize}
 
-\subsection{Story Readiness}
-A story can be marked as ready if the following criteria are met:
+\subsubsection{Readiness}
+A story can be marked as ready when the following criteria are met:
 \begin{itemize}
-\item Story belongs to a Backlog
-\item Story is estimated
-\item Story has at least one Acceptance Criterion
+\item the story belongs to a Backlog
+\item the story is estimated
+\item the story has at least one Acceptance Criterion
 \end{itemize}
 
-\subsection{Backlog}
-
+\subsubsection{Dependencies}
+Some stories may depend on the completion of others. This information can be
+added in the story form. 
+Not all stories can be added as dependencies. Eligible stories must meet the
+following criteria:
 \begin{itemize}
-\item Backlogs can be created when there is an existing project and at least one person with the product owner skill.
-\item The owner of a backlog must have the product owner skill. 
-\item Stories can be added to a backlog.
+\item the story is in the same backlog
+\item adding the story as a dependency will not create a cyclic dependency.
+Cyclic dependencies are chains of dependencies that end with the story where
+they begin.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
