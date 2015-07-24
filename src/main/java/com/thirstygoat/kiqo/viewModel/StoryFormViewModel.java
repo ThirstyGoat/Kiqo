@@ -11,12 +11,8 @@ import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -24,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -35,7 +30,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private Story story;
     private ObjectProperty<Person> creatorProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
-    private Backlog backlog; // not a property because not editable from form
+    private ObjectProperty<Backlog> backlogProperty = new SimpleObjectProperty<>();
     private Organisation organisation;
     private Command<?> command;
     private boolean valid = false;
@@ -183,7 +178,7 @@ public class StoryFormViewModel extends FormController<Story> {
             priorityProperty.set(Integer.toString(story.getPriority()));
             scaleProperty.set(story.getScale());
             estimateProperty.set(story.getEstimate());
-            backlog = story.getBacklog();
+            backlogProperty.set(story.getBacklog());
 
             creatorEditable.set(false);
         }
@@ -217,6 +212,8 @@ public class StoryFormViewModel extends FormController<Story> {
     public StringProperty projectNameProperty() {
         return projectNameProperty;
     }
+
+    public ObjectProperty<Backlog> backlogProperty() { return backlogProperty; }
     
     public ObjectProperty<Project> projectProperty() {
         return projectProperty;

@@ -61,6 +61,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private CheckBox isReadyCheckBox;
     @FXML
     private Hyperlink readyWhy;
+    @FXML
+    private Hyperlink estimateWhy;
 
 
     @Override
@@ -131,6 +133,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
+        setEstimateHyperlink();
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
@@ -232,6 +235,33 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 UndoManager.getUndoManager().doCommand(command);
             }
         });
+    }
+
+    private void setEstimateHyperlink() {
+        Text bulletA = new Text("○ ");
+        Text haveAcceptanceCriteria = new Text("have Acceptance Criteria");
+        haveAcceptanceCriteria.strikethroughProperty().bind(Bindings.isNotEmpty(story.getAcceptanceCriteria()));
+
+        TextFlow tf = new TextFlow(
+                new Text("To estimate this Story, it must:\n\n"),
+                bulletA, haveAcceptanceCriteria);
+
+        tf.setPadding(new Insets(10));
+        PopOver estimateWhyPopOver = new PopOver(tf);
+        estimateWhyPopOver.setDetachable(false);
+
+        estimateWhy.setOnAction((e) -> estimateWhyPopOver.show(estimateWhy));
+        estimateWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                estimateWhyPopOver.hide();
+            }
+        });
+
+        estimateWhy.visibleProperty().bind(storyEstimateSlider.disabledProperty());
+        estimateWhy.managedProperty().bind(storyEstimateSlider.disabledProperty());
+
+        storyEstimateSliderLabel.visibleProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
+        storyEstimateSliderLabel.managedProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
     }
 
     private void setScale() {

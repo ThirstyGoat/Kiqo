@@ -21,6 +21,9 @@ public class RemoveStoryFromBacklogCommand extends Command {
         if (story.getIsReady()) {
             commands.add(new EditCommand<>(story, "isReady", false));
         }
+        if (!story.getDependencies().isEmpty()) {
+            commands.add(new EditCommand<>(story, "dependencies", new ArrayList<>()));
+        }
         compoundCommand = new CompoundCommand("Remove Story from Backlog", commands);
     }
 

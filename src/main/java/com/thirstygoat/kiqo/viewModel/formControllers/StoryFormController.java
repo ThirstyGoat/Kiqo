@@ -10,6 +10,7 @@ import com.thirstygoat.kiqo.viewModel.StoryFormViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -73,7 +74,7 @@ public class StoryFormController extends FormController<Story> {
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
         setStoryCycleHyperLinkInfo();
-
+        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
     }
 
     private void bindFields() {

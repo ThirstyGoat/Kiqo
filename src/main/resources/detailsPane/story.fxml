@@ -32,21 +32,6 @@
             <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />              <Label fx:id="storyScaleLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
               <Label font="$x1" text="Estimation Scale:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
               <Label font="$x1" text="Estimate:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
-              <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                  <children>
-                      <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                          <children>
-                              <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="11.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="609.0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                  <cursor>
-                                      <Cursor fx:constant="HAND" />
-                                  </cursor>
-                              </Slider>
-                              <Label fx:id="storyEstimateSliderLabel" alignment="CENTER_RIGHT" text="" />
-                          </children>
-                      </VBox>
-                      <HBox />
-                  </children>
-              </HBox>
                   <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
                   <CheckBox fx:id="isReadyCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="6" />
@@ -67,6 +52,25 @@
               </HBox>
                   <Label font="$x1" text="Dependencies:" GridPane.rowIndex="5" />
                   <Label fx:id="dependenciesLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
+                     <children>
+                        <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="11.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="288.0" showTickMarks="true" snapToTicks="true">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Slider>
+                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                           <children>
+                              <Label fx:id="storyEstimateSliderLabel" alignment="CENTER_RIGHT" text="" />
+                              <Hyperlink fx:id="estimateWhy" text="Why can't I estimate this Story?">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </Hyperlink>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
 
           </children>
           <columnConstraints>
