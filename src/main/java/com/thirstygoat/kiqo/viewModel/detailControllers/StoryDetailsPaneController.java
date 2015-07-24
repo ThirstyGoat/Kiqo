@@ -20,6 +20,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
+import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.PopOver;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
@@ -56,7 +57,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private CheckBox isReadyCheckBox;
     @FXML
     private Hyperlink readyWhy;
-
 
     @Override
     public void showDetails(final Story story) {

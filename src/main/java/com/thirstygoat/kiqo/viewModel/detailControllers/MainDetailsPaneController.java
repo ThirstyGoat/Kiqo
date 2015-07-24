@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -84,6 +85,7 @@ public class MainDetailsPaneController implements Initializable {
      * @param item item to be displayed
      */
     public void showDetailsPane(Item item) {
+        detailsPane.setPadding(new Insets(20, 20, 20, 20));
         if (item == null) {
             clear();
         } else {
@@ -144,6 +146,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showStoryDetailPane(Story story) {
+        detailsPane.setPadding(new Insets(0, 20, 20, 0));
         storyDetailsPaneController.showDetails(story);
         show(storyDetailsPane);
         showOptionButtons();
