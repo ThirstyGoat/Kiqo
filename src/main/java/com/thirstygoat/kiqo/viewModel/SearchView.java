@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.model;
+package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.viewModel.SearchViewModel;
 import de.saxsys.mvvmfx.FxmlView;
@@ -24,7 +24,6 @@ public class SearchView implements FxmlView<SearchViewModel> {
     private SearchViewModel viewModel;
 
     public void initialize() {
-        searchButton.disableProperty().bind(viewModel.getSearchCommand().isExecutableProperty().not());
     }
 
     //@FXML //Method that is called if the button is clicked
