@@ -36,7 +36,7 @@
                                  <columns>
                                      <TableColumn fx:id="shortNameTableColumn" style="-fx-alignment: CENTER;" text="Story">
                                          <cellValueFactory>
-                                             <PropertyValueFactory property="shortName" />
+                                             <PropertyValueFactory property="shortName"/>
                                          </cellValueFactory>
                                      </TableColumn>
                                      <TableColumn fx:id="priorityTableColumn" maxWidth="80" minWidth="80" style="-fx-alignment: CENTER;" text="Priority">

@@ -270,8 +270,10 @@ public class BacklogFormViewModel extends FormController<Backlog> {
             }
             // get the remaining stories and change their scales - might be a better way to do this rather than 2 loops
             for (Story story : backlog.getStories()) {
-                changes.add(new EditCommand<>(story, "estimate", 0));
-                changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
+                if (story.getScale() != scaleProperty().get()) {
+                    changes.add(new EditCommand<>(story, "estimate", 0));
+                    changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
+                }
             }
 
             if (!projectProperty.get().equals(backlog.getProject())) {
