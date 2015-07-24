@@ -1,17 +1,23 @@
 package com.thirstygoat.kiqo.viewModel.detailsPane;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.viewModel.StoryTableEntryViewModel;
 import com.thirstygoat.kiqo.viewModel.model.BacklogViewModel;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 
 public class BacklogDetailsPaneViewModel extends BacklogViewModel {
+    public final String PLACEHOLDER = "No stories in backlog";
     private final StringProperty productOwnerStringProperty;
     private final StringProperty scaleStringProperty;
-    
+    private ObservableList<StoryTableEntryViewModel> tableViewStories = FXCollections.observableArrayList();
+
 
     public BacklogDetailsPaneViewModel() {
         super();
@@ -42,6 +48,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
             super.scaleProperty().bind(backlog.scaleProperty());
             super.stories().clear();
             super.stories().addAll(backlog.getStories());
+            setTableViewStories(super.stories());
         } else {
             super.shortNameProperty().unbind();
             super.longNameProperty().unbind();
@@ -61,5 +68,14 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
     
     public StringProperty scaleStringProperty() {
         return scaleStringProperty;
+    }
+
+    public void setTableViewStories(ObservableList<Story> stories) {
+        this.tableViewStories.clear();
+        stories.forEach(story -> this.tableViewStories.add(new StoryTableEntryViewModel(story)));
+    }
+
+    public ObservableList<StoryTableEntryViewModel> tableViewStories() {
+        return tableViewStories;
     }
 }
