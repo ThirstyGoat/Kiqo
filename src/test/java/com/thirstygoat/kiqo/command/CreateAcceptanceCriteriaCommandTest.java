@@ -22,8 +22,8 @@ public class CreateAcceptanceCriteriaCommandTest {
     public void setup() {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false); //TODO FIX MY LAST PARAMETER
-        acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of AC's in the story");
+        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
+        acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of ACs in the story");
         command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
     }
 

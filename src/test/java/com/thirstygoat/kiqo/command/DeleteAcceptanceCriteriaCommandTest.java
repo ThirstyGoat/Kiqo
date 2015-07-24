@@ -20,9 +20,9 @@ public class DeleteAcceptanceCriteriaCommandTest {
 
     @Before
     public void setup() {
-        project = new Project("proj", "Project");
+        project = new Project("proj1", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
+        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
         acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of AC's in the story");
         story.getAcceptanceCriteria().add(acceptanceCriteria);
         command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
