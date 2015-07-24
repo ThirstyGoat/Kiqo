@@ -58,7 +58,7 @@ public class Task extends Item {
 
     @Override
     public StringProperty shortNameProperty() {
-        return description;
+        return shortName;
     }
 
     public static Callback<Task, Observable[]> getWatchStrategy() {
