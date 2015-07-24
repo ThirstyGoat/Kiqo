@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.detailsPane;
 
-import java.net.URL;
-import java.util.*;
-
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
@@ -10,26 +7,27 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.*;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
     private MainController mainController;
     private Story story;
     private Map<State, Image> images;
+    private ChangeListener<Boolean> isReadyListener;
     
     @FXML
     private Label shortNameLabel;
@@ -81,9 +79,19 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
-//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
             setScale();
 
+            if (isReadyListener != null) {
+                isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
+            }
+            isReadyListener = (observable, oldValue, newValue) -> {
+                if (story.getIsReady() != newValue) {
+                    Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                    UndoManager.getUndoManager().doCommand(command);
+                }
+            };
+            isReadyCheckBox.setSelected(story.getIsReady());
+            isReadyCheckBox.selectedProperty().addListener(isReadyListener);
         } else {
             longNameLabel.textProperty().unbind();
             shortNameLabel.textProperty().unbind();
@@ -97,6 +105,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             creatorLabel.setText(null);
             priorityLabel.setText(null);
             storyEstimateSliderLabel.setText(null);
+            isReadyCheckBox.setSelected(false); // May not be needed
+            isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
         acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
@@ -108,17 +118,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
-
-        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (story.getIsReady() != newValue) {
-                Command<?> command = new EditCommand<>(story, "isReady", newValue);
-                UndoManager.getUndoManager().doCommand(command);
-            }
-        });
-        isReadyCheckBox.setSelected(story.getIsReady());
-        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
-            isReadyCheckBox.setSelected(newValue);
-        });
 
         // Story must have at least one AC
         // Story must have non-null estimate
