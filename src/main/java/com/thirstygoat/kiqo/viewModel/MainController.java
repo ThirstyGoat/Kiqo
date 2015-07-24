@@ -927,7 +927,6 @@ public class MainController implements Initializable {
 
             if (taskFormController.isValid()) {
                 doCommand(taskFormController.getCommand());
-                System.out.println(((Story) focusedItemProperty.getValue()).observableTasks());
             }
         });
     }

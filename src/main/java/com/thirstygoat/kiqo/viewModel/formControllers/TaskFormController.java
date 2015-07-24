@@ -111,15 +111,17 @@ public class TaskFormController extends FormController<Task> {
     @Override
     public void populateFields(Task task) throws RuntimeException {
         this.task = task;
+
         if (task == null) {
             // We are creating a new allocation (for an existing project)
             stage.setTitle("Create Task");
             okButton.setText("Create Task");
         } else {
             // edit an existing allocation
+            viewModel.setTask(task);
             stage.setTitle("Edit Task");
             okButton.setText("Save");
-            description.setText(task.getShortName());
+//            description.setText(task.getShortName());
         }
     }
     private void setValidationSupport() {

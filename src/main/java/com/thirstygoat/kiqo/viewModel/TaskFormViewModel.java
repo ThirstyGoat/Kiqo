@@ -146,15 +146,21 @@ public class TaskFormViewModel extends FormController<Task> {
 
     public void setCommand() {
         if (task == null) {
-            task = new Task(descriptionProperty.get().trim(), "", (float) 0.0);
+            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), Float.parseFloat(estimateProperty.get()));
             command = new CreateTaskCommand(task, this.story);
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
-            if (!task.getShortName().equals(descriptionProperty.get())) {
-                changes.add(new EditCommand<>(task, "criteria", descriptionProperty.get()));
+            if (!task.getShortName().equals(shortNameProperty().get())) {
+                changes.add(new EditCommand<>(task, "shortName", shortNameProperty().get()));
             }
-            command = new CompoundCommand("Edit AC", changes);
+            if (!task.getDescription().equals(descriptionProperty.get())) {
+                changes.add(new EditCommand<>(task, "description", descriptionProperty.get()));
+            }
+            if (!task.estimateProperty().equals(estimateProperty().get())) {
+                changes.add(new EditCommand<>(task, "estimate", Float.parseFloat(estimateProperty.get())));
+            }
+            command = new CompoundCommand("Edit Task", changes);
         }
     }
 

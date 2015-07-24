@@ -60,11 +60,20 @@ public class TaskListCell extends ListCell<Task> {
             initialiseDragAndDrop(task);
             
             final BorderPane borderPane = new BorderPane();
+            Text name = new Text();
+            name.textProperty().bind(task.shortNameProperty());
+            borderPane.setLeft(name);
+
             Text description = new Text();
-            description.textProperty().bind(task.shortNameProperty());
-            description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
-            borderPane.setLeft(description);
-            BorderPane.setAlignment(description, Pos.CENTER_LEFT);
+            description.textProperty().bind(task.descriptionProperty());
+//            description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
+            borderPane.setCenter(description);
+
+            Text estimate = new Text();
+            estimate.textProperty().bind(task.estimateProperty().asString());
+            borderPane.setRight(estimate);
+
+//            BorderPane.setAlignment(name, Pos.CENTER_LEFT);
 
             setGraphic(borderPane);
         } else {

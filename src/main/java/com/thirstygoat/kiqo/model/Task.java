@@ -43,6 +43,10 @@ public class Task extends Item {
         return estimate.get();
     }
 
+    public void setEstimate(float estimate) {
+        estimateProperty().setValue(estimate);
+    }
+
     public StringProperty descriptionProperty() {
         return description;
     }
@@ -51,9 +55,17 @@ public class Task extends Item {
         return description.get();
     }
 
+    public void setDescription(String description) {
+        descriptionProperty().setValue(description);
+    }
+
     @Override
     public String getShortName() {
         return shortName.get();
+    }
+
+    public void setShortName(String shortName) {
+        shortNameProperty().setValue(shortName);
     }
 
     @Override
