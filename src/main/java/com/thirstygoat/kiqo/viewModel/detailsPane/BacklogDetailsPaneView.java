@@ -1,11 +1,14 @@
 package com.thirstygoat.kiqo.viewModel.detailsPane;
 
-import com.thirstygoat.kiqo.viewModel.StoryTableEntryViewModel;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.viewModel.StoryListCell;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
@@ -43,7 +46,11 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @FXML
     private Label scaleLabel;
     @FXML
-    private TableView<StoryTableEntryViewModel> storyTableView;
+    private TableView<Story> storyTableView;
+    @FXML
+    private TableColumn<Story, String> shortNameTableColumn;
+    @FXML
+    private CheckBox highlightCheckBox;
 
     private Label placeHolder = new Label();
 
@@ -61,12 +68,20 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
 //        storyTableViewModel.setStories(viewModel.stories());
 //        storyTableViewController.setViewModel(storyTableViewModel);
-
+        setStoryCellFactory();
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storyTableView.setItems(backlogDetailsPaneViewModel.tableViewStories());
+        storyTableView.setItems(backlogDetailsPaneViewModel.getStories());
 
         placeHolder.textProperty().set(backlogDetailsPaneViewModel.PLACEHOLDER);
 
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleProperty().asString());
+
+        highlightCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            backlogDetailsPaneViewModel.highlightStoryStateProperty().set(newValue);
+        });
+    }
+
+    private void setStoryCellFactory() {
+        shortNameTableColumn.setCellFactory(param -> new StoryListCell(backlogDetailsPaneViewModel));
     }
 }

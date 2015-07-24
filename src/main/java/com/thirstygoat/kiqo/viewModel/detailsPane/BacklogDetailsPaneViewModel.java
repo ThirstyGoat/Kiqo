@@ -4,28 +4,29 @@ import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.viewModel.StoryTableEntryViewModel;
 import com.thirstygoat.kiqo.viewModel.model.BacklogViewModel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
 public class BacklogDetailsPaneViewModel extends BacklogViewModel {
     public final String PLACEHOLDER = "No stories in backlog";
-    private final StringProperty productOwnerStringProperty;
-    private final StringProperty scaleStringProperty;
-    private ObservableList<StoryTableEntryViewModel> tableViewStories = FXCollections.observableArrayList();
+    private final StringProperty productOwnerString;
+    private final StringProperty scaleString;
+    private final BooleanProperty highlightStoryState;
+//    private ObservableList<Story> tableViewStories = FXCollections.observableArrayList();
 
 
     public BacklogDetailsPaneViewModel() {
         super();
-        productOwnerStringProperty = new SimpleStringProperty("");
-        scaleStringProperty = new SimpleStringProperty("");
-        
+        productOwnerString = new SimpleStringProperty("");
+        scaleString = new SimpleStringProperty("");
+        highlightStoryState = new SimpleBooleanProperty();
         // bind to parent view model
-        scaleStringProperty.bindBidirectional(super.scaleProperty(), StringConverters.scaleStringConverter());
+        scaleString.bindBidirectional(super.scaleProperty(), StringConverters.scaleStringConverter());
     }
 
     /**
@@ -35,8 +36,8 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
     @Override
     public void load(Backlog backlog, Organisation organisation) {        
         // bind to parent view model
-        productOwnerStringProperty.unbindBidirectional(super.productOwnerProperty());
-        productOwnerStringProperty.bindBidirectional(super.productOwnerProperty(), StringConverters.personStringConverter(organisation));
+        productOwnerString.unbindBidirectional(super.productOwnerProperty());
+        productOwnerString.bindBidirectional(super.productOwnerProperty(), StringConverters.personStringConverter(organisation));
         
         if (backlog != null) {
             super.organisationProperty().set(organisation);
@@ -48,7 +49,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
             super.scaleProperty().bind(backlog.scaleProperty());
             super.stories().clear();
             super.stories().addAll(backlog.getStories());
-            setTableViewStories(super.stories());
+//            setTableViewStories(super.stories());
         } else {
             super.shortNameProperty().unbind();
             super.longNameProperty().unbind();
@@ -61,21 +62,30 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
             super.stories().clear();
         }
     }
-    
+
+    public BooleanProperty highlightStoryStateProperty() {
+        return highlightStoryState;
+    }
+
     public StringProperty productOwnerStringProperty() {
-        return productOwnerStringProperty;
+        return productOwnerString;
     }
     
     public StringProperty scaleStringProperty() {
-        return scaleStringProperty;
+        return scaleString;
     }
 
-    public void setTableViewStories(ObservableList<Story> stories) {
-        this.tableViewStories.clear();
-        stories.forEach(story -> this.tableViewStories.add(new StoryTableEntryViewModel(story)));
+    public ObservableList<Story> getStories() {
+        return super.stories();
     }
 
-    public ObservableList<StoryTableEntryViewModel> tableViewStories() {
-        return tableViewStories;
-    }
+//    public void setTableViewStories(ObservableList<Story> stories) {
+//        this.tableViewStories.clear();
+//        this.tableViewStories.add(stories);
+////        stories.forEach(story -> this.tableViewStories.add(new StoryTableEntryViewModel(story)));
+//    }
+
+//    public ObservableList<StoryTableEntryViewModel> tableViewStories() {
+//        return tableViewStories;
+//    }
 }
