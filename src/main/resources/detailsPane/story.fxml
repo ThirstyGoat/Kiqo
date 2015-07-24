@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -19,17 +23,16 @@
             <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Ready:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Ready:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+            <Label font="$x1" text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.valignment="TOP" />
             <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="creatorLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-              <Label fx:id="storyScaleLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-              <Label font="$x1" text="Estimation Scale:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
-              <Label font="$x1" text="Estimate:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
-              <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <Label fx:id="priorityLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />              <Label fx:id="storyScaleLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+              <Label font="$x1" text="Estimation Scale:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+              <Label font="$x1" text="Estimate:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
+              <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
                   <children>
                       <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                           <children>
@@ -44,7 +47,7 @@
                       <HBox />
                   </children>
               </HBox>
-                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
                   <CheckBox fx:id="isReadyCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Hyperlink fx:id="readyWhy" text="Why can't I mark this Story as Ready?">
@@ -54,14 +57,16 @@
                         </Hyperlink>
                      </children>
                   </HBox>
-            <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="11">
                  <children>
                      <Button fx:id="addACButton" text="+" />
                      <Button fx:id="removeACButton" text="-" />
                      <Button fx:id="editACButton" text="Edit" />
                  </children>
               </HBox>
+                  <Label font="$x1" text="Dependencies:" GridPane.rowIndex="5" />
+                  <Label fx:id="dependenciesLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
           </children>
           <columnConstraints>
@@ -71,6 +76,16 @@
           <rowConstraints>
             <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
           </rowConstraints>
         </GridPane>
       </content>

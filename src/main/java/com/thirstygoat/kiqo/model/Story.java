@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -189,10 +184,6 @@ public class Story extends Item {
 
     public void setIsReady(boolean isReady) { 
         this.isReady.set(isReady); 
-    }
-
-    public IntegerProperty estimateProperty() {
-        return estimate;
     }
 
     public List<Story> getDependencies() {

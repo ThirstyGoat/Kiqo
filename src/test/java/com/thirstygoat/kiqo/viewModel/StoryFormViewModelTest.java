@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class StoryFormViewModelTest {
 
@@ -155,7 +156,6 @@ public class StoryFormViewModelTest {
     @Test
     public void testBacklogValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
-        Predicate<String> predicate = storyFormViewModel.getBacklogValidation();
 
         Assert.assertFalse("Must not be valid initially.",
                 storyFormViewModel.priorityValidation().validProperty().get());

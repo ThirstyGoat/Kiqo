@@ -192,6 +192,12 @@ public class StoryFormViewModel extends FormController<Story> {
         setListeners();
     }
 
+    private void setListeners() {
+        projectProperty.addListener(((observable, oldValue, newValue) -> {
+            setStoryListProperties();
+        }));
+    }
+
     public StringProperty shortNameProperty() {
         return shortNameProperty;
     }
