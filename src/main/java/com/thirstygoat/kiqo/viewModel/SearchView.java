@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.SearchResult;
 import com.thirstygoat.kiqo.model.Searchable;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -24,7 +25,7 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
     @FXML
     private TextField searchTextField;
     @FXML
-    private ListView<Searchable> searchResultsListView;
+    private ListView<SearchResult> searchResultsListView;
 
     @InjectViewModel
     private SearchViewModel viewModel;
@@ -33,34 +34,25 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         viewModel.queryProperty().bind(searchTextField.textProperty());
         searchResultsListView.setItems(viewModel.getResults());
-        searchTextField.setOnKeyReleased(event -> {
-            viewModel.getSearchCommand().execute();
-        });
+        searchTextField.setOnKeyReleased(event -> viewModel.getSearchCommand().execute());
 
-        searchResultsListView.setCellFactory(new Callback<ListView<Searchable>, ListCell<Searchable>>() {
+        searchResultsListView.setCellFactory(param -> new ListCell<SearchResult>() {
             @Override
-            public ListCell<Searchable> call(ListView<Searchable> param) {
-                return new ListCell<Searchable>() {
-                    @Override
-                    protected void updateItem(Searchable item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!empty) {
-                            Item searchResultItem = (Item) item;
-                            setText(searchResultItem.getShortName());
-                            setGraphic(null);
-                        } else {
-                            setText("");
-                            setGraphic(null);
-                        }
-                    }
-                };
+            protected void updateItem(SearchResult item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    setGraphic(viewModel.generateSearchResultRow(item));
+                } else {
+                    setGraphic(null);
+                    setText("");
+                }
             }
         });
 
         searchResultsListView.visibleProperty().bind(Bindings.size(viewModel.getResults()).greaterThan(0));
         searchResultsListView.managedProperty().bind(Bindings.size(viewModel.getResults()).greaterThan(0));
 
-        viewModel.getResults().addListener((ListChangeListener<? super Searchable>) c -> {
+        viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
                 searchResultsListView.getScene().getWindow().setHeight(200);
             } else {

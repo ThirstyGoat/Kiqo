@@ -14,12 +14,22 @@ public class Search {
         this.query = query;
     }
 
-    public ObservableList<Searchable> execute() {
-        ObservableList<Searchable> results = FXCollections.observableArrayList();
+    /**
+     * Executes the search
+     * @return ObservableList<SearchResult> containing the results of the search
+     */
+    public ObservableList<SearchResult> execute() {
+        ObservableList<SearchResult> results = FXCollections.observableArrayList();
+
+        // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables()) {
+
+            // Check for matches against every string the object allows to be searchable
             for (String string : searchable.getSearchableStrings()) {
+
+                // Perform comparison
                 if (string.matches(query)) {
-                    results.add(searchable);
+                    results.add(new SearchResult(searchable));
                 }
             }
         }

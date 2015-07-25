@@ -947,6 +947,8 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             ViewTuple<SearchView, SearchViewModel> viewTuple = FluentViewLoader.fxmlView(SearchView.class).load();
+            viewTuple.getViewModel().setMainController(this);
+            viewTuple.getViewModel().setStage(stage);
             Parent root = viewTuple.getView();
             stage.setScene(new Scene(root));
             stage.show();

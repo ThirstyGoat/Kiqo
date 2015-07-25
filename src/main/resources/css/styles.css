@@ -42,3 +42,12 @@
 	-fx-alignment: CENTER_LEFT;
 }
 
+
+/* Search Result */
+.searchResultButton {
+    -fx-background-color: darkgray;
+}
+
+.searchResultButton:hover {
+    -fx-background-color: #62c1ff;
+}
