@@ -14,6 +14,7 @@ public abstract class Item implements Serializable, Searchable {
 
     public Item() {
         SearchableItems.getInstance().addSearchable(this);
+        System.out.println("Adding item to index: ");
     }
 
     public static <E extends Item> Callback<E, Observable[]> getWatchStrategy() {

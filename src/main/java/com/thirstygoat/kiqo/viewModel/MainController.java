@@ -89,22 +89,6 @@ public class MainController implements Initializable {
         return undoManager.changesSavedProperty();
     }
 
-    //TODO remove this
-//    protected void revert() {
-////        undoManager.revert();
-//        File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
-//        // If there is no save location then it has never been saved before so we can just set it to a new Org
-//        if (tempSaveLocation != null) {
-//            selectedOrganisationProperty.set(PersistenceManager.revert());
-//            selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
-//        } else {
-//            selectedOrganisationProperty.set(new Organisation());
-//        }
-//        // Empty the undo/redo stack(s)
-//        undoManager.empty();
-//        undoManager.changesSavedProperty().setValue(true);
-//    }
-
     /**
      * Sets the stage title and updates accordingly depending on the organisation
      * selected, and whether or not changes have been saved.

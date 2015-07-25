@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.Search;
-import com.thirstygoat.kiqo.model.SearchResult;
-import com.thirstygoat.kiqo.model.Searchable;
+import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -12,10 +10,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import javax.swing.border.Border;
 
 /**
  * Created by leroy on 24/07/15.
@@ -56,14 +61,38 @@ public class SearchViewModel implements ViewModel {
         Search search = new Search(query.get());
         results.clear();
         results.addAll(search.execute());
+        System.out.println(SearchableItems.getInstance().getSearchables());
+    }
+
+    private String getClassString(SearchResult searchResult) {
+        return searchResult.getItem().getClass().getSimpleName();
     }
 
     public Button generateSearchResultRow(SearchResult searchResult) {
+        final BorderPane borderPane = new BorderPane();
         final HBox hBox = new HBox();
+        hBox.setPrefHeight(24);
+        hBox.getChildren().add(borderPane);
+        HBox.setHgrow(borderPane, Priority.ALWAYS);
 
-        hBox.getChildren().add(new Label(searchResult.getResultText()));
+        final Label objectTypeLabel = new Label("(" + getClassString(searchResult) + ")");
+        objectTypeLabel.setStyle("-fx-text-fill: #999");
+        objectTypeLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        final Label text = new Label(searchResult.getResultText());
+
+        borderPane.setLeft(text);
+        borderPane.setRight(objectTypeLabel);
+
+        BorderPane.setAlignment(borderPane.getLeft(), Pos.CENTER_LEFT);
+        BorderPane.setAlignment(objectTypeLabel, Pos.CENTER_RIGHT);
+
+        objectTypeLabel.setTextAlignment(TextAlignment.RIGHT);
+        objectTypeLabel.setAlignment(Pos.CENTER_RIGHT);
 
         final Button button = new Button();
+        HBox.setHgrow(button, Priority.ALWAYS);
+        button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(event -> {
             mainController.focusedItemProperty.set(searchResult.getItem());
@@ -72,6 +101,7 @@ public class SearchViewModel implements ViewModel {
 
         button.getStyleClass().add("searchResultButton");
         button.setGraphic(hBox);
+        button.setPadding(new Insets(3, 15, 3, 15));
         return button;
     }
 

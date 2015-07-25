@@ -9,6 +9,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -39,6 +40,7 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
         searchResultsListView.setCellFactory(param -> new ListCell<SearchResult>() {
             @Override
             protected void updateItem(SearchResult item, boolean empty) {
+                setPadding(new Insets(0));
                 super.updateItem(item, empty);
                 if (!empty) {
                     setGraphic(viewModel.generateSearchResultRow(item));
@@ -54,9 +56,11 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
 
         viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
-                searchResultsListView.getScene().getWindow().setHeight(200);
+                searchResultsListView.setPrefHeight(viewModel.getResults().size()*30 + 2);
+                searchResultsListView.getScene().getWindow().setHeight(
+                        viewModel.getResults().size()*30 + 2 + 65);
             } else {
-                searchResultsListView.getScene().getWindow().setHeight(45);
+                searchResultsListView.getScene().getWindow().setHeight(60);
             }
         });
     }

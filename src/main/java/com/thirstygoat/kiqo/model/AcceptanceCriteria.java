@@ -7,8 +7,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
-import java.util.ArrayList;
-
 /**
  * Created by samschofield on 25/06/15.
  */
@@ -16,6 +14,11 @@ public class AcceptanceCriteria extends Item {
 
     public final StringProperty criteria;
     public final ObjectProperty<State> state;
+
+    public AcceptanceCriteria() {
+        this.criteria = new SimpleStringProperty("");
+        this.state = new SimpleObjectProperty<>(State.NEITHER);
+    }
 
     public AcceptanceCriteria(String criteria) {
         this.criteria = new SimpleStringProperty(criteria);
@@ -66,7 +69,6 @@ public class AcceptanceCriteria extends Item {
 
         AcceptanceCriteria that = (AcceptanceCriteria) obj;
         return criteria.get().equals(that.criteria.get());
-
     }
 
     @Override
@@ -76,7 +78,7 @@ public class AcceptanceCriteria extends Item {
 
     @Override
     public String getShortName() {
-        return criteria.getName();
+        return getCriteria();
     }
 
     @Override
@@ -90,6 +92,6 @@ public class AcceptanceCriteria extends Item {
     public enum State {
         ACCEPTED,
         REJECTED,
-        NEITHER;
+        NEITHER
     }
 }
