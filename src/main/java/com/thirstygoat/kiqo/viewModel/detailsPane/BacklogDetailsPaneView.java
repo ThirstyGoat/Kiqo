@@ -96,36 +96,36 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         HBox greenHbox = new HBox();
         HBox orangeHbox = new HBox();
         HBox redHbox = new HBox();
-        HBox transparentHbox = new HBox();
+//        HBox transparentHbox = new HBox();
 
         VBox vb = new VBox();
 
-        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox, transparentHbox);
+        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox);
         vb.setSpacing(2);
         greenHbox.setAlignment(Pos.CENTER_LEFT);
         orangeHbox.setAlignment(Pos.CENTER_LEFT);
         redHbox.setAlignment(Pos.CENTER_LEFT);
-        transparentHbox.setAlignment(Pos.CENTER_LEFT);
+//        transparentHbox.setAlignment(Pos.CENTER_LEFT);
         greenHbox.setSpacing(5);
         orangeHbox.setSpacing(5);
         redHbox.setSpacing(5);
-        transparentHbox.setSpacing(5);
+//        transparentHbox.setSpacing(5);
 
         Rectangle g = new Rectangle(10, 10);
         Rectangle o = new Rectangle(10, 10);
         Rectangle r = new Rectangle(10, 10);
-        Rectangle t = new Rectangle(10, 10);
+//        Rectangle t = new Rectangle(10, 10);
 
         g.setFill(Color.GREEN);
         o.setFill(Color.ORANGE);
         r.setFill(Color.RED);
-        t.setFill(Color.TRANSPARENT);
-        t.setStroke(Color.GREY);  // maybe grey
+//        t.setFill(Color.TRANSPARENT);
+//        t.setStroke(Color.GREY);  // maybe grey
 
         greenHbox.getChildren().addAll(g, new Label("Story is ready"));
         orangeHbox.getChildren().addAll(o, new Label("Story is ready to be estimated"));
         redHbox.getChildren().addAll(r, new Label("Story has one or more dependencies with higher priority"));
-        transparentHbox.getChildren().addAll(t, new Label("Story can be marked as ready"));
+//        transparentHbox.getChildren().addAll(t, new Label("Story can be marked as ready"));
 
         vb.setPadding(new Insets(10));
 
