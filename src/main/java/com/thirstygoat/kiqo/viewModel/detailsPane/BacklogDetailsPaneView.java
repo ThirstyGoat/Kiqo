@@ -91,6 +91,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
     private void setHyperlink() {
         PopOver popOver = new PopOver();
+        popOver.setDetachable(false);
 
         HBox greenHbox = new HBox();
         HBox orangeHbox = new HBox();
@@ -123,7 +124,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         greenHbox.getChildren().addAll(g, new Label("Story is ready"));
         orangeHbox.getChildren().addAll(o, new Label("Story is ready to be estimated"));
-        redHbox.getChildren().addAll(r, new Label("Story has a one or more dependencies with higher priority"));
+        redHbox.getChildren().addAll(r, new Label("Story has one or more dependencies with higher priority"));
         transparentHbox.getChildren().addAll(t, new Label("Story can be marked as ready"));
 
         vb.setPadding(new Insets(10));
