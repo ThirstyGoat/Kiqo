@@ -224,7 +224,7 @@ public class PersistenceManager {
         @Override
         public FloatProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
-            return new SimpleFloatProperty(jsonElement.getAsInt());
+            return new SimpleFloatProperty(jsonElement.getAsFloat());
         }
 
         @Override

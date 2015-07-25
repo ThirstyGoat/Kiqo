@@ -43,7 +43,7 @@ public class Story extends Item {
         this.estimate = new SimpleIntegerProperty(0);
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
-        this.taskHours = new SimpleFloatProperty();
+        this.taskHours = new SimpleFloatProperty((float) 0.0);
         setTasksListener();
     }
 

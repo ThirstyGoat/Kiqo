@@ -66,6 +66,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private CheckBox isReadyCheckBox;
     @FXML
     private Hyperlink readyWhy;
+    @FXML
+    private Label totalHoursLabel;
 
     @Override
     public void showDetails(final Story story) {
@@ -83,6 +85,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
 //            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
+            totalHoursLabel.textProperty().bind(story.taskHoursProperty().asString());
             setScale();
 
         } else {
@@ -97,6 +100,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             descriptionLabel.setText(null);
             creatorLabel.setText(null);
             priorityLabel.setText(null);
+            totalHoursLabel.setText("0.0");
             storyEstimateSliderLabel.setText(null);
         }
 
