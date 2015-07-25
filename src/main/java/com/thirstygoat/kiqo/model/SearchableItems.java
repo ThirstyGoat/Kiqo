@@ -33,4 +33,8 @@ public class SearchableItems {
     public ObservableList<Searchable> getSearchables() {
         return searchableItems;
     }
+
+    public void removeSearchable(Searchable searchable) {
+        searchableItems.remove(searchable);
+    }
 }

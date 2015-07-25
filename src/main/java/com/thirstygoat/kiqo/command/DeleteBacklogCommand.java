@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Story;
 
 import java.util.LinkedHashMap;
@@ -52,6 +53,10 @@ public class DeleteBacklogCommand extends Command<Backlog>{
         // delete the backlog
         index = project.getBacklogs().indexOf(backlog);
         project.observableBacklogs().remove(backlog);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(backlog);
+
         return backlog;
     }
 
@@ -70,6 +75,9 @@ public class DeleteBacklogCommand extends Command<Backlog>{
             }
         }
         project.observableBacklogs().add(index, backlog);
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(backlog);
     }
 
     @Override

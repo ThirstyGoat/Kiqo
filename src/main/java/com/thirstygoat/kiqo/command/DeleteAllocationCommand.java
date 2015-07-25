@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Team;
 
 /**
@@ -32,6 +33,9 @@ public class DeleteAllocationCommand extends Command<Allocation> {
 
         teamIndex = team.getAllocations().indexOf(allocation);
         team.observableAllocations().remove(allocation);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(allocation);
         return allocation;
     }
 
@@ -39,6 +43,9 @@ public class DeleteAllocationCommand extends Command<Allocation> {
     public void undo() {
         project.observableAllocations().add(projectIndex, allocation);
         team.observableAllocations().add(teamIndex, allocation);
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(allocation);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.SearchableItems;
 
 
 /**
@@ -27,6 +28,10 @@ public class DeleteProjectCommand extends Command<Project> {
     public Project execute() {
         index = organisation.getProjects().indexOf(project);
         organisation.getProjects().remove(project);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(project);
+
         return project;
     }
 
@@ -34,6 +39,9 @@ public class DeleteProjectCommand extends Command<Project> {
     @Override
     public void undo() {
         organisation.getProjects().add(index, project);
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(project);
     }
 
     @Override

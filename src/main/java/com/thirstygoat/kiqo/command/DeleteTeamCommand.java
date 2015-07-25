@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.command;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Team;
 
 import java.util.ArrayList;
@@ -69,6 +70,10 @@ public class DeleteTeamCommand extends Command<Team> {
         // delete the team
         organisationIndex = organisation.getTeams().indexOf(team);
         organisation.getTeams().remove(team);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(team);
+
         return team;
     }
 
@@ -86,6 +91,8 @@ public class DeleteTeamCommand extends Command<Team> {
 
         organisation.getTeams().add(organisationIndex, team);
 
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(team);
     }
 
     @Override
