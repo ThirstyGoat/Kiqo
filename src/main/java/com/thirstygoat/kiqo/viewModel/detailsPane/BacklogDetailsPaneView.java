@@ -89,20 +89,17 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         HBox greenHbox = new HBox();
         HBox orangeHbox = new HBox();
         HBox redHbox = new HBox();
-        HBox transparentHbox = new HBox();
 
         VBox vb = new VBox();
 
-        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox, transparentHbox);
+        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox);
         vb.setSpacing(2);
         greenHbox.setAlignment(Pos.CENTER_LEFT);
         orangeHbox.setAlignment(Pos.CENTER_LEFT);
         redHbox.setAlignment(Pos.CENTER_LEFT);
-        transparentHbox.setAlignment(Pos.CENTER_LEFT);
         greenHbox.setSpacing(5);
         orangeHbox.setSpacing(5);
         redHbox.setSpacing(5);
-        transparentHbox.setSpacing(5);
 
         Rectangle g = new Rectangle(10, 10);
         Rectangle o = new Rectangle(10, 10);

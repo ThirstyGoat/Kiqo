@@ -28,6 +28,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Story story;
     private Map<State, Image> images;
     private ChangeListener<Boolean> isReadyListener;
+    private ChangeListener<Boolean> modelIsReadyListener;
     
     @FXML
     private Label shortNameLabel;
@@ -83,6 +84,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
             if (isReadyListener != null) {
                 isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
+                story.isReadyProperty().removeListener(modelIsReadyListener);
             }
             isReadyListener = (observable, oldValue, newValue) -> {
                 if (story.getIsReady() != newValue) {
@@ -90,8 +92,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                     UndoManager.getUndoManager().doCommand(command);
                 }
             };
+            modelIsReadyListener = (observable, oldValue, newValue) -> isReadyCheckBox.setSelected(newValue);
             isReadyCheckBox.setSelected(story.getIsReady());
             isReadyCheckBox.selectedProperty().addListener(isReadyListener);
+            story.isReadyProperty().addListener(modelIsReadyListener);
         } else {
             longNameLabel.textProperty().unbind();
             shortNameLabel.textProperty().unbind();
