@@ -71,7 +71,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleStringProperty());
         setHyperlink();
 
-        setStoryCellFactory();
+        shortNameTableColumn.setCellFactory(param -> new StoryListCell(backlogDetailsPaneViewModel));
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.setItems(backlogDetailsPaneViewModel.getStories());
 
@@ -121,9 +121,5 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
 
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
-    }
-
-    private void setStoryCellFactory() {
-        shortNameTableColumn.setCellFactory(param -> new StoryListCell(backlogDetailsPaneViewModel));
     }
 }

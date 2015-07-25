@@ -30,7 +30,7 @@ public class StoryListCell extends TableCell<Story, String> {
     public static ObjectProperty<Paint> getBadgeColor(Story story) {
         ObjectProperty<Paint> paintColor = new SimpleObjectProperty<>(getColor(story));
 
-        ChangeListener listener = (observable, oldValue, newValue) -> paintColor.set(getColor(story));
+        ChangeListener<? super Object> listener = (observable, oldValue, newValue) -> paintColor.set(getColor(story));
 
         story.estimateProperty().addListener(listener);
         story.isReadyProperty().addListener(listener);
@@ -48,7 +48,7 @@ public class StoryListCell extends TableCell<Story, String> {
         return paintColor;
     }
 
-    public static Color getColor(Story story) {
+    private static Color getColor(Story story) {
         for (Story s : story.getDependencies()) {
             if (s.getPriority() < story.getPriority()) {
                 return Color.RED;
