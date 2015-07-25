@@ -13,7 +13,15 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -40,6 +48,10 @@ public class AllocationsTableViewController implements Initializable {
     private Button deleteAllocationButton;
     @FXML
     private Button editAllocationButton;
+    @FXML
+    private CheckBox highlightCheckBox;
+    @FXML
+    private Hyperlink highlightHyperLink;
 
     public void init(FirstColumnType type) {
         this.type = type;
@@ -51,6 +63,7 @@ public class AllocationsTableViewController implements Initializable {
         deleteAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
         editAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
         initializeTable();
+        setHyperlink();
     }
 
     private void initializeTable() {
@@ -197,5 +210,54 @@ public class AllocationsTableViewController implements Initializable {
 
     public enum  FirstColumnType {
         PROJECT, TEAM
+    }
+
+    private void setHyperlink() {
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(false);
+
+        HBox greenHbox = new HBox();
+        HBox orangeHbox = new HBox();
+        HBox redHbox = new HBox();
+        HBox tHbox = new HBox();
+
+        VBox vb = new VBox();
+
+        vb.getChildren().addAll(greenHbox, orangeHbox, redHbox, tHbox);
+        vb.setSpacing(2);
+        greenHbox.setAlignment(Pos.CENTER_LEFT);
+        orangeHbox.setAlignment(Pos.CENTER_LEFT);
+        redHbox.setAlignment(Pos.CENTER_LEFT);
+        tHbox.setAlignment(Pos.CENTER_LEFT);
+        greenHbox.setSpacing(5);
+        orangeHbox.setSpacing(5);
+        redHbox.setSpacing(5);
+        tHbox.setSpacing(5);
+
+        Rectangle g = new Rectangle(10, 10);
+        Rectangle o = new Rectangle(10, 10);
+        Rectangle r = new Rectangle(10, 10);
+        Rectangle t = new Rectangle(10, 10);
+
+        g.setFill(Color.rgb(0x45, 0xc3, 0x4b));
+        o.setFill(Color.rgb(0x62, 0xc1, 0xff));
+        r.setFill(Color.rgb(0xff, 0xc1, 0x45));
+        t.setFill(Color.rgb(0xff, 0x33, 0x33));
+
+        greenHbox.getChildren().addAll(g, new Label("Team is currently allocated to this project"));
+        orangeHbox.getChildren().addAll(o, new Label("Team was allocated to this project in the past"));
+        redHbox.getChildren().addAll(r, new Label("Team is allocated to this project in the future"));
+        tHbox.getChildren().addAll(t, new Label("This allocation is for a Project or Team that no longer exists"));
+
+        vb.setPadding(new Insets(10));
+
+        popOver.setContentNode(vb);
+
+        highlightHyperLink.setOnAction(e -> popOver.show(highlightHyperLink));
+        highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
+
+        highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
+
+
     }
 }
