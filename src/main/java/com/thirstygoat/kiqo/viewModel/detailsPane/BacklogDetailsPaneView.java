@@ -114,18 +114,14 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         Rectangle g = new Rectangle(10, 10);
         Rectangle o = new Rectangle(10, 10);
         Rectangle r = new Rectangle(10, 10);
-        Rectangle t = new Rectangle(10, 10);
 
         g.setFill(Color.GREEN);
         o.setFill(Color.ORANGE);
         r.setFill(Color.RED);
-        t.setFill(Color.TRANSPARENT);
-        t.setStroke(Color.GREY);  // maybe grey
 
         greenHbox.getChildren().addAll(g, new Label("Story is ready"));
-        orangeHbox.getChildren().addAll(o, new Label("Story is ready to be estimated"));
-        redHbox.getChildren().addAll(r, new Label("Story has one or more dependencies with higher priority"));
-        transparentHbox.getChildren().addAll(t, new Label("Story can be marked as ready"));
+        orangeHbox.getChildren().addAll(o, new Label("Story can be estimated"));
+        redHbox.getChildren().addAll(r, new Label("Story has a higher priority than its dependencies"));
 
         vb.setPadding(new Insets(10));
 
