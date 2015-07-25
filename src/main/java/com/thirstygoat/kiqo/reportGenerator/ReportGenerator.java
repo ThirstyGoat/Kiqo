@@ -260,8 +260,8 @@ public final class ReportGenerator {
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
 
         }
-        lines.add(ReportUtils.collectionLine("Task", story.getTask().isEmpty()));
-        for (final Task task : story.getTask()) {
+        lines.add(ReportUtils.collectionLine("Task", story.observableTasks().isEmpty()));
+        for (final Task task : story.observableTasks()) {
             lines.add(ReportGenerator.TASK_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTaskReport(task)));
         }
