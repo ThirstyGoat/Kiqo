@@ -111,6 +111,7 @@ public class PersistenceManager {
                 .addType(Backlog.class)
                 .addType(Story.class)
                 .addType(AcceptanceCriteria.class)
+                .addType(Task.class)
                 .registerOn(gsonBuilder);
 
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());

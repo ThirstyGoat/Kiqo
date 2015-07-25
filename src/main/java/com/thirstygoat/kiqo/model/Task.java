@@ -16,7 +16,7 @@ public class Task extends Item {
     public Task() {
         shortName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
-        estimate = new SimpleFloatProperty();
+        estimate = new SimpleFloatProperty((float)0.0);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
 

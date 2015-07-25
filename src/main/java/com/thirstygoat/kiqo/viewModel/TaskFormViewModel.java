@@ -62,7 +62,6 @@ public class TaskFormViewModel extends FormController<Task> {
                 ValidationMessage.error(""));
 
         estimateValidator = new FunctionBasedValidator<>(estimateProperty,
-                // Always valid as description isn't required and has no constraints
                 s -> {
                     return s.matches("^([+-]?\\d*\\.?\\d*)$") && s.length() > 0;
                 },
