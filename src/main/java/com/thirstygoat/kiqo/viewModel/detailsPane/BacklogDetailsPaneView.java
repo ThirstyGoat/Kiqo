@@ -61,7 +61,6 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
     private Label placeHolder = new Label();
 
-
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) { 
 
@@ -72,10 +71,6 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleStringProperty());
         setHyperlink();
 
-
-
-//        storyTableViewModel.setStories(viewModel.stories());
-//        storyTableViewController.setViewModel(storyTableViewModel);
         setStoryCellFactory();
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.setItems(backlogDetailsPaneViewModel.getStories());
@@ -84,9 +79,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleProperty().asString());
 
-        highlightCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            backlogDetailsPaneViewModel.highlightStoryStateProperty().set(newValue);
-        });
+        highlightCheckBox.selectedProperty().bindBidirectional(backlogDetailsPaneViewModel.highlightStoryStateProperty());
     }
 
     private void setHyperlink() {

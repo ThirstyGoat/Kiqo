@@ -24,7 +24,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
         super();
         productOwnerString = new SimpleStringProperty("");
         scaleString = new SimpleStringProperty("");
-        highlightStoryState = new SimpleBooleanProperty();
+        highlightStoryState = new SimpleBooleanProperty(true); // highlights on by default
         // bind to parent view model
         scaleString.bindBidirectional(super.scaleProperty(), StringConverters.scaleStringConverter());
     }
