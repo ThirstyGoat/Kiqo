@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -57,18 +58,23 @@ public class AllocationsTableViewController implements Initializable {
         startDateTableColumn.setStyle("-fx-alignment: CENTER;");
         endDateTableColumn.setStyle("-fx-alignment: CENTER;");
 
-        // set the Title of the first column and the cell factory for the first column
+        // set the Title of the first column and the cell VALUE factory for the first column
         if (type.equals(FirstColumnType.PROJECT)) {
-            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
             teamTableColumn.setText("Project");
+            teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
+            teamTableColumn.setCellFactory(tableColumn -> new AllocationListCell(mainController.selectedOrganisationProperty));
             allocationsTableView.setPlaceholder(new Label("Team not allocated to any projects"));
         } else if (type.equals(FirstColumnType.TEAM)) {
+//            teamTableColumn.setText("Team");
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().shortNameProperty());
             allocationsTableView.setPlaceholder(new Label("No teams allocated to project"));
         }
 
         startDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
+
+        // cellFactory is NOT the same as cellValueFactory
+        teamTableColumn.setCellFactory(param -> new AllocationListCell(mainController.selectedOrganisationProperty));
 
         startDateTableColumn.setCellFactory(param -> {
             final AllocationDatePickerCell startDateCellFactory = new AllocationDatePickerCell();
@@ -95,38 +101,6 @@ public class AllocationsTableViewController implements Initializable {
 
         // fixes ghost column issue and resizing
         allocationsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        allocationsTableView.setRowFactory(param -> {
-
-            final TableRow<Allocation> row = new TableRow<>();
-            row.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-past", "allocation-future");
-                    row.setTooltip(null);
-                } else {
-                    // set background color
-                    row.getStyleClass().removeAll("allocation-non-existent-team", "allocation-non-existent-project", "allocation-current", "allocation-future", "allocation-past");
-                    if (!mainController.selectedOrganisationProperty().get().getTeams().contains(newValue.getTeam())) {
-                        row.getStyleClass().add("allocation-non-existent-team");
-                        row.setTooltip(new Tooltip("This allocation belongs to a non-existent team."));
-                    } else if (!mainController.selectedOrganisationProperty().get().getProjects().contains(newValue.getProject())) {
-                        row.getStyleClass().add("allocation-non-existent-project");
-                        row.setTooltip(new Tooltip("This allocation belongs to a non-existent project."));
-                    } else if (newValue.isCurrent()) {
-                        row.getStyleClass().add("allocation-current");
-                        row.setTooltip(new Tooltip("This allocation is currently in progress."));
-                    } else if (newValue.isFuture()) {
-                        row.getStyleClass().add("allocation-future");
-                        row.setTooltip(new Tooltip("This allocation is scheduled for the future."));
-                    } else {
-                        row.getStyleClass().add("allocation-past");
-                        row.setTooltip(new Tooltip("This allocation has been and gone."));
-                    }
-                }
-            });
-            return row;
-        });
-
     }
 
     private void setAllocationButtonListeners() {
