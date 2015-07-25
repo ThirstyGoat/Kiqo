@@ -29,6 +29,7 @@ public final class ReportGenerator {
     private static final String STORY_COMMENT =         " -  ### Story ###";
     private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
     private static final String AC_COMMENT =            " - ";
+    private static final String TASK_COMMENT =          " - ";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -259,6 +260,11 @@ public final class ReportGenerator {
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
 
         }
+        lines.add(ReportUtils.collectionLine("Task", story.getTask().isEmpty()));
+        for (final Task task : story.getTask()) {
+            lines.add(ReportGenerator.TASK_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTaskReport(task)));
+        }
 
         return lines;
     }
@@ -270,6 +276,19 @@ public final class ReportGenerator {
         final List<String> lines = new ArrayList<String>();
         lines.addAll(ReportUtils.valueLiteral("Criteria", acceptanceCriteria.getCriteria()));
         lines.add(ReportUtils.valueLine("State", acceptanceCriteria.getState()));
+
+        return lines;
+    }
+
+    /**
+     *  Generate task data.
+     */
+    private List<String> generateTaskReport(Task tasks) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", tasks.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", tasks.getDescription()));
+        lines.add(ReportUtils.valueLine("Estimate", tasks.getEstimate()));
+        lines.add(ReportUtils.valueLine("Status", tasks.getStatus()));
 
         return lines;
     }
