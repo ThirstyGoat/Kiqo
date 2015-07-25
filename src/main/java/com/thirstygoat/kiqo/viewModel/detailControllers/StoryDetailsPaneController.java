@@ -14,8 +14,11 @@ import com.thirstygoat.kiqo.viewModel.MainController;
 import com.thirstygoat.kiqo.viewModel.TaskListCell;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -29,6 +32,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private MainController mainController;
     private Story story;
     private Map<State, Image> images;
+    private FloatProperty tasksHoursProperty = new SimpleFloatProperty(0.0f);
     
     @FXML
     private Label shortNameLabel;
@@ -72,6 +76,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @Override
     public void showDetails(final Story story) {
         this.story = story;
+        updateTaskHours();
         if (story != null) {
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
@@ -85,7 +90,11 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
 //            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
-            totalHoursLabel.textProperty().bind(story.taskHoursProperty().asString());
+            totalHoursLabel.textProperty().unbind();
+            totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
+            story.observableTasks().addListener((ListChangeListener<Task>) c -> {
+                updateTaskHours();
+            });
             setScale();
 
         } else {
@@ -94,6 +103,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             descriptionLabel.textProperty().unbind();
             creatorLabel.textProperty().unbind();
             priorityLabel.textProperty().unbind();
+            totalHoursLabel.textProperty().unbind();
 
             longNameLabel.setText(null);
             shortNameLabel.setText(null);
@@ -150,6 +160,18 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
+    }
+
+    private void updateTaskHours() {
+        if (story == null) {
+            tasksHoursProperty.setValue(0.0f);
+        } else {
+            float total = 0.0f;
+            for (Task task : story.observableTasks()) {
+                total += task.getEstimate();
+            }
+            tasksHoursProperty.setValue(total);
+        }
     }
 
     private void deleteTask() {

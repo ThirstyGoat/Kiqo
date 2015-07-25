@@ -43,8 +43,8 @@ public class Story extends Item {
         this.estimate = new SimpleIntegerProperty(0);
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
-        this.taskHours = new SimpleFloatProperty((float) 0.0);
-        setTasksListener();
+        this.taskHours = new SimpleFloatProperty(0.0f);
+//        setTasksListener();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -62,7 +62,7 @@ public class Story extends Item {
         this.scale = new SimpleObjectProperty<>(scale);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty();
-        setTasksListener();
+//        setTasksListener();
     }
 
     /**
