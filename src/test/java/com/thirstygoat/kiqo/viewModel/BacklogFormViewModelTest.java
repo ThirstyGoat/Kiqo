@@ -17,7 +17,7 @@ public class BacklogFormViewModelTest {
     public void testShortNameValidation() throws NoSuchFieldException, IllegalAccessException {
 
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
-        Organisation organisation = new Organisation();
+        Organisation organisation = new Organisation(true);
         Predicate<String> predicate = backlogFormViewModel.getShortNameValidation();
 
         Assert.assertFalse("Must not be valid initially.", predicate.test(backlogFormViewModel.shortNameProperty().get()));
@@ -69,7 +69,7 @@ public class BacklogFormViewModelTest {
     @Test
     public void testProductOwnerValidation() {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
-        Organisation organisation = new Organisation();
+        Organisation organisation = new Organisation(true);
         backlogFormViewModel.setOrganisation(organisation);
 
         Predicate<String> predicate = backlogFormViewModel.getProductOwnerValidation();
@@ -92,7 +92,7 @@ public class BacklogFormViewModelTest {
     @Test
     public void testProjectValidation() {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
-        Organisation organisation = new Organisation();
+        Organisation organisation = new Organisation(true);
         backlogFormViewModel.setOrganisation(organisation);
 
         Predicate<String> predicate = backlogFormViewModel.getProjectValidation();
@@ -119,7 +119,7 @@ public class BacklogFormViewModelTest {
     @Test
     public void testScaleValidation() {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
-        Organisation organisation = new Organisation();
+        Organisation organisation = new Organisation(true);
         backlogFormViewModel.setOrganisation(organisation);
 
         Predicate<Scale> predicate = backlogFormViewModel.getScaleValidation();
