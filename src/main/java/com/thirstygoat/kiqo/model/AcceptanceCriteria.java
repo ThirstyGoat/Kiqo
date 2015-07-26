@@ -94,4 +94,9 @@ public class AcceptanceCriteria extends Item {
         REJECTED,
         NEITHER
     }
+
+    @Override
+    public String[] getSearchableStrings() {
+        return new String[] {};
+    }
 }

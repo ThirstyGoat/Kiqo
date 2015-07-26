@@ -27,6 +27,7 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
     private TextField searchTextField;
     @FXML
     private ListView<SearchResult> searchResultsListView;
+    public static final int MAX_RESULTS_BEFORE_SCROLLBAR = 8;
 
     @InjectViewModel
     private SearchViewModel viewModel;
@@ -56,9 +57,9 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
 
         viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
-                searchResultsListView.setPrefHeight(viewModel.getResults().size()*30 + 2);
+                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 2);
                 searchResultsListView.getScene().getWindow().setHeight(
-                        viewModel.getResults().size()*30 + 2 + 65);
+                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 2 + 65);
             } else {
                 searchResultsListView.getScene().getWindow().setHeight(60);
             }

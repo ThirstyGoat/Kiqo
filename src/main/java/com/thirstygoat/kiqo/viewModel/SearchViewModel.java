@@ -61,7 +61,6 @@ public class SearchViewModel implements ViewModel {
         Search search = new Search(query.get());
         results.clear();
         results.addAll(search.execute());
-        System.out.println(SearchableItems.getInstance().getSearchables());
     }
 
     private String getClassString(SearchResult searchResult) {
