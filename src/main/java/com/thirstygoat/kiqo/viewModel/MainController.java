@@ -122,6 +122,9 @@ public class MainController implements Initializable {
                 .concat(changesSavedAsterisk)
                 .concat(" - ")
                 .concat(MainController.PRODUCT_NAME));
+
+        // Fixes border pane issue on lab machines
+        mainBorderPane.requestLayout();
     }
 
     /**
