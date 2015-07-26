@@ -12,7 +12,6 @@ import com.thirstygoat.kiqo.nodes.GoatDialog;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
-import com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.*;
 import com.thirstygoat.kiqo.viewModel.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormController;

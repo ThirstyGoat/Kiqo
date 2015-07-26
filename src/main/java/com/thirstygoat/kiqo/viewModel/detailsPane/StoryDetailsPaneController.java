@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.viewModel.detailsPane;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.model.Task;
@@ -11,6 +12,7 @@ import com.thirstygoat.kiqo.viewModel.MainController;
 import com.thirstygoat.kiqo.viewModel.TaskListCell;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.When;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -98,12 +100,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
-//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
             totalHoursLabel.textProperty().unbind();
             totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
-            story.observableTasks().addListener((ListChangeListener<Task>) c -> {
-                updateTaskHours();
-            });
+            story.observableTasks().addListener((ListChangeListener<Task>) c -> updateTaskHours());
             setScale();
 
             if (isReadyListener != null) {
