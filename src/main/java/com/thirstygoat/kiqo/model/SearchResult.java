@@ -19,7 +19,7 @@ public class SearchResult {
      * Generates the result text to be shown based on the class of Searchable found
      */
     private void generateResultText() {
-        resultText = ((Item) searchable).getShortName() + " @" + searchable.hashCode();
+        resultText = ((Item) searchable).getShortName();
     }
 
     /**
