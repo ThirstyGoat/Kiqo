@@ -6,8 +6,8 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.nodes.GoatDialog;
-
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -75,7 +75,7 @@ public class AllocationsTableViewController implements Initializable {
         if (type.equals(FirstColumnType.PROJECT)) {
             teamTableColumn.setText("Project");
             teamTableColumn.setCellValueFactory(cellData -> cellData.getValue().getProject().shortNameProperty());
-            teamTableColumn.setCellFactory(tableColumn -> new AllocationListCell(mainController.selectedOrganisationProperty));
+            teamTableColumn.setCellFactory(tableColumn -> new AllocationListCell(mainController.selectedOrganisationProperty, this));
             allocationsTableView.setPlaceholder(new Label("Team not allocated to any projects"));
         } else if (type.equals(FirstColumnType.TEAM)) {
 //            teamTableColumn.setText("Team");
@@ -87,7 +87,7 @@ public class AllocationsTableViewController implements Initializable {
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
         // cellFactory is NOT the same as cellValueFactory
-        teamTableColumn.setCellFactory(param -> new AllocationListCell(mainController.selectedOrganisationProperty));
+        teamTableColumn.setCellFactory(param -> new AllocationListCell(mainController.selectedOrganisationProperty, this));
 
         startDateTableColumn.setCellFactory(param -> {
             final AllocationDatePickerCell startDateCellFactory = new AllocationDatePickerCell();
@@ -208,10 +208,6 @@ public class AllocationsTableViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    public enum  FirstColumnType {
-        PROJECT, TEAM
-    }
-
     private void setHyperlink() {
         PopOver popOver = new PopOver();
         popOver.setDetachable(false);
@@ -257,7 +253,13 @@ public class AllocationsTableViewController implements Initializable {
         highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
 
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
+    }
 
+    public BooleanProperty checkBoxSelectedProperty() {
+        return highlightCheckBox.selectedProperty();
+    }
 
+    public enum  FirstColumnType {
+        PROJECT, TEAM
     }
 }
