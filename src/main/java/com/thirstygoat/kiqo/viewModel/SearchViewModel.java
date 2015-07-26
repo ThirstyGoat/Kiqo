@@ -101,6 +101,7 @@ public class SearchViewModel implements ViewModel {
         button.getStyleClass().add("searchResultButton");
         button.setGraphic(hBox);
         button.setPadding(new Insets(3, 15, 3, 15));
+        button.setDefaultButton(true);
         return button;
     }
 

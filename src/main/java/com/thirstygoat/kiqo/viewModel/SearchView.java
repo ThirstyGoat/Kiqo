@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.SearchResult;
-import com.thirstygoat.kiqo.model.Searchable;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -13,7 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.util.Callback;
+import javafx.scene.input.KeyCode;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,7 +34,12 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         viewModel.queryProperty().bind(searchTextField.textProperty());
         searchResultsListView.setItems(viewModel.getResults());
-        searchTextField.setOnKeyReleased(event -> viewModel.getSearchCommand().execute());
+        searchTextField.setOnKeyReleased(event -> {
+            if (event.getCode() != KeyCode.ENTER) {
+                viewModel.getSearchCommand().execute();
+                searchResultsListView.getSelectionModel().selectFirst();
+            }
+        });
 
         searchResultsListView.setCellFactory(param -> new ListCell<SearchResult>() {
             @Override

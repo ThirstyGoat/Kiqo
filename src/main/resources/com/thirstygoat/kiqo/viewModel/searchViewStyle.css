@@ -4,8 +4,12 @@
     -fx-background-radius: 0;
 }
 
-.searchResultButton:hover {
+.searchResultButton:pressed, .list-cell:selected .searchResultButton {
     -fx-background-color: #66ccff;
+    -fx-cursor: hand
+}
+
+.searchResultButton:hover {
     -fx-cursor: hand
 }
 
