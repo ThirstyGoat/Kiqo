@@ -127,6 +127,7 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
+//            System.out.println("Enter");
             if (sourceIsTask(event)) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
@@ -143,6 +144,7 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
+//            System.out.println("exit");
             if (sourceIsTask(event)) {
                 ((TaskListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
@@ -154,6 +156,7 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
+//            System.out.println("drop");
             if (sourceIsTask(event)) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
@@ -166,8 +169,10 @@ public class TaskListCell extends ListCell<Task> {
                         undoManager.doCommand(new MoveItemCommand<>(task, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
                     }
                 } else {
-                    undoManager.doCommand(new MoveItemCommand<>(task, listView.getItems(), prevIndex,
-                            listView.getItems(), listView.getItems().size() - 1));
+                    if (!listView.getItems().contains(t)) {
+                        undoManager.doCommand(new MoveItemCommand<>(task, listView.getItems(), prevIndex,
+                                listView.getItems(), listView.getItems().size() - 1));
+                    }
                 }
                 event.setDropCompleted(true);
             }
@@ -176,10 +181,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
+//            System.out.println("done");
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
             if (sourceIsTask(event)) {
                 Task t = getTask(event);
-
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
@@ -200,7 +205,6 @@ public class TaskListCell extends ListCell<Task> {
             // We do need this one or onDragDone wont be called
             setCursor(Cursor.CLOSED_HAND);
             getParent().setOnDragDone(mContextDragDone);
-
             // begin drag ops
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();

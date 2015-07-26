@@ -64,7 +64,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // calling super here is very important
 
         if (!empty) {
-            System.out.println(item.getShortName());
             initialiseDragAndDrop(item);
 
             final BorderPane borderPane = new BorderPane();
