@@ -59,11 +59,11 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
 
         viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
-                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 2);
+                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 10);
                 searchResultsListView.getScene().getWindow().setHeight(
-                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 55);
+                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 63);
             } else {
-                searchResultsListView.getScene().getWindow().setHeight(52);
+                searchResultsListView.getScene().getWindow().setHeight(61);
             }
         });
     }
