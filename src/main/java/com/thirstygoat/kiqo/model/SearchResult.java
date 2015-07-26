@@ -19,13 +19,7 @@ public class SearchResult {
      * Generates the result text to be shown based on the class of Searchable found
      */
     private void generateResultText() {
-        if (searchable.getClass() == Allocation.class) {
-            Allocation allocation = (Allocation)searchable;
-            resultText = "Allocation [" + allocation.getTeam().getShortName() +
-                    " on Project: " + allocation.getProject().getShortName() + "]";
-        } else {
-            resultText = ((Item) searchable).getShortName();
-        }
+        resultText = ((Item) searchable).getShortName() + " @" + searchable.hashCode();
     }
 
     /**

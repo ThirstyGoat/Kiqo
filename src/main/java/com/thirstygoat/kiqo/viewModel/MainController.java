@@ -398,7 +398,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedOrganisationProperty.set(new Organisation());
+        selectedOrganisationProperty.set(new Organisation(true));
 
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
@@ -524,6 +524,7 @@ public class MainController implements Initializable {
         }
         Organisation organisation;
         try {
+            SearchableItems.clear();
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)
@@ -916,7 +917,8 @@ public class MainController implements Initializable {
                 return;
             }
         }
-        selectedOrganisationProperty.set(new Organisation());
+        SearchableItems.clear();
+        selectedOrganisationProperty.set(new Organisation(true));
     }
 
     public SideBarController getSideBarController() {

@@ -34,10 +34,23 @@ public class Organisation implements Serializable {
         skills = FXCollections.observableArrayList(Item.getWatchStrategy());
         teams = FXCollections.observableArrayList(Item.getWatchStrategy());
         organisationName = new SimpleStringProperty("Untitled");
-        poSkill = new Skill("PO", "Product Owner");
-        smSkill = new Skill("SM", "Scrum Master");
-        skills.add(poSkill);
-        skills.add(smSkill);
+        poSkill = null;
+        smSkill = null;
+    }
+
+    public Organisation(boolean addDefaultItems) {
+        projects = FXCollections.observableArrayList(Item.getWatchStrategy());
+        people = FXCollections.observableArrayList(Item.getWatchStrategy());
+        skills = FXCollections.observableArrayList(Item.getWatchStrategy());
+        teams = FXCollections.observableArrayList(Item.getWatchStrategy());
+        organisationName = new SimpleStringProperty("Untitled");
+        if (addDefaultItems) {
+            poSkill = new Skill("PO", "Product Owner");
+            smSkill = new Skill("SM", "Scrum Master");
+            skills.addAll(poSkill, smSkill);
+        } else {
+            poSkill = smSkill = null;
+        }
     }
 
     public Organisation(final File saveLocation) {
