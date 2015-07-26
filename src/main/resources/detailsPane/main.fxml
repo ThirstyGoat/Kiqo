@@ -7,11 +7,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.MainDetailsPaneController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
   <bottom>
-      <HBox alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0" spacing="10">
+      <HBox fx:id="buttonBox" alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0" spacing="10">
           <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
           <Button fx:id="editButton" mnemonicParsing="false" text="Edit" />
           <padding>

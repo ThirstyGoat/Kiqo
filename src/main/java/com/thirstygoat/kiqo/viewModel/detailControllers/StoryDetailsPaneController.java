@@ -1,9 +1,5 @@
 package com.thirstygoat.kiqo.viewModel.detailControllers;
 
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.*;
-
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
@@ -24,8 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-
 import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.*;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
@@ -182,7 +180,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
                 commands.add(new DeleteTaskCommand(task, story));
             }
-            command = new CompoundCommand("Delete Task", commands);
+            command = new CompoundCommand("Delete `sk", commands);
         } else {
             final Task task = taskListView.getSelectionModel().getSelectedItem();
             command = new DeleteTaskCommand(task, story);

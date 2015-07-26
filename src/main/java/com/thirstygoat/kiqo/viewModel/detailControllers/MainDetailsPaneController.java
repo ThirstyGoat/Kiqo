@@ -7,10 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,6 +41,8 @@ public class MainDetailsPaneController implements Initializable {
     private Button editButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private HBox buttonBox;
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
@@ -86,6 +85,7 @@ public class MainDetailsPaneController implements Initializable {
      */
     public void showDetailsPane(Item item) {
         detailsPane.setPadding(new Insets(20, 20, 20, 20));
+        buttonBox.setPadding(new Insets(0, 0, 0, 0));
         if (item == null) {
             clear();
         } else {
@@ -146,7 +146,8 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showStoryDetailPane(Story story) {
-        detailsPane.setPadding(new Insets(0, 20, 20, 0));
+        detailsPane.setPadding(new Insets(0, 0, 0, 0));
+        buttonBox.setPadding(new Insets(0, 20, 20, 0));
         storyDetailsPaneController.showDetails(story);
         show(storyDetailsPane);
         showOptionButtons();
