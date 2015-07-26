@@ -5,11 +5,18 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
+import com.thirstygoat.kiqo.viewModel.TaskListCell;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -29,6 +36,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private Map<State, Image> images;
     private ChangeListener<Boolean> isReadyListener;
     private ChangeListener<Boolean> modelIsReadyListener;
+    private FloatProperty tasksHoursProperty = new SimpleFloatProperty(0.0f);
     
     @FXML
     private Label shortNameLabel;
@@ -49,6 +57,8 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private ListView<AcceptanceCriteria> acListView;
     @FXML
+    private ListView<Task> taskListView;
+    @FXML
     private Slider storyEstimateSlider;
     @FXML
     private Button addACButton;
@@ -57,16 +67,24 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Button editACButton;
     @FXML
+    private Button addTaskButton;
+    @FXML
+    private Button removeTaskButton;
+    @FXML
+    private Button editTaskButton;
+    @FXML
     private CheckBox isReadyCheckBox;
     @FXML
     private Hyperlink readyWhy;
     @FXML
+    private Label totalHoursLabel;
+    @FXML
     private Hyperlink estimateWhy;
-
 
     @Override
     public void showDetails(final Story story) {
         this.story = story;
+        updateTaskHours();
         if (story != null) {
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
@@ -80,6 +98,12 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
+//            storyScaleLabel.textProperty().bind(new When(story.scaleProperty().isNotNull()).then(story.scaleProperty()).otherwise(Scale.FIBONACCI));
+            totalHoursLabel.textProperty().unbind();
+            totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
+            story.observableTasks().addListener((ListChangeListener<Task>) c -> {
+                updateTaskHours();
+            });
             setScale();
 
             if (isReadyListener != null) {
@@ -102,19 +126,22 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             descriptionLabel.textProperty().unbind();
             creatorLabel.textProperty().unbind();
             priorityLabel.textProperty().unbind();
+            totalHoursLabel.textProperty().unbind();
 
             longNameLabel.setText(null);
             shortNameLabel.setText(null);
             descriptionLabel.setText(null);
             creatorLabel.setText(null);
             priorityLabel.setText(null);
+            totalHoursLabel.setText("0.0");
             storyEstimateSliderLabel.setText(null);
             isReadyCheckBox.setSelected(false); // May not be needed
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
         acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
-        
+        taskListView.setCellFactory(param -> new TaskListCell(param));
+
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
         acListView.setItems(story.getAcceptanceCriteria());
@@ -122,6 +149,25 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
         editACButton.setOnAction(event -> mainController.editAC(acListView.getSelectionModel().getSelectedItem()));
+
+        removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
+        editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
+        taskListView.setItems(story.observableTasks());
+
+        addTaskButton.setOnAction(event -> mainController.createTask());
+        removeTaskButton.setOnAction(event -> deleteTask());
+        editTaskButton.setOnAction(event -> mainController.editTask(taskListView.getSelectionModel().getSelectedItem()));
+
+        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (story.getIsReady() != newValue) {
+                Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                UndoManager.getUndoManager().doCommand(command);
+            }
+        });
+        isReadyCheckBox.setSelected(story.getIsReady());
+        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
+            isReadyCheckBox.setSelected(newValue);
+        });
 
         // Story must have at least one AC
         // Story must have non-null estimate
@@ -140,6 +186,35 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
+    }
+
+    private void updateTaskHours() {
+        if (story == null) {
+            tasksHoursProperty.setValue(0.0f);
+        } else {
+            float total = 0.0f;
+            for (Task task : story.observableTasks()) {
+                total += task.getEstimate();
+            }
+            tasksHoursProperty.setValue(total);
+        }
+    }
+
+    private void deleteTask() {
+        Command<?> command;
+        if (taskListView.getSelectionModel().getSelectedItems().size() > 1) {
+            // Then we have to deal with a multi AC deletion
+            List<Command<?>> commands = new ArrayList<>();
+            for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
+                commands.add(new DeleteTaskCommand(task, story));
+            }
+            command = new CompoundCommand("Delete `sk", commands);
+        } else {
+            final Task task = taskListView.getSelectionModel().getSelectedItem();
+            command = new DeleteTaskCommand(task, story);
+        }
+
+        mainController.doCommand(command);
     }
 
     private void setIsReadyCheckBoxInfo() {
@@ -215,6 +290,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         images.put(State.NEITHER, new Image(classLoader.getResourceAsStream("images/noState.png"), IMAGE_SIZE, IMAGE_SIZE, false, false));
         initSlider();
         acListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        taskListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initSlider() {

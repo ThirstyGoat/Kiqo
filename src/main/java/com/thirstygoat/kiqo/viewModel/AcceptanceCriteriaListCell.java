@@ -32,6 +32,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private final Map<State, Image> images;
     private ListView<AcceptanceCriteria> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
+
     public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
         this.listView = listView;
         this.images = images;
@@ -51,8 +52,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
      */
     private static boolean sourceIsAcceptanceCriteria(DragEvent event) {
         try {
-            ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria");
-            return true;
+            String type = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("type");
+            return type.equals("AC");
         } catch (Exception e) {
             return false;
         }
@@ -61,9 +62,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     @Override
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
         // calling super here is very important
+
         if (!empty) {
             initialiseDragAndDrop(item);
-            
+
             final BorderPane borderPane = new BorderPane();
             Text criteria = new Text();
             criteria.textProperty().bind(item.criteria);
@@ -102,7 +104,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-//            System.out.println("enter");
             if (sourceIsAcceptanceCriteria(event)) {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
@@ -183,6 +184,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             // begin drag ops
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
+            container.addData("type", "AC");
             container.addData("criteria", ac.getCriteria());
             container.addData("state", ac.getState());
             container.addData("listSize", listView.getItems().size());

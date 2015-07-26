@@ -33,7 +33,6 @@ public class PersistenceManager {
             PersistenceManager.createGson(false);
         }
 
-
         try (final Writer writer = new FileWriter(filePath)) {
             final JsonElement jsonElement = PersistenceManager.gson.toJsonTree(organisation);
             jsonElement.getAsJsonObject().addProperty("VERSION", ApplicationInfo.getProperty("version"));
@@ -112,11 +111,13 @@ public class PersistenceManager {
                 .addType(Backlog.class)
                 .addType(Story.class)
                 .addType(AcceptanceCriteria.class)
+                .addType(Task.class)
                 .registerOn(gsonBuilder);
 
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
         gsonBuilder.registerTypeAdapter(StringProperty.class, new StringPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(IntegerProperty.class, new IntegerPropertyDeserializer());
+        gsonBuilder.registerTypeAdapter(FloatProperty.class, new FloatPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(BooleanProperty.class, new BooleanPropertyDeserializer());
 
@@ -171,6 +172,8 @@ public class PersistenceManager {
             ObservableList observableList;
             if (AcceptanceCriteria.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(AcceptanceCriteria.getWatchStrategy());
+            } else if (Task.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(Task.getWatchStrategy());
             } else if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
             } else {
@@ -212,6 +215,23 @@ public class PersistenceManager {
         public JsonElement serialize(IntegerProperty s, Type type, JsonSerializationContext jsonSerializationContext) {
             if (s != null) {
                 return new JsonPrimitive(s.get());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class FloatPropertyDeserializer implements JsonDeserializer<FloatProperty>, JsonSerializer<FloatProperty> {
+        @Override
+        public FloatProperty deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+            return new SimpleFloatProperty(jsonElement.getAsFloat());
+        }
+
+        @Override
+        public JsonElement serialize(FloatProperty floatProperty, Type type, JsonSerializationContext jsonSerializationContext) {
+            if (floatProperty != null) {
+                return new JsonPrimitive(floatProperty.get());
             } else {
                 return null;
             }

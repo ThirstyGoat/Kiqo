@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.beans.binding.Bindings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,8 @@ public class Story extends Item {
     private final ObservableList<AcceptanceCriteria> acceptanceCriteria;
     private final ObservableList<Story> dependencies;
     private final BooleanProperty isReady;
+    private final ObservableList<Task> tasks;
+    private final FloatProperty taskHours;
 
     /**
      * no-arg constructor for JavaBeans compliance
@@ -45,6 +48,9 @@ public class Story extends Item {
         this.estimate = new SimpleIntegerProperty(0);
         this.dependencies = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
+        this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
+        this.taskHours = new SimpleFloatProperty(0.0f);
+//        setTasksListener();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -62,6 +68,34 @@ public class Story extends Item {
         this.scale = new SimpleObjectProperty<>(scale);
         this.dependencies = FXCollections.observableArrayList();
         this.dependencies.addAll(dependencies);
+        this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
+        this.taskHours = new SimpleFloatProperty();
+//        setTasksListener();
+    }
+
+    /**
+     * binds the taskHours property to the sum of estimates for each task for the story
+     */
+    private void setTasksListener() {
+        taskHours.bind(Bindings.createFloatBinding(() -> {
+            float totalVal = 0;
+            for (Task task : tasks) {
+                totalVal += task.getEstimate();
+            }
+            return totalVal;
+        }, tasks));
+    }
+
+    public ObservableList<Task> observableTasks() {
+        return tasks;
+    }
+
+    public FloatProperty taskHoursProperty() {
+        return taskHours;
+    }
+
+    public Float getTaskHours() {
+        return taskHours.get();
     }
 
     @Override
@@ -153,6 +187,12 @@ public class Story extends Item {
     public ObservableList<AcceptanceCriteria> getAcceptanceCriteria() {
         return acceptanceCriteria;
     }
+
+    public ObservableList<Task> getTask() {
+        return tasks;
+    }
+
+
 
     public Integer getEstimate() {
         return estimate.get();
