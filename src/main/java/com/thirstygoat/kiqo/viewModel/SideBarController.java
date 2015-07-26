@@ -9,6 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,10 +17,7 @@ import javafx.scene.control.*;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by samschofield and James on 14/05/15.
@@ -258,6 +256,39 @@ public class SideBarController implements Initializable {
         this.mainController = mainController;
         initializeListViews();
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
+        mainController.focusedItemProperty.addListener((o, oldValue, newValue) -> selectItem(newValue));
+    }
+
+    private void selectItem(Item newValue) {
+        if (newValue == null) { return; }
+        Class itemClass = newValue.getClass();
+        if (itemClass == Project.class || itemClass == Backlog.class || itemClass == Story.class ||
+                itemClass == Release.class || itemClass == TreeNodeHeading.class) {
+            tabViewPane.getSelectionModel().select(projectTab);
+            projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));
+        } else if (itemClass == Team.class) {
+            tabViewPane.getSelectionModel().select(teamsTab);
+            teamsListView.getSelectionModel().select((Team)newValue);
+        } else if (itemClass == Person.class) {
+            tabViewPane.getSelectionModel().select(peopleTab);
+            peopleListView.getSelectionModel().select((Person)newValue);
+        } else if (itemClass == Skill.class) {
+            tabViewPane.getSelectionModel().select(skillsTab);
+            skillsListView.getSelectionModel().select((Skill)newValue);
+        }
+    }
+
+    private TreeItem<Item> getTreeViewItem(Item item, TreeItem<Item> treeItem) {
+        if (treeItem.getValue() == item) {
+            return treeItem;
+        }
+        for (TreeItem<Item> treeItem1 : treeItem.getChildren()) {
+            TreeItem<Item> treeItem2 = getTreeViewItem(item, treeItem1);
+            if (treeItem2 != null) {
+                return treeItem2;
+            }
+        }
+        return null;
     }
 
     public enum TabOption {

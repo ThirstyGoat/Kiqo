@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
@@ -13,7 +14,9 @@ import java.io.Serializable;
 public abstract class Item implements Serializable, Searchable {
 
     public Item() {
-        SearchableItems.getInstance().addSearchable(this);
+        if (this.getClass() != TreeNodeHeading.class) {
+            SearchableItems.getInstance().addSearchable(this);
+        }
     }
 
     public static <E extends Item> Callback<E, Observable[]> getWatchStrategy() {

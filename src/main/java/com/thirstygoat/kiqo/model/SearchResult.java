@@ -7,13 +7,11 @@ package com.thirstygoat.kiqo.model;
  */
 public class SearchResult {
 
-    private Class searchableClass;
     private Searchable searchable;
     private String resultText;
 
     public SearchResult(Searchable searchable) {
         this.searchable = searchable;
-        this.searchableClass = searchable.getClass();
         generateResultText();
     }
 
@@ -21,7 +19,6 @@ public class SearchResult {
      * Generates the result text to be shown based on the class of Searchable found
      */
     private void generateResultText() {
-        System.out.println(searchable.getClass());
         if (searchable.getClass() == Allocation.class) {
             Allocation allocation = (Allocation)searchable;
             resultText = "Allocation [" + allocation.getTeam().getShortName() +
