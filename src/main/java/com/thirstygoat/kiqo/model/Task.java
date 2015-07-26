@@ -84,10 +84,10 @@ public class Task extends Item {
 
         Task task = (Task) o;
 
-        if (!shortName.equals(task.shortName)) return false;
-        if (description != null ? !description.equals(task.description) : task.description != null) return false;
-        if (!estimate.equals(task.estimate)) return false;
-        return !(status != null ? !status.equals(task.status) : task.status != null);
+        if (!shortName.get().equals(task.shortName.get())) return false;
+        if (description.get() != null ? !description.get().equals(task.description.get()) : task.description.get() != null) return false;
+        if (estimate.get() !=(task.estimate.get())) return false;
+        return !(status.get() != null ? !status.get().equals(task.status.get()) : task.status.get() != null);
 
     }
 

@@ -105,7 +105,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-//            System.out.println("enter");
             if (sourceIsAcceptanceCriteria(event)) {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);

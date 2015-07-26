@@ -17,8 +17,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class TaskListCell extends ListCell<Task> {
@@ -33,8 +35,10 @@ public class TaskListCell extends ListCell<Task> {
     private static Task getTask(DragEvent event) {
         String name = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("name");
         String description = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("description");
+        Status status = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("status");
         float estimate = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("estimate");
         Task task = new Task(name, description, estimate);
+        task.statusProperty().setValue(status);
         return task;
     }
 
@@ -57,6 +61,7 @@ public class TaskListCell extends ListCell<Task> {
             initialiseDragAndDrop(task);
             
             final GridPane gridPane = new GridPane();
+//            BorderPane bp = new BorderPane();
             Text name = new Text();
             name.textProperty().bind(task.shortNameProperty());
 
@@ -79,6 +84,10 @@ public class TaskListCell extends ListCell<Task> {
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
+
+//            bp.setLeft(name);
+//            bp.setCenter(description);
+//            bp.setRight(estimate);
 
             gridPane.add(name,0, 0);
             gridPane.add(statusComboBox, 1, 0);
@@ -197,7 +206,7 @@ public class TaskListCell extends ListCell<Task> {
             DragContainer container = new DragContainer();
             container.addData("name", task.getShortName());
             container.addData("description", task.getDescription());
-            container.addData("status",task.getStatus());
+            container.addData("status", task.getStatus());
             container.addData("estimate", task.getEstimate());
             container.addData("listSize", listView.getItems().size());
             container.addData("type", "TASK");
