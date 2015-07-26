@@ -21,12 +21,11 @@ import java.util.ResourceBundle;
  * Created by leroy on 24/07/15.
  */
 public class SearchView implements FxmlView<SearchViewModel>, Initializable {
+    public static final int MAX_RESULTS_BEFORE_SCROLLBAR = 8;
     @FXML
     private TextField searchTextField;
     @FXML
     private ListView<SearchResult> searchResultsListView;
-    public static final int MAX_RESULTS_BEFORE_SCROLLBAR = 8;
-
     @InjectViewModel
     private SearchViewModel viewModel;
 
@@ -62,9 +61,9 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
             if (viewModel.getResults().size() > 0) {
                 searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 2);
                 searchResultsListView.getScene().getWindow().setHeight(
-                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 2 + 65);
+                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 55);
             } else {
-                searchResultsListView.getScene().getWindow().setHeight(60);
+                searchResultsListView.getScene().getWindow().setHeight(52);
             }
         });
     }

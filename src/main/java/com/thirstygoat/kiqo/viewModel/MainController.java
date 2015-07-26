@@ -35,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -410,6 +411,26 @@ public class MainController implements Initializable {
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             undoManager.empty();
         });
+    }
+
+    /**
+     * Manually adds event handlers to open Search (using Double Shift) for Mac users
+     */
+    private void setSearchShortcut() {
+        // Mac only
+        if (com.sun.javafx.PlatformUtil.isMac()) {
+            final long[] timestamp = {0};
+            primaryStage.getScene().setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.SHIFT) {
+                    long diff = System.currentTimeMillis() / 1000L - timestamp[0];
+                    if (diff < 1) {
+                        timestamp[0] = 0;
+                        search();
+                    }
+                    timestamp[0] = System.currentTimeMillis() / 1000L;
+                }
+            });
+        }
     }
 
     public ObjectProperty<Organisation> selectedOrganisationProperty() {
@@ -905,6 +926,7 @@ public class MainController implements Initializable {
         sideBarController.setMainController(this);
 
         setStageTitleProperty();
+        setSearchShortcut();
     }
 
     public MainDetailsPaneController getDetailsPaneController() {
