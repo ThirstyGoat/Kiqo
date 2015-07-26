@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
   <children>
-    <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" layoutY="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
       <content>
             <TabPane fx:id="tabPane" prefHeight="498.0" prefWidth="747.0">
                <tabs>
@@ -75,7 +80,7 @@
                               <RowConstraints />
                       </rowConstraints>
                            <padding>
-                              <Insets left="20.0" top="20.0" right="20.0"/>
+                              <Insets left="20.0" right="20.0" top="20.0" />
                            </padding>
                     </GridPane>
                      </content>
@@ -133,12 +138,15 @@
                               <RowConstraints />
                            </rowConstraints>
                            <padding>
-                              <Insets left="20.0" top="20.0" right="20.0"/>
+                              <Insets left="20.0" right="20.0" top="20.0" />
                            </padding>
                         </GridPane>
                      </content>
                   </Tab>
                </tabs>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </TabPane>
       </content>
     </ScrollPane>
