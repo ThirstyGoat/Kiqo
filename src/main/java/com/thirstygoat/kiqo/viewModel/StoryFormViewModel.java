@@ -349,7 +349,7 @@ public class StoryFormViewModel extends FormController<Story> {
             }
 
             valid = !changes.isEmpty();
-            command = new CompoundCommand("Edit Release", changes);
+            command = new CompoundCommand("Edit Story", changes);
         }
     }
 
