@@ -21,6 +21,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.swing.border.Border;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by leroy on 24/07/15.
@@ -58,6 +60,12 @@ public class SearchViewModel implements ViewModel {
     }
 
     private void search() {
+        try {
+            Pattern.compile(query.get());
+        } catch (PatternSyntaxException ignored) {
+            return;
+        }
+
         Search search = new Search(query.get());
         results.clear();
         results.addAll(search.execute());
