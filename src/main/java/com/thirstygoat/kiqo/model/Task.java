@@ -99,4 +99,5 @@ public class Task extends Item {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
+
 }

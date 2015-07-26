@@ -1,22 +1,26 @@
 package com.thirstygoat.kiqo.viewModel;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.CreateTaskCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 
 /**
@@ -31,6 +35,7 @@ public class TaskFormViewModel extends FormController<Task> {
     private StringProperty nameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
     private StringProperty estimateProperty = new SimpleStringProperty("");
+    private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>();
 
     private FunctionBasedValidator nameValidator;
     private FunctionBasedValidator descriptionValidator;
@@ -81,6 +86,7 @@ public class TaskFormViewModel extends FormController<Task> {
             nameProperty.set(task.getShortName());
             descriptionProperty.set(task.getDescription());
             estimateProperty.set(Float.toString(task.getEstimate()));
+            statusProperty.set(task.getStatus());
         }
     }
 
@@ -98,6 +104,8 @@ public class TaskFormViewModel extends FormController<Task> {
     public StringProperty estimateProperty() {
         return estimateProperty;
     }
+
+    public ObjectProperty<Status> statusProperty() { return statusProperty; }
 
 
     public ValidationStatus nameValidation() {
@@ -162,6 +170,9 @@ public class TaskFormViewModel extends FormController<Task> {
             }
             if (!task.estimateProperty().equals(estimateProperty().get())) {
                 changes.add(new EditCommand<>(task, "estimate", Float.parseFloat(estimateProperty.get())));
+            }
+            if (statusProperty().getValue() != task.getStatus()) {
+                changes.add(new EditCommand<>(task, "status", statusProperty.getValue()));
             }
             command = new CompoundCommand("Edit Task", changes);
         }

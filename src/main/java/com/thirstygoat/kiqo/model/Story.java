@@ -180,6 +180,12 @@ public class Story extends Item {
         return acceptanceCriteria;
     }
 
+    public ObservableList<Task> getTask() {
+        return tasks;
+    }
+
+
+
     public Integer getEstimate() {
         return estimate.get();
     }

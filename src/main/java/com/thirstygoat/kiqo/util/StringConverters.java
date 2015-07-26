@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.util;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Status;
 import javafx.util.StringConverter;
 
 /**
@@ -27,6 +28,20 @@ public class StringConverters {
                     }
                 }
                 return null;
+            }
+        };
+    }
+
+    public static StringConverter<Status> statusStringConverter() {
+        return new StringConverter<Status>() {
+            @Override
+            public Status fromString(String string) {
+                return Status.getEnum(string);
+            }
+
+            @Override
+            public String toString(Status status) {
+                return status != null ? status.toString() : "";
             }
         };
     }

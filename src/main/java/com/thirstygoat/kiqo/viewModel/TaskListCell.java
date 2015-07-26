@@ -1,33 +1,29 @@
 package com.thirstygoat.kiqo.viewModel;
 
 
-import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
-import javafx.beans.property.ObjectProperty;
-import javafx.event.ActionEvent;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-
-import java.util.Map;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
+    private final StringProperty statusString = new SimpleStringProperty("");
 
     public TaskListCell(ListView<Task> listView) {
         this.listView = listView;
@@ -59,23 +55,39 @@ public class TaskListCell extends ListCell<Task> {
         if (!empty) {
             initialiseDragAndDrop(task);
             
-            final BorderPane borderPane = new BorderPane();
+            final GridPane gridPane = new GridPane();
             Text name = new Text();
             name.textProperty().bind(task.shortNameProperty());
-            borderPane.setLeft(name);
 
             Text description = new Text();
             description.textProperty().bind(task.descriptionProperty());
-//            description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
-            borderPane.setCenter(description);
+            //description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
+            //borderPane.setCenter(description);
+
+             final ComboBox statusComboBox = new ComboBox();
+            statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
+            statusComboBox.getSelectionModel().select(task.getStatus());
+
+            //BorderPane.setAlignment(description, Pos.CENTER_LEFT);
+
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
-            borderPane.setRight(estimate);
 
-//            BorderPane.setAlignment(name, Pos.CENTER_LEFT);
+            gridPane.add(name,0, 0);
+            gridPane.add(statusComboBox, 1, 0);
+            gridPane.add(estimate, 2, 0);
+            gridPane.add(description, 0, 1);
 
-            setGraphic(borderPane);
+            ColumnConstraints column1 = new ColumnConstraints();
+            column1.setPercentWidth(40);
+            ColumnConstraints column2 = new ColumnConstraints();
+            column2.setPercentWidth(30);
+            ColumnConstraints column3 = new ColumnConstraints();
+            column3.setPercentWidth(30);
+            gridPane.getColumnConstraints().addAll(column1, column2, column3);
+
+            setGraphic(gridPane);
         } else {
             // clear
             setGraphic(null);
@@ -179,6 +191,7 @@ public class TaskListCell extends ListCell<Task> {
             DragContainer container = new DragContainer();
             container.addData("name", task.getShortName());
             container.addData("description", task.getDescription());
+            container.addData("status",task.getStatus());
             container.addData("estimate", task.getEstimate());
             container.addData("listSize", listView.getItems().size());
             container.addData("type", "TASK");

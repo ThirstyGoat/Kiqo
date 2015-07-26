@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.viewModel.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import com.thirstygoat.kiqo.viewModel.TaskFormViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
