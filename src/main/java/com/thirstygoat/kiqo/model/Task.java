@@ -16,7 +16,7 @@ public class Task extends Item {
     public Task() {
         shortName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
-        estimate = new SimpleFloatProperty((float)0.0);
+        estimate = new SimpleFloatProperty(0.0f);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
 
@@ -84,12 +84,19 @@ public class Task extends Item {
 
         Task task = (Task) o;
 
-        return shortName.get().equals(task.shortName.get());
+        if (!shortName.equals(task.shortName)) return false;
+        if (description != null ? !description.equals(task.description) : task.description != null) return false;
+        if (!estimate.equals(task.estimate)) return false;
+        return !(status != null ? !status.equals(task.status) : task.status != null);
 
     }
 
     @Override
     public int hashCode() {
-        return shortName.hashCode();
+        int result = shortName.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + estimate.hashCode();
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        return result;
     }
 }

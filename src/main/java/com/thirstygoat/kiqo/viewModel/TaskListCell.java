@@ -178,11 +178,10 @@ public class TaskListCell extends ListCell<Task> {
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
             container.addData("name", task.getShortName());
-
-            container.addData("type", "TASK");
             container.addData("description", task.getDescription());
             container.addData("estimate", task.getEstimate());
             container.addData("listSize", listView.getItems().size());
+            container.addData("type", "TASK");
             content.put(DragContainer.DATA_FORMAT, container);
 
             if (getIndex() == listView.getSelectionModel().getSelectedIndex()) {
