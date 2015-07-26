@@ -8,6 +8,8 @@ import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -45,6 +47,12 @@ public class SearchViewModel implements ViewModel {
             }
         }, precondition, false); // true means a new thread will be created for the action.
 
+        queryProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().length() == 0) {
+                results.clear();
+            }
+        });
+
     }
 
     public String getQuery() {
@@ -63,6 +71,11 @@ public class SearchViewModel implements ViewModel {
         try {
             Pattern.compile(query.get());
         } catch (PatternSyntaxException ignored) {
+            return;
+        }
+
+        // Empty search not allowed
+        if (query.get().trim().length() == 0) {
             return;
         }
 

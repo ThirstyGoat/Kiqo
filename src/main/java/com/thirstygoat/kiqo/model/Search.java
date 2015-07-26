@@ -28,7 +28,7 @@ public class Search {
             for (String string : searchable.getSearchableStrings()) {
 
                 // Perform comparison
-                if (string.matches(query)) {
+                if (string.toLowerCase().matches(".*" + query.toLowerCase().trim() + ".*")) {
                     results.add(new SearchResult(searchable));
                 }
             }
