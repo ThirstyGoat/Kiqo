@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Story;
 
 /**
@@ -23,6 +24,10 @@ public class DeleteStoryCommand extends Command<Story> {
             index = story.getProject().getUnallocatedStories().indexOf(story);
             story.getProject().observableUnallocatedStories().remove(story);
         }
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(story);
+
         return story;
     }
 
@@ -34,6 +39,9 @@ public class DeleteStoryCommand extends Command<Story> {
         } else {
             story.getProject().observableUnallocatedStories().add(index, story);
         }
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().removeSearchable(story);
     }
 
     @Override

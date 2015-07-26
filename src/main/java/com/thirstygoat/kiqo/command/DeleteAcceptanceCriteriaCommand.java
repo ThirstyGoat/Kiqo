@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Story;
 
 /**
@@ -27,6 +28,9 @@ public class DeleteAcceptanceCriteriaCommand extends Command<AcceptanceCriteria>
     public AcceptanceCriteria execute() {
         storyIndex = story.getAcceptanceCriteria().indexOf(acceptanceCriteria);
         story.getAcceptanceCriteria().remove(acceptanceCriteria);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(acceptanceCriteria);
         return acceptanceCriteria;
     }
 
@@ -34,6 +38,9 @@ public class DeleteAcceptanceCriteriaCommand extends Command<AcceptanceCriteria>
     public void undo() {
         // Add the acceptanceCriteria back to wherever it was
         story.getAcceptanceCriteria().add(storyIndex, acceptanceCriteria);
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(acceptanceCriteria);
     }
 
     @Override

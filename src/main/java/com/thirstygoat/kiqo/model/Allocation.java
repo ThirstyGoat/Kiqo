@@ -8,7 +8,7 @@ import java.time.LocalDate;
 /**
  * Created by samschofield on 21/04/15.
  */
-public class Allocation {
+public class Allocation implements Searchable {
     private final Team team;
     private final Project project;
 
@@ -29,6 +29,7 @@ public class Allocation {
 
         this.startDate.set(startDate);
         setEndDate(endDate);
+//        SearchableItems.getInstance().addSearchable(this);
     }
 
     /**
@@ -162,5 +163,10 @@ public class Allocation {
     public String toString() {
         return "Allocation{team=" + team.getShortName() + ", project=" + project.getShortName() + ", startDate=" + startDate.get()
                 + ", endDate=" + endDate.get() + "}";
+    }
+
+    @Override
+    public String[] getSearchableStrings() {
+        return new String[] {team.getShortName(), project.getShortName()};
     }
 }

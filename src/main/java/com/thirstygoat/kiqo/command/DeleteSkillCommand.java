@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Skill;
 
 import java.util.ArrayList;
@@ -64,6 +65,10 @@ public class DeleteSkillCommand extends Command<Skill> {
 
         organisationIndex = organisation.getSkills().indexOf(skill);
         organisation.getSkills().remove(skill);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(skill);
+
         return skill;
     }
 
@@ -75,6 +80,9 @@ public class DeleteSkillCommand extends Command<Skill> {
         for (Map.Entry<Integer, Person> entry : peopleWithSkill.entrySet()) {
             entry.getValue().observableSkills().add(entry.getKey(), skill);
         }
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(skill);
     }
 
     @Override

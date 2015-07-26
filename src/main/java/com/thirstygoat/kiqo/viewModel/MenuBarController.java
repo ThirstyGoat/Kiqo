@@ -11,8 +11,10 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class MenuBarController implements Initializable {
@@ -34,6 +36,8 @@ public class MenuBarController implements Initializable {
     private MenuItem newStoryMenuItem;
     @FXML
     private MenuItem revertMenuItem;
+    @FXML
+    private MenuItem searchMenuItem;
     @FXML
     private MenuItem generateStatusReportMenuItem;
     @FXML
@@ -116,6 +120,7 @@ public class MenuBarController implements Initializable {
         undoMenuItem.setOnAction(event -> mainController.undo());
         redoMenuItem.setOnAction(event -> mainController.redo());
         revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
+        searchMenuItem.setOnAction(event -> mainController.search());
 
         generateStatusReportMenuItem.setOnAction(event -> mainController.statusReport());
         openMenuItem.setOnAction(event -> mainController.openOrganisation(null));
@@ -159,6 +164,26 @@ public class MenuBarController implements Initializable {
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+        final long[] timestamp = {0};
+        searchMenuItem.setAccelerator(new KeyCombination() {
+            @Override
+            public boolean match(KeyEvent event) {
+                if (event.getCode() == KeyCode.SHIFT) {
+                    long diff = System.currentTimeMillis()/1000L - timestamp[0];
+                    if (diff < 1) {
+                        timestamp[0] = 0;
+                        return true;
+                    }
+                    timestamp[0] = System.currentTimeMillis()/1000L;
+                }
+                return false;
+            }
+
+            @Override
+            public String getDisplayText() {
+                return "Double Shift";
+            }
+        });
 
         // Undo/redo
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));

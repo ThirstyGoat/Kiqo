@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.SearchableItems;
 
 
 /**
@@ -19,12 +20,19 @@ public class DeleteReleaseCommand extends Command<Release> {
     public Release execute() {
         index = release.getProject().getReleases().indexOf(release);
         release.getProject().observableReleases().remove(release);
+
+        // Remove from SearchableItems
+        SearchableItems.getInstance().removeSearchable(release);
+
         return release;
     }
 
     @Override
     public void undo() {
         release.getProject().observableReleases().add(index, release);
+
+        // Add back to SearchableItems
+        SearchableItems.getInstance().addSearchable(release);
     }
 
 

@@ -18,23 +18,30 @@ import com.thirstygoat.kiqo.viewModel.formControllers.AcceptanceCriteriaFormCont
 import com.thirstygoat.kiqo.viewModel.formControllers.AllocationFormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.FormController;
 import com.thirstygoat.kiqo.viewModel.formControllers.ReportFormController;
-
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
-
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -84,22 +91,6 @@ public class MainController implements Initializable {
         return undoManager.changesSavedProperty();
     }
 
-    //TODO remove this
-//    protected void revert() {
-////        undoManager.revert();
-//        File tempSaveLocation = selectedOrganisationProperty.get().getSaveLocation();
-//        // If there is no save location then it has never been saved before so we can just set it to a new Org
-//        if (tempSaveLocation != null) {
-//            selectedOrganisationProperty.set(PersistenceManager.revert());
-//            selectedOrganisationProperty.get().setSaveLocation(tempSaveLocation);
-//        } else {
-//            selectedOrganisationProperty.set(new Organisation());
-//        }
-//        // Empty the undo/redo stack(s)
-//        undoManager.empty();
-//        undoManager.changesSavedProperty().setValue(true);
-//    }
-
     /**
      * Sets the stage title and updates accordingly depending on the organisation
      * selected, and whether or not changes have been saved.
@@ -130,6 +121,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a project
+     *
      * @param project Project to be deleted
      */
     private void deleteProject(Project project) {
@@ -146,11 +138,12 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a story
+     *
      * @param story Story to be deleted
      */
     private void deleteStory(Story story) {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
-        final String[] buttons = { "Delete Story", "Cancel" };
+        final String[] buttons = {"Delete Story", "Cancel"};
         final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
                 "Are you sure you want to delete the story " + story.getShortName() + "?", buttons);
 
@@ -161,6 +154,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a skill (Note that the PO & SM skills can not be deleted)
+     *
      * @param skill Skill to be deleted
      */
     private void deleteSkill(Skill skill) {
@@ -170,11 +164,11 @@ public class MainController implements Initializable {
         } else {
             String deleteMessage = "There are no people with this skill.";
             final DeleteSkillCommand command = new DeleteSkillCommand(skill, selectedOrganisationProperty.get());
-                if (command.getPeopleWithSkill().size() > 0) {
+            if (command.getPeopleWithSkill().size() > 0) {
                 deleteMessage = "Deleting the skill will also remove it from the following people:\n";
                 deleteMessage += Utilities.concatenateItemsList((command.getPeopleWithSkill()), 5);
             }
-            final String[] buttons = { "Delete Skill", "Cancel" };
+            final String[] buttons = {"Delete Skill", "Cancel"};
             final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Skill",
                     "Are you sure you want to delete the skill " + skill.getShortName() + "?", deleteMessage, buttons);
 
@@ -186,6 +180,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a team
+     *
      * @param team Team to be deleted
      */
     private void deleteTeam(Team team) {
@@ -215,7 +210,7 @@ public class MainController implements Initializable {
             node.getChildren().add(new Label(deleteMessage));
         }
 
-        final String[] buttons = { "Delete Team", "Cancel" };
+        final String[] buttons = {"Delete Team", "Cancel"};
         final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Team", "Are you sure?", node, buttons);
 
         final boolean deletePeople = checkbox.selectedProperty().getValue();
@@ -233,6 +228,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a person
+     *
      * @param person Person to be deleted
      */
     private void deletePerson(Person person) {
@@ -283,10 +279,11 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a release
+     *
      * @param release Release to be deleted
      */
     public void deleteRelease(Release release) {
-       final VBox node = new VBox();
+        final VBox node = new VBox();
         node.setSpacing(10);
 
         final String deleteMessage = "Are you sure you want to remove the release: "
@@ -304,6 +301,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompts to delete a backlog
+     *
      * @param backlog Backlog to be deleted
      */
     public void deleteBacklog(Backlog backlog) {
@@ -344,7 +342,7 @@ public class MainController implements Initializable {
                 // move all stories in backlog to stoies for project
                 for (final Story story : backlog.getStories()) {
                     final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
-                    backlog.getProject().observableUnallocatedStories());
+                            backlog.getProject().observableUnallocatedStories());
                     changes.add(command);
                 }
             }
@@ -395,7 +393,7 @@ public class MainController implements Initializable {
 
     /**
      * Exits the application after prompting to save unsaved changes.
-     *
+     * <p/>
      * We could just call primaryStage.close(), but that is a force close, and
      * then we can't prompt for saving changes
      */
@@ -405,7 +403,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedOrganisationProperty.set(new Organisation());
+        selectedOrganisationProperty.set(new Organisation(true));
 
         saveStateChanges();
         menuBarController.setListenersOnUndoManager(undoManager);
@@ -417,6 +415,26 @@ public class MainController implements Initializable {
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             undoManager.empty();
         });
+    }
+
+    /**
+     * Manually adds event handlers to open Search (using Double Shift) for Mac users
+     */
+    private void setSearchShortcut() {
+        // Mac only
+        if (com.sun.javafx.PlatformUtil.isMac()) {
+            final long[] timestamp = {0};
+            primaryStage.getScene().setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.SHIFT) {
+                    long diff = System.currentTimeMillis() / 1000L - timestamp[0];
+                    if (diff < 1) {
+                        timestamp[0] = 0;
+                        search();
+                    }
+                    timestamp[0] = System.currentTimeMillis() / 1000L;
+                }
+            });
+        }
     }
 
     public ObjectProperty<Organisation> selectedOrganisationProperty() {
@@ -486,7 +504,7 @@ public class MainController implements Initializable {
     }
 
     public void allocateTeams() {
-        if (selectedOrganisationProperty.get() != null ) {
+        if (selectedOrganisationProperty.get() != null) {
             allocationDialog(null);
         }
     }
@@ -525,7 +543,7 @@ public class MainController implements Initializable {
         File filePath;
 
         if (selectedOrganisationProperty.get() != null) {
-            if(!promptForUnsavedChanges()) {
+            if (!promptForUnsavedChanges()) {
                 return;
             }
         }
@@ -543,6 +561,7 @@ public class MainController implements Initializable {
         }
         Organisation organisation;
         try {
+            SearchableItems.clear();
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)
@@ -558,7 +577,7 @@ public class MainController implements Initializable {
             GoatDialog.showAlertDialog(primaryStage, "Error Loading Project", "No can do.", "You are probably trying to load a pre-release organisation.");
         }
 
-        if(PersistenceManager.getIsOldJSON()) {
+        if (PersistenceManager.getIsOldJSON()) {
             GoatDialog.showAlertDialog(primaryStage, "Warning", "An old JSON file has been loaded.", "You will need to allocate teams to your project [Project > Allocate Teams].");
             PersistenceManager.resetIsOldJSON();
         }
@@ -592,6 +611,7 @@ public class MainController implements Initializable {
 
     /**
      * Saves the organisation to its save location (assumed not to be null).
+     *
      * @param organisation Organisation to be saved
      */
     private void saveToDisk(final Organisation organisation) {
@@ -733,8 +753,9 @@ public class MainController implements Initializable {
         return file;
     }
 
-     /**
+    /**
      * Prompt the user if they want to save unsaved changes
+     *
      * @return if the user clicked cancel or not
      */
     public boolean promptBeforeRevert() {
@@ -754,6 +775,7 @@ public class MainController implements Initializable {
 
     /**
      * Prompt the user if they want to save unsaved changes
+     *
      * @return if the user clicked cancel or not
      */
     private boolean promptForUnsavedChanges() {
@@ -796,6 +818,7 @@ public class MainController implements Initializable {
 
     /**
      * Convenience method for {dialog(t, type)}
+     *
      * @param t must not be null
      */
     private <T> void dialog(T t) {
@@ -803,8 +826,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     *
-     * @param t may be null
+     * @param t    may be null
      * @param type type of t. This is displayed in the dialog title and also used to retrieve the fxml file, eg. "Project" => "forms/project.fxml".
      */
     private <T> void dialog(T t, String type) {
@@ -952,6 +974,7 @@ public class MainController implements Initializable {
         sideBarController.setMainController(this);
 
         setStageTitleProperty();
+        setSearchShortcut();
     }
 
     public MainDetailsPaneController getDetailsPaneController() {
@@ -960,14 +983,43 @@ public class MainController implements Initializable {
 
     public void newOrganisation() {
         if (selectedOrganisationProperty.get() != null) {
-            if(!promptForUnsavedChanges()) {
+            if (!promptForUnsavedChanges()) {
                 return;
             }
         }
-        selectedOrganisationProperty.set(new Organisation());
+        SearchableItems.clear();
+        selectedOrganisationProperty.set(new Organisation(true));
     }
 
     public SideBarController getSideBarController() {
         return sideBarController;
     }
+
+    public void search() {
+        Platform.runLater(() -> {
+            final Stage stage = new Stage();
+            stage.setTitle("Report Generator");
+            stage.initOwner(primaryStage);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+            ViewTuple<SearchView, SearchViewModel> viewTuple = FluentViewLoader.fxmlView(SearchView.class).load();
+            viewTuple.getViewModel().setMainController(this);
+            viewTuple.getViewModel().setStage(stage);
+            Parent root = viewTuple.getView();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    stage.close();
+                }
+            });
+            root.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    stage.close();
+                }
+            });
+        });
+    }
 }
+
