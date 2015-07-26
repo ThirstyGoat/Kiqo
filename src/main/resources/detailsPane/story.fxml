@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
+<?import javafx.scene.text.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.detailControllers.StoryDetailsPaneController">
   <children>
     <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" layoutY="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
       <content>
@@ -89,7 +84,10 @@
                      <content>
                         <GridPane mouseTransparent="false" vgap="10.0">
                            <children>
-                              <Label text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP" />
+                              <Label text="Acceptance Criteria:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font></Label>
                               <ListView fx:id="acListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                               <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
@@ -97,6 +95,9 @@
                                     <Button fx:id="removeACButton" text="-" />
                                     <Button fx:id="editACButton" text="Edit" />
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="25.0" />
+                                 </GridPane.margin>
                               </HBox>
                               <GridPane prefHeight="10.0" prefWidth="727.0" GridPane.columnSpan="2" GridPane.rowIndex="3" HBox.hgrow="SOMETIMES">
                                  <columnConstraints>
@@ -104,19 +105,26 @@
                                     <ColumnConstraints hgrow="NEVER" maxWidth="655.0" minWidth="10.0" prefWidth="153.0" />
                                  </columnConstraints>
                                  <rowConstraints>
-                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label font="$x1" text="Tasks" GridPane.valignment="TOP" />
+                                    <Label text="Tasks" GridPane.valignment="TOP">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></Label>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.vgrow="NEVER">
                                        <children>
                                           <Label contentDisplay="RIGHT" font="$x1" prefHeight="15.0" prefWidth="79.0" text="Total Hours: " />
-                                          <Label fx:id="totalHoursLabel" contentDisplay="RIGHT" font="$x1" />
+                                          <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
+                                             <font>
+                                                <Font size="12.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </HBox>
                                  </children>
                               </GridPane>
-                              <ListView fx:id="taskListView" prefHeight="200" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <ListView fx:id="taskListView" prefHeight="200" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                               <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <children>
                                     <Button fx:id="addTaskButton" text="+" />

@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
@@ -10,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -17,16 +19,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class TaskListCell extends ListCell<Task> {
+    private final StringProperty statusString = new SimpleStringProperty("");
     private ListView<Task> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
-    private final StringProperty statusString = new SimpleStringProperty("");
 
     public TaskListCell(ListView<Task> listView) {
         this.listView = listView;
@@ -61,45 +61,52 @@ public class TaskListCell extends ListCell<Task> {
             initialiseDragAndDrop(task);
             
             final GridPane gridPane = new GridPane();
-//            BorderPane bp = new BorderPane();
             Text name = new Text();
             name.textProperty().bind(task.shortNameProperty());
+            name.setStyle("-fx-font: 13px \"System\";");
+            name.setWrappingWidth(listView.getWidth() * 0.65);
 
             Text description = new Text();
             description.textProperty().bind(task.descriptionProperty());
-            //description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
-            //borderPane.setCenter(description);
+            description.setStyle("-fx-font: 9px \"System\";");
+            description.setWrappingWidth(listView.getWidth() * 0.65);
 
-            final ComboBox statusComboBox = new ComboBox();
-
-            statusComboBox.setOnAction(event -> {
-                task.statusProperty().set((Status) statusComboBox.getSelectionModel().getSelectedItem());
-             });
+            final ComboBox<Status> statusComboBox = new ComboBox();
+            statusComboBox.setStyle("-fx-font: 10px \"System\";");
+            statusComboBox.setMaxWidth(90);
 
             statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
-            statusComboBox.getSelectionModel().select(task.getStatus());
+            statusComboBox.setValue(task.getStatus());
 
-            //BorderPane.setAlignment(description, Pos.CENTER_LEFT);
+            statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != task.getStatus()) {
+                    Command<?> command = new EditCommand<>(task, "status", newValue);
+                    UndoManager.getUndoManager().doCommand(command);
+                }
+            });
+
+            task.statusProperty().addListener((observable, oldValue, newValue) -> {
+                statusComboBox.valueProperty().set(newValue);
+            });
 
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
 
-//            bp.setLeft(name);
-//            bp.setCenter(description);
-//            bp.setRight(estimate);
-
             gridPane.add(name,0, 0);
+            gridPane.add(description, 0, 1);
             gridPane.add(statusComboBox, 1, 0);
             gridPane.add(estimate, 2, 0);
-            gridPane.add(description, 0, 1);
+            gridPane.setRowSpan(statusComboBox, 2);
+            gridPane.setRowSpan(estimate, 2);
 
             ColumnConstraints column1 = new ColumnConstraints();
-            column1.setPercentWidth(40);
             ColumnConstraints column2 = new ColumnConstraints();
-            column2.setPercentWidth(30);
             ColumnConstraints column3 = new ColumnConstraints();
-            column3.setPercentWidth(30);
+            column1.setPercentWidth(70);
+            column2.setPercentWidth(25);
+            column3.setPercentWidth(5);
+            column3.setHalignment(HPos.RIGHT);
             gridPane.getColumnConstraints().addAll(column1, column2, column3);
 
             setGraphic(gridPane);

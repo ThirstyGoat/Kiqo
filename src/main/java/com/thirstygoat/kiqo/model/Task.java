@@ -27,12 +27,20 @@ public class Task extends Item {
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
 
+    public static Callback<Task, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
+    }
+
     public ObjectProperty<Status> statusProperty() {
         return status;
     }
 
     public Status getStatus() {
         return status.get();
+    }
+
+    public void setStatus(Status status) {
+        this.status.set(status);
     }
 
     public FloatProperty estimateProperty() {
@@ -71,10 +79,6 @@ public class Task extends Item {
     @Override
     public StringProperty shortNameProperty() {
         return shortName;
-    }
-
-    public static Callback<Task, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
     }
 
     @Override
