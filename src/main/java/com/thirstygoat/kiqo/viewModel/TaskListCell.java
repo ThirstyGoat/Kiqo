@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.viewModel;
 
 
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Status;
@@ -64,7 +65,12 @@ public class TaskListCell extends ListCell<Task> {
             //description.wrappingWidthProperty().bind(listView.widthProperty().subtract(130));
             //borderPane.setCenter(description);
 
-             final ComboBox statusComboBox = new ComboBox();
+            final ComboBox statusComboBox = new ComboBox();
+
+            statusComboBox.setOnAction(event -> {
+                task.statusProperty().set((Status) statusComboBox.getSelectionModel().getSelectedItem());
+             });
+
             statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
             statusComboBox.getSelectionModel().select(task.getStatus());
 
