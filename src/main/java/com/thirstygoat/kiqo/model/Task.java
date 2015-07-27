@@ -104,4 +104,8 @@ public class Task extends Item {
         return result;
     }
 
+    @Override
+    public String[] getSearchableStrings() {
+        return new String[] {};
+    }
 }

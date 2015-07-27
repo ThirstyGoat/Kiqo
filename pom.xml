@@ -4,7 +4,7 @@
   <groupId>com.thirstygoat.kiqo</groupId>
   <artifactId>Kiqo</artifactId>
   <packaging>jar</packaging>
-  <version>3.0</version>
+  <version>4.0</version>
   <name>Kiqo</name>
   <url>http://csse-s302g4.canterbury.ac.nz</url>
   <properties>

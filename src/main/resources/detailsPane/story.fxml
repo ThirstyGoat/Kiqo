@@ -121,7 +121,7 @@
                                                     </font></Label>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.vgrow="NEVER">
                                                     <children>
-                                                        <Label contentDisplay="RIGHT" font="$x1" prefHeight="15.0" prefWidth="79.0" text="Total Hours: " />
+                                                        <Label contentDisplay="RIGHT" font="$x1" prefHeight="30.0" text="Total Hours: " />
                                                         <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
                                                             <font>
                                                                 <Font size="12.0" />

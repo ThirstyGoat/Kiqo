@@ -148,11 +148,12 @@ either \menu{File > Save} or \keys{ctrl + S}.
 \subsection{People}
 A person can be created, saved and edited in the same way as a project.
 \subsection{Skills}
-New skills can be created, edited and deleted, however there are two important skills which cannot be modified: 
-\begin{enumerate}
-  \item The Product Owner (PO) skill - The product owner skill is required
-  \item The Scrum Master (SM) skill -
+There are two important skills which cannot be modified: 
+\begin{itemize}
+  \item The Product Owner (PO) skill
+  \item The Scrum Master (SM) skill
 \end{itemize}
+New skills can be created, edited and deleted.
 \begin{itemize}
   \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the
   first skill is shown in the details pane, unless another skill in the list is selected.
@@ -175,34 +176,100 @@ New skills can be created, edited and deleted, however there are two important s
   \item In edit or create team, use the person selection pane and click the > arrow to add one person to a team
   or >> to add all available people.
   \item In the person selection pane, click the < arrow to remove one person or << to remove all assigned people.
-  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Dev Team members. Only team members who
-   posses the relevant skill may be nominated.
+  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Development Team members. Only team members who
+   possess the relevant skill may be nominated.
 \end{itemize}
 
 \subsection{Project Allocation}
 \begin{itemize}
-  \item Teams can be allocated to projects, with associated dates.
-    A team can only be allocated to one project at a time, so allocations may not overlap.
+  \item Teams can be allocated to projects. A team can only be allocated to one project at a time.
   \item In the project tab a team can be allocated to a project by clicking the 'Allocate Teams'.
   \item Select a team from the from the dropdown list in create Allocation dialog and choose a start and an end date.
   \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
   \item Delete an allocation by right clicking on its row and selecting 'Delete Allocation'.
 \end{itemize}
-\section{Stories \& Backlogs}
+\section{Backlogs \& Stories}
 
-\subsection{Story}
-\begin{itemize}
-  \item Stories can be added to a project and assigned a priority.
-  \item The priority must be a integer between 1000 and -1000, inclusive.
-\end{itemize}
-
-\subsection{Backlog}
+\subsection{Backlogs}
 
 \begin{itemize}
 \item Backlogs can be created when there is an existing project and at least one person with the product owner skill.
 \item The owner of a backlog must have the product owner skill. 
 \item Stories can be added to a backlog.
 \end{itemize}
+
+\subsubsection{Highlight Story State}
+A backlog can show the current states of the stories it contains by toggling the check button located bellow the story table inside the backlog details pane.
+If highlighting has been enabled a colour chip will be displayed on each row of the story table.
+\begin{itemize}
+\item A red chip indiciates that the story has a lower priority than a story that depends on it.
+\item A orange chip indicates that the story is ready to be estimated.
+\item A green chip indicates that the story is ready.
+\end{itemize}
+
+
+\subsection{Stories}
+
+\begin{itemize}
+  \item Stories can be added to a project and assigned a priority.
+  \item The priority must be an integer between 1000 and -1000, inclusive.
+\end{itemize}
+
+\subsubsection{Estimation}
+Stories can be estimated according to any one of these scales:
+\begin{itemize}
+\item Pseudo-Fibonnaci \textit{Default}
+\item T-Shirt Sizes
+\item Dog Breeds
+\end{itemize}
+The estimation scale is the same for all stories in a backlog.
+share its backlog. Stories within a backlog that use a different estimation
+scale will have their scale changed to that of the backlog, and the estimation unset.
+
+\subsubsection{Acceptance Criteria}
+Acceptance criteria can be added to a story and be assigned a state of readiness to help the user determine whether the
+story is ready to begin. The readiness can be one of three states (ready/not ready/undetermined).
+\begin{itemize}
+  \item To create an acceptance criteria, inside the story details pane, press the \menu{+} button under the Acceptance Critera table
+  view.
+  \item To change the readiness state of the acceptance critera, a toggle button on the right hand side of the table view
+  can be pressed repeatedly to alter the state.
+  \item To rearrange the list of acceptance critera, click (and hold) within an acceptance critera cell (located within the table view)
+  and drag the cell up or down inside the table view. Once the click has been released the acceptance critera will be
+  dropped at that location and the order of the acceptance criteria will be updated.
+\end{itemize}
+
+\subsubsection{Tasks}
+Tasks can be added to a story and their status can be changed via the dropdown list.
+The status of a task can be set as one of the following (Not started, In Progress, Pending, Blocked, Ready, Done or Deferred).
+\begin{itemize}
+   \item To create a task, inside the story details pane, press the \menu{+} button under the Tasks table view.
+   \item Each task has a name, status, estimate and a description. The Total Hours for all the tasks in a story is also displayed.
+   \item To rearrange the list of tasks, click (and hold) within a task cell (located within the table view)
+   and drag the cell up or down inside the table view. Once the click has been released the task will be dropped at
+   that location and the order of the tasks will be updated.
+\end{itemize}
+
+\subsubsection{Readiness}
+A story can be marked as ready when the following criteria are met:
+\begin{itemize}
+\item the story belongs to a Backlog
+\item the story is estimated
+\item the story has at least one Acceptance Criterion
+\end{itemize}
+
+\subsubsection{Dependencies}
+Some stories may depend on the completion of others. This information can be
+added in the story form. 
+Not all stories are available to be added as dependencies. Eligible stories must
+meet the following criteria:
+\begin{itemize}
+\item the story is in the same backlog
+\item adding the story as a dependency will not create a cyclic dependency
+(cyclic dependencies are chains of dependencies that end with the story where
+they begin)
+\end{itemize}
+
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 3
@@ -225,11 +292,28 @@ The report generator gives the user the ability to generate reports in yaml form
 \end{figure}
 
 \section{Undo, Redo, Revert}
-You can undo or redo any action using \keys{\ctrl + Z} and \keys{\ctrl + \shift + Z}. Whenever a new action is performed
-you will no longer be able to redo any previously undo actions.
+\paragraph{}
+Selecting \menu{Edit > Undo} will undo the last operation made to the organisation. It is important to note that any
+new changes made after \textit{undoing} changes, will empty the
+\textit{redo-able} operations. Be sure to save your organisation often to avoid
+unrecoverable changes.
 
-\noindent You can revert back to the last save point using \menu{File > Revert}. Note that this action cannot be undone.
+\paragraph{}
+\menu{Edit > Redo} will redo the last operation that has been \textit{undone}.
 
+\paragraph{}
+Selecting \menu{File > Revert} will prompt the user that any unsaved changes will be lost, before reverting
+to the previously saved state. If the organisation has not previously been saved, then it will be reverted
+to a blank organisation. Note that the \textit{undo-able} operations will be preserved for the particular save state.
+
+\section{Search}
+Search gives the user the ability to find items that match a search query.
+
+\begin{itemize}
+\item Selecting \menu{File > Search} will display the search toolbar.
+\item Whenever a character is entered into the search box the results that match will be displayed bellow the text area.
+\item If the seach result inside the list is clicked it will take the user to the location of that object.
+\end{itemize}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 4
