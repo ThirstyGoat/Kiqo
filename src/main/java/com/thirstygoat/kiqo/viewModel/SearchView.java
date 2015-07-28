@@ -33,10 +33,36 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         viewModel.queryProperty().bind(searchTextField.textProperty());
         searchResultsListView.setItems(viewModel.getResults());
+
+        searchTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
+                searchResultsListView.requestFocus();
+                searchResultsListView.fireEvent(event);
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                event.consume();
+                viewModel.closeSearch();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                event.consume();
+                viewModel.buttonAction(searchResultsListView.getSelectionModel().getSelectedItem());
+            }
+        });
+
         searchTextField.setOnKeyReleased(event -> {
-            if (event.getCode() != KeyCode.ENTER) {
-                viewModel.getSearchCommand().execute();
-                searchResultsListView.getSelectionModel().selectFirst();
+            viewModel.getSearchCommand().execute();
+            searchResultsListView.getSelectionModel().selectFirst();
+        });
+
+        searchResultsListView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                event.consume();
+                viewModel.closeSearch();
+            } else if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
+                event.consume();
+                viewModel.buttonAction(searchResultsListView.getSelectionModel().getSelectedItem());
+            } else if (!(event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN)) {
+                searchTextField.requestFocus();
+                searchTextField.positionCaret(searchTextField.getLength());
+                searchTextField.fireEvent(event);
             }
         });
 

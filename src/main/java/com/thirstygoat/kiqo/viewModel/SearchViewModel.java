@@ -115,15 +115,18 @@ public class SearchViewModel implements ViewModel {
         button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(event -> {
-            mainController.focusedItemProperty.set(searchResult.getItem());
-            stage.close();
+            buttonAction(searchResult);
         });
 
         button.getStyleClass().add("searchResultButton");
         button.setGraphic(hBox);
         button.setPadding(new Insets(3, 15, 3, 15));
-        button.setDefaultButton(true);
         return button;
+    }
+
+    public void buttonAction(SearchResult searchResult) {
+        mainController.focusedItemProperty.set(searchResult.getItem());
+        stage.close();
     }
 
     public Command getSearchCommand() {
@@ -136,5 +139,9 @@ public class SearchViewModel implements ViewModel {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void closeSearch() {
+        stage.close();
     }
 }
