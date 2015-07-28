@@ -27,7 +27,6 @@ import java.util.ResourceBundle;
  */
 public class TaskFormController extends FormController<Task> {
     private Stage stage;
-    private boolean valid;
     private Command<?> command;
     private Organisation organisation;
     private TaskFormViewModel viewModel;
@@ -63,9 +62,8 @@ public class TaskFormController extends FormController<Task> {
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            if (validate()) {
-                stage.close();
-            }
+            setCommand();
+            stage.close();
         });
         cancelButton.setOnAction(event -> cancel());
 
@@ -87,7 +85,6 @@ public class TaskFormController extends FormController<Task> {
     }
 
     private void cancel() {
-        valid = false;
         stage.close();
     }
 
@@ -97,7 +94,7 @@ public class TaskFormController extends FormController<Task> {
 
     @Override
     public boolean isValid() {
-        return valid;
+        return viewModel.isValid();
     }
 
     @Override
@@ -135,7 +132,6 @@ public class TaskFormController extends FormController<Task> {
 
     public void setStory(Story story) {
         viewModel.setStory(story);
-
         setValidationSupport();
         setButtonHandlers();
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
@@ -148,15 +144,5 @@ public class TaskFormController extends FormController<Task> {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-    }
-
-    private boolean validate() {
-        if (validationSupport.isInvalid()) {
-            return false;
-        } else {
-            valid = true;
-        }
-        setCommand();
-        return true;
     }
 }

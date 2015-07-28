@@ -9,6 +9,8 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.When;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -45,20 +47,13 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         Platform.runLater(acTextArea::requestFocus);
-        okButton.setDisable(true);
-        acTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            valid = newValue.trim().length() > 0;
-            okButton.setDisable(!valid);
-        });
+        okButton.disableProperty().bind(Bindings.length(acTextArea.textProperty()).isEqualTo(0));
     }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-            valid = acTextArea.getText().trim().length() > 0;
-            if (valid) {
-                setCommand();
-                stage.close();
-            }
+            setCommand();
+            stage.close();
         });
         cancelButton.setOnAction(event -> cancel());
 
@@ -88,12 +83,15 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         if (acceptanceCriteria == null) {
             acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim());
             command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
+            valid = true;
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
             if (!acceptanceCriteria.getShortName().equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
+
+            valid = !changes.isEmpty();
             command = new CompoundCommand("Edit AC", changes);
         }
     }

@@ -162,15 +162,12 @@ public class StoryFormController extends FormController<Story> {
 
         storySelectionView.setPadding(new Insets(0, 0, 0, 0));
 
-        storySelectionView.setCellFactories(view -> {
-            final ListCell<Story> cell = new ListCell<Story>() {
-                @Override
-                public void updateItem(Story item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(item != null ? item.getShortName() : null);
-                }
-            };
-            return cell;
+        storySelectionView.setCellFactories(view -> new ListCell<Story>() {
+            @Override
+            public void updateItem(Story item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item != null ? item.getShortName() : null);
+            }
         });
     }
 

@@ -29,8 +29,8 @@ import java.util.ResourceBundle;
 public class TaskFormViewModel extends FormController<Task> {
     private Task task;
     private Organisation organisation;
-    private Command<?> command;
     private boolean valid = false;
+    private Command<?> command;
 
     private StringProperty nameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
@@ -67,9 +67,7 @@ public class TaskFormViewModel extends FormController<Task> {
                 ValidationMessage.error(""));
 
         estimateValidator = new FunctionBasedValidator<>(estimateProperty,
-                s -> {
-                    return s.matches("^([+-]?\\d*\\.?\\d*)$") && s.length() > 0;
-                },
+                s -> s.matches("^([+-]?\\d*\\.?\\d*)$") && s.length() > 0,
                 ValidationMessage.error("Estimate must be a number"));
 
         formValidator = new CompositeValidator();
@@ -149,6 +147,11 @@ public class TaskFormViewModel extends FormController<Task> {
     }
 
     @Override
+    public boolean isValid() {
+        return valid;
+    }
+
+    @Override
     public Command<?> getCommand() { return command; }
 
     public void setCommand() {
@@ -159,6 +162,7 @@ public class TaskFormViewModel extends FormController<Task> {
             }
             task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate);
             command = new CreateTaskCommand(task, this.story);
+            valid = true;
         } else {
             // edit command
             final ArrayList<Command<?>> changes = new ArrayList<>();
@@ -168,18 +172,16 @@ public class TaskFormViewModel extends FormController<Task> {
             if (!task.getDescription().equals(descriptionProperty.get())) {
                 changes.add(new EditCommand<>(task, "description", descriptionProperty.get()));
             }
-            if (!task.estimateProperty().equals(estimateProperty().get())) {
+            if (task.estimateProperty().get() != Float.parseFloat(estimateProperty().get())) {
                 changes.add(new EditCommand<>(task, "estimate", Float.parseFloat(estimateProperty.get())));
             }
             if (statusProperty().getValue() != task.getStatus()) {
                 changes.add(new EditCommand<>(task, "status", statusProperty.getValue()));
             }
             command = new CompoundCommand("Edit Task", changes);
+            valid = !changes.isEmpty();
         }
     }
-
-    @Override
-    public boolean isValid() { return valid; }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
