@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@searchViewStyle.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.viewModel.SearchView">
    <children>
@@ -19,7 +13,7 @@
                   <Font size="24.0" />
                </font>
             </TextField>
-            <ListView fx:id="searchResultsListView" focusTraversable="false" prefWidth="500.0" style="-fx-border-style: none;" />
+            <ListView fx:id="searchResultsListView" prefWidth="500.0" style="-fx-border-style: none;" styleClass="search-list-view"/>
          </children>
       </VBox>
    </children>
