@@ -20,7 +20,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
@@ -81,6 +80,7 @@ public class StoryFormController extends FormController<Story> {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
         longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        estimationScaleComboBox.disableProperty().bind(Bindings.isNotNull(viewModel.backlogProperty()));
         estimationScaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
