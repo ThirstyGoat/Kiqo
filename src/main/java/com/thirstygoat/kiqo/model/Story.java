@@ -188,7 +188,7 @@ public class Story extends Item {
         return acceptanceCriteria;
     }
 
-    public ObservableList<Task> getTask() {
+    public ObservableList<Task> getTasks() {
         return tasks;
     }
 
