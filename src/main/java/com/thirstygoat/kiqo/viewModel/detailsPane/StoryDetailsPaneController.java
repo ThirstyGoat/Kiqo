@@ -3,21 +3,17 @@ package com.thirstygoat.kiqo.viewModel.detailsPane;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
-import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.util.Utilities;
 import com.thirstygoat.kiqo.viewModel.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.viewModel.MainController;
 import com.thirstygoat.kiqo.viewModel.TaskListCell;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.When;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -105,6 +101,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             story.observableTasks().addListener((ListChangeListener<Task>) c -> updateTaskHours());
             setScale();
 
+
             if (isReadyListener != null) {
                 isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
                 story.isReadyProperty().removeListener(modelIsReadyListener);
@@ -134,7 +131,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
             totalHoursLabel.setText("0.0");
             storyEstimateSliderLabel.setText(null);
-            isReadyCheckBox.setSelected(false); // May not be needed
+            System.out.println("removing listener for null story");
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
@@ -157,16 +154,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         removeTaskButton.setOnAction(event -> deleteTask());
         editTaskButton.setOnAction(event -> mainController.editTask(taskListView.getSelectionModel().getSelectedItem()));
 
-        isReadyCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (story.getIsReady() != newValue) {
-                Command<?> command = new EditCommand<>(story, "isReady", newValue);
-                UndoManager.getUndoManager().doCommand(command);
-            }
-        });
-        isReadyCheckBox.setSelected(story.getIsReady());
-        story.isReadyProperty().addListener((observable, oldValue, newValue) -> {
-            isReadyCheckBox.setSelected(newValue);
-        });
 
         // Story must have at least one AC
         // Story must have non-null estimate
