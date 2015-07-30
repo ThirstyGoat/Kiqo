@@ -29,7 +29,6 @@ public class Sprint extends Item {
         project = new SimpleObjectProperty<>();
         startDate = new SimpleObjectProperty<>();
         endDate = new SimpleObjectProperty<>();
-        startDate = new SimpleObjectProperty<>();
         team = new SimpleObjectProperty<>();
         release = new SimpleObjectProperty<>();
         goal = new SimpleStringProperty();
