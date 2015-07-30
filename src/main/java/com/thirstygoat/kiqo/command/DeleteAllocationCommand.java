@@ -2,8 +2,8 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.search.SearchableItems;
 
 /**
  * Command to delete a person from a project.

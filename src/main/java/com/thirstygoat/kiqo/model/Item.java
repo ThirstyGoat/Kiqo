@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;

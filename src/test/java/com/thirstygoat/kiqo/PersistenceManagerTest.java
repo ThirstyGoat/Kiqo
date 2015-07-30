@@ -1,11 +1,8 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.persistence.PersistenceManager;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +13,7 @@ import org.junit.runners.MethodSorters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+
 
 // Methods are run in alphabetical order
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

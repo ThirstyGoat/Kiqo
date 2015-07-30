@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.search.SearchableItems;
 
 /**
  * Created by leroy on 15/05/15.

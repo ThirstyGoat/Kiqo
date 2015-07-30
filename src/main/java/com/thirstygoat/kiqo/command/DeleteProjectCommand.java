@@ -2,7 +2,7 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.SearchableItems;
+import com.thirstygoat.kiqo.search.SearchableItems;
 
 
 /**

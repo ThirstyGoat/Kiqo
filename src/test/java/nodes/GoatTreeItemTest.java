@@ -1,7 +1,7 @@
 package nodes;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatTreeItem;
 import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.nodes.GoatTreeItem;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -16,28 +16,6 @@ import org.junit.Test;
 import java.util.Comparator;
 
 public class GoatTreeItemTest {
-    private static class MockObject extends Item {
-        private final StringProperty shortNameProperty;
-        public MockObject(String label) {
-            shortNameProperty = new SimpleStringProperty(label);
-        }
-
-        @Override
-        public String getShortName() {
-            return shortNameProperty.get();
-        }
-
-        @Override
-        public StringProperty shortNameProperty() {
-            return shortNameProperty;
-        }
-
-        @Override
-        public String toString() {
-            return getShortName();
-        }
-    }
-
     private static final SelectionModel<TreeItem<Item>> selectionModel = new SelectionModel<TreeItem<Item>>() {
 
         @Override
@@ -106,12 +84,9 @@ public class GoatTreeItemTest {
 
         }
     };
-
-
     private static final Comparator<Item> comparator = (o1, o2) -> {
         return ((MockObject) o1).getShortName().compareToIgnoreCase(((MockObject) o2).getShortName());
     };
-
     // some tests assume this array is in sorted order
     private MockObject[] reservoir;
     private ObservableList<MockObject> observableList;
@@ -206,5 +181,27 @@ public class GoatTreeItemTest {
             items[i] = children.get(i).getValue();
         }
         return items;
+    }
+
+    private static class MockObject extends Item {
+        private final StringProperty shortNameProperty;
+        public MockObject(String label) {
+            shortNameProperty = new SimpleStringProperty(label);
+        }
+
+        @Override
+        public String getShortName() {
+            return shortNameProperty.get();
+        }
+
+        @Override
+        public StringProperty shortNameProperty() {
+            return shortNameProperty;
+        }
+
+        @Override
+        public String toString() {
+            return getShortName();
+        }
     }
 }
