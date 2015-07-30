@@ -25,10 +25,9 @@ public abstract class Item implements Serializable, Searchable {
         return p -> new Observable[] {p.shortNameProperty()};
     }
 
-    /**
-     * @return non-null unique identifier for this item
-     */
-    public abstract String getShortName();
+    public String getShortName() {
+        return shortNameProperty().get();
+    };
 
     public abstract StringProperty shortNameProperty();
 
