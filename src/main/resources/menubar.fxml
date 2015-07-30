@@ -1,61 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.MenuBarController">
-  <menus>
-    <Menu mnemonicParsing="false" text="File">
-      <items>
-        <Menu mnemonicParsing="false" text="New">
+<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.MenuBarController">
+  <children>
+    <MenuBar useSystemMenuBar="true">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Organisation" fx:id="newOrganisationMenuItem" />
+            <Menu mnemonicParsing="false" text="New">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Organisation" fx:id="newOrganisationMenuItem" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Release" fx:id="newReleaseMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Team" fx:id="newTeamMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Backlog" fx:id="newBacklogMenuItem" />
+                <MenuItem mnemonicParsing="false" text="Story" fx:id="newStoryMenuItem" />
+              </items>
+            </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Project" fx:id="newProjectMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Release" fx:id="newReleaseMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Team" fx:id="newTeamMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Person" fx:id="newPersonMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Skill" fx:id="newSkillMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Backlog" fx:id="newBacklogMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Story" fx:id="newStoryMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Save As" fx:id="saveAsMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Revert" fx:id="revertMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Search" fx:id="searchMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Generate Report" fx:id="generateStatusReportMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
           </items>
         </Menu>
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Open" fx:id="openMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Save As" fx:id="saveAsMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Revert" fx:id="revertMenuItem" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Search" fx:id="searchMenuItem" />
-
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Generate Report" fx:id="generateStatusReportMenuItem" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem" />
-      </items>
-    </Menu>
-    <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="View">
+          <items>
+            <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <RadioMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectsMenuItem">
+              <toggleGroup>
+                <ToggleGroup fx:id="selectedTab" />
+              </toggleGroup>
+            </RadioMenuItem>
+            <RadioMenuItem mnemonicParsing="false" text="Team" toggleGroup="$selectedTab" fx:id="listShowTeamsMenuItem" />
+            <RadioMenuItem mnemonicParsing="false" text="People" toggleGroup="$selectedTab" fx:id="listShowPeopleMenuItem" />
+            <RadioMenuItem mnemonicParsing="false" text="Skills" toggleGroup="$selectedTab" fx:id="listShowSkillsMenuItem" />
+              <SeparatorMenuItem mnemonicParsing="false" />
+              <CheckMenuItem fx:id="showToolbarMenuItem" text="ToolBar" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <ToolBar fx:id="mainToolbar" styleClass="main-toolbar">
       <items>
-        <MenuItem mnemonicParsing="false" text="Undo" fx:id="undoMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Redo" fx:id="redoMenuItem" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
-        <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
+          <Button fx:id="mainToolbarUndoMenuItem">
+              <graphic>
+                <FontAwesomeIcon glyphName="UNDO" />
+              </graphic>
+          </Button>
+          <Button fx:id="mainToolbarRedoMenuItem">
+              <graphic>
+                  <FontAwesomeIcon glyphName="REPEAT" />
+              </graphic>
+          </Button>
       </items>
-    </Menu>
-    <Menu mnemonicParsing="false" text="View">
-      <items>
-        <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <RadioMenuItem mnemonicParsing="false" selected="true" text="Project" fx:id="listShowProjectsMenuItem">
-          <toggleGroup>
-            <ToggleGroup fx:id="selectedTab" />
-          </toggleGroup>
-        </RadioMenuItem>
-        <RadioMenuItem mnemonicParsing="false" text="Team" toggleGroup="$selectedTab" fx:id="listShowTeamsMenuItem" />
-        <RadioMenuItem mnemonicParsing="false" text="People" toggleGroup="$selectedTab" fx:id="listShowPeopleMenuItem" />
-        <RadioMenuItem mnemonicParsing="false" text="Skills" toggleGroup="$selectedTab" fx:id="listShowSkillsMenuItem" />
-      </items>
-    </Menu>
-
-  </menus>
-
-</MenuBar>
+    </ToolBar>
+  </children>
+</VBox>

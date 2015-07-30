@@ -4,10 +4,7 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -68,6 +65,15 @@ public class MenuBarController implements Initializable {
     private ToggleGroup selectedTab;
     @FXML
     private MenuItem quitMenuItem;
+    @FXML
+    private ToolBar mainToolbar;
+    @FXML
+    private CheckMenuItem showToolbarMenuItem;
+    @FXML
+    private Button mainToolbarUndoMenuItem;
+    @FXML
+    private Button mainToolbarRedoMenuItem;
+
     private MainController mainController;
 
     @Override
@@ -100,6 +106,13 @@ public class MenuBarController implements Initializable {
                 selectedTab.selectToggle(listShowSkillsMenuItem);
             }
         });
+
+        // Bind showToolbarMenuItem to property in MainController
+        showToolbarMenuItem.selectedProperty().bindBidirectional(mainController.mainToolbarVisibleProperty());
+
+        // Bind visibility of toolbar to property in MainController
+        mainToolbar.visibleProperty().bind(mainController.mainToolbarVisibleProperty());
+        mainToolbar.managedProperty().bind(mainController.mainToolbarVisibleProperty());
     }
 
     public void setMainController(MainController mainController) {
@@ -118,7 +131,9 @@ public class MenuBarController implements Initializable {
         newStoryMenuItem.setOnAction(event -> mainController.newStory());
 
         undoMenuItem.setOnAction(event -> mainController.undo());
+        mainToolbarUndoMenuItem.setOnAction(event -> mainController.undo());
         redoMenuItem.setOnAction(event -> mainController.redo());
+        mainToolbarRedoMenuItem.setOnAction(event -> mainController.redo());
         revertMenuItem.setOnAction(event -> mainController.promptBeforeRevert());
         searchMenuItem.setOnAction(event -> mainController.search());
 
@@ -130,7 +145,6 @@ public class MenuBarController implements Initializable {
 
         editMenuItem.setOnAction(event -> mainController.editItem());
         deleteMenuItem.setOnAction(event -> mainController.deleteItem());
-
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
@@ -206,5 +220,8 @@ public class MenuBarController implements Initializable {
 
         undoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.undoTypeProperty));
         redoMenuItem.disableProperty().bind(Bindings.equal("", undoManager.redoTypeProperty));
+
+        mainToolbarUndoMenuItem.disableProperty().bind(undoMenuItem.disableProperty());
+        mainToolbarRedoMenuItem.disableProperty().bind(redoMenuItem.disableProperty());
     }
 }

@@ -68,6 +68,7 @@ public class MainController implements Initializable {
     public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
+    private final BooleanProperty mainToolbarVisible = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -86,6 +87,10 @@ public class MainController implements Initializable {
     private MenuBarController menuBarController;
     private Stage primaryStage;
     private double dividerPosition;
+
+    public BooleanProperty mainToolbarVisibleProperty() {
+        return mainToolbarVisible;
+    }
 
     public ReadOnlyBooleanProperty changesSavedProperty() {
         return undoManager.changesSavedProperty();
