@@ -56,6 +56,8 @@ public class MenuBarController implements Initializable {
     @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
+    private CheckMenuItem toolBarToggleCheckMenuItem;
+    @FXML
     private RadioMenuItem listShowProjectsMenuItem;
     @FXML
     private RadioMenuItem listShowTeamsMenuItem;
@@ -136,6 +138,10 @@ public class MenuBarController implements Initializable {
 
         listToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
+        });
+
+        toolBarToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            toolBarController.setVisible(newValue);
         });
 
         selectedTab.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {

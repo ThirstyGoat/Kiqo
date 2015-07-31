@@ -49,6 +49,8 @@
             <items>
               <CheckMenuItem fx:id="listToggleCheckMenuItem" mnemonicParsing="false" selected="true" text="List" />
               <SeparatorMenuItem mnemonicParsing="false" />
+              <CheckMenuItem fx:id="toolBarToggleCheckMenuItem" mnemonicParsing="false" selected="true" text="Toolbar" />
+              <SeparatorMenuItem mnemonicParsing="false" />
               <RadioMenuItem fx:id="listShowProjectsMenuItem" mnemonicParsing="false" selected="true" text="Project">
                 <toggleGroup>
                   <ToggleGroup fx:id="selectedTab" />

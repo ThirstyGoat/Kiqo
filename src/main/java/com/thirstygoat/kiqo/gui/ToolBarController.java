@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +23,8 @@ public class ToolBarController implements Initializable {
     private Button redoButton;
     @FXML
     private Button reportButton;
+    @FXML
+    private ToolBar toolBar;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -48,5 +51,10 @@ public class ToolBarController implements Initializable {
     public void setListenersOnUndoManager() {
         undoButton.disableProperty().bind(Bindings.equal("", UndoManager.getUndoManager().undoTypeProperty));
         redoButton.disableProperty().bind(Bindings.equal("", UndoManager.getUndoManager().redoTypeProperty));
+    }
+
+    public void setVisible(Boolean state) {
+        toolBar.setVisible(state);
+        toolBar.setManaged(state);
     }
 }
