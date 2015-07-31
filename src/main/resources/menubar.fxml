@@ -64,5 +64,5 @@
       
       </MenuBar>
    </children>
-  <fx:include fx:id="toolbar" source="toolbar.fxml" />
+  <fx:include fx:id="toolBar" source="toolbar.fxml" />
 </VBox>

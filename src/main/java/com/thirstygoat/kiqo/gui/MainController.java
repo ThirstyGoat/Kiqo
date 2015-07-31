@@ -78,6 +78,8 @@ public class MainController implements Initializable {
     private SideBarController sideBarController;
     @FXML
     private MenuBarController menuBarController;
+    @FXML
+    private ToolBarController toolBarController;
     private Stage primaryStage;
     private double dividerPosition;
 

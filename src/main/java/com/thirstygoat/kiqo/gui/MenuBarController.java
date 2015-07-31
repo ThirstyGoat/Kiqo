@@ -67,6 +67,8 @@ public class MenuBarController implements Initializable {
     private ToggleGroup selectedTab;
     @FXML
     private MenuItem quitMenuItem;
+    @FXML
+    private ToolBarController toolBarController;
     private MainController mainController;
 
     @Override
@@ -103,6 +105,7 @@ public class MenuBarController implements Initializable {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        toolBarController.setMainController(mainController);
         setMenuButtons();
     }
 
