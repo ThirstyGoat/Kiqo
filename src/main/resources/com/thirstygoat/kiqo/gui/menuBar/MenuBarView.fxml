@@ -43,6 +43,8 @@
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Edit Selected" onAction="#edit" fx:id="editMenuItem" />
         <MenuItem mnemonicParsing="false" text="Delete Selected" onAction="#delete" fx:id="deleteMenuItem" />
+        <SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem mnemonicParsing="false" text="Advanced Search" onAction="#advancedSearch" fx:id="advancedSearchMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="View">
