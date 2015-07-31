@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -61,6 +63,8 @@ public class MainDetailsPaneController implements Initializable {
     
     private Pane backlogDetailsPane;
     private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
+    private Pane advancedSearchDetailsPane;
+    private AdvancedSearchViewModel advancedSearchViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,12 +72,17 @@ public class MainDetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
-        
-        
-        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
-        backlogDetailsPane = (Pane) viewTuple.getView();
+
+        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> backlogDetailsPaneViewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
+        backlogDetailsPane = (Pane) backlogDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(backlogDetailsPane);
-        backlogDetailsPaneViewModel = viewTuple.getViewModel();
+        backlogDetailsPaneViewModel = backlogDetailsPaneViewTuple.getViewModel();
+
+        // Advanced Search
+        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
+        advancedSearchDetailsPane = (Pane) advancedSearchViewTuple.getView();
+        stackPane.getChildren().add(advancedSearchDetailsPane);
+        advancedSearchViewModel = advancedSearchViewTuple.getViewModel();
         
         panes = new Pane[] {
                 projectDetailsPane,
@@ -83,6 +92,7 @@ public class MainDetailsPaneController implements Initializable {
                 storyDetailsPane,
                 teamDetailsPane,
                 releaseDetailsPane,
+                advancedSearchDetailsPane
         };
         clear();
     }
@@ -179,6 +189,10 @@ public class MainDetailsPaneController implements Initializable {
         }
 
         pane.setVisible(true);
+    }
+
+    public void showSearchPane() {
+        show(advancedSearchDetailsPane);
     }
 
     private void showOptionButtons() {
