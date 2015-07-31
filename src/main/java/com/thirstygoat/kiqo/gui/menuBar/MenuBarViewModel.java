@@ -122,6 +122,10 @@ public class MenuBarViewModel implements ViewModel {
         mainController.deleteItem();
     }
 
+    public void advancedSearchAction() {
+        mainController.getDetailsPaneController().showSearchPane();
+    }
+
     public void projectsTabAction() {
         mainController.getSideBarController().show(SideBarController.TabOption.PROJECTS);
     }
