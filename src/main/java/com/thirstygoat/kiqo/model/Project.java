@@ -20,6 +20,7 @@ public class Project extends Item {
     private final ObservableList<Story> unallocatedStories;
     private final ObservableList<Allocation> allocations;
     private final ObservableList<Backlog> backlogs;
+    private final ObservableList<Sprint> sprints;
     private final StringProperty description;
 
     /**
@@ -30,6 +31,7 @@ public class Project extends Item {
         unallocatedStories = FXCollections.observableArrayList(Item.getWatchStrategy());
         backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
+        sprints = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty();
         longName = new SimpleStringProperty();
         description = new SimpleStringProperty();
@@ -156,6 +158,10 @@ public class Project extends Item {
         return backlogs;
     }
 
+    public ObservableList<Sprint> observableSprints() {
+        return sprints;
+    }
+
     public List<Release> getReleases() {
         final List<Release> releases = new ArrayList<>();
         releases.addAll(this.releases);
@@ -204,6 +210,25 @@ public class Project extends Item {
     public void setBacklogs(final List<Backlog> backlogs) {
         this.backlogs.clear();
         this.backlogs.addAll(backlogs);
+    }
+
+    /**
+     *
+     * @return list of sprints associated with this project.
+     */
+    public List<Sprint> getSprints() {
+        final List<Sprint> sprints = new ArrayList<>();
+        sprints.addAll(this.sprints);
+        return sprints;
+    }
+
+    /**
+     *
+     * @param sprints list of sprints associated with this project
+     */
+    public void setSprints(final List<Sprint> sprints) {
+        this.sprints.clear();
+        this.sprints.addAll(sprints);
     }
 
     @Override
