@@ -8,6 +8,8 @@ import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
@@ -28,10 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -79,9 +78,11 @@ public class MainController implements Initializable {
     @FXML
     private SideBarController sideBarController;
     @FXML
-    private MenuBarController menuBarController;
+    private VBox menuBar;
     @FXML
     private ToolBarController toolBarController;
+
+    private ViewTuple<MenuBarView, MenuBarViewModel> menuBarViewTuple;
     private Stage primaryStage;
     private double dividerPosition;
 
@@ -404,7 +405,10 @@ public class MainController implements Initializable {
         selectedOrganisationProperty.set(new Organisation(true));
 
         saveStateChanges();
-        menuBarController.setListenersOnUndoManager(undoManager);
+        menuBarViewTuple = FluentViewLoader.fxmlView(MenuBarView.class).load();
+        menuBarViewTuple.getViewModel().setListenersOnUndoManager(undoManager);
+        menuBar = (VBox) menuBarViewTuple.getView();
+        mainBorderPane.setTop(menuBar);
         focusedItemProperty.addListener((observable, oldValue, newValue) -> {
             MainController.LOGGER.log(Level.FINE, "Focus changed to %s", newValue);
             detailsPaneController.showDetailsPane(newValue);
@@ -955,7 +959,7 @@ public class MainController implements Initializable {
     public void setPrimaryStage(final Stage primaryStage) {
         this.primaryStage = primaryStage;
         addClosePrompt();
-        menuBarController.setMainController(this);
+        menuBarViewTuple.getViewModel().setMainController(this);
         detailsPaneController.setMainController(this);
         sideBarController.setMainController(this);
 
