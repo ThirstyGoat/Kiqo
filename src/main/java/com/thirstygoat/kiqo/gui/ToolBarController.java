@@ -48,7 +48,7 @@ public class ToolBarController implements Initializable {
 
 
 
-    public void setListenersOnUndoManager() {
+    private void setListenersOnUndoManager() {
         undoButton.disableProperty().bind(Bindings.equal("", UndoManager.getUndoManager().undoTypeProperty));
         redoButton.disableProperty().bind(Bindings.equal("", UndoManager.getUndoManager().redoTypeProperty));
     }
