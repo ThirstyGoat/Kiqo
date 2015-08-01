@@ -7,9 +7,9 @@ import java.util.List;
 * Scale for estimating story size.
 */
 public enum Scale {
-    FIBONACCI("Fibonacci", new String[] {"0", "1", "2", "3", "5", "8", "13", "20", "40", "100", "∞"}),
-    TSHIRT_SIZE("T-Shirt Size", new String[] {"XS", "S", "M", "L", "XL", "XXL", "∞"}),
-    DOG_BREEDS("Dog Breeds", new String[] {"Chihuahua", "Jack Russell", "Beagle", "Labrador", "German Shepherd", "Great Dane", "∞"});
+    FIBONACCI("Fibonacci", new String[] {"0", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?", "∞"}),
+    TSHIRT_SIZE("T-Shirt Size", new String[] {"XS", "S", "M", "L", "XL", "XXL", "?", "∞"}),
+    DOG_BREEDS("Dog Breeds", new String[] {"Chihuahua", "Jack Russell", "Beagle", "Labrador", "German Shepherd", "Great Dane", "?", "∞"});
 
     private String label;
     private String[] estimates;
