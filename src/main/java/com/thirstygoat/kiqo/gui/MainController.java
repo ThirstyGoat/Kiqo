@@ -17,6 +17,7 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
@@ -36,6 +37,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
+
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -546,7 +548,7 @@ public class MainController implements Initializable {
 
         if (draggedFilePath == null) {
             final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*.*"));
             filePath = fileChooser.showOpenDialog(primaryStage);
         } else {
             filePath = draggedFilePath;
@@ -673,10 +675,8 @@ public class MainController implements Initializable {
     }
 
     public void saveStatusReport(Collection<Item> list) {
-        final String FILE_EXTENSION = ".yaml";
-
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("yaml Files", "*" + FILE_EXTENSION));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
@@ -686,10 +686,6 @@ public class MainController implements Initializable {
         File selectedFile = fileChooser.showSaveDialog(primaryStage);
 
         if (selectedFile != null) {
-            if (!selectedFile.getName().endsWith(FILE_EXTENSION)) {
-                // append file extension if not already present
-                selectedFile = new File(selectedFile.getAbsolutePath() + FILE_EXTENSION);
-            }
             try (final FileWriter fileWriter = new FileWriter(selectedFile)) {
                 final ReportGenerator reportGenerator = new ReportGenerator(selectedOrganisationProperty.get());
                 if (list != null) {
@@ -733,19 +729,13 @@ public class MainController implements Initializable {
      * @return file to save in (may be null if cancelled)
      */
     private File promptForSaveLocation(File existingFile) {
-        final String FILE_EXTENSION = ".json";
-
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files(.JSON)", "*.json"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
         }
         File file = fileChooser.showSaveDialog(primaryStage);
-        if (file != null && !file.getName().endsWith(FILE_EXTENSION)) {
-            // append file extension if not already present
-            file = new File(file.getAbsolutePath() + FILE_EXTENSION);
-        }
         return file;
     }
 
