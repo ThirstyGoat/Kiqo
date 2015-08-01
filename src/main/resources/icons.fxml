@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tooltip?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import de.jensd.fx.glyphs.GlyphsStack?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1" spacing="5">
+ <children>
+  <Button>
+  	<tooltip><Tooltip text="Save Organisation (Ctrl-S)"/></tooltip>
+  	<graphic><FontAwesomeIconView glyphName="SAVE" styleClass="single-icon" /></graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="Load Organisation (Ctrl-O)"/></tooltip>
+  	<graphic><FontAwesomeIconView glyphName="FOLDER_OPEN_ALT" styleClass="single-icon" /></graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="Undo (Ctrl-Z)"/></tooltip>
+  	<graphic><FontAwesomeIconView glyphName="UNDO" styleClass="single-icon"/></graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="Redo (Ctrl-⇧-Z)"/></tooltip>
+  	<graphic><FontAwesomeIconView glyphName="REPEAT" styleClass="single-icon" /></graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Project (Ctrl-N)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="GIFT" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Release (Ctrl-R)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="ROCKET" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Team (Ctrl-T)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="USERS" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Person (Ctrl-P)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="USER" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Skill (Ctrl-K)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="HAND_ALT_RIGHT" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Backlog (Ctrl-B)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="TASKS" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Sprint (Ctrl-?)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="CLOCK_ALT" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+  <Button>
+  	<tooltip><Tooltip text="New Story (Ctrl-Y)"/></tooltip>
+  	<graphic>
+  	  <GlyphsStack prefHeight="24" prefWidth="24">
+	  	<FontAwesomeIconView glyphName="BOOK" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
+	  </GlyphsStack>
+    </graphic>
+  </Button>
+ </children>
+</HBox>

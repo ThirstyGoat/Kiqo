@@ -51,3 +51,18 @@
 .searchResultButton:hover {
     -fx-background-color: #62c1ff;
 }
+
+/* Toolbar icons */
+.single-icon {
+	-glyph-size: 24;
+}
+
+.annotated-icon {
+	-glyph-size: 20;
+}
+
+.plus-icon-annotation {
+	-glyph-name: "PLUS";
+	-glyph-size: 12;
+	-fx-fill: green;
+}
