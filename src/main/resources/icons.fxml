@@ -46,7 +46,7 @@
   	<tooltip><Tooltip text="New Team (Ctrl-T)"/></tooltip>
   	<graphic>
   	  <GlyphsStack prefHeight="24" prefWidth="24">
-	  	<FontAwesomeIconView glyphName="USERS" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
+	  	<FontAwesomeIconView glyphName="GROUP" GlyphsStack.alignment="TOP_LEFT" styleClass="annotated-icon"/>
 	  	<FontAwesomeIconView styleClass="plus-icon-annotation" GlyphsStack.alignment="BOTTOM_RIGHT"/>
 	  </GlyphsStack>
     </graphic>

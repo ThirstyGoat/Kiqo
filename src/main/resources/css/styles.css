@@ -54,15 +54,16 @@
 
 /* Toolbar icons */
 .single-icon {
-	-glyph-size: 24;
+	-glyph-size: 16;
+	-fx-alignment: CENTER;
 }
 
 .annotated-icon {
-	-glyph-size: 20;
+	-glyph-size: 12;
 }
 
 .plus-icon-annotation {
 	-glyph-name: "PLUS";
-	-glyph-size: 12;
+	-glyph-size: 8;
 	-fx-fill: green;
 }
