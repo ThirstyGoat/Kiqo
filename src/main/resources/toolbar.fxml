@@ -2,22 +2,31 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+
 <ToolBar xmlns:fx="http://javafx.com/fxml/1" fx:id="toolBar" visible="false" managed="false" prefHeight="40.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.ToolBarController">
-  <items>
-      <Button fx:id="openButton" mnemonicParsing="false" text="Open" />
-      <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-      <Separator orientation="VERTICAL">
-         <padding>
-            <Insets left="10.0" right="10.0" />
-         </padding>
-      </Separator>
-      <Button fx:id="undoButton" mnemonicParsing="false" text="Undo" />
-      <Button fx:id="redoButton" mnemonicParsing="false" text="Redo" />
-      <Separator orientation="VERTICAL">
-         <padding>
-            <Insets left="10.0" right="10.0" />
-         </padding>
-      </Separator>
-      <Button fx:id="reportButton" mnemonicParsing="false" text="Report" />
+ <items>
+      <Button fx:id="openButton" mnemonicParsing="false" >
+     	<tooltip><Tooltip text="Load Organisation (Ctrl-O)"/></tooltip>
+	 	<graphic><FontAwesomeIconView glyphName="FOLDER_OPEN_ALT" styleClass="single-icon" /></graphic>
+	  </Button>
+      <Button fx:id="saveButton" mnemonicParsing="false" >
+	  	<tooltip><Tooltip text="Save Organisation (Ctrl-S)"/></tooltip>
+	  	<graphic><FontAwesomeIconView glyphName="SAVE" styleClass="single-icon" /></graphic>
+	  </Button>
+      <Separator />
+      <Button fx:id="undoButton" mnemonicParsing="false" >
+      	<tooltip><Tooltip text="Undo (Ctrl-Z)"/></tooltip>
+	  	<graphic><FontAwesomeIconView glyphName="UNDO" styleClass="single-icon"/></graphic>
+	  </Button>
+      <Button fx:id="redoButton" mnemonicParsing="false">
+      	<tooltip><Tooltip text="Redo (Ctrl-⇧-Z)"/></tooltip>
+	  	<graphic><FontAwesomeIconView glyphName="REPEAT" styleClass="single-icon" /></graphic>
+	  </Button>
+      <Separator />
+      <Button fx:id="reportButton" mnemonicParsing="false" >
+        <tooltip><Tooltip text="Generate Report"/></tooltip>
+	  	<graphic><FontAwesomeIconView glyphName="FILE_TEXT_ALT" styleClass="single-icon" /></graphic>
+	  </Button>
   </items>
 </ToolBar>
