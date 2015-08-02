@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.gui.view;
 
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.search.AdvancedSearchListCell;
 import com.thirstygoat.kiqo.search.SearchResult;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,7 +23,11 @@ public class AdvancedSearchView implements FxmlView<AdvancedSearchViewModel>, In
     @FXML
     private TextField searchTextField;
     @FXML
+    private CheckBox regexCheckBox;
+    @FXML
     private Button searchButton;
+    @FXML
+    private ComboBox<SearchableItems.SCOPE> limitSearchComboBox;
     @FXML
     private ListView<SearchResult> resultsListView;
     @InjectViewModel
@@ -35,21 +35,31 @@ public class AdvancedSearchView implements FxmlView<AdvancedSearchViewModel>, In
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        viewModel.searchScopeProperty().bindBidirectional(limitSearchComboBox.valueProperty());
+        limitSearchComboBox.setItems(FXCollections.observableArrayList(SearchableItems.SCOPE.values()));
+        limitSearchComboBox.setValue(SearchableItems.SCOPE.ORGANISATION);
+
+        // Bind view elements to view model
+        regexCheckBox.selectedProperty().bindBidirectional(viewModel.regexEnabledProperty());
+        searchTextField.textProperty().bindBidirectional(viewModel.searchQueryProperty());
+
+        // Disable search button appropriately depending on whether search is RegEx or not
+        searchButton.disableProperty().bind(Bindings.createBooleanBinding(
+                () -> {
+                    if (searchTextField.getText().length() == 0)
+                        return true; // We do not allow an empty search (Whether RegEx or not)
+                    if (regexCheckBox.selectedProperty().get())
+                        return false; // We allow leading and trailing whitespace for RegEx search
+                    if (searchTextField.getText().trim().length() == 0)
+                        return true; // We do not allow empty string for non regex search
+                    return false;
+                }, searchTextField.textProperty(), regexCheckBox.selectedProperty()));
+
         resultsListView.setItems(viewModel.getSearchResults());
 
-        resultsListView.setCellFactory(param -> new ListCell<SearchResult>() {
-            @Override
-            protected void updateItem(SearchResult item, boolean empty) {
-                super.updateItem(item, empty);
-                if (!empty && item != null) {
-                    setText(item.getResultText());
-                } else {
-                    setText("");
-                }
-            }
-        });
+        resultsListView.setCellFactory(param -> new AdvancedSearchListCell());
 
         // Set button action
-        searchButton.setOnAction(event -> viewModel.search(searchTextField.getText()));
+        searchButton.setOnAction(event -> viewModel.search());
     }
 }

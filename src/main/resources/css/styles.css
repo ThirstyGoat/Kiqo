@@ -52,6 +52,7 @@
     -fx-background-color: #62c1ff;
 }
 
+<<<<<<< HEAD
 /* Toolbar icons */
 .single-icon {
 	-glyph-size: 16;
@@ -66,4 +67,8 @@
 	-glyph-name: "PLUS";
 	-glyph-size: 8;
 	-fx-fill: green;
+}
+
+.advanced-search-list-result-title {
+    -fx-font-weight: bolder;
 }

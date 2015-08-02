@@ -190,4 +190,9 @@ public class Person extends Item {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    @Override
+    public String[] getSearchableStrings() {
+        return new String[] {getShortName(), getLongName(), getDescription()};
+    }
 }
