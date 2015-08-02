@@ -1,6 +1,11 @@
 package com.thirstygoat.kiqo.search;
 
 import com.thirstygoat.kiqo.model.Item;
+import javafx.collections.FXCollections;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -12,9 +17,12 @@ public class SearchResult {
 
     private Searchable searchable;
     private String resultText;
+    private String searchQuery;
+    private List<Match> matches = new ArrayList<>();
 
-    public SearchResult(Searchable searchable) {
+    public SearchResult(Searchable searchable, String searchQuery) {
         this.searchable = searchable;
+        this.searchQuery = searchQuery;
         generateResultText();
     }
 
@@ -33,7 +41,23 @@ public class SearchResult {
         return resultText;
     }
 
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
     public Item getItem() {
         return (Item) searchable;
+    }
+
+    public void addMatch(Match match) {
+        matches.add(match);
+    }
+
+    public List<Match> getMatches() {
+        return matches;
+    }
+
+    public List<Match> getMatchesUnmodifiable() {
+        return Collections.unmodifiableList(matches);
     }
 }

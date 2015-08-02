@@ -1,8 +1,9 @@
 package com.thirstygoat.kiqo.search;
 
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 
 /**
  * Created by leroy on 25/07/15.
@@ -29,12 +30,51 @@ public class SearchableItems {
         searchableItems.add(item);
     }
 
-    //TODO make readonly
     public ObservableList<Searchable> getSearchables() {
-        return searchableItems;
+        return FXCollections.unmodifiableObservableList(searchableItems);
+    }
+
+    /**
+     * Generates and returns a list of Searchables limited to the scope that is defined
+     * @param scope Scope of search (eg Projects/Teams/People)
+     * @param organisation Organisation to search within
+     * @return ObservableList containing Searchables items within the defined scope
+     */
+    public ObservableList<? extends Searchable> getSearchables(SCOPE scope, Organisation organisation) {
+        switch (scope) {
+            case ORGANISATION: return getSearchables();
+            case PROJECTS: return organisation.getProjects();
+            case TEAMS: return organisation.getTeams();
+            case PEOPLE: return organisation.getPeople();
+            case SKILLS: return organisation.getSkills();
+            case BACKLOGS:
+                ObservableList<Searchable> backlogs = FXCollections.observableArrayList();
+                for (Project project : organisation.getProjects()) {
+                    project.observableBacklogs().forEach(backlogs::addAll);
+                }
+                return backlogs;
+            case STORIES:
+                ObservableList<Searchable> stories = FXCollections.observableArrayList();
+                for (Project project : organisation.getProjects()) {
+                    stories.addAll(project.observableUnallocatedStories());
+                    project.observableBacklogs().forEach(stories::addAll);
+                }
+                return stories;
+        }
+        return getSearchables();
     }
 
     public void removeSearchable(Searchable searchable) {
         searchableItems.remove(searchable);
+    }
+
+    public enum SCOPE {
+        ORGANISATION,
+        PROJECTS,
+        BACKLOGS,
+        STORIES,
+        TEAMS,
+        PEOPLE,
+        SKILLS
     }
 }
