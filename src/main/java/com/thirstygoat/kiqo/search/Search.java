@@ -11,7 +11,11 @@ public class Search {
     private final String query;
 
     public Search(String query) {
-        this.query = query;
+        this.query = query.toLowerCase();
+    }
+
+    public String getQuery() {
+        return query;
     }
 
     /**
@@ -23,14 +27,16 @@ public class Search {
 
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables()) {
-
             // Check for matches against every string the object allows to be searchable
-            for (String string : searchable.getSearchableStrings()) {
-
+            String[] searchableStrings = searchable.getSearchableStrings();
+            for (String string : searchableStrings) {
                 // Perform comparison
-                if (string.toLowerCase().matches(".*" + query.toLowerCase().trim() + ".*")) {
-                    results.add(new SearchResult(searchable));
+                if (string.toLowerCase().matches(".*" + query.trim() + ".*")) {
+                    results.add(new SearchResult(searchable, query.trim()));
                 }
+                break;
+                // Cheats way of only caring about the first element in the array (if there is one) since we
+                // only care about the first searchable string (short name) for this basic search implementation
             }
         }
         return results;
