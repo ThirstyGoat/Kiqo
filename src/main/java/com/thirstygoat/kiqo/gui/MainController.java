@@ -552,7 +552,7 @@ public class MainController implements Initializable {
 
         if (draggedFilePath == null) {
             final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*"));
             filePath = fileChooser.showOpenDialog(primaryStage);
         } else {
             filePath = draggedFilePath;
@@ -680,7 +680,7 @@ public class MainController implements Initializable {
 
     public void saveStatusReport(Collection<Item> list) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"), new FileChooser.ExtensionFilter("All Files", "*"));
         final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
@@ -734,7 +734,7 @@ public class MainController implements Initializable {
      */
     private File promptForSaveLocation(File existingFile) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*"));
         if (existingFile != null) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
