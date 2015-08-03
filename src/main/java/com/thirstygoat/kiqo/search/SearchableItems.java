@@ -1,7 +1,10 @@
 package com.thirstygoat.kiqo.search;
 
+import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,6 +14,7 @@ import javafx.collections.ObservableList;
 public class SearchableItems {
     private static SearchableItems instance;
     private ObservableList<Searchable> searchableItems = FXCollections.observableArrayList();
+    private ObjectProperty<Organisation> organisation = new SimpleObjectProperty<>();
 
     private SearchableItems() {
     }
@@ -26,6 +30,14 @@ public class SearchableItems {
         getInstance().searchableItems.clear();
     }
 
+    public ObjectProperty<Organisation> organisationProperty() {
+        return organisation;
+    }
+
+    public Organisation getOrganisation() {
+        return organisationProperty().get();
+    }
+
     public void addSearchable(Searchable item) {
         searchableItems.add(item);
     }
@@ -37,27 +49,27 @@ public class SearchableItems {
     /**
      * Generates and returns a list of Searchables limited to the scope that is defined
      * @param scope Scope of search (eg Projects/Teams/People)
-     * @param organisation Organisation to search within
      * @return ObservableList containing Searchables items within the defined scope
      */
-    public ObservableList<? extends Searchable> getSearchables(SCOPE scope, Organisation organisation) {
+    public ObservableList<? extends Searchable> getSearchables(SCOPE scope) {
         switch (scope) {
             case ORGANISATION: return getSearchables();
-            case PROJECTS: return organisation.getProjects();
-            case TEAMS: return organisation.getTeams();
-            case PEOPLE: return organisation.getPeople();
-            case SKILLS: return organisation.getSkills();
+            case PROJECTS: return getOrganisation().getProjects();
+            case TEAMS: return getOrganisation().getTeams();
+            case PEOPLE: return getOrganisation().getPeople();
+            case SKILLS: return getOrganisation().getSkills();
             case BACKLOGS:
                 ObservableList<Searchable> backlogs = FXCollections.observableArrayList();
-                for (Project project : organisation.getProjects()) {
+                for (Project project : getOrganisation().getProjects()) {
                     project.observableBacklogs().forEach(backlogs::addAll);
                 }
                 return backlogs;
             case STORIES:
                 ObservableList<Searchable> stories = FXCollections.observableArrayList();
-                for (Project project : organisation.getProjects()) {
+                for (Project project : getOrganisation().getProjects()) {
                     stories.addAll(project.observableUnallocatedStories());
-                    project.observableBacklogs().forEach(stories::addAll);
+                    for (Backlog backlog: project.observableBacklogs())
+                        backlog.getStories().forEach(stories::addAll);
                 }
                 return stories;
         }
