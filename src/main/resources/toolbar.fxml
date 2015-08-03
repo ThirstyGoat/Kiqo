@@ -6,16 +6,18 @@
 
 <ToolBar xmlns:fx="http://javafx.com/fxml/1" fx:id="toolBar" visible="false" managed="false" prefHeight="40.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.ToolBarController">
  <items>
-      <Button fx:id="openButton" mnemonicParsing="false" >
+      <Button fx:id="openButton" >
      	<tooltip><Tooltip text="Load Organisation (Ctrl-O)"/></tooltip>
 	 	<graphic><FontAwesomeIconView glyphName="FOLDER_OPEN_ALT" styleClass="single-icon" /></graphic>
 	  </Button>
-      <Button fx:id="saveButton" mnemonicParsing="false" >
+      <Button fx:id="saveButton" >
 	  	<tooltip><Tooltip text="Save Organisation (Ctrl-S)"/></tooltip>
 	  	<graphic><FontAwesomeIconView glyphName="SAVE" styleClass="single-icon" /></graphic>
 	  </Button>
-      <Separator />
-      <Button fx:id="undoButton" mnemonicParsing="false" >
+      <Separator orientation='vertical' halignment='CENTER'>
+      	<padding><Insets left='4' right='0' /></padding>
+      </Separator>
+      <Button fx:id="undoButton" >
       	<tooltip><Tooltip text="Undo (Ctrl-Z)"/></tooltip>
 	  	<graphic><FontAwesomeIconView glyphName="UNDO" styleClass="single-icon"/></graphic>
 	  </Button>
@@ -23,8 +25,10 @@
       	<tooltip><Tooltip text="Redo (Ctrl-⇧-Z)"/></tooltip>
 	  	<graphic><FontAwesomeIconView glyphName="REPEAT" styleClass="single-icon" /></graphic>
 	  </Button>
-      <Separator />
-      <Button fx:id="reportButton" mnemonicParsing="false" >
+      <Separator orientation='vertical' halignment='CENTER'>
+      	<padding><Insets left='4' right='0' /></padding>
+      </Separator>
+      <Button fx:id="reportButton" >
         <tooltip><Tooltip text="Generate Report"/></tooltip>
 	  	<graphic><FontAwesomeIconView glyphName="FILE_TEXT_ALT" styleClass="single-icon" /></graphic>
 	  </Button>
