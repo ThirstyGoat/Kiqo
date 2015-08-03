@@ -14,8 +14,7 @@ import java.util.Collection;
  * Created by Bradley on 31/07/15.
  */
 public class Sprint extends Item {
-
-    private ObjectProperty<Project> project;
+    private ObjectProperty<Backlog> backlog;
     private ObjectProperty<LocalDate> startDate;
     private ObjectProperty<LocalDate> endDate;
     private ObjectProperty<Team> team;
@@ -26,7 +25,7 @@ public class Sprint extends Item {
     private ObservableList<Story> stories;
 
     public Sprint() {
-        project = new SimpleObjectProperty<>();
+        backlog = new SimpleObjectProperty<>();
         startDate = new SimpleObjectProperty<>();
         endDate = new SimpleObjectProperty<>();
         team = new SimpleObjectProperty<>();
@@ -37,13 +36,13 @@ public class Sprint extends Item {
         stories = FXCollections.observableArrayList(Item.getWatchStrategy());
     }
 
-    public Sprint(String goal, String longName, String description, Project project, Release release,
+    public Sprint(String goal, String longName, String description, Backlog backlog, Release release,
                   Team team, LocalDate startDate, LocalDate endDate, Collection<Story> stories) {
         this();
         setGoal(goal);
         setLongName(longName);
         setDescription(description);
-        setProject(project);
+        setBacklog(backlog);
         setRelease(release);
         setTeam(team);
         setStartDate(startDate);
@@ -56,16 +55,16 @@ public class Sprint extends Item {
         return goal;
     }
 
-    public Project getProject() {
-        return project.get();
+    public Backlog getBacklog() {
+        return backlog.get();
     }
 
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setBacklog(Backlog backlog) {
+        this.backlog.set(backlog);
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<Backlog> backlogProperty() {
+        return backlog;
     }
 
     public LocalDate getStartDate() {

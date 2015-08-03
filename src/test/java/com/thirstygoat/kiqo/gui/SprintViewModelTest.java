@@ -1,14 +1,23 @@
 package com.thirstygoat.kiqo.gui;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import com.thirstygoat.kiqo.gui.model.SprintViewModel;
+import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.util.TestUtils;
+
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.function.Predicate;
+import com.thirstygoat.kiqo.gui.model.SprintViewModel;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 
 
 /**
@@ -22,18 +31,18 @@ public class SprintViewModelTest {
         FunctionBasedValidator<String> predicate = viewModel.getGoalValidator();
 
         viewModel.goalProperty().setValue("");
-        // Cant be empty
+        // Can't be empty
         Assert.assertFalse(predicate.getValidationStatus().isValid());
 
         viewModel.goalProperty().setValue("Sprint1");
         // can be non empty and unique
         Assert.assertTrue(predicate.getValidationStatus().isValid());
 
-        viewModel.projectProperty().setValue(TestUtils.initProject());
+        viewModel.backlogProperty().setValue(new Backlog("backlog", null, null, null, null,  new ArrayList<Story>(), null));
 
         Sprint sprint = new Sprint();
         sprint.setGoal("Sprint");
-        viewModel.projectProperty().get().observableSprints().add(sprint);
+        viewModel.backlogProperty().get().getProject().observableSprints().add(sprint);
         viewModel.goalProperty().set("Sprint");
         // Must be unique
         Assert.assertFalse(predicate.getValidationStatus().isValid());
@@ -82,10 +91,4 @@ public class SprintViewModelTest {
         viewModel.endDateProperty().setValue(LocalDate.now().minusDays(2));
         System.out.println(predicate.getValidationStatus().isValid());
     }
-
-
-
-
-
-
 }
