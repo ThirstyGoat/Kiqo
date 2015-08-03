@@ -404,6 +404,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisationProperty.set(new Organisation(true));
+        SearchableItems.getInstance().organisationProperty().bind(selectedOrganisationProperty);
 
         saveStateChanges();
         menuBarViewTuple = FluentViewLoader.fxmlView(MenuBarView.class).load();
