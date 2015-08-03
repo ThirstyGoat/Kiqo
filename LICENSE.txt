@@ -1,0 +1,12 @@
+THIRD-PARTY DEPENDENCIES
+
+launch4j is licensed under the BSD 3-Clause license.
+ControlsFX is licensed under the BSD 3-Clause license.
+SLF4J is licensed under the MIT license.
+
+log4j is licensed under the Apache 2.0 license.
+GSON is licensed under the Apache 2.0 license.
+FontAwesomeFX is licensed under the Apache 2.0 license.
+mvvmFX is licensed under the Apache 2.0 license.
+maven-latex-plugin is licensed under the Apache 2.0 license.
+appbundle-maven-plugin is licensed under the Apache 2.0 license.
