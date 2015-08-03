@@ -73,7 +73,7 @@ public class ProjectFormController extends FormController<Project> {
                 "Short name must be unique and not empty."));
 
         validationSupport.registerValidator(longNameTextField,
-                Validator.createEmptyValidator("Long name can not be empty", Severity.ERROR));
+                Validator.createEmptyValidator("Name must not be empty", Severity.ERROR));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

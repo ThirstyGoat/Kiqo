@@ -35,7 +35,7 @@
         <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
     </padding>
     <children>
-        <Label text="Long Name:" />
+        <Label text="Name:" />
         <Label text="Short Name:" GridPane.rowIndex="1" />
         <Label text="Description:" GridPane.rowIndex="2" />
         <Label text="Project:" GridPane.rowIndex="3" />

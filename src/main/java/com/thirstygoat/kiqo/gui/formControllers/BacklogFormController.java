@@ -95,7 +95,7 @@ public class BacklogFormController extends FormController<Backlog> {
 
     private void setValidationSupport() {
         validationSupport.registerValidator(longNameTextField,
-                Validator.createPredicateValidator(viewModel.getLongNameValidation(), "Long name must not be empty"));
+                Validator.createPredicateValidator(viewModel.getLongNameValidation(), "Name must not be empty"));
 
         validationSupport.registerValidator(shortNameTextField, 
                 Validator.createPredicateValidator(viewModel.getShortNameValidation(), "Short name must be unique and not empty"));
@@ -165,13 +165,13 @@ public class BacklogFormController extends FormController<Backlog> {
         if (validationSupport.isInvalid()) {
             return false;
         } else if (!conflicts.isEmpty()) {
-            final String[] options = {"Okay", "Cancel"};
-            final String query = "The following stories will have their estimate reset due to their scales not matching the backlogs." +
+            final String[] options = {"OK", "Cancel"};
+            final String query = "The following stories will have their estimate reset due to their scales not matching the backlog's scale." +
                     "\n\nStories: " + Utilities.concatenateItemsList(conflicts, 5);
 
             final String result = GoatDialog.createBasicButtonDialog(stage, "Are you sure?", "Conflicting scales", query, options);
 
-            if (result.equals("Okay")) {
+            if (result.equals("OK")) {
                 valid = true;
             } else {
                 return false;

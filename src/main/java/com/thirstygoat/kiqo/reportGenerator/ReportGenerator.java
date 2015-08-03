@@ -173,7 +173,7 @@ public final class ReportGenerator {
         final List<String> lines = new LinkedList<>();
 
         lines.add(ReportUtils.valueLine("Short Name", project.getShortName()));
-        lines.add(ReportUtils.valueLine("Long Name", project.getLongName()));
+        lines.add(ReportUtils.valueLine("Name", project.getLongName()));
         lines.add(ReportUtils.valueLine("Description", null));
 
         // Add backlogs to the report
@@ -364,7 +364,7 @@ public final class ReportGenerator {
         people.remove(person);
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
-        lines.add(ReportUtils.valueLine("Long Name", person.getLongName()));
+        lines.add(ReportUtils.valueLine("Name", person.getLongName()));
         lines.add(ReportUtils.valueLine("Description", person.getDescription()));
         lines.add(ReportUtils.valueLine("User ID", person.getUserId()));
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));

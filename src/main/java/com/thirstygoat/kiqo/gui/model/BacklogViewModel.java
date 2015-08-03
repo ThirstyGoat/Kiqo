@@ -66,7 +66,7 @@ public class BacklogViewModel implements ViewModel {
         
         longNameValidator = new FunctionBasedValidator<>(longNameProperty,
                 Utilities.emptinessPredicate(),
-                ValidationMessage.error("Long name must not be empty."));
+                ValidationMessage.error("Name must not be empty."));
         
         descriptionValidator = new FunctionBasedValidator<>(descriptionProperty, 
                 string -> { 

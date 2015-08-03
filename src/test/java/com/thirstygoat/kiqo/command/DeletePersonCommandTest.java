@@ -259,7 +259,7 @@ public class DeletePersonCommandTest {
         person.setSkills(skills);
 
 
-        Backlog backlog = new Backlog("Short name", "Long name", "Description", person, project, new ArrayList<>(), Scale.FIBONACCI);
+        Backlog backlog = new Backlog("Short name", "Name", "Description", person, project, new ArrayList<>(), Scale.FIBONACCI);
         project.observableBacklogs().add(backlog);
 
         try {

@@ -77,7 +77,7 @@ public class StoryFormViewModel extends FormController<Story> {
         longNameValidator = new FunctionBasedValidator<>(longNameProperty,
             // Checks that the long name isn't empty
             s -> s != null && !s.isEmpty(),
-            ValidationMessage.error("Long name must not be empty"));
+            ValidationMessage.error("Name must not be empty"));
 
         descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
             // Always valid as description isn't required and has no constraints

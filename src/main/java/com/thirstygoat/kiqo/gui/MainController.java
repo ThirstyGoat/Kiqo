@@ -791,6 +791,8 @@ public class MainController implements Initializable {
      */
     private void saveStateChanges() {
         final StatusBar statusBar = new StatusBar();
+        statusBar.setText(undoManager.changesSavedProperty().get() ? ALL_CHANGES_SAVED_TEXT : UNSAVED_CHANGES_TEXT);
+        
         // Add the status bar to the bottom of the window
         mainBorderPane.setBottom(statusBar);
 
