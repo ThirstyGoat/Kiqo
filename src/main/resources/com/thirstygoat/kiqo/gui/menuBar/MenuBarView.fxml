@@ -14,6 +14,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Project" onAction="#newProject" fx:id="newProjectMenuItem" />
             <MenuItem mnemonicParsing="false" text="Release" onAction="#newRelease" fx:id="newReleaseMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Sprint" onAction="#newSprint" fx:id="newSprintMenuItem" />
             <MenuItem mnemonicParsing="false" text="Team" onAction="#newTeam" fx:id="newTeamMenuItem" />
             <MenuItem mnemonicParsing="false" text="Person" onAction="#newPerson" fx:id="newPersonMenuItem" />
             <MenuItem mnemonicParsing="false" text="Skill" onAction="#newSkill" fx:id="newSkillMenuItem" />

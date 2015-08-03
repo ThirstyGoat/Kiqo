@@ -19,7 +19,6 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
@@ -30,13 +29,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
-
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -539,6 +540,10 @@ public class MainController implements Initializable {
         if (selectedOrganisationProperty.get() != null) {
             taskDialog(task);
         }
+    }
+
+    public void newSprint() {
+        //TODO add method body when the dialog has been completed
     }
 
     public void openOrganisation(File draggedFilePath) {

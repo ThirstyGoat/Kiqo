@@ -28,6 +28,7 @@ public final class ReportGenerator {
     private static final String BACKLOG_COMMENT =       " -  ### Backlog ###";
     private static final String STORY_COMMENT =         " -  ### Story ###";
     private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
+    private static final String SPRINT_COMMENT =        " -  ### Sprint ###";
     private static final String AC_COMMENT =            " - ";
     private static final String TASK_COMMENT =          " - ";
     private static final int WIDTH = 80;
@@ -195,6 +196,12 @@ public final class ReportGenerator {
         for (final Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateReleaseReport(release)));
+
+            for (final Sprint sprint : release.getSprints()) {
+                lines.add(ReportGenerator.SPRINT_COMMENT);
+                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateSprintReport(sprint)));
+            }
+
         }
 
         // only print teams that are currently allocated
@@ -305,6 +312,22 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", release.getDescription()));
         lines.add(ReportUtils.valueLine("Date", release.getDate().format(ReportGenerator.DATE_FORMATTER)));
 
+        return lines;
+    }
+    //TODO check validity
+    private List<String> generateSprintReport(Sprint sprint) {
+        final List<String> lines = new ArrayList<>();
+        lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
+        lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
+        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Team", sprint.getTeam()));
+
+        lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
+        for (final Story story : sprint.getStories()) {
+            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + story.getShortName());
+        }
         return lines;
     }
 

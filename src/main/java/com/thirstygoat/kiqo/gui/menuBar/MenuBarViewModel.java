@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.gui.menuBar;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.SideBarController;
-import com.thirstygoat.kiqo.gui.ToolBarController;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -43,17 +42,6 @@ public class MenuBarViewModel implements ViewModel {
         redoDisabled.bind(Bindings.equal("Redo ", redoString));
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-        mainControllerIsSet.set(true);
-        changesSaved.bind(mainController.changesSavedProperty());
-        itemIsSelected.bind(Bindings.isNotNull(mainController.focusedItemProperty));
-        listIsVisible.addListener((observable, oldValue, newValue) -> {
-            mainController.setListVisible(newValue);
-        });
-        selectedTab.bind(mainController.getSideBarController().selectedTabProperty());
-    }
-
     public void newOrganisationAction() {
         mainController.newOrganisation();
     }
@@ -64,6 +52,10 @@ public class MenuBarViewModel implements ViewModel {
 
     public void newReleaseAction() {
         mainController.newRelease();
+    }
+
+    public void newSprintAction() {
+        mainController.newSprint();
     }
 
     public void newTeamAction() {
@@ -148,6 +140,17 @@ public class MenuBarViewModel implements ViewModel {
 
     public MainController getMainController() {
         return mainController;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+        mainControllerIsSet.set(true);
+        changesSaved.bind(mainController.changesSavedProperty());
+        itemIsSelected.bind(Bindings.isNotNull(mainController.focusedItemProperty));
+        listIsVisible.addListener((observable, oldValue, newValue) -> {
+            mainController.setListVisible(newValue);
+        });
+        selectedTab.bind(mainController.getSideBarController().selectedTabProperty());
     }
 
     public BooleanProperty mainControllerIsSet() {
