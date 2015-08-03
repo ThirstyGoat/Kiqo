@@ -4,6 +4,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,12 +18,18 @@ public class Release extends Item implements Serializable {
     private final StringProperty description;
     private final ObjectProperty<Project> project;
     private final ObjectProperty<LocalDate> date;
+    private final ObservableList<Sprint> sprints;
 
     public Release(String shortName, Project project, LocalDate date, String description) {
         this.shortName = new SimpleStringProperty(shortName);
         this.project = new SimpleObjectProperty<>(project);
         this.description = new SimpleStringProperty(description);
         this.date = new SimpleObjectProperty<>(date);
+        this.sprints = FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Sprint> getSprints() {
+        return sprints;
     }
 
     public ObjectProperty<Project> projectProperty() {

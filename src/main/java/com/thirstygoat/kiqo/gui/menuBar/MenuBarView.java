@@ -28,6 +28,8 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     private MenuItem newReleaseMenuItem;
     @FXML
+    private MenuItem newSprintMenuItem;
+    @FXML
     private MenuItem newBacklogMenuItem;
     @FXML
     private MenuItem newStoryMenuItem;
@@ -157,6 +159,11 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     public void newRelease() {
         viewModel.newReleaseAction();
+    }
+
+    @FXML
+    public void newSprint() {
+        viewModel.newSprintAction();
     }
 
     @FXML
