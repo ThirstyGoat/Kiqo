@@ -1,6 +1,6 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import com.thirstygoat.kiqo.gui.model.SprintViewModel;
+import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 
 /**
  * Created by samschofield on 31/07/15.
