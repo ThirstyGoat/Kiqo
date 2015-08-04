@@ -15,6 +15,23 @@ import java.util.ArrayList;
 public class SprintViewModelTest {
 
     @Test
+    public void initialTest() {
+        // Test initial values before anything has been added.
+        SprintViewModel viewModel = new SprintViewModel();
+
+        // Assert False should be invalid by default.
+        // Assert True should be valid by default.
+        Assert.assertFalse(viewModel.goalValidation().isValid());
+        Assert.assertTrue(viewModel.descriptionValidation().isValid());
+        Assert.assertFalse(viewModel.startDateValidation().isValid());
+        Assert.assertFalse(viewModel.endDateValidation().isValid());
+        Assert.assertFalse(viewModel.backlogValidation().isValid());
+        Assert.assertFalse(viewModel.releaseValidation().isValid());
+        Assert.assertFalse(viewModel.teamValidation().isValid());
+        Assert.assertTrue(viewModel.storiesValidation().isValid());
+    }
+
+    @Test
     public void testGoalValidator() {
         SprintViewModel viewModel = new SprintViewModel();
 
@@ -28,7 +45,6 @@ public class SprintViewModelTest {
 
         Project project = new Project();
         viewModel.backlogProperty().setValue(new Backlog("backlog", null, null, null, project,  new ArrayList<Story>(), null));
-
         Sprint sprint = new Sprint();
         sprint.setGoal("Sprint");
         viewModel.backlogProperty().get().getProject().observableSprints().add(sprint);

@@ -85,20 +85,6 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        storiesValidator = new ObservableRuleBasedValidator();
-        storiesValidator.addRule(
-                Bindings.createBooleanBinding(
-                        () -> {
-                            for (Story story : stories) {
-                                if (!story.getIsReady()) {
-                                    return false;
-                                }
-                            }
-                            return true;
-                        },
-                        stories),
-                ValidationMessage.error("All stories must be marked as ready"));
-
         startDateValidator = new ObservableRuleBasedValidator();
         startDateValidator.addRule(startDateProperty.isNotNull(),
                 ValidationMessage.error("Start date must not be empty"));
@@ -152,9 +138,21 @@ public class SprintViewModel implements ViewModel {
         releaseValidator = new FunctionBasedValidator<>(releaseProperty,
                 release -> release != null,
                 ValidationMessage.error("Release must exist"));
+
+        storiesValidator = new ObservableRuleBasedValidator();
+        storiesValidator.addRule(
+                Bindings.createBooleanBinding(
+                        () -> {
+                            for (Story story : stories) {
+                                if (!story.getIsReady()) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        },
+                        stories),
+                ValidationMessage.error("All stories must be marked as ready"));
     }
-
-
 
     public void load(Sprint sprint) {
         if (sprint != null) {
