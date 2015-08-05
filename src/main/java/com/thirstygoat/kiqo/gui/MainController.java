@@ -569,7 +569,7 @@ public class MainController implements Initializable {
         }
         Organisation organisation;
         try {
-            SearchableItems.clear();
+            SearchableItems.getInstance().clear();
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)
@@ -985,7 +985,7 @@ public class MainController implements Initializable {
                 return;
             }
         }
-        SearchableItems.clear();
+        SearchableItems.getInstance().clear();
         selectedOrganisationProperty.set(new Organisation(true));
     }
 
