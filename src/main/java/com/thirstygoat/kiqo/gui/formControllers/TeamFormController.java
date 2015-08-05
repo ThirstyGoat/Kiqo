@@ -155,8 +155,11 @@ public class TeamFormController extends FormController<Team> {
         teamMembers.addAll(targetPeople);
         if (team == null) {
             // create command
-            command = new CreateTeamCommand(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers,
-                    productOwner, scrumMaster, devTeam, organisation);
+            team = new Team(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers);
+            team.setProductOwner(productOwner);
+            team.setScrumMaster(scrumMaster);
+            team.setDevTeam(devTeam);
+            command = new CreateTeamCommand(team, organisation);
         } else {
             // edit command
             final ArrayList<Command> changes = new ArrayList<>();

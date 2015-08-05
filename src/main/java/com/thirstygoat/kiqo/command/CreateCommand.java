@@ -12,13 +12,13 @@ public abstract class CreateCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public final void execute() {
         addToModel();
         SearchableItems.getInstance().addSearchable(obj);
     }
 
     @Override
-    public void undo() {
+    public final void undo() {
         SearchableItems.getInstance().removeSearchable(obj);
         removeFromModel();
     }

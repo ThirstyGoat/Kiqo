@@ -17,13 +17,12 @@ public class CreateBacklogCommandTest {
 
     private Backlog backlog;
     private Project project;
-    private Scale scale;
     private CreateBacklogCommand command;
 
     @Before
     public void setup() {
         project = new Project("proj", "Project");
-        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>(), scale);
+        backlog = new Backlog("", "", "", new Person() ,project, new ArrayList<>(), Scale.FIBONACCI);
         command = new CreateBacklogCommand(backlog);
     }
 
