@@ -2,7 +2,9 @@ package com.thirstygoat.kiqo.persistence;
 
 import com.google.gson.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
+
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -89,6 +91,7 @@ public class PersistenceManager {
         }
         if (organisation != null) {
             organisation.setSaveLocation(file);
+            SearchableItems.getInstance().addAll(organisation);
         }
         return organisation;
     }
