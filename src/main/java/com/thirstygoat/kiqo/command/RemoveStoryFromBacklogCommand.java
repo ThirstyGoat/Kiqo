@@ -41,4 +41,16 @@ public class RemoveStoryFromBacklogCommand extends Command {
     public String getType() {
         return compoundCommand.getType();
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("RemoveStoryFromBacklogCommand\\{compoundCommand='");
+        builder.append(compoundCommand);
+        builder.append("\\}");
+        return builder.toString();
+    }
 }
