@@ -53,12 +53,10 @@ public class UndoManager {
         UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
         command.execute();
         undoStack.push(command);
-        if (command.getClass() != RevertCommand.class) {
-            if (undoStack.size() < savePosition) { // behind saveposition
-                canRevertProperty.set(false);
-            }
-            redoStack.clear();
+        if (undoStack.size() < savePosition) { // behind saveposition
+            canRevertProperty.set(false);
         }
+        redoStack.clear();
 
         updateUndoRedoTypes();
         checkChangesSaved();
@@ -140,9 +138,7 @@ public class UndoManager {
     }
 
     private void checkChangesSaved() {
-        // If the top of the undostack is a RevertCommand, then that means that the user has just Reverted to last
-        // saved version, therefore changes are saved - feels a little hacky - Bradley
-        if (!undoStack.isEmpty() && undoStack.peek().getClass() == RevertCommand.class) {
+        if (!undoStack.isEmpty()) {
             changesSavedProperty().set(true);
             return;
         }
