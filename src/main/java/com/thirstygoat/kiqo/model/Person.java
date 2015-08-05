@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,6 +61,16 @@ public class Person extends Item {
         this.department = new SimpleStringProperty(department);
         this.skills = FXCollections.observableArrayList(Item.getWatchStrategy());
         this.skills.addAll(skills);
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        List<String> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(getShortName(), getLongName(), getDescription(), getUserId(), getEmailAddress(), getPhoneNumber(), getDepartment()));
+        return searchStrings;
     }
 
     @Override
@@ -189,10 +200,5 @@ public class Person extends Item {
 
     public void setTeam(Team team) {
         this.team = team;
-    }
-
-    @Override
-    public String[] getSearchableStrings() {
-        return new String[] {getShortName(), getLongName(), getDescription()};
     }
 }

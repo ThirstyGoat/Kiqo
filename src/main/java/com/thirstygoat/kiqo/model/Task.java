@@ -4,6 +4,10 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * Created by samschofield on 23/07/15.
  */
@@ -26,6 +30,16 @@ public class Task extends Item {
         this.estimate = new SimpleFloatProperty(estimate);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
+
+//    /**
+//     * @return a string array of the searchable fields for a model object
+//     */
+//    @Override
+//    public String[] getSearchableStrings() {
+//        return new String[] {
+//                getShortName(), getDescription(), getStatus().toString()
+//        };
+//    }
 
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
@@ -105,7 +119,7 @@ public class Task extends Item {
     }
 
     @Override
-    public String[] getSearchableStrings() {
-        return new String[] {};
+    public List<String> getSearchableStrings() {
+        return new ArrayList<>();
     }
 }

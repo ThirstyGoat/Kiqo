@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,8 +28,8 @@ public class Team extends Item {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Team() {
-        shortName = new SimpleStringProperty();
-        description = new SimpleStringProperty();
+        shortName = new SimpleStringProperty("");
+        description = new SimpleStringProperty("");
     }
 
     public Team(String shortName, String description, List<Person> teamMembers) {
@@ -36,6 +37,19 @@ public class Team extends Item {
         this.description = new SimpleStringProperty(description);
         this.teamMembers.addAll(teamMembers);
     }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        List<String> searchString = new ArrayList<>();
+        searchString.addAll(Arrays.asList(getShortName(), getDescription()));
+        if (productOwnerProperty().get() != null) searchString.add(getProductOwner().getShortName());
+        if (scrumMasterProperty().get() != null) searchString.add(getScrumMaster().getShortName());
+        return searchString;
+    }
+
 
     @Override
     public StringProperty shortNameProperty() {

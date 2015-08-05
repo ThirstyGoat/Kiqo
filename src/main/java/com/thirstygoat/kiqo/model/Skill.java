@@ -3,6 +3,11 @@ package com.thirstygoat.kiqo.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
 /**
  * Created by leroy on 25/03/15.
  */
@@ -21,6 +26,16 @@ public class Skill extends Item {
     public Skill(String shortName, String description) {
         this.shortName = new SimpleStringProperty(shortName);
         this.description = new SimpleStringProperty(description);
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        List<String> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(getShortName(), getDescription()));
+        return searchStrings;
     }
 
     /*
