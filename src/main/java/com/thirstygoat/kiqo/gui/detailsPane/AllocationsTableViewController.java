@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.command.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
 import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
@@ -9,6 +9,7 @@ import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;

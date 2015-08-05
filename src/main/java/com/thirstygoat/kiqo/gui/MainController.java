@@ -3,6 +3,13 @@ package com.thirstygoat.kiqo.gui;
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.delete.DeleteBacklogCommand;
+import com.thirstygoat.kiqo.command.delete.DeletePersonCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteProjectCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteReleaseCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteSkillCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteStoryCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteTeamCommand;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
@@ -19,6 +26,7 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
@@ -38,6 +46,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
+
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
