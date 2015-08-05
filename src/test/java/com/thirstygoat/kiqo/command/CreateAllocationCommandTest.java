@@ -1,8 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

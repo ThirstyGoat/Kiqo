@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

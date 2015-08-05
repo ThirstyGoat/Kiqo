@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

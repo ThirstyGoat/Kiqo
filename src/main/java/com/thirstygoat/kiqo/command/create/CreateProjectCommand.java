@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.command;
+package com.thirstygoat.kiqo.command.create;
 
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;

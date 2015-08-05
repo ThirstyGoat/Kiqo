@@ -1,5 +1,6 @@
-package com.thirstygoat.kiqo.command;
+package com.thirstygoat.kiqo.command.delete;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
