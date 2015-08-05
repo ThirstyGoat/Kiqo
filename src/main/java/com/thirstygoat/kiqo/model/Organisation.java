@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
