@@ -31,10 +31,10 @@ public class Search {
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables()) {
             // Check for matches against every string the object allows to be searchable
-            List<String> searchableStrings = searchable.getSearchableStrings();
-            for (String string : searchableStrings) {
+            List<SearchableField> searchableFields = searchable.getSearchableStrings();
+            for (SearchableField searchableField : searchableFields) {
                 // Perform comparison
-                if (string.toLowerCase().matches(".*" + query.trim() + ".*")) {
+                if (searchableField.getFieldValue().toLowerCase().matches(".*" + query.trim() + ".*")) {
                     results.add(new SearchResult(searchable, query.trim()));
                 }
                 break;
