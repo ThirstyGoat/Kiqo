@@ -34,6 +34,15 @@ public class UndoManagerTest {
         public String getType() {
             return "";
         }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("MockCommand\\{done='");
+            builder.append(done);
+            builder.append("\\}");
+            return builder.toString();
+        }
     }
 
     /**
