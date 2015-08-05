@@ -65,11 +65,14 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         
         attachValidators();
         okButton.disableProperty().bind(viewModel.validProperty().not());
+        
+        // TODO register autocompleting textfields
     }
     
     @Override
     public void setExitStrategy(Runnable exitStrategy) {
-        // disabled if invalid so any clicks must be good to close.
+        // the ok button will be disabled if the form is invalid
+        // so any clicks must be good to close.
         okButton.setOnAction(event -> exitStrategy.run());
         cancelButton.setOnAction(event -> exitStrategy.run());
     }

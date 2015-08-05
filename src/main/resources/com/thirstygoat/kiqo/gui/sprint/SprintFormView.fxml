@@ -47,8 +47,8 @@
                 <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="2"  GridPane.halignment="RIGHT"/>
                 <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
                 <TextField fx:id="releaseTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <TextField fx:id="goalTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TextField fx:id="goalTextField" promptText="display name" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <TextField fx:id="nameTextField" promptText="long name" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                 <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="8" />
 

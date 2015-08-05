@@ -10,7 +10,10 @@ import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -191,6 +194,10 @@ public class SprintViewModel implements ViewModel {
 
     public ObjectProperty<Release> releaseProperty() {
         return releaseProperty;
+    }
+
+    public ReadOnlyBooleanProperty validProperty() {
+        return allValidator.getValidationStatus().validProperty();
     }
 
     public ObservableList<Story> getStories() {

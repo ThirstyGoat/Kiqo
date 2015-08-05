@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -95,9 +96,5 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     
     public Property<String> backlogNameProperty() {
         return backlogNameProperty;
-    }
-    
-    public ReadOnlyBooleanProperty validProperty() {
-        return super.allValidation().validProperty();
     }
 }
