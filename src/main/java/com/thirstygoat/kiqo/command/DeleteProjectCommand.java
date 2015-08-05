@@ -8,7 +8,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
 /**
  * Created by Bradley on 29/04/15.
  */
-public class DeleteProjectCommand extends Command<Project> {
+public class DeleteProjectCommand extends Command {
     private final Organisation organisation;
     private final Project project;
 
@@ -25,14 +25,12 @@ public class DeleteProjectCommand extends Command<Project> {
     }
 
     @Override
-    public Project execute() {
+    public void execute() {
         index = organisation.getProjects().indexOf(project);
         organisation.getProjects().remove(project);
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(project);
-
-        return project;
     }
 
     

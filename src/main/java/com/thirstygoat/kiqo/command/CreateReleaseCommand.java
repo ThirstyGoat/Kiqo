@@ -5,7 +5,7 @@ import com.thirstygoat.kiqo.model.Release;
 /**
  * Created by james on 11/04/15.
  */
-public class CreateReleaseCommand extends Command<Release> {
+public class CreateReleaseCommand extends Command {
     private final Release release;
 
 
@@ -14,9 +14,8 @@ public class CreateReleaseCommand extends Command<Release> {
     }
 
     @Override
-    public Release execute() {
+    public void execute() {
         release.getProject().observableReleases().add(release);
-        return release;
     }
 
     @Override

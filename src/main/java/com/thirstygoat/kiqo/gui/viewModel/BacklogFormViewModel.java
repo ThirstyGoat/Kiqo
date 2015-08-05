@@ -27,7 +27,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     private Person productOwner;
     private Organisation organisation;
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
 
 
@@ -221,7 +221,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     public void setCommand() {
         final ArrayList<Story> stories = new ArrayList<>();
@@ -232,7 +232,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
                     descriptionProperty.getValue(), productOwner, projectProperty.get(), stories, scaleProperty.getValue());
             command = new CreateBacklogCommand(backlog);
         } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!longNameProperty.getValue().equals(backlog.getLongName())) {
                 changes.add(new EditCommand<>(backlog, "longName", longNameProperty.getValue()));
             }

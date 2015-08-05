@@ -8,7 +8,7 @@ import com.thirstygoat.kiqo.model.Story;
  * Command to add a Skill to a Project
  *
  */
-public class CreateAcceptanceCriteriaCommand extends Command<AcceptanceCriteria> {
+public class CreateAcceptanceCriteriaCommand extends Command {
     private final AcceptanceCriteria acceptanceCriteria;
     private final Story story;
 
@@ -22,9 +22,8 @@ public class CreateAcceptanceCriteriaCommand extends Command<AcceptanceCriteria>
     }
 
     @Override
-    public AcceptanceCriteria execute() {
+    public void execute() {
         story.getAcceptanceCriteria().add(acceptanceCriteria);
-        return acceptanceCriteria;
     }
 
     @Override

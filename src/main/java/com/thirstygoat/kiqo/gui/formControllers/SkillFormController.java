@@ -31,7 +31,7 @@ public class SkillFormController extends FormController<Skill> {
     private String description;
     private boolean valid = false;
     private Stage stage;
-    private Command<?> command;
+    private Command command;
     private Organisation organisation;
 
     // Begin FXML Injections
@@ -124,7 +124,7 @@ public class SkillFormController extends FormController<Skill> {
             final Skill s = new Skill(shortNameTextField.getText(), descriptionTextField.getText());
             command = new CreateSkillCommand(s, organisation);
         } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(skill.getShortName())) {
                 changes.add(new EditCommand<>(skill, "shortName", shortNameTextField.getText()));
@@ -175,6 +175,6 @@ public class SkillFormController extends FormController<Skill> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
 }

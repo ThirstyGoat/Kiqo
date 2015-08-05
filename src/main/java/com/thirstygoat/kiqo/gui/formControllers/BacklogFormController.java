@@ -36,7 +36,7 @@ public class BacklogFormController extends FormController<Backlog> {
     private Stage stage;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
-    private Command<?> command;
+    private Command command;
     
     // Begin FXML Injections
     @FXML
@@ -204,7 +204,7 @@ public class BacklogFormController extends FormController<Backlog> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return viewModel.getCommand() ;
     }
 

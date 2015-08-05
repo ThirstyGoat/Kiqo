@@ -6,7 +6,7 @@ import com.thirstygoat.kiqo.model.Story;
 /**
  * Created by Carina on 20/05/2015.
  */
-public class CreateBacklogCommand extends Command<Backlog> {
+public class CreateBacklogCommand extends Command {
     private final Backlog backlog;
 
     public CreateBacklogCommand(final Backlog backlog) {
@@ -14,7 +14,7 @@ public class CreateBacklogCommand extends Command<Backlog> {
     }
 
     @Override
-    public Backlog execute() {
+    public void execute() {
         backlog.getProject().observableBacklogs().add(backlog);
 
         // Assign this backlog as the owner of each of the stories
@@ -24,7 +24,6 @@ public class CreateBacklogCommand extends Command<Backlog> {
 
         // Remove all stories from unallocated stories in Project
         backlog.getProject().observableUnallocatedStories().removeAll(backlog.getStories());
-        return backlog;
     }
 
     @Override

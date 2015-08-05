@@ -8,14 +8,12 @@ package com.thirstygoat.kiqo.command;
  *
  * @param <T> Return type of execute() method
  */
-public abstract class Command<T> {
+public abstract class Command {
 
     /**
      * Executes the command
-     *
-     * @return object created during execution (if any)
      */
-    public abstract T execute();
+    public abstract void execute();
 
     /**
      * Re-executes the command. DO NOT OVERRIDE THIS METHOD as it is depended upon to be equivalent to execute (ie. execute must not be a precondition of redo).

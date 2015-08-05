@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 public class TaskFormController extends FormController<Task> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
-    private Command<?> command;
+    private Command command;
     private Organisation organisation;
     private TaskFormViewModel viewModel;
     private Story story;
@@ -97,7 +97,7 @@ public class TaskFormController extends FormController<Task> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return viewModel.getCommand();
     }
 

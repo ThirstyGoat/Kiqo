@@ -13,7 +13,7 @@ import java.util.List;
  * @author amy
  *
  */
-public class CreateTeamCommand extends Command<Team> {
+public class CreateTeamCommand extends Command {
     private final String shortName;
     private final String description;
     private final List<Person> teamMembers = new ArrayList<>();
@@ -47,7 +47,7 @@ public class CreateTeamCommand extends Command<Team> {
     }
 
     @Override
-    public Team execute() {
+    public void execute() {
         if (team == null) {
             team = new Team(shortName, description, teamMembers);
             team.setProductOwner(productOwner);
@@ -62,7 +62,6 @@ public class CreateTeamCommand extends Command<Team> {
 
         // Add team to project
         organisation.getTeams().add(team);
-        return team;
     }
 
     @Override
