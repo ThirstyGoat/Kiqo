@@ -9,32 +9,28 @@ import com.thirstygoat.kiqo.model.Project;
  * @author amy
  *
  */
-public class CreateProjectCommand extends Command {
+public class CreateProjectCommand extends CreateCommand {
     private final Project project;
     private final Organisation organisation;
 
     /**
      * Constructor for a command that creates a project with the specified properties
-     * @param project
+     * @param project project to be added to the model
      * @param organisation organisation to which the project belongs
      */
     public CreateProjectCommand(final Project project, final Organisation organisation) {
+        super(project);
         this.project = project;
         this.organisation = organisation;
     }
 
     @Override
-    public void execute() {
+    public void addToModel() {
         organisation.getProjects().add(project);
     }
 
     @Override
-    public String toString() {
-        return "<Create Project: \"" + project.getShortName() + "\" \"" + project.getLongName() + "\" \"" + project.getDescription() + "\">";
-    }
-
-    @Override
-    public void undo() {
+    public void removeFromModel() {
         // Goodbye team
         organisation.getProjects().remove(project);
     }
@@ -42,6 +38,11 @@ public class CreateProjectCommand extends Command {
     @Override
     public String getType() {
         return "Create Project";
+    }
+
+    @Override
+    public String toString() {
+        return "<Create Project: \"" + project.getShortName() + "\" \"" + project.getLongName() + "\" \"" + project.getDescription() + "\">";
     }
 
 }

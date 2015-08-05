@@ -5,21 +5,22 @@ import com.thirstygoat.kiqo.model.Story;
 /**
  * Created by james on 11/04/15.
  */
-public class CreateStoryCommand extends Command {
+public class CreateStoryCommand extends CreateCommand {
     private final Story story;
 
 
     public CreateStoryCommand(final Story story) {
+        super(story);
         this.story = story;
     }
 
     @Override
-    public void execute() {
+    public void addToModel() {
         story.getProject().observableUnallocatedStories().add(story);
     }
 
     @Override
-    public void undo() {
+    public void removeFromModel() {
         story.getProject().observableUnallocatedStories().remove(story);
     }
 
