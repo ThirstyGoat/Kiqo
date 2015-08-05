@@ -1,20 +1,35 @@
 package com.thirstygoat.kiqo.command;
 
-public abstract class CreateCommand extends Command {
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableItems;
 
-    public CreateCommand() {
+public abstract class CreateCommand extends Command {
+    private Searchable obj;
+
+    public CreateCommand(Searchable obj) {
         super();
+        this.obj = obj;
     }
 
     @Override
-    public abstract String getType();
+    public void execute() {
+        addToModel();
+        SearchableItems.getInstance().addSearchable(obj);
+    }
 
     @Override
-    public abstract String toString();
+    public void undo() {
+        SearchableItems.getInstance().removeSearchable(obj);
+        removeFromModel();
+    }
 
-    @Override
-    public abstract void undo();
-
-    @Override
-    public abstract void execute();
+    /**
+     * Add the object to the model (used in execute()).
+     */
+    protected abstract void addToModel();
+    
+    /**
+     * Remove the object from the model (used in undo()).
+     */
+    protected abstract void removeFromModel();
 }
