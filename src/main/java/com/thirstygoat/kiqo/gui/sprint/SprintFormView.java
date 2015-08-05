@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -67,6 +68,9 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         okButton.disableProperty().bind(viewModel.validProperty().not());
         
         // TODO register autocompleting textfields
+        // FormController.setTextFieldSuggester
+
+        Platform.runLater(nameTextField::requestFocus);
     }
     
     @Override
