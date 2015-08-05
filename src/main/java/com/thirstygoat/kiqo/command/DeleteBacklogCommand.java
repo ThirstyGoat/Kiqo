@@ -2,8 +2,8 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.search.SearchableItems;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

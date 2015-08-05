@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo;
 
-import com.thirstygoat.kiqo.nodes.GoatDialog;
-import com.thirstygoat.kiqo.viewModel.MainController;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

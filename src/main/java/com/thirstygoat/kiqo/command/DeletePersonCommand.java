@@ -3,8 +3,8 @@ package com.thirstygoat.kiqo.command;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.SearchableItems;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.Utilities;
 
 /**

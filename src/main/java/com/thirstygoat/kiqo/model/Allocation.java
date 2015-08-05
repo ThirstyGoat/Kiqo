@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.Searchable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 

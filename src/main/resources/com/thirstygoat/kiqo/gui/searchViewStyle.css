@@ -1,0 +1,36 @@
+/* Search Result */
+.searchResultButton {
+    -fx-background-color: #e5e5e5;
+    -fx-background-radius: 0;
+}
+
+.searchResultButton:pressed, .list-cell:selected .searchResultButton {
+    -fx-background-color: #66ccff;
+    -fx-cursor: hand
+}
+
+.searchResultButton:hover {
+    -fx-cursor: hand
+}
+
+.search-text-field {
+    -fx-background-color: #ffffff;
+    -fx-background-image: url('thirsty-goat-glyph.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 4 4;
+    -fx-padding: 12 12 12 60;
+    -fx-text-fill: #000;
+    -fx-prompt-text-fill: #bdbdbe;
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
+    -fx-border-radius: 0;
+    -fx-border-color: #bdbdbe;
+}
+.search-text-field:focused {
+    -fx-prompt-text-fill: #bdbdbe;
+}
+
+.search-list-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}

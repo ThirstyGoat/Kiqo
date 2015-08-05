@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.Search;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

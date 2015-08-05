@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
@@ -23,10 +25,9 @@ public abstract class Item implements Serializable, Searchable {
         return p -> new Observable[] {p.shortNameProperty()};
     }
 
-    /**
-     * @return non-null unique identifier for this item
-     */
-    public abstract String getShortName();
+    public String getShortName() {
+        return shortNameProperty().get();
+    };
 
     public abstract StringProperty shortNameProperty();
 

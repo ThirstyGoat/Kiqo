@@ -50,11 +50,11 @@
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.12</version>
     </dependency>
-      <dependency>
-          <groupId>de.jensd</groupId>
-          <artifactId>fontawesomefx</artifactId>
-          <version>8.3</version>
-      </dependency>
+    <dependency>
+	  <groupId>de.jensd</groupId>
+	  <artifactId>fontawesomefx</artifactId>
+	  <version>8.4</version>
+	</dependency>
   </dependencies>
   <pluginRepositories>
     <pluginRepository>

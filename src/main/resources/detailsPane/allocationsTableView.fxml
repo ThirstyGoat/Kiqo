@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Font?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.viewModel.AllocationsTableViewController">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController">
   <children>
     <TableView fx:id="allocationsTableView" prefHeight="200.0" prefWidth="-1.0">
       <columns>

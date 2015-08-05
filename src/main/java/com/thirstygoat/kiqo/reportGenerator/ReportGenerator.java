@@ -28,6 +28,7 @@ public final class ReportGenerator {
     private static final String BACKLOG_COMMENT =       " -  ### Backlog ###";
     private static final String STORY_COMMENT =         " -  ### Story ###";
     private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
+    private static final String SPRINT_COMMENT =        " -  ### Sprint ###";
     private static final String AC_COMMENT =            " - ";
     private static final String TASK_COMMENT =          " - ";
     private static final int WIDTH = 80;
@@ -173,7 +174,7 @@ public final class ReportGenerator {
         final List<String> lines = new LinkedList<>();
 
         lines.add(ReportUtils.valueLine("Short Name", project.getShortName()));
-        lines.add(ReportUtils.valueLine("Long Name", project.getLongName()));
+        lines.add(ReportUtils.valueLine("Name", project.getLongName()));
         lines.add(ReportUtils.valueLine("Description", null));
 
         // Add backlogs to the report
@@ -195,6 +196,12 @@ public final class ReportGenerator {
         for (final Release release : project.getReleases()) {
             lines.add(ReportGenerator.RELEASE_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateReleaseReport(release)));
+
+            for (final Sprint sprint : release.getSprints()) {
+                lines.add(ReportGenerator.SPRINT_COMMENT);
+                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateSprintReport(sprint)));
+            }
+
         }
 
         // only print teams that are currently allocated
@@ -307,6 +314,22 @@ public final class ReportGenerator {
 
         return lines;
     }
+    //TODO check validity
+    private List<String> generateSprintReport(Sprint sprint) {
+        final List<String> lines = new ArrayList<>();
+        lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
+        lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
+        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Team", sprint.getTeam()));
+
+        lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
+        for (final Story story : sprint.getStories()) {
+            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + story.getShortName());
+        }
+        return lines;
+    }
 
     /**
      *  Generate team data including product owner information and current allocation.
@@ -364,7 +387,7 @@ public final class ReportGenerator {
         people.remove(person);
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
-        lines.add(ReportUtils.valueLine("Long Name", person.getLongName()));
+        lines.add(ReportUtils.valueLine("Name", person.getLongName()));
         lines.add(ReportUtils.valueLine("Description", person.getDescription()));
         lines.add(ReportUtils.valueLine("User ID", person.getUserId()));
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
