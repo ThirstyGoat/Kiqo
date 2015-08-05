@@ -33,20 +33,17 @@ public class AdvancedSearch extends Search {
             SearchResult searchResult = new SearchResult(searchable, getQuery());
 
             // Check for matches against every string the object allows to be searchable
-            for (String string : searchable.getSearchableStrings()) {
+            for (SearchableField searchableField : searchable.getSearchableStrings()) {
 
                 // If RegEx, perform comparison using String.matches, otherwise use Dice Coefficient algorithm
                 if (regexEnabled) {
-                    if (string.matches(getQuery())) {
-                        searchResult.addMatch(new Match(string, 1.0)); // 1.0 similarity used since [when using RegEx]
+                    if (searchableField.getFieldValue().matches(getQuery())) {
+                        searchResult.addMatch(new Match(searchResult, searchableField.getFieldValue(), 1.0)); // 1.0 similarity used since [when using RegEx]
                         // results must exactly match the RegEx, therefore matches always have 1.0 similarity
-                        break; // When we have a match, we move on.
                     }
                 } else {
-                    double similarity = SearchAlgorithm.diceCoefficient(getQuery(), string.toLowerCase());
-                    if (similarity != 0.0) {
-                        searchResult.addMatch(new Match(string, similarity));
-                        break; // When we have a match, we move on.
+                    if (searchableField.getFieldValue().toLowerCase().matches(".*" + escapedQuery + ".*")) {
+                        searchResult.addMatch(new Match(searchResult, searchableField.getFieldValue(), 1.0));
                     }
                 }
             }
