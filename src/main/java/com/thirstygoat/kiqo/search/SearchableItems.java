@@ -1,16 +1,10 @@
 package com.thirstygoat.kiqo.search;
 
-<<<<<<< Upstream, based on twig/sharedBasicSearch
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-=======
-import java.util.Collections;
-import java.util.List;
-
->>>>>>> 1a6614e Updated SearchTest to use CreateCommands instead of Item constructor. Converted SearchableItems.clear() into a static method (following singleton pattern).
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -48,7 +42,6 @@ public class SearchableItems {
         searchableItems.add(item);
     }
 
-<<<<<<< Upstream, based on twig/sharedBasicSearch
     public ObservableList<Searchable> getSearchables() {
         return FXCollections.unmodifiableObservableList(searchableItems);
     }
@@ -81,10 +74,6 @@ public class SearchableItems {
                 return stories;
         }
         return getSearchables();
-=======
-    public List<Searchable> getSearchables() {
-        return Collections.unmodifiableList(searchableItems);
->>>>>>> 1a6614e Updated SearchTest to use CreateCommands instead of Item constructor. Converted SearchableItems.clear() into a static method (following singleton pattern).
     }
 
     public void removeSearchable(Searchable searchable) {
