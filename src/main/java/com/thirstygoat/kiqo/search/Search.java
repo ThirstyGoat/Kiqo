@@ -3,6 +3,9 @@ package com.thirstygoat.kiqo.search;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
+
 /**
  * Created by leroy on 25/07/15.
  */
@@ -28,7 +31,7 @@ public class Search {
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables()) {
             // Check for matches against every string the object allows to be searchable
-            String[] searchableStrings = searchable.getSearchableStrings();
+            List<String> searchableStrings = searchable.getSearchableStrings();
             for (String string : searchableStrings) {
                 // Perform comparison
                 if (string.toLowerCase().matches(".*" + query.trim() + ".*")) {

@@ -7,6 +7,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * Created by samschofield on 25/06/15.
  */
@@ -86,6 +90,11 @@ public class AcceptanceCriteria extends Item {
         return criteria;
     }
 
+    @Override
+    public List<String> getSearchableStrings() {
+        return new ArrayList<>();
+    }
+
     /**
      * Represents the state of acceptance.
      */
@@ -93,10 +102,5 @@ public class AcceptanceCriteria extends Item {
         ACCEPTED,
         REJECTED,
         NEITHER
-    }
-
-    @Override
-    public String[] getSearchableStrings() {
-        return new String[] {};
     }
 }

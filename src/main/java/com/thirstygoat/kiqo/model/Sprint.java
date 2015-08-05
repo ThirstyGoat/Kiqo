@@ -8,7 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+
 
 /**
  * Created by Bradley on 31/07/15.
@@ -49,6 +54,18 @@ public class Sprint extends Item {
         setEndDate(endDate);
         getStories().addAll(stories);
     }
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<String> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(getShortName(), getLongName(), getDescription(),
+                getStartDate().format(dateTimeFormatter), getEndDate().format(dateTimeFormatter)));
+        return searchStrings;
+    }
+
 
     @Override
     public StringProperty shortNameProperty() {

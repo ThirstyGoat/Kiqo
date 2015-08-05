@@ -8,6 +8,9 @@ import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Represents an object in the model.
@@ -32,7 +35,9 @@ public abstract class Item implements Serializable, Searchable {
     public abstract StringProperty shortNameProperty();
 
     @Override
-    public String[] getSearchableStrings() {
-        return new String[] {getShortName()};
+    public List<String> getSearchableStrings() {
+        List<String> searchString = new ArrayList<>();
+        searchString.add(getShortName());
+        return searchString;
     }
 }

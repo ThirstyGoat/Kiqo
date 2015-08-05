@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -61,6 +62,16 @@ public class Project extends Item {
         setShortName(shortName);
         setLongName(longName);
         setDescription(description);
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        List<String> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(getShortName(), getLongName(), getDescription()));
+        return searchStrings;
     }
 
     /**
