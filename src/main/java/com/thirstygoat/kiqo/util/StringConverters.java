@@ -1,12 +1,15 @@
 package com.thirstygoat.kiqo.util;
 
+import javafx.util.StringConverter;
+
+import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Scale;
-
-import javafx.util.StringConverter;
+import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by leroy on 21/07/15.
@@ -77,6 +80,67 @@ public class StringConverters {
             @Override
             public String toString(Scale scale) {
                 return scale != null ? scale.toString() : "";
+            }
+        };
+    }
+
+    public static StringConverter<Team> teamStringConverter(Organisation organisation) {
+        return new StringConverter<Team>() {
+            @Override
+            public String toString(Team team) {
+                return team != null ? team.getShortName() : "";
+            }
+
+            @Override
+            public Team fromString(String shortName) {
+                for (final Team team : organisation.getTeams()) {
+                    if (team.getShortName().equals(shortName)) {
+                        return team;
+                    }
+                }
+                return null;
+            }
+        };
+    }
+
+    public static StringConverter<Backlog> backlogStringConverter(Organisation organisation) {
+        return new StringConverter<Backlog>() {
+            @Override
+            public String toString(Backlog backlog) {
+                return backlog != null ? backlog.getShortName() : "";
+            }
+
+            @Override
+            public Backlog fromString(String shortName) {
+                for (final Project project : organisation.getProjects()) {
+                    for (final Backlog backlog : project.getBacklogs()) {
+                        if (backlog.getShortName().equals(shortName)) {
+                            return backlog;
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+    }
+
+    public static StringConverter<Release> releaseStringConverter(Organisation organisation) {
+        return new StringConverter<Release>() {
+            @Override
+            public String toString(Release release) {
+                return release != null ? release.getShortName() : "";
+            }
+
+            @Override
+            public Release fromString(String shortName) {
+                for (final Project project : organisation.getProjects()) {
+                    for (final Release release : project.getReleases()) {
+                        if (release.getShortName().equals(shortName)) {
+                            return release;
+                        }
+                    }
+                }
+                return null;
             }
         };
     }

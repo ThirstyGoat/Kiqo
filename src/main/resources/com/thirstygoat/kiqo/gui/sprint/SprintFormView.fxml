@@ -4,12 +4,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.formControllers.AllocationFormController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintFormView">
   <bottom>
     <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
       <children>
         <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-        <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Allocation" />
+        <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Sprint" />
       </children>
       <padding>
         <Insets right="35.0" />
@@ -48,8 +48,8 @@
                 <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
                 <TextField fx:id="releaseTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <TextField fx:id="goalTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                <TextField fx:id="NameTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <TextField fx:id="DescriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="8" />
 
             </children>

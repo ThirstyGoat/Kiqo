@@ -161,7 +161,7 @@ public class SprintViewModelTest {
     }
 
     @Test
-    public void releaseValidationTest() {
+    public void testReleaseValidation() {
         SprintViewModel viewModel = new SprintViewModel();
 
         Assert.assertFalse("Should not be valid by default",

@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.model.Story;
+
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,10 +16,12 @@ import java.util.ResourceBundle;
 /**
 * Created by Carina Blair on 3/08/2015.
 */
-public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewModel> {
+public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewModel>, Initializable {
 
+    private Label placeHolder = new Label();
+    
     @InjectViewModel
-    private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
+    private SprintDetailsPaneViewModel viewModel;
 
     @FXML
     private Label longNameLabel;
@@ -40,29 +44,21 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private TableColumn<Story, String> shortNameTableColumn;
 
-    private Label placeHolder = new Label();
-
-
-//    @Override
+    @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        longNameLabel.textProperty().bind(viewModel.longNameProperty());
+        goalLabel.textProperty().bind(viewModel.goalProperty());
+        startDateLabel.textProperty().bind(viewModel.startDateProperty().asString());
+        endDateLabel.textProperty().bind(viewModel.endDateProperty().asString());
+        releaseLabel.textProperty().bind(viewModel.releaseProperty().asString());
+        descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
+        teamLabel.textProperty().bind(viewModel.teamProperty().asString());
+        backlogLabel.textProperty().bind(viewModel.backlogProperty().asString());
 
-        longNameLabel.textProperty().bind(sprintDetailsPaneViewModel.longNameProperty());
-        goalLabel.textProperty().bind(sprintDetailsPaneViewModel.goalProperty());
-        startDateLabel.textProperty().bind(sprintDetailsPaneViewModel.startDateProperty().asString());
-        endDateLabel.textProperty().bind(sprintDetailsPaneViewModel.endDateProperty().asString());
-        releaseLabel.textProperty().bind(sprintDetailsPaneViewModel.releaseProperty().asString());
-        descriptionLabel.textProperty().bind(sprintDetailsPaneViewModel.descriptionProperty());
-        teamLabel.textProperty().bind(sprintDetailsPaneViewModel.teamProperty().asString());
-        backlogLabel.textProperty().bind(sprintDetailsPaneViewModel.backlogProperty().asString());
-
-//        shortNameTableColumn.setCellFactory(param -> new StoryListCell(sprintDetailsPaneViewModel));
+//        shortNameTableColumn.setCellFactory(param -> new StoryListCell(viewModel));
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storyTableView.setItems(sprintDetailsPaneViewModel.getStories());
+        storyTableView.setItems(viewModel.getStories());
 
-        placeHolder.textProperty().set(sprintDetailsPaneViewModel.PLACEHOLDER);
-
+        placeHolder.textProperty().set(viewModel.PLACEHOLDER);
     }
-
-
-
-    }
+}

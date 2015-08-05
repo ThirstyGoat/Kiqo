@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
@@ -41,7 +42,6 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
 
-
     public SprintViewModel() {
         goalProperty = new SimpleStringProperty("");
         longNameProperty = new SimpleStringProperty("");
@@ -55,7 +55,7 @@ public class SprintViewModel implements ViewModel {
 
         goalValidator = new FunctionBasedValidator<>(goalProperty,
                 string -> {
-                    if (string.length() == 0 || string.length() > 20) {
+                    if (string == null || string.length() == 0 || string.length() > 20) {
                         return false;
                     }
                     final Backlog backlog = backlogProperty.get();
@@ -131,7 +131,8 @@ public class SprintViewModel implements ViewModel {
         endDateValidator.addRule(
                 Bindings.createBooleanBinding(
                         () -> {
-                            if (releaseProperty.get() == null) {
+                            // endDate null check is necessary for runtime correctness but impotent in terms of validation
+                            if (releaseProperty.get() == null || endDateProperty().get() == null) {
                                 return true;
                             } else {
                                 return endDateProperty.get().isBefore(releaseProperty.get().getDate())
@@ -153,33 +154,8 @@ public class SprintViewModel implements ViewModel {
                 release -> release != null,
                 ValidationMessage.error("Release must exist"));
     }
-
-
-
-    public void load(Sprint sprint) {
-        if (sprint != null) {
-            goalProperty.set(sprint.shortNameProperty().get());
-            longNameProperty.set(sprint.longNameProperty().get());
-            descriptionProperty.set(sprint.descriptionProperty().get());
-            backlogProperty.set(sprint.backlogProperty().get());
-            startDateProperty.set(sprint.startDateProperty().get());
-            endDateProperty.set(sprint.endDateProperty().get());
-            teamProperty.set(sprint.teamProperty().get());
-            releaseProperty.set(sprint.releaseProperty().get());
-            stories.clear();
-            stories.addAll(sprint.getStories());
-        } else {
-            goalProperty.set("");
-            longNameProperty.set("");
-            descriptionProperty.set("");
-            backlogProperty.set(null);
-            startDateProperty.set(null);
-            endDateProperty.set(null);
-            teamProperty.set(null);
-            releaseProperty.set(null);
-            stories.clear();
-        }
-    }
+    
+    public void load(Sprint sprint, Organisation organisation) {} 
 
     public StringProperty goalProperty() {
         return goalProperty;

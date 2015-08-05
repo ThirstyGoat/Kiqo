@@ -1,20 +1,33 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.gui.viewModel.SprintFormViewModel;
-import de.saxsys.mvvmfx.FxmlView;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.Utilities;
+
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 /**
 * Created by Carina Blair on 3/08/2015.
 */
-public class SprintFormView implements FxmlView<SprintFormViewModel> {
+public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializable {
+    @InjectViewModel
+    private SprintFormViewModel viewModel;
+    
     @FXML
-    private TextField backlogTextField;
+    private TextField nameTextField;
     @FXML
-    private TextField teamTextField;
+    private TextField goalTextField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -22,20 +35,38 @@ public class SprintFormView implements FxmlView<SprintFormViewModel> {
     @FXML
     private TextField releaseTextField;
     @FXML
-    private TextField goalTextField;
-    @FXML
-    private TextField nameTextField;
-    @FXML
     private TextField descriptionTextField;
     @FXML
-    private GoatListSelectionView storySelectionView;
+    private TextField teamTextField;
+    @FXML
+    private TextField backlogTextField;
+    @FXML
+    private GoatListSelectionView<Story> storySelectionView;
+    @FXML
+    private Button okButton;
+    @FXML
+    private Button cancelButton;
 
-    public void initialize() {
-
-
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        nameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
+        goalTextField.textProperty().bindBidirectional(viewModel.goalProperty());
+        startDatePicker.valueProperty().bindBidirectional(viewModel.startDateProperty());
+        endDatePicker.valueProperty().bindBidirectional(viewModel.endDateProperty());
+        releaseTextField.textProperty().bindBidirectional(viewModel.releaseNameProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        teamTextField.textProperty().bindBidirectional(viewModel.teamNameProperty());
+        backlogTextField.textProperty().bindBidirectional(viewModel.backlogNameProperty());
     }
+    
+    public void setExitStrategy(Runnable exitStrategy) {
+        okButton.setOnAction(event -> {
+            if (viewModel.isValid()) {
+                exitStrategy.run();
+            }
+        });
 
-
-
+        cancelButton.setOnAction(event -> exitStrategy.run());
+    }
 }
 

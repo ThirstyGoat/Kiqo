@@ -2,14 +2,11 @@ package com.thirstygoat.kiqo.gui;
 
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.command.delete.DeleteBacklogCommand;
-import com.thirstygoat.kiqo.command.delete.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteStoryCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteTeamCommand;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.delete.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
@@ -18,6 +15,8 @@ import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
@@ -26,7 +25,6 @@ import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
@@ -46,7 +44,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
-
 import org.controlsfx.control.StatusBar;
 
 import java.io.File;
@@ -516,6 +513,12 @@ public class MainController implements Initializable {
         }
     }
 
+    public void newSprint() {
+        if (selectedOrganisationProperty.get() != null) {
+            dialog(null, "Sprint");
+        }
+    }
+
     public void allocateTeams() {
         if (selectedOrganisationProperty.get() != null) {
             allocationDialog(null);
@@ -550,10 +553,6 @@ public class MainController implements Initializable {
         if (selectedOrganisationProperty.get() != null) {
             taskDialog(task);
         }
-    }
-
-    public void newSprint() {
-        //TODO add method body when the dialog has been completed
     }
 
     public void openOrganisation(File draggedFilePath) {
@@ -844,25 +843,41 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            @SuppressWarnings("unchecked")
-            final FormController<T> formController = loader.getController();
-            formController.setStage(stage);
-            formController.setOrganisation(selectedOrganisationProperty.get());
-            formController.populateFields(t);
-            stage.showAndWait();
-            if (formController.isValid()) {
-                doCommand(formController.getCommand());
+            
+            if (type.equals("Sprint")) { // TODO replace with enum
+                ViewTuple<SprintFormView, SprintFormViewModel> viewTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
+                // viewModel
+                final SprintFormViewModel viewModel = viewTuple.getViewModel();
+                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                // view
+                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(viewTuple.getView()));
+                
+                stage.showAndWait();
+                if (viewModel.isValid()) {
+                    doCommand(viewModel.createCommand());
+                }
+            } else {
+                final FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
+                Pane root;
+                try {
+                    root = loader.load();
+                } catch (final IOException e) {
+                    MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
+                    return;
+                }
+                final Scene scene = new Scene(root);
+                stage.setScene(scene);
+                final FormController<T> formController = loader.getController();
+                formController.setStage(stage);
+                formController.setOrganisation(selectedOrganisationProperty.get());
+                formController.populateFields(t);
+                
+                stage.showAndWait();
+                if (formController.isValid()) {
+                    doCommand(formController.getCommand());
+                }
             }
         });
     }

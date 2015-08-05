@@ -1,11 +1,12 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
 
 /**
  * Created by Carina Blair on 5/08/2015.
  */
-public class SprintDetailsPaneViewModel extends SprintViewModel{
+public class SprintDetailsPaneViewModel extends SprintViewModel {
     public final String PLACEHOLDER = "No stories in sprint";
 
     public SprintDetailsPaneViewModel() {
@@ -16,7 +17,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel{
      * Bind to model so there is not copying data in
      */
     @Override
-    public void load(Sprint sprint) {
+    public void load(Sprint sprint, Organisation organisation) {
         if (sprint != null) {
             super.goalProperty().bind(sprint.shortNameProperty());
             super.longNameProperty().bind(sprint.longNameProperty());
@@ -39,9 +40,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel{
             super.releaseProperty().unbind();
             super.getStories().clear();
         }
-
     }
-
 }
 
 
