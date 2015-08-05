@@ -854,7 +854,7 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(viewTuple.getView()));
                 
                 stage.showAndWait();
-                if (viewModel.isValid()) {
+                if (viewModel.validProperty().get()) { // true if ok; false if cancel
                     doCommand(viewModel.createCommand());
                 }
             } else {

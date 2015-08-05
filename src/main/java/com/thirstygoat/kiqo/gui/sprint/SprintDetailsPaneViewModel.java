@@ -6,12 +6,8 @@ import com.thirstygoat.kiqo.model.Sprint;
 /**
  * Created by Carina Blair on 5/08/2015.
  */
-public class SprintDetailsPaneViewModel extends SprintViewModel {
+public class SprintDetailsPaneViewModel extends SprintViewModel implements Loadable<Sprint> {
     public final String PLACEHOLDER = "No stories in sprint";
-
-    public SprintDetailsPaneViewModel() {
-
-    }
 
     /**
      * Bind to model so there is not copying data in

@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,7 +14,7 @@ import com.thirstygoat.kiqo.util.StringConverters;
 /**
  * Created by samschofield on 31/07/15.
  */
-public class SprintFormViewModel extends SprintViewModel {
+public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
     
     private StringProperty teamNameProperty;
     private StringProperty releaseNameProperty;
@@ -60,6 +61,7 @@ public class SprintFormViewModel extends SprintViewModel {
         }
     }
     
+    @Override
     public Command<?> createCommand() {
         // TODO implement me
         final Command<Void> noop = new Command<Void>() {
@@ -83,10 +85,6 @@ public class SprintFormViewModel extends SprintViewModel {
         return noop;
     }
 
-    public boolean isValid() {
-        return true; // TODO implement me
-    }
-
     public Property<String> teamNameProperty() {
         return teamNameProperty;
     }
@@ -97,5 +95,9 @@ public class SprintFormViewModel extends SprintViewModel {
     
     public Property<String> backlogNameProperty() {
         return backlogNameProperty;
+    }
+    
+    public ReadOnlyBooleanProperty validProperty() {
+        return super.allValidation().validProperty();
     }
 }

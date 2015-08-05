@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -41,6 +42,7 @@ public class SprintViewModel implements ViewModel {
     private final ObservableRuleBasedValidator endDateValidator;
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
+    private final CompositeValidator allValidator;
 
     public SprintViewModel() {
         goalProperty = new SimpleStringProperty("");
@@ -153,10 +155,12 @@ public class SprintViewModel implements ViewModel {
         releaseValidator = new FunctionBasedValidator<>(releaseProperty,
                 release -> release != null,
                 ValidationMessage.error("Release must exist"));
+        
+        allValidator = new CompositeValidator(goalValidator, longNameValidator, 
+                descriptionValidator, backlogValidator, startDateValidator, 
+                endDateValidator, teamValidator, releaseValidator, storiesValidator);
     }
     
-    public void load(Sprint sprint, Organisation organisation) {} 
-
     public StringProperty goalProperty() {
         return goalProperty;
     }
@@ -227,5 +231,9 @@ public class SprintViewModel implements ViewModel {
 
     public ValidationStatus storiesValidation() {
         return storiesValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus allValidation() {
+        return allValidator.getValidationStatus();
     }
 }
