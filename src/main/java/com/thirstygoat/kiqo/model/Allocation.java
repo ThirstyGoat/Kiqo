@@ -5,6 +5,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Created by samschofield on 21/04/15.
@@ -30,7 +34,6 @@ public class Allocation implements Searchable {
 
         this.startDate.set(startDate);
         setEndDate(endDate);
-//        SearchableItems.getInstance().addSearchable(this);
     }
 
     /**
@@ -167,7 +170,9 @@ public class Allocation implements Searchable {
     }
 
     @Override
-    public String[] getSearchableStrings() {
-        return new String[] {team.getShortName(), project.getShortName()};
+    public List<String> getSearchableStrings() {
+        List<String> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(team.getShortName(), project.getShortName()));
+        return searchStrings;
     }
 }

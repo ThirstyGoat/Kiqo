@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,6 +41,17 @@ public class Backlog extends Item {
         this.project = new SimpleObjectProperty<>(project);
         this.scale = new SimpleObjectProperty<>(scale);
         this.stories.addAll(stories);
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<String> getSearchableStrings() {
+        List<String> searchString =  new ArrayList<>();
+        searchString.addAll(Arrays.asList(getShortName(), getLongName(), getDescription()));
+        if (getProductOwner() != null) searchString.add(getProductOwner().getShortName());
+        return searchString;
     }
 
     public Scale getScale() {
