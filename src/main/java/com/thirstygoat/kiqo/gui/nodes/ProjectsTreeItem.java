@@ -27,9 +27,6 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
         final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
         stories.setItems(((Project) item).observableUnallocatedStories());
 
-//        final GoatTreeItem<Release> releases = new GoatTreeItem<>("Releases", selectionModel, Utilities.LEXICAL_COMPARATOR);
-//        releases.setItems(((Project) item).observableReleases());
-
         final ReleaseTreeItem releases = new ReleaseTreeItem(selectionModel);
         releases.setItems(((Project) item).observableReleases());
 
