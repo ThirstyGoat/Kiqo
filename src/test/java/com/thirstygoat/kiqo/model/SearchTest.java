@@ -1,8 +1,8 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.command.CreateCommand;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.CreateSkillCommand;
+import com.thirstygoat.kiqo.command.create.CreateCommand;
+import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.search.Search;
 import com.thirstygoat.kiqo.search.SearchableItems;
 

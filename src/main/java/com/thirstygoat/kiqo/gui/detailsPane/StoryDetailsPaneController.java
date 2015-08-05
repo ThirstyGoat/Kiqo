@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.delete.DeleteAcceptanceCriteriaCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
@@ -9,6 +11,7 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
@@ -22,6 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;

@@ -1,5 +1,6 @@
-package com.thirstygoat.kiqo.command;
+package com.thirstygoat.kiqo.command.create;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableItems;
 

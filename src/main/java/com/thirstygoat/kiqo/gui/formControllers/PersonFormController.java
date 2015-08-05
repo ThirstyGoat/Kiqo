@@ -2,12 +2,13 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreatePersonCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;

@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.model.*;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

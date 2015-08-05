@@ -2,12 +2,13 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

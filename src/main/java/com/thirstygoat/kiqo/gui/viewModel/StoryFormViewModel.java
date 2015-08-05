@@ -1,10 +1,12 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;

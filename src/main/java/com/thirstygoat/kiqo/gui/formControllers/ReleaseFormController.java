@@ -1,16 +1,19 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
