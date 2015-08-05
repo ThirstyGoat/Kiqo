@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -170,9 +171,9 @@ public class Allocation implements Searchable {
     }
 
     @Override
-    public List<String> getSearchableStrings() {
-        List<String> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(team.getShortName(), project.getShortName()));
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name:", team.getShortName()), new SearchableField("Project:", project.getShortName())));
         return searchStrings;
     }
 }

@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -68,9 +69,10 @@ public class Project extends Item {
      * @return a string array of the searchable fields for a model object
      */
     @Override
-    public List<String> getSearchableStrings() {
-        List<String> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(getShortName(), getLongName(), getDescription()));
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Long Name", getLongName()),
+                new SearchableField("Description", getDescription())));
         return searchStrings;
     }
 

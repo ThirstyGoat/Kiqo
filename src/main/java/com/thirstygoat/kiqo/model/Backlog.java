@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,10 +48,11 @@ public class Backlog extends Item {
      * @return a string array of the searchable fields for a model object
      */
     @Override
-    public List<String> getSearchableStrings() {
-        List<String> searchString =  new ArrayList<>();
-        searchString.addAll(Arrays.asList(getShortName(), getLongName(), getDescription()));
-        if (getProductOwner() != null) searchString.add(getProductOwner().getShortName());
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString =  new ArrayList<>();
+        searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()),
+                new SearchableField("Long Name", getLongName()), new SearchableField("Description", getDescription())));
+        if (getProductOwner() != null) searchString.add(new SearchableField("Product Owner", getProductOwner().getShortName()));
         return searchString;
     }
 

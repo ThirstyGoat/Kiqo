@@ -7,5 +7,5 @@ import java.util.List;
  * Created by leroy on 25/07/15.
  */
 public interface Searchable {
-    List<String> getSearchableStrings();
+    List<SearchableField> getSearchableStrings();
 }
