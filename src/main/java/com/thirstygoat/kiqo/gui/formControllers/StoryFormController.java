@@ -158,7 +158,7 @@ public class StoryFormController extends FormController<Story> {
 
     private void setupStoriesList() {
         storySelectionView.setSourceHeader(new Label("Stories Available:"));
-        storySelectionView.setTargetHeader(new Label("Dependencies"));
+        storySelectionView.setTargetHeader(new Label("Depends on:"));
 
         storySelectionView.setPadding(new Insets(0, 0, 0, 0));
 
