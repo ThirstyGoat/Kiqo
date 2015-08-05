@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by Carina on 20/05/2015.
  */
-public class DeleteBacklogCommand extends Command<Backlog>{
+public class DeleteBacklogCommand extends Command{
     private final Project project;
     private final Backlog backlog;
     private final Map<Integer, Story> stories = new LinkedHashMap<>();
@@ -39,13 +39,13 @@ public class DeleteBacklogCommand extends Command<Backlog>{
     }
 
     @Override
-    public Backlog execute() {
+    public void execute() {
         // Set stories backlog' field to null
         for (final Story story : backlog.getStories()) {
             story.setBacklog(null);
         }
 
-        // if setDelteMember was called, delete each story member
+        // delete each story member
         for (final Story story : stories.values()) {
             backlog.observableStories().remove(story);
         }
@@ -56,8 +56,6 @@ public class DeleteBacklogCommand extends Command<Backlog>{
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(backlog);
-
-        return backlog;
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
 /**
  * Created by james on 14/04/15.
  */
-public class DeleteReleaseCommand extends Command<Release> {
+public class DeleteReleaseCommand extends Command {
     private final Release release;
 
     private int index;
@@ -17,14 +17,12 @@ public class DeleteReleaseCommand extends Command<Release> {
     }
 
     @Override
-    public Release execute() {
+    public void execute() {
         index = release.getProject().getReleases().indexOf(release);
         release.getProject().observableReleases().remove(release);
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(release);
-
-        return release;
     }
 
     @Override

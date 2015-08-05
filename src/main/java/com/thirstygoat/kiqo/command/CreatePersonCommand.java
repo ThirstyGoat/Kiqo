@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.model.Person;
  * @author amy, Edited by Bradley 10/4/15
  *
  */
-public class CreatePersonCommand extends Command<Person> {
+public class CreatePersonCommand extends Command {
     private final Person person;
     private final Organisation organisation;
 
@@ -26,9 +26,8 @@ public class CreatePersonCommand extends Command<Person> {
     }
 
     @Override
-    public Person execute() {
+    public void execute() {
         organisation.getPeople().add(person);
-        return person;
     }
 
     @Override

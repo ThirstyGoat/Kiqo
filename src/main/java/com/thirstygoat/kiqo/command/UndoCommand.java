@@ -1,16 +1,15 @@
 package com.thirstygoat.kiqo.command;
 
-public class UndoCommand extends Command<Void> {
-    private final Command<?> command;
+public class UndoCommand extends Command {
+    private final Command command;
 
-    protected UndoCommand(Command<?> command) {
+    protected UndoCommand(Command command) {
         this.command = command;
     }
 
     @Override
-    public Void execute() {
+    public void execute() {
         command.undo();
-        return null;
     }
 
     @Override

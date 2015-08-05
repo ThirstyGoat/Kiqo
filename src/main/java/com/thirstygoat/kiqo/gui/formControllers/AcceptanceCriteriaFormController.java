@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 public class AcceptanceCriteriaFormController extends FormController<AcceptanceCriteria> {
     private Stage stage;
     private boolean valid;
-    private Command<?> command;
+    private Command command;
     private Organisation organisation;
     private Story story;
     private AcceptanceCriteria acceptanceCriteria;
@@ -85,7 +85,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
             valid = true;
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!acceptanceCriteria.getShortName().equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
@@ -101,7 +101,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 

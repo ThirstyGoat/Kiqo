@@ -37,7 +37,7 @@ public class StoryFormController extends FormController<Story> {
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
-    private Command<?> command;
+    private Command command;
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -205,7 +205,7 @@ public class StoryFormController extends FormController<Story> {
     public boolean isValid() { return valid; }
 
     @Override
-    public Command<?> getCommand() { return viewModel.getCommand(); }
+    public Command getCommand() { return viewModel.getCommand(); }
 
     public void setCommand() {
         viewModel.setCommand();

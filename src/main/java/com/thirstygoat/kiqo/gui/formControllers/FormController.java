@@ -46,7 +46,7 @@ public abstract class FormController<T> implements Initializable {
      *
      * @return gets the command that this form represents
      */
-    public abstract Command<?> getCommand();
+    public abstract Command getCommand();
 
     public <E extends Item> void setTextFieldSuggester(TextField textField, Collection<E> list) {
         // use a callback to get an up-to-date list, instead of just whatever exists at initialisation.

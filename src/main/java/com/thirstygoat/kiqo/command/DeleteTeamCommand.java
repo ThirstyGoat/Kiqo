@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by james on 11/04/15.
  */
-public class DeleteTeamCommand extends Command<Team> {
+public class DeleteTeamCommand extends Command {
     private final Organisation organisation;
     private final Team team;
     private final List<DeletePersonCommand> deletePersonCommands = new ArrayList<>();
@@ -56,7 +56,7 @@ public class DeleteTeamCommand extends Command<Team> {
     }
 
     @Override
-    public Team execute() {
+    public void execute() {
         // If we are deleting the team members as well, their team field can stay set to this team
         if (deleteTeamMembers) {
             deletePersonCommands.forEach(Command::execute);
@@ -73,8 +73,6 @@ public class DeleteTeamCommand extends Command<Team> {
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(team);
-
-        return team;
     }
 
 

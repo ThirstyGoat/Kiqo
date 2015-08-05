@@ -108,7 +108,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             }
             isReadyListener = (observable, oldValue, newValue) -> {
                 if (story.getIsReady() != newValue) {
-                    Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                    Command command = new EditCommand<>(story, "isReady", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
             };
@@ -187,10 +187,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteTask() {
-        Command<?> command;
+        Command command;
         if (taskListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
-            List<Command<?>> commands = new ArrayList<>();
+            List<Command> commands = new ArrayList<>();
             for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
                 commands.add(new DeleteTaskCommand(task, story));
             }
@@ -235,10 +235,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteAC() {
-        Command<?> command;
+        Command command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
-            List<Command<?>> commands = new ArrayList<>();
+            List<Command> commands = new ArrayList<>();
             for (AcceptanceCriteria ac : acListView.getSelectionModel().getSelectedItems()) {
                 commands.add(new DeleteAcceptanceCriteriaCommand(ac, story));
             }
@@ -252,7 +252,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         // If so, then the command executed must mark the story as no longer ready
         if (acListView.getSelectionModel().getSelectedItems().size() == acListView.getItems().size() &&
                 story.getIsReady()) {
-            List<Command<?>> changes = new ArrayList<>();
+            List<Command> changes = new ArrayList<>();
             changes.add(command);
             changes.add(new EditCommand<>(story, "isReady", false));
             command = new CompoundCommand("Delete AC", changes);
@@ -291,7 +291,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
-                List<Command<?>> commands = new ArrayList<>();
+                List<Command> commands = new ArrayList<>();
                 if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
                     commands.add(new EditCommand<>(story, "isReady", false));
                 }
