@@ -8,8 +8,8 @@ import java.util.ListIterator;
  * Command which (when executed) undoes changes up until the last save position.
  * @author Bradley Kirwan
  */
-public class RevertCommand extends Command<Void> {
-    private final List<Command<?>> commands = new ArrayList<>();
+public class RevertCommand extends Command {
+    private final List<Command> commands = new ArrayList<>();
 
     /**
      *
@@ -21,30 +21,29 @@ public class RevertCommand extends Command<Void> {
         // only one of these while loops will be executed
         // depending on whether revert takes us forwards or backwards
         while (diff < 0) {
-            final Command<?> command = undoManager.undoStack.pop();
+            final Command command = undoManager.undoStack.pop();
             commands.add(command);
             diff++;
         }
         while (diff > 0) {
-            final Command<?> command = undoManager.redoStack.pop();
+            final Command command = undoManager.redoStack.pop();
             commands.add(new UndoCommand(command));
             diff--;
         }
     }
 
     @Override
-    public Void execute() {
-        for (final Command<?> command : commands) {
+    public void execute() {
+        for (final Command command : commands) {
             command.undo();
         }
-        return null;
     }
 
     @Override
     public void undo() {
-        final ListIterator<Command<?>> li = commands.listIterator(commands.size());
+        final ListIterator<Command> li = commands.listIterator(commands.size());
         while (li.hasPrevious()) {
-            final Command<?> command = li.previous();
+            final Command command = li.previous();
             command.execute(); // or redo?
         }
     }

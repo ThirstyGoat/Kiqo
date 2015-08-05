@@ -48,7 +48,7 @@ public class TeamFormController extends FormController<Team> {
     private Stage stage;
     private Organisation organisation;
     private Team team;
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
     private Person scrumMaster;
     private Person productOwner;
@@ -159,7 +159,7 @@ public class TeamFormController extends FormController<Team> {
                     productOwner, scrumMaster, devTeam, organisation);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(team.getShortName())) {
                 changes.add(new EditCommand<>(team, "shortName", shortNameTextField.getText()));
@@ -209,7 +209,7 @@ public class TeamFormController extends FormController<Team> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 

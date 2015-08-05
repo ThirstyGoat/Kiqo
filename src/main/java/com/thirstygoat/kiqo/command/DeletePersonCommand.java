@@ -11,7 +11,7 @@ import com.thirstygoat.kiqo.util.Utilities;
  * Command to delete a person from a project.
  *
  */
-public class DeletePersonCommand extends Command<Person> {
+public class DeletePersonCommand extends Command {
     private final Organisation organisation;
     private final Person person;
     private final Team team;
@@ -52,7 +52,7 @@ public class DeletePersonCommand extends Command<Person> {
     }
 
     @Override
-    public Person execute() {
+    public void execute() {
         // Remove the person first from their team, working the way up the hierarchy
         if (team != null) {
             // Remove person from PO/SM/Dev Role if they're there, and remember where they are
@@ -79,8 +79,6 @@ public class DeletePersonCommand extends Command<Person> {
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(person);
-
-        return person;
     }
 
     @Override

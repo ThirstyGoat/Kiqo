@@ -27,7 +27,7 @@ public class RemoveStoryFromBacklogCommandTest {
 
     @Test
     public void checkStoryRemovedFromBacklog() {
-        Command<?> command = new RemoveStoryFromBacklogCommand(story, backlog);
+        Command command = new RemoveStoryFromBacklogCommand(story, backlog);
         Assert.assertTrue(backlog.getStories().contains(story));
 
         command.execute();
@@ -36,7 +36,7 @@ public class RemoveStoryFromBacklogCommandTest {
 
     @Test
     public void checkStoryAddedToProjectUnAllocatedStories() {
-        Command<?> command = new RemoveStoryFromBacklogCommand(story, backlog);
+        Command command = new RemoveStoryFromBacklogCommand(story, backlog);
         Assert.assertTrue(backlog.getStories().contains(story));
 
         command.execute();
@@ -46,7 +46,7 @@ public class RemoveStoryFromBacklogCommandTest {
     @Test
     public void checkReadinessReset() {
         story.setIsReady(true);
-        Command<?> command = new RemoveStoryFromBacklogCommand(story, backlog);
+        Command command = new RemoveStoryFromBacklogCommand(story, backlog);
 
         command.execute();
         Assert.assertFalse(story.getIsReady());
@@ -55,7 +55,7 @@ public class RemoveStoryFromBacklogCommandTest {
     @Test
     public void checkReadinessReset_Undo() {
         story.setIsReady(true);
-        Command<?> command = new RemoveStoryFromBacklogCommand(story, backlog);
+        Command command = new RemoveStoryFromBacklogCommand(story, backlog);
 
         command.execute();
         Assert.assertFalse(story.getIsReady());

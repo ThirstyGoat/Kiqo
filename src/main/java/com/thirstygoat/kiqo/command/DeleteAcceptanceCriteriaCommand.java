@@ -8,7 +8,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
  * Command to delete a acceptanceCriteria from a project.
  *
  */
-public class DeleteAcceptanceCriteriaCommand extends Command<AcceptanceCriteria> {
+public class DeleteAcceptanceCriteriaCommand extends Command {
 
     private final Story story;
     private final AcceptanceCriteria acceptanceCriteria;
@@ -25,13 +25,12 @@ public class DeleteAcceptanceCriteriaCommand extends Command<AcceptanceCriteria>
     }
 
     @Override
-    public AcceptanceCriteria execute() {
+    public void execute() {
         storyIndex = story.getAcceptanceCriteria().indexOf(acceptanceCriteria);
         story.getAcceptanceCriteria().remove(acceptanceCriteria);
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(acceptanceCriteria);
-        return acceptanceCriteria;
     }
 
     @Override

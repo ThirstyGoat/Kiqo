@@ -30,7 +30,7 @@ public class TaskFormViewModel extends FormController<Task> {
     private Task task;
     private Organisation organisation;
     private boolean valid = false;
-    private Command<?> command;
+    private Command command;
 
     private StringProperty nameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
@@ -152,7 +152,7 @@ public class TaskFormViewModel extends FormController<Task> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     public void setCommand() {
         if (task == null) {
@@ -165,7 +165,7 @@ public class TaskFormViewModel extends FormController<Task> {
             valid = true;
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!task.getShortName().equals(shortNameProperty().get())) {
                 changes.add(new EditCommand<>(task, "shortName", shortNameProperty().get()));
             }

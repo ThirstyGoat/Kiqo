@@ -7,7 +7,7 @@ import com.thirstygoat.kiqo.model.Team;
 /**
  * Created by bradley on 23/04/15.
  */
-public class CreateAllocationCommand extends Command<Allocation> {
+public class CreateAllocationCommand extends Command {
     private final Allocation allocation;
     private final Project project;
     private final Team team;
@@ -19,11 +19,9 @@ public class CreateAllocationCommand extends Command<Allocation> {
     }
 
     @Override
-    public Allocation execute() {
+    public void execute() {
         project.observableAllocations().add(allocation);
         team.observableAllocations().add(allocation);
-
-        return null;
     }
 
     @Override

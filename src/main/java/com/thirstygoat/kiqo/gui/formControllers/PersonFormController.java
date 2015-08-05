@@ -41,7 +41,7 @@ public class PersonFormController extends FormController<Person> {
     private Person person;
     private boolean valid = false;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
-    private Command<?> command;
+    private Command command;
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -275,7 +275,7 @@ public class PersonFormController extends FormController<Person> {
                     phoneTextField.getText(), departmentTextField.getText(), skills);
             command = new CreatePersonCommand(p, organisation);
         } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(person.getShortName())) {
                 changes.add(new EditCommand<>(person, "shortName", shortNameTextField.getText()));
@@ -348,7 +348,7 @@ public class PersonFormController extends FormController<Person> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     @Override
     public void setStage(Stage stage) {

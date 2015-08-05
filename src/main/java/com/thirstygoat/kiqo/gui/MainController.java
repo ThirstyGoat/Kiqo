@@ -332,7 +332,7 @@ public class MainController implements Initializable {
         final boolean deleteStories = (checkBox != null) ? checkBox.selectedProperty().getValue() : false;
 
         if (result.equals("Delete Backlog")) {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (deleteStories) {
                 final DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
                 command.setDeleteMembers();
@@ -717,7 +717,7 @@ public class MainController implements Initializable {
         undoManager.redoCommand();
     }
 
-    public void doCommand(Command<?> command) {
+    public void doCommand(Command command) {
         undoManager.doCommand(command);
     }
 

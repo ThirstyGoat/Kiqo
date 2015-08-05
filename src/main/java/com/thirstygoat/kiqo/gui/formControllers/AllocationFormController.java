@@ -36,7 +36,7 @@ public class AllocationFormController extends FormController<Allocation> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private boolean valid;
-    private Command<?> command;
+    private Command command;
     private Organisation organisation;
     private Project project;
     private Team team = null;
@@ -307,7 +307,7 @@ public class AllocationFormController extends FormController<Allocation> {
             command = new CreateAllocationCommand(allocation);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!team.equals(allocation.getTeam())) {
                 changes.add(new EditCommand<>(allocation, "team", team));
             }
@@ -330,7 +330,7 @@ public class AllocationFormController extends FormController<Allocation> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 

@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.model.Project;
  * @author amy
  *
  */
-public class CreateProjectCommand extends Command<Project> {
+public class CreateProjectCommand extends Command {
     private final Project project;
     private final Organisation organisation;
 
@@ -19,14 +19,13 @@ public class CreateProjectCommand extends Command<Project> {
      * @param organisation organisation to which the project belongs
      */
     public CreateProjectCommand(final Project project, final Organisation organisation) {
-       this.project = project;
+        this.project = project;
         this.organisation = organisation;
     }
 
     @Override
-    public Project execute() {
+    public void execute() {
         organisation.getProjects().add(project);
-        return project;
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.thirstygoat.kiqo.model.Skill;
  * Command to add a Skill to a Project
  *
  */
-public class CreateSkillCommand extends Command<Skill> {
+public class CreateSkillCommand extends Command {
     private final Skill skill;
     private final Organisation organisation;
 
@@ -22,9 +22,8 @@ public class CreateSkillCommand extends Command<Skill> {
     }
 
     @Override
-    public Skill execute() {
+    public void execute() {
         organisation.getSkills().add(skill);
-        return skill;
     }
 
     @Override

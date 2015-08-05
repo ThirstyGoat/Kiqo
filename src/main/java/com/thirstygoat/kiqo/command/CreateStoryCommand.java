@@ -5,7 +5,7 @@ import com.thirstygoat.kiqo.model.Story;
 /**
  * Created by james on 11/04/15.
  */
-public class CreateStoryCommand extends Command<Story> {
+public class CreateStoryCommand extends Command {
     private final Story story;
 
 
@@ -14,9 +14,8 @@ public class CreateStoryCommand extends Command<Story> {
     }
 
     @Override
-    public Story execute() {
+    public void execute() {
         story.getProject().observableUnallocatedStories().add(story);
-        return story;
     }
 
     @Override

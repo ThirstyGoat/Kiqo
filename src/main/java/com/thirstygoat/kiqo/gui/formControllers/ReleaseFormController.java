@@ -28,7 +28,7 @@ public class ReleaseFormController extends FormController<Release> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;
     private Release release;
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
     private Stage stage;
     private Project project;
@@ -152,7 +152,7 @@ public class ReleaseFormController extends FormController<Release> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 
@@ -164,7 +164,7 @@ public class ReleaseFormController extends FormController<Release> {
             command = new CreateReleaseCommand(release);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!shortNameTextField.getText().equals(release.getShortName())) {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }

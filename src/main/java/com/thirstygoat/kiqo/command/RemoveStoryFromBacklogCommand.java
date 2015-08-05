@@ -14,7 +14,7 @@ import java.util.List;
 public class RemoveStoryFromBacklogCommand extends Command {
     private CompoundCommand compoundCommand;
     public RemoveStoryFromBacklogCommand(Story story, Backlog backlog) {
-        List<Command<?>> commands = new ArrayList<>();
+        List<Command> commands = new ArrayList<>();
         commands.add(new MoveItemCommand<>(story, backlog.observableStories(),
                 backlog.projectProperty().get().observableUnallocatedStories()));
         commands.add(new EditCommand<>(story, "backlog", null));
@@ -28,8 +28,8 @@ public class RemoveStoryFromBacklogCommand extends Command {
     }
 
     @Override
-    public Object execute() {
-        return compoundCommand.execute();
+    public void execute() {
+        compoundCommand.execute();
     }
 
     @Override

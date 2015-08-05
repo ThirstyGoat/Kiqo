@@ -81,7 +81,7 @@ public class TaskListCell extends ListCell<Task> {
 
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != task.getStatus()) {
-                    Command<?> command = new EditCommand<>(task, "status", newValue);
+                    Command command = new EditCommand<>(task, "status", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
             });

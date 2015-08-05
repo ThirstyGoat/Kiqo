@@ -35,7 +35,7 @@ public class ProjectFormController extends FormController<Project> {
     public String shortName;
     public String description;
     private Project project;
-    private Command<?> command;
+    private Command command;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Stage stage;
@@ -112,7 +112,7 @@ public class ProjectFormController extends FormController<Project> {
             final Project p = new Project(shortNameTextField.getText(),longNameTextField.getText(), descriptionTextField.getText());
             command = new CreateProjectCommand(p, organisation);
         } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(project.getShortName())) {
                 changes.add(new EditCommand<>(project, "shortName", shortNameTextField.getText()));
@@ -188,7 +188,7 @@ public class ProjectFormController extends FormController<Project> {
 
     }
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     @Override
     public void setStage(final Stage stage) {

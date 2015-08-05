@@ -28,7 +28,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Backlog> backlogProperty = new SimpleObjectProperty<>();
     private Organisation organisation;
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
 
     private StringProperty shortNameProperty = new SimpleStringProperty("");
@@ -290,7 +290,7 @@ public class StoryFormViewModel extends FormController<Story> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     public void setCommand() {
         if (story == null) {
@@ -300,7 +300,7 @@ public class StoryFormViewModel extends FormController<Story> {
             command = new CreateStoryCommand(story);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!longNameProperty.getValue().equals(story.getLongName())) {
                 changes.add(new EditCommand<>(story, "longName", longNameProperty.getValue()));
             }

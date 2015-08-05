@@ -13,7 +13,7 @@ import java.util.Map;
  * Command to delete a skill from a project.
  *
  */
-public class DeleteSkillCommand extends Command<Skill> {
+public class DeleteSkillCommand extends Command {
 
     private final Organisation organisation;
     private final Skill skill;
@@ -57,7 +57,7 @@ public class DeleteSkillCommand extends Command<Skill> {
     }
 
     @Override
-    public Skill execute() {
+    public void execute() {
         // Remove the skill from any people in the project who have the skill
         for (Person person : peopleWithSkill.values()) {
             person.observableSkills().remove(skill);
@@ -68,8 +68,6 @@ public class DeleteSkillCommand extends Command<Skill> {
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(skill);
-
-        return skill;
     }
 
     @Override

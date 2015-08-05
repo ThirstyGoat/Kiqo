@@ -6,7 +6,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
 /**
  * Created by leroy on 15/05/15.
  */
-public class DeleteStoryCommand extends Command<Story> {
+public class DeleteStoryCommand extends Command {
     private final Story story;
 
     private int index;
@@ -16,7 +16,7 @@ public class DeleteStoryCommand extends Command<Story> {
     }
 
     @Override
-    public Story execute() {
+    public void execute() {
         if (story.getBacklog() != null) {
             index = story.getBacklog().getStories().indexOf(story);
             story.getBacklog().observableStories().remove(story);
@@ -27,8 +27,6 @@ public class DeleteStoryCommand extends Command<Story> {
 
         // Remove from SearchableItems
         SearchableItems.getInstance().removeSearchable(story);
-
-        return story;
     }
 
     @Override
