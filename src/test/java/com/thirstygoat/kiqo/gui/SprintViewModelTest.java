@@ -115,15 +115,15 @@ public class SprintViewModelTest {
         Story readyStory = new Story();
         readyStory.setIsReady(true);
 
-        viewModel.getStories().add(readyStory);
+        viewModel.stories().add(readyStory);
         Assert.assertTrue("Sprint can have ready stories",
                 viewModel.storiesValidation().isValid());
 
-        viewModel.getStories().add(unreadyStory);
+        viewModel.stories().add(unreadyStory);
         Assert.assertFalse("Sprint cannot have un-ready stories",
                 viewModel.storiesValidation().isValid());
 
-        viewModel.getStories().remove(unreadyStory);
+        viewModel.stories().remove(unreadyStory);
         Assert.assertTrue("Sprint can have ready stories",
                 viewModel.storiesValidation().isValid());
     }

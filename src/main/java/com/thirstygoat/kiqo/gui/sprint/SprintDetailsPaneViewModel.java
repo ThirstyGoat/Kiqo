@@ -23,8 +23,8 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
             super.endDateProperty().bind(sprint.endDateProperty());
             super.teamProperty().bind(sprint.teamProperty());
             super.releaseProperty().bind(sprint.releaseProperty());
-            super.getStories().clear();
-            super.getStories().addAll(sprint.getStories());
+            super.stories().clear();
+            super.stories().addAll(sprint.getStories());
         } else {
             super.goalProperty().unbind();
             super.longNameProperty().unbind();
@@ -34,7 +34,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
             super.endDateProperty().unbind();
             super.teamProperty().unbind();
             super.releaseProperty().unbind();
-            super.getStories().clear();
+            super.stories().clear();
         }
     }
 }

@@ -200,7 +200,7 @@ public class SprintViewModel implements ViewModel {
         return allValidator.getValidationStatus().validProperty();
     }
 
-    public ObservableList<Story> getStories() {
+    public ObservableList<Story> stories() {
         return stories;
     }
 

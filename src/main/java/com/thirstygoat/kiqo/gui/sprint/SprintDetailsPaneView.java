@@ -57,7 +57,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
 
 //        shortNameTableColumn.setCellFactory(param -> new StoryListCell(viewModel));
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storyTableView.setItems(viewModel.getStories());
+        storyTableView.setItems(viewModel.stories());
 
         placeHolder.textProperty().set(viewModel.PLACEHOLDER);
     }
