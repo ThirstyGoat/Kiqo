@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -58,11 +59,12 @@ public class Sprint extends Item {
      * @return a string array of the searchable fields for a model object
      */
     @Override
-    public List<String> getSearchableStrings() {
+    public List<SearchableField> getSearchableStrings() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        List<String> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(getShortName(), getLongName(), getDescription(),
-                getStartDate().format(dateTimeFormatter), getEndDate().format(dateTimeFormatter)));
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
+                new SearchableField("Long Name", getLongName()),
+                new SearchableField("Start Date", getStartDate().format(dateTimeFormatter)), new SearchableField("End Date", getEndDate().format(dateTimeFormatter))));
         return searchStrings;
     }
 

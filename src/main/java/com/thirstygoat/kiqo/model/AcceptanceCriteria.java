@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -91,7 +92,7 @@ public class AcceptanceCriteria extends Item {
     }
 
     @Override
-    public List<String> getSearchableStrings() {
+    public List<SearchableField> getSearchableStrings() {
         return new ArrayList<>();
     }
 

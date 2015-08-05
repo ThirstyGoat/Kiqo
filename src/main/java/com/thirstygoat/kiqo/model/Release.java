@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,10 +51,11 @@ public class Release extends Item implements Serializable {
      * @return a string array of the searchable fields for a model object
      */
     @Override
-    public List<String> getSearchableStrings() {
+    public List<SearchableField> getSearchableStrings() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        List<String> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(getShortName(), getDescription(), getDate().format(dateTimeFormatter)));
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
+                new SearchableField("Release Date", getDate().format(dateTimeFormatter))));
         return searchStrings;
     }
 

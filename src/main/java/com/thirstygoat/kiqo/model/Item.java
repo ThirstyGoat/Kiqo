@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
@@ -27,9 +28,9 @@ public abstract class Item implements Serializable, Searchable {
     public abstract StringProperty shortNameProperty();
 
     @Override
-    public List<String> getSearchableStrings() {
-        List<String> searchString = new ArrayList<>();
-        searchString.add(getShortName());
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString = new ArrayList<>();
+        searchString.add(new SearchableField("Short Name", getShortName()));
         return searchString;
     }
 }

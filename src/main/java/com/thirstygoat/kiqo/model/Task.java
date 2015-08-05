@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
@@ -119,7 +120,7 @@ public class Task extends Item {
     }
 
     @Override
-    public List<String> getSearchableStrings() {
+    public List<SearchableField> getSearchableStrings() {
         return new ArrayList<>();
     }
 }

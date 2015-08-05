@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -42,11 +43,11 @@ public class Team extends Item {
      * @return a string array of the searchable fields for a model object
      */
     @Override
-    public List<String> getSearchableStrings() {
-        List<String> searchString = new ArrayList<>();
-        searchString.addAll(Arrays.asList(getShortName(), getDescription()));
-        if (productOwnerProperty().get() != null) searchString.add(getProductOwner().getShortName());
-        if (scrumMasterProperty().get() != null) searchString.add(getScrumMaster().getShortName());
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString = new ArrayList<>();
+        searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription())));
+        if (productOwnerProperty().get() != null) searchString.add(new SearchableField("Product Owner", getProductOwner().getShortName()));
+        if (scrumMasterProperty().get() != null) searchString.add(new SearchableField("Scrum Master", getScrumMaster().getShortName()));
         return searchString;
     }
 
