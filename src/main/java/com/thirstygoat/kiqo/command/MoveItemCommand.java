@@ -85,4 +85,24 @@ public class MoveItemCommand<T extends Item> extends Command {
         return "Move Item";
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("MoveItemCommand\\{item='");
+        builder.append(item);
+        builder.append("', position='");
+        builder.append(position);
+        builder.append("', destination='");
+        builder.append(destination);
+        builder.append("', posIndex='");
+        builder.append(posIndex);
+        builder.append("', destIndex='");
+        builder.append(destIndex);
+        builder.append("\\}");
+        return builder.toString();
+    }
+
 }

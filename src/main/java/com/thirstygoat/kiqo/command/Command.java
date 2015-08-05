@@ -32,4 +32,10 @@ public abstract class Command {
      * @return user-friendly description of functionality
      */
     public abstract String getType();
+
+    /**
+     * @return developer-friendly description of state
+     */
+    @Override
+    public abstract String toString();
 }

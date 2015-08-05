@@ -6,15 +6,16 @@ import com.thirstygoat.kiqo.model.Story;
 /**
  * Created by Carina on 20/05/2015.
  */
-public class CreateBacklogCommand extends Command {
+public class CreateBacklogCommand extends CreateCommand {
     private final Backlog backlog;
 
     public CreateBacklogCommand(final Backlog backlog) {
+        super(backlog);
         this.backlog = backlog;
     }
 
     @Override
-    public void execute() {
+    public void addToModel() {
         backlog.getProject().observableBacklogs().add(backlog);
 
         // Assign this backlog as the owner of each of the stories
@@ -27,7 +28,7 @@ public class CreateBacklogCommand extends Command {
     }
 
     @Override
-    public void undo() {
+    public void removeFromModel() {
         backlog.getProject().observableBacklogs().remove(backlog);
 
         for (Story story : backlog.getStories()) {
