@@ -6,23 +6,24 @@ import com.thirstygoat.kiqo.model.Task;
 /**
  * Created by Carina Blair on 23/07/2015.
  */
-public class CreateTaskCommand extends Command {
+public class CreateTaskCommand extends CreateCommand {
 
     private final Task task;
     private final Story story;
 
     public CreateTaskCommand(final Task task, final Story story) {
+        super(task);
         this.task = task;
         this.story = story;
     }
 
     @Override
-    public void execute() {
+    public void addToModel() {
         story.observableTasks().add(task);
     }
 
     @Override
-    public void undo() {
+    public void removeFromModel() {
         story.observableTasks().remove(task);
     }
 

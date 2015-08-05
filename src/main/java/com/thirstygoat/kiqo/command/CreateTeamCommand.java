@@ -13,48 +13,22 @@ import java.util.List;
  * @author amy
  *
  */
-public class CreateTeamCommand extends Command {
-    private final String shortName;
-    private final String description;
-    private final List<Person> teamMembers = new ArrayList<>();
-    private final Person productOwner;
-    private final Person scrumMaster;
-    private final List<Person> devTeam;
-    private final Organisation organisation;
+public class CreateTeamCommand extends CreateCommand {
     private Team team;
-
+    private final Organisation organisation;
     /**
-     * Constructor for CreateTeamCommand
-     *
-     * @param shortName Short name of the team
-     * @param description Description of the team
-     * @param teamMembers List of people to be in the team
-     * @param productOwner Person in the Product Owner role for the team
-     * @param scrumMaster Person in the Scrum Master role for the team
-     * @param devTeam List of people in development roles for the team
+     * Constructor
+     * @param team team to be "created"
      * @param organisation organisation to which this team belongs
      */
-    public CreateTeamCommand(final String shortName, final String description, final List<Person> teamMembers, final Person productOwner,
-            final Person scrumMaster, final List<Person> devTeam,
-                             final Organisation organisation) {
-        this.shortName = shortName;
-        this.description = description;
-        this.teamMembers.addAll(teamMembers);
-        this.productOwner = productOwner;
-        this.scrumMaster = scrumMaster;
-        this.devTeam = devTeam;
+    public CreateTeamCommand(Team team, Organisation organisation) {
+        super(team);
+        this.team = team;
         this.organisation = organisation;
     }
 
     @Override
-    public void execute() {
-        if (team == null) {
-            team = new Team(shortName, description, teamMembers);
-            team.setProductOwner(productOwner);
-            team.setScrumMaster(scrumMaster);
-            team.setDevTeam(devTeam);
-        }
-
+    public void addToModel() {
         // Assign this team to all the people in the team
         for (final Person person : team.getTeamMembers()) {
             person.setTeam(team);
@@ -65,7 +39,7 @@ public class CreateTeamCommand extends Command {
     }
 
     @Override
-    public void undo() {
+    public void removeFromModel() {
         // Goodbye team
         organisation.getTeams().remove(team);
 
@@ -77,7 +51,7 @@ public class CreateTeamCommand extends Command {
 
     @Override
     public String toString() {
-        return "<Create Team: \"" + shortName + "\">";
+        return "<Create Team: \"" + team.toString() + "\">";
     }
 
     @Override
