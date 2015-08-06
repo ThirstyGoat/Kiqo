@@ -60,4 +60,8 @@ public class SearchResult {
     public List<Match> getMatchesUnmodifiable() {
         return Collections.unmodifiableList(matches);
     }
+
+    public String getType() {
+        return searchable.getClass().getSimpleName();
+    }
 }

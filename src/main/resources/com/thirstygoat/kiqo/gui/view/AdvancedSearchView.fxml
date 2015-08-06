@@ -23,7 +23,7 @@
                   <CheckBox fx:id="regexCheckBox" mnemonicParsing="false" text="Enable RegEx" />
                </children>
             </HBox>
-            <ListView fx:id="resultsListView" prefHeight="434.0" prefWidth="600.0" />
+            <ListView fx:id="resultsListView" styleClass="advanced-search-results-list-view" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </children>

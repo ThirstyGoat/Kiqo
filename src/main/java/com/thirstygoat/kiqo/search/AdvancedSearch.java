@@ -27,6 +27,8 @@ public class AdvancedSearch extends Search {
     public ObservableList<SearchResult> execute() {
         ObservableList<SearchResult> results = FXCollections.observableArrayList();
 
+        String escapedQuery = Pattern.quote(getQuery().trim());
+
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables(scope)) {
             // Create the containing SearchResult which will hold all the matches
@@ -38,12 +40,12 @@ public class AdvancedSearch extends Search {
                 // If RegEx, perform comparison using String.matches, otherwise use Dice Coefficient algorithm
                 if (regexEnabled) {
                     if (searchableField.getFieldValue().matches(getQuery())) {
-                        searchResult.addMatch(new Match(searchResult, searchableField.getFieldValue(), 1.0)); // 1.0 similarity used since [when using RegEx]
+                        searchResult.addMatch(new Match(searchResult, searchableField, 1.0)); // 1.0 similarity used since [when using RegEx]
                         // results must exactly match the RegEx, therefore matches always have 1.0 similarity
                     }
                 } else {
                     if (searchableField.getFieldValue().toLowerCase().matches(".*" + escapedQuery + ".*")) {
-                        searchResult.addMatch(new Match(searchResult, searchableField.getFieldValue(), 1.0));
+                        searchResult.addMatch(new Match(searchResult, searchableField, 1.0));
                     }
                 }
             }

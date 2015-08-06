@@ -72,7 +72,7 @@ public class Person extends Item {
         List<SearchableField> searchStrings = new ArrayList<>();
         searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Long Name", getLongName()),
                 new SearchableField("Description", getDescription()), new SearchableField("User ID", getUserId()),
-                new SearchableField("Email", getEmailAddress()), new SearchableField("Phone Number", getPhoneNumber()),
+                new SearchableField("Email", getEmailAddress()), new SearchableField("Phone", getPhoneNumber()),
                 new SearchableField("Department", getDepartment())));
         return searchStrings;
     }

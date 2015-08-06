@@ -14,11 +14,15 @@ public class Search {
     private final String query;
 
     public Search(String query) {
-        this.query = query.toLowerCase();
+        this.query = query;
     }
 
     public String getQuery() {
         return query;
+    }
+
+    public String getQueryLowerCase() {
+        return query.toLowerCase();
     }
 
     /**
@@ -34,8 +38,8 @@ public class Search {
             List<SearchableField> searchableFields = searchable.getSearchableStrings();
             for (SearchableField searchableField : searchableFields) {
                 // Perform comparison
-                if (searchableField.getFieldValue().toLowerCase().matches(".*" + query.trim() + ".*")) {
-                    results.add(new SearchResult(searchable, query.trim()));
+                if (searchableField.getFieldValue().toLowerCase().matches(".*" + getQueryLowerCase().trim() + ".*")) {
+                    results.add(new SearchResult(searchable, getQueryLowerCase().trim()));
                 }
                 break;
                 // Cheats way of only caring about the first element in the array (if there is one) since we
