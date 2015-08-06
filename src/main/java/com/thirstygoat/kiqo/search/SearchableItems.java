@@ -1,12 +1,15 @@
 package com.thirstygoat.kiqo.search;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+
+
 
 /**
  * Created by leroy on 25/07/15.
@@ -74,10 +77,35 @@ public class SearchableItems {
                 return stories;
         }
         return getSearchables();
-    }
+	}
 
     public void removeSearchable(Searchable searchable) {
         searchableItems.remove(searchable);
+    }
+
+    /**
+     * Add all Searchables in Organisation to SearchableItems. Useful for deserialisation.
+     * @param organisation model to traverse for searchables
+     */
+    public void addAll(Organisation organisation) {
+        organisation.getProjects().forEach((project) -> {
+            addSearchable(project);
+            // (allocations are not included)
+            project.getReleases().forEach(this::addSearchable);
+            project.getUnallocatedStories().forEach(this::addSearchable);
+            project.getSprints().forEach(this::addSearchable);
+            project.getBacklogs().forEach((backlog) -> {
+                addSearchable(backlog);
+                backlog.getStories().forEach((story) -> {
+                    addSearchable(story);
+                    story.getTasks().forEach(this::addSearchable);
+                    story.getAcceptanceCriteria().forEach(this::addSearchable);
+                });
+            });
+        });
+        organisation.getPeople().forEach(this::addSearchable);
+        organisation.getSkills().forEach(this::addSearchable);
+        organisation.getTeams().forEach(this::addSearchable);
     }
 
     public enum SCOPE {
