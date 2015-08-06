@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
  * Command to delete a acceptanceCriteria from a project.
  *
  */
-public class DeleteAcceptanceCriteriaCommand extends Command {
+public class DeleteAcceptanceCriteriaCommand extends DeleteCommand {
 
     private final Story story;
     private final AcceptanceCriteria acceptanceCriteria;
@@ -21,26 +21,21 @@ public class DeleteAcceptanceCriteriaCommand extends Command {
      *
      */
     public DeleteAcceptanceCriteriaCommand(final AcceptanceCriteria acceptanceCriteria, final Story story) {
+        super(acceptanceCriteria);
         this.acceptanceCriteria = acceptanceCriteria;
         this.story = story;
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         storyIndex = story.getAcceptanceCriteria().indexOf(acceptanceCriteria);
         story.getAcceptanceCriteria().remove(acceptanceCriteria);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(acceptanceCriteria);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
         // Add the acceptanceCriteria back to wherever it was
         story.getAcceptanceCriteria().add(storyIndex, acceptanceCriteria);
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(acceptanceCriteria);
     }
 
     @Override

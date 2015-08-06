@@ -10,7 +10,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
  * Command to delete a person from a project.
  *
  */
-public class DeleteAllocationCommand extends Command {
+public class DeleteAllocationCommand extends DeleteCommand {
     private final Allocation allocation;
     private final Project project;
     private final Team team;
@@ -22,30 +22,25 @@ public class DeleteAllocationCommand extends Command {
      * @param allocation Allocation to be deleted
      */
     public DeleteAllocationCommand(final Allocation allocation) {
+        super(allocation);
         this.allocation = allocation;
         project = allocation.getProject();
         team = allocation.getTeam();
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         projectIndex = project.getAllocations().indexOf(allocation);
         project.observableAllocations().remove(allocation);
 
         teamIndex = team.getAllocations().indexOf(allocation);
         team.observableAllocations().remove(allocation);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(allocation);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
         project.observableAllocations().add(projectIndex, allocation);
         team.observableAllocations().add(teamIndex, allocation);
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(allocation);
     }
 
     @Override

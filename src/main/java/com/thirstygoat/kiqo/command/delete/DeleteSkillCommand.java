@@ -1,20 +1,18 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.search.SearchableItems;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
 
 /**
  * Command to delete a skill from a project.
  *
  */
-public class DeleteSkillCommand extends Command {
+public class DeleteSkillCommand extends DeleteCommand {
 
     private final Organisation organisation;
     private final Skill skill;
@@ -28,6 +26,7 @@ public class DeleteSkillCommand extends Command {
      * @param organisation organisation to which the skill belongs
      */
     public DeleteSkillCommand(final Skill skill, final Organisation organisation) {
+        super(skill);
         this.skill = skill;
         this.organisation = organisation;
 
@@ -58,7 +57,7 @@ public class DeleteSkillCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         // Remove the skill from any people in the project who have the skill
         for (Person person : peopleWithSkill.values()) {
             person.observableSkills().remove(skill);
@@ -66,22 +65,16 @@ public class DeleteSkillCommand extends Command {
 
         organisationIndex = organisation.getSkills().indexOf(skill);
         organisation.getSkills().remove(skill);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(skill);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
         // Add the skill back to wherever it was
         organisation.getSkills().add(organisationIndex, skill);
 
         for (Map.Entry<Integer, Person> entry : peopleWithSkill.entrySet()) {
             entry.getValue().observableSkills().add(entry.getKey(), skill);
         }
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(skill);
     }
 
     @Override

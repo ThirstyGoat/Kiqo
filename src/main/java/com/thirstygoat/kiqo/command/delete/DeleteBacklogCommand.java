@@ -1,18 +1,16 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.command.Command;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.search.SearchableItems;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by Carina on 20/05/2015.
  */
-public class DeleteBacklogCommand extends Command{
+public class DeleteBacklogCommand extends DeleteCommand {
     private final Project project;
     private final Backlog backlog;
     private final Map<Integer, Story> stories = new LinkedHashMap<>();
@@ -24,6 +22,7 @@ public class DeleteBacklogCommand extends Command{
      * @param backlog
      */
     public DeleteBacklogCommand(final Backlog backlog) {
+        super(backlog);
         this.project = backlog.getProject();
         this.backlog = backlog;
 
@@ -40,7 +39,7 @@ public class DeleteBacklogCommand extends Command{
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         // Set stories backlog' field to null
         for (final Story story : backlog.getStories()) {
             story.setBacklog(null);
@@ -54,13 +53,10 @@ public class DeleteBacklogCommand extends Command{
         // delete the backlog
         index = project.getBacklogs().indexOf(backlog);
         project.observableBacklogs().remove(backlog);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(backlog);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
 
         // Set team members team field to this team
         for (final Story story : backlog.getStories()) {
@@ -74,9 +70,6 @@ public class DeleteBacklogCommand extends Command{
             }
         }
         project.observableBacklogs().add(index, backlog);
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(backlog);
     }
 
     @Override
