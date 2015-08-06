@@ -11,6 +11,9 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxListCell;
+import javafx.scene.input.KeyCode;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -58,6 +61,12 @@ public class AdvancedSearchView implements FxmlView<AdvancedSearchViewModel>, In
         resultsListView.setItems(viewModel.getSearchResults());
 
         resultsListView.setCellFactory(param -> new AdvancedSearchListCell(viewModel));
+
+        resultsListView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                viewModel.action(resultsListView.getSelectionModel().getSelectedItem());
+            }
+        });
 
         // Set button action
         searchButton.setOnAction(event -> viewModel.search());
