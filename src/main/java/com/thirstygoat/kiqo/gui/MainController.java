@@ -853,7 +853,6 @@ public class MainController implements Initializable {
                 viewModel.setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(sprintFormTuple.getView()));
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());
-                sprintFormTuple.getCodeBehind().attachValidators();
                 stage.showAndWait();
                 if (!viewModel.isCanceled()) {
                     doCommand(viewModel.createCommand());

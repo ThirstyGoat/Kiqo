@@ -46,8 +46,6 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
     @FXML
     private Button cancelButton;
 
-    private ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
-
     @InjectViewModel
     private SprintFormViewModel viewModel;
 
@@ -62,19 +60,20 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         teamTextField.textProperty().bindBidirectional(viewModel.teamShortNameProperty());
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogShortNameProperty());
 
-        attachValidators();
-
         okButton.disableProperty().bind(viewModel.validProperty().not());
         
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
         FxUtils.setTextFieldSuggester(releaseTextField, viewModel.getReleasesSupplier());
 
-        Platform.runLater(backlogTextField::requestFocus);
+        Platform.runLater(() -> {
+            backlogTextField.requestFocus();
+            attachValidators();
+        });
     }
 
-    public void attachValidators() {
-        validationVisualizer = new ControlsFxVisualizer();
+    private void attachValidators() {
+        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
         validationVisualizer.initVisualization(viewModel.longNameValidation(), nameTextField, true);
         validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField, true);
         validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField);

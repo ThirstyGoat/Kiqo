@@ -42,9 +42,11 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
-        super.organisation = organisation;
+        this.organisation = organisation;
+        this.sprint = sprint;
+        
         bindStringProperties(organisation);
-        super.sprint = sprint;
+        
         if (sprint != null) {
             goalProperty().set(sprint.getShortName());
             longNameProperty().set(sprint.getLongName());
@@ -69,17 +71,23 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         }
     }
     
+    /**
+     * The StringConverters must always be bound with the current organisation.
+     * @param organisation
+     */
     private void bindStringProperties(Organisation organisation) {
-        backlogShortNameProperty.unbind();
-        teamShortNameProperty.unbind();
-        releaseShortNameProperty.unbind();
+        backlogShortNameProperty.unbindBidirectional(backlogProperty());
+        teamShortNameProperty.unbindBidirectional(teamProperty());
+        releaseShortNameProperty.unbindBidirectional(releaseProperty());
         
-        backlogShortNameProperty.bindBidirectional(backlogProperty(),
-                StringConverters.backlogStringConverter(organisation));
-        teamShortNameProperty.bindBidirectional(teamProperty(),
-                StringConverters.teamStringConverter(organisation));
-        releaseShortNameProperty.bindBidirectional(releaseProperty(),
-                StringConverters.releaseStringConverter(organisation));
+        if (organisation != null) {
+            backlogShortNameProperty.bindBidirectional(backlogProperty(),
+                    StringConverters.backlogStringConverter(organisation));
+            teamShortNameProperty.bindBidirectional(teamProperty(),
+                    StringConverters.teamStringConverter(organisation));
+            releaseShortNameProperty.bindBidirectional(releaseProperty(),
+                    StringConverters.releaseStringConverter(organisation));
+        }
     }
 
     @Override
@@ -114,31 +122,31 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         return releaseShortNameProperty;
     }
 
-    public Supplier<List<Backlog>> getBacklogsSupplier() {
+    protected Supplier<List<Backlog>> getBacklogsSupplier() {
         return () -> {
             List<Backlog> list = new ArrayList<>();
-            if (super.organisation != null) {
-                super.organisation.getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
+            if (organisation != null) {
+                organisation.getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
             }
             return list;
         };
     }
 
-    public Supplier<List<Team>> getTeamsSupplier() {
+    protected Supplier<List<Team>> getTeamsSupplier() {
         return () -> {
-            if (super.organisation != null) {
-                return super.organisation.getTeams();
+            if (organisation != null) {
+                return organisation.getTeams();
             } else {
                 return new ArrayList<>();
             }
         };
     }
 
-    public Supplier<List<Release>> getReleasesSupplier() {
+    protected Supplier<List<Release>> getReleasesSupplier() {
         return () -> {
             List<Release> list = new ArrayList<>();
-            if (super.organisation != null) {
-                super.organisation.getProjects().forEach((project) -> list.addAll(project.getReleases()));
+            if (organisation != null) {
+                organisation.getProjects().forEach((project) -> list.addAll(project.getReleases()));
             }
             return list;
         };

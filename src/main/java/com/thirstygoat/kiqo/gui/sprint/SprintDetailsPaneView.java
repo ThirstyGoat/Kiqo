@@ -1,23 +1,24 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.model.Story;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Story;
+
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 /**
 * Created by Carina Blair on 3/08/2015.
 */
 public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewModel>, Initializable {
-
+    
     private Label placeHolder = new Label();
     
     @InjectViewModel
@@ -50,15 +51,15 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         goalLabel.textProperty().bind(viewModel.goalProperty());
         startDateLabel.textProperty().bind(viewModel.startDateProperty().asString());
         endDateLabel.textProperty().bind(viewModel.endDateProperty().asString());
-        releaseLabel.textProperty().bind(viewModel.releaseProperty().asString());
+        releaseLabel.textProperty().bind(viewModel.releaseShortNameProperty());
         descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
-        teamLabel.textProperty().bind(viewModel.teamProperty().asString());
-        backlogLabel.textProperty().bind(viewModel.backlogProperty().asString());
+        teamLabel.textProperty().bind(viewModel.teamShortNameProperty());
+        backlogLabel.textProperty().bind(viewModel.backlogShortNameProperty());
 
 //        shortNameTableColumn.setCellFactory(param -> new StoryListCell(viewModel));
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.setItems(viewModel.stories());
 
-        placeHolder.textProperty().set(viewModel.PLACEHOLDER);
+        placeHolder.textProperty().set(SprintDetailsPaneViewModel.PLACEHOLDER);
     }
 }
