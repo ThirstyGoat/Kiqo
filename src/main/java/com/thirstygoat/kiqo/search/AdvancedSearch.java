@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.search;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by leroy on 25/07/15.
  */
