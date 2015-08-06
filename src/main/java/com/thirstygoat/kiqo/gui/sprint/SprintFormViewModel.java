@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
+
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
@@ -9,7 +11,7 @@ import javafx.collections.ObservableList;
 /**
  * Created by samschofield on 31/07/15.
  */
-public class SprintFormViewModel extends SprintViewModel {
+public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
     private BooleanProperty canceled;
     private StringProperty backlogShortNameProperty;
     private StringProperty teamShortNameProperty;
@@ -35,6 +37,7 @@ public class SprintFormViewModel extends SprintViewModel {
                 StringConverters.releaseStringConverter(super.organisation));
     }
 
+    @Override
     public void setExitStrategy(Runnable exitStrategy) {
         canceled.addListener((observable) -> {
                 exitStrategy.run();
