@@ -1,15 +1,13 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.search.SearchableItems;
 
 
 /**
  * Created by Bradley on 29/04/15.
  */
-public class DeleteProjectCommand extends Command {
+public class DeleteProjectCommand extends DeleteCommand {
     private final Organisation organisation;
     private final Project project;
 
@@ -21,26 +19,21 @@ public class DeleteProjectCommand extends Command {
      * @param organisation the project to delete the team from
      */
     public DeleteProjectCommand(final Project project, final Organisation organisation) {
+        super(project);
         this.organisation = organisation;
         this.project = project;
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         index = organisation.getProjects().indexOf(project);
         organisation.getProjects().remove(project);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(project);
     }
 
     
     @Override
-    public void undo() {
+    public void addToModel() {
         organisation.getProjects().add(index, project);
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(project);
     }
 
     @Override

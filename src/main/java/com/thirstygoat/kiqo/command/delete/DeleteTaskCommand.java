@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.model.Task;
  *
  * Command to delete a task from a project.
  */
-public class DeleteTaskCommand extends Command {
+public class DeleteTaskCommand extends DeleteCommand {
 
     private final Story story;
     private final Task task;
@@ -17,18 +17,19 @@ public class DeleteTaskCommand extends Command {
     private int storyIndex;
 
     public DeleteTaskCommand(final Task task, final Story story) {
+        super(task);
         this.task = task;
         this.story = story;
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         storyIndex = story.observableTasks().indexOf(task);
         story.observableTasks().remove(task);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
         story.observableTasks().add(storyIndex, task);
     }
     @Override

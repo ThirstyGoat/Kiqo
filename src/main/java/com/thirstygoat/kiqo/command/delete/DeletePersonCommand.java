@@ -1,18 +1,16 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Command to delete a person from a project.
  *
  */
-public class DeletePersonCommand extends Command {
+public class DeletePersonCommand extends DeleteCommand {
     private final Organisation organisation;
     private final Person person;
     private final Team team;
@@ -25,8 +23,10 @@ public class DeletePersonCommand extends Command {
     /**
      * @param person Person to be deleted
      * @param organisation organisation to which the person belongs
+     * @throws InvalidPersonDeletionException person is PO of one or more backlogs
      */
     public DeletePersonCommand(final Person person, final Organisation organisation) throws InvalidPersonDeletionException {
+        super(person);
         this.person = person;
         this.organisation = organisation;
 
@@ -53,7 +53,7 @@ public class DeletePersonCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         // Remove the person first from their team, working the way up the hierarchy
         if (team != null) {
             // Remove person from PO/SM/Dev Role if they're there, and remember where they are
@@ -77,13 +77,10 @@ public class DeletePersonCommand extends Command {
 
         // Remove the person from the project
         organisation.getPeople().remove(person);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(person);
     }
 
     @Override
-    public void undo() {
+    public void addToModel() {
         // Repeat execute steps backwards
         // Add person back to project at appropriate index
         organisation.getPeople().add(index, person);
@@ -102,9 +99,6 @@ public class DeletePersonCommand extends Command {
                 team.observableDevTeam().add(person);
             }
         }
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(person);
     }
 
     @Override
