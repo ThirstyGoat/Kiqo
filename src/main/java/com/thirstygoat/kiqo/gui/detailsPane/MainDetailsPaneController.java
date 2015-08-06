@@ -205,5 +205,6 @@ public class MainDetailsPaneController implements Initializable {
         projectDetailsPaneController.setMainController(mainController);
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
+        advancedSearchViewModel.setMainController(mainController);
     }
 }

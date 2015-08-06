@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.search;
 
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -19,6 +20,11 @@ import java.util.Comparator;
 public class AdvancedSearchListCell extends ListCell<SearchResult> {
 
     public static final int MAX_MATCH_DISPLAY_LENGTH = 100;
+    private AdvancedSearchViewModel viewModel;
+
+    public AdvancedSearchListCell(AdvancedSearchViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     @Override
     protected void updateItem(SearchResult item, boolean empty) {
@@ -54,6 +60,15 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
                 vBox.getChildren().add(getHighlightedMatchNode(match));
             }
         }
+
+        vBox.setCursor(javafx.scene.Cursor.HAND);
+        vBox.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                // They've double clicked woohoo!
+                // So we take them to the details pane for that Item
+                viewModel.getMainController().focusedItemProperty.set(searchResult.getItem());
+            }
+        });
         return vBox;
     }
 
