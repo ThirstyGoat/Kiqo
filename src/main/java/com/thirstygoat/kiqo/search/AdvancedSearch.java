@@ -45,7 +45,7 @@ public class AdvancedSearch extends Search {
                     }
                 } else {
                     if (searchableField.getFieldValue().toLowerCase().matches(".*" + escapedQuery + ".*")) {
-                        searchResult.addMatch(new Match(searchResult, searchableField, 1.0));
+                        searchResult.addMatch(new Match(searchResult, searchableField, 0.0));
                     }
                 }
             }
