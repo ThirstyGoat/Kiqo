@@ -52,7 +52,7 @@ public class Backlog extends Item {
         List<SearchableField> searchString =  new ArrayList<>();
         searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()),
                 new SearchableField("Long Name", getLongName()), new SearchableField("Description", getDescription())));
-        if (getProductOwner() != null) searchString.add(new SearchableField("Product Owner", getProductOwner().getShortName()));
+        if (getProductOwner() != null) searchString.add(new SearchableField("PO", getProductOwner().getShortName()));
         return searchString;
     }
 

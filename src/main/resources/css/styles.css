@@ -71,3 +71,39 @@
 .advanced-search-list-result-title {
     -fx-font-weight: bolder;
 }
+/* Advanced Search */
+
+.advanced-search-result-title-label {
+    -fx-font-weight: 900;
+    -fx-text-fill: black
+}
+
+.advanced-search-result-highlight {
+    -fx-background-color: yellow
+}
+
+.advanced-search-result-heading-label {
+    -fx-text-fill: grey;
+    -fx-pref-width: 70px;
+}
+
+.advanced-search-result-match-container {
+    -fx-font-size: 10px;
+}
+
+.advanced-search-result-type-label {
+    -fx-text-fill: grey
+}
+
+.advanced-search-results-list-view {
+}
+
+.advanced-search-results-list-view .list-cell:selected {
+    -fx-background-color: gainsboro;
+}
+
+.advanced-search-results-list-view .list-cell:selected .label,
+.advanced-search-results-list-view .list-cell:selected .advanced-search-result-title-label,
+.advanced-search-results-list-view .list-cell:selected .advanced-search-result-type-label, {
+    -fx-text-fill: inherit
+}
