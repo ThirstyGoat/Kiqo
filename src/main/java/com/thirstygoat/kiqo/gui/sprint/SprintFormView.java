@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
-import com.thirstygoat.kiqo.util.StringConverters;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -10,14 +11,12 @@ import javafx.scene.control.TextField;
 
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -67,18 +66,17 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
 
         okButton.disableProperty().bind(viewModel.validProperty().not());
         
-        // TODO register autocompleting textfields
-        // FormController.setTextFieldSuggester
+        FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
+        FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
+        FxUtils.setTextFieldSuggester(releaseTextField, viewModel.getReleasesSupplier());
 
-        Platform.runLater(nameTextField::requestFocus);
+        Platform.runLater(backlogTextField::requestFocus);
     }
-    
-
 
     public void attachValidators() {
         validationVisualizer = new ControlsFxVisualizer();
         validationVisualizer.initVisualization(viewModel.longNameValidation(), nameTextField, true);
-        validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField);
+        validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField, true);
         validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField);
         validationVisualizer.initVisualization(viewModel.startDateValidation(), startDatePicker, true);
         validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);

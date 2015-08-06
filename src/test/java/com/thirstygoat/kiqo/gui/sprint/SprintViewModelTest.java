@@ -1,8 +1,10 @@
-package com.thirstygoat.kiqo.gui;
+package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 import com.thirstygoat.kiqo.model.*;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -13,11 +15,15 @@ import java.util.ArrayList;
 * Created by Sam Schofield on 21/07/2015.
 */
 public class SprintViewModelTest {
-
+    private SprintViewModel viewModel;
+    
+    @Before
+    public void setUp() {
+        viewModel = new SprintViewModel();
+    }
+    
     @Test
     public void testGoalValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         viewModel.goalProperty().setValue("");
         // Can't be empty
         Assert.assertFalse(viewModel.goalValidation().isValid());
@@ -42,8 +48,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testLongNameValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         viewModel.longNameProperty().setValue("");
         // Cant be empty
         Assert.assertFalse(viewModel.longNameValidation().isValid());
@@ -54,8 +58,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testDescriptionValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         //Always valid
         viewModel.descriptionProperty().setValue("");
         Assert.assertTrue(viewModel.descriptionValidation().isValid());
@@ -66,8 +68,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testStartDateValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         // empty is invalid
         Assert.assertFalse(viewModel.startDateValidation().isValid());
 
@@ -84,8 +84,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testEndDateValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         Assert.assertFalse("Null end date is invalid",
                 viewModel.endDateValidation().isValid());
 
@@ -104,8 +102,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testStoriesValidator() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         Assert.assertTrue("Sprint can have no stories",
                 viewModel.storiesValidation().isValid());
 
@@ -130,8 +126,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testTeamValidation() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         Assert.assertFalse("Should not be valid by default",
                 viewModel.teamValidation().isValid());
 
@@ -146,8 +140,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testBacklogValidation() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         Assert.assertFalse("Should not be valid by default",
                 viewModel.backlogValidation().isValid());
 
@@ -162,8 +154,6 @@ public class SprintViewModelTest {
 
     @Test
     public void testReleaseValidation() {
-        SprintViewModel viewModel = new SprintViewModel();
-
         Assert.assertFalse("Should not be valid by default",
                 viewModel.releaseValidation().isValid());
 

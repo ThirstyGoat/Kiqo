@@ -31,14 +31,14 @@ public class Sprint extends Item {
     private ObservableList<Story> stories;
 
     public Sprint() {
-        backlog = new SimpleObjectProperty<>();
-        startDate = new SimpleObjectProperty<>();
-        endDate = new SimpleObjectProperty<>();
-        team = new SimpleObjectProperty<>();
-        release = new SimpleObjectProperty<>();
-        goal = new SimpleStringProperty();
-        longName = new SimpleStringProperty();
-        description = new SimpleStringProperty();
+        backlog = new SimpleObjectProperty<>(null);
+        startDate = new SimpleObjectProperty<>(null);
+        endDate = new SimpleObjectProperty<>(null);
+        team = new SimpleObjectProperty<>(null);
+        release = new SimpleObjectProperty<>(null);
+        goal = new SimpleStringProperty("");
+        longName = new SimpleStringProperty("");
+        description = new SimpleStringProperty("");
         stories = FXCollections.observableArrayList(Item.getWatchStrategy());
     }
 

@@ -1,11 +1,24 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.StringConverters;
-
-import javafx.beans.property.*;
-import javafx.collections.ObservableList;
 
 
 /**
@@ -28,44 +41,106 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     }
 
     @Override
-    public void bindStringProperties() {
-        backlogShortNameProperty.bindBidirectional(super.backlogProperty(),
-                StringConverters.backlogStringConverter(super.organisation));
-        teamShortNameProperty.bindBidirectional(super.teamProperty(),
-                StringConverters.teamStringConverter(super.organisation));
-        releaseShortNameProperty.bindBidirectional(super.releaseProperty(),
-                StringConverters.releaseStringConverter(super.organisation));
+    public void load(Sprint sprint, Organisation organisation) {
+        super.organisation = organisation;
+        bindStringProperties(organisation);
+        super.sprint = sprint;
+        if (sprint != null) {
+            goalProperty().set(sprint.getShortName());
+            longNameProperty().set(sprint.getLongName());
+            descriptionProperty().set(sprint.getDescription());
+            backlogProperty().set(sprint.getBacklog());
+            startDateProperty().set(sprint.getStartDate());
+            endDateProperty().set(sprint.getEndDate());
+            teamProperty().set(sprint.getTeam());
+            releaseProperty().set(sprint.getRelease());
+            stories().clear();
+            stories().addAll(sprint.getStories());
+        } else {
+            goalProperty().set("");
+            longNameProperty().set("");
+            descriptionProperty().set("");
+            backlogProperty().set(null);
+            startDateProperty().set(null);
+            endDateProperty().set(null);
+            teamProperty().set(null);
+            releaseProperty().set(null);
+            stories().clear();
+        }
+    }
+    
+    private void bindStringProperties(Organisation organisation) {
+        backlogShortNameProperty.unbind();
+        teamShortNameProperty.unbind();
+        releaseShortNameProperty.unbind();
+        
+        backlogShortNameProperty.bindBidirectional(backlogProperty(),
+                StringConverters.backlogStringConverter(organisation));
+        teamShortNameProperty.bindBidirectional(teamProperty(),
+                StringConverters.teamStringConverter(organisation));
+        releaseShortNameProperty.bindBidirectional(releaseProperty(),
+                StringConverters.releaseStringConverter(organisation));
     }
 
     @Override
     public void setExitStrategy(Runnable exitStrategy) {
         canceled.addListener((observable) -> {
-                exitStrategy.run();
+            exitStrategy.run();
         });
-    }
-
-    public void okAction() {
-        canceled.set(true); // Set true first to trigger change on listener.
-        canceled.set(false);
-    }
-
-    public void cancelAction() {
-        canceled.set(true);
     }
 
     public Boolean isCanceled() {
         return canceled.get();
     }
 
-    public StringProperty backlogShortNameProperty() {
+    protected void okAction() {
+        canceled.set(true); // Set true first to trigger change on listener.
+        canceled.set(false);
+    }
+
+    protected void cancelAction() {
+        canceled.set(true);
+    }
+
+    protected StringProperty backlogShortNameProperty() {
         return backlogShortNameProperty;
     }
 
-    public StringProperty teamShortNameProperty() {
+    protected StringProperty teamShortNameProperty() {
         return teamShortNameProperty;
     }
 
-    public StringProperty releaseShortNameProperty() {
+    protected StringProperty releaseShortNameProperty() {
         return releaseShortNameProperty;
+    }
+
+    public Supplier<List<Backlog>> getBacklogsSupplier() {
+        return () -> {
+            List<Backlog> list = new ArrayList<>();
+            if (super.organisation != null) {
+                super.organisation.getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
+            }
+            return list;
+        };
+    }
+
+    public Supplier<List<Team>> getTeamsSupplier() {
+        return () -> {
+            if (super.organisation != null) {
+                return super.organisation.getTeams();
+            } else {
+                return new ArrayList<>();
+            }
+        };
+    }
+
+    public Supplier<List<Release>> getReleasesSupplier() {
+        return () -> {
+            List<Release> list = new ArrayList<>();
+            if (super.organisation != null) {
+                super.organisation.getProjects().forEach((project) -> list.addAll(project.getReleases()));
+            }
+            return list;
+        };
     }
 }
