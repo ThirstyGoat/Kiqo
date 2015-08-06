@@ -62,7 +62,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     private Label placeHolder = new Label();
 
     @Override
-    public void initialize(URL arg0, ResourceBundle arg1) { 
+    public void initialize(URL arg0, ResourceBundle arg1) {
 
         shortNameLabel.textProperty().bind(backlogDetailsPaneViewModel.shortNameProperty());
         longNameLabel.textProperty().bind(backlogDetailsPaneViewModel.longNameProperty());
