@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by james on 11/04/15.
  */
-public class DeleteTeamCommand extends Command {
+public class DeleteTeamCommand extends DeleteCommand {
     private final Organisation organisation;
     private final Team team;
     private final List<DeletePersonCommand> deletePersonCommands = new ArrayList<>();
@@ -26,8 +26,9 @@ public class DeleteTeamCommand extends Command {
      * @param organisation the project to delete the team from
      */
     public DeleteTeamCommand(final Team team, final Organisation organisation) {
-        this.organisation = organisation;
+        super(team);
         this.team = team;
+        this.organisation = organisation;
 
         addDeletePersonCommands();
     }
@@ -57,7 +58,7 @@ public class DeleteTeamCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public void removeFromModel() {
         // If we are deleting the team members as well, their team field can stay set to this team
         if (deleteTeamMembers) {
             deletePersonCommands.forEach(Command::execute);
@@ -71,14 +72,11 @@ public class DeleteTeamCommand extends Command {
         // delete the team
         organisationIndex = organisation.getTeams().indexOf(team);
         organisation.getTeams().remove(team);
-
-        // Remove from SearchableItems
-        SearchableItems.getInstance().removeSearchable(team);
     }
 
 
     @Override
-    public void undo() {
+    public void addToModel() {
         if (deleteTeamMembers) {
             deletePersonCommands.forEach(Command::undo);
         } else {
@@ -89,9 +87,6 @@ public class DeleteTeamCommand extends Command {
         }
 
         organisation.getTeams().add(organisationIndex, team);
-
-        // Add back to SearchableItems
-        SearchableItems.getInstance().addSearchable(team);
     }
 
     @Override
