@@ -134,6 +134,10 @@ public class Sprint extends Item {
         return release;
     }
 
+    public String getGoal() {
+        return goal.get();
+    }
+
     public void setGoal(String goal) {
         this.goal.set(goal);
     }

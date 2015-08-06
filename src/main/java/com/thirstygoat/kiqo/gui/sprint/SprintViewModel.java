@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 
@@ -21,11 +22,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 31/07/15.
  */
 public class SprintViewModel implements ViewModel {
+    protected Organisation organisation;
+    protected Sprint sprint;
     private final StringProperty goalProperty; // This is the shortName
     private final StringProperty longNameProperty;
     private final StringProperty descriptionProperty;
@@ -48,6 +52,8 @@ public class SprintViewModel implements ViewModel {
     private final CompositeValidator allValidator;
 
     public SprintViewModel() {
+        organisation = null;
+        sprint = null;
         goalProperty = new SimpleStringProperty("");
         longNameProperty = new SimpleStringProperty("");
         descriptionProperty = new SimpleStringProperty("");
@@ -155,15 +161,109 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        releaseValidator = new FunctionBasedValidator<>(releaseProperty,
-                release -> release != null,
-                ValidationMessage.error("Release must exist"));
-        
+        releaseValidator = new FunctionBasedValidator<>(releaseProperty, release -> {
+            if (release == null) {
+                return ValidationMessage.error("Release must exist");
+            } else {
+                return null;
+            }
+        });
+
         allValidator = new CompositeValidator(goalValidator, longNameValidator, 
                 descriptionValidator, backlogValidator, startDateValidator, 
                 endDateValidator, teamValidator, releaseValidator, storiesValidator);
     }
-    
+
+    public void load(Sprint sprint, Organisation organisation) {
+        this.organisation = organisation;
+        bindStringProperties();
+        this.sprint = sprint;
+        if (sprint != null) {
+            goalProperty.set(sprint.getShortName());
+            longNameProperty.set(sprint.getLongName());
+            descriptionProperty.set(sprint.getDescription());
+            backlogProperty.set(sprint.getBacklog());
+            startDateProperty.set(sprint.getStartDate());
+            endDateProperty.set(sprint.getEndDate());
+            teamProperty.set(sprint.getTeam());
+            releaseProperty.set(sprint.getRelease());
+            stories.clear();
+            stories.addAll(sprint.getStories());
+        } else {
+            goalProperty.set("");
+            longNameProperty.set("");
+            descriptionProperty.set("");
+            backlogProperty.set(null);
+            startDateProperty.set(null);
+            endDateProperty.set(null);
+            teamProperty.set(null);
+            releaseProperty.set(null);
+            stories.clear();
+        }
+    }
+
+    public void bindStringProperties() {
+        // Implemented in children
+    }
+
+    public Command createCommand() {
+        final Command command;
+        if (sprint == null) {
+            // new sprint command
+            final Sprint sprint = new Sprint(goalProperty().get(), longNameProperty().get(),
+                    descriptionProperty().getValue(), backlogProperty().get(), releaseProperty().get(), teamProperty().get(), startDateProperty().get(), endDateProperty().get(), stories());
+            command = new CreateSprintCommand(sprint);
+        } else {
+            // edit command
+            final ArrayList<Command<?>> changes = new ArrayList<>();
+            if (!goalProperty().get().equals(sprint.getShortName())) {
+                changes.add(new EditCommand<>(sprint, "goal", goalProperty().get()));
+            }
+            if (!longNameProperty().get().equals(sprint.getLongName())) {
+                changes.add(new EditCommand<>(sprint, "longName", longNameProperty().get()));
+            }
+            if (!descriptionProperty().get().equals(sprint.getDescription())) {
+                changes.add(new EditCommand<>(sprint, "description", descriptionProperty().get()));
+            }
+            if (!backlogProperty().get().equals(sprint.getBacklog())) {
+                changes.add(new EditCommand<>(sprint, "backlog", backlogProperty().get()));
+            }
+            if (!startDateProperty().get().equals(sprint.getStartDate())) {
+                changes.add(new EditCommand<>(sprint, "startDate", startDateProperty().get()));
+            }
+            if (!endDateProperty().get().equals(sprint.getEndDate())) {
+                changes.add(new EditCommand<>(sprint, "endDate", endDateProperty().get()));
+            }
+            if (!teamProperty().get().equals(sprint.getTeam())) {
+                changes.add(new EditCommand<>(sprint, "team", teamProperty().get()));
+            }
+            if (!releaseProperty().get().equals(sprint.getRelease())) {
+                changes.add(new MoveItemCommand<>(sprint, sprint.getRelease().getSprints(),
+                        releaseProperty().get().getSprints()));
+                changes.add(new EditCommand<>(sprint, "release", releaseProperty().get()));
+            }
+            // Stories being added to the sprint
+            final ArrayList<Story> addedStories = new ArrayList<>();
+            addedStories.addAll(stories);
+            addedStories.removeAll(sprint.getStories());
+            for (Story story : addedStories) {
+                changes.add(new MoveItemCommand<>(story, addedStories, sprint.getStories()));
+            }
+            // Stories being removed from the sprint
+            final ArrayList<Story> removedStories = new ArrayList<>(sprint.getStories());
+            removedStories.removeAll(stories);
+            for (Story story : removedStories) {
+                changes.add(new MoveItemCommand<>(story, sprint.getStories(), removedStories));
+            }
+
+            command = new CompoundCommand("Edit Sprint", changes);
+        }
+        return command;
+    }
+
+    public Sprint getSprint() {
+        return sprint;
+    }
     public StringProperty goalProperty() {
         return goalProperty;
     }

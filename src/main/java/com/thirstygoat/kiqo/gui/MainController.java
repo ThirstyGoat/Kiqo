@@ -845,16 +845,17 @@ public class MainController implements Initializable {
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
             
             if (type.equals("Sprint")) { // TODO replace with enum
-                ViewTuple<SprintFormView, SprintFormViewModel> viewTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
+                ViewTuple<SprintFormView, SprintFormViewModel> sprintFormTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
                 // viewModel
-                final SprintFormViewModel viewModel = viewTuple.getViewModel();
+                final SprintFormViewModel viewModel = sprintFormTuple.getViewModel();
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());
                 // view
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
-                stage.setScene(new Scene(viewTuple.getView()));
-                
+                viewModel.setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(sprintFormTuple.getView()));
+                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                sprintFormTuple.getCodeBehind().attachValidators();
                 stage.showAndWait();
-                if (viewModel.validProperty().get()) { // true if ok; false if cancel
+                if (!viewModel.isCanceled()) {
                     doCommand(viewModel.createCommand());
                 }
             } else {
