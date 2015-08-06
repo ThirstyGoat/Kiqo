@@ -110,6 +110,7 @@ public class Person extends Item {
         stringBuilder.append(", phoneNumber='" + getPhoneNumber() + "\'");
         stringBuilder.append(", department='" + getDepartment() + "\'");
         stringBuilder.append(", team='" + ((team == null) ? "null" : team.getShortName()) + "'}");
+        stringBuilder.append(", skills='" + skills + "'}");
         return stringBuilder.toString();
     }
 
