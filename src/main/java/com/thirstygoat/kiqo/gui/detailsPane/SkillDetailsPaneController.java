@@ -1,7 +1,11 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelView;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelViewModel;
 import com.thirstygoat.kiqo.model.Skill;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -14,10 +18,13 @@ public class SkillDetailsPaneController implements Initializable, IDetailsPaneCo
     private Label shortNameLabel;
     @FXML
     private Label descriptionLabel;
+    @FXML
+    private GoatLabelView goatLabelView;
 
 
     @Override
     public void showDetails(final Skill skill) {
+        ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
         if (skill != null) {
             shortNameLabel.textProperty().bind(skill.shortNameProperty());
             descriptionLabel.textProperty().bind(skill.descriptionProperty());

@@ -29,7 +29,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Writes a graph of objects as a list of named nodes.
+ * Writes a graph of objects as a list of named com.thirstygoat.kiqo.gui.nodes.
  */
 // TODO: proper documentation
 @SuppressWarnings("rawtypes")

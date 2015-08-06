@@ -110,7 +110,7 @@ public final class GoatDialog {
     }
 
     /**
-     * Sets up the structure and properties of nodes in the window.
+     * Sets up the structure and properties of com.thirstygoat.kiqo.gui.nodes in the window.
      * @param owner Stage that owns this dialog
      */
     public static void setup(final Stage owner) {
