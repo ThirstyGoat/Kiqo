@@ -1,4 +1,4 @@
-package nodes;
+package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.gui.nodes.GoatTreeItem;
 import com.thirstygoat.kiqo.model.Item;

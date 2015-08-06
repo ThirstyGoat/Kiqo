@@ -73,7 +73,7 @@ public class TaskListCell extends ListCell<Task> {
             description.setWrappingWidth(listView.getWidth() * 0.65);
 
             final ComboBox<Status> statusComboBox = new ComboBox();
-            statusComboBox.setStyle("-fx-font: 10px \"System\";");
+            statusComboBox.setStyle("-fx-font: 10px \"System\"; -fx-border-width: 0.5px; -fx-border-color: black;");
             statusComboBox.setMaxWidth(90);
 
             statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
@@ -88,7 +88,9 @@ public class TaskListCell extends ListCell<Task> {
 
             task.statusProperty().addListener((observable, oldValue, newValue) -> {
                 statusComboBox.valueProperty().set(newValue);
+                statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
             });
+            statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
 
 
             Text estimate = new Text();

@@ -25,7 +25,7 @@
                                         <Label font="$x1" text="Creator:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Ready:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
-                                        <Label font="$x1" text="Dependencies:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                                        <Label font="$x1" text="Depends on:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
                                         <Label fx:id="longNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                         <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
