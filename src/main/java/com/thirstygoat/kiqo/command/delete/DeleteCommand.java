@@ -4,6 +4,10 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableItems;
 
+/**
+ * A wrapper to remove/add Searchables to the search index as they are deleted and reinstated.
+ * @author amy
+ */
 public abstract class DeleteCommand extends Command {
     private Searchable obj;
 
@@ -12,12 +16,18 @@ public abstract class DeleteCommand extends Command {
         this.obj = obj;
     }
 
+    /**
+     * Removes the searchable from the search index and the model.
+     */
     @Override
     public final void execute() {
         SearchableItems.getInstance().removeSearchable(obj);
         removeFromModel();
     }
 
+    /**
+     * Adds the searchable to the model and the search index.
+     */
     @Override
     public final void undo() {
         addToModel();
@@ -25,12 +35,12 @@ public abstract class DeleteCommand extends Command {
     }
 
     /**
-     * Remove the object from the model (used in undo()).
+     * Removes the object from the model (used in {@link #execute()}).
      */
     protected abstract void removeFromModel();
 
     /**
-     * Add the object to the model (used in execute()).
+     * Adds the object to the model (used in {@link #undo()}).
      */
     protected abstract void addToModel();
 }
