@@ -23,8 +23,6 @@
         <MenuItem mnemonicParsing="false" text="Save" fx:id="saveMenuItem" />
         <MenuItem mnemonicParsing="false" text="Save As" fx:id="saveAsMenuItem" />
         <MenuItem mnemonicParsing="false" text="Revert" fx:id="revertMenuItem" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" text="Search" fx:id="searchMenuItem" />
 
         <SeparatorMenuItem mnemonicParsing="false" />
         <MenuItem mnemonicParsing="false" text="Generate Report" fx:id="generateStatusReportMenuItem" />
@@ -40,6 +38,7 @@
         <MenuItem mnemonicParsing="false" text="Edit Selected" fx:id="editMenuItem" />
         <MenuItem mnemonicParsing="false" text="Delete Selected" fx:id="deleteMenuItem" />
           <SeparatorMenuItem mnemonicParsing="false" />
+          <MenuItem mnemonicParsing="false" text="Simple Search" fx:id="searchMenuItem" />
           <MenuItem mnemonicParsing="false" text="Advanced Search" fx:id="advancedSearchMenuItem" />
       </items>
     </Menu>

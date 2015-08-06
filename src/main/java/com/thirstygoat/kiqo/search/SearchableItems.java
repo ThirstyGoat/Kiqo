@@ -109,12 +109,23 @@ public class SearchableItems {
     }
 
     public enum SCOPE {
-        ORGANISATION,
-        PROJECTS,
-        BACKLOGS,
-        STORIES,
-        TEAMS,
-        PEOPLE,
-        SKILLS
+        ORGANISATION("Entire Organisation"),
+        PROJECTS("Projects"),
+        BACKLOGS("Backlogs"),
+        STORIES("Stories"),
+        TEAMS("Teams"),
+        PEOPLE("People"),
+        SKILLS("Skills");
+
+        private String name;
+
+        SCOPE(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

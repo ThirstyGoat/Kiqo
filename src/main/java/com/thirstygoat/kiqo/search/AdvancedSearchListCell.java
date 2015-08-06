@@ -65,13 +65,11 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
         vBox.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 // They've double clicked woohoo!
-                // So we take them to the details pane for that Item
-                viewModel.getMainController().focusedItemProperty.set(searchResult.getItem());
+                viewModel.action(searchResult);
             }
         });
         return vBox;
     }
-
 
     private Node getHighlightedMatchNode(Match match) {
         FlowPane flowPane = new FlowPane();

@@ -59,4 +59,8 @@ public class AdvancedSearchViewModel implements ViewModel {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
+    public void action(SearchResult searchResult) {
+        mainController.focusedItemProperty.set(searchResult.getItem());
+    }
 }
