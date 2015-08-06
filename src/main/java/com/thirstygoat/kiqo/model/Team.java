@@ -46,6 +46,7 @@ public class Team extends Item {
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchString = new ArrayList<>();
         searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription())));
+        searchString.add(new SearchableField("Members", Utilities.commaSeparatedValues(teamMembers)));
         if (productOwnerProperty().get() != null) searchString.add(new SearchableField("PO", getProductOwner().getShortName()));
         if (scrumMasterProperty().get() != null) searchString.add(new SearchableField("SM", getScrumMaster().getShortName()));
         return searchString;
