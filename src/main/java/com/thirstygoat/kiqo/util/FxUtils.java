@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -60,5 +61,18 @@ public final class FxUtils {
                 binding.setUserInput(textField.getText());
             }
         });
+    }
+
+    /**
+     * @return
+     */
+    public static <T extends Item> ListCell<T> listCellFactory() {
+        return new ListCell<T>() {
+            @Override
+            public void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item != null ? item.getShortName() : null);
+            }
+        };
     }
 }

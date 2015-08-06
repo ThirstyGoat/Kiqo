@@ -59,7 +59,12 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         teamTextField.textProperty().bindBidirectional(viewModel.teamShortNameProperty());
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogShortNameProperty());
-
+        
+        storySelectionView.getTargetListView().setItems(viewModel.stories());
+        storySelectionView.getSourceListView().setItems(viewModel.sourceStories());
+        storySelectionView.setCellFactories(view -> FxUtils.listCellFactory());
+        
+        releaseTextField.disableProperty().bind(viewModel.releaseEditableProperty().not());
         okButton.disableProperty().bind(viewModel.validProperty().not());
         
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
@@ -68,6 +73,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
 
         Platform.runLater(() -> {
             backlogTextField.requestFocus();
+            // do this in here to ensure textFields definitely exist
             attachValidators();
         });
     }
@@ -76,7 +82,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
         validationVisualizer.initVisualization(viewModel.longNameValidation(), nameTextField, true);
         validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField, true);
-        validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField);
+        validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField, true);
         validationVisualizer.initVisualization(viewModel.startDateValidation(), startDatePicker, true);
         validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);
         validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField);
@@ -90,10 +96,6 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
 
     public void cancelAction() {
         viewModel.cancelAction();
-    }
-
-    public SprintFormViewModel getViewModel() {
-        return viewModel;
     }
 }
 

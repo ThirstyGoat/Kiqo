@@ -1,14 +1,9 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -16,15 +11,28 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.ValidationSupport;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.Utilities;
+
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -162,13 +170,7 @@ public class StoryFormController extends FormController<Story> {
 
         storySelectionView.setPadding(new Insets(0, 0, 0, 0));
 
-        storySelectionView.setCellFactories(view -> new ListCell<Story>() {
-            @Override
-            public void updateItem(Story item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(item != null ? item.getShortName() : null);
-            }
-        });
+        storySelectionView.setCellFactories(view -> FxUtils.listCellFactory());
     }
 
     private void setButtonHandlers() {

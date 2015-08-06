@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
@@ -25,12 +26,12 @@ import com.thirstygoat.kiqo.util.StringConverters;
  * Created by samschofield on 31/07/15.
  */
 public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
-    private BooleanProperty canceled;
-    private StringProperty backlogShortNameProperty;
-    private StringProperty teamShortNameProperty;
-    private StringProperty releaseShortNameProperty;
-    private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
+    private final BooleanProperty canceled;
+    private final StringProperty backlogShortNameProperty;
+    private final StringProperty teamShortNameProperty;
+    private final StringProperty releaseShortNameProperty;
+    private final ObservableList<Story> sourceStories;
+    private final BooleanProperty releaseEditableProperty;
     
     public SprintFormViewModel() {
         super();
@@ -38,13 +39,42 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         backlogShortNameProperty = new SimpleStringProperty("");
         teamShortNameProperty = new SimpleStringProperty("");
         releaseShortNameProperty = new SimpleStringProperty("");
+        sourceStories = FXCollections.observableArrayList(Story.getWatchStrategy());
+        releaseEditableProperty = new SimpleBooleanProperty(false);
+        
+        backlogProperty().addListener((observable, oldValue, newValue) -> {
+            loadGoatLists(sprint);
+        });
+    }
+
+    /**
+     * Loads information from the model into the GoatListSelectionView.
+     */
+    private void loadGoatLists(Sprint sprint) {
+        final Backlog backlog = sprint.getBacklog();
+
+        // add all stories in project to source
+        List<Story> source = new ArrayList<>();
+        if (backlog != null) {
+            final Project project = backlog.getProject();
+            source.addAll(project.getUnallocatedStories());
+            project.getBacklogs().forEach(b -> {
+                source.addAll(b.getStories());
+            });
+            // remove existing targetStories from sourceStories
+            source.removeAll(sprint.getStories());
+        }
+        sourceStories.setAll(source);
+        
+        stories().setAll(sprint.getStories());
     }
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
         this.organisation = organisation;
         this.sprint = sprint;
-        
+
+        // do after binding backlog name
         bindStringProperties(organisation);
         
         if (sprint != null) {
@@ -58,6 +88,8 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             releaseProperty().set(sprint.getRelease());
             stories().clear();
             stories().addAll(sprint.getStories());
+            
+            releaseEditableProperty.set(false);
         } else {
             goalProperty().set("");
             longNameProperty().set("");
@@ -68,6 +100,8 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             teamProperty().set(null);
             releaseProperty().set(null);
             stories().clear();
+            
+            releaseEditableProperty.set(true);
         }
     }
     
@@ -150,5 +184,13 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             }
             return list;
         };
+    }
+
+    protected ObservableList<Story> sourceStories() { 
+        return sourceStories;
+    }
+
+    public BooleanExpression releaseEditableProperty() {
+        return releaseEditableProperty;
     }
 }

@@ -18,7 +18,6 @@ import com.thirstygoat.kiqo.command.CreateSprintCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
@@ -72,7 +71,7 @@ public class SprintViewModel implements ViewModel {
         endDateProperty = new SimpleObjectProperty<>(null);
         teamProperty = new SimpleObjectProperty<>();
         releaseProperty = new SimpleObjectProperty<>();
-        stories = FXCollections.observableArrayList(Item.getWatchStrategy());
+        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
 
         goalValidator = new FunctionBasedValidator<>(goalProperty,
                 string -> {
@@ -221,18 +220,22 @@ public class SprintViewModel implements ViewModel {
                         releaseProperty().get().getSprints()));
                 changes.add(new EditCommand<>(sprint, "release", releaseProperty().get()));
             }
-            // Stories being added to the sprint
-            final ArrayList<Story> addedStories = new ArrayList<>();
-            addedStories.addAll(stories);
-            addedStories.removeAll(sprint.getStories());
-            for (Story story : addedStories) {
-                changes.add(new MoveItemCommand<>(story, addedStories, sprint.getStories()));
-            }
-            // Stories being removed from the sprint
-            final ArrayList<Story> removedStories = new ArrayList<>(sprint.getStories());
-            removedStories.removeAll(stories);
-            for (Story story : removedStories) {
-                changes.add(new MoveItemCommand<>(story, sprint.getStories(), removedStories));
+//            // Stories being added to the sprint
+//            final ArrayList<Story> addedStories = new ArrayList<>();
+//            addedStories.addAll(stories);
+//            addedStories.removeAll(sprint.getStories());
+//            for (Story story : addedStories) {
+//                changes.add(new MoveItemCommand<>(story, addedStories, sprint.getStories()));
+//            }
+//            // Stories being removed from the sprint
+//            final ArrayList<Story> removedStories = new ArrayList<>(sprint.getStories());
+//            removedStories.removeAll(stories);
+//            for (Story story : removedStories) {
+//                changes.add(new MoveItemCommand<>(story, sprint.getStories(), removedStories));
+//            }
+            if (!(stories().containsAll(sprint.getStories())
+                    && sprint.getStories().containsAll(stories()))) {
+                changes.add(new EditCommand<>(sprint, "stories", stories()));
             }
 
             command = new CompoundCommand("Edit Sprint", changes);
