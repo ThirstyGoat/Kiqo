@@ -1,19 +1,26 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,17 +30,12 @@ import java.util.ResourceBundle;
  */
 public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializable {
 
-
     @FXML
     private HBox displayView;
     @FXML
     private HBox editView;
     @FXML
     private Button doneButton;
-
-
-
-
     @FXML
     private Label textLabel;
     @FXML
@@ -42,6 +44,8 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
     private Button editButton;
     @FXML
     private HBox goatLabel;
+    @FXML
+    private FontAwesomeIconView pencilIcon;
 
     @InjectViewModel
     private GoatLabelViewModel viewModel;
@@ -52,18 +56,19 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         displayView.setVisible(true);
         editView.setVisible(false);
         textLabel.setVisible(true);
-
         editButton.visibleProperty().bind(displayView.hoverProperty());
 
         textLabel.textProperty().bindBidirectional(textInput.textProperty());
         textLabel.setText("some text");
-        textLabel.setStyle("-fx-alignment: bottom-left");
 
         final FadeTransition fade = new FadeTransition(Duration.millis(400), editButton);
         fade.setAutoReverse(true);
         fade.setFromValue(0);
         fade.setToValue(1);
 
+        displayView.setAlignment(Pos.CENTER_LEFT);
+        displayView.setSpacing(5);
+        displayView.setMaxWidth(Control.USE_PREF_SIZE);
         displayView.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 fade.setCycleCount(1);
@@ -74,19 +79,17 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
             }
         });
 
-        displayView.setSpacing(5);
+        //TODO move this into CSS?
+        pencilIcon.setStyle("-fx-fill: lightcoral");
         editButton.setStyle("" +
                 "-fx-background-color: transparent;" +
                 "-fx-padding: 3px;" +
-                "-fx-animated: true");
-        editButton.setMinSize(10, 10);
-
+                "-fx-animated: true;"
+        );
 
         editButton.setOnAction(event -> {
             displayView.setVisible(false);
             editView.setVisible(true);
-//            textLabel.setVisible(!textLabel.isVisible());
-//            textInput.setVisible(!textInput.isVisible());
         });
 
         doneButton.setOnAction(event -> {
@@ -95,5 +98,7 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         });
     }
 
-    
+    public void setText(String text) {
+
+    }
 }
