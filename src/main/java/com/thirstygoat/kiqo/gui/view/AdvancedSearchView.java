@@ -57,7 +57,7 @@ public class AdvancedSearchView implements FxmlView<AdvancedSearchViewModel>, In
 
         resultsListView.setItems(viewModel.getSearchResults());
 
-        resultsListView.setCellFactory(param -> new AdvancedSearchListCell());
+        resultsListView.setCellFactory(param -> new AdvancedSearchListCell(viewModel));
 
         // Set button action
         searchButton.setOnAction(event -> viewModel.search());

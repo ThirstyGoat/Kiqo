@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.model;
 
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.search.AdvancedSearch;
 import com.thirstygoat.kiqo.search.SearchResult;
 import com.thirstygoat.kiqo.search.SearchableItems;
@@ -16,6 +17,7 @@ public class AdvancedSearchViewModel implements ViewModel {
     private BooleanProperty regexEnabled = new SimpleBooleanProperty();
     private StringProperty searchQuery = new SimpleStringProperty("");
     private ObjectProperty<SearchableItems.SCOPE> searchScope = new SimpleObjectProperty<>();
+    private MainController mainController;
 
     public ObservableList<SearchResult> getSearchResults() {
         return searchResults;
@@ -48,5 +50,13 @@ public class AdvancedSearchViewModel implements ViewModel {
 
     public ObjectProperty<SearchableItems.SCOPE> searchScopeProperty() {
         return searchScope;
+    }
+
+    public MainController getMainController() {
+        return mainController;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }
