@@ -30,6 +30,8 @@ import java.util.ResourceBundle;
  */
 public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializable {
 
+    @InjectViewModel
+    private GoatLabelViewModel viewModel;
     @FXML
     private HBox displayView;
     @FXML
@@ -47,19 +49,19 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
     @FXML
     private FontAwesomeIconView pencilIcon;
 
-    @InjectViewModel
-    private GoatLabelViewModel viewModel;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        System.out.println("A");
         displayView.setVisible(true);
         editView.setVisible(false);
         textLabel.setVisible(true);
-        editButton.visibleProperty().bind(displayView.hoverProperty());
 
+        editButton.visibleProperty().unbind();
+        textLabel.textProperty().unbind();
+
+        editButton.visibleProperty().bind(displayView.hoverProperty());
         textLabel.textProperty().bindBidirectional(textInput.textProperty());
-        textLabel.setText("some text");
+        textLabel.textProperty().bindBidirectional(viewModel.textProperty());
 
         final FadeTransition fade = new FadeTransition(Duration.millis(400), editButton);
         fade.setAutoReverse(true);
@@ -82,9 +84,9 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         //TODO move this into CSS?
         pencilIcon.setStyle("-fx-fill: lightcoral");
         editButton.setStyle("" +
-                "-fx-background-color: transparent;" +
-                "-fx-padding: 3px;" +
-                "-fx-animated: true;"
+                        "-fx-background-color: transparent;" +
+                        "-fx-padding: 3px;" +
+                        "-fx-animated: true;"
         );
 
         editButton.setOnAction(event -> {
@@ -92,13 +94,14 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
             editView.setVisible(true);
         });
 
+
         doneButton.setOnAction(event -> {
             displayView.setVisible(true);
             editView.setVisible(false);
         });
     }
 
-    public void setText(String text) {
-
+    public HBox getGoatLabel() {
+        return goatLabel;
     }
 }
