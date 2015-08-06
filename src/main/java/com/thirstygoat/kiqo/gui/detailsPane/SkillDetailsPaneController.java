@@ -24,7 +24,6 @@ public class SkillDetailsPaneController implements Initializable, IDetailsPaneCo
 
     @Override
     public void showDetails(final Skill skill) {
-        ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
         if (skill != null) {
             shortNameLabel.textProperty().bind(skill.shortNameProperty());
             descriptionLabel.textProperty().bind(skill.descriptionProperty());

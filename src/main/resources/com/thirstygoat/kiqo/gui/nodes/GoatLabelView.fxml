@@ -1,45 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.text.Font?>
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.nodes.GoatLabelView" fx:id="goatLabel">
    <children>
       <StackPane>
          <children>
-            <HBox fx:id="displayView" StackPane.alignment="BOTTOM_LEFT">
-               <Label fx:id="textLabel" text="" visible="false" alignment="BOTTOM_LEFT"/>
-               <Button fx:id="editButton" mnemonicParsing="false" text="" alignment="TOP_RIGHT">
-                  <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon" /></graphic>
+            <HBox fx:id="displayView" StackPane.alignment="BOTTOM_LEFT" >
+               <Label fx:id="textLabel" text="" visible="false" />
+               <Button fx:id="editButton" mnemonicParsing="false" text="" >
+                  <graphic><FontAwesomeIconView fx:id="pencilIcon" glyphName="PENCIL" styleClass="single-icon" /></graphic>
                </Button>
             </HBox>
             <HBox fx:id="editView">
                <TextField fx:id="textInput" StackPane.alignment="CENTER_LEFT" />
                <Button fx:id="doneButton" mnemonicParsing="false" text="" alignment="TOP_RIGHT">
-                  <graphic><FontAwesomeIconView glyphName="CHECK" styleClass="single-icon" /></graphic>
+                  <graphic><FontAwesomeIconView glyphName="CHECK" styleClass="single-icon"/></graphic>
                </Button>
             </HBox>
-
-
          </children>
       </StackPane>
-
    </children>
 </HBox>
-
-<!--<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.nodes.GoatLabelView" fx:id="goatLabel">-->
-<!--<children>-->
-   <!--<StackPane>-->
-      <!--<children>-->
-         <!--<TextField fx:id="textInput" StackPane.alignment="CENTER_LEFT" />-->
-         <!--<Label fx:id="textLabel" text="&#45;&#45;&#45;&#45;" visible="false" StackPane.alignment="CENTER_LEFT" />-->
-      <!--</children>-->
-   <!--</StackPane>-->
-   <!--<Button fx:id="editButton" mnemonicParsing="false" text="" >-->
-      <!--<graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon" /></graphic>-->
-   <!--</Button>-->
-<!--</children>-->
-<!--</HBox>-->
-
