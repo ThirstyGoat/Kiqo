@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
-
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 
 /**
  * Created by Carina Blair on 5/08/2015.
@@ -27,12 +26,9 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
         teamShortNameProperty = new SimpleStringProperty("");
         releaseShortNameProperty = new SimpleStringProperty("");
         
-        listChangeListener = new ListChangeListener<Story>() {
-            @Override
-            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Story> change) {
-                change.next();
-                stories().setAll(change.getList());
-            }                
+        listChangeListener = change -> {
+            change.next();
+            stories().setAll(change.getList());
         };
     }
 
@@ -41,13 +37,14 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
      */
     @Override
     public void load(Sprint sprint, Organisation organisation) {
-        bindStringProperties();
+        bindStringProperties(organisation);
         
         if (sprint != null) {
             goalProperty().bind(sprint.shortNameProperty());
             longNameProperty().bind(sprint.longNameProperty());
             descriptionProperty().bind(sprint.descriptionProperty());
             backlogProperty().bind(sprint.backlogProperty());
+//            backlogShortNameProperty.bind(backlogProperty().get().shortNameProperty());
             startDateProperty().bind(sprint.startDateProperty());
             endDateProperty().bind(sprint.endDateProperty());
             teamProperty().bind(sprint.teamProperty());
@@ -72,11 +69,11 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
      * The StringConverters must always be bound with the current organisation.
      * @param organisation
      */
-    private void bindStringProperties() {
+    private void bindStringProperties(Organisation organisation) {
         backlogShortNameProperty.unbindBidirectional(backlogProperty());
         teamShortNameProperty.unbindBidirectional(teamProperty());
         releaseShortNameProperty.unbindBidirectional(releaseProperty());
-        
+
         if (organisation != null) {
             backlogShortNameProperty.bindBidirectional(backlogProperty(), StringConverters.backlogStringConverter(organisation));
             teamShortNameProperty.bindBidirectional(teamProperty(), StringConverters.teamStringConverter(organisation));

@@ -55,6 +55,7 @@ public class Sprint extends Item {
         setEndDate(endDate);
         getStories().addAll(stories);
     }
+
     /**
      * @return a string array of the searchable fields for a model object
      */

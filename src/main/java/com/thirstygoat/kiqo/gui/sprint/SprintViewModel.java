@@ -27,7 +27,7 @@ public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Release> releaseProperty;
     private final ObservableList<Story> stories;
     private final FunctionBasedValidator<String> goalValidator;
-//    private final FunctionBasedValidator<String> longNameValidator;
+    private final FunctionBasedValidator<String> longNameValidator;
 //    private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
@@ -74,6 +74,16 @@ public class SprintViewModel implements ViewModel {
                 return null;
             }
         });
+
+        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
+                string -> {
+                    if (string == null || string.length() == 0 || string.length() > 20) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                },
+                ValidationMessage.error("Sprint name must be unique and not empty"));
 
         storiesValidator = new ObservableRuleBasedValidator();
         storiesValidator.addRule(
@@ -148,7 +158,7 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        allValidator = new CompositeValidator(goalValidator, backlogValidator, startDateValidator,
+        allValidator = new CompositeValidator(goalValidator, longNameValidator, backlogValidator, startDateValidator,
                 endDateValidator, teamValidator, releaseValidator, storiesValidator);
     }
 
@@ -263,6 +273,10 @@ public class SprintViewModel implements ViewModel {
 
     protected ValidationStatus teamValidation() {
         return teamValidator.getValidationStatus();
+    }
+
+    protected ValidationStatus longNameValidation() {
+        return longNameValidator.getValidationStatus();
     }
 
     protected ValidationStatus releaseValidation() {

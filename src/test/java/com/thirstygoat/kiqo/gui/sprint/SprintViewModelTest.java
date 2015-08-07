@@ -31,7 +31,7 @@ public class SprintViewModelTest {
         Assert.assertTrue(viewModel.goalValidation().isValid());
 
         Project project = new Project();
-        viewModel.backlogProperty().setValue(new Backlog("backlog", null, null, null, project,  new ArrayList<Story>(), null));
+        viewModel.backlogProperty().setValue(new Backlog("backlog", null, null, null, project, new ArrayList<Story>(), null));
 
         Sprint sprint = new Sprint();
         sprint.setGoal("Sprint");
@@ -76,6 +76,23 @@ public class SprintViewModelTest {
         viewModel.releaseProperty().set(new Release("", null, LocalDate.now(), ""));
         Assert.assertFalse("Release date must not be before end date",
                 viewModel.endDateValidation().isValid());
+    }
+
+
+    @Test
+    public void testLongNameValidation() {
+        SprintFormViewModel sprintFormViewModel = new SprintFormViewModel();
+
+        Assert.assertFalse("Must not be valid initially.",
+                sprintFormViewModel.longNameValidation().validProperty().get());
+
+        sprintFormViewModel.longNameProperty().set("Billy Goat");
+        Assert.assertTrue("Valid input not recognised as valid.",
+                sprintFormViewModel.longNameValidation().validProperty().get());
+
+        sprintFormViewModel.longNameProperty().set("");
+        Assert.assertFalse("Must not be an empty string.",
+                sprintFormViewModel.longNameValidation().validProperty().get());
     }
 
     @Test

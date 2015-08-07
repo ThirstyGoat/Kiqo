@@ -55,7 +55,7 @@ public class StoryFormViewModelTest {
         Assert.assertFalse("Must be unique within project.",
                 storyFormViewModel.shortNameValidation().validProperty().get());
     }
-    
+
     @Test
     public void testLongNameValidation() {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();

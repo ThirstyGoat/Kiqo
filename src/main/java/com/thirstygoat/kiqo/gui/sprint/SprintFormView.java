@@ -87,6 +87,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);
         validationVisualizer.initVisualization(viewModel.teamValidation(), teamTextField, true);
         validationVisualizer.initVisualization(viewModel.backlogValidation(), backlogTextField, true);
+        validationVisualizer.initVisualization(viewModel.longNameValidation(), nameTextField, true);
     }
 
     public void okAction() {
