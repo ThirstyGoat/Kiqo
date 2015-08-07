@@ -39,7 +39,6 @@ public class GoatLabelSkin extends SkinBase<Control> {
 
         mainView = createMainView();
         getChildren().add(mainView);
-
     }
 
     private HBox createMainView() {
@@ -51,7 +50,7 @@ public class GoatLabelSkin extends SkinBase<Control> {
 
         editButton = new Button();
         FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
-        pencilIcon.setStyle("-fx-fill: lightcoral");
+        pencilIcon.setStyle("-fx-fill: grey");
         editButton.setGraphic(pencilIcon);
         editButton.setStyle(
                 "-fx-background-color: transparent;" +
@@ -102,8 +101,11 @@ public class GoatLabelSkin extends SkinBase<Control> {
         displayView.setAlignment(Pos.CENTER_LEFT);
         displayView.setMaxWidth(Control.USE_PREF_SIZE);
         displayView.setSpacing(5);
+        displayView.setMaxHeight(Control.USE_COMPUTED_SIZE);
 
         stackPane.setAlignment(Pos.CENTER_LEFT);
+        displayLabel.maxWidthProperty().bind(hBox.widthProperty());
+        displayLabel.setWrapText(true);
 
         return hBox;
     }
