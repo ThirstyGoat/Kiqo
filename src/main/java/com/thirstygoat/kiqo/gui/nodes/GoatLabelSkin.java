@@ -5,6 +5,8 @@ import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -39,6 +41,12 @@ public class GoatLabelSkin extends SkinBase<Control> {
 
         mainView = createMainView();
         getChildren().add(mainView);
+
+        editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && !doneButton.isFocused()) {
+                showDisplay();
+            }
+        });
     }
 
     private HBox createMainView() {
@@ -101,7 +109,10 @@ public class GoatLabelSkin extends SkinBase<Control> {
         displayView.setAlignment(Pos.CENTER_LEFT);
         displayView.setMaxWidth(Control.USE_PREF_SIZE);
         displayView.setSpacing(5);
-        displayView.setMaxHeight(Control.USE_COMPUTED_SIZE);
+
+        editView.setMaxWidth(Control.USE_COMPUTED_SIZE);
+        editField.setMinWidth(100);
+        editField.prefWidthProperty().bind(displayLabel.widthProperty());
 
         stackPane.setAlignment(Pos.CENTER_LEFT);
         displayLabel.maxWidthProperty().bind(hBox.widthProperty());
