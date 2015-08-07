@@ -91,6 +91,9 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
             if (shownChars < MAX_MATCH_DISPLAY_LENGTH) {
                 int startPos = shownChars > 0 ? lastIndex : Math.max(0, matchPos[0]-20);
                 int endPos = Math.min(MAX_MATCH_DISPLAY_LENGTH-shownChars+startPos, matchPos[0]);
+                if (shownChars == 0 && startPos > 0) {
+                    leadingEllipsis = true;
+                }
                 if (startPos > endPos)
                     break;
                 Label noMatchLabel = new Label(match.getMatchedString().substring(startPos, endPos));
@@ -101,6 +104,12 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
                     endPos = Math.min(matchPos[1], matchPos[0] + MAX_MATCH_DISPLAY_LENGTH - shownChars);
                     Label matchLabel = new Label(match.getMatchedString().substring(matchPos[0], endPos));
                     matchLabel.getStyleClass().add("advanced-search-result-highlight");
+                    Tooltip matchTooltip = new Tooltip(match.getMatchedString());
+                    matchTooltip.setPrefWidth(500);
+                    matchTooltip.setMaxHeight(400);
+                    matchTooltip.setWrapText(true);
+                    matchTooltip.getStyleClass().add("advanced-search-result-tooltip");
+                    matchLabel.setTooltip(matchTooltip);
                     shownChars += matchPos[1] - matchPos[0];
                     lastIndex = endPos;
                     flowPane.getChildren().add(matchLabel);

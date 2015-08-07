@@ -79,7 +79,7 @@
 }
 
 .advanced-search-result-highlight {
-    -fx-background-color: yellow
+    -fx-background-color: greenyellow;
 }
 
 .advanced-search-result-heading-label {
@@ -106,4 +106,9 @@
 .advanced-search-results-list-view .list-cell:selected .advanced-search-result-title-label,
 .advanced-search-results-list-view .list-cell:selected .advanced-search-result-type-label, {
     -fx-text-fill: inherit
+}
+
+.advanced-search-result-tooltip {
+    -fx-text-fill: gainsboro;
+    -fx-font-size: 12px;
 }
