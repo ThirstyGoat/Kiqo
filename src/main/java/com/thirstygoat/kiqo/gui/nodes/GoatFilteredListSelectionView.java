@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -130,15 +131,22 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 
-        getChildren().addAll(new Region(), textField, listView, new Region());
+        HBox headerContainer = new HBox();
+        headerContainer.setPadding(new Insets(0, 0 ,5 ,0));
+        HBox footerContainer = new HBox();
+        footerContainer.setPadding(new Insets(5, 0, 0, 0));
+
+        getChildren().addAll(headerContainer, textField, listView, footerContainer);
         setPrefHeight(USE_COMPUTED_SIZE);
 
         headerProperty().addListener((observable, oldValue, newValue) -> {
-            getChildren().set(0, newValue);
+            headerContainer.getChildren().clear();
+            headerContainer.getChildren().add(newValue);
         });
 
         footerProperty().addListener((observable, oldValue, newValue) -> {
-            getChildren().set(3, newValue);
+            footerContainer.getChildren().clear();
+            footerContainer.getChildren().add(newValue);
         });
     }
 

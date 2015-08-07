@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.formControllers.BacklogFormController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
@@ -47,7 +47,7 @@
         <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <TextField fx:id="productOwnerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <ComboBox fx:id="scaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <GoatListSelectionView fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+        <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="6" />
     </children>
    </GridPane>
     </center>
