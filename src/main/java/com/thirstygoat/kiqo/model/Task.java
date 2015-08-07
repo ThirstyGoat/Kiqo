@@ -34,18 +34,20 @@ public class Task extends Item {
         this.story = story;
     }
 
-//    /**
-//     * @return a string array of the searchable fields for a model object
-//     */
-//    @Override
-//    public String[] getSearchableStrings() {
-//        return new String[] {
-//                getShortName(), getDescription(), getStatus().toString()
-//        };
-//    }
-
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchableFields = new ArrayList<>();
+        searchableFields.add(new SearchableField("Short Name", getShortName()));
+        searchableFields.add(new SearchableField("Description", getDescription()));
+
+        return searchableFields;
     }
 
     public Story getStory() {
@@ -123,13 +125,5 @@ public class Task extends Item {
         result = 31 * result + estimate.hashCode();
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public List<SearchableField> getSearchableStrings() {
-        List<SearchableField> list = new ArrayList<>();
-        list.add(new SearchableField("Short Name", getShortName()));
-        list.add(new SearchableField("Description", getDescription()));
-        return list;
     }
 }
