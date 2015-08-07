@@ -2,9 +2,18 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryListCell;
+import com.thirstygoat.kiqo.gui.nodes.GoatComboBoxLabel;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
+import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -19,6 +28,8 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 
@@ -32,7 +43,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
     
     @FXML
-    private Label shortNameLabel;
+    private GoatLabel shortNameLabel;
     @FXML
     private Label longNameLabel;
     @FXML
@@ -40,7 +51,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @FXML
     private Label productOwnerLabel;
     @FXML
-    private Label scaleLabel;
+    private GoatComboBoxLabel scaleLabel;
     @FXML
     private TableView<Story> storyTableView;
     @FXML
@@ -56,6 +67,11 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     public void initialize(URL arg0, ResourceBundle arg1) { 
 
         shortNameLabel.textProperty().bind(backlogDetailsPaneViewModel.shortNameProperty());
+        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        validationVisualizer.initVisualization(backlogDetailsPaneViewModel.shortNameValidation(), shortNameLabel.getEditField(), true);
+        shortNameLabel.doneButton().disableProperty().bind(Bindings.not(backlogDetailsPaneViewModel.shortNameValidation().validProperty()));
+
+
         longNameLabel.textProperty().bind(backlogDetailsPaneViewModel.longNameProperty());
         descriptionLabel.textProperty().bind(backlogDetailsPaneViewModel.descriptionProperty());
         productOwnerLabel.textProperty().bind(backlogDetailsPaneViewModel.productOwnerStringProperty());
@@ -79,6 +95,15 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleProperty().asString());
 
         highlightCheckBox.selectedProperty().bindBidirectional(backlogDetailsPaneViewModel.highlightStoryStateProperty());
+
+        backlogDetailsPaneViewModel.backlog.addListener((observable, oldValue, newValue) -> {
+            shortNameLabel.setItem(backlogDetailsPaneViewModel.backlog.getValue(), "shortName",
+                    backlogDetailsPaneViewModel.backlog.getValue().shortNameProperty());
+
+
+            scaleLabel.setItem(backlogDetailsPaneViewModel.backlog.getValue(), "scale",
+                    backlogDetailsPaneViewModel.backlog.getValue().scaleProperty(), new ArrayList(Arrays.asList(Scale.values())));
+        });
     }
 
     private void setHyperlink() {

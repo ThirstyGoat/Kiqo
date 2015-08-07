@@ -53,12 +53,15 @@ public class BacklogViewModel implements ViewModel {
         shortNameValidator = new FunctionBasedValidator<>(shortNameProperty, 
                 string -> {
                     if (string.length() == 0|| string.length() > 20) {
+                        System.out.println("A");
                         return false;
                     }
                     final Project project = projectProperty.get();
                     if (project == null) {
+                        System.out.println("B");
                         return true;
                     } else {
+                        System.out.println("C");
                         return Utilities.shortnameIsUnique(string, null, project.getBacklogs());
                     }
                 },
