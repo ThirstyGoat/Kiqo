@@ -5,12 +5,15 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -27,6 +30,8 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
     private TextField textField;
     private ListView<T> listView;
+    private ObjectProperty<Node> header = new SimpleObjectProperty<>();
+    private ObjectProperty<Node> footer = new SimpleObjectProperty<>();
 
     public GoatFilteredListSelectionView() {
         sourceItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
@@ -36,6 +41,30 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         createSkin();
         setDefaultCellFactory();
         bindShownItems();
+    }
+
+    public Node getFooter() {
+        return footer.get();
+    }
+
+    public void setFooter(Node footer) {
+        this.footer.set(footer);
+    }
+
+    public ObjectProperty<Node> footerProperty() {
+        return footer;
+    }
+
+    public Node getHeader() {
+        return header.get();
+    }
+
+    public void setHeader(Node header) {
+        this.header.set(header);
+    }
+
+    public ObjectProperty<Node> headerProperty() {
+        return header;
     }
 
     public Callback<T, Node> getTargetCellGraphicFactory() {
@@ -67,9 +96,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
 
     public void setTargetItems(ObservableList<T> targetItems) {
         allItems.removeAll(getTargetItems());
-
         allItems.addAll(targetItems);
-
         targetItemsProperty().set(targetItems);
     }
 
@@ -83,9 +110,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
 
     public void setSourceItems(ObservableList<T> sourceItems) {
         allItems.removeAll(getSourceItems());
-
         allItems.addAll(sourceItems);
-
         sourceItemsProperty().set(sourceItems);
     }
 
@@ -105,16 +130,16 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 
-        getChildren().addAll(textField, listView);
+        getChildren().addAll(new Region(), textField, listView, new Region());
         setPrefHeight(USE_COMPUTED_SIZE);
-    }
 
-    public void setSourceHeader(Node node) {
+        headerProperty().addListener((observable, oldValue, newValue) -> {
+            getChildren().set(0, newValue);
+        });
 
-    }
-
-    public void setTargetHeader(Node node) {
-
+        footerProperty().addListener((observable, oldValue, newValue) -> {
+            getChildren().set(3, newValue);
+        });
     }
 
     private void setDefaultCellFactory() {
