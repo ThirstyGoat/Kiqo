@@ -33,10 +33,7 @@ public class SkillDetailsPaneController implements Initializable, IDetailsPaneCo
             shortNameLabel.textProperty().bind(skill.shortNameProperty());
             descriptionLabel.textProperty().bind(skill.descriptionProperty());
             testGoatLabel.textProperty().bind(skill.shortNameProperty());
-            testGoatLabel.setSkill(skill);
-
-
-            /* edit label validation */
+            testGoatLabel.setItem(skill, "shortName", skill.shortNameProperty().get());
 
             final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
                     Utilities.shortnameIsUnique(testGoatLabel.getEditField().getText(), skill, organisation.getSkills());
