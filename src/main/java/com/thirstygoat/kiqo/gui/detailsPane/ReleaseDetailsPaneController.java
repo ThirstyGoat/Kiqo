@@ -2,12 +2,15 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Release;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+
 
 public class ReleaseDetailsPaneController implements Initializable, IDetailsPaneController<Release> {
     @FXML
@@ -22,6 +25,7 @@ public class ReleaseDetailsPaneController implements Initializable, IDetailsPane
 
     @Override
     public void showDetails(final Release release) {
+        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (release != null) {
             shortNameLabel.textProperty().bind(release.shortNameProperty());
 
@@ -38,18 +42,9 @@ public class ReleaseDetailsPaneController implements Initializable, IDetailsPane
                 }
             });
 
-            releaseDateLabel.setText(release.getDate().toString());
-            // Add listener on date
-            release.dateProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    // Then the product owner is not null, proceed
-                    releaseDateLabel.textProperty().unbind();
-                    releaseDateLabel.setText(newValue.toString());
-                } else {
-                    releaseDateLabel.textProperty().unbind();
-                    releaseDateLabel.setText(null);
-                }
-            });
+            releaseDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+                return release.dateProperty().get().format(datetimeFormat);
+            }, release.dateProperty()));
 
             descriptionLabel.textProperty().bind(release.descriptionProperty());
         } else {

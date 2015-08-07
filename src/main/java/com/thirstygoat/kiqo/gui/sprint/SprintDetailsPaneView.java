@@ -1,18 +1,18 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Story;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import com.thirstygoat.kiqo.model.Story;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -47,10 +47,22 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         longNameLabel.textProperty().bind(viewModel.longNameProperty());
         goalLabel.textProperty().bind(viewModel.goalProperty());
-        startDateLabel.textProperty().bind(viewModel.startDateProperty().asString());
-        endDateLabel.textProperty().bind(viewModel.endDateProperty().asString());
+        startDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            if (viewModel.startDateProperty().get() != null) {
+                return viewModel.startDateProperty().get().format(datetimeFormat);
+            }
+            return "";
+        }, viewModel.startDateProperty()));
+        endDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            if (viewModel.endDateProperty().get() != null) {
+                return viewModel.endDateProperty().get().format(datetimeFormat);
+            }
+            return "";
+        }, viewModel.endDateProperty()));
         releaseLabel.textProperty().bind(viewModel.releaseShortNameProperty());
         descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
         teamLabel.textProperty().bind(viewModel.teamShortNameProperty());
