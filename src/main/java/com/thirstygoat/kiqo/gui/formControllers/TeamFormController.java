@@ -222,9 +222,8 @@ public class TeamFormController extends FormController<Team> {
     }
 
     private void setListSelectionViewSettings() {
-        peopleListSelectionView.setSourceHeader(new Label("People Available:"));
-        final BorderPane targetHeader = new BorderPane();
-        targetHeader.setLeft(new Label("People Selected:"));
+        final BorderPane footer = new BorderPane();
+        footer.setPadding(new Insets(5, 15, 0, 0));
 
         peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
 
@@ -237,8 +236,8 @@ public class TeamFormController extends FormController<Team> {
         final Text otherText = new Text("Other");
         final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
 
-        targetHeader.setRight(legend);
-        peopleListSelectionView.setTargetHeader(targetHeader);
+        footer.setRight(legend);
+        peopleListSelectionView.setFooter(footer);
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
