@@ -257,10 +257,10 @@ public class MainController implements Initializable {
 
             GoatDialog.showAlertDialog(
                     primaryStage,
-                    "Can't delete Person",
-                    "Can't delete Person",
+                    "Can't delete person",
+                    "Can't delete person",
                     person.getShortName() + " is currently the PO of the following " +
-                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ":\n" +
+                            Utilities.pluralise(backlogsOwned.size(), "backlog", "backlogs") + ":\n" +
                             Utilities.concatenateItemsList(backlogsOwned, 5)
             );
             return;
@@ -476,8 +476,8 @@ public class MainController implements Initializable {
         if (selectedOrganisationProperty.get() != null) {
             // Check to make sure at least one project exists first, otherwise show warning dialog
             if (selectedOrganisationProperty.get().getProjects().isEmpty()) {
-                GoatDialog.showAlertDialog(primaryStage, "Can't create Release", "Can't create Release",
-                        "No projects available, you must first have a project in order to create a Release.");
+                GoatDialog.showAlertDialog(primaryStage, "Can't create release", "Can't create release",
+                        "No projects available, you must first have a project in order to create a release.");
                 return;
             }
             dialog(null, "Release");
@@ -489,8 +489,8 @@ public class MainController implements Initializable {
             if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
                     selectedOrganisationProperty.get().getPeople().isEmpty() ||
                     selectedOrganisationProperty.get().getEligiblePOs().isEmpty()) {
-                GoatDialog.showAlertDialog(primaryStage, "Can't create Backlog", "Can't create Backlog",
-                        "You must have at least one Project and one Person with the PO skill in order to create a Backlog.");
+                GoatDialog.showAlertDialog(primaryStage, "Can't create backlog", "Can't create backlog",
+                        "You must have at least one project and one person with the PO skill in order to create a backlog.");
                 return;
             }
             dialog(null, "Backlog");
@@ -501,8 +501,8 @@ public class MainController implements Initializable {
         if (selectedOrganisationProperty.get() != null) {
             if (selectedOrganisationProperty.get().getProjects().isEmpty() ||
                     selectedOrganisationProperty.get().getPeople().isEmpty()) {
-                GoatDialog.showAlertDialog(primaryStage, "Can't create Story", "Can't create Story",
-                        "You must have at least one Project and one Person in order to create a Story.");
+                GoatDialog.showAlertDialog(primaryStage, "Can't create story", "Can't create story",
+                        "You must have at least one project and one person in order to create a story.");
                 return;
             }
             dialog(null, "Story");
