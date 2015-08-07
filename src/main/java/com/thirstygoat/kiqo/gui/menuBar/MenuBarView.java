@@ -147,6 +147,7 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
                 return "Double Shift";
             }
         });
+        advancedSearchMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
     }
 
     @FXML

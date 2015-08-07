@@ -29,7 +29,7 @@ public class AdvancedSearch extends Search {
     public ObservableList<SearchResult> execute() {
         ObservableList<SearchResult> results = FXCollections.observableArrayList();
 
-        String escapedQuery = Pattern.quote(getQuery().trim());
+        String escapedQuery = Pattern.quote(getQueryLowerCase().trim());
 
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables(scope)) {
