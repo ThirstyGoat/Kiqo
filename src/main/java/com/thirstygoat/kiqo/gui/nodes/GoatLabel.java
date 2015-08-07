@@ -3,8 +3,6 @@ package com.thirstygoat.kiqo.gui.nodes;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -73,11 +71,6 @@ public class GoatLabel<T extends Item> extends Control {
             }
         });
 
-        editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                skin.showDisplay();
-            }
-        });
     }
 
     public Button doneButton() {
