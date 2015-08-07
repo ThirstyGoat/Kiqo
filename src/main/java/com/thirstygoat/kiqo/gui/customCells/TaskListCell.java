@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
 import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -38,7 +39,7 @@ public class TaskListCell extends ListCell<Task> {
         String description = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("description");
         Status status = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("status");
         float estimate = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("estimate");
-        Task task = new Task(name, description, estimate);
+        Task task = new Task(name, description, estimate, new Story());
         task.statusProperty().setValue(status);
         return task;
     }

@@ -161,7 +161,7 @@ public class TaskFormViewModel extends FormController<Task> {
             if (!estimateProperty().get().trim().equals("")) {
                 estimate = Float.parseFloat(estimateProperty.get());
             }
-            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate);
+            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate, story);
             command = new CreateTaskCommand(task, this.story);
             valid = true;
         } else {

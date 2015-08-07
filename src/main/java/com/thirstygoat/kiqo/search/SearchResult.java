@@ -1,7 +1,8 @@
 package com.thirstygoat.kiqo.search;
 
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Item;
-import javafx.collections.FXCollections;
+import com.thirstygoat.kiqo.model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,18 @@ public class SearchResult {
         return searchQuery;
     }
 
+    /**
+     * Returns the Item that this search result relates to. (The Item that can be displayed in the details pane)
+     * Eg, an AC relates to the Story item that owns it
+     * @return Item to be displayed in the details pane
+     */
     public Item getItem() {
+        if (searchable.getClass() == AcceptanceCriteria.class) {
+            return ((AcceptanceCriteria)searchable).getStory();
+        } else if (searchable.getClass() == Task.class) {
+            return ((Task)searchable).getStory();
+        }
+
         return (Item) searchable;
     }
 
