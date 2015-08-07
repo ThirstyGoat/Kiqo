@@ -1,9 +1,7 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.Skill;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -11,25 +9,28 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
+import java.lang.reflect.Field;
+
 
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatLabel extends Control {
+public class GoatLabel<T extends Item> extends Control {
     public final GoatLabelSkin skin;
     private Label displayLabel;
     private TextField editField;
     private Button editButton;
     private Button doneButton;
-    private BooleanProperty validProperty = new SimpleBooleanProperty();
-    private Skill skill;
+    private T item;
+    private String fieldName;
+    private Field field;
+    private String currentVal;
 
     private EditCommand command;
 
 
     public GoatLabel() {
         super();
-        validProperty.setValue(true);
         skin = new GoatLabelSkin(this) {
             {
                 displayLabel = getDisplayLabel();
@@ -52,11 +53,10 @@ public class GoatLabel extends Control {
             displayLabel.textProperty().unbind();
             displayLabel.setText(editField.getText());
 
-            if (!editField.getText().equals(skill.getShortName())) {
-                command = new EditCommand<>(skill, "shortName", editField.getText());
+            if (!editField.getText().equals(currentVal)) {
+                command = new EditCommand<>(item, fieldName, editField.getText());
                 UndoManager.getUndoManager().doCommand(command);
             }
-
         });
 
         editField.setOnKeyPressed(event -> {
@@ -71,14 +71,6 @@ public class GoatLabel extends Control {
         return doneButton;
     }
 
-    public BooleanProperty validProperty() {
-        return validProperty;
-    }
-
-    public void setValidator() {
-
-    }
-
     public StringProperty textProperty() {
         return displayLabel.textProperty();
     }
@@ -87,7 +79,9 @@ public class GoatLabel extends Control {
         return editField;
     }
 
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setItem(T item, String fieldname, String currentVal) {
+        this.item = item;
+        this.fieldName = fieldname;
+        this.currentVal = currentVal;
     }
 }
