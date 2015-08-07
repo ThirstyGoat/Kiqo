@@ -4,6 +4,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,10 +30,8 @@ import java.util.ResourceBundle;
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializable {
+public class GoatLabelViewController implements Initializable {
 
-    @InjectViewModel
-    private GoatLabelViewModel viewModel;
     @FXML
     private HBox displayView;
     @FXML
@@ -45,27 +45,17 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
     @FXML
     private Button editButton;
     @FXML
-    private HBox goatLabel;
-    @FXML
     private FontAwesomeIconView pencilIcon;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public BooleanProperty done = new SimpleBooleanProperty(false);
+
+    private void init() {
         displayView.setVisible(true);
         editView.setVisible(false);
         textLabel.setVisible(true);
-
-        editButton.visibleProperty().unbind();
-        textLabel.textProperty().unbind();
-
         editButton.visibleProperty().bind(displayView.hoverProperty());
-        doneButton.disableProperty().bind(viewModel.validProperty());
 
-        textLabel.textProperty().bind(viewModel.displayedTextProperty());
 //        textInput.textProperty().bind(textLabel.textProperty());
-
-
-
 
         final FadeTransition fade = new FadeTransition(Duration.millis(400), editButton);
         fade.setAutoReverse(true);
@@ -103,14 +93,22 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         doneButton.setOnAction(event -> {
             displayView.setVisible(true);
             editView.setVisible(false);
-            viewModel.displayedTextProperty().unbind();
-            viewModel.setText(textInput.getText());
-            viewModel.doneProperty.setValue(true);
-            textLabel.textProperty().bind(viewModel.displayedTextProperty());
+            textLabel.setText(textInput.getText());
+            done.setValue(true);
         });
     }
 
-    public HBox getGoatLabel() {
-        return goatLabel;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public StringProperty textProperty() {
+        return textLabel.textProperty();
+    }
+
+    public void setText(String text) {
+        init();
+        textLabel.setText(text);
     }
 }

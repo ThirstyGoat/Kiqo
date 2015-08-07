@@ -166,7 +166,9 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showSkillDetailsPane(Skill skill) {
+        skillDetailsPaneController.setOrganisation(mainController.selectedOrganisationProperty.get());
         skillDetailsPaneController.showDetails(skill);
+
         show(skillDetailsPane);
         showOptionButtons();
     }

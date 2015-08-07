@@ -1,21 +1,18 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelView;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelViewModel;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class SkillDetailsPaneController implements Initializable, IDetailsPaneController<Skill> {
     @FXML
@@ -23,48 +20,59 @@ public class SkillDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Label descriptionLabel;
     @FXML
-    private GridPane grid;
+    private GoatLabel testGoatLabel;
 
-    private GoatLabelViewModel editableShortName;
-
-    private ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple;
+    private final ValidationSupport validationSupport = new ValidationSupport();
+    private Organisation organisation;
 
 
     @Override
     public void showDetails(final Skill skill) {
 
-//        ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
-//        grid.add(viewTuple.getCodeBehind().getGoatLabel(), 1, 2);
-//        editableShortName = viewTuple.getViewModel();
-
         if (skill != null) {
             shortNameLabel.textProperty().bind(skill.shortNameProperty());
             descriptionLabel.textProperty().bind(skill.descriptionProperty());
-            editableShortName.displayedTextProperty().bind(skill.shortNameProperty());
+            testGoatLabel.textProperty().bind(skill.shortNameProperty());
+            testGoatLabel.setSkill(skill);
 
-            editableShortName.doneProperty.addListener((observable, oldValue, newValue) -> {
+
+            /* edit label validation */
+
+            final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+                    Utilities.shortnameIsUnique(testGoatLabel.getEditField().getText(), skill, organisation.getSkills());
+
+            validationSupport.registerValidator(testGoatLabel.getEditField(), Validator.createPredicateValidator(shortNameValidation,
+                    "Short name must be unique and not empty."));
+
+            validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    skill.setShortName(editableShortName.displayedTextProperty().get());
-                    editableShortName.doneProperty.setValue(false);
+                    // Then invalid, disable ok button
+                    testGoatLabel.doneButton().setDisable(true);
+                } else {
+                    testGoatLabel.doneButton().setDisable(false);
                 }
             });
-        } else {
 
+            /* edit label validation */
+
+        } else {
             shortNameLabel.setText(null);
             descriptionLabel.setText(null);
-            editableShortName.setText(null);
         }
+    }
+
+    public void setOrganisation(Organisation organisaion) {
+        this.organisation = organisaion;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
-        grid.add(viewTuple.getCodeBehind().getGoatLabel(), 1, 2);
-        editableShortName = viewTuple.getViewModel();
+
     }
 
     @Override
     public void setMainController(MainController mainController) {
         // don't do it
     }
+
 }
