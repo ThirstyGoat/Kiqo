@@ -11,10 +11,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -69,6 +71,19 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
         FxUtils.setTextFieldSuggester(releaseTextField, viewModel.getReleasesSupplier());
+
+        endDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (viewModel.releaseProperty().get() != null) {
+                    if (item.isAfter(viewModel.releaseProperty().get().getDate())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    }
+                }
+            }
+        });
 
         viewModel.setListeners();
 
