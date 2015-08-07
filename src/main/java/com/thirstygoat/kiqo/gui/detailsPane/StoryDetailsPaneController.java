@@ -6,12 +6,16 @@ import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
+import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
 
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
@@ -47,7 +51,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     private ChangeListener<Boolean> modelIsReadyListener;
     private FloatProperty tasksHoursProperty = new SimpleFloatProperty(0.0f);
     @FXML
-    private Label shortNameLabel;
+    private GoatLabel shortNameLabel;
     @FXML
     private Label longNameLabel;
     @FXML
@@ -110,6 +114,11 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
+            shortNameLabel.setItem(story, "shortName", story.shortNameProperty());
+            ValidationVisualizer visualizer = new ControlsFxVisualizer();
+            StoryFormViewModel viewModel = new StoryFormViewModel();
+            visualizer.initVisualization(viewModel.shortNameValidation(), shortNameLabel.getEditField(), true);
+
             descriptionLabel.textProperty().bind(story.descriptionProperty());
             // This is some seriously cool binding
             // Binding to a property of a property

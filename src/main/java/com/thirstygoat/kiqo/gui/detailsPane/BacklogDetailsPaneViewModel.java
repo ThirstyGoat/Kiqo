@@ -5,10 +5,7 @@ import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 
@@ -17,6 +14,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
     private final StringProperty productOwnerString;
     private final StringProperty scaleString;
     private final BooleanProperty highlightStoryState;
+    public ObjectProperty<Backlog> backlog;
 //    private ObservableList<Story> tableViewStories = FXCollections.observableArrayList();
 
 
@@ -27,6 +25,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
         highlightStoryState = new SimpleBooleanProperty(true); // highlights on by default
         // bind to parent view model
         scaleString.bindBidirectional(super.scaleProperty(), StringConverters.scaleStringConverter());
+        backlog = new SimpleObjectProperty<>();
     }
 
     /**
@@ -34,11 +33,12 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
      * This is because the detailspane is read-only and should always exactly represent the state of the model.
      */
     @Override
-    public void load(Backlog backlog, Organisation organisation) {        
+    public void load(Backlog backlog, Organisation organisation) {
         // bind to parent view model
+        this.backlog.setValue(backlog);
         productOwnerString.unbindBidirectional(super.productOwnerProperty());
         productOwnerString.bindBidirectional(super.productOwnerProperty(), StringConverters.personStringConverter(organisation));
-        
+
         if (backlog != null) {
             super.organisationProperty().set(organisation);
             super.shortNameProperty().bind(backlog.shortNameProperty());
@@ -57,7 +57,7 @@ public class BacklogDetailsPaneViewModel extends BacklogViewModel {
             super.productOwnerProperty().unbind();
             super.projectProperty().unbind();
             super.scaleProperty().unbind();
-            
+
 //            stories.unbind();
             super.stories().clear();
         }
