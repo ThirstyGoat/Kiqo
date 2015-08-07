@@ -2,15 +2,14 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Skill;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-
-import java.lang.reflect.Field;
 
 
 /**
@@ -61,6 +60,21 @@ public class GoatLabel<T extends Item> extends Control {
         editField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 event.consume();
+                skin.showDisplay();
+
+                displayLabel.textProperty().unbind();
+                displayLabel.setText(editField.getText());
+                displayLabel.textProperty().bind(currentVal);
+
+                if (!editField.getText().equals(currentVal.get())) {
+                    command = new EditCommand<>(item, fieldName, editField.getText());
+                    UndoManager.getUndoManager().doCommand(command);
+                }
+            }
+        });
+
+        editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
                 skin.showDisplay();
             }
         });
