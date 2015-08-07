@@ -346,6 +346,17 @@ public class StoryFormViewModel extends FormController<Story> {
                 changes.add(new EditCommand<>(story, "dependencies", targetStoriesProperty.get()));
             }
 
+            // So that the table view gets update we need to remove a story from the observable lists
+            // it is in and then re-add it. Checking if project and backlog are null to avoid null
+            // pointer exception.
+            if (story.getProject() != null && story.getProject().getUnallocatedStories().contains(story)) {
+                story.getProject().getUnallocatedStories().remove(story);
+                story.getProject().getUnallocatedStories().add(story);
+            } else if (story.getBacklog() != null && story.getBacklog().getStories().contains(story)) {
+                story.getBacklog().getStories().remove(story);
+                story.getBacklog().getStories().add(story);
+            }
+
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Story", changes);
         }
