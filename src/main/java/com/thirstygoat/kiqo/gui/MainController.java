@@ -854,8 +854,9 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(sprintFormTuple.getView()));
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());
                 stage.showAndWait();
-                if (!viewModel.isCanceled()) {
-                    doCommand(viewModel.createCommand());
+                Command command = viewModel.createCommand();
+                if (command != null) { // null if cancelled or no changes
+                    doCommand(command);
                 }
             } else {
                 final FXMLLoader loader = new FXMLLoader();

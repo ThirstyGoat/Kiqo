@@ -2,9 +2,11 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
 
 /**
@@ -17,11 +19,21 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
     private final StringProperty teamShortNameProperty;
     private final StringProperty releaseShortNameProperty;
     
+    private final ListChangeListener<Story> listChangeListener;
+    
     public SprintDetailsPaneViewModel() {
         super();
         backlogShortNameProperty = new SimpleStringProperty("");
         teamShortNameProperty = new SimpleStringProperty("");
         releaseShortNameProperty = new SimpleStringProperty("");
+        
+        listChangeListener = new ListChangeListener<Story>() {
+            @Override
+            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Story> change) {
+                change.next();
+                stories().setAll(change.getList());
+            }                
+        };
     }
 
     /**
@@ -42,6 +54,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
             releaseProperty().bind(sprint.releaseProperty());
             stories().clear();
             stories().addAll(sprint.getStories());
+            sprint.getStories().addListener(listChangeListener);
         } else {
             goalProperty().unbind();
             longNameProperty().unbind();

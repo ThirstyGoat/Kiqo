@@ -12,6 +12,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
@@ -26,16 +27,18 @@ import com.thirstygoat.kiqo.util.StringConverters;
  * Created by samschofield on 31/07/15.
  */
 public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
-    private final BooleanProperty canceled;
+    
     private final StringProperty backlogShortNameProperty;
     private final StringProperty teamShortNameProperty;
     private final StringProperty releaseShortNameProperty;
     private final ObservableList<Story> sourceStories;
     private final BooleanProperty releaseEditableProperty;
     
+    private boolean cancelled;
+    private Runnable exitStrategy;
+    
     public SprintFormViewModel() {
         super();
-        canceled = new SimpleBooleanProperty();
         backlogShortNameProperty = new SimpleStringProperty("");
         teamShortNameProperty = new SimpleStringProperty("");
         releaseShortNameProperty = new SimpleStringProperty("");
@@ -51,22 +54,25 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
      * Loads information from the model into the GoatListSelectionView.
      */
     private void loadGoatLists(Sprint sprint) {
-        final Backlog backlog = sprint.getBacklog();
-
-        // add all stories in project to source
-        List<Story> source = new ArrayList<>();
-        if (backlog != null) {
-            final Project project = backlog.getProject();
-            source.addAll(project.getUnallocatedStories());
-            project.getBacklogs().forEach(b -> {
-                source.addAll(b.getStories());
-            });
-            // remove existing targetStories from sourceStories
-            source.removeAll(sprint.getStories());
+        if (sprint != null) {
+            List<Story> source = new ArrayList<>();
+            final Backlog backlog = sprint.getBacklog();
+            if (backlog != null) {
+                final Project project = backlog.getProject();
+                source.addAll(project.getUnallocatedStories());
+                project.getBacklogs().forEach(b -> {
+                    source.addAll(b.getStories());
+                });
+                // remove existing targetStories from sourceStories
+                source.removeAll(sprint.getStories());
+            }
+            
+            sourceStories.setAll(source);
+            stories().setAll(sprint.getStories());
+        } else { // no sprint
+            sourceStories.clear();
+            stories().clear();
         }
-        sourceStories.setAll(source);
-        
-        stories().setAll(sprint.getStories());
     }
 
     @Override
@@ -126,22 +132,26 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
 
     @Override
     public void setExitStrategy(Runnable exitStrategy) {
-        canceled.addListener((observable) -> {
-            exitStrategy.run();
-        });
+        this.exitStrategy = exitStrategy;
     }
 
-    public Boolean isCanceled() {
-        return canceled.get();
+    @Override
+    public Command createCommand() {
+        if (cancelled) {
+            return null;
+        } else {
+            return super.createCommand(); // null if no changes
+        }
     }
-
+    
     protected void okAction() {
-        canceled.set(true); // Set true first to trigger change on listener.
-        canceled.set(false);
+        cancelled = false;
+        exitStrategy.run();
     }
 
     protected void cancelAction() {
-        canceled.set(true);
+        cancelled = true;
+        exitStrategy.run();
     }
 
     protected StringProperty backlogShortNameProperty() {
