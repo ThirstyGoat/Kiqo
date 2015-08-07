@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
+import com.sun.javafx.tools.ant.Callback;
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.create.CreateTeamCommand;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
@@ -16,6 +18,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -60,7 +63,7 @@ public class TeamFormController extends FormController<Team> {
     @FXML
     private TextField descriptionTextField;
     @FXML
-    private GoatListSelectionView<Person> peopleListSelectionView;
+    private GoatFilteredListSelectionView<Person> peopleListSelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -240,8 +243,8 @@ public class TeamFormController extends FormController<Team> {
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
 
-        TeamFormController.setCellFactory(peopleListSelectionView.getSourceListView());
-        setTargetPeopleCellFactory(peopleListSelectionView.getTargetListView());
+//        TeamFormController.setCellFactory(peopleListSelectionView.getSourceListView());
+        peopleListSelectionView.setTargetCellGraphicFactory(getTargetCell());
 
         // Set change listener on target list view
         targetPeople.addListener((ListChangeListener<Person>) c -> {
@@ -262,67 +265,56 @@ public class TeamFormController extends FormController<Team> {
         });
     }
 
-    private void setTargetPeopleCellFactory(ListView<Person> listView) {
-        listView.setCellFactory(view -> new ListCell<Person>() {
-            @Override
-            public void updateItem(Person person, boolean empty) {
-                super.updateItem(person, empty);
-                if (person != null) {
+    private javafx.util.Callback<Person, Node> getTargetCell() {
+        return person -> {
+            final BorderPane borderPane = new BorderPane();
+            final HBox hbox = new HBox();
+            borderPane.setRight(hbox);
+            final Label label = new Label(person.getShortName());
+            borderPane.setLeft(label);
 
-                    final BorderPane borderPane = new BorderPane();
-                    final HBox hbox = new HBox();
-                    borderPane.setRight(hbox);
-                    final Label label = new Label(person.getShortName());
-                    borderPane.setLeft(label);
+            final ToggleGroup radioGroup = new ToggleGroup();
+            final RadioButton radioPo = new RadioButton();
+            final RadioButton radioSm = new RadioButton();
+            final RadioButton radioDev = new RadioButton();
+            final RadioButton radioOther = new RadioButton();
+            radioPo.setToggleGroup(radioGroup);
+            radioSm.setToggleGroup(radioGroup);
+            radioDev.setToggleGroup(radioGroup);
+            radioOther.setToggleGroup(radioGroup);
+            radioPo.setStyle("-fx-mark-color: blue;");
+            radioSm.setStyle("-fx-mark-color: red;");
+            radioDev.setStyle("-fx-mark-color: green;");
 
-                    final ToggleGroup radioGroup = new ToggleGroup();
-                    final RadioButton radioPo = new RadioButton();
-                    final RadioButton radioSm = new RadioButton();
-                    final RadioButton radioDev = new RadioButton();
-                    final RadioButton radioOther = new RadioButton();
-                    radioPo.setToggleGroup(radioGroup);
-                    radioSm.setToggleGroup(radioGroup);
-                    radioDev.setToggleGroup(radioGroup);
-                    radioOther.setToggleGroup(radioGroup);
-                    radioPo.setStyle("-fx-mark-color: blue;");
-                    radioSm.setStyle("-fx-mark-color: red;");
-                    radioDev.setStyle("-fx-mark-color: green;");
-
-                    // Disable PO/SM Radio Buttons if the person doesn't have
-                    // the skill
-                    if (!person.getSkills().contains(organisation.getPoSkill())) {
-                        radioPo.setDisable(true);
-                    }
-                    if (!person.getSkills().contains(organisation.getSmSkill())) {
-                        radioSm.setDisable(true);
-                    }
-
-                    // Select appropriate RadioButton
-                    if (productOwner == person || (team != null && team.getProductOwner() == person)) {
-                        radioPo.setSelected(true);
-                    } else if (scrumMaster == person || (team != null && team.getScrumMaster() == person)) {
-                        radioSm.setSelected(true);
-                    } else if ((devTeam != null && devTeam.contains(person)) ||
-                            (team != null && team.getDevTeam() != null && team.getDevTeam().contains(person))) {
-                        radioDev.setSelected(true);
-                    } else {
-                        radioOther.setSelected(true);
-                    }
-
-                    hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
-
-                    setupRadioPoListener(radioPo, radioOther, person);
-                    setupRadioSmListener(radioSm, radioOther, person);
-                    setupRadioDevListener(radioDev, person);
-
-                    setGraphic(borderPane);
-
-                } else {
-                    setGraphic(null);
-                    setText(null);
-                }
+            // Disable PO/SM Radio Buttons if the person doesn't have
+            // the skill
+            if (!person.getSkills().contains(organisation.getPoSkill())) {
+                radioPo.setDisable(true);
             }
-        });
+            if (!person.getSkills().contains(organisation.getSmSkill())) {
+                radioSm.setDisable(true);
+            }
+
+            // Select appropriate RadioButton
+            if (productOwner == person || (team != null && team.getProductOwner() == person)) {
+                radioPo.setSelected(true);
+            } else if (scrumMaster == person || (team != null && team.getScrumMaster() == person)) {
+                radioSm.setSelected(true);
+            } else if ((devTeam != null && devTeam.contains(person)) ||
+                    (team != null && team.getDevTeam() != null && team.getDevTeam().contains(person))) {
+                radioDev.setSelected(true);
+            } else {
+                radioOther.setSelected(true);
+            }
+
+            hbox.getChildren().addAll(radioPo, radioSm, radioDev, radioOther);
+
+            setupRadioPoListener(radioPo, radioOther, person);
+            setupRadioSmListener(radioSm, radioOther, person);
+            setupRadioDevListener(radioDev, person);
+
+            return borderPane;
+        };
     }
 
     private void setupRadioDevListener(RadioButton radioDev, Person person) {
@@ -402,8 +394,8 @@ public class TeamFormController extends FormController<Team> {
             }
         });
 
-        peopleListSelectionView.getSourceListView().setItems(sourcePeople);
-        peopleListSelectionView.getTargetListView().setItems(targetPeople);
+        peopleListSelectionView.setSourceItems(sourcePeople);
+        peopleListSelectionView.setTargetItems(targetPeople);
     }
 
 

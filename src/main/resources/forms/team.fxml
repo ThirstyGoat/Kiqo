@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.formControllers.TeamFormController">
   <bottom>
     <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
@@ -36,7 +36,7 @@
               <Label text="Description:" GridPane.rowIndex="1" />
               <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
               <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <GoatListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
+              <GoatFilteredListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
               <Label text="If a role is disabled, the Person lacks the necessary skill for that role." GridPane.rowIndex="5" GridPane.columnSpan="2" GridPane.columnIndex="0" />
           </children>
       </GridPane>
