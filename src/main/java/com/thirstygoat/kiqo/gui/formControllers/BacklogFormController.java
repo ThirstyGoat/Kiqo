@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.gui.viewModel.BacklogFormViewModel;
 import com.thirstygoat.kiqo.model.Backlog;
@@ -12,7 +13,10 @@ import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -52,7 +56,7 @@ public class BacklogFormController extends FormController<Backlog> {
     @FXML
     private ComboBox<Scale> scaleComboBox;
     @FXML
-    private GoatListSelectionView<Story> storySelectionView;
+    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -68,6 +72,7 @@ public class BacklogFormController extends FormController<Backlog> {
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
         Platform.runLater(longNameTextField::requestFocus);
+        storySelectionView.setHeader(new Label("Stories:"));
     }
 
     private void initialiseScaleCombobox() {
@@ -82,16 +87,13 @@ public class BacklogFormController extends FormController<Backlog> {
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         productOwnerTextField.textProperty().bindBidirectional(viewModel.productOwnerNameProperty());
         scaleComboBox.valueProperty().bindBidirectional(viewModel.scaleProperty());
-        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
-        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
-    }
 
-//    private void setListeners() {
-//        project.addListener(((observable, oldValue, newValue) -> {
-//            storySelectionView.getTargetListView().getItems().clear();
-//            setStoryListSelectionViewData();
-//        }));
-//    }
+        storySelectionView.setSourceItems(viewModel.sourceStoriesProperty().get());
+        storySelectionView.setTargetItems(viewModel.targetStoriesProperty().get());
+
+        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
+        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
+    }
 
     private void setValidationSupport() {
         validationSupport.registerValidator(longNameTextField,
@@ -119,25 +121,6 @@ public class BacklogFormController extends FormController<Backlog> {
         shortNameTextField.setPromptText("Must be under 20 characters and unique.");
         descriptionTextField.setPromptText("Describe this backlog");
     }
-
-    private void setupStoriesList() {
-        storySelectionView.setSourceHeader(new Label("Stories Available:"));
-        storySelectionView.setTargetHeader(new Label("Stories in Backlog"));
-
-        storySelectionView.setPadding(new Insets(0, 0, 0, 0));
-
-        storySelectionView.setCellFactories(view -> {
-            final ListCell<Story> cell = new ListCell<Story>() {
-                @Override
-                public void updateItem(Story item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(item != null ? item.getShortName() : null);
-                }
-            };
-            return cell;
-        });
-    }
-
 
     @Override
     public void populateFields(final Backlog backlog) {
@@ -216,7 +199,6 @@ public class BacklogFormController extends FormController<Backlog> {
     @Override
     public void setOrganisation(Organisation organisation) {
         viewModel.setOrganisation(organisation);
-        setupStoriesList();
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setTextFieldSuggester(productOwnerTextField, organisation.getEligiblePOs());
         setValidationSupport();

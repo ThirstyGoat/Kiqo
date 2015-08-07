@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -62,7 +63,7 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
     @FXML
-    private GoatListSelectionView<Story> storySelectionView;
+    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -93,8 +94,14 @@ public class StoryFormController extends FormController<Story> {
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
-        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
-        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
+
+
+
+        storySelectionView.setSourceItems(viewModel.sourceStoriesProperty().get());
+        storySelectionView.setTargetItems(viewModel.targetStoriesProperty().get());
+
+        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
+        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
 
         creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
@@ -165,12 +172,7 @@ public class StoryFormController extends FormController<Story> {
     }
 
     private void setupStoriesList() {
-        storySelectionView.setSourceHeader(new Label("Stories Available:"));
-        storySelectionView.setTargetHeader(new Label("Depends on:"));
-
-        storySelectionView.setPadding(new Insets(0, 0, 0, 0));
-
-        storySelectionView.setCellFactories(view -> FxUtils.listCellFactory());
+        storySelectionView.setHeader(new Label("Depends on:"));
     }
 
     private void setButtonHandlers() {

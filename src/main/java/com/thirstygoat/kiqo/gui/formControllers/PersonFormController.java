@@ -5,6 +5,7 @@ import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
@@ -60,7 +61,7 @@ public class PersonFormController extends FormController<Person> {
     @FXML
     private TextField departmentTextField;
     @FXML
-    private GoatListSelectionView<Skill> skillsSelectionView;
+    private GoatFilteredListSelectionView<Skill> skillsSelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -113,20 +114,7 @@ public class PersonFormController extends FormController<Person> {
      * Sets the skills list data and formatting
      */
     private void setUpSkillsList() {
-        skillsSelectionView.setSourceHeader(new Label("Skills Available:"));
-        skillsSelectionView.setTargetHeader(new Label("Skills Selected:"));
-
-        skillsSelectionView.setPadding(new Insets(0, 0, 0, 0));
-
-        // Set the custom cell factory for the skills lists
-        // Thank GoatListSelectionView for this fabulous method
-        skillsSelectionView.setCellFactories(view -> new ListCell<Skill>() {
-            @Override
-            public void updateItem(Skill item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(item != null ? item.getShortName() : null);
-            }
-        });
+        skillsSelectionView.setHeader(new Label("Skills:"));
     }
 
     private void setSkillsListSelectionViewData() {
@@ -138,8 +126,8 @@ public class PersonFormController extends FormController<Person> {
             targetSkills.addAll(person.getSkills());
         }
 
-        skillsSelectionView.getSourceListView().setItems(sourceSkills);
-        skillsSelectionView.getTargetListView().setItems(targetSkills);
+        skillsSelectionView.setSourceItems(sourceSkills);
+        skillsSelectionView.setTargetItems(targetSkills);
     }
 
     /**
@@ -192,69 +180,71 @@ public class PersonFormController extends FormController<Person> {
         final boolean smOfTeam = person.getTeam() != null && person.getTeam().getScrumMaster() == person;
         final boolean finalUsingPoSkillInBacklog = usingPoSkillInBacklog;
 
-        ListView<Skill> targetListView = skillsSelectionView.getTargetListView();
 
-        skillsSelectionView.skin.getMoveToSourceButton().setOnAction(event -> {
-            if (targetListView.getSelectionModel().getSelectedItems().contains(poSkill)) {
-                // Then they are trying to remove the PO skill
-                if (poOfTeam || finalUsingPoSkillInBacklog) {
-                    // Then they are a product owner, and owner of 1 or more backlogs
-                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
-                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
-                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-                            Utilities.concatenateItemsList(backlogsOwned, 5) : "";
-                    GoatDialog.showAlertDialog(
-                            stage,
-                            "Can't remove skill",
-                            "PO Skill can't be removed",
-                            person.getShortName() + " is currently the PO of:\n" +
-                            teamLine + backlogsLine
-                    );
-                    return;
-                }
-            }
-            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
-                GoatDialog.showAlertDialog(
-                        stage,
-                        "Can't remove skill",
-                        "SM Skill can't be removed",
-                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
-                );
-                return;
-            }
-            skillsSelectionView.skin.moveToSource();
-        });
 
-        skillsSelectionView.skin.getMoveToSourceAllButton().setOnAction(event -> {
-            if (targetListView.getItems().contains(poSkill)) {
-                // Then they are trying to remove the PO skill
-                if (poOfTeam || finalUsingPoSkillInBacklog) {
-                    // Then they are a product owner, and owner of 1 or more backlogs
-                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
-                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
-                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-                                    Utilities.concatenateItemsList(backlogsOwned, 5) : "";
-                    GoatDialog.showAlertDialog(
-                            stage,
-                            "Can't remove skill",
-                            "PO Skill can't be removed",
-                            person.getShortName() + " is currently the PO of:\n" +
-                                    teamLine + backlogsLine
-                    );
-                    return;
-                }
-            }
-            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
-                GoatDialog.showAlertDialog(
-                        stage,
-                        "Can't remove skill",
-                        "SM Skill can't be removed",
-                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
-                );
-                return;
-            }
-            skillsSelectionView.skin.moveToSourceAll();
-        });
+//        ListView<Skill> targetListView = skillsSelectionView.getTargetListView();
+//
+//        skillsSelectionView.skin.getMoveToSourceButton().setOnAction(event -> {
+//            if (targetListView.getSelectionModel().getSelectedItems().contains(poSkill)) {
+//                // Then they are trying to remove the PO skill
+//                if (poOfTeam || finalUsingPoSkillInBacklog) {
+//                    // Then they are a product owner, and owner of 1 or more backlogs
+//                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
+//                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
+//                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
+//                            Utilities.concatenateItemsList(backlogsOwned, 5) : "";
+//                    GoatDialog.showAlertDialog(
+//                            stage,
+//                            "Can't remove skill",
+//                            "PO Skill can't be removed",
+//                            person.getShortName() + " is currently the PO of:\n" +
+//                            teamLine + backlogsLine
+//                    );
+//                    return;
+//                }
+//            }
+//            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
+//                GoatDialog.showAlertDialog(
+//                        stage,
+//                        "Can't remove skill",
+//                        "SM Skill can't be removed",
+//                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
+//                );
+//                return;
+//            }
+//            skillsSelectionView.skin.moveToSource();
+//        });
+//
+//        skillsSelectionView.skin.getMoveToSourceAllButton().setOnAction(event -> {
+//            if (targetListView.getItems().contains(poSkill)) {
+//                // Then they are trying to remove the PO skill
+//                if (poOfTeam || finalUsingPoSkillInBacklog) {
+//                    // Then they are a product owner, and owner of 1 or more backlogs
+//                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
+//                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
+//                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
+//                                    Utilities.concatenateItemsList(backlogsOwned, 5) : "";
+//                    GoatDialog.showAlertDialog(
+//                            stage,
+//                            "Can't remove skill",
+//                            "PO Skill can't be removed",
+//                            person.getShortName() + " is currently the PO of:\n" +
+//                                    teamLine + backlogsLine
+//                    );
+//                    return;
+//                }
+//            }
+//            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
+//                GoatDialog.showAlertDialog(
+//                        stage,
+//                        "Can't remove skill",
+//                        "SM Skill can't be removed",
+//                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
+//                );
+//                return;
+//            }
+//            skillsSelectionView.skin.moveToSourceAll();
+//        });
     }
 
     private void setButtonHandlers() {
