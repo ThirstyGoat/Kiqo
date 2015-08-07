@@ -6,7 +6,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -24,7 +23,6 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private final ObjectProperty<ObservableList<T>> sourceItems;
     private final ObjectProperty<ObservableList<T>> targetItems;
     private final ObservableList<T> allItems;
-    private final ListChangeListener<T> listener;
     private ObjectProperty<Callback<T, Node>> targetCellGraphicFactory = new SimpleObjectProperty<>();
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
     private TextField textField;
@@ -34,11 +32,6 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         sourceItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         targetItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         allItems = FXCollections.observableArrayList();
-        listener = c -> {
-            c.next();
-            allItems.addAll(c.getAddedSubList());
-            allItems.removeAll(c.getRemoved());
-        };
 
         createSkin();
         setDefaultCellFactory();
@@ -74,10 +67,8 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
 
     public void setTargetItems(ObservableList<T> targetItems) {
         allItems.removeAll(getTargetItems());
-        getTargetItems().removeListener(listener);
 
         allItems.addAll(targetItems);
-        targetItems.addListener(listener);
 
         targetItemsProperty().set(targetItems);
     }
@@ -92,10 +83,8 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
 
     public void setSourceItems(ObservableList<T> sourceItems) {
         allItems.removeAll(getSourceItems());
-        getSourceItems().removeListener(listener);
 
         allItems.addAll(sourceItems);
-        sourceItems.addListener(listener);
 
         sourceItemsProperty().set(sourceItems);
     }
@@ -112,6 +101,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         textField.setStyle("-fx-border-radius: 4 4 0 0; -fx-background-radius: 4 4 0 0;");
         textField.setPromptText("Type here to filter list...");
         listView = new ListView<>();
+        listView.setStyle("-fx-border-radius: 0 0 4 4; -fx-background-radius: 0 0 4 4;");
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 

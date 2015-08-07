@@ -424,12 +424,12 @@ public class TeamFormController extends FormController<Team> {
             scrumMaster = team.getScrumMaster();
             devTeam.addAll(team.getDevTeam().stream().collect(Collectors.toList()));
         }
+        populatePeopleListView();
     }
 
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        populatePeopleListView();
         setListSelectionViewSettings();
     }
 }
