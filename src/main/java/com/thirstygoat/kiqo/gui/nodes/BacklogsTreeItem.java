@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
+
 /**
  * Represents a collection of Projects for display in a TreeView
  * @author Bradley Kirwan

@@ -12,8 +12,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -211,14 +213,27 @@ public class SideBarController implements Initializable {
                     @Override
                     protected void updateItem(Item item, boolean empty) {
                         if (item != null) {
+                            FontAwesome fontAwesome = new FontAwesome();
                             textProperty().bind(item.shortNameProperty());
                             if (item.getClass() != TreeNodeHeading.class) {
                                 setContextMenu(contextMenu);
+                                setGraphic(null);
+                            } else {
+                                Node node = null;
+                                if (item.getShortName().equals("Releases")) {
+                                    node = fontAwesome.create(FontAwesome.Glyph.CALENDAR);
+                                }  else if (item.getShortName().equals("Backlogs")) {
+                                    node = fontAwesome.create(FontAwesome.Glyph.LIST);
+                                } else if (item.getShortName().equals("Unallocated Stories")) {
+                                    node = fontAwesome.create(FontAwesome.Glyph.BOOK);
+                                }
+                                setGraphic(node);
                             }
                         } else {
                             textProperty().unbind();
                             textProperty().set("");
                             setContextMenu(null);
+                            setGraphic(null);
                         }
                         super.updateItem(item, empty);
                     }
