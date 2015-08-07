@@ -105,7 +105,7 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
                     Label matchLabel = new Label(match.getMatchedString().substring(matchPos[0], endPos));
                     matchLabel.getStyleClass().add("advanced-search-result-highlight");
                     Tooltip matchTooltip = new Tooltip(match.getMatchedString());
-                    matchTooltip.setPrefWidth(500);
+                    matchTooltip.setMaxWidth(500);
                     matchTooltip.setMaxHeight(400);
                     matchTooltip.setWrapText(true);
                     matchTooltip.getStyleClass().add("advanced-search-result-tooltip");
