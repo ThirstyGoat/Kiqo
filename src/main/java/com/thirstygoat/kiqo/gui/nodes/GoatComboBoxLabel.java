@@ -25,7 +25,6 @@ public class GoatComboBoxLabel<T extends Item> extends Control {
     private String fieldName;
     private ObjectProperty currentVal;
     private EditCommand command;
-    private ArrayList options;
 
     public GoatComboBoxLabel() {
         super();
@@ -89,11 +88,10 @@ public class GoatComboBoxLabel<T extends Item> extends Control {
         return comboBox;
     }
 
-    public void setItem(T item, String fieldName, ObjectProperty currentVal, ArrayList options) {
+    public void setItem(T item, String fieldName, ObjectProperty currentVal, Object[] options) {
         this.item = item;
         this.fieldName = fieldName;
         this.currentVal = currentVal;
-        this.options = options;
         comboBox.setItems(FXCollections.observableArrayList(options));
     }
 

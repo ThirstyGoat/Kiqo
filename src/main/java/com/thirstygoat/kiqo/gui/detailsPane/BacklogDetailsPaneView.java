@@ -96,13 +96,15 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         highlightCheckBox.selectedProperty().bindBidirectional(backlogDetailsPaneViewModel.highlightStoryStateProperty());
 
+
+        // Added
         backlogDetailsPaneViewModel.backlog.addListener((observable, oldValue, newValue) -> {
             shortNameLabel.setItem(backlogDetailsPaneViewModel.backlog.getValue(), "shortName",
                     backlogDetailsPaneViewModel.backlog.getValue().shortNameProperty());
 
 
             scaleLabel.setItem(backlogDetailsPaneViewModel.backlog.getValue(), "scale",
-                    backlogDetailsPaneViewModel.backlog.getValue().scaleProperty(), new ArrayList(Arrays.asList(Scale.values())));
+                    backlogDetailsPaneViewModel.backlog.getValue().scaleProperty(), Scale.values());
         });
     }
 
