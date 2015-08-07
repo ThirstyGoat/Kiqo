@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryListCell;
 import com.thirstygoat.kiqo.model.Story;
 import de.saxsys.mvvmfx.FxmlView;
@@ -9,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -71,7 +73,15 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleStringProperty());
         setHyperlink();
 
-        shortNameTableColumn.setCellFactory(param -> new StoryListCell(backlogDetailsPaneViewModel));
+        shortNameTableColumn.setCellFactory(param -> {
+            StoryListCell storyListCell = new StoryListCell(backlogDetailsPaneViewModel);
+            storyListCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1) {
+                    MainController.focusedItemProperty.set((Story) storyListCell.getTableRow().getItem());
+                }
+            });
+            return storyListCell;
+        });
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.setItems(backlogDetailsPaneViewModel.getStories());
 

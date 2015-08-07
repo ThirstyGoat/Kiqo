@@ -90,4 +90,6 @@ public class StoryListCell extends TableCell<Story, String> {
             setGraphic(null);
         }
     }
+
+
 }

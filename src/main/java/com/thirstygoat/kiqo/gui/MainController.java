@@ -63,11 +63,11 @@ import java.util.stream.Collectors;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
+    public static final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
-    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
     @FXML
