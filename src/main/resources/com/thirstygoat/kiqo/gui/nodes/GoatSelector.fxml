@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ListView?>
+
+<VBox fx:controller="com.thirstygoat.kiqo.gui.nodes.GoatSelector" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<TextField fx:id="textField" />
+		<ListView fx:id="listView" VBox.vgrow="ALWAYS" />
+	</children>
+</VBox>
+

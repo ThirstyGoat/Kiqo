@@ -1,8 +1,11 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+
 import org.controlsfx.control.ListSelectionView;
 
 /**
@@ -11,7 +14,7 @@ import org.controlsfx.control.ListSelectionView;
  *
  * @param <T> Type of item to be displayed in the listviews
  */
-public class GoatListSelectionView<T> extends ListSelectionView<T> {
+public class GoatListSelectionView<T> extends ListSelectionView<T> implements ISelectionView<T> {
     public final GoatListSelectionViewSkin<T> skin;
     private ListView<T> sourceListView;
     private ListView<T> targetListView;
@@ -35,6 +38,8 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     /**
      * @return ListView displaying the pool of available items
      */
+    @Deprecated
+    @Override
     public ListView<T> getSourceListView() {
         return sourceListView;
     }
@@ -42,6 +47,8 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
     /**
      * @return ListView displaying the assigned items
      */
+    @Deprecated
+    @Override
     public ListView<T> getTargetListView() {
         return targetListView;
     }
@@ -51,9 +58,22 @@ public class GoatListSelectionView<T> extends ListSelectionView<T> {
      * ListCells created with the new cell factory.
      *
      * @param cellFactory Cell Factory for both ListViews
+     * @deprecated
      */
+    @Deprecated
+    @Override
     public final void setCellFactories(Callback<ListView<T>, ListCell<T>> cellFactory) {
         sourceListView.setCellFactory(cellFactory);
         targetListView.setCellFactory(cellFactory);
+    }
+
+    @Override
+    public ObjectProperty<ObservableList<T>> getSourceItemsProperty() {
+        return sourceListView.itemsProperty();
+    }
+
+    @Override
+    public ObjectProperty<ObservableList<T>> getTargetItemsProperty() {
+        return targetListView.itemsProperty();
     }
 }
