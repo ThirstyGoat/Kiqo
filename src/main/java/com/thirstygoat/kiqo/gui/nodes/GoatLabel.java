@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Skill;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -23,11 +24,8 @@ public class GoatLabel<T extends Item> extends Control {
     private Button doneButton;
     private T item;
     private String fieldName;
-    private Field field;
-    private String currentVal;
-
+    private StringProperty currentVal;
     private EditCommand command;
-
 
     public GoatLabel() {
         super();
@@ -52,8 +50,9 @@ public class GoatLabel<T extends Item> extends Control {
 
             displayLabel.textProperty().unbind();
             displayLabel.setText(editField.getText());
+            displayLabel.textProperty().bind(currentVal);
 
-            if (!editField.getText().equals(currentVal)) {
+            if (!editField.getText().equals(currentVal.get())) {
                 command = new EditCommand<>(item, fieldName, editField.getText());
                 UndoManager.getUndoManager().doCommand(command);
             }
@@ -79,9 +78,13 @@ public class GoatLabel<T extends Item> extends Control {
         return editField;
     }
 
-    public void setItem(T item, String fieldname, String currentVal) {
+    public void setItem(T item, String fieldName, StringProperty currentVal) {
         this.item = item;
-        this.fieldName = fieldname;
+        this.fieldName = fieldName;
         this.currentVal = currentVal;
+    }
+
+    public void setText(String text) {
+        displayLabel.textProperty().setValue(text);
     }
 }
