@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo;
 
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import org.junit.Assert;
@@ -38,8 +39,8 @@ public class ReportGeneratorTest{
     private Team team = new Team("team1", "description", Arrays.asList(person, person2, person3, person4));
     private Sprint sprint = new Sprint("Goal", "longname", "Sprint description", null, release, team, LocalDate.now().minusDays(10), LocalDate.now().minusDays(1), new ArrayList<>());
     private Allocation allocation;
-    private AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria("ac text");
-    private Task task = new Task("Shortname task", "description task", (float) 5);
+    private AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria("ac text", story);
+    private Task task = new Task("Shortname task", "description task", (float) 5, story);
 
     @Before
     public void setUp() {
@@ -57,8 +58,7 @@ public class ReportGeneratorTest{
         CreatePersonCommand createPersonCommand2 = new CreatePersonCommand(person2, organisation);
         createPersonCommand2.execute();
 
-        CreateTeamCommand createTeamCommand = new CreateTeamCommand(team.getShortName(), team.getDescription(),
-                Arrays.asList(person3), person, person2, Arrays.asList(person4), organisation);
+        CreateTeamCommand createTeamCommand = new CreateTeamCommand(team, organisation);
         createTeamCommand.execute();
 
         allocation = new Allocation(organisation.getTeams().get(0), LocalDate.of(2013, 5, 5), LocalDate.now().plusDays(1), organisation.getProjects().get(0));

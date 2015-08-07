@@ -35,14 +35,14 @@ public class UndoManager {
     protected int branchPosition = 0;
 
 
+    private UndoManager() {}
+
     public static UndoManager getUndoManager() {
         if (instance == null) {
             instance = new UndoManager();
         }
         return instance;
     }
-
-    private UndoManager() {}
 
     /**
      * Executes the command and adds it to the undo stack.
@@ -138,11 +138,6 @@ public class UndoManager {
     }
 
     private void checkChangesSaved() {
-        if (!undoStack.isEmpty()) {
-            changesSavedProperty().set(true);
-            return;
-        }
-
         // because there aren't equal methods for
         boolean unsavedChanges = true;
         ArrayList<Command> temp = new ArrayList<>(undoStack);
