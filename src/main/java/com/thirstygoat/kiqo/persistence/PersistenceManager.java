@@ -184,7 +184,6 @@ public class PersistenceManager {
                 observableList = FXCollections.observableArrayList();
             }
             for (final JsonElement element : json.getAsJsonArray()) {
-                // TODO FIX GENERICS ISSUE
                 observableList.add(PersistenceManager.gson.fromJson(element, type));
             }
             return observableList;
