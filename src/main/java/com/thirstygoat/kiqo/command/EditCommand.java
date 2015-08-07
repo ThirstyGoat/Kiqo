@@ -37,6 +37,7 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
      */
     public EditCommand(final ModelObjectType subject, final String fieldName, final FieldType newVal) throws FieldNotFoundException {
         this.subject = subject;
+        System.out.println(subject.getClass());
         try {
             this.propertyDescriptor = new PropertyDescriptor(fieldName, subject.getClass());
         } catch (final IntrospectionException e) {
