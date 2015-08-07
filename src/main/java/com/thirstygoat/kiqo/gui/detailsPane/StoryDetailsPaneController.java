@@ -6,7 +6,7 @@ import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
-import com.thirstygoat.kiqo.gui.nodes.DragSupportedListView;
+import com.thirstygoat.kiqo.gui.nodes.ReorderableListView;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
@@ -59,9 +59,9 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Label storyScaleLabel;
     @FXML
-    private DragSupportedListView<AcceptanceCriteria> acListView;
+    private ReorderableListView<AcceptanceCriteria> acListView;
     @FXML
-    private ListView<Task> taskListView;
+    private ReorderableListView<Task> taskListView;
     @FXML
     private Slider storyEstimateSlider;
     @FXML

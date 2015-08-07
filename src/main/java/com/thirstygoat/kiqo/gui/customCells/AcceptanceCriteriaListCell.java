@@ -5,6 +5,8 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.nodes.DraggableListCell;
+import com.thirstygoat.kiqo.gui.nodes.ReorderableListView;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
@@ -27,12 +29,13 @@ import javafx.scene.text.Text;
 import java.util.Map;
 
 
-public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
+public class AcceptanceCriteriaListCell extends DraggableListCell<AcceptanceCriteria> {
     private final Map<State, Image> images;
     private ListView<AcceptanceCriteria> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
 
-    public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
+    public AcceptanceCriteriaListCell(ReorderableListView<AcceptanceCriteria> listView, Map<State, Image> images) {
+        super(listView);
         this.listView = listView;
         this.images = images;
     }
@@ -62,8 +65,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
         // calling super here is very important
 
-        if (!empty) {
-            initialiseDragAndDrop(item);
+        if (!empty && item != null) {
+//            initialiseDragAndDrop(item);
 
             final BorderPane borderPane = new BorderPane();
             Text criteria = new Text();
