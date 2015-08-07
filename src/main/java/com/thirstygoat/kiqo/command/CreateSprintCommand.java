@@ -1,25 +1,26 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.create.CreateCommand;
 import com.thirstygoat.kiqo.model.Sprint;
 
 /**
  * Created by amy on 5/8/15.
  */
-public class CreateSprintCommand extends Command<Void> {
+public class CreateSprintCommand extends CreateCommand {
     private final Sprint sprint;
 
     public CreateSprintCommand(final Sprint sprint) {
+        super(sprint);
         this.sprint = sprint;
     }
 
     @Override
-    public Void execute() {
+    public void addToModel() {
         sprint.getRelease().getSprints().add(sprint);
-        return null;
     }
 
     @Override
-    public void undo() {
+    public void removeFromModel() {
         sprint.getRelease().getSprints().remove(sprint);
     }
 

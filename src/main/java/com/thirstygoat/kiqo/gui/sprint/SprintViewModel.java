@@ -165,7 +165,7 @@ public class SprintViewModel implements ViewModel {
             command = new CreateSprintCommand(sprint);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!goalProperty.get().equals(sprint.getShortName())) {
                 changes.add(new EditCommand<>(sprint, "goal", goalProperty.get()));
             }

@@ -83,6 +83,7 @@ public class MainDetailsPaneController implements Initializable {
     private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
     
     private Pane advancedSearchDetailsPane;
+    private AdvancedSearchViewModel advancedSearchViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -97,6 +98,7 @@ public class MainDetailsPaneController implements Initializable {
         ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
         advancedSearchDetailsPane = (Pane) advancedSearchViewTuple.getView();
         stackPane.getChildren().add(advancedSearchDetailsPane);
+        advancedSearchViewModel = advancedSearchViewTuple.getViewModel();
         
         panes = new Pane[] {
                 projectDetailsPane,
