@@ -1,16 +1,12 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import java.net.URL;
