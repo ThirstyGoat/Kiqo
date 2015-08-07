@@ -22,17 +22,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-//@Override
-//public void initialize(URL location, ResourceBundle resources) {
-//        storyTableView.setPlaceholder(placeHolder);
-//        storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//        }
-
-//public void bindFields() {
-//        placeHolder.textProperty().set(gui.PLACEHOLDER);
-//        storyTableView.setItems(gui.stories());
-//        }
-
 /**
  * Created by Bradley on 25/03/2015.
  *
