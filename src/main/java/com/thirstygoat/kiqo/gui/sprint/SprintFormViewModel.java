@@ -1,9 +1,8 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.StringConverters;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,15 +11,10 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.StringConverters;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 
 /**
@@ -92,6 +86,10 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             endDateProperty().set(sprint.getEndDate());
             teamProperty().set(sprint.getTeam());
             releaseProperty().set(sprint.getRelease());
+            sourceStories.clear();
+            sourceStories.addAll(backlogProperty().get().getStories().stream()
+                    .filter(story -> story.getIsReady() && !stories().contains(story)).collect(Collectors.toList()));
+
             stories().clear();
             stories().addAll(sprint.getStories());
             
@@ -106,11 +104,26 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             teamProperty().set(null);
             releaseProperty().set(null);
             stories().clear();
+
             
             releaseEditableProperty.set(true);
         }
     }
-    
+
+    public void setListeners() {
+        backlogProperty().addListener(((observable, oldValue, newValue) -> {
+            sourceStories.clear();
+            stories().clear();
+            setStoryListProperties();
+        }));
+    }
+
+    private void setStoryListProperties() {
+        if (backlogProperty().get() != null) {
+            sourceStories.addAll(backlogProperty().get().getStories().stream().filter(story -> story.getIsReady()).collect(Collectors.toList()));
+        }
+    }
+
     /**
      * The StringConverters must always be bound with the current organisation.
      * @param organisation
@@ -128,6 +141,7 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
             releaseShortNameProperty.bindBidirectional(releaseProperty(),
                     StringConverters.releaseStringConverter(organisation));
         }
+
     }
 
     @Override

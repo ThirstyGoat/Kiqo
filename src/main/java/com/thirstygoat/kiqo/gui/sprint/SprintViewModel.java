@@ -1,45 +1,22 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateSprintCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UpdateListCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.Utilities;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 31/07/15.
  */
 public class SprintViewModel implements ViewModel {
-    protected Organisation organisation;
-    protected Sprint sprint;
-    
     private final StringProperty goalProperty; // This is the shortName
     private final StringProperty longNameProperty;
     private final StringProperty descriptionProperty;
@@ -49,10 +26,9 @@ public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Team> teamProperty;
     private final ObjectProperty<Release> releaseProperty;
     private final ObservableList<Story> stories;
-
     private final FunctionBasedValidator<String> goalValidator;
-    private final FunctionBasedValidator<String> longNameValidator;
-    private final FunctionBasedValidator<String> descriptionValidator;
+//    private final FunctionBasedValidator<String> longNameValidator;
+//    private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
     private final ObservableRuleBasedValidator startDateValidator;
@@ -60,6 +36,8 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
+    protected Organisation organisation;
+    protected Sprint sprint;
 
     public SprintViewModel() {
         organisation = null;
@@ -88,16 +66,6 @@ public class SprintViewModel implements ViewModel {
                     }
                 },
                 ValidationMessage.error("Sprint goal must be unique and not empty"));
-
-        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
-                Utilities.emptinessPredicate(),
-                ValidationMessage.error("Long name must not be empty."));
-
-        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
-                string -> {
-                    return true;
-                },
-                ValidationMessage.error("Description is not valid."));
 
         backlogValidator = new FunctionBasedValidator<>(backlogProperty, backlog -> {
             if (backlog == null) {
@@ -180,8 +148,7 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        allValidator = new CompositeValidator(goalValidator, longNameValidator, 
-                descriptionValidator, backlogValidator, startDateValidator, 
+        allValidator = new CompositeValidator(goalValidator, backlogValidator, startDateValidator,
                 endDateValidator, teamValidator, releaseValidator, storiesValidator);
     }
 
@@ -280,14 +247,6 @@ public class SprintViewModel implements ViewModel {
 
     protected ValidationStatus goalValidation() {
         return goalValidator.getValidationStatus();
-    }
-
-    protected ValidationStatus longNameValidation() {
-        return longNameValidator.getValidationStatus();
-    }
-
-    protected ValidationStatus descriptionValidation() {
-        return descriptionValidator.getValidationStatus();
     }
 
     protected ValidationStatus backlogValidation() {

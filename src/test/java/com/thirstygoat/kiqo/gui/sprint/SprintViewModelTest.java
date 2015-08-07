@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 import com.thirstygoat.kiqo.model.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,26 +42,6 @@ public class SprintViewModelTest {
 
         viewModel.goalProperty().set("Must be less than 20 characters");
         Assert.assertFalse(viewModel.goalValidation().isValid());
-    }
-
-    @Test
-    public void testLongNameValidator() {
-        viewModel.longNameProperty().setValue("");
-        // Cant be empty
-        Assert.assertFalse(viewModel.longNameValidation().isValid());
-
-        viewModel.longNameProperty().setValue("A long name");
-        Assert.assertTrue(viewModel.longNameValidation().isValid());
-    }
-
-    @Test
-    public void testDescriptionValidator() {
-        //Always valid
-        viewModel.descriptionProperty().setValue("");
-        Assert.assertTrue(viewModel.descriptionValidation().isValid());
-
-        viewModel.descriptionProperty().setValue("A description");
-        Assert.assertTrue(viewModel.descriptionValidation().isValid());
     }
 
     @Test
