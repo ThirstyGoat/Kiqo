@@ -5,8 +5,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -111,19 +109,14 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
      */
     private void createSkin() {
         textField = new TextField();
+        textField.setStyle("-fx-border-radius: 4 4 0 0; -fx-background-radius: 4 4 0 0;");
+        textField.setPromptText("Type here to filter list...");
         listView = new ListView<>();
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 
         getChildren().addAll(textField, listView);
-    }
-
-    public ListView<T> getSourceListView() {
-        return listView;
-    }
-
-    public ListView<T> getTargetListView() {
-        return listView;
+        setPrefHeight(USE_COMPUTED_SIZE);
     }
 
     public void setSourceHeader(Node node) {
@@ -174,6 +167,12 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
                         HBox.setHgrow(newValue, Priority.ALWAYS);
                         hBox.getChildren().remove(oldValue);
                         hBox.getChildren().add(newValue);
+                    });
+
+                    hBox.setOnMousePressed(event -> {
+                        if (event.getClickCount() == 2) {
+                            checkBox.setSelected(!checkBox.isSelected());
+                        }
                     });
 
                     setText("");

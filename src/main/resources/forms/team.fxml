@@ -36,7 +36,7 @@
               <Label text="Description:" GridPane.rowIndex="1" />
               <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
               <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <GoatFilteredListSelectionView fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
+              <GoatFilteredListSelectionView prefHeight="200" fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
               <Label text="If a role is disabled, the Person lacks the necessary skill for that role." GridPane.rowIndex="5" GridPane.columnSpan="2" GridPane.columnIndex="0" />
           </children>
       </GridPane>
