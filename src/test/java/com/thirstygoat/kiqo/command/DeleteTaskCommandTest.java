@@ -25,7 +25,7 @@ public class DeleteTaskCommandTest {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
         story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
-        task = new Task("task1", "descr", 0f );
+        task = new Task("task1", "descr", 0f, story);
         story.observableTasks().add(task);
         command = new DeleteTaskCommand(task, story);
     }

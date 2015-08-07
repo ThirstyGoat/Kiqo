@@ -17,6 +17,7 @@ public class Task extends Item {
     private final StringProperty description;
     private final FloatProperty estimate;
     private final ObjectProperty<Status> status;
+    private Story story;
 
     public Task() {
         shortName = new SimpleStringProperty("");
@@ -25,11 +26,12 @@ public class Task extends Item {
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
 
-    public Task(String shortName, String description, Float estimate) {
+    public Task(String shortName, String description, Float estimate, Story story) {
         this.shortName = new SimpleStringProperty(shortName);
         this.description = new SimpleStringProperty(description);
         this.estimate = new SimpleFloatProperty(estimate);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
+        this.story = story;
     }
 
 //    /**
@@ -44,6 +46,10 @@ public class Task extends Item {
 
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
+    }
+
+    public Story getStory() {
+        return story;
     }
 
     public ObjectProperty<Status> statusProperty() {
@@ -121,6 +127,9 @@ public class Task extends Item {
 
     @Override
     public List<SearchableField> getSearchableStrings() {
-        return new ArrayList<>();
+        List<SearchableField> list = new ArrayList<>();
+        list.add(new SearchableField("Short Name", getShortName()));
+        list.add(new SearchableField("Description", getDescription()));
+        return list;
     }
 }

@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
+import com.thirstygoat.kiqo.gui.nodes.DragSupportedListView;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
@@ -26,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -57,7 +59,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @FXML
     private Label storyScaleLabel;
     @FXML
-    private ListView<AcceptanceCriteria> acListView;
+    private DragSupportedListView<AcceptanceCriteria> acListView;
     @FXML
     private ListView<Task> taskListView;
     @FXML
@@ -135,11 +137,11 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
             totalHoursLabel.setText("0.0");
             storyEstimateSliderLabel.setText(null);
-            System.out.println("removing listener for null story");
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
-        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
+        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images));
+
         taskListView.setCellFactory(param -> new TaskListCell(param));
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));

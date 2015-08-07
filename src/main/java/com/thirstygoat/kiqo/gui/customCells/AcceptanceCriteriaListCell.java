@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,7 +40,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
         AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
                 ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-        );
+        , new Story());
         AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
         acceptanceCriteria.setState(state);
         return acceptanceCriteria;

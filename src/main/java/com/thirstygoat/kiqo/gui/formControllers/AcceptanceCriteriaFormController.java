@@ -81,7 +81,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     private void setCommand() {
         if (acceptanceCriteria == null) {
-            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim());
+            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim(), story);
             command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
             valid = true;
         } else {

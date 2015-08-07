@@ -19,19 +19,25 @@ public class AcceptanceCriteria extends Item {
 
     public final StringProperty criteria;
     public final ObjectProperty<State> state;
+    public Story story;
 
     public AcceptanceCriteria() {
         this.criteria = new SimpleStringProperty("");
         this.state = new SimpleObjectProperty<>(State.NEITHER);
     }
 
-    public AcceptanceCriteria(String criteria) {
+    public AcceptanceCriteria(String criteria, Story story) {
         this.criteria = new SimpleStringProperty(criteria);
         this.state = new SimpleObjectProperty<>(State.NEITHER);
+        this.story = story;
     }
 
     public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.state};
+    }
+
+    public Story getStory() {
+        return story;
     }
 
     public String getCriteria() {
@@ -40,7 +46,7 @@ public class AcceptanceCriteria extends Item {
 
     /**
      * For introspection
-     * @param criteria
+     * @param criteria Criteria to be set
      */
     // for introspection
     public void setCriteria(String criteria) {
@@ -93,7 +99,9 @@ public class AcceptanceCriteria extends Item {
 
     @Override
     public List<SearchableField> getSearchableStrings() {
-        return new ArrayList<>();
+        List<SearchableField> list = new ArrayList<>();
+        list.add(new SearchableField("Criteria", getCriteria()));
+        return list;
     }
 
     /**

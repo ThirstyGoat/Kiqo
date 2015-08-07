@@ -25,7 +25,7 @@ public class CreateTaskCommandTest {
         project = new Project("proj1", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
         story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
-        task = new Task("task1", "descr", 0f );
+        task = new Task("task1", "descr", 0f, story);
         command = new CreateTaskCommand(task, story);
     }
 
