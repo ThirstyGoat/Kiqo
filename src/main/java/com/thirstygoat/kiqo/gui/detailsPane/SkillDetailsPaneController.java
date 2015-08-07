@@ -6,6 +6,8 @@ import com.thirstygoat.kiqo.gui.nodes.GoatLabelViewModel;
 import com.thirstygoat.kiqo.model.Skill;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -22,29 +24,41 @@ public class SkillDetailsPaneController implements Initializable, IDetailsPaneCo
     private Label descriptionLabel;
     @FXML
     private GridPane grid;
-//    @FXML
-//    private GoatLabelView goatLabelView;
 
     private GoatLabelViewModel editableShortName;
+
+    private ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple;
 
 
     @Override
     public void showDetails(final Skill skill) {
 
-        System.out.println("show");
+//        ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
+//        grid.add(viewTuple.getCodeBehind().getGoatLabel(), 1, 2);
+//        editableShortName = viewTuple.getViewModel();
+
         if (skill != null) {
-            editableShortName.textProperty().bindBidirectional(skill.shortNameProperty());
+            shortNameLabel.textProperty().bind(skill.shortNameProperty());
             descriptionLabel.textProperty().bind(skill.descriptionProperty());
+            editableShortName.displayedTextProperty().bind(skill.shortNameProperty());
+
+            editableShortName.doneProperty.addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    skill.setShortName(editableShortName.displayedTextProperty().get());
+                    editableShortName.doneProperty.setValue(false);
+                }
+            });
         } else {
+
             shortNameLabel.setText(null);
             descriptionLabel.setText(null);
+            editableShortName.setText(null);
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("init");
-        ViewTuple<GoatLabelView, GoatLabelViewModel> viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
+        viewTuple = FluentViewLoader.fxmlView(GoatLabelView.class).load();
         grid.add(viewTuple.getCodeBehind().getGoatLabel(), 1, 2);
         editableShortName = viewTuple.getViewModel();
     }

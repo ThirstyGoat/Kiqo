@@ -51,7 +51,6 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("A");
         displayView.setVisible(true);
         editView.setVisible(false);
         textLabel.setVisible(true);
@@ -60,8 +59,13 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         textLabel.textProperty().unbind();
 
         editButton.visibleProperty().bind(displayView.hoverProperty());
-        textLabel.textProperty().bindBidirectional(textInput.textProperty());
-        textLabel.textProperty().bindBidirectional(viewModel.textProperty());
+        doneButton.disableProperty().bind(viewModel.validProperty());
+
+        textLabel.textProperty().bind(viewModel.displayedTextProperty());
+//        textInput.textProperty().bind(textLabel.textProperty());
+
+
+
 
         final FadeTransition fade = new FadeTransition(Duration.millis(400), editButton);
         fade.setAutoReverse(true);
@@ -92,12 +96,17 @@ public class GoatLabelView implements FxmlView<GoatLabelViewModel>, Initializabl
         editButton.setOnAction(event -> {
             displayView.setVisible(false);
             editView.setVisible(true);
+            textInput.setText(textLabel.getText());
         });
 
 
         doneButton.setOnAction(event -> {
             displayView.setVisible(true);
             editView.setVisible(false);
+            viewModel.displayedTextProperty().unbind();
+            viewModel.setText(textInput.getText());
+            viewModel.doneProperty.setValue(true);
+            textLabel.textProperty().bind(viewModel.displayedTextProperty());
         });
     }
 
