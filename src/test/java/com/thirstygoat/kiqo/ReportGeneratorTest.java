@@ -78,19 +78,15 @@ public class ReportGeneratorTest{
         CreateStoryCommand createStoryCommand3 = new CreateStoryCommand(story3);
         createStoryCommand3.execute();
 
-
-
         CreateAcceptanceCriteriaCommand acceptanceCriteriaCommand = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
         acceptanceCriteriaCommand.execute();
 
         CreateTaskCommand createTaskCommand = new CreateTaskCommand(task, story);
         createTaskCommand.execute();
 
-
         backlog = new Backlog("shortname", "longname", "description", person, organisation.getProjects().get(0), Arrays.asList(story, story2), Scale.FIBONACCI);
         CreateBacklogCommand createBacklogCommand = new CreateBacklogCommand(backlog);
         createBacklogCommand.execute();
-
 
         CreateReleaseCommand createReleaseCommand = new CreateReleaseCommand(release);
         createReleaseCommand.execute();

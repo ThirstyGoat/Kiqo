@@ -202,7 +202,6 @@ public final class ReportGenerator {
                 lines.add(ReportUtils.indent(INDENT_SIZE) + ReportGenerator.SPRINT_COMMENT);
                 lines.addAll(ReportUtils.indentArray((ReportGenerator.INDENT_SIZE * 2), generateSprintReport(sprint)));
             }
-
         }
 
         // only print teams that are currently allocated
@@ -221,7 +220,6 @@ public final class ReportGenerator {
         if (!hasAllocationHeader) {
             lines.add(ReportUtils.collectionLine("Currently Allocated Teams", true));
         }
-
         return lines;
     }
 
@@ -240,7 +238,6 @@ public final class ReportGenerator {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
         }
-
         return lines;
     }
 
@@ -263,7 +260,6 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Scale", story.getScale()));
         lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
         lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
-        
 
         // Add unallocated stories that belong to this project to the report
         lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
@@ -315,7 +311,7 @@ public final class ReportGenerator {
 
         return lines;
     }
-    //TODO check validity
+
     private List<String> generateSprintReport(Sprint sprint) {
         final List<String> lines = new ArrayList<>();
         lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
@@ -377,7 +373,6 @@ public final class ReportGenerator {
             lines.add(ReportGenerator.ALLOCATION_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
         }
-
         return lines;
     }
 
