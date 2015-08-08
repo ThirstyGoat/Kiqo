@@ -152,6 +152,7 @@ public class MainDetailsPaneController implements Initializable {
             } else if (item instanceof Backlog) {
                 showBacklogDetailsPane((Backlog) item);
             } else if (item instanceof Sprint) {
+                sprintDetailsPaneViewModel.load((Sprint) item, mainController.selectedOrganisationProperty().get());
                 showSprintDetailsPane((Sprint) item);
             }
         }

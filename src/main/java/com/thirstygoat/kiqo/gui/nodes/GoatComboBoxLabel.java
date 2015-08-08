@@ -38,8 +38,7 @@ public class GoatComboBoxLabel<T extends Item> extends Control {
         };
 
         setSkin(skin);
-
-
+        
         editButton.setOnAction(event -> {
             skin.showEdit();
             comboBox.setValue(displayLabel.getText());

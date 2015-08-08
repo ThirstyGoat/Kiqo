@@ -1,8 +1,12 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
+import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +31,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private Label longNameLabel;
     @FXML
-    private Label goalLabel;
+    private GoatLabel goalLabel;
     @FXML
     private Label teamLabel;
     @FXML
@@ -73,5 +77,13 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         storyTableView.setItems(viewModel.stories());
 
         placeHolder.textProperty().set(SprintDetailsPaneViewModel.PLACEHOLDER);
+
+        viewModel.sprint.addListener((observable, oldValue, newValue) -> {
+            goalLabel.setItem(newValue, "goal", viewModel.sprint.get().shortNameProperty());
+                ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+                validationVisualizer.initVisualization(viewModel.goalValidation(), goalLabel.getEditField(), true);
+                goalLabel.doneButton().disableProperty().bind(Bindings.not(viewModel.goalValidation().validProperty()));
+
+        });
     }
 }

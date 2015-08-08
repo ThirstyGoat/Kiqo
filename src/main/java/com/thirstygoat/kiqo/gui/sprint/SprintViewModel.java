@@ -36,11 +36,11 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     protected Organisation organisation;
-    protected Sprint sprint;
+    protected ObjectProperty<Sprint> sprint;
 
     public SprintViewModel() {
         organisation = null;
-        sprint = null;
+        sprint = new SimpleObjectProperty<>();
         goalProperty = new SimpleStringProperty("");
         longNameProperty = new SimpleStringProperty("");
         descriptionProperty = new SimpleStringProperty("");
@@ -167,7 +167,7 @@ public class SprintViewModel implements ViewModel {
      */
     public Command createCommand() {
         final Command command;
-        if (sprint == null) {
+        if (sprint.get() == null) {
             // new sprint command
             final Sprint sprint = new Sprint(goalProperty.get(), longNameProperty.get(),
                     descriptionProperty.getValue(), backlogProperty.get(), releaseProperty.get(), teamProperty.get(), startDateProperty.get(), endDateProperty.get(), stories());
@@ -175,35 +175,35 @@ public class SprintViewModel implements ViewModel {
         } else {
             // edit command
             final ArrayList<Command> changes = new ArrayList<>();
-            if (!goalProperty.get().equals(sprint.getShortName())) {
-                changes.add(new EditCommand<>(sprint, "goal", goalProperty.get()));
+            if (!goalProperty.get().equals(sprint.get().getShortName())) {
+                changes.add(new EditCommand<>(sprint.get(), "goal", goalProperty.get()));
             }
-            if (!longNameProperty.get().equals(sprint.getLongName())) {
-                changes.add(new EditCommand<>(sprint, "longName", longNameProperty.get()));
+            if (!longNameProperty.get().equals(sprint.get().getLongName())) {
+                changes.add(new EditCommand<>(sprint.get(), "longName", longNameProperty.get()));
             }
-            if (!descriptionProperty.get().equals(sprint.getDescription())) {
-                changes.add(new EditCommand<>(sprint, "description", descriptionProperty.get()));
+            if (!descriptionProperty.get().equals(sprint.get().getDescription())) {
+                changes.add(new EditCommand<>(sprint.get(), "description", descriptionProperty.get()));
             }
-            if (!backlogProperty.get().equals(sprint.getBacklog())) {
-                changes.add(new EditCommand<>(sprint, "backlog", backlogProperty.get()));
+            if (!backlogProperty.get().equals(sprint.get().getBacklog())) {
+                changes.add(new EditCommand<>(sprint.get(), "backlog", backlogProperty.get()));
             }
-            if (!startDateProperty.get().equals(sprint.getStartDate())) {
-                changes.add(new EditCommand<>(sprint, "startDate", startDateProperty.get()));
+            if (!startDateProperty.get().equals(sprint.get().getStartDate())) {
+                changes.add(new EditCommand<>(sprint.get(), "startDate", startDateProperty.get()));
             }
-            if (!endDateProperty.get().equals(sprint.getEndDate())) {
-                changes.add(new EditCommand<>(sprint, "endDate", endDateProperty.get()));
+            if (!endDateProperty.get().equals(sprint.get().getEndDate())) {
+                changes.add(new EditCommand<>(sprint.get(), "endDate", endDateProperty.get()));
             }
-            if (!teamProperty.get().equals(sprint.getTeam())) {
-                changes.add(new EditCommand<>(sprint, "team", teamProperty.get()));
+            if (!teamProperty.get().equals(sprint.get().getTeam())) {
+                changes.add(new EditCommand<>(sprint.get(), "team", teamProperty.get()));
             }
-            if (!releaseProperty.get().equals(sprint.getRelease())) {
-                changes.add(new MoveItemCommand<>(sprint, sprint.getRelease().getSprints(),
+            if (!releaseProperty.get().equals(sprint.get().getRelease())) {
+                changes.add(new MoveItemCommand<>(sprint.get(), sprint.get().getRelease().getSprints(),
                         releaseProperty.get().getSprints()));
-                changes.add(new EditCommand<>(sprint, "release", releaseProperty.get()));
+                changes.add(new EditCommand<>(sprint.get(), "release", releaseProperty.get()));
             }
-            if (!(stories.containsAll(sprint.getStories())
-                    && sprint.getStories().containsAll(stories()))) {
-                changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprint.getStories()));
+            if (!(stories.containsAll(sprint.get().getStories())
+                    && sprint.get().getStories().containsAll(stories()))) {
+                changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprint.get().getStories()));
             }
             if (!changes.isEmpty()) {
                 command = new CompoundCommand("Edit Sprint", changes);
@@ -214,7 +214,7 @@ public class SprintViewModel implements ViewModel {
         return command;
     }
     
-    protected StringProperty goalProperty() {
+    public StringProperty goalProperty() {
         return goalProperty;
     }
 

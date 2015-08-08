@@ -38,6 +38,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
     @Override
     public void load(Sprint sprint, Organisation organisation) {
         bindStringProperties(organisation);
+        super.sprint.setValue(sprint);
         
         if (sprint != null) {
             goalProperty().bind(sprint.shortNameProperty());

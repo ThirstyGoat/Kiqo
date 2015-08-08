@@ -4,10 +4,7 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import javafx.beans.binding.BooleanExpression;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -40,7 +37,7 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         releaseEditableProperty = new SimpleBooleanProperty(false);
         
         backlogProperty().addListener((observable, oldValue, newValue) -> {
-            loadGoatLists(sprint);
+            loadGoatLists(sprint.get());
         });
     }
 
@@ -72,7 +69,7 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     @Override
     public void load(Sprint sprint, Organisation organisation) {
         this.organisation = organisation;
-        this.sprint = sprint;
+        this.sprint = new SimpleObjectProperty<>(sprint);
 
         // do after binding backlog name
         bindStringProperties(organisation);
