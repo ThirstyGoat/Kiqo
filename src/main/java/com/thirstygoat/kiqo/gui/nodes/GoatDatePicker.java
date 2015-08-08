@@ -27,6 +27,7 @@ public class GoatDatePicker <T extends Item> extends Control {
         private String fieldName;
         private ObjectProperty<LocalDate> currentVal;
         private EditCommand command;
+        public static final String DISABLED_CELL_STYLE = "-fx-background-color: #ffc0cb";
 
         public GoatDatePicker() {
             super();
