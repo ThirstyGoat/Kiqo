@@ -3,12 +3,11 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.MenuBar?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1100.0" stylesheets="css/styles.css" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.MainController">
   <center>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.31" maxHeight="-1.0" minHeight="-1.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+    <SplitPane fx:id="mainSplitPane" dividerPositions="0.31" maxHeight="-1.0" minHeight="-1.0" BorderPane.alignment="CENTER">
       <items>
-        <VBox fx:id="listPane" opacity="1.0" spacing="10.0">
+        <VBox fx:id="listPane" opacity="1.0" minWidth="270" maxWidth="270" spacing="10.0">
           <children>
             <fx:include fx:id="sideBar" source="sidebar.fxml" />
           </children>
