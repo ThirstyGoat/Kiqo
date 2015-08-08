@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatDatePicker;
 import com.thirstygoat.kiqo.model.Release;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ public class ReleaseDetailsPaneController implements Initializable, IDetailsPane
     @FXML
     private Label projectLabel;
     @FXML
-    private Label releaseDateLabel;
+    private GoatDatePicker releaseDateLabel;
     @FXML
     private Label descriptionLabel;
 
@@ -45,6 +46,7 @@ public class ReleaseDetailsPaneController implements Initializable, IDetailsPane
             releaseDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
                 return release.dateProperty().get().format(datetimeFormat);
             }, release.dateProperty()));
+            releaseDateLabel.setItem(release, "date", release.dateProperty());
 
             descriptionLabel.textProperty().bind(release.descriptionProperty());
         } else {
