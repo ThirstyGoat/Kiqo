@@ -309,7 +309,7 @@ public class PersonFormController extends FormController<Person> {
     private boolean validate() {
         if (validationSupport.isInvalid()) {
             return false;
-        } else {
+        } else if (person != null) {
             Skill poSkill = organisation.getPoSkill();
             Skill smSkill = organisation.getSmSkill();
 
@@ -347,6 +347,8 @@ public class PersonFormController extends FormController<Person> {
                 return false;
             }
 
+            valid = true;
+        } else {
             valid = true;
         }
         setCommand();

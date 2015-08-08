@@ -22,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -136,9 +137,7 @@ public class TeamFormController extends FormController<Team> {
             }
         });
 
-        cancelButton.setOnAction(event -> {
-            stage.close();
-        });
+        cancelButton.setOnAction(event -> stage.close());
     }
 
     /**
@@ -223,9 +222,8 @@ public class TeamFormController extends FormController<Team> {
 
     private void setListSelectionViewSettings() {
         final BorderPane footer = new BorderPane();
-        footer.setPadding(new Insets(5, 15, 0, 0));
-
-        peopleListSelectionView.setPadding(new Insets(0, 0, 0, 0));
+        footer.setPadding(new Insets(0, 15, 0, 0));
+        HBox.setHgrow(footer, Priority.ALWAYS);
 
         final Text poText = new Text(organisation.getPoSkill().getShortName().substring(0, 2) + " ");
         poText.setFill(Color.BLUE);
@@ -238,6 +236,7 @@ public class TeamFormController extends FormController<Team> {
 
         footer.setRight(legend);
         peopleListSelectionView.setFooter(footer);
+        peopleListSelectionView.setHeader(new Label("Team Members:"));
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
