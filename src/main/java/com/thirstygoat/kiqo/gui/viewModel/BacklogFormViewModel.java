@@ -6,7 +6,6 @@ import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,7 +37,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     private StringProperty descriptionProperty = new SimpleStringProperty("");
     private StringProperty productOwnerNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
     private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
 

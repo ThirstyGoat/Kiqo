@@ -1,17 +1,14 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import com.sun.javafx.tools.ant.Callback;
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.create.CreateTeamCommand;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -27,7 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
