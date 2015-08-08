@@ -123,4 +123,4 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
     public void cancelAction() {
         viewModel.cancelAction();
     }
-}
+}}
