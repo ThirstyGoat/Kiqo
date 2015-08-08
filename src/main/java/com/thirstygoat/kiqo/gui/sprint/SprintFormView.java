@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
@@ -8,11 +9,13 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -41,7 +44,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
     @FXML
     private TextField backlogTextField;
     @FXML
-    private GoatListSelectionView<Story> storySelectionView;
+    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -60,11 +63,19 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         teamTextField.textProperty().bindBidirectional(viewModel.teamShortNameProperty());
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogShortNameProperty());
-        
-        storySelectionView.getTargetListView().setItems(viewModel.stories());
-        storySelectionView.getSourceListView().setItems(viewModel.sourceStories());
-        storySelectionView.setCellFactories(view -> FxUtils.listCellFactory());
-        
+
+        storySelectionView.setHeader(new Label("Stories in Sprint:"));
+        storySelectionView.setSourceItems(viewModel.sourceStories());
+        storySelectionView.setTargetItems(viewModel.stories());
+
+        viewModel.sourceStories().addListener((ListChangeListener<Story>) c -> {
+            storySelectionView.setSourceItems(viewModel.sourceStories());
+        });
+
+        viewModel.stories().addListener((ListChangeListener<Story>) c -> {
+            storySelectionView.setTargetItems(viewModel.stories());
+        });
+
         releaseTextField.disableProperty().bind(viewModel.releaseEditableProperty().not());
         okButton.disableProperty().bind(viewModel.validProperty().not());
         
@@ -113,4 +124,3 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         viewModel.cancelAction();
     }
 }
-

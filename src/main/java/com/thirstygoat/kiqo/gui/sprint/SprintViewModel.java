@@ -28,7 +28,6 @@ public class SprintViewModel implements ViewModel {
     private final ObservableList<Story> stories;
     private final FunctionBasedValidator<String> goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
-//    private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
     private final ObservableRuleBasedValidator startDateValidator;
