@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -43,7 +44,10 @@ public class GoatDatePicker <T extends Item> extends Control {
 
             editButton.setOnAction(event -> {
                 skin.showEdit();
-                datePicker.setValue(datePicker.getValue());
+                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate date = LocalDate.parse(dateLabel.textProperty().get(), datetimeFormat);
+                datePicker.setValue(date);
+
             });
 
             doneButton.setOnAction(event -> {
@@ -51,6 +55,7 @@ public class GoatDatePicker <T extends Item> extends Control {
 
                 dateLabel.textProperty().unbind();
                 dateLabel.setText(datePicker.getValue().toString());
+
 
                 DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 dateLabel.textProperty().bind(Bindings.createStringBinding(() ->
