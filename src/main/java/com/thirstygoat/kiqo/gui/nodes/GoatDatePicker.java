@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.gui.nodes;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Item;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
@@ -12,6 +11,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -25,8 +25,9 @@ public class GoatDatePicker <T extends Item> extends Control {
         private Button doneButton;
         private T item;
         private String fieldName;
-        private ObjectProperty currentVal;
+        private ObjectProperty<LocalDate> currentVal;
         private EditCommand command;
+        public static final String DISABLED_CELL_STYLE = "-fx-background-color: #ffc0cb";
 
         public GoatDatePicker() {
             super();
@@ -43,7 +44,10 @@ public class GoatDatePicker <T extends Item> extends Control {
 
             editButton.setOnAction(event -> {
                 skin.showEdit();
-                datePicker.setValue(datePicker.getValue());
+                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate date = LocalDate.parse(dateLabel.textProperty().get(), datetimeFormat);
+                datePicker.setValue(date);
+
             });
 
             doneButton.setOnAction(event -> {
@@ -51,10 +55,10 @@ public class GoatDatePicker <T extends Item> extends Control {
 
                 dateLabel.textProperty().unbind();
                 dateLabel.setText(datePicker.getValue().toString());
+                dateLabel.textProperty().bind(currentVal.asString());
 
-                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                dateLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                        datetimeFormat.format(datePicker.getValue())));
+//                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                textProperty().bind(currentVal.asString());
 
                 if (!datePicker.getValue().toString().equals(currentVal.get())) {
                     command = new EditCommand<>(item, fieldName, datePicker.getValue());
@@ -63,13 +67,15 @@ public class GoatDatePicker <T extends Item> extends Control {
             });
 
             datePicker.setOnKeyPressed(event -> {
+
                 if (event.getCode() == KeyCode.ENTER) {
                     event.consume();
                     skin.showDisplay();
 
                     dateLabel.textProperty().unbind();
                     dateLabel.setText(datePicker.getValue().toString());
-                    dateLabel.textProperty().bind(currentVal);
+                    dateLabel.textProperty().bind(currentVal.asString());
+
 
                     if (!datePicker.getValue().toString().equals(currentVal.get())) {
                         command = new EditCommand<>(item, fieldName, datePicker.getValue().toString());
@@ -92,7 +98,7 @@ public class GoatDatePicker <T extends Item> extends Control {
             return datePicker;
         }
 
-        public void setItem(T item, String fieldName, ObjectProperty currentVal) {
+        public void setItem(T item, String fieldName, ObjectProperty<LocalDate> currentVal) {
             this.item = item;
             this.fieldName = fieldName;
             this.currentVal = currentVal;

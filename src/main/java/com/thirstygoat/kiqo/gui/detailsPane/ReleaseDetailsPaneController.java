@@ -26,7 +26,7 @@ public class ReleaseDetailsPaneController implements Initializable, IDetailsPane
 
     @Override
     public void showDetails(final Release release) {
-        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("yyy-MM-dd");
         if (release != null) {
             shortNameLabel.textProperty().bind(release.shortNameProperty());
 
