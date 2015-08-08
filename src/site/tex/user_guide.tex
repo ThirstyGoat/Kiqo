@@ -312,11 +312,36 @@ to a blank organisation. Note that the \textit{undo-able} operations will be pre
 \section{Search}
 Search gives the user the ability to find items that match a search query.
 
+There are two types of searches in this application.
+
+\subsection{Simple Search}
+\paragraph{}
+Simple Search allows the user to find almost any item in the application, by searching for the short name of that item.
+
 \begin{itemize}
-\item Selecting \menu{File > Search} will display the search toolbar.
-\item Whenever a character is entered into the search box the results that match will be displayed bellow the text area.
-\item If the seach result inside the list is clicked it will take the user to the location of that object.
+\item Simple Search can be initiated by selecting \menu{Edit > Simple Search}.
+\item You can then start typing into the text field, and the results will be gathered as you type.
+\item \textit{Your search query is evaluated as a partial regular expression, which means your query must appear exactly (case-insensitive) in the short name of one of the items in the application.}
+\item Selecting one of the results in the list will take you to that item.
 \end{itemize}
+
+\subsection{Advanced Search}
+\paragraph{}
+Advanced Search allows the user to search through nearly all of the properties that each item in the application has (eg. description, long name).
+Advanced Search allows the user to limit their search to a narrowed scope, and has full support for Regular Expressions.
+
+\begin{itemize}
+\item Advanced Search can be opened by selecting \menu{Edit > Advanced Search}
+\item \textit{If the \textbf{Enable RegEx} checkbox is not checked, then the query is evaluated the same as \textbf{Simple Search}, however it looks through all of the searchable fields of each item.}
+\item Search results will appear in the list below, and the will have highlighting where the match was found.
+\item Double clicking on a search result will take you to that item \textit{(Or in the case of Tasks, and Acceptance Criteria, it will take you to the owning story)}
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{advancedSearch}
+  \caption{Advanced Search (showing results for search query: "design").\label{advancedSearch}}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 4
@@ -353,6 +378,8 @@ Search gives the user the ability to find items that match a search query.
     Show/Hide Toolbar  &  \keys{\ctrl + /} \\
     Show/Hide List Pane  &  \keys{\ctrl + L} \\
     Switch Tabs & \keys{\ctrl + 1-4} \\
+    Simple Search & Double \keys{\shift} \\
+    Advanced Search & \keys{\ctrl + \shift + F} \\
     \bottomrule
   \end{tabular}
   \caption{List of Keyboard Shortcuts}
