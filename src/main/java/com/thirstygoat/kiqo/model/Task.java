@@ -54,6 +54,10 @@ public class Task extends Item {
         return story;
     }
 
+    public void setStory(Story story) {
+        this.story = story;
+    }
+
     public ObjectProperty<Status> statusProperty() {
         return status;
     }

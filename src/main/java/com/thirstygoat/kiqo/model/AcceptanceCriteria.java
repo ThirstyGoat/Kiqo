@@ -40,6 +40,10 @@ public class AcceptanceCriteria extends Item {
         return story;
     }
 
+    public void setStory(Story story) {
+        this.story = story;
+    }
+
     public String getCriteria() {
         return criteria.get();
     }

@@ -50,7 +50,7 @@ public class BacklogFormViewModelTest {
         BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
         Predicate<String> predicate = backlogFormViewModel.getLongNameValidation();
 
-        Assert.assertFalse("Must not be valid initially.", 
+        Assert.assertFalse("Must not be valid initially.",
                 predicate.test(backlogFormViewModel.longNameProperty().get()));
 
         Assert.assertTrue("Valid input not recognised as valid.", predicate.test("Billy Goat"));
@@ -115,20 +115,5 @@ public class BacklogFormViewModelTest {
         backlogFormViewModel.projectNameProperty().set("");
         backlogFormViewModel.projectNameProperty().set(projectName);
         Assert.assertTrue("Valid project not recognised as valid.", predicate.test(projectName));
-    }
-
-    @Test
-    public void testScaleValidation() {
-        BacklogFormViewModel backlogFormViewModel = new BacklogFormViewModel();
-        Organisation organisation = new Organisation(true);
-        backlogFormViewModel.setOrganisation(organisation);
-
-        Predicate<Scale> predicate = backlogFormViewModel.getScaleValidation();
-        Assert.assertFalse("Must not be valid initially.", predicate.test(backlogFormViewModel.scaleProperty().get()));
-        Assert.assertFalse("Must not be null.", predicate.test(null));
-        
-        for (Scale scale : Scale.values()) {
-            Assert.assertTrue("Valid scale " + scale.name() + " not recognised as valid.", predicate.test(scale));
-        }
     }
 }
