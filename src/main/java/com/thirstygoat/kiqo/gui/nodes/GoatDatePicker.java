@@ -43,7 +43,7 @@ public class GoatDatePicker <T extends Item> extends Control {
 
             editButton.setOnAction(event -> {
                 skin.showEdit();
-                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate date = LocalDate.parse(dateLabel.textProperty().get(), datetimeFormat);
                 datePicker.setValue(date);
 
@@ -56,7 +56,7 @@ public class GoatDatePicker <T extends Item> extends Control {
                 dateLabel.setText(datePicker.getValue().toString());
                 dateLabel.textProperty().bind(currentVal.asString());
 
-                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//                DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 textProperty().bind(currentVal.asString());
 
                 if (!datePicker.getValue().toString().equals(currentVal.get())) {
