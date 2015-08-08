@@ -9,14 +9,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
+import org.controlsfx.control.SegmentedButton;
 
 import java.util.regex.Pattern;
 
@@ -33,6 +32,8 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private ListView<T> listView;
     private ObjectProperty<Node> header = new SimpleObjectProperty<>();
     private ObjectProperty<Node> footer = new SimpleObjectProperty<>();
+
+    private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
 
     public GoatFilteredListSelectionView() {
         sourceItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
@@ -131,10 +132,49 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 
+        ToggleButton allToggleButton = new ToggleButton(SHOWING.All.toString());
+        ToggleButton selectedToggleButton = new ToggleButton(SHOWING.Selected.toString());
+        ToggleButton unSelectedToggleButton = new ToggleButton(SHOWING.Unselected.toString());
+        SegmentedButton showingSegmentedButton = new SegmentedButton(
+                allToggleButton, selectedToggleButton, unSelectedToggleButton);
+
+        showingSegmentedButton.setStyle("-fx-font-size: 11px");
+        showingSegmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == allToggleButton) {
+                showing.set(SHOWING.All);
+            } else if (newValue == selectedToggleButton) {
+                showing.set(SHOWING.Selected);
+            } else if (newValue == unSelectedToggleButton) {
+                showing.set(SHOWING.Unselected);
+            } else {
+                oldValue.setSelected(true);
+            }
+        });
+        allToggleButton.setSelected(true);
+
+        // Set up binding so that allItems contains only items depending on the showingSegmentedButton
+        showing.addListener((observable, oldValue, newValue) -> {
+            allItems.clear();
+            if (newValue == SHOWING.All) {
+                allItems.addAll(sourceItems.get());
+                allItems.addAll(targetItems.get());
+            } else if (newValue == SHOWING.Selected) {
+                allItems.addAll(targetItems.get());
+            } else if (newValue == SHOWING.Unselected) {
+                allItems.addAll(sourceItems.get());
+            }
+            // Trigger refresh of shown items by firing change event on the filter text field
+            String value = textField.getText();
+            textField.setText(value + " ");
+            textField.setText(value);
+        });
+
         HBox headerContainer = new HBox();
         headerContainer.setPadding(new Insets(0, 0 ,5 ,0));
-        HBox footerContainer = new HBox();
+        BorderPane footerContainer = new BorderPane();
         footerContainer.setPadding(new Insets(5, 0, 0, 0));
+
+        footerContainer.setLeft(showingSegmentedButton);
 
         getChildren().addAll(headerContainer, textField, listView, footerContainer);
         setPrefHeight(USE_COMPUTED_SIZE);
@@ -145,8 +185,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         });
 
         footerProperty().addListener((observable, oldValue, newValue) -> {
-            footerContainer.getChildren().clear();
-            footerContainer.getChildren().add(newValue);
+            footerContainer.setRight(newValue);
         });
     }
 
@@ -233,5 +272,11 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
 
     public void setSourceCellGraphicFactory(Callback<T, Node> sourceCellGraphicFactory) {
         this.sourceCellGraphicFactory.set(sourceCellGraphicFactory);
+    }
+
+    private enum SHOWING {
+        All,
+        Selected,
+        Unselected
     }
 }
