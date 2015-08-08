@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.command.delete;
 
 import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableItems;
 
@@ -32,6 +34,9 @@ public abstract class DeleteCommand extends Command {
     public final void undo() {
         addToModel();
         SearchableItems.getInstance().addSearchable(obj);
+        if (obj.getClass().getSuperclass() == Item.class) {
+            MainController.focusedItemProperty.set((Item) obj);
+        }
     }
 
     /**

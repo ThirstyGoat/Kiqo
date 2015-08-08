@@ -273,7 +273,7 @@ public class SideBarController implements Initializable {
         this.mainController = mainController;
         initializeListViews();
         mainController.selectedOrganisationProperty.addListener((o, oldValue, newValue) -> setListViewData());
-        mainController.focusedItemProperty.addListener((o, oldValue, newValue) -> selectItem(newValue));
+        MainController.focusedItemProperty.addListener((o, oldValue, newValue) -> selectItem(newValue));
     }
 
     private void selectItem(Item newValue) {
@@ -292,6 +292,9 @@ public class SideBarController implements Initializable {
         } else if (itemClass == Skill.class) {
             tabViewPane.getSelectionModel().select(skillsTab);
             skillsListView.getSelectionModel().select((Skill)newValue);
+        } else if (itemClass == Sprint.class) {
+            tabViewPane.getSelectionModel().select(projectTab);
+            projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));
         }
     }
 
