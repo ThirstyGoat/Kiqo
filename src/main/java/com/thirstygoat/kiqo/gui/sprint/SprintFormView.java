@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
@@ -12,11 +11,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -82,6 +77,19 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
         FxUtils.setTextFieldSuggester(releaseTextField, viewModel.getReleasesSupplier());
+
+        startDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (viewModel.releaseProperty().get() != null) {
+                    if (item.isAfter(viewModel.releaseProperty().get().getDate()) || item.isAfter(viewModel.endDateProperty().get().minusDays(1))) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    }
+                }
+            }
+        });
 
         endDatePicker.setDayCellFactory(param -> new DateCell() {
             @Override

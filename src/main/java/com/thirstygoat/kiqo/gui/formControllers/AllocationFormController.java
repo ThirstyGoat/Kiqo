@@ -8,16 +8,11 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.ValidationSupport;
@@ -371,9 +366,57 @@ public class AllocationFormController extends FormController<Allocation> {
             setTextFieldAutoCompletionBindingTeam();
         }
 
+        setCellFactories();
         setPrompts();
         setValidationSupport();
 
+    }
+
+    private void setCellFactories() {
+        System.out.println(allocation);
+        startDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (team != null) {
+                    team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
+                        if ((item.isAfter(allocation1.getStartDate().minusDays(2)) && item.isBefore(allocation1.getEndDate().plusDays(1)))) {
+                            //date falls inside a previous allocation
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb");
+                        } else if (endDatePicker.getValue() != null) {
+                            if (item.isAfter(endDatePicker.getValue().minusDays(1))) {
+                                //date falls after the end date
+                                setDisable(true);
+                                setStyle("-fx-background-color: #ffc0cb");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        endDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (team != null) {
+                    team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
+                        if (item.isAfter(allocation1.getStartDate().minusDays(1)) && item.isBefore(allocation1.getEndDate().plusDays(2))) {
+                            //date falls inside a previous allocation
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb");
+                        } else if (startDatePicker.getValue() != null) {
+                            if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
+                                //date is before the start date
+                                setDisable(true);
+                                setStyle("-fx-background-color: #ffc0cb");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     /**
