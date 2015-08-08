@@ -2,18 +2,9 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryListCell;
-import com.thirstygoat.kiqo.gui.nodes.GoatComboBoxLabel;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
-import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -28,8 +19,6 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 
