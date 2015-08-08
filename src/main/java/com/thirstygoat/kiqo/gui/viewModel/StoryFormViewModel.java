@@ -1,12 +1,14 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -39,7 +41,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty creatorNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
     private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
