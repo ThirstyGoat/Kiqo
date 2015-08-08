@@ -1,19 +1,20 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -177,10 +178,14 @@ public class ReleaseFormController extends FormController<Release> {
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {
                 changes.add(new EditCommand<>(release, "date", releaseDatePicker.getValue()));
+                System.out.println(release + "," + releaseDatePicker.getValue());
             }
             if (!descriptionTextField.getText().equals(release.getDescription())) {
                 changes.add(new EditCommand<>(release, "description", descriptionTextField.getText()));
             }
+
+
+
 
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Release", changes);
