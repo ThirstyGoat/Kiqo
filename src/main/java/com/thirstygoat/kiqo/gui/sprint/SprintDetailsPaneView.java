@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -63,12 +64,14 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             }
             return "";
         }, viewModel.endDateProperty()));
-        releaseLabel.textProperty().bind(viewModel.releaseShortNameProperty());
+        releaseLabel.textProperty().bindBidirectional(viewModel.releaseProperty(),
+                StringConverters.releaseStringConverter(viewModel.organisationProperty()));
         descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
-        teamLabel.textProperty().bind(viewModel.teamShortNameProperty());
-        backlogLabel.textProperty().bind(viewModel.backlogShortNameProperty());
+        teamLabel.textProperty().bindBidirectional(viewModel.teamProperty(),
+                StringConverters.teamStringConverter(viewModel.organisationProperty()));
+        backlogLabel.textProperty().bindBidirectional(viewModel.backlogProperty(),
+                StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
-//        shortNameTableColumn.setCellFactory(param -> new StoryListCell(viewModel));
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.setItems(viewModel.stories());
 

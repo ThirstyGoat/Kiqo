@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
@@ -54,12 +55,15 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         goalTextField.textProperty().bindBidirectional(viewModel.goalProperty());
         startDatePicker.valueProperty().bindBidirectional(viewModel.startDateProperty());
         endDatePicker.valueProperty().bindBidirectional(viewModel.endDateProperty());
-        releaseTextField.textProperty().bindBidirectional(viewModel.releaseShortNameProperty());
+        releaseTextField.textProperty().bindBidirectional(viewModel.releaseProperty(),
+                StringConverters.releaseStringConverter(viewModel.organisationProperty()));
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
-        teamTextField.textProperty().bindBidirectional(viewModel.teamShortNameProperty());
-        backlogTextField.textProperty().bindBidirectional(viewModel.backlogShortNameProperty());
+        teamTextField.textProperty().bindBidirectional(viewModel.teamProperty(),
+                StringConverters.teamStringConverter(viewModel.organisationProperty()));
+        backlogTextField.textProperty().bindBidirectional(viewModel.backlogProperty(),
+                StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
-        storySelectionView.setHeader(new Label("Stories in Sprint:"));
+                storySelectionView.setHeader(new Label("Stories in Sprint:"));
         storySelectionView.setSourceItems(viewModel.sourceStories());
         storySelectionView.setTargetItems(viewModel.stories());
 
@@ -72,7 +76,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         });
 
         releaseTextField.disableProperty().bind(viewModel.releaseEditableProperty().not());
-        okButton.disableProperty().bind(viewModel.validProperty().not());
+        okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
         
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
