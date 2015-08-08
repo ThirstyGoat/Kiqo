@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Skill;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class RevertTest {
         undoManager.empty();
         for (int i = 0; i < 10; i++) {
             Skill skill = new Skill(String.valueOf(i), String.valueOf(i));
-            Command<Skill> command1 = new CreateSkillCommand(skill, organisation);
+            Command command1 = new CreateSkillCommand(skill, organisation);
             undoManager.doCommand(command1);
         }
     }
@@ -66,8 +68,8 @@ public class RevertTest {
         undoManager.undoCommand();
         Skill newSkill = new Skill("new skill", "new skill");
         Skill newSkill2 = new Skill("new skill2", "new skill2");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
         undoManager.doCommand(newSkillCommand);
         undoManager.doCommand(newSkillCommand2);
         Assert.assertEquals(7, undoManager.branchPosition);
@@ -85,8 +87,8 @@ public class RevertTest {
         undoManager.undoCommand();
         Skill newSkill = new Skill("new skill", "new skill");
         Skill newSkill2 = new Skill("new skill2", "new skill2");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
         undoManager.doCommand(newSkillCommand);
         undoManager.doCommand(newSkillCommand2);
         undoManager.undoCommand();
@@ -115,8 +117,8 @@ public class RevertTest {
         undoManager.markSavePosition();
         Skill newSkill = new Skill("10", "");
         Skill newSkill2 = new Skill("11", "");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
         undoManager.doCommand(newSkillCommand);
         undoManager.doCommand(newSkillCommand2);
         undoManager.revert();
@@ -162,8 +164,8 @@ public class RevertTest {
         undoManager.markSavePosition();
         Skill newSkill = new Skill("10", "");
         Skill newSkill2 = new Skill("11", "");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
 
         undoManager.undoCommand();
         undoManager.undoCommand();
@@ -196,9 +198,9 @@ public class RevertTest {
         Skill newSkill = new Skill("10", "");
         Skill newSkill2 = new Skill("11", "");
         Skill newSkill3 = new Skill("12", "");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
-        Command<Skill> newSkillCommand3 = new CreateSkillCommand(newSkill3, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand3 = new CreateSkillCommand(newSkill3, organisation);
 
         undoManager.undoCommand();
         undoManager.undoCommand();
@@ -235,8 +237,8 @@ public class RevertTest {
         undoManager.markSavePosition();
         Skill newSkill = new Skill("10", "");
         Skill newSkill2 = new Skill("11", "");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
 
         undoManager.undoCommand();
         undoManager.undoCommand();
@@ -268,8 +270,8 @@ public class RevertTest {
         undoManager.markSavePosition();
         Skill newSkill = new Skill("10", "");
         Skill newSkill2 = new Skill("11", "");
-        Command<Skill> newSkillCommand = new CreateSkillCommand(newSkill, organisation);
-        Command<Skill> newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
+        Command newSkillCommand = new CreateSkillCommand(newSkill, organisation);
+        Command newSkillCommand2 = new CreateSkillCommand(newSkill2, organisation);
 
         undoManager.undoCommand();
         undoManager.undoCommand();

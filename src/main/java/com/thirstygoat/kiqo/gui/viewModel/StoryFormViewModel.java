@@ -1,6 +1,10 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
@@ -28,7 +32,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Backlog> backlogProperty = new SimpleObjectProperty<>();
     private Organisation organisation;
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
 
     private StringProperty shortNameProperty = new SimpleStringProperty("");
@@ -37,7 +41,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private StringProperty creatorNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
     private StringProperty priorityProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
     private IntegerProperty estimateProperty = new SimpleIntegerProperty();
     private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
@@ -290,7 +294,7 @@ public class StoryFormViewModel extends FormController<Story> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     public void setCommand() {
         if (story == null) {
@@ -300,7 +304,7 @@ public class StoryFormViewModel extends FormController<Story> {
             command = new CreateStoryCommand(story);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!longNameProperty.getValue().equals(story.getLongName())) {
                 changes.add(new EditCommand<>(story, "longName", longNameProperty.getValue()));
             }
@@ -342,6 +346,17 @@ public class StoryFormViewModel extends FormController<Story> {
             if (!(targetStoriesProperty.get().containsAll(story.getDependencies())
                     && story.getDependencies().containsAll(targetStoriesProperty.get()))) {
                 changes.add(new EditCommand<>(story, "dependencies", targetStoriesProperty.get()));
+            }
+
+            // So that the table view gets update we need to remove a story from the observable lists
+            // it is in and then re-add it. Checking if project and backlog are null to avoid null
+            // pointer exception.
+            if (story.getProject() != null && story.getProject().getUnallocatedStories().contains(story)) {
+                story.getProject().getUnallocatedStories().remove(story);
+                story.getProject().getUnallocatedStories().add(story);
+            } else if (story.getBacklog() != null && story.getBacklog().getStories().contains(story)) {
+                story.getBacklog().getStories().remove(story);
+                story.getBacklog().getStories().add(story);
             }
 
             valid = !changes.isEmpty();

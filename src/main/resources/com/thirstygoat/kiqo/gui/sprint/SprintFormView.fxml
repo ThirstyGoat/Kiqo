@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintFormView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" >
+  <bottom>
+    <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+      <children>
+        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" onAction="#cancelAction"/>
+        <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Done" onAction="#okAction"/>
+      </children>
+      <padding>
+        <Insets right="35.0" />
+      </padding>
+    </HBox>
+  </bottom>
+  <center>
+      <GridPane vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="183.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="347.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+            <padding>
+                <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+            </padding>
+            <children>
+                <Label text="Goal:" GridPane.rowIndex="0" />
+                <Label text="Name:" GridPane.rowIndex="1" />
+                <Label text="Description:" GridPane.rowIndex="2" />
+                <Label text="Release:" GridPane.rowIndex="3" />
+                <Label text="Start Date:" GridPane.rowIndex="4" />
+                <Label text="End Date:" GridPane.rowIndex="5" />
+                <Label text="Backlog:" GridPane.rowIndex="6" />
+                <Label text="Team:" GridPane.rowIndex="7"/>
+
+                <TextField fx:id="goalTextField" promptText="display name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="nameTextField" promptText="long name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="releaseTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="4"  GridPane.halignment="RIGHT"/>
+                <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.halignment="RIGHT" />
+                <TextField fx:id="backlogTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+
+            </children>
+        </GridPane>
+  </center>
+</BorderPane>

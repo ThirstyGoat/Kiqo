@@ -94,6 +94,4 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
             }
         });
     }
-
-
 }

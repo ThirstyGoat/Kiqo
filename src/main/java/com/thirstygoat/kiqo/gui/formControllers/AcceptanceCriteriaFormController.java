@@ -2,12 +2,13 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -28,7 +29,7 @@ import java.util.ResourceBundle;
 public class AcceptanceCriteriaFormController extends FormController<AcceptanceCriteria> {
     private Stage stage;
     private boolean valid;
-    private Command<?> command;
+    private Command command;
     private Organisation organisation;
     private Story story;
     private AcceptanceCriteria acceptanceCriteria;
@@ -80,12 +81,12 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     private void setCommand() {
         if (acceptanceCriteria == null) {
-            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim());
+            acceptanceCriteria = new AcceptanceCriteria(acTextArea.getText().trim(), story);
             command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
             valid = true;
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!acceptanceCriteria.getShortName().equals(acTextArea.getText())) {
                 changes.add(new EditCommand<>(acceptanceCriteria, "criteria", acTextArea.getText()));
             }
@@ -101,7 +102,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 

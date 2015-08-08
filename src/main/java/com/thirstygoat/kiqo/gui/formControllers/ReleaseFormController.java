@@ -1,16 +1,19 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -28,7 +31,7 @@ public class ReleaseFormController extends FormController<Release> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;
     private Release release;
-    private Command<?> command;
+    private Command command;
     private boolean valid = false;
     private Stage stage;
     private Project project;
@@ -152,7 +155,7 @@ public class ReleaseFormController extends FormController<Release> {
     }
 
     @Override
-    public Command<?> getCommand() {
+    public Command getCommand() {
         return command;
     }
 
@@ -164,7 +167,7 @@ public class ReleaseFormController extends FormController<Release> {
             command = new CreateReleaseCommand(release);
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!shortNameTextField.getText().equals(release.getShortName())) {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }

@@ -9,23 +9,22 @@ import java.util.Collection;
  * @author bjk60
  *
  */
-public class CompoundCommand extends Command<Void> {
-    private final Collection<Command<?>> commands;
+public class CompoundCommand extends Command {
+    private final Collection<Command> commands;
     private String type = "Compound Command";
 
     /**
      * @param type short, user-friendly explanation of the functionality
      * @param commands collection of commands to be performed
      */
-    public CompoundCommand(String type, final Collection<Command<?>> commands) {
+    public CompoundCommand(String type, final Collection<Command> commands) {
         this.type = type;
         this.commands = commands;
     }
 
     @Override
-    public Void execute() {
-        commands.forEach(com.thirstygoat.kiqo.command.Command::execute);
-        return null;
+    public void execute() {
+        commands.forEach(Command::execute);
     }
 
     @Override

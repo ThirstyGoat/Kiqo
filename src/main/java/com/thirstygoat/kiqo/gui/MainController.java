@@ -2,7 +2,11 @@ package com.thirstygoat.kiqo.gui;
 
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.delete.*;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
@@ -11,6 +15,8 @@ import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
@@ -57,11 +63,11 @@ import java.util.stream.Collectors;
  * Main controller for the primary view
  */
 public class MainController implements Initializable {
+    public static final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
-    public final ObjectProperty<Item> focusedItemProperty = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
     private final BooleanProperty mainToolbarVisible = new SimpleBooleanProperty(true);
@@ -337,7 +343,7 @@ public class MainController implements Initializable {
         final boolean deleteStories = (checkBox != null) ? checkBox.selectedProperty().getValue() : false;
 
         if (result.equals("Delete Backlog")) {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (deleteStories) {
                 final DeleteBacklogCommand command = new DeleteBacklogCommand(backlog);
                 command.setDeleteMembers();
@@ -409,6 +415,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedOrganisationProperty.set(new Organisation(true));
+        SearchableItems.getInstance().organisationProperty().bind(selectedOrganisationProperty);
 
         saveStateChanges();
         menuBarViewTuple = FluentViewLoader.fxmlView(MenuBarView.class).load();
@@ -511,6 +518,12 @@ public class MainController implements Initializable {
         }
     }
 
+    public void newSprint() {
+        if (selectedOrganisationProperty.get() != null) {
+            dialog(null, "Sprint");
+        }
+    }
+
     public void allocateTeams() {
         if (selectedOrganisationProperty.get() != null) {
             allocationDialog(null);
@@ -547,10 +560,6 @@ public class MainController implements Initializable {
         }
     }
 
-    public void newSprint() {
-        //TODO add method body when the dialog has been completed
-    }
-
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 
@@ -573,7 +582,7 @@ public class MainController implements Initializable {
         }
         Organisation organisation;
         try {
-            SearchableItems.clear();
+            SearchableItems.getInstance().clear();
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)
@@ -721,7 +730,7 @@ public class MainController implements Initializable {
         undoManager.redoCommand();
     }
 
-    public void doCommand(Command<?> command) {
+    public void doCommand(Command command) {
         undoManager.doCommand(command);
     }
 
@@ -839,25 +848,42 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
-            Pane root;
-            try {
-                root = loader.load();
-            } catch (final IOException e) {
-                MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
-                return;
-            }
-            final Scene scene = new Scene(root);
-            stage.setScene(scene);
-            @SuppressWarnings("unchecked")
-            final FormController<T> formController = loader.getController();
-            formController.setStage(stage);
-            formController.setOrganisation(selectedOrganisationProperty.get());
-            formController.populateFields(t);
-            stage.showAndWait();
-            if (formController.isValid()) {
-                doCommand(formController.getCommand());
+            
+            if (type.equals("Sprint")) { // TODO replace with enum
+                ViewTuple<SprintFormView, SprintFormViewModel> sprintFormTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
+                // viewModel
+                final SprintFormViewModel viewModel = sprintFormTuple.getViewModel();
+                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                // view
+                viewModel.setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(sprintFormTuple.getView()));
+                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                stage.showAndWait();
+                Command command = viewModel.createCommand();
+                if (command != null) { // null if cancelled or no changes
+                    doCommand(command);
+                }
+            } else {
+                final FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
+                Pane root;
+                try {
+                    root = loader.load();
+                } catch (final IOException e) {
+                    MainController.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
+                    return;
+                }
+                final Scene scene = new Scene(root);
+                stage.setScene(scene);
+                final FormController<T> formController = loader.getController();
+                formController.setStage(stage);
+                formController.setOrganisation(selectedOrganisationProperty.get());
+                formController.populateFields(t);
+                
+                stage.showAndWait();
+                if (formController.isValid()) {
+                    doCommand(formController.getCommand());
+                }
             }
         });
     }
@@ -989,7 +1015,7 @@ public class MainController implements Initializable {
                 return;
             }
         }
-        SearchableItems.clear();
+        SearchableItems.getInstance().clear();
         selectedOrganisationProperty.set(new Organisation(true));
     }
 

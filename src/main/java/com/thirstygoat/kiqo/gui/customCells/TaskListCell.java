@@ -6,10 +6,9 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
 import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -25,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 public class TaskListCell extends ListCell<Task> {
-    private final StringProperty statusString = new SimpleStringProperty("");
     private ListView<Task> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
 
@@ -33,28 +31,7 @@ public class TaskListCell extends ListCell<Task> {
         this.listView = listView;
     }
 
-    private static Task getTask(DragEvent event) {
-        String name = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("name");
-        String description = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("description");
-        Status status = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("status");
-        float estimate = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("estimate");
-        Task task = new Task(name, description, estimate);
-        task.statusProperty().setValue(status);
-        return task;
-    }
 
-    /**
-     * Determines if an event contains an AC (to prevent dragging of files etc into the listview)
-     */
-    private static boolean sourceIsTask(DragEvent event) {
-        try {
-            String type = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("type");
-            return type.equals("TASK");
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
     @Override
     protected void updateItem(final Task task, final boolean empty) {
         // calling super here is very important
@@ -72,7 +49,7 @@ public class TaskListCell extends ListCell<Task> {
             description.setStyle("-fx-font: 9px \"System\";");
             description.setWrappingWidth(listView.getWidth() * 0.65);
 
-            final ComboBox<Status> statusComboBox = new ComboBox();
+            final ComboBox<Status> statusComboBox = new ComboBox<>();
             statusComboBox.setStyle("-fx-font: 10px \"System\"; -fx-border-width: 0.5px; -fx-border-color: black;");
             statusComboBox.setMaxWidth(90);
 
@@ -81,7 +58,7 @@ public class TaskListCell extends ListCell<Task> {
 
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != task.getStatus()) {
-                    Command<?> command = new EditCommand<>(task, "status", newValue);
+                    Command command = new EditCommand<>(task, "status", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
             });
@@ -100,8 +77,8 @@ public class TaskListCell extends ListCell<Task> {
             gridPane.add(description, 0, 1);
             gridPane.add(statusComboBox, 1, 0);
             gridPane.add(estimate, 2, 0);
-            gridPane.setRowSpan(statusComboBox, 2);
-            gridPane.setRowSpan(estimate, 2);
+            GridPane.setRowSpan(statusComboBox, 2);
+            GridPane.setRowSpan(estimate, 2);
 
             ColumnConstraints column1 = new ColumnConstraints();
             ColumnConstraints column2 = new ColumnConstraints();
@@ -138,10 +115,10 @@ public class TaskListCell extends ListCell<Task> {
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
 //            System.out.println("Enter");
-            if (sourceIsTask(event)) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = getTask(event);
+                Task t = StoryDetailsPaneController.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), t);
@@ -154,11 +131,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-//            System.out.println("exit");
-            if (sourceIsTask(event)) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = getTask(event);
+                Task t = StoryDetailsPaneController.draggingTask;
                 listView.getItems().remove(t);
             }
             event.consume();
@@ -166,17 +142,15 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-//            System.out.println("drop");
-            if (sourceIsTask(event)) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                Task t = getTask(event);
+                Task t = StoryDetailsPaneController.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
-//                listView.getItems().add(getIndex(), t);
                     if (prevIndex != getIndex()) {
-                        undoManager.doCommand(new MoveItemCommand<>(task, listView.getItems(), prevIndex, listView.getItems(), getIndex()));
+                        undoManager.doCommand(new MoveItemCommand<>(task, task.getStory().observableTasks(), prevIndex, task.getStory().observableTasks(), getIndex()));
                     }
                 } else {
                     if (!listView.getItems().contains(t)) {
@@ -193,14 +167,15 @@ public class TaskListCell extends ListCell<Task> {
         EventHandler<DragEvent> mContextDragDone = event -> {
 //            System.out.println("done");
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            if (sourceIsTask(event)) {
-                Task t = getTask(event);
+            if (StoryDetailsPaneController.draggingTask != null) {
+                Task t = StoryDetailsPaneController.draggingTask;
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
-                if (listSize > listView.getItems().size()) {
+                if (!listView.getItems().contains(t)) {
                     listView.getItems().add(prevIndex, t);
                 }
+                StoryDetailsPaneController.draggingTask = null;
             }
             event.consume();
         };
@@ -215,6 +190,9 @@ public class TaskListCell extends ListCell<Task> {
             // We do need this one or onDragDone wont be called
             setCursor(Cursor.CLOSED_HAND);
             getParent().setOnDragDone(mContextDragDone);
+
+            StoryDetailsPaneController.draggingTask = task;
+
             // begin drag ops
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();

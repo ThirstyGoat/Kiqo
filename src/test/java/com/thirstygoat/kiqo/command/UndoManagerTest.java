@@ -13,13 +13,12 @@ import java.util.NoSuchElementException;
  *
  */
 public class UndoManagerTest {
-    class MockCommand extends Command<Void> {
+    class MockCommand extends Command {
         boolean done = false;
 
         @Override
-        public final Void execute() {
+        public void execute() {
             done = true;
-            return null;
         }
 
         public boolean isDone() {
@@ -34,6 +33,15 @@ public class UndoManagerTest {
         @Override
         public String getType() {
             return "";
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("MockCommand\\{done='");
+            builder.append(done);
+            builder.append("\\}");
+            return builder.toString();
         }
     }
 

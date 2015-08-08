@@ -175,7 +175,7 @@ public final class ReportGenerator {
 
         lines.add(ReportUtils.valueLine("Short Name", project.getShortName()));
         lines.add(ReportUtils.valueLine("Name", project.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", null));
+        lines.add(ReportUtils.valueLine("Description", project.getDescription()));
 
         // Add backlogs to the report
         lines.add(ReportUtils.collectionLine("Backlogs", project.getBacklogs().isEmpty()));
@@ -197,11 +197,11 @@ public final class ReportGenerator {
             lines.add(ReportGenerator.RELEASE_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateReleaseReport(release)));
 
+            lines.add(ReportUtils.indent(INDENT_SIZE) + ReportUtils.collectionLine("Sprints", release.getSprints().isEmpty()));
             for (final Sprint sprint : release.getSprints()) {
-                lines.add(ReportGenerator.SPRINT_COMMENT);
-                lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateSprintReport(sprint)));
+                lines.add(ReportUtils.indent(INDENT_SIZE) + ReportGenerator.SPRINT_COMMENT);
+                lines.addAll(ReportUtils.indentArray((ReportGenerator.INDENT_SIZE * 2), generateSprintReport(sprint)));
             }
-
         }
 
         // only print teams that are currently allocated
@@ -220,7 +220,6 @@ public final class ReportGenerator {
         if (!hasAllocationHeader) {
             lines.add(ReportUtils.collectionLine("Currently Allocated Teams", true));
         }
-
         return lines;
     }
 
@@ -239,7 +238,6 @@ public final class ReportGenerator {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
         }
-
         return lines;
     }
 
@@ -262,7 +260,6 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Scale", story.getScale()));
         lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
         lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
-        
 
         // Add unallocated stories that belong to this project to the report
         lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
@@ -314,7 +311,7 @@ public final class ReportGenerator {
 
         return lines;
     }
-    //TODO check validity
+
     private List<String> generateSprintReport(Sprint sprint) {
         final List<String> lines = new ArrayList<>();
         lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
@@ -322,7 +319,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
         lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
         lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
-        lines.add(ReportUtils.valueLine("Team", sprint.getTeam()));
+        lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
 
         lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
         for (final Story story : sprint.getStories()) {
@@ -370,13 +367,12 @@ public final class ReportGenerator {
 
         final LocalDate today = LocalDate.now();
         final List<Allocation> allocations = team.getAllocations();
-        allocations.removeIf(a -> a.getStartDate().isBefore(today) && a.getEndDate().isAfter(today));
+        allocations.removeIf(a -> !(a.getStartDate().isBefore(today) && a.getEndDate().isAfter(today)));
         lines.add(ReportUtils.collectionLine("Current Allocation", allocations.isEmpty()));
         for (final Allocation allocation : allocations) {
             lines.add(ReportGenerator.ALLOCATION_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
         }
-
         return lines;
     }
 

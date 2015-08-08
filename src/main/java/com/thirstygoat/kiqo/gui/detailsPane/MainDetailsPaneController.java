@@ -1,18 +1,36 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.model.*;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
+
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).
@@ -60,7 +78,12 @@ public class MainDetailsPaneController implements Initializable {
     private Pane[] panes;
     
     private Pane backlogDetailsPane;
+    private Pane sprintDetailsPane;
     private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
+    private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
+    
+    private Pane advancedSearchDetailsPane;
+    private AdvancedSearchViewModel advancedSearchViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,12 +91,14 @@ public class MainDetailsPaneController implements Initializable {
 
         editButton.setOnAction(event -> mainController.editItem());
         deleteButton.setOnAction(event -> mainController.deleteItem());
-        
-        
-        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
-        backlogDetailsPane = (Pane) viewTuple.getView();
-        stackPane.getChildren().add(backlogDetailsPane);
-        backlogDetailsPaneViewModel = viewTuple.getViewModel();
+
+        loadDetailsPanes();
+
+        // Advanced Search
+        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
+        advancedSearchDetailsPane = (Pane) advancedSearchViewTuple.getView();
+        stackPane.getChildren().add(advancedSearchDetailsPane);
+        advancedSearchViewModel = advancedSearchViewTuple.getViewModel();
         
         panes = new Pane[] {
                 projectDetailsPane,
@@ -83,8 +108,22 @@ public class MainDetailsPaneController implements Initializable {
                 storyDetailsPane,
                 teamDetailsPane,
                 releaseDetailsPane,
+                sprintDetailsPane,
+                advancedSearchDetailsPane
         };
         clear();
+    }
+
+    private void loadDetailsPanes() {
+        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> backlogDetailsPaneViewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
+        backlogDetailsPane = (Pane) backlogDetailsPaneViewTuple.getView();
+        stackPane.getChildren().add(backlogDetailsPane);
+        backlogDetailsPaneViewModel = backlogDetailsPaneViewTuple.getViewModel();
+        
+        ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> sprintDetailsPaneViewTuple = FluentViewLoader.fxmlView(SprintDetailsPaneView.class).load();
+        sprintDetailsPane = (Pane) sprintDetailsPaneViewTuple.getView();
+        stackPane.getChildren().add(sprintDetailsPane);
+        sprintDetailsPaneViewModel = sprintDetailsPaneViewTuple.getViewModel();
     }
 
     /**
@@ -112,6 +151,8 @@ public class MainDetailsPaneController implements Initializable {
                 showStoryDetailPane((Story) item);
             } else if (item instanceof Backlog) {
                 showBacklogDetailsPane((Backlog) item);
+            } else if (item instanceof Sprint) {
+                showSprintDetailsPane((Sprint) item);
             }
         }
     }
@@ -167,6 +208,12 @@ public class MainDetailsPaneController implements Initializable {
         show(backlogDetailsPane);
         showOptionButtons();
     }
+    
+    private void showSprintDetailsPane(Sprint sprint) {
+        sprintDetailsPaneViewModel.load(sprint, mainController.selectedOrganisationProperty.get());
+        show(sprintDetailsPane);
+        showOptionButtons();
+    }
 
     /**
      * Shows the appropriate pane
@@ -181,6 +228,10 @@ public class MainDetailsPaneController implements Initializable {
         pane.setVisible(true);
     }
 
+    public void showSearchPane() {
+        show(advancedSearchDetailsPane);
+    }
+
     private void showOptionButtons() {
         editButton.setVisible(true);
         deleteButton.setVisible(true);
@@ -191,5 +242,6 @@ public class MainDetailsPaneController implements Initializable {
         projectDetailsPaneController.setMainController(mainController);
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
+        advancedSearchViewModel.setMainController(mainController);
     }
 }

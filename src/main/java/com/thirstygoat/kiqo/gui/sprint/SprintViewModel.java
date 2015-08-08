@@ -1,21 +1,17 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 31/07/15.
@@ -30,19 +26,21 @@ public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Team> teamProperty;
     private final ObjectProperty<Release> releaseProperty;
     private final ObservableList<Story> stories;
-
     private final FunctionBasedValidator<String> goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
-    private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
     private final ObservableRuleBasedValidator startDateValidator;
     private final ObservableRuleBasedValidator endDateValidator;
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
-
+    private final CompositeValidator allValidator;
+    protected Organisation organisation;
+    protected Sprint sprint;
 
     public SprintViewModel() {
+        organisation = null;
+        sprint = null;
         goalProperty = new SimpleStringProperty("");
         longNameProperty = new SimpleStringProperty("");
         descriptionProperty = new SimpleStringProperty("");
@@ -51,13 +49,14 @@ public class SprintViewModel implements ViewModel {
         endDateProperty = new SimpleObjectProperty<>(null);
         teamProperty = new SimpleObjectProperty<>();
         releaseProperty = new SimpleObjectProperty<>();
-        stories = FXCollections.observableArrayList(Item.getWatchStrategy());
+        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
 
         goalValidator = new FunctionBasedValidator<>(goalProperty,
                 string -> {
-                    if (string.length() == 0 || string.length() > 20) {
+                    if (string == null || string.length() == 0 || string.length() > 20) {
                         return false;
                     }
+                    // TODO unique within backlog, or project??
                     final Backlog backlog = backlogProperty.get();
                     if (backlog == null) {
                         return true;
@@ -67,16 +66,6 @@ public class SprintViewModel implements ViewModel {
                 },
                 ValidationMessage.error("Sprint goal must be unique and not empty"));
 
-        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
-                Utilities.emptinessPredicate(),
-                ValidationMessage.error("Long name must not be empty."));
-
-        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
-                string -> {
-                    return true;
-                },
-                ValidationMessage.error("Description is not valid."));
-
         backlogValidator = new FunctionBasedValidator<>(backlogProperty, backlog -> {
             if (backlog == null) {
                 return ValidationMessage.error("Backlog must exist and not be empty");
@@ -84,6 +73,16 @@ public class SprintViewModel implements ViewModel {
                 return null;
             }
         });
+
+        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
+                string -> {
+                    if (string == null || string.length() == 0 || string.length() > 20) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                },
+                ValidationMessage.error("Sprint name must be unique and not empty"));
 
         storiesValidator = new ObservableRuleBasedValidator();
         storiesValidator.addRule(
@@ -120,7 +119,7 @@ public class SprintViewModel implements ViewModel {
         endDateValidator.addRule(
                 Bindings.createBooleanBinding(
                         () -> {
-                            if (startDateProperty.get() == null || endDateProperty().get() == null) {
+                            if (startDateProperty.get() == null || endDateProperty.get() == null) {
                                 return true;
                             } else {
                                 return endDateProperty.get().isAfter(startDateProperty.get());
@@ -131,11 +130,12 @@ public class SprintViewModel implements ViewModel {
         endDateValidator.addRule(
                 Bindings.createBooleanBinding(
                         () -> {
-                            if (releaseProperty.get() == null) {
+                            // endDate null check is necessary for runtime correctness but impotent in terms of validation
+                            if (releaseProperty.get() == null || endDateProperty.get() == null) {
                                 return true;
                             } else {
                                 return endDateProperty.get().isBefore(releaseProperty.get().getDate())
-                                        || endDateProperty().get().isEqual(releaseProperty().get().getDate());
+                                        || endDateProperty.get().isEqual(releaseProperty.get().getDate());
                             }
                         },
                         endDateProperty, releaseProperty),
@@ -149,107 +149,144 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        releaseValidator = new FunctionBasedValidator<>(releaseProperty,
-                release -> release != null,
-                ValidationMessage.error("Release must exist"));
+        releaseValidator = new FunctionBasedValidator<>(releaseProperty, release -> {
+            if (release == null) {
+                return ValidationMessage.error("Release must exist");
+            } else {
+                return null;
+            }
+        });
+
+        allValidator = new CompositeValidator(goalValidator, longNameValidator, backlogValidator, startDateValidator,
+                endDateValidator, teamValidator, releaseValidator, storiesValidator);
     }
 
-
-
-    public void load(Sprint sprint) {
-        if (sprint != null) {
-            goalProperty.set(sprint.shortNameProperty().get());
-            longNameProperty.set(sprint.longNameProperty().get());
-            descriptionProperty.set(sprint.descriptionProperty().get());
-            backlogProperty.set(sprint.backlogProperty().get());
-            startDateProperty.set(sprint.startDateProperty().get());
-            endDateProperty.set(sprint.endDateProperty().get());
-            teamProperty.set(sprint.teamProperty().get());
-            releaseProperty.set(sprint.releaseProperty().get());
-            stories.clear();
-            stories.addAll(sprint.getStories());
+    /**
+     * 
+     * @return command for creating or editing the active item. Null if no changes have been made.
+     */
+    public Command createCommand() {
+        final Command command;
+        if (sprint == null) {
+            // new sprint command
+            final Sprint sprint = new Sprint(goalProperty.get(), longNameProperty.get(),
+                    descriptionProperty.getValue(), backlogProperty.get(), releaseProperty.get(), teamProperty.get(), startDateProperty.get(), endDateProperty.get(), stories());
+            command = new CreateSprintCommand(sprint);
         } else {
-            goalProperty.set("");
-            longNameProperty.set("");
-            descriptionProperty.set("");
-            backlogProperty.set(null);
-            startDateProperty.set(null);
-            endDateProperty.set(null);
-            teamProperty.set(null);
-            releaseProperty.set(null);
-            stories.clear();
+            // edit command
+            final ArrayList<Command> changes = new ArrayList<>();
+            if (!goalProperty.get().equals(sprint.getShortName())) {
+                changes.add(new EditCommand<>(sprint, "goal", goalProperty.get()));
+            }
+            if (!longNameProperty.get().equals(sprint.getLongName())) {
+                changes.add(new EditCommand<>(sprint, "longName", longNameProperty.get()));
+            }
+            if (!descriptionProperty.get().equals(sprint.getDescription())) {
+                changes.add(new EditCommand<>(sprint, "description", descriptionProperty.get()));
+            }
+            if (!backlogProperty.get().equals(sprint.getBacklog())) {
+                changes.add(new EditCommand<>(sprint, "backlog", backlogProperty.get()));
+            }
+            if (!startDateProperty.get().equals(sprint.getStartDate())) {
+                changes.add(new EditCommand<>(sprint, "startDate", startDateProperty.get()));
+            }
+            if (!endDateProperty.get().equals(sprint.getEndDate())) {
+                changes.add(new EditCommand<>(sprint, "endDate", endDateProperty.get()));
+            }
+            if (!teamProperty.get().equals(sprint.getTeam())) {
+                changes.add(new EditCommand<>(sprint, "team", teamProperty.get()));
+            }
+            if (!releaseProperty.get().equals(sprint.getRelease())) {
+                changes.add(new MoveItemCommand<>(sprint, sprint.getRelease().getSprints(),
+                        releaseProperty.get().getSprints()));
+                changes.add(new EditCommand<>(sprint, "release", releaseProperty.get()));
+            }
+            if (!(stories.containsAll(sprint.getStories())
+                    && sprint.getStories().containsAll(stories()))) {
+                changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprint.getStories()));
+            }
+            if (!changes.isEmpty()) {
+                command = new CompoundCommand("Edit Sprint", changes);
+            } else {
+                command = null;
+            }
         }
+        return command;
     }
-
-    public StringProperty goalProperty() {
+    
+    protected StringProperty goalProperty() {
         return goalProperty;
     }
 
-    public StringProperty longNameProperty() {
+    protected StringProperty longNameProperty() {
         return longNameProperty;
     }
 
-    public StringProperty descriptionProperty() {
+    protected StringProperty descriptionProperty() {
         return descriptionProperty;
     }
 
-    public ObjectProperty<Backlog> backlogProperty() {
+    protected ObjectProperty<Backlog> backlogProperty() {
         return backlogProperty;
     }
 
-    public ObjectProperty<LocalDate> startDateProperty() {
+    protected ObjectProperty<LocalDate> startDateProperty() {
         return startDateProperty;
     }
 
-    public ObjectProperty<LocalDate> endDateProperty() {
+    protected ObjectProperty<LocalDate> endDateProperty() {
         return endDateProperty;
     }
 
-    public ObjectProperty<Team> teamProperty() {
+    protected ObjectProperty<Team> teamProperty() {
         return teamProperty;
     }
 
-    public ObjectProperty<Release> releaseProperty() {
+    protected ObjectProperty<Release> releaseProperty() {
         return releaseProperty;
     }
 
-    public ObservableList<Story> getStories() {
+    protected ReadOnlyBooleanProperty validProperty() {
+        return allValidator.getValidationStatus().validProperty();
+    }
+
+    protected ObservableList<Story> stories() {
         return stories;
     }
 
-    public ValidationStatus goalValidation() {
+    protected ValidationStatus goalValidation() {
         return goalValidator.getValidationStatus();
     }
 
-    public ValidationStatus longNameValidation() {
-        return longNameValidator.getValidationStatus();
-    }
-
-    public ValidationStatus descriptionValidation() {
-        return descriptionValidator.getValidationStatus();
-    }
-
-    public ValidationStatus backlogValidation() {
+    protected ValidationStatus backlogValidation() {
         return backlogValidator.getValidationStatus();
     }
 
-    public ValidationStatus startDateValidation() {
+    protected ValidationStatus startDateValidation() {
         return startDateValidator.getValidationStatus();
     }
 
-    public ValidationStatus endDateValidation() {
+    protected ValidationStatus endDateValidation() {
         return endDateValidator.getValidationStatus();
     }
 
-    public ValidationStatus teamValidation() {
+    protected ValidationStatus teamValidation() {
         return teamValidator.getValidationStatus();
     }
 
-    public ValidationStatus releaseValidation() {
+    protected ValidationStatus longNameValidation() {
+        return longNameValidator.getValidationStatus();
+    }
+
+    protected ValidationStatus releaseValidation() {
         return releaseValidator.getValidationStatus();
     }
 
-    public ValidationStatus storiesValidation() {
+    protected ValidationStatus storiesValidation() {
         return storiesValidator.getValidationStatus();
+    }
+    
+    protected ValidationStatus allValidation() {
+        return allValidator.getValidationStatus();
     }
 }

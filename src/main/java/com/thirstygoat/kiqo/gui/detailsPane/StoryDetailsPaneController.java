@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.delete.DeleteAcceptanceCriteriaCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
@@ -9,12 +11,15 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -22,20 +27,25 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
+    public static AcceptanceCriteria draggingAC;
+    public static Task draggingTask;
     private MainController mainController;
     private Story story;
     private Map<State, Image> images;
     private ChangeListener<Boolean> isReadyListener;
     private ChangeListener<Boolean> modelIsReadyListener;
     private FloatProperty tasksHoursProperty = new SimpleFloatProperty(0.0f);
-    
     @FXML
     private Label shortNameLabel;
     @FXML
@@ -82,8 +92,22 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     @Override
     public void showDetails(final Story story) {
         this.story = story;
-        updateTaskHours();
         if (story != null) {
+
+            story.observableTasks().addListener((ListChangeListener<Task>) c -> {
+                c.next();
+                c.getAddedSubList().forEach(task -> {
+                    task.estimateProperty().addListener((observable, oldValue, newValue) -> {
+                        // This is a "hack" fix for a JavaFX documented bug.
+                        // Extractor is not being called properly when an item is removed from a list and then
+                        // added back [as is the case when re-ordering]
+                        Task tmpTask = new Task();
+                        story.observableTasks().add(tmpTask);
+                        story.observableTasks().remove(tmpTask);
+                    });
+                });
+            });
+
             longNameLabel.textProperty().bind(story.longNameProperty());
             shortNameLabel.textProperty().bind(story.shortNameProperty());
             descriptionLabel.textProperty().bind(story.descriptionProperty());
@@ -97,8 +121,18 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
             totalHoursLabel.textProperty().unbind();
-            totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
-            story.observableTasks().addListener((ListChangeListener<Task>) c -> updateTaskHours());
+//            totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
+
+            totalHoursLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+                        float totalHours = 0;
+                        for (Task task : story.observableTasks()) {
+                            totalHours += task.getEstimate();
+                        }
+
+                        return Float.toString(totalHours);
+
+                }, story.observableTasks()
+            ));
             setScale();
 
 
@@ -108,7 +142,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             }
             isReadyListener = (observable, oldValue, newValue) -> {
                 if (story.getIsReady() != newValue) {
-                    Command<?> command = new EditCommand<>(story, "isReady", newValue);
+                    Command command = new EditCommand<>(story, "isReady", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
             };
@@ -131,11 +165,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             priorityLabel.setText(null);
             totalHoursLabel.setText("0.0");
             storyEstimateSliderLabel.setText(null);
-            System.out.println("removing listener for null story");
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
-        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(param, images));
+        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images));
         taskListView.setCellFactory(param -> new TaskListCell(param));
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
@@ -174,27 +207,15 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
     }
 
-    private void updateTaskHours() {
-        if (story == null) {
-            tasksHoursProperty.setValue(0.0f);
-        } else {
-            float total = 0.0f;
-            for (Task task : story.observableTasks()) {
-                total += task.getEstimate();
-            }
-            tasksHoursProperty.setValue(total);
-        }
-    }
-
     private void deleteTask() {
-        Command<?> command;
+        Command command;
         if (taskListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
-            List<Command<?>> commands = new ArrayList<>();
+            List<Command> commands = new ArrayList<>();
             for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
                 commands.add(new DeleteTaskCommand(task, story));
             }
-            command = new CompoundCommand("Delete `sk", commands);
+            command = new CompoundCommand("Delete Task", commands);
         } else {
             final Task task = taskListView.getSelectionModel().getSelectedItem();
             command = new DeleteTaskCommand(task, story);
@@ -235,10 +256,10 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
     }
 
     private void deleteAC() {
-        Command<?> command;
+        Command command;
         if (acListView.getSelectionModel().getSelectedItems().size() > 1) {
             // Then we have to deal with a multi AC deletion
-            List<Command<?>> commands = new ArrayList<>();
+            List<Command> commands = new ArrayList<>();
             for (AcceptanceCriteria ac : acListView.getSelectionModel().getSelectedItems()) {
                 commands.add(new DeleteAcceptanceCriteriaCommand(ac, story));
             }
@@ -252,7 +273,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         // If so, then the command executed must mark the story as no longer ready
         if (acListView.getSelectionModel().getSelectedItems().size() == acListView.getItems().size() &&
                 story.getIsReady()) {
-            List<Command<?>> changes = new ArrayList<>();
+            List<Command> changes = new ArrayList<>();
             changes.add(command);
             changes.add(new EditCommand<>(story, "isReady", false));
             command = new CompoundCommand("Delete AC", changes);
@@ -291,7 +312,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
-                List<Command<?>> commands = new ArrayList<>();
+                List<Command> commands = new ArrayList<>();
                 if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
                     commands.add(new EditCommand<>(story, "isReady", false));
                 }

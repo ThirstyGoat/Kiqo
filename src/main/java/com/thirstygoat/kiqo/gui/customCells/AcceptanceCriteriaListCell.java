@@ -5,8 +5,10 @@ import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,27 +36,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
         this.listView = listView;
         this.images = images;
-    }
-    
-    private static AcceptanceCriteria getAcceptanceCriteria(DragEvent event) {
-        AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria(
-                ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("criteria")
-        );
-        AcceptanceCriteria.State state = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("state");
-        acceptanceCriteria.setState(state);
-        return acceptanceCriteria;
-    }
-
-    /**
-     * Determines if an event contains an AC (to prevent dragging of files etc into the listview)
-     */
-    private static boolean sourceIsAcceptanceCriteria(DragEvent event) {
-        try {
-            String type = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("type");
-            return type.equals("AC");
-        } catch (Exception e) {
-            return false;
-        }
     }
     
     @Override
@@ -102,10 +83,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-            if (sourceIsAcceptanceCriteria(event)) {
+            if (StoryDetailsPaneController.draggingAC != null) {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
-                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
@@ -118,11 +99,11 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-            if (sourceIsAcceptanceCriteria(event)) {
+            if (StoryDetailsPaneController.draggingAC != null) {
 //            System.out.println("exit");
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;
                 listView.getItems().remove(acceptanceCriteria);
             }
             event.consume();
@@ -130,11 +111,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-            if (sourceIsAcceptanceCriteria(event)) {
-//            System.out.println("drop");
+            if (StoryDetailsPaneController.draggingAC != null) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
@@ -154,9 +134,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            if (sourceIsAcceptanceCriteria(event)) {
-//            System.out.println("done");
-                AcceptanceCriteria acceptanceCriteria = getAcceptanceCriteria(event);
+            if (StoryDetailsPaneController.draggingAC != null) {
+                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;
 
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
@@ -164,6 +143,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 if (listSize > listView.getItems().size()) {
                     listView.getItems().add(prevIndex, acceptanceCriteria);
                 }
+                StoryDetailsPaneController.draggingAC = null;
             }
             event.consume();
         };
@@ -187,6 +167,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             container.addData("state", ac.getState());
             container.addData("listSize", listView.getItems().size());
             content.put(DragContainer.DATA_FORMAT, container);
+
+            StoryDetailsPaneController.draggingAC = ac;
 
             if (getIndex() == listView.getSelectionModel().getSelectedIndex()) {
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());

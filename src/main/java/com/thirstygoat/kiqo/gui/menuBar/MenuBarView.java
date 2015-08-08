@@ -54,6 +54,8 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     private MenuItem deleteMenuItem;
     @FXML
+    private MenuItem advancedSearchMenuItem;
+    @FXML
     private CheckMenuItem listToggleCheckMenuItem;
     @FXML
     private CheckMenuItem toolBarToggleCheckMenuItem;
@@ -145,6 +147,7 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
                 return "Double Shift";
             }
         });
+        advancedSearchMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
     }
 
     @FXML
@@ -245,6 +248,11 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     public void delete() {
         viewModel.deleteAction();
+    }
+
+    @FXML
+    public void advancedSearch() {
+        viewModel.advancedSearchAction();
     }
 
     @FXML

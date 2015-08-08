@@ -34,6 +34,7 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
         this.selectionModel = selectionModel;
     }
 
+
     /**
      * Initialises a new TreeItem and adds children if required. Beware lack of type-checking (due to TreeView limitation); callers must ensure that item is an E.
      * @param item value of new TreeItem (assumed to be an instance of type &lt;E&gt;)

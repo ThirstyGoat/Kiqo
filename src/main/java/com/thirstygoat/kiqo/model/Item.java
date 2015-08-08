@@ -1,25 +1,21 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
 import com.thirstygoat.kiqo.search.Searchable;
-import com.thirstygoat.kiqo.search.SearchableItems;
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Represents an object in the model.
  *
  */
 public abstract class Item implements Serializable, Searchable {
-
-    public Item() {
-        if (this.getClass() != TreeNodeHeading.class) {
-            SearchableItems.getInstance().addSearchable(this);
-        }
-    }
 
     public static <E extends Item> Callback<E, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty()};
@@ -32,7 +28,9 @@ public abstract class Item implements Serializable, Searchable {
     public abstract StringProperty shortNameProperty();
 
     @Override
-    public String[] getSearchableStrings() {
-        return new String[] {getShortName()};
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString = new ArrayList<>();
+        searchString.add(new SearchableField("Short Name", getShortName()));
+        return searchString;
     }
 }

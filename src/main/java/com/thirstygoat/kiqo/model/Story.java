@@ -1,13 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.binding.Bindings;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by leroy on 15/05/15.
@@ -71,6 +72,17 @@ public class Story extends Item {
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty();
 //        setTasksListener();
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString = new ArrayList<>();
+        searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Long Name", getLongName()),
+                new SearchableField("Description", getDescription())));
+        return searchString;
     }
 
     /**

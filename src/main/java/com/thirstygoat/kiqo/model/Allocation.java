@@ -1,10 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Created by samschofield on 21/04/15.
@@ -30,7 +35,6 @@ public class Allocation implements Searchable {
 
         this.startDate.set(startDate);
         setEndDate(endDate);
-//        SearchableItems.getInstance().addSearchable(this);
     }
 
     /**
@@ -167,7 +171,9 @@ public class Allocation implements Searchable {
     }
 
     @Override
-    public String[] getSearchableStrings() {
-        return new String[] {team.getShortName(), project.getShortName()};
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name:", team.getShortName()), new SearchableField("Project:", project.getShortName())));
+        return searchStrings;
     }
 }

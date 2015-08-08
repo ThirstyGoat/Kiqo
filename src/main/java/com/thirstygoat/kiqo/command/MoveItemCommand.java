@@ -9,7 +9,7 @@ import java.util.List;
  * Command for moving an item from one collection to another
  * @param <T> Type of Item to be moved
  */
-public class MoveItemCommand<T extends Item> extends Command<Void> {
+public class MoveItemCommand<T extends Item> extends Command {
     private final T item;
     private final List<? super T> position;
     private final List<? super T> destination;
@@ -56,7 +56,7 @@ public class MoveItemCommand<T extends Item> extends Command<Void> {
     }
 
     @Override
-    public Void execute() {
+    public void execute() {
         if (posIndex != -1 && destIndex != -1) {
             // position and destination are the same list in the same state
             if (destination.get(posIndex).equals(item)) {
@@ -67,7 +67,6 @@ public class MoveItemCommand<T extends Item> extends Command<Void> {
             position.remove(item);
             destination.add(item);
         }
-        return null;
     }
 
     @Override
@@ -84,6 +83,26 @@ public class MoveItemCommand<T extends Item> extends Command<Void> {
     @Override
     public String getType() {
         return "Move Item";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("MoveItemCommand\\{item='");
+        builder.append(item);
+        builder.append("', position='");
+        builder.append(position);
+        builder.append("', destination='");
+        builder.append(destination);
+        builder.append("', posIndex='");
+        builder.append(posIndex);
+        builder.append("', destIndex='");
+        builder.append(destIndex);
+        builder.append("\\}");
+        return builder.toString();
     }
 
 }

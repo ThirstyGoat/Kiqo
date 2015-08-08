@@ -1,8 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by samschofield on 23/07/15.
@@ -12,6 +17,7 @@ public class Task extends Item {
     private final StringProperty description;
     private final FloatProperty estimate;
     private final ObjectProperty<Status> status;
+    private Story story;
 
     public Task() {
         shortName = new SimpleStringProperty("");
@@ -20,15 +26,36 @@ public class Task extends Item {
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
     }
 
-    public Task(String shortName, String description, Float estimate) {
+    public Task(String shortName, String description, Float estimate, Story story) {
         this.shortName = new SimpleStringProperty(shortName);
         this.description = new SimpleStringProperty(description);
         this.estimate = new SimpleFloatProperty(estimate);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
+        this.story = story;
     }
 
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchableFields = new ArrayList<>();
+        searchableFields.add(new SearchableField("Short Name", getShortName()));
+        searchableFields.add(new SearchableField("Description", getDescription()));
+
+        return searchableFields;
+    }
+
+    public Story getStory() {
+        return story;
+    }
+
+    public void setStory(Story story) {
+        this.story = story;
     }
 
     public ObjectProperty<Status> statusProperty() {
@@ -102,10 +129,5 @@ public class Task extends Item {
         result = 31 * result + estimate.hashCode();
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String[] getSearchableStrings() {
-        return new String[] {};
     }
 }

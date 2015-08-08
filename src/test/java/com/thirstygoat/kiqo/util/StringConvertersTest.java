@@ -1,14 +1,12 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.*;
 import javafx.util.StringConverter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +22,7 @@ public class StringConvertersTest {
     }
 
     @Test
-    public void testPersonStringConverter() {
+    public void personStringConverterTest() {
         Person personInOrganisation = new Person("inny", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         organisation.getPeople().add(personInOrganisation);
         Person personNotInOrganisation = new Person("outy", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
@@ -50,7 +48,7 @@ public class StringConvertersTest {
     }
 
     @Test
-    public void testProjectStringConverter() {
+    public void pojectStringConverterTest() {
         Project projectInOrganisation = new Project("inny", "longName");
         organisation.getProjects().add(projectInOrganisation);
         Project projectNotInOrganisation = new Project("outy", "longName");
@@ -74,5 +72,74 @@ public class StringConvertersTest {
         Assert.assertEquals("Null project should return empty string", "",
                 projectStringConverter.toString(null));
 
+    }
+
+    @Test
+    public void releaseStringConverterTest() {
+        Project project = new Project();
+        Release releaseInProject = new Release("releaseInProject", project, LocalDate.now(), "description");
+        project.observableReleases().add(releaseInProject);
+        organisation.getProjects().add(project);
+        StringConverter releaseStringConverter = StringConverters.releaseStringConverter(organisation);
+
+        // Test from string method
+        Assert.assertEquals("Empty string should return null",
+                null, releaseStringConverter.fromString(""));
+        Assert.assertEquals("String of non existing release should return null",
+                null, releaseStringConverter.fromString("Non existing release"));
+        Assert.assertEquals("String of release in a project should return that release",
+                releaseInProject, releaseStringConverter.fromString("releaseInProject"));
+
+        // Test to string method
+        Assert.assertEquals("Release in project should return the short name of that release",
+                "releaseInProject", releaseStringConverter.toString(releaseInProject));
+        Assert.assertEquals("Null should return empty string",
+                "", releaseStringConverter.toString(null));
+    }
+    
+    @Test
+    public void teamStringConverterTest() {
+        Team teamInOrganisation = new Team();
+        teamInOrganisation.setShortName("teamInOrganisation");
+        organisation.getTeams().add(teamInOrganisation);
+        StringConverter teamStringConverter = StringConverters.teamStringConverter(organisation);
+
+        // Test from string method
+        Assert.assertEquals("Empty string should return null",
+                null, teamStringConverter.fromString(""));
+        Assert.assertEquals("String of non existing release should return null",
+                null, teamStringConverter.fromString("Non existing release"));
+        Assert.assertEquals("String of release in a project should return that release",
+                teamInOrganisation, teamStringConverter.fromString("teamInOrganisation"));
+
+        // Test to string method
+        Assert.assertEquals("Release in project should return the short name of that release",
+                "teamInOrganisation", teamStringConverter.toString(teamInOrganisation));
+        Assert.assertEquals("Null should return empty string",
+                "", teamStringConverter.toString(null));
+    }
+
+    @Test
+    public void backlogStringConverterTest() {
+        Backlog backlogInProject = new Backlog();
+        backlogInProject.setShortName("backlogInProject");
+        Project project = new Project();
+        project.observableBacklogs().add(backlogInProject);
+        organisation.getProjects().add(project);
+        StringConverter backlogStringConverter = StringConverters.backlogStringConverter(organisation);
+
+        // Test from string method
+        Assert.assertEquals("Empty string should return null",
+                null, backlogStringConverter.fromString(""));
+        Assert.assertEquals("String of non existing release should return null",
+                null, backlogStringConverter.fromString("Non existing release"));
+        Assert.assertEquals("String of release in a project should return that release",
+                backlogInProject, backlogStringConverter.fromString("backlogInProject"));
+
+        // Test to string method
+        Assert.assertEquals("Release in project should return the short name of that release",
+                "backlogInProject", backlogStringConverter.toString(backlogInProject));
+        Assert.assertEquals("Null should return empty string",
+                "", backlogStringConverter.toString(null));
     }
 }

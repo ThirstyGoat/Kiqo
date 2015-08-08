@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.command.delete.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.*;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class DeleteAcceptanceCriteriaCommandTest {
         project = new Project("proj1", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<Skill>());
         story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
-        acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of AC's in the story");
+        acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of AC's in the story", story);
         story.getAcceptanceCriteria().add(acceptanceCriteria);
         command = new DeleteAcceptanceCriteriaCommand(acceptanceCriteria, story);
     }

@@ -1,11 +1,16 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by samschofield on 25/06/15.
@@ -14,19 +19,29 @@ public class AcceptanceCriteria extends Item {
 
     public final StringProperty criteria;
     public final ObjectProperty<State> state;
+    public Story story;
 
     public AcceptanceCriteria() {
         this.criteria = new SimpleStringProperty("");
         this.state = new SimpleObjectProperty<>(State.NEITHER);
     }
 
-    public AcceptanceCriteria(String criteria) {
+    public AcceptanceCriteria(String criteria, Story story) {
         this.criteria = new SimpleStringProperty(criteria);
         this.state = new SimpleObjectProperty<>(State.NEITHER);
+        this.story = story;
     }
 
     public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.state};
+    }
+
+    public Story getStory() {
+        return story;
+    }
+
+    public void setStory(Story story) {
+        this.story = story;
     }
 
     public String getCriteria() {
@@ -35,7 +50,7 @@ public class AcceptanceCriteria extends Item {
 
     /**
      * For introspection
-     * @param criteria
+     * @param criteria Criteria to be set
      */
     // for introspection
     public void setCriteria(String criteria) {
@@ -86,6 +101,13 @@ public class AcceptanceCriteria extends Item {
         return criteria;
     }
 
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> list = new ArrayList<>();
+        list.add(new SearchableField("Criteria", getCriteria()));
+        return list;
+    }
+
     /**
      * Represents the state of acceptance.
      */
@@ -93,10 +115,5 @@ public class AcceptanceCriteria extends Item {
         ACCEPTED,
         REJECTED,
         NEITHER
-    }
-
-    @Override
-    public String[] getSearchableStrings() {
-        return new String[] {};
     }
 }

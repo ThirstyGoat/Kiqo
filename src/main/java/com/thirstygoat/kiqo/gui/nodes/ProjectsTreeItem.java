@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.SelectionModel;
@@ -24,7 +23,7 @@ public class ProjectsTreeItem extends GoatTreeItem<Project> {
         final BacklogsTreeItem backlogs = new BacklogsTreeItem(selectionModel);
         backlogs.setItems(((Project) item).observableBacklogs());
 
-        final GoatTreeItem<Story> stories = new GoatTreeItem<>("Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
+        final GoatTreeItem<Story> stories = new GoatTreeItem<>("Unallocated Stories", selectionModel, Utilities.LEXICAL_COMPARATOR);
         stories.setItems(((Project) item).observableUnallocatedStories());
 
         final ReleaseTreeItem releases = new ReleaseTreeItem(selectionModel);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatDatePicker?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -19,7 +20,7 @@
             <Label font="$x1" text="Description" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label fx:id="shortNameLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label fx:id="projectLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="releaseDateLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <GoatDatePicker fx:id="releaseDateLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="descriptionLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
           </children>
           <columnConstraints>

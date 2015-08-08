@@ -1,14 +1,10 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -16,15 +12,28 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.ValidationSupport;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.Utilities;
+
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 
 /**
  * Created by Carina on 15/05/2015.
@@ -37,7 +46,7 @@ public class StoryFormController extends FormController<Story> {
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
-    private Command<?> command;
+    private Command command;
     // Begin FXML Injections
     @FXML
     private TextField longNameTextField;
@@ -54,7 +63,7 @@ public class StoryFormController extends FormController<Story> {
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
     @FXML
-    private GoatListSelectionView<Story> storySelectionView;
+    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -85,8 +94,14 @@ public class StoryFormController extends FormController<Story> {
         projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorNameProperty());
-        storySelectionView.getTargetListView().itemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
-        storySelectionView.getSourceListView().itemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
+
+
+
+        storySelectionView.setSourceItems(viewModel.sourceStoriesProperty().get());
+        storySelectionView.setTargetItems(viewModel.targetStoriesProperty().get());
+
+        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
+        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
 
         creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
@@ -157,18 +172,7 @@ public class StoryFormController extends FormController<Story> {
     }
 
     private void setupStoriesList() {
-        storySelectionView.setSourceHeader(new Label("Stories Available:"));
-        storySelectionView.setTargetHeader(new Label("Depends on:"));
-
-        storySelectionView.setPadding(new Insets(0, 0, 0, 0));
-
-        storySelectionView.setCellFactories(view -> new ListCell<Story>() {
-            @Override
-            public void updateItem(Story item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(item != null ? item.getShortName() : null);
-            }
-        });
+        storySelectionView.setHeader(new Label("Depends on:"));
     }
 
     private void setButtonHandlers() {
@@ -205,7 +209,7 @@ public class StoryFormController extends FormController<Story> {
     public boolean isValid() { return valid; }
 
     @Override
-    public Command<?> getCommand() { return viewModel.getCommand(); }
+    public Command getCommand() { return viewModel.getCommand(); }
 
     public void setCommand() {
         viewModel.setCommand();

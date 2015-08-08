@@ -124,7 +124,7 @@ public class SearchViewModel implements ViewModel {
     }
 
     public void buttonAction(SearchResult searchResult) {
-    	mainController.focusedItemProperty.set(searchResult != null ? searchResult.getItem() : null);
+        mainController.focusedItemProperty.set(searchResult != null ? searchResult.getItem() : null);
         stage.close();
     }
 

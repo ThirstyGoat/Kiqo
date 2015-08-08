@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.persistence;
 
 import com.google.gson.*;
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.ApplicationInfo;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -10,6 +11,8 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,7 +81,9 @@ public class PersistenceManager {
             revertVersion = gson.toJson(jsonObject);
 
             // loading old json file
-            if(version == null) {
+            String versionStr = version.getAsString();
+
+            if (version == null) {
                 PersistenceManager.isOldJSON = true;
                 final BufferedReader br1 = new BufferedReader(new FileReader(file));
                 PersistenceManager.createGson(true);
@@ -86,9 +91,22 @@ public class PersistenceManager {
                 organisation.getProjects().setAll(organisation2.getProjects());
                 PersistenceManager.createGson(false);
             }
+
+            if (versionStr.equals("4.0")) {
+                List<Story> stories = new ArrayList<>();
+                organisation.getProjects().forEach(project1 -> {
+                    stories.addAll(project1.getUnallocatedStories());
+                    project1.getBacklogs().forEach(backlog -> stories.addAll(backlog.getStories()));
+                });
+                stories.forEach(story -> {
+                    story.getTasks().forEach(task -> task.setStory(story));
+                    story.getAcceptanceCriteria().forEach(acceptanceCriteria -> acceptanceCriteria.setStory(story));
+                });
+            }
         }
         if (organisation != null) {
             organisation.setSaveLocation(file);
+            SearchableItems.getInstance().addAll(organisation);
         }
         return organisation;
     }
@@ -153,6 +171,7 @@ public class PersistenceManager {
 
             final Project p = jsonDeserializationContext.deserialize(jsonElement, Project.class);
             org.getProjects().add(p);
+
             return org;
         }
     }
@@ -181,7 +200,6 @@ public class PersistenceManager {
                 observableList = FXCollections.observableArrayList();
             }
             for (final JsonElement element : json.getAsJsonArray()) {
-                // TODO FIX GENERICS ISSUE
                 observableList.add(PersistenceManager.gson.fromJson(element, type));
             }
             return observableList;

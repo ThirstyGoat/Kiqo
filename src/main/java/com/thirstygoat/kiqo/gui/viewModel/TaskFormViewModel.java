@@ -2,11 +2,12 @@ package com.thirstygoat.kiqo.gui.viewModel;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateTaskCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateTaskCommand;
 import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -30,7 +31,7 @@ public class TaskFormViewModel extends FormController<Task> {
     private Task task;
     private Organisation organisation;
     private boolean valid = false;
-    private Command<?> command;
+    private Command command;
 
     private StringProperty nameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
@@ -67,8 +68,8 @@ public class TaskFormViewModel extends FormController<Task> {
                 ValidationMessage.error(""));
 
         estimateValidator = new FunctionBasedValidator<>(estimateProperty,
-                s -> s.matches("^([+-]?\\d*\\.?\\d*)$") && s.length() > 0,
-                ValidationMessage.error("Estimate must be a number"));
+                s -> s.matches("^[+]?([.]\\d+|\\d+[.]?\\d*)$") && s.length() > 0,
+                ValidationMessage.error("Estimate must be a positive number"));
 
         formValidator = new CompositeValidator();
         formValidator.addValidators(nameValidator, descriptionValidator, estimateValidator);
@@ -152,7 +153,7 @@ public class TaskFormViewModel extends FormController<Task> {
     }
 
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     public void setCommand() {
         if (task == null) {
@@ -160,12 +161,12 @@ public class TaskFormViewModel extends FormController<Task> {
             if (!estimateProperty().get().trim().equals("")) {
                 estimate = Float.parseFloat(estimateProperty.get());
             }
-            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate);
+            task = new Task(nameProperty.get().trim(), descriptionProperty.get().trim(), estimate, story);
             command = new CreateTaskCommand(task, this.story);
             valid = true;
         } else {
             // edit command
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
             if (!task.getShortName().equals(shortNameProperty().get())) {
                 changes.add(new EditCommand<>(task, "shortName", shortNameProperty().get()));
             }

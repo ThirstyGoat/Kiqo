@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,6 +10,11 @@ import javafx.collections.ObservableList;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Created by leroy on 10/04/15.
@@ -20,6 +26,15 @@ public class Release extends Item implements Serializable {
     private final ObjectProperty<LocalDate> date;
     private final ObservableList<Sprint> sprints;
 
+    public Release() {
+        this.shortName = new SimpleStringProperty("");
+        this.description = new SimpleStringProperty("");
+        this.project = new SimpleObjectProperty<>(null);
+        this.date = new SimpleObjectProperty<>(null);
+        this.sprints = FXCollections.observableArrayList();
+    }
+
+
     public Release(String shortName, Project project, LocalDate date, String description) {
         this.shortName = new SimpleStringProperty(shortName);
         this.project = new SimpleObjectProperty<>(project);
@@ -30,6 +45,18 @@ public class Release extends Item implements Serializable {
 
     public ObservableList<Sprint> getSprints() {
         return sprints;
+    }
+
+    /**
+     * @return a string array of the searchable fields for a model object
+     */
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<SearchableField> searchStrings = new ArrayList<>();
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
+                new SearchableField("Release Date", getDate().format(dateTimeFormatter))));
+        return searchStrings;
     }
 
     public ObjectProperty<Project> projectProperty() {

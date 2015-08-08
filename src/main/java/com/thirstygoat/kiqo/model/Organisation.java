@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableItems;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -48,6 +49,8 @@ public class Organisation implements Serializable {
             poSkill = new Skill("PO", "Product Owner");
             smSkill = new Skill("SM", "Scrum Master");
             skills.addAll(poSkill, smSkill);
+            SearchableItems.getInstance().addSearchable(poSkill);
+            SearchableItems.getInstance().addSearchable(smSkill);
         } else {
             poSkill = smSkill = null;
         }

@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @param <FieldType> Type of the field that will be edited
  *
  */
-public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
+public class EditCommand<ModelObjectType, FieldType> extends Command {
     private static final Logger LOGGER = Logger.getLogger(EditCommand.class.getName());
     private final Object newVal;
     private final ModelObjectType subject;
@@ -52,14 +52,13 @@ public class EditCommand<ModelObjectType, FieldType> extends Command<Void> {
      * @see com.thirstygoat.kiqo.command.Command#execute()
      */
     @Override
-    public Void execute() {
+    public void execute() {
         try {
             this.oldVal = propertyDescriptor.getReadMethod().invoke(subject);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             EditCommand.LOGGER.log(Level.SEVERE, "Can't read old value", e);
         }
         editField(this.newVal);
-        return null;
     }
 
     @Override

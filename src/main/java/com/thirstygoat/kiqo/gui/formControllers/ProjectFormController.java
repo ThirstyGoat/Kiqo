@@ -2,11 +2,12 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateProjectCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateProjectCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -35,7 +37,7 @@ public class ProjectFormController extends FormController<Project> {
     public String shortName;
     public String description;
     private Project project;
-    private Command<?> command;
+    private Command command;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Stage stage;
@@ -112,7 +114,7 @@ public class ProjectFormController extends FormController<Project> {
             final Project p = new Project(shortNameTextField.getText(),longNameTextField.getText(), descriptionTextField.getText());
             command = new CreateProjectCommand(p, organisation);
         } else {
-            final ArrayList<Command<?>> changes = new ArrayList<>();
+            final ArrayList<Command> changes = new ArrayList<>();
 
             if (!shortNameTextField.getText().equals(project.getShortName())) {
                 changes.add(new EditCommand<>(project, "shortName", shortNameTextField.getText()));
@@ -188,7 +190,7 @@ public class ProjectFormController extends FormController<Project> {
 
     }
     @Override
-    public Command<?> getCommand() { return command; }
+    public Command getCommand() { return command; }
 
     @Override
     public void setStage(final Stage stage) {

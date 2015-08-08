@@ -25,15 +25,17 @@ public class UndoManager {
 
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
     public final StringProperty redoTypeProperty = new SimpleStringProperty("");
-    protected final Deque<Command<?>> undoStack = new ArrayDeque<>();
-    protected final Deque<Command<?>> redoStack = new ArrayDeque<>();
-    protected final Deque<Command<?>> revertStack = new ArrayDeque<>();
-    protected final ObservableList<Command<?>> saveUndoStack = FXCollections.observableArrayList();
+    protected final Deque<Command> undoStack = new ArrayDeque<>();
+    protected final Deque<Command> redoStack = new ArrayDeque<>();
+    protected final Deque<Command> revertStack = new ArrayDeque<>();
+    protected final ObservableList<Command> saveUndoStack = FXCollections.observableArrayList();
     private final BooleanProperty changesSavedProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
     protected int branchPosition = 0;
 
+
+    private UndoManager() {}
 
     public static UndoManager getUndoManager() {
         if (instance == null) {
@@ -42,36 +44,29 @@ public class UndoManager {
         return instance;
     }
 
-    private UndoManager() {}
-
     /**
      * Executes the command and adds it to the undo stack.
      *
-     * @param <T> return type of the command
      * @param command command to be executed
-     * @return return value from command.execute()
      */
-    public <T> T doCommand(final Command<T> command) {
+    public void doCommand(final Command command) {
         UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
-        final T result = command.execute();
+        command.execute();
         undoStack.push(command);
-        if (command.getClass() != RevertCommand.class) {
-            if (undoStack.size() < savePosition) { // behind saveposition
-                canRevertProperty.set(false);
-            }
-            redoStack.clear();
+        if (undoStack.size() < savePosition) { // behind saveposition
+            canRevertProperty.set(false);
         }
+        redoStack.clear();
 
         updateUndoRedoTypes();
         checkChangesSaved();
-        return result;
     }
 
     /**
      * Redoes the most recently undone command and adds it to the undo stack.
      */
     public void redoCommand() {
-        final Command<?> command = redoStack.pop();
+        final Command command = redoStack.pop();
         command.redo();
         undoStack.push(command);
         updateUndoRedoTypes();
@@ -84,7 +79,7 @@ public class UndoManager {
      * redo stack.
      */
     public void undoCommand() {
-        final Command<?> command = undoStack.pop();
+        final Command command = undoStack.pop();
         command.undo();
         redoStack.push(command);
         updateUndoRedoTypes();
@@ -122,7 +117,7 @@ public class UndoManager {
         // depending on whether revert takes us forwards or backwards
         redoStack.clear();
         while (diff < 0) {
-            final Command<?> command = undoStack.pop();
+            final Command command = undoStack.pop();
             command.undo();
             diff++;
         }
@@ -143,16 +138,9 @@ public class UndoManager {
     }
 
     private void checkChangesSaved() {
-        // If the top of the undostack is a RevertCommand, then that means that the user has just Reverted to last
-        // saved version, therefore changes are saved - feels a little hacky - Bradley
-        if (!undoStack.isEmpty() && undoStack.peek().getClass() == RevertCommand.class) {
-            changesSavedProperty().set(true);
-            return;
-        }
-
         // because there aren't equal methods for
         boolean unsavedChanges = true;
-        ArrayList<Command<?>> temp = new ArrayList<>(undoStack);
+        ArrayList<Command> temp = new ArrayList<>(undoStack);
         if (saveUndoStack.size() == undoStack.size()) {
             for (int i = 0; i < undoStack.size(); i++) {
                 if (saveUndoStack.get(i) != temp.get(i)) {
