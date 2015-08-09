@@ -1,6 +1,5 @@
-package com.thirstygoat.kiqo.command;
+package com.thirstygoat.kiqo.command.create;
 
-import com.thirstygoat.kiqo.command.create.CreateCommand;
 import com.thirstygoat.kiqo.model.Sprint;
 
 /**
