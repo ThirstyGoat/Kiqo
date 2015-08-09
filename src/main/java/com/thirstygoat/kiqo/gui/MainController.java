@@ -362,6 +362,23 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Prompts to delete a sprint
+     *
+     * @param sprint Sprint to be deleted
+     */
+    private void deleteSprint(Sprint sprint) {
+        final DeleteSprintCommand command = new DeleteSprintCommand(sprint);
+
+        final String[] buttons = {"Delete Sprint", "Cancel"};
+        final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Sprint", "Are you sure?",
+                "Are you sure you want to delete the sprint " + sprint.getShortName() + "?", buttons);
+
+        if (result.equals("Delete Sprint")) {
+            doCommand(command);
+        }
+    }
+
+    /**
      * Convenience method to delete the currently selected Item
      */
     public void deleteItem() {
@@ -381,6 +398,8 @@ public class MainController implements Initializable {
                 deleteStory((Story) focusedObject);
             } else if (focusedObject.getClass() == Backlog.class) {
                 deleteBacklog((Backlog) focusedObject);
+            } else if (focusedObject.getClass() == Sprint.class) {
+                deleteSprint((Sprint) focusedObject);
             }
         });
     }
