@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintFormView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" >
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintFormView" prefWidth="600.0" >
   <bottom>
     <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
       <children>
@@ -50,8 +51,12 @@
                 <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.halignment="RIGHT" />
                 <TextField fx:id="backlogTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                 <TextField fx:id="teamTextField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-
+                <GoatFilteredListSelectionView fx:id="storySelectionView" prefHeight="200" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                <Hyperlink fx:id="whyHyperlink" text="Why can't I see all stories?" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                    <font>
+                        <Font size="10.0" />
+                    </font>
+                </Hyperlink>
             </children>
         </GridPane>
   </center>

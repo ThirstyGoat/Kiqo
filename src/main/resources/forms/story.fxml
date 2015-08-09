@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.formControllers.StoryFormController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.formControllers.StoryFormController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
