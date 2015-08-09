@@ -104,7 +104,7 @@
 
 .advanced-search-results-list-view .list-cell:selected .label,
 .advanced-search-results-list-view .list-cell:selected .advanced-search-result-title-label,
-.advanced-search-results-list-view .list-cell:selected .advanced-search-result-type-label, {
+.advanced-search-results-list-view .list-cell:selected .advanced-search-result-type-label {
     -fx-text-fill: inherit
 }
 
