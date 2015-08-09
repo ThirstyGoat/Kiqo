@@ -20,8 +20,6 @@ import java.util.ArrayList;
  * Created by samschofield on 31/07/15.
  */
 public class SprintViewModel implements ViewModel {
-    private ModelWrapper<Sprint> sprintWrapper = new ModelWrapper<>();
-    private Boolean newSprint;
     private final ObjectProperty<Organisation> organisationProperty;
     private final ObjectProperty<Sprint> sprintProperty;
     private final ObservableList<Story> stories;
@@ -34,6 +32,8 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
+    private ModelWrapper<Sprint> sprintWrapper = new ModelWrapper<>();
+    private Boolean newSprint;
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
@@ -45,7 +45,10 @@ public class SprintViewModel implements ViewModel {
                     if (string == null || string.length() == 0 || string.length() > 20) {
                         return false;
                     }
-                    // TODO unique within backlog, or project??
+                    final Release release =  releaseProperty().get();
+                    if (release != null) {
+                        return Utilities.shortnameIsUnique(string, null, release.getSprints());
+                    }
                     final Backlog backlog = backlogProperty().get();
                     if (backlog == null) {
                         return true;
@@ -207,6 +210,7 @@ public class SprintViewModel implements ViewModel {
             if (!longNameProperty().get().equals(sprintProperty.get().getLongName())) {
                 changes.add(new EditCommand<>(sprintProperty.get(), "longName", longNameProperty().get()));
             }
+            System.out.println(descriptionProperty().get());
             if (!descriptionProperty().get().equals(sprintProperty.get().getDescription())) {
                 changes.add(new EditCommand<>(sprintProperty.get(), "description", descriptionProperty().get()));
             }
