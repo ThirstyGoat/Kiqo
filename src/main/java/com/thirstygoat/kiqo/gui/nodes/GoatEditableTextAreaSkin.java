@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.sun.tools.javac.util.StringUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
@@ -57,6 +58,8 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
         displayView.setMaxWidth(Control.USE_PREF_SIZE);
         stackPane.setAlignment(Pos.TOP_LEFT);
 
+
+
         displayView.visibleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 editField.setMinHeight(5);
@@ -66,29 +69,18 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
             } else {
                 editField.setMinHeight(Control.USE_PREF_SIZE);
                 editField.setMaxHeight(Control.USE_PREF_SIZE);
-                editField.setPrefRowCount(3);
+                editField.setPrefRowCount(editField.getText().split("\n").length);
+                editField.textProperty().addListener((observable1, oldValue1, newValue1) -> {
+                    String s = newValue1;
+                    char c = '\n';
+                    editField.setPrefRowCount(Math.max(s.replaceAll("[^" + c + "]", "").length(), 1));
+                });
                 editView.setMinHeight(Control.USE_PREF_SIZE);
                 editView.setMaxHeight(Control.USE_PREF_SIZE);
             }
         });
 
-
-
-        //TODO remove
-        displayView.setStyle("-fx-border-color: red");
-        stackPane.setStyle("-fx-border-color: black");
-        displayLabel.setStyle("-fx-border-color: pink");
-        editView.setStyle("-fx-border-color: blue");
-        mainView.setStyle("-fx-border-color: forestgreen");
     }
-
-    public void something() {
-        displayLabel.heightProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
-        });
-    }
-
-
 
     private HBox createMainView() {
 
@@ -143,6 +135,11 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
     public void showEdit() {
         displayView.setVisible(false);
         editView.setVisible(true);
+
+        editField.setWrapText(true);
+        ScrollBar scrollBarv = (ScrollBar)editField.lookup(".scroll-bar:vertical");
+        scrollBarv.setDisable(true);
+        scrollBarv.setOpacity(0);
     }
 
     public void showDisplay() {

@@ -47,19 +47,6 @@ public class GoatEditableTextArea<T extends Item> extends Control {
             }
             skin.showDisplay();
         });
-
-        editField.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.ENTER) {
-//                event.consume();
-//                skin.showDisplay();
-//
-//                if (!editField.getText().equals(currentVal.get())) {
-//                    command = new EditCommand<>(item, fieldName, editField.getText());
-//                    UndoManager.getUndoManager().doCommand(command);
-//                }
-//            }
-        });
-
     }
 
     public Button doneButton() {
@@ -78,7 +65,6 @@ public class GoatEditableTextArea<T extends Item> extends Control {
         this.item = item;
         this.fieldName = fieldName;
         this.currentVal = currentVal;
-        skin.something();
     }
 
     public void setText(String text) {
