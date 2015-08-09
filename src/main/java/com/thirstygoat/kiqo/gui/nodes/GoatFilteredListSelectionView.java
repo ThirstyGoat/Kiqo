@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -22,7 +23,8 @@ import java.util.regex.Pattern;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class GoatFilteredListSelectionView<T extends Item> extends VBox {
+public class
+        GoatFilteredListSelectionView<T extends Item> extends VBox {
     private final ObjectProperty<ObservableList<T>> sourceItems;
     private final ObjectProperty<ObservableList<T>> targetItems;
     private final ObservableList<T> allItems;
@@ -43,6 +45,12 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         createSkin();
         setDefaultCellFactory();
         bindShownItems();
+
+        allItems.addListener((ListChangeListener<T>) c -> {
+            String value = textField.getText();
+            textField.setText(value + " ");
+            textField.setText(value);
+        });
     }
 
     public Node getFooter() {
