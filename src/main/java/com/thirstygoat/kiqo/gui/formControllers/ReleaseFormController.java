@@ -8,8 +8,11 @@ import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -20,6 +23,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -93,8 +97,22 @@ public class ReleaseFormController extends FormController<Release> {
         validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
                 "Project must already exist"));
 
+        final Predicate<LocalDate> dateValidation = d -> {
+            if (d == null) {
+                return false;
+            } else {
+                for (Sprint sprint : release.getSprints()) {
+                    if (d.isBefore(sprint.getEndDate())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+
+
         validationSupport.registerValidator(releaseDatePicker,
-                Validator.createEmptyValidator("Release date must be valid", Severity.ERROR));
+                Validator.createPredicateValidator(dateValidation, "Release date must set and after all sprint end dates"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

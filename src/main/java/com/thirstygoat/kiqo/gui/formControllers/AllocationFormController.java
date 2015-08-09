@@ -379,18 +379,19 @@ public class AllocationFormController extends FormController<Allocation> {
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 if (team != null) {
+                    if (endDatePicker.getValue() != null) {
+                        if (item.isAfter(endDatePicker.getValue().minusDays(1))) {
+                            //date falls after the end date
+                            setDisable(true);
+                            setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                        }
+                    }
                     //remove the current allocation for if we are editing
                     team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
                         if ((item.isAfter(allocation1.getStartDate().minusDays(2)) && item.isBefore(allocation1.getEndDate().plusDays(1)))) {
                             //date falls inside a previous allocation
                             setDisable(true);
                             setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
-                        } else if (endDatePicker.getValue() != null) {
-                            if (item.isAfter(endDatePicker.getValue().minusDays(1))) {
-                                //date falls after the end date
-                                setDisable(true);
-                                setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
-                            }
                         }
                     });
                 }
@@ -402,9 +403,12 @@ public class AllocationFormController extends FormController<Allocation> {
         public void updateItem(LocalDate item, boolean empty) {
             super.updateItem(item, empty);
             if (team != null) {
-                if(item.isBefore(startDatePicker.getValue().plusDays(1))) {
-                    setDisable(true);
-                    setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                if (startDatePicker.getValue() != null) {
+                    if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
+                        //date is before the start date
+                        setDisable(true);
+                        setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                    }
                 }
                 //remove the current allocation for if we are editing
                 team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
@@ -413,11 +417,7 @@ public class AllocationFormController extends FormController<Allocation> {
                         setDisable(true);
                         setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
                     } else if (startDatePicker.getValue() != null) {
-                        if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
-                            //date is before the start date
-                            setDisable(true);
-                            setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
-                        } else if (startDatePicker.getValue().isBefore(allocation1.getStartDate()) && item.isAfter(allocation1.getEndDate())) {
+                        if (startDatePicker.getValue().isBefore(allocation1.getStartDate()) && item.isAfter(allocation1.getEndDate())) {
                             setDisable(true);
                             setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
                         }
