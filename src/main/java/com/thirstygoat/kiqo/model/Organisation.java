@@ -20,6 +20,7 @@ import java.util.List;
 public class Organisation implements Serializable {
     private final ObservableList<Project> projects;
     private final ObservableList<Person> people;
+    private final ObservableList<Release> releases;
     private final ObservableList<Skill> skills;
     private final ObservableList<Team> teams;
     private final StringProperty organisationName;
@@ -33,6 +34,7 @@ public class Organisation implements Serializable {
         projects = FXCollections.observableArrayList(Item.getWatchStrategy());
         people = FXCollections.observableArrayList(Item.getWatchStrategy());
         skills = FXCollections.observableArrayList(Item.getWatchStrategy());
+        releases = FXCollections.observableArrayList(Item.getWatchStrategy());
         teams = FXCollections.observableArrayList(Item.getWatchStrategy());
         organisationName = new SimpleStringProperty("Untitled");
         poSkill = null;
@@ -42,6 +44,7 @@ public class Organisation implements Serializable {
     public Organisation(boolean addDefaultItems) {
         projects = FXCollections.observableArrayList(Item.getWatchStrategy());
         people = FXCollections.observableArrayList(Item.getWatchStrategy());
+        releases = FXCollections.observableArrayList(Item.getWatchStrategy());
         skills = FXCollections.observableArrayList(Item.getWatchStrategy());
         teams = FXCollections.observableArrayList(Item.getWatchStrategy());
         organisationName = new SimpleStringProperty("Untitled");
@@ -89,6 +92,14 @@ public class Organisation implements Serializable {
             }
         }
         return eligiblePOs;
+    }
+
+    /**
+     *
+     * @return ObservableList of releases
+     */
+    public ObservableList<Release> getReleases() {
+        return releases;
     }
 
     /**

@@ -539,9 +539,17 @@ public class MainController implements Initializable {
 
     public void newSprint() {
         if (selectedOrganisationProperty.get() != null) {
-            dialog(null, "Sprint");
+            // Check to make sure at least one release exists first, otherwise show warning dialog
+            for (Project project : selectedOrganisationProperty.get().getProjects()) {
+                    if (!project.getReleases().isEmpty()) {
+                        dialog(null, "Sprint");
+                        return;
+                    }
+                }
+            GoatDialog.showAlertDialog(primaryStage, "Can't create sprint", "Can't create sprint",
+                    "No releases available, you must have at least one release in order to create a sprint.");
+            }
         }
-    }
 
     public void allocateTeams() {
         if (selectedOrganisationProperty.get() != null) {

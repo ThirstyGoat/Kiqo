@@ -2,7 +2,7 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.CreateSprintCommand;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,8 +41,8 @@ public class SprintFormViewModelTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
         backlog.observableStories().add(readyStory);
         backlog.observableStories().add(unreadyStory);
         sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,

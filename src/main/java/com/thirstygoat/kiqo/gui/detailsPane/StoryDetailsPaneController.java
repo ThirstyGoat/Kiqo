@@ -1,6 +1,9 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.delete.DeleteAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
@@ -11,15 +14,12 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -27,14 +27,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
-import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
@@ -197,14 +193,14 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         BooleanBinding noEstimateBinding = Bindings.equal(story.estimateProperty(), 0);
 
         // Bind the disable property
-        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding));
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding).or(story.inSprintProperty()));
         readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
         setEstimateHyperlink();
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
-        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()));
+        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()).or(story.inSprintProperty()));
     }
 
     private void deleteTask() {
@@ -243,8 +239,18 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 bulletB, beEstimated,
                 bulletC, haveAcceptanceCriteria);
 
+
         tf.setPadding(new Insets(10));
-        PopOver readyWhyPopOver = new PopOver(tf);
+        tf.visibleProperty().bind(story.inSprintProperty().not());
+        tf.managedProperty().bind(story.inSprintProperty().not());
+
+        Text text = new Text("\nThe story is currently allocated to a sprint. ");
+        text.visibleProperty().bind(story.inSprintProperty());
+        text.managedProperty().bind(story.inSprintProperty());
+
+        TextFlow tf2 = new TextFlow(tf, text);
+
+        PopOver readyWhyPopOver = new PopOver(tf2);
         readyWhyPopOver.setDetachable(false);
 
         readyWhy.setOnAction((e) -> readyWhyPopOver.show(readyWhy));
@@ -333,8 +339,21 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
                 bulletA, haveAcceptanceCriteria);
 
         tf.setPadding(new Insets(10));
-        PopOver estimateWhyPopOver = new PopOver(tf);
+        tf.visibleProperty().bind(story.inSprintProperty().not());
+        tf.managedProperty().bind(story.inSprintProperty().not());
+
+        Text text = new Text("\nThe story is currently allocated to a sprint. ");
+        text.visibleProperty().bind(story.inSprintProperty());
+        text.managedProperty().bind(story.inSprintProperty());
+
+        TextFlow tf2 = new TextFlow(tf, text);
+
+
+        PopOver estimateWhyPopOver = new PopOver(tf2);
         estimateWhyPopOver.setDetachable(false);
+
+
+
 
         estimateWhy.setOnAction((e) -> estimateWhyPopOver.show(estimateWhy));
         estimateWhy.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -346,11 +365,11 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         estimateWhy.visibleProperty().bind(storyEstimateSlider.disabledProperty());
         estimateWhy.managedProperty().bind(storyEstimateSlider.disabledProperty());
 
-        storyEstimateSlider.visibleProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty()));
-        storyEstimateSlider.managedProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty()));
+        storyEstimateSlider.visibleProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty().and(story.inSprintProperty().not())));
+        storyEstimateSlider.managedProperty().bind(Bindings.not(storyEstimateSlider.disabledProperty().and(story.inSprintProperty().not())));
 
-        storyEstimateSliderLabel.visibleProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
-        storyEstimateSliderLabel.managedProperty().bind(Bindings.not(estimateWhy.visibleProperty()));
+        storyEstimateSliderLabel.visibleProperty().bind(Bindings.not(estimateWhy.visibleProperty().and(story.inSprintProperty().not())));
+        storyEstimateSliderLabel.managedProperty().bind(Bindings.not(estimateWhy.visibleProperty().and(story.inSprintProperty().not())));
     }
 
     private void setScale() {

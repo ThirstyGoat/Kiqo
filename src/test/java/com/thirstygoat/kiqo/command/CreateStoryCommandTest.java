@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.model.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,7 @@ public class CreateStoryCommandTest {
     public void setup() {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
-        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
+        story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false);
         command = new CreateStoryCommand(story);
     }
 
