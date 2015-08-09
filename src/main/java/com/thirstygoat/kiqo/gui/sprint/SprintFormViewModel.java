@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.IFormViewModel;
 import com.thirstygoat.kiqo.model.*;
 import javafx.beans.binding.BooleanExpression;
@@ -94,11 +95,11 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     }
 
     protected void okAction() {
+        UndoManager.getUndoManager().doCommand(createCommand());
         exitStrategy.run();
     }
 
     protected void cancelAction() {
-        sprintProperty().set(null); // Potential hack way to ensure no command is made when the user cancels the dialog
         exitStrategy.run();
     }
 

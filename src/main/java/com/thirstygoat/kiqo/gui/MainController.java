@@ -886,10 +886,6 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(sprintFormTuple.getView()));
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());
                 stage.showAndWait();
-                Command command = viewModel.createCommand();
-                if (command != null) { // null if cancelled or no changes
-                    doCommand(command);
-                }
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
