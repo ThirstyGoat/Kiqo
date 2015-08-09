@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatEditableTextArea;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.fxml.FXML;
@@ -15,7 +16,7 @@ public class TeamDetailsPaneController implements Initializable, IDetailsPaneCon
     @FXML
     private Label shortNameLabel;
     @FXML
-    private Label descriptionLabel;
+    private GoatEditableTextArea descriptionLabel;
     @FXML
     private Label teamMembersLabel;
     @FXML
@@ -32,6 +33,7 @@ public class TeamDetailsPaneController implements Initializable, IDetailsPaneCon
         if (team != null) {
             shortNameLabel.textProperty().bind(team.shortNameProperty());
             descriptionLabel.textProperty().bind(team.descriptionProperty());
+            descriptionLabel.setItem(team, "description", team.descriptionProperty());
             teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableTeamMembers()));
 
             if (team.getProductOwner() != null) {

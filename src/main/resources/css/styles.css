@@ -112,3 +112,7 @@
     -fx-text-fill: gainsboro;
     -fx-font-size: 12px;
 }
+
+.text-area .scroll-bar:vertical:disabled {
+    -fx-opacity: 0;
+}
