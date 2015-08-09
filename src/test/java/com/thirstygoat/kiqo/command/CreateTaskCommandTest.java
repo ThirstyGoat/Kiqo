@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.command.create.CreateTaskCommand;
 import com.thirstygoat.kiqo.model.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class CreateTaskCommandTest {
     public void setup() {
         project = new Project("proj1", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
-        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
+        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false);
         task = new Task("task1", "descr", 0f, story);
         command = new CreateTaskCommand(task, story);
     }

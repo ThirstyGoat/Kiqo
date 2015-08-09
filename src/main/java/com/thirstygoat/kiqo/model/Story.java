@@ -32,7 +32,7 @@ public class Story extends Item {
     private final BooleanProperty isReady;
     private final ObservableList<Task> tasks;
     private final FloatProperty taskHours;
-
+    private final SimpleBooleanProperty inSprint;
     /**
      * no-arg constructor for JavaBeans compliance
      */
@@ -51,11 +51,12 @@ public class Story extends Item {
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty(0.0f);
+        this.inSprint = new SimpleBooleanProperty(false);
 //        setTasksListener();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady, boolean inSprint) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -71,6 +72,7 @@ public class Story extends Item {
         this.dependencies.addAll(dependencies);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty();
+        this.inSprint = new SimpleBooleanProperty(inSprint);
 //        setTasksListener();
     }
 
@@ -96,6 +98,18 @@ public class Story extends Item {
             }
             return totalVal;
         }, tasks));
+    }
+
+    public BooleanProperty inSprintProperty() {
+        return inSprint;
+    }
+
+    public boolean getInSprint() {
+        return inSprint.get();
+    }
+
+    public void setInSprint(boolean inSprint) {
+        this.inSprint.set(inSprint);
     }
 
     public ObservableList<Task> observableTasks() {

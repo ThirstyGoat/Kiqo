@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
@@ -210,7 +211,6 @@ public class SprintViewModel implements ViewModel {
             if (!longNameProperty().get().equals(sprintProperty.get().getLongName())) {
                 changes.add(new EditCommand<>(sprintProperty.get(), "longName", longNameProperty().get()));
             }
-            System.out.println(descriptionProperty().get());
             if (!descriptionProperty().get().equals(sprintProperty.get().getDescription())) {
                 changes.add(new EditCommand<>(sprintProperty.get(), "description", descriptionProperty().get()));
             }
@@ -235,6 +235,11 @@ public class SprintViewModel implements ViewModel {
                     && sprintProperty.get().getStories().containsAll(stories()))) {
                 changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
+
+            stories.forEach(s -> {
+                changes.add(new EditCommand<>(s, "inSprint", true));
+            });
+
             if (!changes.isEmpty()) {
                 command = new CompoundCommand("Edit Sprint", changes);
             } else {

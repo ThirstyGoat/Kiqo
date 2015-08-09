@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.command;
 
 import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
 import com.thirstygoat.kiqo.model.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class CreateAcceptanceCriteriaCommandTest {
     public void setup() {
         project = new Project("proj", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
-        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false);
+        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false);
         acceptanceCriteria = new AcceptanceCriteria("Creating new acceptance criteria will add it to the list of ACs in the story", story);
         command = new CreateAcceptanceCriteriaCommand(acceptanceCriteria, story);
     }
