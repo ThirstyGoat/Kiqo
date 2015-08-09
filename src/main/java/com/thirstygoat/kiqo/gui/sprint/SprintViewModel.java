@@ -12,6 +12,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -34,30 +35,13 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     private ModelWrapper<Sprint> sprintWrapper = new ModelWrapper<>();
-    private Boolean newSprint;
+
+    private ListChangeListener<Story> storyListener = c -> stories().setAll(sprintWrapper.get().getStories());
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
         sprintProperty = new SimpleObjectProperty<>();
         stories = FXCollections.observableArrayList(Story.getWatchStrategy());
-
-//        goalValidator = new FunctionBasedValidator<>(goalProperty(),
-//                string -> {
-//                    if (string == null || string.length() == 0 || string.length() > 20) {
-//                        return false;
-//                    }
-//                    final Release release =  releaseProperty().get();
-//                    if (release != null) {
-//                        return Utilities.shortnameIsUnique(string, null, release.getSprints());
-//                    }
-//                    final Backlog backlog = backlogProperty().get();
-//                    if (backlog == null) {
-//                        return true;
-//                    } else {
-//                        return Utilities.shortnameIsUnique(string, null, backlog.getProject().getSprints());
-//                    }
-//                },
-//                ValidationMessage.error("Sprint goal must be unique and not empty"));
 
         goalValidator = new ObservableRuleBasedValidator();
 
@@ -183,8 +167,11 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
-            stories().clear();
-            stories().addAll(sprint.getStories());
+            if (sprintWrapper.get() != null) {
+                sprintWrapper.get().getStories().removeListener(storyListener);
+            }
+            sprintWrapper.get().getStories().addListener(storyListener);
+            stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
             sprintWrapper.reset();
@@ -256,7 +243,7 @@ public class SprintViewModel implements ViewModel {
             }
             if (!(stories.containsAll(sprintProperty.get().getStories())
                     && sprintProperty.get().getStories().containsAll(stories()))) {
-                changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
+                changes.add(new UpdateListCommand<>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
 
             stories.forEach(s -> {
