@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
@@ -26,7 +28,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private SprintDetailsPaneViewModel viewModel;
 
     @FXML
-    private Label longNameLabel;
+    private GoatLabelView longNameLabel;
     @FXML
     private Label goalLabel;
     @FXML
@@ -50,7 +52,11 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     public void initialize(URL arg0, ResourceBundle arg1) {
         DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        longNameLabel.textProperty().bind(viewModel.longNameProperty());
+        longNameLabel.setViewModel(viewModel);
+        longNameLabel.textProperty().bindBidirectional(viewModel.longNameProperty());
+        longNameLabel.getEditField().textProperty().bindBidirectional(viewModel.longNameProperty());
+        longNameLabel.doneButton().disableProperty().bind(viewModel.allValidation().validProperty().not());
+
         goalLabel.textProperty().bind(viewModel.goalProperty());
         startDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             if (viewModel.startDateProperty().get() != null) {
