@@ -249,7 +249,7 @@ public class SprintViewModel implements ViewModel {
                 changes.add(new UpdateListCommand<>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
 
-            sprintProperty.get().getStories().stream().filter(s -> stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
+            sprintProperty.get().getStories().stream().filter(s -> !stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
 
             stories.forEach(s -> {
                 changes.add(new EditCommand<>(s, "inSprint", true));
