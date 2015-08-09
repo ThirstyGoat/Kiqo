@@ -175,4 +175,30 @@ public class SprintFormViewModelTest {
         viewModel.releaseProperty().set(null);
         Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
     }
+
+    @Test
+    public void existingSprint_EditingGoalNameToBeSameAsSelfTest() {
+        // Test that a goal having the same shortName does not cause goalValidation to be invalid.
+        Sprint sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
+                LocalDate.now().minusDays(11), LocalDate.now().minusDays(5), new ArrayList<>());
+        CreateSprintCommand command = new CreateSprintCommand(sprint);
+        command.execute();
+
+        viewModel.load(null, organisation);
+        viewModel.goalProperty().set("sprintGoal");
+        Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
+
+        viewModel.releaseProperty().set(release);
+        Assert.assertFalse("The sprint shortname should NOT be valid when a release is selected that contains a sprint" +
+                " with the same shortname", viewModel.goalValidation().isValid());
+
+        viewModel.releaseProperty().set(null);
+        Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
+
+        SprintFormViewModel editingViewModel = new SprintFormViewModel();
+        editingViewModel.load(sprint, organisation);
+        viewModel.goalProperty().set("sprintGoal");
+        Assert.assertTrue("Editing the sprint allow the shortName to be set to the same as itself",
+                editingViewModel.goalValidation().isValid());
+    }
 }

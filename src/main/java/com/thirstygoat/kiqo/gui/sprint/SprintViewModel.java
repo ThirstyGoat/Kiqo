@@ -55,7 +55,10 @@ public class SprintViewModel implements ViewModel {
                     }
                     for (Sprint sprint : releaseProperty().get().getSprints()) {
                         if (sprint.getShortName().equals(goalProperty().get())) {
-                            return false;
+                            if (!sprint.equals(sprintProperty().get())) {
+                                // Checks sprint with same short name isn't itself
+                                return false;
+                            }
                         }
                     }
                     return true;
