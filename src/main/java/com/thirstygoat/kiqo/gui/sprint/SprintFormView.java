@@ -12,7 +12,10 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -45,6 +48,8 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
     private Button okButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Hyperlink whyHyperlink;
 
     @InjectViewModel
     private SprintFormViewModel viewModel;
@@ -126,6 +131,25 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
             goalTextField.requestFocus();
             // do this in here to ensure textFields definitely exist
             attachValidators();
+        });
+
+        setWhyHyperLink();
+    }
+
+    private void setWhyHyperLink() {
+        Label label = new Label();
+        label.setText("Only stories that are marked as ready can be added to a sprint.");
+        label.setPadding(new Insets(10, 10, 10, 10));
+        PopOver readyWhyPopOver = new PopOver(label);
+        readyWhyPopOver.setDetachable(false);
+
+        whyHyperlink.setOnAction((e) -> {
+            readyWhyPopOver.show(whyHyperlink);
+        });
+        whyHyperlink.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide(Duration.millis(0));
+            }
         });
     }
 

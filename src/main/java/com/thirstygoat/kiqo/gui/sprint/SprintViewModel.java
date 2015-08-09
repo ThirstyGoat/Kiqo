@@ -12,6 +12,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -34,7 +35,8 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     private ModelWrapper<Sprint> sprintWrapper = new ModelWrapper<>();
-    private Boolean newSprint;
+
+    private ListChangeListener<Story> storyListener = c -> stories().setAll(sprintWrapper.get().getStories());
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
@@ -168,8 +170,11 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
-            stories().clear();
-            stories().addAll(sprint.getStories());
+            if (sprintWrapper.get() != null) {
+                sprintWrapper.get().getStories().removeListener(storyListener);
+            }
+            sprintWrapper.get().getStories().addListener(storyListener);
+            stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
             sprintWrapper.reset();
@@ -241,7 +246,7 @@ public class SprintViewModel implements ViewModel {
             }
             if (!(stories.containsAll(sprintProperty.get().getStories())
                     && sprintProperty.get().getStories().containsAll(stories()))) {
-                changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
+                changes.add(new UpdateListCommand<>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
 
             sprintProperty.get().getStories().stream().filter(s -> stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
