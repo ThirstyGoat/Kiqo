@@ -80,7 +80,7 @@ Kiqo is an agile project management tool. Like its namesake, New Zealand's most 
      or by right clicking on the item and selecting edit.
     \item All items can be deleted using \keys{\ctrl + D} or by right clicking on the item and selecting delete.
     \item To save use either \menu{File > Save} or \keys{\ctrl + S}.
-    \item To load an existing .json file use either \menu{File > Load} or \keys{\ctrl + O} and select the file using the file chooser.
+    \item To load an existing {\tt .json} file use either \menu{File > Load} or \keys{\ctrl + O} and select the file using the file chooser.
     \item Undo an action using either \menu{Edit > Undo} or \keys{\ctrl + Z}.
     \item Redo an action using either \menu{Edit > Redo} or \keys{\ctrl + \shift + Z}.
     \item To revert to the last save point use \menu{File > Revert}.
@@ -110,6 +110,7 @@ There are three ways of changing the view to show relevant information.
 \item Details pane - The details pane displays more information about the selected item.
 \item Status bar - The status bar indicates whether there are any unsaved changes.
 \item Toolbar - The toolbar provides quick access to common tasks.
+   The toolbar is hidden by default. There are two ways to make it visible:
     \begin{itemize}
       \item From the menu bar, use \menu{View > Toolbar} and select the item.
       \item By using the keyboard shortcuts \keys{\ctrl + /}
@@ -124,13 +125,13 @@ There are three ways of changing the view to show relevant information.
 \section{Organisation}
 An organisation is the root element of the hierarchy. An organisation contains projects, teams, people, skills, backlogs and stories.
 A new organisation is automatically loaded when Kiqo is initially opened. An existing organisation can also be loaded
-from a .json file. To create a new organisation use \menu{File > New > Organisation}. An organisation can be saved using
+from a {\tt .json} file. To create a new organisation use \menu{File > New > Organisation}. An organisation can be saved using
 either \menu{File > Save} or \keys{ctrl + S}.
 
 \section{Projects \& Releases}
 \subsection{Create a project}
     \begin{itemize}
-        \item From the menu bar, use \menu{File > New... > Project}.
+        \item From the menu bar, use \menu{File > New > Project}.
         \item Use the keyboard shortcut \keys{\ctrl + N}.
     \end{itemize}
     You will then be prompted to enter the details of the new project.
@@ -143,11 +144,19 @@ either \menu{File > Save} or \keys{ctrl + S}.
 
 \subsection{Create a Release}
     \begin{itemize}
-        \item To create a release use \menu{File > New... > Release}.
+        \item To create a release use \menu{File > New > Release}.
         \item Use the keyboard shortcut \keys{\ctrl + R}.
     \end{itemize}
     The release will be added to the project selected in the creation dialog.
     The releases for a project can be found under the projects releases heading in the tree view.
+
+\section{Sprints}
+  \begin{itemize}
+    \item To create a sprint use \menu{File > New > Sprint}.
+    \item Use keyboard shortcut \keys{\ctrl + I}.
+  \end{itemize}
+  You must a backlog, release, and team before creating a sprint.
+  A sprints end date must come before the end date of the release with which it is associated.
 
 \section{People \& Skills}
 \subsection{People}
@@ -155,8 +164,9 @@ A person can be created, saved and edited in the same way as a project.
 \subsection{Skills}
 There are two important skills which cannot be modified: 
 \begin{itemize}
-  \item The Product Owner (PO) skill
-  \item The Scrum Master (SM) skill
+  \item The Product Owner (PO) skill.
+    This skill is required by a person in order for them to be the owner of a backlog. 
+  \item The Scrum Master (SM) skill.
 \end{itemize}
 New skills can be created, edited and deleted.
 \begin{itemize}
