@@ -112,7 +112,7 @@ public class ReleaseFormController extends FormController<Release> {
 
 
         validationSupport.registerValidator(releaseDatePicker,
-                Validator.createPredicateValidator(dateValidation, "Release date must set and after all sprint end dates"));
+                Validator.createPredicateValidator(dateValidation, "Release date must not be empty, and must fall after any sprint within."));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
