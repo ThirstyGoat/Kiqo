@@ -47,10 +47,6 @@ public class GoatLabel<T extends Item> extends Control {
         doneButton.setOnAction(event -> {
             skin.showDisplay();
 
-            displayLabel.textProperty().unbind();
-            displayLabel.setText(editField.getText());
-            displayLabel.textProperty().bind(currentVal);
-
             if (!editField.getText().equals(currentVal.get())) {
                 command = new EditCommand<>(item, fieldName, editField.getText());
                 UndoManager.getUndoManager().doCommand(command);
@@ -61,10 +57,6 @@ public class GoatLabel<T extends Item> extends Control {
             if (event.getCode() == KeyCode.ENTER) {
                 event.consume();
                 skin.showDisplay();
-
-                displayLabel.textProperty().unbind();
-                displayLabel.setText(editField.getText());
-                displayLabel.textProperty().bind(currentVal);
 
                 if (!editField.getText().equals(currentVal.get())) {
                     command = new EditCommand<>(item, fieldName, editField.getText());

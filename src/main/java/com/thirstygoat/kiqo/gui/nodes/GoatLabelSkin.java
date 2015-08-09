@@ -25,6 +25,7 @@ public class GoatLabelSkin extends SkinBase<Control> {
     private Button doneButton;
 
     private HBox mainView;
+    private StackPane stackPane;
     private HBox displayView;
     private HBox editView;
 
@@ -42,6 +43,25 @@ public class GoatLabelSkin extends SkinBase<Control> {
         editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue && !doneButton.isFocused()) {
                 showDisplay();
+            }
+        });
+
+        editField.setMinHeight(5);
+        editField.setMaxHeight(5);
+        editView.setMinHeight(5);
+        editView.setMaxHeight(5);
+
+        displayView.visibleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                editField.setMinHeight(5);
+                editField.setMaxHeight(5);
+                editView.setMinHeight(5);
+                editView.setMaxHeight(5);
+            } else {
+                editField.setMinHeight(Control.USE_COMPUTED_SIZE);
+                editField.setMaxHeight(Control.USE_COMPUTED_SIZE);
+                editView.setMinHeight(Control.USE_COMPUTED_SIZE);
+                editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
             }
         });
     }
@@ -97,7 +117,7 @@ public class GoatLabelSkin extends SkinBase<Control> {
         editView.getChildren().add(doneButton);
 
         HBox hBox = new HBox();
-        StackPane stackPane = new StackPane();
+        stackPane = new StackPane();
 
         stackPane.getChildren().add(displayView);
         stackPane.getChildren().add(editView);
@@ -154,5 +174,14 @@ public class GoatLabelSkin extends SkinBase<Control> {
 
     public void setValidator() {
 
+    }
+
+    public void showDebuglines() {
+        mainView.setStyle("-fx-border-color: black;");
+        displayView.setStyle("-fx-border-color: red;");
+        displayLabel.setStyle("-fx-border-color: green;");
+        editField.setStyle("-fx-border-color: blue;");
+        editView.setStyle("-fx-border-color: pink;");
+        stackPane.setStyle("-fx-border-color: mediumaquamarine;");
     }
 }
