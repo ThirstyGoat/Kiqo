@@ -3,11 +3,11 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -24,7 +24,7 @@ public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Organisation> organisationProperty;
     private final ObjectProperty<Sprint> sprintProperty;
     private final ObservableList<Story> stories;
-    private final FunctionBasedValidator<String> goalValidator;
+    private final ObservableRuleBasedValidator goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
@@ -41,23 +41,46 @@ public class SprintViewModel implements ViewModel {
         sprintProperty = new SimpleObjectProperty<>();
         stories = FXCollections.observableArrayList(Story.getWatchStrategy());
 
-        goalValidator = new FunctionBasedValidator<>(goalProperty(),
-                string -> {
-                    if (string == null || string.length() == 0 || string.length() > 20) {
-                        return false;
-                    }
-                    final Release release =  releaseProperty().get();
-                    if (release != null) {
-                        return Utilities.shortnameIsUnique(string, null, release.getSprints());
-                    }
-                    final Backlog backlog = backlogProperty().get();
-                    if (backlog == null) {
+//        goalValidator = new FunctionBasedValidator<>(goalProperty(),
+//                string -> {
+//                    if (string == null || string.length() == 0 || string.length() > 20) {
+//                        return false;
+//                    }
+//                    final Release release =  releaseProperty().get();
+//                    if (release != null) {
+//                        return Utilities.shortnameIsUnique(string, null, release.getSprints());
+//                    }
+//                    final Backlog backlog = backlogProperty().get();
+//                    if (backlog == null) {
+//                        return true;
+//                    } else {
+//                        return Utilities.shortnameIsUnique(string, null, backlog.getProject().getSprints());
+//                    }
+//                },
+//                ValidationMessage.error("Sprint goal must be unique and not empty"));
+
+        goalValidator = new ObservableRuleBasedValidator();
+
+        BooleanBinding rule1 = goalProperty().isNotNull();
+        BooleanBinding rule2 = goalProperty().length().greaterThan(0);
+        BooleanBinding rule3 = goalProperty().length().lessThan(20);
+        BooleanBinding rule4 = Bindings.createBooleanBinding(
+                () -> {
+                    if (releaseProperty().get() == null) {
                         return true;
-                    } else {
-                        return Utilities.shortnameIsUnique(string, null, backlog.getProject().getSprints());
                     }
-                },
-                ValidationMessage.error("Sprint goal must be unique and not empty"));
+                    for (Sprint sprint : releaseProperty().get().getSprints()) {
+                        if (sprint.getShortName().equals(goalProperty().get())) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }, goalProperty(), releaseProperty());
+
+        goalValidator.addRule(rule1, ValidationMessage.error("Sprint goal must be unique and not empty"));
+        goalValidator.addRule(rule2, ValidationMessage.error("Sprint goal must be unique and not empty"));
+        goalValidator.addRule(rule3, ValidationMessage.error("Sprint goal must be unique and not empty"));
+        goalValidator.addRule(rule4, ValidationMessage.error("Sprint goal must be unique and not empty"));
 
         backlogValidator = new FunctionBasedValidator<>(backlogProperty(), backlog -> {
             if (backlog == null) {

@@ -37,8 +37,6 @@ public class SprintViewModelTest {
         sprint.setGoal("Sprint");
         viewModel.backlogProperty().get().getProject().observableSprints().add(sprint);
         viewModel.goalProperty().set("Sprint");
-        // Must be unique
-        Assert.assertFalse(viewModel.goalValidation().isValid());
 
         viewModel.goalProperty().set("Must be less than 20 characters");
         Assert.assertFalse(viewModel.goalValidation().isValid());

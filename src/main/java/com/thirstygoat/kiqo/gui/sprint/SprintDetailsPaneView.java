@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +26,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @InjectViewModel
     private SprintDetailsPaneViewModel viewModel;
 
+    @FXML
+    private AnchorPane anchorPane;
     @FXML
     private Label longNameLabel;
     @FXML
@@ -49,6 +52,10 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        anchorPane.focusedProperty().addListener(observable -> {
+            viewModel.reload();
+        });
 
         longNameLabel.textProperty().bind(viewModel.longNameProperty());
         goalLabel.textProperty().bind(viewModel.goalProperty());

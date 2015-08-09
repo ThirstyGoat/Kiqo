@@ -1,8 +1,11 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 
@@ -15,12 +18,6 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
     private final ListChangeListener<Story> listChangeListener;
 
     public SprintDetailsPaneViewModel() {
-        super();
-        sprintProperty().addListener((observable -> {
-            // Listen for changes on the model.
-            // If the model changes reload the ViewModel so that it displays the updated info.
-            super.reload();
-        }));
         listChangeListener = change -> {
             change.next();
             stories().setAll(change.getList());

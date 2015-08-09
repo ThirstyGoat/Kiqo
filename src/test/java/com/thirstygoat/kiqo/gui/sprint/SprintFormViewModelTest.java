@@ -155,4 +155,24 @@ public class SprintFormViewModelTest {
         Assert.assertTrue("Description should be empty string",
                 newViewModel.descriptionProperty().get() == "");
     }
+
+    @Test
+    public void newSprint_GoalTest() {
+        // Test that if optional fields are left blank that they are set to some sane default value rather than null
+        Sprint sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
+                LocalDate.now().minusDays(11), LocalDate.now().minusDays(5), new ArrayList<>());
+        CreateSprintCommand command = new CreateSprintCommand(sprint);
+        command.execute();
+
+        viewModel.load(null, organisation);
+        viewModel.goalProperty().set("sprintGoal");
+        Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
+
+        viewModel.releaseProperty().set(release);
+        Assert.assertFalse("The sprint shortname should NOT be valid when a release is selected that contains a sprint" +
+                " with the same shortname", viewModel.goalValidation().isValid());
+
+        viewModel.releaseProperty().set(null);
+        Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
+    }
 }

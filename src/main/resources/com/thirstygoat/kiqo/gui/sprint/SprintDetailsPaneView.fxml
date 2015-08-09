@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView" prefHeight="713.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane fx:id="anchorPane" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView" prefHeight="713.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <ScrollPane id="ScrollPane" fitToWidth="true" prefViewportHeight="0.0" prefViewportWidth="0.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
