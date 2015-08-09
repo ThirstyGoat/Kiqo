@@ -57,7 +57,7 @@ public class SprintFormViewModelTest {
         viewModel.goalProperty().set("goalShortName");
         viewModel.longNameProperty().set("goalLongName");
         viewModel.backlogProperty().set(backlog);
-        viewModel.descriptionProperty().set("goalDescription");
+        // viewModel.descriptionProperty().set("goalDescription"); // Description is optional
         viewModel.releaseProperty().set(release);
         viewModel.startDateProperty().set(LocalDate.now().minusDays(11));
         viewModel.endDateProperty().set(LocalDate.now().minusDays(5));
@@ -139,5 +139,20 @@ public class SprintFormViewModelTest {
         command.execute();
         Assert.assertTrue("Sprint should now have story",
                 sprint.getStories().contains(readyStory));
+    }
+
+    @Test
+    public void newSprint_OptionalFieldNullTest() {
+        // Test that if optional fields are left blank that they are set to some sane default value rather than null
+        viewModel.load(null, organisation);
+        populateFields(viewModel);
+        viewModel.createCommand().execute();
+        Sprint newSprint = viewModel.sprintProperty().get();
+        SprintFormViewModel newViewModel = new SprintFormViewModel();
+        newViewModel.load(newSprint, organisation);
+        Assert.assertFalse("Description should not be null",
+                newViewModel.descriptionProperty().get() == null);
+        Assert.assertTrue("Description should be empty string",
+                newViewModel.descriptionProperty().get() == "");
     }
 }

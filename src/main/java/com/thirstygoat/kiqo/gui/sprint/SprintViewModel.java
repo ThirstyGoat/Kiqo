@@ -160,8 +160,8 @@ public class SprintViewModel implements ViewModel {
             stories().addAll(sprint.getStories());
         } else {
             sprintWrapper.set(new Sprint());
-            sprintWrapper.commit();
             sprintWrapper.reset();
+            sprintWrapper.commit();
             stories().clear();
         }
         sprintWrapper.reload();
