@@ -32,7 +32,7 @@ public class Story extends Item {
     private final BooleanProperty isReady;
     private final ObservableList<Task> tasks;
     private final FloatProperty taskHours;
-    private final SimpleBooleanProperty inSprint;
+    private final BooleanProperty inSprint;
     /**
      * no-arg constructor for JavaBeans compliance
      */

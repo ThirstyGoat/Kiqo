@@ -41,24 +41,6 @@ public class SprintViewModel implements ViewModel {
         sprintProperty = new SimpleObjectProperty<>();
         stories = FXCollections.observableArrayList(Story.getWatchStrategy());
 
-//        goalValidator = new FunctionBasedValidator<>(goalProperty(),
-//                string -> {
-//                    if (string == null || string.length() == 0 || string.length() > 20) {
-//                        return false;
-//                    }
-//                    final Release release =  releaseProperty().get();
-//                    if (release != null) {
-//                        return Utilities.shortnameIsUnique(string, null, release.getSprints());
-//                    }
-//                    final Backlog backlog = backlogProperty().get();
-//                    if (backlog == null) {
-//                        return true;
-//                    } else {
-//                        return Utilities.shortnameIsUnique(string, null, backlog.getProject().getSprints());
-//                    }
-//                },
-//                ValidationMessage.error("Sprint goal must be unique and not empty"));
-
         goalValidator = new ObservableRuleBasedValidator();
 
         BooleanBinding rule1 = goalProperty().isNotNull();
@@ -259,9 +241,13 @@ public class SprintViewModel implements ViewModel {
                 changes.add(new UpdateListCommand<Story>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
 
+            sprintProperty.get().getStories().stream().filter(s -> stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
+
             stories.forEach(s -> {
                 changes.add(new EditCommand<>(s, "inSprint", true));
             });
+
+
 
             if (!changes.isEmpty()) {
                 command = new CompoundCommand("Edit Sprint", changes);
