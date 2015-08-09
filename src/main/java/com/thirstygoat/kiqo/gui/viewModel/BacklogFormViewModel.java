@@ -31,7 +31,6 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     private Command command;
     private boolean valid = false;
 
-
     private StringProperty shortNameProperty = new SimpleStringProperty("");
     private StringProperty longNameProperty = new SimpleStringProperty("");
     private StringProperty descriptionProperty = new SimpleStringProperty("");
@@ -40,7 +39,6 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
     private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
-
 
     public BacklogFormViewModel() {
     }
@@ -149,11 +147,15 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     private void setStoryListProperties() {
         if (projectProperty.get() != null) {
-            sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
+            ObservableList<Story> sourceStories = FXCollections.observableArrayList();
+            ObservableList<Story> targetStories = FXCollections.observableArrayList();
+            sourceStories.addAll(projectProperty.get().observableUnallocatedStories());
             if (backlog != null) {
-                sourceStoriesProperty.get().removeAll(backlog.getStories());
-                targetStoriesProperty.get().addAll(backlog.getStories());
+                sourceStories.removeAll(backlog.getStories());
+                targetStories.addAll(backlog.observableStories());
             }
+            sourceStoriesProperty().set(sourceStories);
+            targetStoriesProperty().set(targetStories);
         }
     }
 
@@ -306,6 +308,4 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
-
-
 }

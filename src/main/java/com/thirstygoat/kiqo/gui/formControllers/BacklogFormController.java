@@ -91,8 +91,13 @@ public class BacklogFormController extends FormController<Backlog> {
         storySelectionView.setSourceItems(viewModel.sourceStoriesProperty().get());
         storySelectionView.setTargetItems(viewModel.targetStoriesProperty().get());
 
-        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.sourceStoriesProperty());
-        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.targetStoriesProperty());
+        viewModel.sourceStoriesProperty().addListener((observable, oldValue, newValue) -> {
+            storySelectionView.setSourceItems(newValue);
+        });
+
+        viewModel.targetStoriesProperty().addListener((observable, oldValue, newValue) -> {
+            storySelectionView.setTargetItems(newValue);
+        });
     }
 
     private void setValidationSupport() {
