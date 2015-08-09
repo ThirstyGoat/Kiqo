@@ -1,13 +1,10 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.IFormViewModel;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.StringConverters;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,25 +19,18 @@ import java.util.stream.Collectors;
  */
 public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
     
-    private final StringProperty backlogShortNameProperty;
-    private final StringProperty teamShortNameProperty;
-    private final StringProperty releaseShortNameProperty;
     private final ObservableList<Story> sourceStories;
     private final BooleanProperty releaseEditableProperty;
     
-    private boolean cancelled;
     private Runnable exitStrategy;
     
     public SprintFormViewModel() {
         super();
-        backlogShortNameProperty = new SimpleStringProperty("");
-        teamShortNameProperty = new SimpleStringProperty("");
-        releaseShortNameProperty = new SimpleStringProperty("");
         sourceStories = FXCollections.observableArrayList(Story.getWatchStrategy());
         releaseEditableProperty = new SimpleBooleanProperty(false);
         
         backlogProperty().addListener((observable, oldValue, newValue) -> {
-            loadGoatLists(sprint);
+            loadGoatLists(super.sprintProperty().get());
         });
     }
 
@@ -71,41 +61,15 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
-        this.organisation = organisation;
-        this.sprint = sprint;
+        super.load(sprint, organisation);
 
-        // do after binding backlog name
-        bindStringProperties(organisation);
-        
-        if (sprint != null) {
-            goalProperty().set(sprint.getShortName());
-            longNameProperty().set(sprint.getLongName());
-            descriptionProperty().set(sprint.getDescription());
-            backlogProperty().set(sprint.getBacklog());
-            startDateProperty().set(sprint.getStartDate());
-            endDateProperty().set(sprint.getEndDate());
-            teamProperty().set(sprint.getTeam());
-            releaseProperty().set(sprint.getRelease());
+        if (backlogProperty().get() != null) {
             sourceStories.clear();
             sourceStories.addAll(backlogProperty().get().getStories().stream()
                     .filter(story -> story.getIsReady() && !stories().contains(story)).collect(Collectors.toList()));
-
-            stories().clear();
-            stories().addAll(sprint.getStories());
-            
             releaseEditableProperty.set(false);
         } else {
-            goalProperty().set("");
-            longNameProperty().set("");
-            descriptionProperty().set("");
-            backlogProperty().set(null);
-            startDateProperty().set(null);
-            endDateProperty().set(null);
-            teamProperty().set(null);
-            releaseProperty().set(null);
             stories().clear();
-
-            
             releaseEditableProperty.set(true);
         }
     }
@@ -124,67 +88,24 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         }
     }
 
-    /**
-     * The StringConverters must always be bound with the current organisation.
-     * @param organisation
-     */
-    private void bindStringProperties(Organisation organisation) {
-        backlogShortNameProperty.unbindBidirectional(backlogProperty());
-        teamShortNameProperty.unbindBidirectional(teamProperty());
-        releaseShortNameProperty.unbindBidirectional(releaseProperty());
-        
-        if (organisation != null) {
-            backlogShortNameProperty.bindBidirectional(backlogProperty(),
-                    StringConverters.backlogStringConverter(organisation));
-            teamShortNameProperty.bindBidirectional(teamProperty(),
-                    StringConverters.teamStringConverter(organisation));
-            releaseShortNameProperty.bindBidirectional(releaseProperty(),
-                    StringConverters.releaseStringConverter(organisation));
-        }
-
-    }
-
     @Override
     public void setExitStrategy(Runnable exitStrategy) {
         this.exitStrategy = exitStrategy;
     }
 
-    @Override
-    public Command createCommand() {
-        if (cancelled) {
-            return null;
-        } else {
-            return super.createCommand(); // null if no changes
-        }
-    }
-    
     protected void okAction() {
-        cancelled = false;
         exitStrategy.run();
     }
 
     protected void cancelAction() {
-        cancelled = true;
         exitStrategy.run();
-    }
-
-    protected StringProperty backlogShortNameProperty() {
-        return backlogShortNameProperty;
-    }
-
-    protected StringProperty teamShortNameProperty() {
-        return teamShortNameProperty;
-    }
-
-    protected StringProperty releaseShortNameProperty() {
-        return releaseShortNameProperty;
     }
 
     protected Supplier<List<Backlog>> getBacklogsSupplier() {
         return () -> {
             List<Backlog> list = new ArrayList<>();
-            if (organisation != null) {
-                organisation.getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
+            if (organisationProperty() != null) {
+                organisationProperty().get().getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
             }
             return list;
         };
@@ -192,8 +113,8 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
 
     protected Supplier<List<Team>> getTeamsSupplier() {
         return () -> {
-            if (organisation != null) {
-                return organisation.getTeams();
+            if (organisationProperty().get() != null) {
+                return organisationProperty().get().getTeams();
             } else {
                 return new ArrayList<>();
             }
@@ -203,8 +124,8 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     protected Supplier<List<Release>> getReleasesSupplier() {
         return () -> {
             List<Release> list = new ArrayList<>();
-            if (organisation != null) {
-                organisation.getProjects().forEach((project) -> list.addAll(project.getReleases()));
+            if (organisationProperty().get() != null) {
+                organisationProperty().get().getProjects().forEach((project) -> list.addAll(project.getReleases()));
             }
             return list;
         };

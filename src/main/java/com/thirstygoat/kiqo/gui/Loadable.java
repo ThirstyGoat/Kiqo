@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.gui.sprint;
+package com.thirstygoat.kiqo.gui;
 
 import com.thirstygoat.kiqo.model.Organisation;
 
