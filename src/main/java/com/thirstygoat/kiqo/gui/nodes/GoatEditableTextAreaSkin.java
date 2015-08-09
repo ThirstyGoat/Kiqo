@@ -26,6 +26,7 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
     private Button doneButton;
 
     private HBox mainView;
+    private StackPane stackPane;
     private HBox displayView;
     private HBox editView;
 
@@ -45,135 +46,72 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
                 showDisplay();
             }
         });
-    }
 
-    private HBox createMainView() {
 
-        displayView = new HBox();
-        displayView.setVisible(true);
-
-        displayLabel = new Label();
-        displayLabel.setWrapText(true);
-
-        editButton = new Button();
-        FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
-        pencilIcon.setStyle("-fx-fill: grey");
-        editButton.setGraphic(pencilIcon);
-        editButton.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-padding: 0px;" +
-                        "-fx-animated: true;"
-        );
-
-        // Make the edit button fade on hover
-        final FadeTransition fade = new FadeTransition(Duration.millis(400), editButton);
-        fade.setAutoReverse(true);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        editButton.visibleProperty().bind(displayView.hoverProperty());
-        displayView.hoverProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                fade.setCycleCount(1);
-                fade.playFromStart();
-            } else {
-                fade.setCycleCount(2);
-                fade.playFrom(Duration.millis(400));
-            }
-        });
-
-        displayView.getChildren().add(displayLabel);
-        displayView.getChildren().add(editButton);
-
-        editView = new HBox();
-        editView.setVisible(false);
-
-        editField = new TextArea();
-        editField.setWrapText(true);
-
-        doneButton = new Button();
-        FontAwesomeIconView doneIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
-        doneIcon.setStyle("-fx-fill: green");
-        doneButton.setGraphic(doneIcon);
-
-        editView.getChildren().add(editField);
-        editView.getChildren().add(doneButton);
-
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(displayView);
-        stackPane.getChildren().add(editView);
-
-        HBox hBox = new HBox();
-        hBox.getChildren().add(stackPane);
-
-        /* START LAYOUT */
-        displayView.setSpacing(5);
-        displayLabel.maxWidthProperty().bind(hBox.widthProperty());
-        displayView.minHeightProperty().bind(displayLabel.heightProperty());
-        displayView.setMaxHeight(Control.USE_PREF_SIZE);
-        displayView.setMaxWidth(Control.USE_PREF_SIZE);
-        stackPane.setAlignment(Pos.TOP_LEFT);
-        //
-
-        /* Complete wizardry, do not ask questions */
         editField.setMinHeight(5);
         editField.setMaxHeight(5);
         editView.setMinHeight(5);
         editView.setMaxHeight(5);
 
-//        stackPane.prefHeightProperty().bind(displayLabel.heightProperty());
+        displayLabel.maxWidthProperty().bind(mainView.widthProperty());
+        displayView.setMaxWidth(Control.USE_PREF_SIZE);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+
         displayView.visibleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                System.out.println("a");
-                System.out.println(displayLabel.getHeight());
                 editField.setMinHeight(5);
                 editField.setMaxHeight(5);
                 editView.setMinHeight(5);
                 editView.setMaxHeight(5);
-                stackPane.prefHeightProperty().unbind();
-                stackPane.setPrefHeight(Control.USE_COMPUTED_SIZE);
             } else {
-                System.out.println("a*");
-                stackPane.prefHeightProperty().unbind();
-                stackPane.setPrefHeight(Control.USE_COMPUTED_SIZE);
-                editField.setMinHeight(Control.USE_COMPUTED_SIZE);
+                editField.setMinHeight(Control.USE_PREF_SIZE);
                 editField.setMaxHeight(Control.USE_PREF_SIZE);
-                editView.setMinHeight(Control.USE_COMPUTED_SIZE);
-                editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
                 editField.setPrefRowCount(3);
+                editView.setMinHeight(Control.USE_PREF_SIZE);
+                editView.setMaxHeight(Control.USE_PREF_SIZE);
             }
-
         });
 
-        final int[] i = {0};
+
+
+        //TODO remove
+        displayView.setStyle("-fx-border-color: red");
+        stackPane.setStyle("-fx-border-color: black");
+        displayLabel.setStyle("-fx-border-color: pink");
+        editView.setStyle("-fx-border-color: blue");
+        mainView.setStyle("-fx-border-color: forestgreen");
+    }
+
+    public void something() {
         displayLabel.heightProperty().addListener((observable, oldValue, newValue) -> {
-            if (i[0] > 0) {
-                System.out.println("b");
-                stackPane.prefHeightProperty().bind(displayLabel.heightProperty());
-            }
-            i[0]++;
+            System.out.println(newValue);
         });
-
-        /* End of complete wizardry */
-
-        displayLabel.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(displayLabel.getHeight());
-            showEdit();
-            showDisplay();
-        });
+    }
 
 
 
+    private HBox createMainView() {
 
+        displayView = new HBox();
+        displayView.setVisible(true);
+        displayView.setSpacing(5);
+        displayLabel = new Label();
+        displayLabel.setWrapText(true);
+        editButton = makeEditButton();
+        displayView.getChildren().addAll(displayLabel, editButton);
 
+        editView = new HBox();
+        editView.setVisible(false);
+        editField = new TextArea();
+        editField.setWrapText(true);
+        doneButton = makeDoneButton();
+        editView.getChildren().addAll(editField, doneButton);
 
+        stackPane = new StackPane();
+        stackPane.getChildren().addAll(displayView, editView);
 
-
-
-//        displayView.setStyle("-fx-border-color: red");
-//        stackPane.setStyle("-fx-border-color: black");
-//        displayLabel.setStyle("-fx-border-color: pink");
-//        editView.setStyle("-fx-border-color: blue");
-//        hBox.setStyle("-fx-border-color: forestgreen");
+        HBox hBox = new HBox();
+        hBox.getChildren().add(stackPane);
 
         return hBox;
     }
@@ -212,7 +150,39 @@ public class GoatEditableTextAreaSkin extends SkinBase<Control> {
         editView.setVisible(false);
     }
 
-    public void setValidator() {
+    private Button makeDoneButton() {
+        Button button = new Button();
+        FontAwesomeIconView doneIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
+        doneIcon.setStyle("-fx-fill: green");
+        button.setGraphic(doneIcon);
+        return button;
+    }
 
+    private Button makeEditButton() {
+        Button button = new Button();
+        FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
+        pencilIcon.setStyle("-fx-fill: grey");
+        button.setGraphic(pencilIcon);
+        button.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-padding: 0px;" +
+                        "-fx-animated: true;"
+        );
+        // Make the edit button fade on hover
+        final FadeTransition fade = new FadeTransition(Duration.millis(400), button);
+        fade.setAutoReverse(true);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        button.visibleProperty().bind(displayView.hoverProperty());
+        displayView.hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                fade.setCycleCount(1);
+                fade.playFromStart();
+            } else {
+                fade.setCycleCount(2);
+                fade.playFrom(Duration.millis(400));
+            }
+        });
+        return button;
     }
 }
