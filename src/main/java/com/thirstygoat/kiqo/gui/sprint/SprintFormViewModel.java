@@ -98,6 +98,7 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     }
 
     protected void cancelAction() {
+        sprintProperty().set(null); // Potential hack way to ensure no command is made when the user cancels the dialog
         exitStrategy.run();
     }
 

@@ -100,14 +100,14 @@ public class ReleaseFormController extends FormController<Release> {
         final Predicate<LocalDate> dateValidation = d -> {
             if (d == null) {
                 return false;
-            } else {
+            } else if (release != null) {
                 for (Sprint sprint : release.getSprints()) {
                     if (d.isBefore(sprint.getEndDate())) {
                         return false;
                     }
                 }
-                return true;
             }
+                return true;
         };
 
 
