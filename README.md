@@ -11,7 +11,7 @@ The program can be run by opening the appropriate executable located within the 
 The program can also be executed by opening the .jar file included.
 Alternatively the .jar file can be executed from the command line using the following command:
 
-	java -jar Kiqo-3.0.jar
+	java -jar Kiqo-5.0.jar
 
 
 Building from Source
