@@ -28,7 +28,7 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     private final ObservableList<Story> sourceStories;
     private final BooleanProperty releaseEditableProperty;
     
-    private boolean cancelled;
+    private boolean ok = false;
     private Runnable exitStrategy;
     
     public SprintFormViewModel() {
@@ -151,20 +151,20 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
 
     @Override
     public Command createCommand() {
-        if (cancelled) {
-            return null;
-        } else {
+        if (ok) {
             return super.createCommand(); // null if no changes
+        } else {
+            return null;
         }
     }
     
     protected void okAction() {
-        cancelled = false;
+        ok = true;
         exitStrategy.run();
     }
 
     protected void cancelAction() {
-        cancelled = true;
+//        ok = false;
         exitStrategy.run();
     }
 

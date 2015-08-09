@@ -83,7 +83,13 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 if (viewModel.releaseProperty().get() != null) {
-                    if (item.isAfter(viewModel.releaseProperty().get().getDate()) || item.isAfter(viewModel.endDateProperty().get().minusDays(1))) {
+                    if (endDatePicker.getValue() != null) {
+                        if (item.isAfter(endDatePicker.getValue().minusDays(1))) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                    if (item.isAfter(viewModel.releaseProperty().get().getDate())) {
                         setDisable(true);
                         setStyle("-fx-background-color: #ffc0cb;");
                     }
@@ -97,6 +103,12 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
                 super.updateItem(item, empty);
                 if (viewModel.releaseProperty().get() != null) {
                     if (item.isAfter(viewModel.releaseProperty().get().getDate())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    }
+                }
+                if (startDatePicker.getValue() != null) {
+                    if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
                         setDisable(true);
                         setStyle("-fx-background-color: #ffc0cb;");
                     }
