@@ -38,13 +38,13 @@ while getopts ":GM" opt; do
 done
 
 if [[ $DO_GIT_MASTER_PULL -gt 0 ]]; then
-  echo "\ngit checkout master"
+  echo "git checkout master"
   git checkout master
-  echo "\ngit pull"
+  echo "git pull"
   git pull
 fi
 if [[ $DO_MAVEN_BUILD -gt 0 ]]; then
-  echo "\nmvn clean package site"
+  echo "mvn clean package site"
   mvn clean package site
 fi
 
@@ -56,7 +56,7 @@ mkdir $OUT_DIRECTORY
 echo "\nREADME.md" # - A readme that describes how to run your program and any information that you think is relevant
 cp $GIT_REPO/README* $OUT_DIRECTORY
 
-echo "\nsource.zip" # - An archive of your source code
+echo "source.zip" # - An archive of your source code
 (cd $GIT_REPO; git archive --format zip --output $OUT_DIRECTORY/source.zip HEAD)
 
 echo "\nprogram/" # - Your jar file and any other resources it needs
@@ -66,7 +66,7 @@ cp $GIT_REPO/target/*.jar $OUT_DIRECTORY/program # TODO don't copy unshaded jar
 cp -r $GIT_REPO/target/deploy/* $OUT_DIRECTORY/program
 chmod +x $OUT_DIRECTORY/program/*.sh
 
-echo "\nmanual_test_plans/" # - Any manual test plans you executed
+echo "manual_test_plans/" # - Any manual test plans you executed
 mkdir $OUT_DIRECTORY/manual_test_plans
 DB_NAME=akm96
 DB_USER=akm96
@@ -77,15 +77,15 @@ mysql --host=mysql.cosc.canterbury.ac.nz --user=$DB_USER --password=$DB_PASS $DB
 # html table
 mysql --host=mysql.cosc.canterbury.ac.nz --user=$DB_USER --password=$DB_PASS $DB_NAME --column-names --batch --html <<< $sql_query > $OUT_DIRECTORY/manual_test_plans/manual_tests.html
 
-echo "\nsurefire-reports/" # - The surefire test output
+echo "surefire-reports/" # - The surefire test output
 mkdir $OUT_DIRECTORY/surefire-reports
 cp -r $GIT_REPO/target/surefire-reports/* $OUT_DIRECTORY/surefire-reports
 
-echo "\nsite/" # - The maven site output
+echo "site/" # - The maven site output
 mkdir $OUT_DIRECTORY/site
 cp -r $GIT_REPO/target/site/* $OUT_DIRECTORY/site
 
-echo "\ndoc/" # - User and design documentation
+echo "doc/" # - User and design documentation
 mkdir $OUT_DIRECTORY/doc
 ln -s $OUT_DIRECTORY/site/*.pdf $OUT_DIRECTORY/doc
 mkdir $OUT_DIRECTORY/doc/javadoc
@@ -96,7 +96,7 @@ ln -s $OUT_DIRECTORY/site/testapidocs $OUT_DIRECTORY/doc/javadoc
 rm -rf $OUT_DIRECTORY.zip
 zip -rq $OUT_DIRECTORY $OUT_DIRECTORY
 
-echo "\nDone. Deliverable available at $OUT_DIRECTORY.zip"
+echo "Done. Deliverable available at $OUT_DIRECTORY.zip"
 echo "Remember to tag the repo!"
 echo "  git tag -a sprint_X -m \"Deliverable for sprint X\""
 echo "  git push origin --tags"
