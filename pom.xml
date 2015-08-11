@@ -210,7 +210,7 @@
               <outputDirectory>${basedir}/target/deploy</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/scripts</directory>
+                  <directory>src/main/misc</directory>
                   <filtering>true</filtering>
                 </resource>
               </resources>
