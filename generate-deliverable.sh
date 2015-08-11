@@ -53,13 +53,13 @@ fi
 rm -rf $OUT_DIRECTORY
 mkdir $OUT_DIRECTORY
 
-echo "\nREADME.md" # - A readme that describes how to run your program and any information that you think is relevant
+echo "README.md" # - A readme that describes how to run your program and any information that you think is relevant
 cp $GIT_REPO/README* $OUT_DIRECTORY
 
 echo "source.zip" # - An archive of your source code
 (cd $GIT_REPO; git archive --format zip --output $OUT_DIRECTORY/source.zip HEAD)
 
-echo "\nprogram/" # - Your jar file and any other resources it needs
+echo "program/" # - Your jar file and any other resources it needs
 mkdir $OUT_DIRECTORY/program
 cp $GIT_REPO/target/*.jar $OUT_DIRECTORY/program # TODO don't copy unshaded jar
 # includes demo.json
@@ -87,16 +87,18 @@ cp -r $GIT_REPO/target/site/* $OUT_DIRECTORY/site
 
 echo "doc/" # - User and design documentation
 mkdir $OUT_DIRECTORY/doc
-ln -s $OUT_DIRECTORY/site/*.pdf $OUT_DIRECTORY/doc
+cp -r $OUT_DIRECTORY/site/*.pdf $OUT_DIRECTORY/doc
 mkdir $OUT_DIRECTORY/doc/javadoc
-ln -s $OUT_DIRECTORY/site/apidocs $OUT_DIRECTORY/doc/javadoc
-ln -s $OUT_DIRECTORY/site/testapidocs $OUT_DIRECTORY/doc/javadoc
+cp -r $OUT_DIRECTORY/site/apidocs $OUT_DIRECTORY/doc/javadoc
+cp -r $OUT_DIRECTORY/site/testapidocs $OUT_DIRECTORY/doc/javadoc
 
 #### COMPRESS TO ZIP
 rm -rf $OUT_DIRECTORY.zip
-zip -rq $OUT_DIRECTORY $OUT_DIRECTORY
+cd $OUT_DIRECTORY # to get relative paths within zip
+zip -rq $OUT_DIRECTORY .
+#~ tar -czf $OUT_DIRECTORY.tar.gz -C $OUT_DIRECTORY '.'
 
-echo "Done. Deliverable available at $OUT_DIRECTORY.zip"
+echo "Done."
 echo "Remember to tag the repo!"
 echo "  git tag -a sprint_X -m \"Deliverable for sprint X\""
 echo "  git push origin --tags"
