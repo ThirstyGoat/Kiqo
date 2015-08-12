@@ -78,9 +78,11 @@ public class PersonFormController extends FormController<Person> {
         setButtonHandlers();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
-        Platform.runLater(longNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            longNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {

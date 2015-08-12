@@ -71,8 +71,13 @@ public class BacklogFormController extends FormController<Backlog> {
         setButtonHandlers();
         Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
                 shortNameModified);
-        Platform.runLater(longNameTextField::requestFocus);
         storySelectionView.setHeader(new Label("Stories:"));
+        
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            longNameTextField.requestFocus();
+        });
     }
 
     private void initialiseScaleCombobox() {
@@ -206,6 +211,5 @@ public class BacklogFormController extends FormController<Backlog> {
         viewModel.setOrganisation(organisation);
         setTextFieldSuggester(projectTextField, organisation.getProjects());
         setTextFieldSuggester(productOwnerTextField, organisation.getEligiblePOs());
-        setValidationSupport();
     }
 }

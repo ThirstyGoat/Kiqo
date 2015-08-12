@@ -54,9 +54,11 @@ public class SkillFormController extends FormController<Skill> {
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Platform.runLater(shortNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            shortNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {

@@ -86,9 +86,11 @@ public class TeamFormController extends FormController<Team> {
         setShortNameLengthRestrictor();
         setPrompts();
 
-        Platform.runLater(shortNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            shortNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {

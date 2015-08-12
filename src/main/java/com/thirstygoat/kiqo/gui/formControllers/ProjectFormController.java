@@ -61,9 +61,11 @@ public class ProjectFormController extends FormController<Project> {
         setPrompts();
         setButtonHandlers();
         setShortNameHandler();
-        Platform.runLater(ProjectFormController.this.longNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            longNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {

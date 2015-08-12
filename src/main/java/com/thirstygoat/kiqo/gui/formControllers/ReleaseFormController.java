@@ -60,9 +60,11 @@ public class ReleaseFormController extends FormController<Release> {
         setButtonHandlers();
         setShortNameLengthRestrictor();
         setPrompts();
-        Platform.runLater(shortNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            shortNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {
