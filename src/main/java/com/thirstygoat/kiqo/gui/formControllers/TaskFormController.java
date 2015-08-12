@@ -134,9 +134,11 @@ public class TaskFormController extends FormController<Task> {
 
     public void setStory(Story story) {
         viewModel.setStory(story);
-        setValidationSupport();
         setButtonHandlers();
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
+        Platform.runLater(() -> {
+            setValidationSupport();
+        });
     }
 
     @Override

@@ -22,7 +22,6 @@ import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -58,7 +57,7 @@ public class TaskFormViewModel extends FormController<Task> {
         nameValidator = new FunctionBasedValidator<>(nameProperty,
                 // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
                 s -> {
-                    if (s.length() == 0 || s.length() > 20) {
+                    if (s.length() == 0) {
                         return false;
                     }
                     Collection<Collection<? extends Item>> existingTasks = new ArrayList<>();
