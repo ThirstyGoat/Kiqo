@@ -53,8 +53,12 @@ fi
 rm -rf $OUT_DIRECTORY
 mkdir $OUT_DIRECTORY
 
-echo "README.md" # - A readme that describes how to run your program and any information that you think is relevant
+echo "README" # - A readme that describes how to run your program and any information that you think is relevant
 cp $GIT_REPO/README* $OUT_DIRECTORY
+echo "LICENSE"
+cp $GIT_REPO/LICENSE* $OUT_DIRECTORY
+echo "*.json"
+cp $GIT_REPO/*.json $OUT_DIRECTORY
 
 echo "source.zip" # - An archive of your source code
 (cd $GIT_REPO; git archive --format zip --output $OUT_DIRECTORY/source.zip HEAD)
@@ -62,7 +66,6 @@ echo "source.zip" # - An archive of your source code
 echo "program/" # - Your jar file and any other resources it needs
 mkdir $OUT_DIRECTORY/program
 cp $GIT_REPO/target/*.jar $OUT_DIRECTORY/program # TODO don't copy unshaded jar
-# includes demo.json
 cp -r $GIT_REPO/target/deploy/* $OUT_DIRECTORY/program
 chmod +x $OUT_DIRECTORY/program/*.sh
 
@@ -94,9 +97,12 @@ cp -r $OUT_DIRECTORY/site/testapidocs $OUT_DIRECTORY/doc/javadoc
 
 #### COMPRESS TO ZIP
 rm -rf $OUT_DIRECTORY.zip
+CURR_DIR=`pwd`
 cd $OUT_DIRECTORY # to get relative paths within zip
 zip -rq $OUT_DIRECTORY .
-#~ tar -czf $OUT_DIRECTORY.tar.gz -C $OUT_DIRECTORY '.'
+cd $CURR_DIR
+# tidy up by deleting working directory
+rm -rf $OUT_DIRECTORY
 
 echo "Done."
 echo "Remember to tag the repo!"
