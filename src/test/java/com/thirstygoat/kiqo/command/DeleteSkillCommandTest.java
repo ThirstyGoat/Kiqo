@@ -1,17 +1,17 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.delete.DeleteSkillCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
+import java.io.File;
+import java.util.ArrayList;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.command.delete.DeleteSkillCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
 
 /**
  * Created by Bradley on 9/04/15.

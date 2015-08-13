@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Story;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Wraps the commands needed when a story is removed from a backlog into a single

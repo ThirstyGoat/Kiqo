@@ -1,12 +1,18 @@
 package com.thirstygoat.kiqo.gui;
 
-import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
-import com.thirstygoat.kiqo.model.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
 
 
 public class StoryFormViewModelTest {

@@ -1,14 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.Searchable;
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 
 
 /**

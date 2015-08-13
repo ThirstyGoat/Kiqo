@@ -1,11 +1,18 @@
 package com.thirstygoat.kiqo.gui.menuBar;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.SideBarController;
+
 import de.saxsys.mvvmfx.ViewModel;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
 
 public class MenuBarViewModel implements ViewModel {
     private MainController mainController;

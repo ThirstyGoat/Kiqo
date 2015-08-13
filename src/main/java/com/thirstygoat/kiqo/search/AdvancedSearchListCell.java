@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.search;
 
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -9,11 +8,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.*;
-import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.util.Comparator;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 
 /**
  * Created by bradley on 1/08/15.

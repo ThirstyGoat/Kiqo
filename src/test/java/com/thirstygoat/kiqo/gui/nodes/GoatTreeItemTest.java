@@ -1,19 +1,20 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatTreeItem;
-import com.thirstygoat.kiqo.model.Item;
+import java.util.Comparator;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Comparator;
+import com.thirstygoat.kiqo.model.Item;
 
 public class GoatTreeItemTest {
     private static final SelectionModel<TreeItem<Item>> selectionModel = new SelectionModel<TreeItem<Item>>() {

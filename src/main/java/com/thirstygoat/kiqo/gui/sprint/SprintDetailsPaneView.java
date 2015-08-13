@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.StringConverters;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +12,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
-import java.net.URL;
-import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.StringConverters;
+
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 
 /**
 * Created by Carina Blair on 3/08/2015.

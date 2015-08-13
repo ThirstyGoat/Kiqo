@@ -1,15 +1,16 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.model.Release;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.net.URL;
-import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Release;
 
 
 public class ReleaseDetailsPaneController implements Initializable, IDetailsPaneController<Release> {

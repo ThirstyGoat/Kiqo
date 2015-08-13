@@ -1,12 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import com.thirstygoat.kiqo.search.SearchableField;
 
 
 /**

@@ -1,12 +1,19 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
-import com.thirstygoat.kiqo.model.*;
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
 
 /**
  * Created by Carina Blair on 24/07/2015.

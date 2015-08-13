@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.search;
 
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Task;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Task;
 
 
 /**

@@ -1,9 +1,7 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.search.SearchableItems;
 
 /**
  * Command to delete a acceptanceCriteria from a project.

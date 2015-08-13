@@ -1,10 +1,15 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.delete.DeleteStoryCommand;
-import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.thirstygoat.kiqo.command.delete.DeleteStoryCommand;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Created by leroy on 15/05/2015

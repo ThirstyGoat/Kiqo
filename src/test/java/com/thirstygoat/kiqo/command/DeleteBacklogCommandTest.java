@@ -1,16 +1,16 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.delete.DeleteBacklogCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.command.delete.DeleteBacklogCommand;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
 
 /**
  * Created by Carina on 20/05/2015.

@@ -1,13 +1,19 @@
 package com.thirstygoat.kiqo.gui;
 
-import com.thirstygoat.kiqo.gui.viewModel.BacklogFormViewModel;
-import com.thirstygoat.kiqo.model.*;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Predicate;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.thirstygoat.kiqo.gui.viewModel.BacklogFormViewModel;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
 
 /**
 * Created by Carina Blair on 21/07/2015.

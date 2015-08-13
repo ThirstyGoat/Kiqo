@@ -1,12 +1,13 @@
 package com.thirstygoat.kiqo.gui;
 
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import javafx.scene.input.DataFormat;
-import javafx.util.Pair;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.input.DataFormat;
+import javafx.util.Pair;
+
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 
 public class DragContainer implements Serializable {
 	public static final DataFormat DATA_FORMAT = new DataFormat(AcceptanceCriteria.class.getPackage().getName() + ".dataformat");

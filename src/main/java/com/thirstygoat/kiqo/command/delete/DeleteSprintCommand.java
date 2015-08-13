@@ -1,7 +1,5 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Sprint;
 
 

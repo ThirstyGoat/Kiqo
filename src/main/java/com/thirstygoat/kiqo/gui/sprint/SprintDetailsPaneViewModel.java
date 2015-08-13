@@ -1,13 +1,10 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import javafx.collections.ListChangeListener;
+
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 
 /**
  * Created by Carina Blair on 5/08/2015.
