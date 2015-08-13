@@ -121,27 +121,27 @@ public class PersistenceManager {
             revertVersion = gson.toJson(jsonObject);
 
             // loading old json file
-            String versionStr = version.getAsString();
-
             if (version == null) {
+                // 1.0
                 PersistenceManager.isOldJSON = true;
                 final BufferedReader br1 = new BufferedReader(new FileReader(file));
                 PersistenceManager.createGson(true);
                 final Organisation organisation2 = PersistenceManager.gson.fromJson(br1, Organisation.class);
                 organisation.getProjects().setAll(organisation2.getProjects());
                 PersistenceManager.createGson(false);
-            }
-
-            if (versionStr.equals("4.0")) {
-                List<Story> stories = new ArrayList<>();
-                organisation.getProjects().forEach(project1 -> {
-                    stories.addAll(project1.getUnallocatedStories());
-                    project1.getBacklogs().forEach(backlog -> stories.addAll(backlog.getStories()));
-                });
-                stories.forEach(story -> {
-                    story.getTasks().forEach(task -> task.setStory(story));
-                    story.getAcceptanceCriteria().forEach(acceptanceCriteria -> acceptanceCriteria.setStory(story));
-                });
+            } else {
+                String versionStr = version.getAsString();
+                if (versionStr.equals("4.0")) {
+                    List<Story> stories = new ArrayList<>();
+                    organisation.getProjects().forEach(project1 -> {
+                        stories.addAll(project1.getUnallocatedStories());
+                        project1.getBacklogs().forEach(backlog -> stories.addAll(backlog.getStories()));
+                    });
+                    stories.forEach(story -> {
+                        story.getTasks().forEach(task -> task.setStory(story));
+                        story.getAcceptanceCriteria().forEach(acceptanceCriteria -> acceptanceCriteria.setStory(story));
+                    });
+                }
             }
         }
         if (organisation != null) {
