@@ -765,7 +765,9 @@ public class MainController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"), new FileChooser.ExtensionFilter("All Files", "*"));
         final File existingFile = selectedOrganisationProperty.get().getSaveLocation();
         if (existingFile != null) {
-            fileChooser.setInitialDirectory(existingFile.getParentFile());
+            if (existingFile.getParentFile().exists()) {
+                fileChooser.setInitialDirectory(existingFile.getParentFile());
+            }
             fileChooser.setInitialFileName(selectedOrganisationProperty.get().organisationNameProperty().get());
         }
 
@@ -817,7 +819,7 @@ public class MainController implements Initializable {
     private File promptForSaveLocation(File existingFile) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"), new FileChooser.ExtensionFilter("All Files", "*"));
-        if (existingFile != null) {
+        if (existingFile != null && existingFile.exists()) {
             fileChooser.setInitialDirectory(existingFile.getParentFile());
             fileChooser.setInitialFileName(existingFile.getName());
         }
