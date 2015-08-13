@@ -100,7 +100,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
             if (StoryDetailsPaneController.draggingAC != null) {
-//            System.out.println("exit");
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;

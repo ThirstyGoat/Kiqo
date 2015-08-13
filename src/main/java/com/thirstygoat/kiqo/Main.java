@@ -39,7 +39,7 @@ public class Main extends Application {
                 } else if (arg.matches("(.*)\\.json")) {
                     file = new File(arg);
                     if (!file.exists()) {
-                        System.out.println("Invalid file path");
+                        System.err.println("Invalid file path");
                         System.exit(1);
                     }
                 }

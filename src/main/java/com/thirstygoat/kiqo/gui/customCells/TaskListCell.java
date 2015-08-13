@@ -115,7 +115,6 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-//            System.out.println("Enter");
             if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
@@ -166,7 +165,6 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
-//            System.out.println("done");
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
             if (StoryDetailsPaneController.draggingTask != null) {
                 Task t = StoryDetailsPaneController.draggingTask;

@@ -197,7 +197,6 @@ public class ReleaseFormController extends FormController<Release> {
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {
                 changes.add(new EditCommand<>(release, "date", releaseDatePicker.getValue()));
-                System.out.println(release + "," + releaseDatePicker.getValue());
             }
             if (!descriptionTextField.getText().equals(release.getDescription())) {
                 changes.add(new EditCommand<>(release, "description", descriptionTextField.getText()));
