@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;

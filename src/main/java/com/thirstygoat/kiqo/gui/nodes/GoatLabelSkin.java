@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -44,6 +45,11 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
         editField.setMaxHeight(5);
         editView.setMinHeight(5);
         editView.setMaxHeight(5);
+
+        displayView.setMaxWidth(Control.USE_PREF_SIZE);
+        displayView.setMinWidth(Control.USE_PREF_SIZE);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+
         setResizeListener();
     }
 
