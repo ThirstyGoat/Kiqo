@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 public abstract class GoatLabel<T extends Item, C extends Control, S extends GoatLabelSkin> extends Control {
     protected S skin;
     protected Label displayLabel;
+    protected C editField;
     protected Button editButton;
     protected Button doneButton;
     private ObjectProperty<EditCommand> commandProperty;
@@ -57,7 +58,13 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
 
     protected abstract void populateEditField();
 
-    protected abstract void setSkin();
+    protected void setSkin() {
+        skin = initSkin();
+        displayLabel = skin.getDisplayLabel();
+        editField = (C) skin.getEditField();
+        editButton = skin.getEditButton();
+        doneButton = skin.getDoneButton();
+    }
 
     public Button doneButton() {
         return doneButton;
@@ -66,6 +73,8 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     public StringProperty displayTextProperty() {
         return displayLabel.textProperty();
     }
+
+    protected abstract S initSkin();
 
     public abstract C getEditField();
 
