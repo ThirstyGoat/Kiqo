@@ -40,11 +40,11 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
         });
 
         skin.getEditField().setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                event.consume();
-                skin.showDisplay();
-                doneAction();
-            }
+//            if (event.getCode() == KeyCode.ENTER) {
+//                event.consume();
+//                skin.showDisplay();
+//                doneAction();
+//            }
         });
     }
 

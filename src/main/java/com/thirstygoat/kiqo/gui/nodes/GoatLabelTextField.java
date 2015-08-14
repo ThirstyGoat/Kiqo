@@ -7,10 +7,6 @@ import javafx.scene.control.TextField;
  */
 public class GoatLabelTextField extends GoatLabel {
 
-    public GoatLabelTextField() {
-        super();
-    }
-
     @Override
     protected void populateEditField() {
         ((TextField) editField).setText(displayLabel.getText());

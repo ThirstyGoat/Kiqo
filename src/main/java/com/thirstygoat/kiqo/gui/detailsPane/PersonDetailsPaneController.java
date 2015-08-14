@@ -71,7 +71,7 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
             departmentLabel.displayTextProperty().bind(person.departmentProperty());
 //            departmentLabel.displayTextProperty(person, "department", person.departmentProperty());
 
-            descriptionLabel.textProperty().bind(person.descriptionProperty());
+            descriptionLabel.displayTextProperty().bind(person.descriptionProperty());
 //            descriptionLabel.setItem(person, "description", person.descriptionProperty());
 
             skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
@@ -95,7 +95,7 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
             phoneLabel.displayTextProperty().setValue("");
             departmentLabel.displayTextProperty().setValue("");
             skillsLabel.setText(null);
-            descriptionLabel.setText(null);
+            descriptionLabel.displayTextProperty().setValue("");
         }
     }
 
