@@ -1,25 +1,25 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import javafx.collections.ListChangeListener;
-
 import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
+import de.saxsys.mvvmfx.ViewModel;
+import javafx.collections.ListChangeListener;
 
 /**
  * Created by Carina Blair on 5/08/2015.
  */
-public class SprintDetailsPaneViewModel extends SprintViewModel implements Loadable<Sprint> {
-    public static final String PLACEHOLDER = "No stories in sprint";
+public class SprintDetailsPaneViewModel implements Loadable<Sprint>, ViewModel {
 
-    private final ListChangeListener<Story> listChangeListener;
+    private SprintDetailsPaneDetailsViewModel sprintDetailsPaneDetailsViewModel;
 
-    public SprintDetailsPaneViewModel() {
-        listChangeListener = change -> {
-            change.next();
-            stories().setAll(change.getList());
-        };
+    public void setDetailsViewModel(SprintDetailsPaneDetailsViewModel viewModel) {
+        sprintDetailsPaneDetailsViewModel = viewModel;
+    }
+
+    @Override
+    public void load(Sprint sprint, Organisation organisation) {
+        sprintDetailsPaneDetailsViewModel.load(sprint, organisation);
     }
 }
-
-
