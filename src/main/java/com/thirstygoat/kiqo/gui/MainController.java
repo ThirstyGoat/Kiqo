@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.logging.*;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.gui.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -25,6 +26,8 @@ import com.thirstygoat.kiqo.command.delete.*;
 import com.thirstygoat.kiqo.exceptions.*;
 import com.thirstygoat.kiqo.gui.backlog.*;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.*;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
@@ -881,6 +884,16 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
+            }  else if (type.equals(Story.class.getSimpleName())) {
+                    ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
+                    // viewModel
+                    final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    // view
+                    viewModel.setExitStrategy(() -> stage.close());
+                    stage.setScene(new Scene(storyFormTuple.getView()));
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
