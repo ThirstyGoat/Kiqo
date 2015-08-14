@@ -1,8 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
-import com.thirstygoat.kiqo.gui.nodes.GoatTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.fxml.FXML;
@@ -22,21 +22,21 @@ import java.util.function.Predicate;
  */
 public class PersonDetailsPaneController implements Initializable, IDetailsPaneController<Person> {
     @FXML
-    private GoatLabel shortNameLabel;
+    private GoatLabelTextField shortNameLabel;
     @FXML
-    private GoatLabel longNameLabel;
+    private GoatLabelTextField longNameLabel;
     @FXML
-    private GoatLabel userIdLabel;
+    private GoatLabelTextField userIdLabel;
     @FXML
-    private GoatLabel emailLabel;
+    private GoatLabelTextField emailLabel;
     @FXML
-    private GoatLabel phoneLabel;
+    private GoatLabelTextField phoneLabel;
     @FXML
-    private GoatLabel departmentLabel;
+    private GoatLabelTextField departmentLabel;
     @FXML
     private Label skillsLabel;
     @FXML
-    private GoatTextArea descriptionLabel;
+    private GoatLabelTextArea descriptionLabel;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -47,25 +47,25 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
     public void showDetails(final Person person) {
         if (person != null) {
             shortNameLabel.textProperty().bind(person.shortNameProperty());
-            shortNameLabel.setItem(person, "shortName", person.shortNameProperty());
+//            shortNameLabel.setItem(person, "shortName", person.shortNameProperty());
 
             longNameLabel.textProperty().bind(person.longNameProperty());
-            longNameLabel.setItem(person, "longName", person.longNameProperty());
+//            longNameLabel.setItem(person, "longName", person.longNameProperty());
 
             userIdLabel.textProperty().bind(person.userIdProperty());
-            userIdLabel.setItem(person, "userId", person.userIdProperty());
+//            userIdLabel.setItem(person, "userId", person.userIdProperty());
 
             emailLabel.textProperty().bind(person.emailAddressProperty());
-            emailLabel.setItem(person, "emailAddress", person.emailAddressProperty());
+//            emailLabel.setItem(person, "emailAddress", person.emailAddressProperty());
 
             phoneLabel.textProperty().bind(person.phoneNumberProperty());
-            phoneLabel.setItem(person, "phoneNumber", person.phoneNumberProperty());
+//            phoneLabel.setItem(person, "phoneNumber", person.phoneNumberProperty());
 
             departmentLabel.textProperty().bind(person.departmentProperty());
-            departmentLabel.setItem(person, "department", person.departmentProperty());
+//            departmentLabel.setItem(person, "department", person.departmentProperty());
 
             descriptionLabel.textProperty().bind(person.descriptionProperty());
-            descriptionLabel.setItem(person, "description", person.descriptionProperty());
+//            descriptionLabel.setItem(person, "description", person.descriptionProperty());
 
             skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
 

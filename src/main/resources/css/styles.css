@@ -112,3 +112,7 @@
     -fx-text-fill: gainsboro;
     -fx-font-size: 12px;
 }
+
+.GoatLabelTextField {
+    -fx-skin: inherit;
+}

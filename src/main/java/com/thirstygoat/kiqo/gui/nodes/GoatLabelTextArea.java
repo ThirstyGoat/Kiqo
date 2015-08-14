@@ -14,8 +14,8 @@ import com.thirstygoat.kiqo.model.Item;
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatTextArea<T extends Item> extends Control {
-    public final GoatTextAreaSkin skin;
+public class GoatLabelTextArea<T extends Item> extends Control {
+    public final GoatLabelTextAreaSkin skin;
     private Label displayLabel;
     private TextArea editField;
     private Button editButton;
@@ -25,9 +25,9 @@ public class GoatTextArea<T extends Item> extends Control {
     private StringProperty currentVal;
     private EditCommand command;
 
-    public GoatTextArea() {
+    public GoatLabelTextArea() {
         super();
-        skin = new GoatTextAreaSkin(this) {
+        skin = new GoatLabelTextAreaSkin(this) {
             {
                 displayLabel = getDisplayLabel();
                 editField = getEditField();

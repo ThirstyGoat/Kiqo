@@ -129,7 +129,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
             totalHoursLabel.textProperty().unbind();
-//            totalHoursLabel.textProperty().bind(tasksHoursProperty.asString());
+//            totalHoursLabel.displayTextProperty().bind(tasksHoursProperty.asString());
 
             totalHoursLabel.textProperty().bind(Bindings.createStringBinding(() -> {
                         float totalHours = 0;

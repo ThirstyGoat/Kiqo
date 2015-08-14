@@ -18,7 +18,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 /**
  * Created by samschofield on 7/08/15.
  */
-public class GoatTextAreaSkin extends SkinBase<Control> {
+public class GoatLabelTextAreaSkin extends SkinBase<Control> {
 
     private Label displayLabel;
     private TextArea editField;
@@ -36,7 +36,7 @@ public class GoatTextAreaSkin extends SkinBase<Control> {
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatTextAreaSkin(Control control) {
+    protected GoatLabelTextAreaSkin(Control control) {
         super(control);
 
         mainView = createMainView();
