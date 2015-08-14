@@ -1,8 +1,11 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
+import com.thirstygoat.kiqo.model.*;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
@@ -12,26 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UpdateListCommand;
-import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 31/07/15.
@@ -214,7 +199,7 @@ public class SprintViewModel implements ViewModel {
      * 
      * @return command for creating or editing the active item. Null if no changes have been made.
      */
-    public Command createCommand() {
+    public Command getCommand() {
         final Command command;
         if  (!allValidation().isValid()) {
             // Properties are not valid

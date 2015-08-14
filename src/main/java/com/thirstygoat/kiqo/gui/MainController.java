@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.gui.formControllers.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -61,11 +62,6 @@ import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
-import com.thirstygoat.kiqo.gui.formControllers.AcceptanceCriteriaFormController;
-import com.thirstygoat.kiqo.gui.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
-import com.thirstygoat.kiqo.gui.formControllers.ReportFormController;
-import com.thirstygoat.kiqo.gui.formControllers.TaskFormController;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
@@ -923,6 +919,16 @@ public class MainController implements Initializable {
                 viewModel.setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(sprintFormTuple.getView()));
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                stage.showAndWait();
+            } else if (type.equals("Story")) {
+                ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
+                // viewModel
+                final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
+                viewModel.load((Story) t, selectedOrganisationProperty.get());
+                // view
+                viewModel.setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(storyFormTuple.getView()));
+                viewModel.load((Story) t, selectedOrganisationProperty.get());
                 stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();

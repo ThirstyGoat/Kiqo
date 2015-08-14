@@ -1,25 +1,16 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
+import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by leroy on 9/08/15.
@@ -77,7 +68,7 @@ public class SprintFormViewModelTest {
     public void newSprint_DoNothing_CommandTest() {
         viewModel.load(null, organisation);
         Assert.assertTrue("Command should be null if nothing was done",
-                viewModel.createCommand() == null);
+                viewModel.getCommand() == null);
     }
 
     @Test
@@ -87,7 +78,7 @@ public class SprintFormViewModelTest {
         String errorMessages = viewModel.allValidation().getErrorMessages().toString();
         Assert.assertTrue("Fields should all be valid:\n" + errorMessages,
                 viewModel.allValidation().isValid());
-        Command command = viewModel.createCommand();
+        Command command = viewModel.getCommand();
         Assert.assertTrue("Command should not be null if all fields are valid",
                 command != null);
         Assert.assertTrue("Command should be of type CreatSprintCommand",
@@ -107,7 +98,7 @@ public class SprintFormViewModelTest {
     public void existingSprint_DoNothingTest() {
         viewModel.load(sprint, organisation);
         Assert.assertTrue("Command should be null if nothing was done",
-                (viewModel.createCommand() == null));
+                (viewModel.getCommand() == null));
         Assert.assertTrue("All fields should be valid",
                 viewModel.allValidation().isValid());
     }
@@ -120,14 +111,14 @@ public class SprintFormViewModelTest {
                 originalGoal != null); viewModel.goalProperty().set("A different goal");
         viewModel.goalProperty().set(originalGoal);
         Assert.assertTrue("Command should be null if something was done, but then undone",
-                viewModel.createCommand() == null);
+                viewModel.getCommand() == null);
     }
 
     @Test
     public void existingSprint_ChangeProperty_CommandTest() {
         viewModel.load(sprint, organisation);
         viewModel.goalProperty().set("A different goal");
-        Command command = viewModel.createCommand();
+        Command command = viewModel.getCommand();
         Assert.assertTrue("If we did something, command should not be null",
                 command != null);
         Assert.assertTrue("Command should be a CompoundCommand",
@@ -140,7 +131,7 @@ public class SprintFormViewModelTest {
         viewModel.stories().add(readyStory);
         Assert.assertTrue("There should be no validation errors",
                 viewModel.allValidation().isValid());
-        Command command = viewModel.createCommand();
+        Command command = viewModel.getCommand();
         Assert.assertTrue("Something changed, so command should not be null",
                 command != null);
         Assert.assertTrue("Command should be a CompoundCommand",
@@ -155,7 +146,7 @@ public class SprintFormViewModelTest {
         // Test that if optional fields are left blank that they are set to some sane default value rather than null
         viewModel.load(null, organisation);
         populateFields(viewModel);
-        viewModel.createCommand().execute();
+        viewModel.getCommand().execute();
         Sprint newSprint = viewModel.sprintProperty().get();
         SprintFormViewModel newViewModel = new SprintFormViewModel();
         newViewModel.load(newSprint, organisation);

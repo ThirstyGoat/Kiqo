@@ -8,15 +8,10 @@ import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
+import com.thirstygoat.kiqo.gui.GoatViewModel;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
@@ -25,7 +20,6 @@ import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
@@ -45,25 +39,17 @@ import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 /**
  * Created by samschofield on 16/07/15.
  */
-public class StoryFormViewModel extends FormController<Story> {
-    private Story story;
-    private ObjectProperty<Person> creatorProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Backlog> backlogProperty = new SimpleObjectProperty<>();
+public class StoryViewModel implements ViewModel {
+    private ModelWrapper<Story> storyWrapper = new ModelWrapper<>();
+
     private Organisation organisation;
     private Command command;
+    private Story story;
     private boolean valid = false;
 
-    private StringProperty shortNameProperty = new SimpleStringProperty("");
-    private StringProperty longNameProperty = new SimpleStringProperty("");
-    private StringProperty descriptionProperty = new SimpleStringProperty("");
-    private StringProperty creatorNameProperty = new SimpleStringProperty("");
-    private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private StringProperty priorityProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
-    private IntegerProperty estimateProperty = new SimpleIntegerProperty();
-    private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
+    private ListProperty<Story> dependenciesProperty = new SimpleListProperty<>();
+    private ListProperty<Story> sourceStoriesProperty = new SimpleListProperty<>();
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
@@ -76,15 +62,15 @@ public class StoryFormViewModel extends FormController<Story> {
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator formValidator;
 
-    public StoryFormViewModel() {
-        shortNameValidator = new FunctionBasedValidator<>(shortNameProperty,
+    public StoryViewModel() {
+        shortNameValidator = new FunctionBasedValidator<>(shortNameProperty(),
             // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
             s -> {
-                if (s.length() == 0 || s.length() > 20) {
+                if (s.isEmpty() || s.length() == 0 || s.length() > 20) {
                     return false;
                 }
 
-                final Project project = projectProperty.get();
+                final Project project = projectProperty().get();
                 if (project == null) {
                     return true;
                 } else {
@@ -97,17 +83,17 @@ public class StoryFormViewModel extends FormController<Story> {
             },
             ValidationMessage.error("Short name must be unique and not empty"));
 
-        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
+        longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
             // Checks that the long name isn't empty
             s -> s != null && !s.isEmpty(),
             ValidationMessage.error("Name must not be empty"));
 
-        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
+        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty(),
             // Always valid as description isn't required and has no constraints
             s -> true,
             ValidationMessage.error(""));
 
-        creatorValidator = new FunctionBasedValidator<>(creatorNameProperty,
+        creatorValidator = new FunctionBasedValidator<>(creatorProperty(),
             // Checks that the creator exists within the organisation and is set
             s -> {
                 if (organisation != null) {
@@ -121,16 +107,15 @@ public class StoryFormViewModel extends FormController<Story> {
             },
             ValidationMessage.error("Person must already exist"));
 
-        projectValidator = new FunctionBasedValidator<>(projectProperty,
+        projectValidator = new FunctionBasedValidator<>(projectProperty(),
             // Checks that the project exists and is set
             Utilities.emptinessPredicate(),
             ValidationMessage.error("Project must already exist"));
 
-        priorityValidator = new FunctionBasedValidator<>(priorityProperty,
-            s -> {
+        priorityValidator = new FunctionBasedValidator<>(priorityProperty(),
+            i -> {
                 try {
-                    int i = Integer.parseInt(s);
-                    if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+                    if (i.intValue() < Story.MIN_PRIORITY || i.intValue() > Story.MAX_PRIORITY) {
                         return false;
                     }
                 } catch (NumberFormatException e) {
@@ -141,7 +126,7 @@ public class StoryFormViewModel extends FormController<Story> {
             ValidationMessage.error("Priority must be an integer between "
                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-        scaleValidator = new FunctionBasedValidator<>(scaleProperty,
+        scaleValidator = new FunctionBasedValidator<>(scaleProperty(),
             Utilities.emptinessPredicate(),
             ValidationMessage.error("Estimation Scale must not be empty"));
 
@@ -151,15 +136,15 @@ public class StoryFormViewModel extends FormController<Story> {
     }
     
     private void setStoryListProperties() {
-        targetStoriesProperty.get().clear();
+        dependenciesProperty.get().clear();
         sourceStoriesProperty.get().clear();
-        if (story != null) {
-            if (projectProperty.get() != null) {
-                targetStoriesProperty.get().addAll(story.getDependencies());
-                if (story.getBacklog() != null) {
-                    sourceStoriesProperty.get().addAll(story.getBacklog().getStories());
+        if (storyWrapper.get() != null) {
+            if (projectProperty() != null) {
+                dependenciesProperty.get().addAll(storyWrapper.get().getDependencies());
+                if (storyWrapper.get().getBacklog() != null) {
+                    sourceStoriesProperty.get().addAll(storyWrapper.get().getBacklog().getStories());
                 } else {
-                    sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
+                    sourceStoriesProperty.get().addAll(projectProperty().get().getUnallocatedStories());
                 }
 
                 ArrayList<Story> toRemove = new ArrayList<>();
@@ -170,89 +155,81 @@ public class StoryFormViewModel extends FormController<Story> {
                 }
                 sourceStoriesProperty.get().removeAll(toRemove);
             }
-            sourceStoriesProperty.get().removeAll(story.getDependencies());
-            sourceStoriesProperty.get().remove(story); // cannot depend on itself
+            sourceStoriesProperty.get().removeAll(storyWrapper.get().getDependencies());
+            sourceStoriesProperty.get().remove(storyWrapper.get()); // cannot depend on itself
         } else {
-            if (projectProperty.get() != null) {
-                sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
+            if (projectProperty() != null) {
+                sourceStoriesProperty.get().addAll(projectProperty().get().getUnallocatedStories());
             }
         }
     }
 
-    /**
-     * Sets all properties to be that of model. So for example if you change the story using,
-     * setTask(), and you want to update the text fields with the new stories data, then you
-     * should call this method.
-     */
-    private void reloadFromModel() {
-        targetStoriesProperty.set(FXCollections.observableArrayList());
-        sourceStoriesProperty.set(FXCollections.observableArrayList());
-        
-        if (story != null) {
-            shortNameProperty.set(story.getShortName());
-            longNameProperty.set(story.getLongName());
-            descriptionProperty.set(story.getDescription());
-            creatorNameProperty.set(story.getCreator().getShortName());
-            projectNameProperty.set(story.getProject().getShortName());
-            priorityProperty.set(Integer.toString(story.getPriority()));
-            scaleProperty.set(story.getScale());
-            estimateProperty.set(story.getEstimate());
-            backlogProperty.set(story.getBacklog());
-
-            creatorEditable.set(false);
-        }
-
-        setStoryListProperties();
-        setListeners();
-    }
-
     private void setListeners() {
-        projectProperty.addListener(((observable, oldValue, newValue) -> {
+        projectProperty().addListener(((observable, oldValue, newValue) -> {
             setStoryListProperties();
         }));
     }
 
+    public void load(Story story, Organisation organisation) {
+        organisationProperty().set(organisation);
+        if(story != null) {
+            storyWrapper.set(story);
+            this.story = story;
+            dependenciesProperty.setAll(story.getDependencies());
+        } else {
+            storyWrapper.set(new Story());
+            storyWrapper.reset();
+            storyWrapper.commit();
+            dependenciesProperty.clear();
+        }
+        storyWrapper.reload();
+    }
+
     public StringProperty shortNameProperty() {
-        return shortNameProperty;
+        return storyWrapper.field("shortName", Story::getShortName, Story::setShortName, "");
     }
 
     public StringProperty longNameProperty() {
-        return longNameProperty;
+        return storyWrapper.field("longName", Story::getLongName, Story::setLongName, "");
     }
 
     public StringProperty descriptionProperty() {
-        return descriptionProperty;
-    }
-    
-    public StringProperty creatorNameProperty() {
-        return creatorNameProperty;
+        return storyWrapper.field("description", Story::getDescription, Story::setDescription, "");
     }
 
-    public StringProperty projectNameProperty() {
-        return projectNameProperty;
+    public ObjectProperty<Person> creatorProperty() {
+        return storyWrapper.field("creator", Story::getCreator, Story::setCreator, null);
     }
 
-    public ObjectProperty<Backlog> backlogProperty() { return backlogProperty; }
-    
+    public ObjectProperty<Backlog> backlogProperty() {
+        return storyWrapper.field("backlog", Story::getBacklog, Story::setBacklog, null);
+    }
+
     public ObjectProperty<Project> projectProperty() {
-        return projectProperty;
+        return storyWrapper.field("project", Story::getProject, Story::setProject, null);
     }
-    
-    public StringProperty priorityProperty() { return priorityProperty; }
+
+    public IntegerProperty priorityProperty() {
+        return storyWrapper.field("priority", Story::getPriority, Story::setPriority, 0);
+    }
 
     public ObjectProperty<Scale> scaleProperty() {
-        return scaleProperty;
+        return storyWrapper.field("scale", Story::getScale, Story::setScale, Scale.FIBONACCI );
     }
 
     public IntegerProperty estimateProperty() {
-        return estimateProperty;
-    }
-    
-    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() { 
-        return targetStoriesProperty;
+        return storyWrapper.field("estimate", Story::getEstimate, Story::setEstimate, 0);
     }
 
-    public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { 
+    public ObjectProperty<Organisation> organisationProperty() {
+        return organisationProperty;
+    }
+
+    public ListProperty<Story> dependenciesProperty() {
+        return dependenciesProperty;
+    }
+
+    public  ListProperty<Story> sourceStoriesProperty() {
         return sourceStoriesProperty;
     }
 
@@ -268,7 +245,9 @@ public class StoryFormViewModel extends FormController<Story> {
         return longNameValidator.getValidationStatus();
     }
 
-    public ValidationStatus descriptionValidation() { return descriptionValidator.getValidationStatus(); }
+    public ValidationStatus descriptionValidation() {
+        return descriptionValidator.getValidationStatus();
+    }
 
     public ValidationStatus creatorValidation() {
         return creatorValidator.getValidationStatus();
@@ -290,81 +269,48 @@ public class StoryFormViewModel extends FormController<Story> {
         return formValidator.getValidationStatus();
     }
 
-    public void setStory(Story story) {
-        this.story = story;
-        reloadFromModel();
-    }
-
-    @Override
-    public void setStage(Stage stage) {
-
-    }
-
-    @Override
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
-        projectNameProperty.bindBidirectional(projectProperty, StringConverters.projectStringConverter(organisation));
-        creatorNameProperty.bindBidirectional(creatorProperty, StringConverters.personStringConverter(organisation));
-    }
-
-    @Override
-    public void populateFields(Story story) {
-
-    }
-
-    @Override
-    public Command getCommand() { return command; }
-
-    public void setCommand() {
+    public Command getCommand() {
         if (story == null) {
             // new story command
-            story = new Story(shortNameProperty.getValue(), longNameProperty.getValue(), descriptionProperty.getValue(), creatorProperty.get(),
-                    projectProperty.get(), null, Integer.parseInt(priorityProperty.getValue()), scaleProperty.getValue(), estimateProperty.getValue(), false, false);
+            Story story = new Story(shortNameProperty().getValue(), longNameProperty().getValue(), descriptionProperty().getValue(), creatorProperty().get(),
+                    projectProperty().get(), null, priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false);
             command = new CreateStoryCommand(story);
         } else {
             // edit command
             final ArrayList<Command> changes = new ArrayList<>();
-            if (!longNameProperty.getValue().equals(story.getLongName())) {
-                changes.add(new EditCommand<>(story, "longName", longNameProperty.getValue()));
+            if (!longNameProperty().getValue().equals(story.getLongName())) {
+                changes.add(new EditCommand<>(story, "longName", longNameProperty().getValue()));
             }
-            if (!shortNameProperty.getValue().equals(story.getShortName())) {
-                changes.add(new EditCommand<>(story, "shortName", shortNameProperty.getValue()));
+            if (!shortNameProperty().getValue().equals(story.getShortName())) {
+                changes.add(new EditCommand<>(story, "shortName", shortNameProperty().getValue()));
             }
-            if (!descriptionProperty.getValue().equals(story.getDescription())) {
-                changes.add(new EditCommand<>(story, "description", descriptionProperty.getValue()));
+            if (!descriptionProperty().getValue().equals(story.getDescription())) {
+                changes.add(new EditCommand<>(story, "description", descriptionProperty().getValue()));
             }
             // creator can't be changed
             
-            if (!projectProperty.get().equals(story.getProject())) {
+            if (!projectProperty().get().equals(story.getProject())) {
                 if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), projectProperty.get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), projectProperty().get().observableUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), projectProperty.get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), projectProperty().get().observableUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
                 changes.add(new EditCommand<>(story, "backlog", null));
-                changes.add(new EditCommand<>(story, "project", projectProperty.get()));
+                changes.add(new EditCommand<>(story, "project", projectProperty().get()));
             }
 
-            if (Integer.parseInt(priorityProperty.getValue()) != story.getPriority()) {
-                changes.add(new EditCommand<>(story, "priority", Integer.parseInt(priorityProperty.getValue())));
+            if (priorityProperty().getValue() != story.getPriority()) {
+                changes.add(new EditCommand<>(story, "priority",priorityProperty().getValue()));
             }
 
-            if (scaleProperty.getValue() != story.getScale()) {
-                changes.add(new EditCommand<>(story, "scale", scaleProperty.getValue()));
+            if (scaleProperty().getValue() != story.getScale()) {
+                changes.add(new EditCommand<>(story, "scale", scaleProperty().getValue()));
             }
-            
-//            // Stories being added as dependencies
-//            final ArrayList<Story> addedStories = new ArrayList<>(targetStoriesProperty.get());
-//            addedStories.removeAll(story.getDependencies());
-//
-//            // Stories being removed as dependencies
-//            final ArrayList<Story> removedStories = new ArrayList<>(story.getDependencies());
-//            removedStories.removeAll(targetStoriesProperty.get());
 
-            if (!(targetStoriesProperty.get().containsAll(story.getDependencies())
-                    && story.getDependencies().containsAll(targetStoriesProperty.get()))) {
-                changes.add(new EditCommand<>(story, "dependencies", targetStoriesProperty.get()));
+            if (!(dependenciesProperty.get().containsAll(story.getDependencies())
+                    && story.getDependencies().containsAll(dependenciesProperty.get()))) {
+                changes.add(new EditCommand<>(story, "dependencies", dependenciesProperty.get()));
             }
 
             // So that the table view gets update we need to remove a story from the observable lists
@@ -381,13 +327,14 @@ public class StoryFormViewModel extends FormController<Story> {
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Story", changes);
         }
+        return command;
     }
 
     /**
      * @return if the story being created has any cyclic dependencies
      */
     public boolean hasCyclicDependency() {
-        for (Story dependency : targetStoriesProperty.get()) {
+        for (Story dependency : dependenciesProperty.get()) {
             if (checkCyclicDependency(dependency)) {
                 return true;
             }
@@ -418,14 +365,6 @@ public class StoryFormViewModel extends FormController<Story> {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean isValid() { return valid; }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     private class Node {
