@@ -60,6 +60,7 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
         try {
             UndoManager.getUndoManager().doCommand(commandProperty.get());
         } catch (Exception e) {
+            // TODO remove this (it was only for use in development of this class)
             System.out.println("You should really set the edit command for this label");
         }
     }
