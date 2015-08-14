@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.nodes.GoatSuggester;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
@@ -28,6 +29,7 @@ import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.StringConverters;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -84,6 +86,7 @@ public class MainDetailsPaneController implements Initializable {
     
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
+    private GoatSuggester<Person> goatSuggester;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -112,6 +115,9 @@ public class MainDetailsPaneController implements Initializable {
                 advancedSearchDetailsPane
         };
         clear();
+        
+        goatSuggester = new GoatSuggester<>();
+        stackPane.getChildren().setAll(goatSuggester);
     }
 
     private void loadDetailsPanes() {
@@ -243,5 +249,11 @@ public class MainDetailsPaneController implements Initializable {
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
+        
+
+        goatSuggester.setConverter(StringConverters.personStringConverter(mainController.selectedOrganisationProperty));
+        mainController.selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
+            goatSuggester.setAllItems(newValue.getPeople());
+        });
     }
 }
