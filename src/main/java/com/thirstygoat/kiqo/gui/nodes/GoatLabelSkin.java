@@ -46,23 +46,34 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
         editView.setMinHeight(5);
         editView.setMaxHeight(5);
 
-        displayView.setMaxWidth(Control.USE_PREF_SIZE);
-        displayView.setMinWidth(Control.USE_PREF_SIZE);
-        stackPane.setAlignment(Pos.TOP_LEFT);
+        setSizing();
 
-        setResizeListener();
+        displayView.visibleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                editField.setMinHeight(5);
+                editField.setMaxHeight(5);
+                editView.setMinHeight(5);
+                editView.setMaxHeight(5);
+            } else {
+                showEditField();
+            }
+        });
     }
 
     /**
-     * Sets the size for display view and the edit view when the visible view changes
-     * see GoatLabelTextField
+     * Do any custom resizing etc
      */
-    protected abstract void setResizeListener();
+    protected abstract void setSizing();
 
     /**
      * Creates a new Control to use for editing in edit mode
      */
     protected abstract C createEditField();
+
+    /**
+     * Make any changes to the sizing for when the edit field is shown
+     */
+    protected abstract void showEditField();
 
     private HBox createMainView() {
 

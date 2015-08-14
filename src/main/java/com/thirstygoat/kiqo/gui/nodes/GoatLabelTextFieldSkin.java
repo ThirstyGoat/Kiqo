@@ -20,20 +20,12 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
     }
 
     @Override
-    protected void setResizeListener() {
-        displayView.visibleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                editField.setMinHeight(5);
-                editField.setMaxHeight(5);
-                editView.setMinHeight(5);
-                editView.setMaxHeight(5);
-            } else {
-                editField.setMinHeight(Control.USE_COMPUTED_SIZE);
-                editField.setMaxHeight(Control.USE_COMPUTED_SIZE);
-                editView.setMinHeight(Control.USE_COMPUTED_SIZE);
-                editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
-            }
-        });
+    protected void setSizing() {
+
+        displayView.setMaxWidth(Control.USE_PREF_SIZE);
+        displayView.setMinWidth(Control.USE_PREF_SIZE);
+        stackPane.setAlignment(Pos.TOP_LEFT);
+
         TextField textField = ((TextField) editField);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             Text text = new Text(newValue);
@@ -49,6 +41,14 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
     @Override
     protected Control createEditField() {
         return new TextField();
+    }
+
+    @Override
+    protected void showEditField() {
+        editField.setMinHeight(Control.USE_COMPUTED_SIZE);
+        editField.setMaxHeight(Control.USE_COMPUTED_SIZE);
+        editView.setMinHeight(Control.USE_COMPUTED_SIZE);
+        editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
     }
 
 }
