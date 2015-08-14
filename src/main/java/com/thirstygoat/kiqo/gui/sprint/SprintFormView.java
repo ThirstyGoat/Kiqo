@@ -76,7 +76,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogProperty(),
                 StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
-                storySelectionView.setHeader(new Label("Stories in Sprint:"));
+        storySelectionView.setHeader(new Label("Stories in Sprint:"));
         storySelectionView.setSourceItems(viewModel.sourceStories());
         storySelectionView.setTargetItems(viewModel.stories());
 
@@ -170,6 +170,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         validationVisualizer.initVisualization(viewModel.teamValidation(), teamTextField, true);
         validationVisualizer.initVisualization(viewModel.backlogValidation(), backlogTextField, true);
         validationVisualizer.initVisualization(viewModel.longNameValidation(), nameTextField, true);
+        validationVisualizer.initVisualization(viewModel.storiesValidation(), storySelectionView.getControl(), true);
     }
 
     public void okAction() {

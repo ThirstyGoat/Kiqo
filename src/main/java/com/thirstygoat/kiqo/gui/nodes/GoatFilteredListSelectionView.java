@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -30,8 +31,7 @@ import com.thirstygoat.kiqo.model.Item;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class
-        GoatFilteredListSelectionView<T extends Item> extends VBox {
+public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private final ObjectProperty<ObservableList<T>> sourceItems;
     private final ObjectProperty<ObservableList<T>> targetItems;
     private final ObservableList<T> allItems;
@@ -288,6 +288,14 @@ public class
 
     public void setSourceCellGraphicFactory(Callback<T, Node> sourceCellGraphicFactory) {
         this.sourceCellGraphicFactory.set(sourceCellGraphicFactory);
+    }
+
+    /**
+     * 
+     * @return Control which semantically symbolises the input (to be used for validation visualisation).
+     */
+    public Control getControl() {
+        return textField;
     }
 
     private enum SHOWING {
