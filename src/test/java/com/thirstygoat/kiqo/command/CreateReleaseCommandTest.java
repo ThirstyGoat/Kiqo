@@ -1,14 +1,14 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
+import java.time.LocalDate;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
+import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
 
 /**
  * Created by bradley on 14/04/15.

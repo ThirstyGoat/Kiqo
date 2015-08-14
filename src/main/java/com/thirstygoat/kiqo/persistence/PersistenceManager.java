@@ -1,20 +1,60 @@
 package com.thirstygoat.kiqo.persistence;
 
-import com.google.gson.*;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.search.SearchableItems;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 
 /**
  * Class for saving, loading, deleting etc Created by samschofield on 17/03/15.
@@ -81,27 +121,27 @@ public class PersistenceManager {
             revertVersion = gson.toJson(jsonObject);
 
             // loading old json file
-            String versionStr = version.getAsString();
-
             if (version == null) {
+                // 1.0
                 PersistenceManager.isOldJSON = true;
                 final BufferedReader br1 = new BufferedReader(new FileReader(file));
                 PersistenceManager.createGson(true);
                 final Organisation organisation2 = PersistenceManager.gson.fromJson(br1, Organisation.class);
                 organisation.getProjects().setAll(organisation2.getProjects());
                 PersistenceManager.createGson(false);
-            }
-
-            if (versionStr.equals("4.0")) {
-                List<Story> stories = new ArrayList<>();
-                organisation.getProjects().forEach(project1 -> {
-                    stories.addAll(project1.getUnallocatedStories());
-                    project1.getBacklogs().forEach(backlog -> stories.addAll(backlog.getStories()));
-                });
-                stories.forEach(story -> {
-                    story.getTasks().forEach(task -> task.setStory(story));
-                    story.getAcceptanceCriteria().forEach(acceptanceCriteria -> acceptanceCriteria.setStory(story));
-                });
+            } else {
+                String versionStr = version.getAsString();
+                if (versionStr.equals("4.0")) {
+                    List<Story> stories = new ArrayList<>();
+                    organisation.getProjects().forEach(project1 -> {
+                        stories.addAll(project1.getUnallocatedStories());
+                        project1.getBacklogs().forEach(backlog -> stories.addAll(backlog.getStories()));
+                    });
+                    stories.forEach(story -> {
+                        story.getTasks().forEach(task -> task.setStory(story));
+                        story.getAcceptanceCriteria().forEach(acceptanceCriteria -> acceptanceCriteria.setStory(story));
+                    });
+                }
             }
         }
         if (organisation != null) {

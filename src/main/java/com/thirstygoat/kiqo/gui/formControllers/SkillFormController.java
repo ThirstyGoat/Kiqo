@@ -1,12 +1,9 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -17,10 +14,13 @@ import javafx.stage.Stage;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by james on 20/03/15.
@@ -54,9 +54,11 @@ public class SkillFormController extends FormController<Skill> {
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Platform.runLater(shortNameTextField::requestFocus);
-
-        setValidationSupport();
+        Platform.runLater(() -> {
+            // wait for textfields to exist
+            setValidationSupport();
+            shortNameTextField.requestFocus();
+        });
     }
 
     private void setValidationSupport() {

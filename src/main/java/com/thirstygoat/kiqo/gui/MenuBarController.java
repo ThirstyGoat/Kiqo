@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,8 +15,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.UndoManager;
 
 public class MenuBarController implements Initializable {
     @FXML

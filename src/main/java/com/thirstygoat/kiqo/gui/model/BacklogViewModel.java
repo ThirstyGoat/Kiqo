@@ -1,17 +1,25 @@
 package com.thirstygoat.kiqo.gui.model;
 
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.Utilities;
+
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 /**
  * Model ViewModel

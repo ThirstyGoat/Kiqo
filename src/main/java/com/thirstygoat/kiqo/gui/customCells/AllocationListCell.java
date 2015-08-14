@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
-import com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -15,6 +12,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+
+import com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
 
 /**
  * Created by amy on 25/07/15.

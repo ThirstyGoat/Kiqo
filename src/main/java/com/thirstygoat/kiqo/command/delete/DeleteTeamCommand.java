@@ -1,14 +1,13 @@
 package com.thirstygoat.kiqo.command.delete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.search.SearchableItems;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

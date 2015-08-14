@@ -1,12 +1,18 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.model.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
 
 
 /**

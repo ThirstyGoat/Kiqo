@@ -1,13 +1,21 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.model.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import javafx.util.StringConverter;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by leroy on 21/07/15.

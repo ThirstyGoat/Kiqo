@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +7,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 
 /**
  * Created by james, amy on 6/5/15.

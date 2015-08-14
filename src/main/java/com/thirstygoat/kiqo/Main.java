@@ -1,7 +1,15 @@
 package com.thirstygoat.kiqo;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import java.io.File;
+import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,9 +18,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.Date;
-import java.util.logging.*;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 
 /**
  * Main entry point for application
@@ -32,7 +39,7 @@ public class Main extends Application {
                 } else if (arg.matches("(.*)\\.json")) {
                     file = new File(arg);
                     if (!file.exists()) {
-                        System.out.println("Invalid file path");
+                        System.err.println("Invalid file path");
                         System.exit(1);
                     }
                 }

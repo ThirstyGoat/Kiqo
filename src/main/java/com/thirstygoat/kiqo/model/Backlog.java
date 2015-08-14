@@ -1,6 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,9 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.thirstygoat.kiqo.search.SearchableField;
 
 /**
  * Created by leroy on 20/05/15.

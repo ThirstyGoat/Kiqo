@@ -1,8 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.model.Item;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
@@ -11,8 +11,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.model.Item;
 
 /**
 * Created by Carina Blair on 8/08/2015.

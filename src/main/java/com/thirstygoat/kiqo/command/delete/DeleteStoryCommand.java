@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import com.thirstygoat.kiqo.model.Story;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Created by leroy on 15/05/15.

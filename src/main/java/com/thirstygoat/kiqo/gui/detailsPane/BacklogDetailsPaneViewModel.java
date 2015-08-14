@@ -1,15 +1,16 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.gui.model.BacklogViewModel;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.StringConverters;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+
+import com.thirstygoat.kiqo.gui.model.BacklogViewModel;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.StringConverters;
 
 
 public class BacklogDetailsPaneViewModel extends BacklogViewModel {

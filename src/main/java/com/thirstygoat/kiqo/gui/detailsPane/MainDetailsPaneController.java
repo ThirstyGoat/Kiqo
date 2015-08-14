@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -16,7 +17,6 @@ import javafx.scene.layout.StackPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
-import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.Backlog;
@@ -34,9 +34,7 @@ import de.saxsys.mvvmfx.ViewTuple;
 
 /**
  * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).
- *
  * @author amy
- *
  */
 public class MainDetailsPaneController implements Initializable {
     @FXML

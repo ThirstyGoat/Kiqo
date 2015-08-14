@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.paint.Color;
 
 /**
  * Created by samschofield on 23/07/15.

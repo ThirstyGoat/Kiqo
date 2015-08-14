@@ -1,17 +1,17 @@
 package com.thirstygoat.kiqo.command;
 
-import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by bradley on 23/04/15.

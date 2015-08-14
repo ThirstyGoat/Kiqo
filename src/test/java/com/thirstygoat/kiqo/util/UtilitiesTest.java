@@ -1,17 +1,19 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
 
 
 /**

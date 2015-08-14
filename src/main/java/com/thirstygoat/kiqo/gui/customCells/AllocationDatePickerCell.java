@@ -1,11 +1,12 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.model.Allocation;
+import java.time.LocalDate;
+
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.model.Allocation;
 
 /**
  * Created by bradley on 30/04/15.

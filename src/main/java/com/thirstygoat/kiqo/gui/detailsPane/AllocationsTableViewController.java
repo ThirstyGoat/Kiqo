@@ -1,14 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
-import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -19,7 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,9 +27,15 @@ import javafx.util.Duration;
 
 import org.controlsfx.control.PopOver;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
+import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
 
 
 /**

@@ -4,9 +4,6 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Command to create a project
  *

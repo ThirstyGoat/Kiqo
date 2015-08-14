@@ -1,30 +1,37 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.regex.Pattern;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+
 import org.controlsfx.control.SegmentedButton;
 
-import java.util.regex.Pattern;
+import com.thirstygoat.kiqo.model.Item;
 
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class
-        GoatFilteredListSelectionView<T extends Item> extends VBox {
+public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private final ObjectProperty<ObservableList<T>> sourceItems;
     private final ObjectProperty<ObservableList<T>> targetItems;
     private final ObservableList<T> allItems;
@@ -281,6 +288,14 @@ public class
 
     public void setSourceCellGraphicFactory(Callback<T, Node> sourceCellGraphicFactory) {
         this.sourceCellGraphicFactory.set(sourceCellGraphicFactory);
+    }
+
+    /**
+     * 
+     * @return Control which semantically symbolises the input (to be used for validation visualisation).
+     */
+    public Control getControl() {
+        return textField;
     }
 
     private enum SHOWING {

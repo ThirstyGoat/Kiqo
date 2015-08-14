@@ -1,18 +1,20 @@
 package com.thirstygoat.kiqo.gui.model;
 
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import java.time.LocalDate;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.time.LocalDate;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 
 /**

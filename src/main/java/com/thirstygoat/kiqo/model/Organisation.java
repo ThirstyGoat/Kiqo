@@ -1,16 +1,17 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.thirstygoat.kiqo.search.SearchableItems;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Project class represents a software project

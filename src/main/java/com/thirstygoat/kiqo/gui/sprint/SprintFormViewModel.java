@@ -1,17 +1,25 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.gui.IFormViewModel;
-import com.thirstygoat.kiqo.model.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.IFormViewModel;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Team;
 
 
 /**
@@ -94,11 +102,11 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
     }
 
     protected void okAction() {
+        UndoManager.getUndoManager().doCommand(createCommand());
         exitStrategy.run();
     }
 
     protected void cancelAction() {
-        sprintProperty().set(null); // Potential hack way to ensure no command is made when the user cancels the dialog
         exitStrategy.run();
     }
 

@@ -1,13 +1,14 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.model.Skill;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Skill;
 
 public class SkillDetailsPaneController implements Initializable, IDetailsPaneController<Skill> {
     @FXML

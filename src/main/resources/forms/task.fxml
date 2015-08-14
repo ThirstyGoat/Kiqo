@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.formControllers.TaskFormController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.45" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.formControllers.TaskFormController">
   <bottom>
     <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
       <children>
@@ -19,8 +23,8 @@
   <center>
       <GridPane vgap="10.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="0.0" prefWidth="103.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="530.0" minWidth="10.0" prefWidth="427.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="0.0" prefWidth="138.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="530.0" minWidth="10.0" prefWidth="392.0" />
                 <!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="347.0" />-->
             </columnConstraints>
             <rowConstraints>
@@ -44,7 +48,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <Label text="Estimate:" GridPane.rowIndex="1">
+            <Label text="Estimated Hours:" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

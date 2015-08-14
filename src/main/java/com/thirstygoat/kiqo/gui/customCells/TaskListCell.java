@@ -1,14 +1,6 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
-import com.thirstygoat.kiqo.model.Status;
-import com.thirstygoat.kiqo.model.Task;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -22,6 +14,15 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
+import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Task;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
@@ -114,7 +115,6 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-//            System.out.println("Enter");
             if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
@@ -165,7 +165,6 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
-//            System.out.println("done");
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
             if (StoryDetailsPaneController.draggingTask != null) {
                 Task t = StoryDetailsPaneController.draggingTask;

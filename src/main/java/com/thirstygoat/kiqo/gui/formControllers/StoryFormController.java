@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -24,12 +23,11 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.ValidationSupport;
 
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.Utilities;
 
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;

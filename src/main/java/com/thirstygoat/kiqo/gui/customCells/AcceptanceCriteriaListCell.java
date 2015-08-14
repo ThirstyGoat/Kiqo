@@ -1,14 +1,8 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
-import com.thirstygoat.kiqo.model.Story;
+import java.util.Map;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +19,13 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-import java.util.Map;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
@@ -100,7 +100,6 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
             if (StoryDetailsPaneController.draggingAC != null) {
-//            System.out.println("exit");
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
                 AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneController.draggingAC;

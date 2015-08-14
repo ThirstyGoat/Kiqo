@@ -1,54 +1,73 @@
 #!/bin/bash
 
-# Required: git, mysql
+# Usage: ./git-deliverable.sh [-G] [-M]
+# -G skips git commands "git checkout master" and "git pull"
+# -m skips maven commands "mvn clean package site"
 
-pwd
-GIT_REPO=$1
-(cd $GIT_REPO; pwd)
-if [ ! -d $1 ]
-then
-  echo "git repo must be supplied as positional argument"
-  exit 1
-fi
+# Requires git, mvn, mysql
+# Requires internet access (for git, mvn and mysql)
+# Assumes current directory is the git repo
 
+# TODO: As of 11/8/15, the README mention of the jarfile needs to be manually bumped
+# to the new version number (and committed to master) before this script is run.
+
+#### PRECONFIGURATION
+# Constants
+GIT_REPO=`pwd`
 OUT_DIRECTORY=`pwd`/deliverable
-#http://wiki.bash-hackers.org/howto/getopts_tutorial
-while getopts o:m option
-do
-  case "${option}"
-  in
-    o)
-      OUT_DIRECTORY=${OPTARG}  # NO TRAILING SLASH
-    ;;
-    m)
-      mvn package site # generate required packages
-    ;;
+
+# Defaults
+DO_GIT_MASTER_PULL=1
+DO_MAVEN_BUILD=1
+
+# http://wiki.bash-hackers.org/howto/getopts_tutorial
+while getopts ":GM" opt; do
+  case $opt in
+    G) # don't do git stuff
+      echo "-G: Skipping git stuff"
+      DO_GIT_MASTER_PULL=0
+      ;;
+    M) # don't do maven stuff
+      echo "-M : Skipping maven stuff"
+      DO_MAVEN_BUILD=0
+      ;;
     \?)
-      exit "Invalid option"
-    ;;
+      echo "Invalid option: -$OPTARG"
+      ;;
   esac
 done
 
-#clear
-rm -r $OUT_DIRECTORY
+if [[ $DO_GIT_MASTER_PULL -gt 0 ]]; then
+  echo "git checkout master"
+  git checkout master
+  echo "git pull"
+  git pull
+fi
+if [[ $DO_MAVEN_BUILD -gt 0 ]]; then
+  echo "mvn clean package site"
+  mvn clean package site
+fi
+
+#### PACKAGING
+# clear old deliverable if it exists
+rm -rf $OUT_DIRECTORY
 mkdir $OUT_DIRECTORY
 
-echo "README" # - A read me that describes how to run your program and any information that you think is relevant
+echo "README" # - A readme that describes how to run your program and any information that you think is relevant
 cp $GIT_REPO/README* $OUT_DIRECTORY
+echo "LICENSE"
+cp $GIT_REPO/LICENSE* $OUT_DIRECTORY
+echo "*.json"
+cp $GIT_REPO/*.json $OUT_DIRECTORY
 
-echo "source.zip" # - An archive of your source code"
+echo "source.zip" # - An archive of your source code
 (cd $GIT_REPO; git archive --format zip --output $OUT_DIRECTORY/source.zip HEAD)
 
 echo "program/" # - Your jar file and any other resources it needs
 mkdir $OUT_DIRECTORY/program
 cp $GIT_REPO/target/*.jar $OUT_DIRECTORY/program # TODO don't copy unshaded jar
 cp -r $GIT_REPO/target/deploy/* $OUT_DIRECTORY/program
-
-echo "doc/" # - User and design documentation
-mkdir $OUT_DIRECTORY/doc
-cp $GIT_REPO/target/site/*.pdf $OUT_DIRECTORY/doc
-mkdir $OUT_DIRECTORY/doc/javadoc
-cp -r $GIT_REPO/target/site/apidocs/* $OUT_DIRECTORY/doc/javadoc
+chmod +x $OUT_DIRECTORY/program/*.sh
 
 echo "manual_test_plans/" # - Any manual test plans you executed
 mkdir $OUT_DIRECTORY/manual_test_plans
@@ -68,3 +87,24 @@ cp -r $GIT_REPO/target/surefire-reports/* $OUT_DIRECTORY/surefire-reports
 echo "site/" # - The maven site output
 mkdir $OUT_DIRECTORY/site
 cp -r $GIT_REPO/target/site/* $OUT_DIRECTORY/site
+
+echo "doc/" # - User and design documentation
+mkdir $OUT_DIRECTORY/doc
+cp -r $OUT_DIRECTORY/site/*.pdf $OUT_DIRECTORY/doc
+mkdir $OUT_DIRECTORY/doc/javadoc
+cp -r $OUT_DIRECTORY/site/apidocs $OUT_DIRECTORY/doc/javadoc
+cp -r $OUT_DIRECTORY/site/testapidocs $OUT_DIRECTORY/doc/javadoc
+
+#### COMPRESS TO ZIP
+rm -rf $OUT_DIRECTORY.zip
+CURR_DIR=`pwd`
+cd $OUT_DIRECTORY # to get relative paths within zip
+zip -rq $OUT_DIRECTORY .
+cd $CURR_DIR
+# tidy up by deleting working directory
+rm -rf $OUT_DIRECTORY
+
+echo "Done."
+echo "Remember to tag the repo!"
+echo "  git tag -a sprint_X -m \"Deliverable for sprint X\""
+echo "  git push origin --tags"

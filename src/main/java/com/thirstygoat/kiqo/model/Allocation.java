@@ -1,14 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.Searchable;
-import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 
 
 /**
