@@ -42,6 +42,10 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
         setEnterAction();
     }
 
+    /**
+     * Performs an action when the enter key is pressed
+     * override if custom enter functionality is needed
+     */
     protected void setEnterAction() {
         skin.getEditField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
