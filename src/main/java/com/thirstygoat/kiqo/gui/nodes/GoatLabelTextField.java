@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 

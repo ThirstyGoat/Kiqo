@@ -1,11 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 
 
 /**

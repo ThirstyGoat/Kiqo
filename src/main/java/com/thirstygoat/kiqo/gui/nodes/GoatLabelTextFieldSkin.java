@@ -1,7 +1,5 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -18,7 +16,6 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
      */
     protected GoatLabelTextFieldSkin(Control control) {
         super(control);
-
     }
 
     @Override
