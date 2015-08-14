@@ -72,6 +72,9 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
 //            departmentLabel.displayTextProperty(person, "department", person.departmentProperty());
 
             descriptionLabel.displayTextProperty().bind(person.descriptionProperty());
+            descriptionLabel.getEditField().textProperty().addListener((observable, oldValue, newValue) -> {
+                descriptionLabel.commandProperty().setValue(new EditCommand(person, "description", newValue));
+            });
 //            descriptionLabel.setItem(person, "description", person.descriptionProperty());
 
             skillsLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(person.observableSkills()));
