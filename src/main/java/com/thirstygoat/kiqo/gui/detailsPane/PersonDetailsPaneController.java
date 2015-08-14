@@ -1,10 +1,14 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -47,6 +51,9 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
     public void showDetails(final Person person) {
         if (person != null) {
             shortNameLabel.displayTextProperty().bind(person.shortNameProperty());
+            shortNameLabel.getEditField().textProperty().addListener((observable, oldValue, newValue) -> {
+                shortNameLabel.commandProperty().setValue(new EditCommand(person, "shortName", newValue));
+            });
 //            shortNameLabel.setItem(person, "shortName", person.shortNameProperty());
 
             longNameLabel.displayTextProperty().bind(person.longNameProperty());

@@ -1,8 +1,13 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Item;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 
 
 /**
@@ -13,14 +18,44 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     protected Label displayLabel;
     protected Button editButton;
     protected Button doneButton;
+    private ObjectProperty<EditCommand> commandProperty;
 
     public GoatLabel() {
         super();
         setSkin();
         setButtonBindings();
+        commandProperty = new SimpleObjectProperty<>();
     }
 
-    protected abstract void setButtonBindings();
+    private void setButtonBindings() {
+        editButton.setOnAction(event -> {
+            skin.showEdit();
+            populateEditField();
+        });
+
+        doneButton.setOnAction(event -> {
+            skin.showDisplay();
+            doneAction();
+        });
+
+        skin.getEditField().setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                event.consume();
+                skin.showDisplay();
+                doneAction();
+            }
+        });
+    }
+
+    protected void doneAction() {
+        try {
+            UndoManager.getUndoManager().doCommand(commandProperty.get());
+        } catch (Exception e) {
+            System.out.println("You should really set the edit command for this label");
+        }
+    }
+
+    protected abstract void populateEditField();
 
     protected abstract void setSkin();
 
@@ -37,5 +72,9 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     @Override
     protected Skin<?> createDefaultSkin() {
         return skin;
+    }
+
+    public ObjectProperty<EditCommand> commandProperty() {
+        return commandProperty;
     }
 }
