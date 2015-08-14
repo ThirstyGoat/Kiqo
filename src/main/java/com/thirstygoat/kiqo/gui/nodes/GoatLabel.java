@@ -16,7 +16,6 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     protected Label displayLabel;
     protected Button editButton;
     protected Button doneButton;
-    protected C editField;
 
     public GoatLabel() {
         super();
@@ -36,9 +35,7 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
         return displayLabel.textProperty();
     }
 
-    public C getEditField() {
-        return editField;
-    }
+    public abstract C getEditField();
 
     @Override
     protected Skin<?> createDefaultSkin() {

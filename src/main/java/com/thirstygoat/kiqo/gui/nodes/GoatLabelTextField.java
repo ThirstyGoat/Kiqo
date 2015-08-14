@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.Button;
+
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
@@ -14,7 +13,6 @@ public class GoatLabelTextField extends GoatLabel {
 
     public GoatLabelTextField() {
         super();
-        editField = new TextField();
     }
 
     @Override
@@ -45,19 +43,8 @@ public class GoatLabelTextField extends GoatLabel {
         doneButton = skin.getDoneButton();
     }
 
-    public Button doneButton() {
-        return doneButton;
-    }
-
-    public StringProperty textProperty() {
-        return displayLabel.textProperty();
-    }
-
+    @Override
     public TextField getEditField() {
         return editField;
-    }
-
-    public void setText(String text) {
-        displayLabel.textProperty().setValue(text);
     }
 }

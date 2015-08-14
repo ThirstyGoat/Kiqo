@@ -40,29 +40,29 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        emailLabel.managedProperty().bind(emailLabel.textProperty().isNotEmpty());
+        emailLabel.managedProperty().bind(emailLabel.displayTextProperty().isNotEmpty());
     }
 
     @Override
     public void showDetails(final Person person) {
         if (person != null) {
-            shortNameLabel.textProperty().bind(person.shortNameProperty());
+            shortNameLabel.displayTextProperty().bind(person.shortNameProperty());
 //            shortNameLabel.setItem(person, "shortName", person.shortNameProperty());
 
-            longNameLabel.textProperty().bind(person.longNameProperty());
+            longNameLabel.displayTextProperty().bind(person.longNameProperty());
 //            longNameLabel.setItem(person, "longName", person.longNameProperty());
 
-            userIdLabel.textProperty().bind(person.userIdProperty());
+            userIdLabel.displayTextProperty().bind(person.userIdProperty());
 //            userIdLabel.setItem(person, "userId", person.userIdProperty());
 
-            emailLabel.textProperty().bind(person.emailAddressProperty());
+            emailLabel.displayTextProperty().bind(person.emailAddressProperty());
 //            emailLabel.setItem(person, "emailAddress", person.emailAddressProperty());
 
-            phoneLabel.textProperty().bind(person.phoneNumberProperty());
+            phoneLabel.displayTextProperty().bind(person.phoneNumberProperty());
 //            phoneLabel.setItem(person, "phoneNumber", person.phoneNumberProperty());
 
-            departmentLabel.textProperty().bind(person.departmentProperty());
-//            departmentLabel.setItem(person, "department", person.departmentProperty());
+            departmentLabel.displayTextProperty().bind(person.departmentProperty());
+//            departmentLabel.displayTextProperty(person, "department", person.departmentProperty());
 
             descriptionLabel.textProperty().bind(person.descriptionProperty());
 //            descriptionLabel.setItem(person, "description", person.descriptionProperty());
@@ -81,12 +81,12 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
             validationSupport.registerValidator(longNameLabel.getEditField(),
                     Validator.createEmptyValidator("Name must not be empty", Severity.ERROR));
         } else {
-            shortNameLabel.setText(null);
-            longNameLabel.setText(null);
-            userIdLabel.setText(null);
-            emailLabel.setText(null);
-            phoneLabel.setText(null);
-            departmentLabel.setText(null);
+            shortNameLabel.displayTextProperty().setValue("");
+            longNameLabel.displayTextProperty().setValue("");
+            userIdLabel.displayTextProperty().setValue("");
+            emailLabel.displayTextProperty().setValue("");
+            phoneLabel.displayTextProperty().setValue("");
+            departmentLabel.displayTextProperty().setValue("");
             skillsLabel.setText(null);
             descriptionLabel.setText(null);
         }

@@ -48,7 +48,16 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
         setResizeListener();
     }
 
+    /**
+     * Sets the size for display view and the edit view when the visible view changes
+     * see GoatLabelTextField
+     */
     protected abstract void setResizeListener();
+
+    /**
+     * Creates a new Control to use for editing in edit mode
+     */
+    protected abstract C createEditField();
 
     private HBox createMainView() {
 
@@ -74,8 +83,6 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
 
         return hBox;
     }
-
-    protected abstract C createEditField();
 
     public Button getEditButton() {
         return editButton;

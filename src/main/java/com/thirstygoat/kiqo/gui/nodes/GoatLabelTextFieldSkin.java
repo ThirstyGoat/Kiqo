@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import javafx.scene.control.Control;
-import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 
 /**
