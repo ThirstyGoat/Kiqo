@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
@@ -22,7 +23,11 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private SprintDetailsPaneDetailsView detailsViewController; // Ignore naming convention here
     @FXML
+    private ScrumboardView scrumboardViewController; // Ignore naming convention here
+    @FXML
     private AnchorPane detailsView;
+    @FXML
+    private AnchorPane scrumboardView;
 
     @FXML
     private SegmentedButton segmentedButton;
@@ -46,25 +51,28 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             } else if (newValue == detailsToggleButton) {
                 // Show Details View
                 show(detailsView);
+            } else  if (newValue == scrumboardToggleButton) {
+                show(scrumboardView);
             } else {
-                hideAllViews();
+                    hideAllViews();
             }
         });
 
         detailsToggleButton.setSelected(true);
 
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
+        viewModel.setScrumboardViewModel(scrumboardViewController.getViewModel());
     }
 
     /**
      * Hides all views and then shows the given view
-     * @param node View to be shown
+     * @param pane View to be shown
      */
-    private void show(Node node) {
+    private void show(Pane pane) {
         hideAllViews();
 
-        node.setManaged(true);
-        node.setVisible(true);
+        pane.setManaged(true);
+        pane.setVisible(true);
     }
 
     /**
@@ -73,5 +81,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private void hideAllViews() {
         detailsView.setVisible(false);
         detailsView.setManaged(false);
+
+        scrumboardView.setVisible(false);
+        scrumboardView.setManaged(false);
     }
 }

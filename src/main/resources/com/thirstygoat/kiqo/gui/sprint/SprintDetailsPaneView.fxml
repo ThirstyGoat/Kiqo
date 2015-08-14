@@ -21,6 +21,7 @@
         </HBox>
 
         <fx:include fx:id="detailsView" source="SprintDetailsPaneDetailsView.fxml" />
+        <fx:include fx:id="scrumboardView" source="ScrumboardView.fxml" />
 
       </children>
       <padding>
