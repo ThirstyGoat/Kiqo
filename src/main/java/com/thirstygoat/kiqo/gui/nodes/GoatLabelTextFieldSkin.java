@@ -1,7 +1,10 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 /**
  * Created by samschofield on 7/08/15.
@@ -32,6 +35,16 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
                 editView.setMinHeight(Control.USE_COMPUTED_SIZE);
                 editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
             }
+        });
+        TextField textField = ((TextField) editField);
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            Text text = new Text(newValue);
+            text.setFont(textField.getFont()); // Set the same font, so the size is the same
+            double width = text.getLayoutBounds().getWidth() // This big is the Text in the TextField
+                    + textField.getPadding().getLeft() + textField.getPadding().getRight() // Add the padding of the TextField
+                    + 2d; // Add some spacing
+            textField.setPrefWidth(Math.max(width, 150)); // Set the width
+            textField.positionCaret(((TextField) editField).getCaretPosition());
         });
     }
 
