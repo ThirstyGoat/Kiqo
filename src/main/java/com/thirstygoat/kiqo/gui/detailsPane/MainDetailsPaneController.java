@@ -86,7 +86,6 @@ public class MainDetailsPaneController implements Initializable {
     
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
-    private GoatSuggester<Person> goatSuggester;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -115,9 +114,6 @@ public class MainDetailsPaneController implements Initializable {
                 advancedSearchDetailsPane
         };
         clear();
-        
-        goatSuggester = new GoatSuggester<>();
-        stackPane.getChildren().setAll(goatSuggester);
     }
 
     private void loadDetailsPanes() {
@@ -249,11 +245,5 @@ public class MainDetailsPaneController implements Initializable {
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
-        
-
-        goatSuggester.setConverter(StringConverters.personStringConverter(mainController.selectedOrganisationProperty));
-        mainController.selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            goatSuggester.setSource(newValue.getPeople());
-        });
     }
 }

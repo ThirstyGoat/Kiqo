@@ -21,10 +21,12 @@ import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
+import com.thirstygoat.kiqo.gui.nodes.GoatSuggester;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 
 /**
@@ -38,13 +40,12 @@ public class ReleaseFormController extends FormController<Release> {
     private Command command;
     private boolean valid = false;
     private Stage stage;
-    private Project project;
 
     // Begin FXML Injections
     @FXML
     private TextField shortNameTextField;
     @FXML
-    private TextField projectTextField;
+    private GoatSuggester<Project> projectSuggester;
     @FXML
     private DatePicker releaseDatePicker;
     @FXML
@@ -58,7 +59,6 @@ public class ReleaseFormController extends FormController<Release> {
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setShortNameLengthRestrictor();
-        setPrompts();
         Platform.runLater(() -> {
             // wait for textfields to exist
             setValidationSupport();
@@ -72,30 +72,32 @@ public class ReleaseFormController extends FormController<Release> {
             if (s.length() == 0) {
                 return false;
             }
+            Project project = projectSuggester.getValue();
             if (project == null) {
                 return true;
+            } else {
+                return Utilities.shortnameIsUnique(shortNameTextField.getText(), release, projectSuggester.getValue().getReleases());
             }
-            return Utilities.shortnameIsUnique(shortNameTextField.getText(), release, project.getReleases());
         };
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
                 "Short name must be unique and not empty."));
 
-        final Predicate<String> projectValidation = s -> {
-            for (final Project p : organisation.getProjects()) {
-                if (p.getShortName().equals(projectTextField.getText())) {
-                    project = p;
-                    // Redo validation for shortname text field
-                    final String snt = shortNameTextField.getText();
-                    shortNameTextField.setText("");
-                    shortNameTextField.setText(snt);
-                    return true;
-                }
+        final Predicate<Project> projectValidation = project -> {
+            if (projectSuggester.getValue() != null) {
+//            for (final Project p : organisation.getProjects()) {
+//                if (p.getShortName().equals(projectSuggester.getText())) {
+                project = projectSuggester.getValue();
+                // Redo validation for shortname text field
+                final String snt = shortNameTextField.getText();
+                shortNameTextField.setText("");
+                shortNameTextField.setText(snt);
+                return true;
             }
             return false;
         };
 
-        validationSupport.registerValidator(projectTextField, Validator.createPredicateValidator(projectValidation,
+        validationSupport.registerValidator(projectSuggester, Validator.createPredicateValidator(projectValidation,
                 "Project must already exist"));
 
         final Predicate<LocalDate> dateValidation = d -> {
@@ -123,12 +125,6 @@ public class ReleaseFormController extends FormController<Release> {
                 okButton.setDisable(false);
             }
         });
-    }
-
-    private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
-        projectTextField.setPromptText("Project this release is associated with.");
-        descriptionTextField.setPromptText("Describe this release.");
     }
 
     /**
@@ -182,7 +178,7 @@ public class ReleaseFormController extends FormController<Release> {
     public void setCommand() {
         if (release == null) {
             // new release command
-            release = new Release(shortNameTextField.getText(), project, releaseDatePicker.getValue(),
+            release = new Release(shortNameTextField.getText(), projectSuggester.getValue(), releaseDatePicker.getValue(),
                     descriptionTextField.getText());
             command = new CreateReleaseCommand(release);
         } else {
@@ -191,9 +187,9 @@ public class ReleaseFormController extends FormController<Release> {
             if (!shortNameTextField.getText().equals(release.getShortName())) {
                 changes.add(new EditCommand<>(release, "shortName", shortNameTextField.getText()));
             }
-            if (!project.equals(release.getProject())) {
-                changes.add(new MoveItemCommand<>(release, release.getProject().observableReleases(), project.observableReleases()));
-                changes.add(new EditCommand<>(release, "project", project));
+            if (!projectSuggester.getValue().equals(release.getProject())) {
+                changes.add(new MoveItemCommand<>(release, release.getProject().observableReleases(), projectSuggester.getValue().observableReleases()));
+                changes.add(new EditCommand<>(release, "project", projectSuggester.getValue()));
             }
             if (!releaseDatePicker.getValue().equals(release.getDate())) {
                 changes.add(new EditCommand<>(release, "date", releaseDatePicker.getValue()));
@@ -201,9 +197,6 @@ public class ReleaseFormController extends FormController<Release> {
             if (!descriptionTextField.getText().equals(release.getDescription())) {
                 changes.add(new EditCommand<>(release, "description", descriptionTextField.getText()));
             }
-
-
-
 
             valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Release", changes);
@@ -218,7 +211,8 @@ public class ReleaseFormController extends FormController<Release> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        setTextFieldSuggester(projectTextField, organisation.getProjects());
+        projectSuggester.setConverter(StringConverters.projectStringConverter(organisation));
+        projectSuggester.setSource(organisation.getProjects());
     }
 
     @Override
@@ -228,11 +222,14 @@ public class ReleaseFormController extends FormController<Release> {
 
         if (release == null) {
             // create a release
-            releaseDatePicker.setPromptText("dd/mm/yyyy");
+            shortNameTextField.setText("");
+            projectSuggester.setValue(null);
+            releaseDatePicker.setValue(null);
+            descriptionTextField.setText("");
         } else {
             // edit an existing release
             shortNameTextField.setText(release.getShortName());
-            projectTextField.setText(release.getProject().getShortName());
+            projectSuggester.setValue(release.getProject());
             releaseDatePicker.setValue(release.getDate());
             descriptionTextField.setText(release.getDescription());
         }

@@ -29,8 +29,8 @@ public class GoatSuggester<T extends Item> extends ComboBox<T> {
 //        setMinHeight(30);
 //        setStyle("-fx-border-radius: 4 4 0 0; -fx-background-radius: 4 4 0 0;");
         setEditable(true);
-        setPromptText("Filter by regex...");
         setVisibleRowCount(8);
+        setPrefWidth(Integer.MAX_VALUE); // grow to fill available space
     }
 
     private void addBehaviour() {
