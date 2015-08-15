@@ -26,7 +26,6 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 
 /**
@@ -84,10 +83,7 @@ public class ReleaseFormController extends FormController<Release> {
                 "Short name must be unique and not empty."));
 
         final Predicate<Project> projectValidation = project -> {
-            if (projectSuggester.getValue() != null) {
-//            for (final Project p : organisation.getProjects()) {
-//                if (p.getShortName().equals(projectSuggester.getText())) {
-                project = projectSuggester.getValue();
+            if (project != null) {
                 // Redo validation for shortname text field
                 final String snt = shortNameTextField.getText();
                 shortNameTextField.setText("");
@@ -98,7 +94,7 @@ public class ReleaseFormController extends FormController<Release> {
         };
 
         validationSupport.registerValidator(projectSuggester, Validator.createPredicateValidator(projectValidation,
-                "Project must already exist"));
+                "Project name must not be empty"));
 
         final Predicate<LocalDate> dateValidation = d -> {
             if (d == null) {
