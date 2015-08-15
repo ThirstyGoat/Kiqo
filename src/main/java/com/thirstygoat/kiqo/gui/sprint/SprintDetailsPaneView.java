@@ -4,6 +4,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,7 +32,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private AnchorPane anchorPane;
     @FXML
-    private Label longNameLabel;
+    private GoatLabelTextField longNameLabel;
     @FXML
     private Label goalLabel;
     @FXML
@@ -59,7 +60,15 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             viewModel.reload();
         });
 
-        longNameLabel.textProperty().bind(viewModel.longNameProperty());
+        longNameLabel.displayTextProperty().bind(viewModel.longNameProperty());
+        longNameLabel.commandProperty().bind(viewModel.commandObjectProperty);
+        longNameLabel.getEditField().textProperty().bindBidirectional(viewModel.longNameProperty());
+
+
+
+
+
+
         goalLabel.textProperty().bind(viewModel.goalProperty());
         startDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             if (viewModel.startDateProperty().get() != null) {
