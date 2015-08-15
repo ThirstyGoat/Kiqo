@@ -10,6 +10,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 
 import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.util.StringConverters;
 
 public class GoatSuggester<T extends Item> extends ComboBox<T> {    
     private ListProperty<T> sourceList;
@@ -53,6 +54,7 @@ public class GoatSuggester<T extends Item> extends ComboBox<T> {
     }
 
     public void setSource(ObservableList<T> source) {
+        setConverter(StringConverters.stringConverter(source));
         sourceList.set(source);
     }
 }

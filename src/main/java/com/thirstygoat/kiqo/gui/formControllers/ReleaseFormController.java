@@ -211,7 +211,6 @@ public class ReleaseFormController extends FormController<Release> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        projectSuggester.setConverter(StringConverters.projectStringConverter(organisation));
         projectSuggester.setSource(organisation.getProjects());
     }
 

@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.util;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 
 import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Project;
@@ -19,6 +21,25 @@ public class StringConverters {
     StringConverter<Project> projectStringConverter;
     StringConverter<Person> personStringConverter;
 
+    public static <T extends Item> StringConverter<T> stringConverter(ObservableList<T> source) {
+        return new StringConverter<T>() {
+            @Override
+             public String toString(T t) {
+                 return t != null ? t.getShortName() : "";
+             }
+
+             @Override
+             public T fromString(String shortName) {
+                 for (final T t : source) {
+                     if (t.getShortName().equals(shortName)) {
+                         return t;
+                     }
+                 }
+                 return null;
+             }
+         };
+    }
+    
     public static StringConverter<Project> projectStringConverter(Organisation organisation) {
         return new StringConverter<Project>() {
            @Override
