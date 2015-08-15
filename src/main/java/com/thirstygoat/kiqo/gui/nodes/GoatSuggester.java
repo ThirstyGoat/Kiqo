@@ -41,17 +41,14 @@ public class GoatSuggester<T extends Item> extends ComboBox<T> {
             }
         });
         
-        valueProperty().addListener((observable, oldValue, newValue) -> {
-            int newIndex = getConverter().toString(newValue).length();
-            System.out.println(String.format("new caret position: %d", newIndex));
-            TextField editor = getEditor();
-            editor.positionCaret(newIndex);
-            editor.selectEnd();
-        });
-        
         // when source list changes, filter list
         allItems.addListener((ListChangeListener<T>) c -> {
             filterList();
+        });
+
+        // when selected item changes, move caret to end of text
+        getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            getEditor().end();
         });
     }
 
