@@ -63,6 +63,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         longNameLabel.displayTextProperty().bind(viewModel.longNameProperty());
         longNameLabel.commandProperty().bind(viewModel.commandObjectProperty);
         longNameLabel.getEditField().textProperty().bindBidirectional(viewModel.longNameProperty());
+        longNameLabel.validationStatus().set(viewModel.longNameValidation());
 
 
 

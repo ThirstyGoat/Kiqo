@@ -3,9 +3,15 @@ package com.thirstygoat.kiqo.gui.nodes;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Item;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
@@ -20,12 +26,24 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     protected Button editButton;
     protected Button doneButton;
     private ObjectProperty<EditCommand> commandProperty;
+    private ValidationVisualizer validationVisualizer;
+    private ObjectProperty<ValidationStatus> validationStatus;
 
     public GoatLabel() {
         super();
         setSkin();
         setButtonBindings();
+        setValidation();
+    }
+
+    private void setValidation() {
         commandProperty = new SimpleObjectProperty<>();
+        validationVisualizer = new ControlsFxVisualizer();
+        validationStatus = new SimpleObjectProperty<>();
+        validationStatus.addListener((observable, oldValue, newValue) -> {
+            doneButton.disableProperty().bind(Bindings.not(validationStatus.get().validProperty()));
+            validationVisualizer.initVisualization(validationStatus.get(), editField, true);
+        });
     }
 
     private void setButtonBindings() {
@@ -48,7 +66,7 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
      */
     protected void setEnterAction() {
         skin.getEditField().setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
+            if (event.getCode() == KeyCode.ENTER && validationStatus.get().isValid()) {
                 event.consume();
                 skin.showDisplay();
                 doneAction();
@@ -94,5 +112,9 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
 
     public ObjectProperty<EditCommand> commandProperty() {
         return commandProperty;
+    }
+
+    public ObjectProperty<ValidationStatus> validationStatus() {
+        return validationStatus;
     }
 }

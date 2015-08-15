@@ -6,7 +6,10 @@ import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -53,12 +56,18 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
     public void showDetails(final Person person) {
         if (person != null) {
             shortNameLabel.displayTextProperty().bind(person.shortNameProperty());
-            StringProperty p = new SimpleStringProperty();
-            p.bind(shortNameLabel.getEditField().textProperty());
-
-            p.addListener((observable, oldValue, newValue) -> {
+            shortNameLabel.getEditField().textProperty().addListener((observable, oldValue, newValue) -> {
                 shortNameLabel.commandProperty().setValue(new EditCommand(person, "shortName", newValue));
+                ObservableRuleBasedValidator shortNameValidator = new ObservableRuleBasedValidator();
+                BooleanBinding rule1 = shortNameLabel.getEditField().textProperty().isNotNull();
+                BooleanBinding rule2 = shortNameLabel.getEditField().textProperty().length().greaterThan(0);
+                BooleanBinding rule3 = shortNameLabel.getEditField().textProperty().length().lessThan(20);
+                shortNameValidator.addRule(rule1, ValidationMessage.error("Short name must be set"));
+                shortNameValidator.addRule(rule2, ValidationMessage.error("Short name must be set"));
+                shortNameValidator.addRule(rule3, ValidationMessage.error("Short name must be less than 20 characters"));
+                shortNameLabel.validationStatus().setValue(shortNameValidator.getValidationStatus());
             });
+
 //            shortNameLabel.setItem(person, "shortName", person.shortNameProperty());
 
             longNameLabel.displayTextProperty().bind(person.longNameProperty());
@@ -87,11 +96,11 @@ public class PersonDetailsPaneController implements Initializable, IDetailsPaneC
             final ValidationSupport validationSupport = new ValidationSupport();
 //            final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
 //                    Utilities.shortnameIsUnique(shortNameLabel.getEditField().getText(), person, organisation.getPeople());
-            final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
-                    Utilities.shortnameIsUnique(shortNameLabel.getEditField().getText(), person, new ArrayList<>());
-            //Todo prevent the user from clicking the done button
-            validationSupport.registerValidator(shortNameLabel.getEditField(), Validator.createPredicateValidator(shortNameValidation,
-                    "Short name must be unique and not empty."));
+//            final Predicate<String> shortNameValidation = s -> s.length() != 0 &&
+//                    Utilities.shortnameIsUnique(shortNameLabel.getEditField().getText(), person, new ArrayList<>());
+//            //Todo prevent the user from clicking the done button
+//            validationSupport.registerValidator(shortNameLabel.getEditField(), Validator.createPredicateValidator(shortNameValidation,
+//                    "Short name must be unique and not empty."));
 
             validationSupport.registerValidator(longNameLabel.getEditField(),
                     Validator.createEmptyValidator("Name must not be empty", Severity.ERROR));
