@@ -1,69 +1,58 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 
 import com.thirstygoat.kiqo.model.Item;
 
 public class GoatSuggester<T extends Item> extends ComboBox<T> {    
-    private ObservableList<T> allItems;
+    private ListProperty<T> sourceList;
+    private FilteredList<T> filteredList;
 
     public GoatSuggester() {
         super();        
-        allItems = FXCollections.observableArrayList(Item.getWatchStrategy());
+        sourceList = new SimpleListProperty<>();
+        filteredList = new FilteredList<>(sourceList);
+        setItems(filteredList);
         
         style();
-        bindShownItems();
+        addBehaviour();
     }
     
     private void style() {
 //        setMinHeight(30);
 //        setStyle("-fx-border-radius: 4 4 0 0; -fx-background-radius: 4 4 0 0;");
-        setPromptText("Filter by regex...");
         setEditable(true);
+        setPromptText("Filter by regex...");
         setVisibleRowCount(8);
     }
 
-    private void bindShownItems() {
-        // when text changes, filter list
-        getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            filterList();
-            if (!isShowing()) {
-                // open the dropdown
-                show();
-            }
-        });
-        
-        // when source list changes, filter list
-        allItems.addListener((ListChangeListener<T>) c -> {
-            filterList();
-        });
-
+    private void addBehaviour() {
         // when selected item changes, move caret to end of text
         getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             getEditor().end();
         });
+        
+        // when text changes, replace filter
+        getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isShowing() && isFocused()) {
+                show(); // open the dropdown
+            }
+            // wrap in runLater to avoid odd IndexOutOfBoundsException when a suggestion is clicked
+            Platform.runLater(() -> {
+                filteredList.setPredicate(t -> { return t.getShortName()
+                        .toLowerCase().matches(".*" + Pattern.quote(newValue.toLowerCase()) + ".*"); });
+            });
+        });
     }
 
-    private void filterList() {
-        final String regex = Pattern.quote(getEditor().getText().toLowerCase());
-        Platform.runLater(() -> {
-            getItems().clear();
-            getItems().addAll(allItems.stream()
-                    .filter(t -> { return t.getShortName().toLowerCase().matches(".*" + regex + ".*"); })
-                    .collect(Collectors.toList()));
-        });       
-    }
-
-    public void setAllItems(ObservableList<T> allItems) {
-        this.allItems.clear();
-        this.allItems.addAll(allItems);
+    public void setSource(ObservableList<T> source) {
+        sourceList.set(source);
     }
 }

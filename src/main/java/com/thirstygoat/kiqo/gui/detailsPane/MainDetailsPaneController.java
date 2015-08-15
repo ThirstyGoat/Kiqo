@@ -253,7 +253,7 @@ public class MainDetailsPaneController implements Initializable {
 
         goatSuggester.setConverter(StringConverters.personStringConverter(mainController.selectedOrganisationProperty));
         mainController.selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
-            goatSuggester.setAllItems(newValue.getPeople());
+            goatSuggester.setSource(newValue.getPeople());
         });
     }
 }
