@@ -185,6 +185,8 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
+            sprint.initBoundPropertySupport();
+            sprint.addPropertyChangeListener((observable) -> reload());
             if (sprintWrapper.get() != null) {
                 sprintWrapper.get().getStories().removeListener(storyListener);
             }
