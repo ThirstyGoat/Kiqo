@@ -60,9 +60,13 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             viewModel.reload();
         });
 
-        longNameLabel.displayTextProperty().bind(viewModel.longNameProperty());
+        // Because otherwise we get a null pointer exception becuase the sprint property hasnt been set yet
+        viewModel.sprintProperty().addListener((observable, oldValue, newValue) -> {
+            longNameLabel.displayTextProperty().bind(viewModel.sprintProperty().get().longNameProperty());
+            longNameLabel.getEditField().textProperty().bindBidirectional(viewModel.longNameProperty());
+        });
+
         longNameLabel.commandProperty().bind(viewModel.commandObjectProperty);
-        longNameLabel.getEditField().textProperty().bindBidirectional(viewModel.longNameProperty());
         longNameLabel.validationStatus().set(viewModel.longNameValidation());
 
 
