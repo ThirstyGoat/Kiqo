@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.EditCommand;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,7 +19,7 @@ import com.thirstygoat.kiqo.model.Story;
  */
 public class SprintDetailsPaneViewModel extends SprintViewModel implements Loadable<Sprint> {
     public static final String PLACEHOLDER = "No stories in sprint";
-    public ObjectProperty<EditCommand> commandObjectProperty;
+    public ObjectProperty<Command> commandObjectProperty;
 
     private final ListChangeListener<Story> listChangeListener;
 
@@ -30,7 +31,7 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Loada
 
         commandObjectProperty = new SimpleObjectProperty<>();
         longNameProperty().addListener((observable, oldValue, newValue) -> {
-            commandObjectProperty.set(new EditCommand(sprintProperty().get(), "longName", newValue));
+            commandObjectProperty.set(createCommand());
         });
     }
 }
