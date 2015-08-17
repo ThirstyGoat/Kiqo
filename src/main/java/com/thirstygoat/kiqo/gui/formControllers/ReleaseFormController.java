@@ -58,7 +58,6 @@ public class ReleaseFormController extends FormController<Release> {
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
         setShortNameLengthRestrictor();
-        setPrompts();
         Platform.runLater(() -> {
             // wait for textfields to exist
             setValidationSupport();
@@ -124,13 +123,7 @@ public class ReleaseFormController extends FormController<Release> {
             }
         });
     }
-
-    private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
-        projectTextField.setPromptText("Project this release is associated with.");
-        descriptionTextField.setPromptText("Describe this release.");
-    }
-
+    
     /**
      * Sets up a listener on the name field of team to restrict it to the predefined maximum length
      */
@@ -228,7 +221,10 @@ public class ReleaseFormController extends FormController<Release> {
 
         if (release == null) {
             // create a release
-            releaseDatePicker.setPromptText("dd/mm/yyyy");
+            shortNameTextField.setText("");
+            projectTextField.setText("");
+            releaseDatePicker.setValue(null);
+            descriptionTextField.setText("");
         } else {
             // edit an existing release
             shortNameTextField.setText(release.getShortName());
