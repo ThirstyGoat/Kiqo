@@ -29,6 +29,13 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     private ValidationVisualizer validationVisualizer;
     private ObjectProperty<ValidationStatus> validationStatus;
 
+
+    protected abstract S initSkin();
+
+    public abstract C getEditField();
+
+    protected abstract void populateEditField();
+
     public GoatLabel() {
         super();
         setSkin();
@@ -83,8 +90,6 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
         }
     }
 
-    protected abstract void populateEditField();
-
     protected void setSkin() {
         skin = initSkin();
         displayLabel = skin.getDisplayLabel();
@@ -100,10 +105,6 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     public StringProperty displayTextProperty() {
         return displayLabel.textProperty();
     }
-
-    protected abstract S initSkin();
-
-    public abstract C getEditField();
 
     @Override
     protected Skin<?> createDefaultSkin() {
