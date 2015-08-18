@@ -59,62 +59,29 @@ public class PersistenceManagerTest {
     @Test
     public void testLoad_sprint1File() {
         final File f = new File(getClass().getResource("/save_files/sprint1.json").getFile());
-        Exception ex = null;
-        try {
-            PersistenceManager.loadOrganisation(f);
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Opening old save file should not raise an exception",
-                ex == null);
     }
 
     @Test
-    public void testLoad_sprint2File() {
+    public void testLoad_sprint2File() throws FileNotFoundException {
         final File f = new File(getClass().getResource("/save_files/sprint2.json").getFile());
-        Exception ex = null;
-        try {
-            PersistenceManager.loadOrganisation(f);
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Opening old save file should not raise an exception",
-                ex == null);
+        PersistenceManager.loadOrganisation(f);
     }
 
     @Test
-    public void testLoad_sprint3File() {
+    public void testLoad_sprint3File() throws FileNotFoundException {
         final File f = new File(getClass().getResource("/save_files/sprint3.json").getFile());
-        Exception ex = null;
-        try {
-            PersistenceManager.loadOrganisation(f);
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Opening old save file should not raise an exception",
-                ex == null);     }
+        PersistenceManager.loadOrganisation(f);
+    }
 
     @Test
-    public void testLoad_sprint4File() {
+    public void testLoad_sprint4File() throws FileNotFoundException {
         final File f = new File(getClass().getResource("/save_files/sprint4.json").getFile());
-        Exception ex = null;
-        try {
-            PersistenceManager.loadOrganisation(f);
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Opening old save file should not raise an exception",
-                ex == null); }
+        PersistenceManager.loadOrganisation(f);
+    }
 
     @Test
-    public void testLoad_sprint5File() {
+    public void testLoad_sprint5File() throws FileNotFoundException {
         final File f = new File(getClass().getResource("/save_files/sprint5.json").getFile());
-        Exception ex = null;
-        try {
-            PersistenceManager.loadOrganisation(f);
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Opening old save file should not raise an exception",
-                ex == null); }
+        PersistenceManager.loadOrganisation(f);
+    }
 }
