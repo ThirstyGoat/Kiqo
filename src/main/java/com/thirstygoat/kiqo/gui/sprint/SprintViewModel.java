@@ -60,10 +60,7 @@ public class SprintViewModel implements ViewModel {
 
         goalValidator = new ObservableRuleBasedValidator();
 
-        BooleanBinding rule1 = goalProperty().isNotNull();
-        BooleanBinding rule2 = goalProperty().length().greaterThan(0);
-        BooleanBinding rule3 = goalProperty().length().lessThan(20);
-        BooleanBinding rule4 = Bindings.createBooleanBinding(
+        BooleanBinding uniqueShortName = Bindings.createBooleanBinding(
                 () -> {
                     if (releaseProperty().get() == null) {
                         return true;
@@ -79,14 +76,14 @@ public class SprintViewModel implements ViewModel {
                     return true;
                 }, goalProperty(), releaseProperty());
 
-        goalValidator.addRule(rule1, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule2, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule3, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule4, ValidationMessage.error("Sprint goal must be unique and not empty"));
+        goalValidator.addRule(goalProperty().isNotNull(), ValidationMessage.error("Sprint goal must not be empty"));
+        goalValidator.addRule(goalProperty().length().greaterThan(0), ValidationMessage.error("Sprint goal must not be empty"));
+        goalValidator.addRule(goalProperty().length().lessThan(20), ValidationMessage.error("Sprint goal must be less than 20 characters"));
+        goalValidator.addRule(uniqueShortName, ValidationMessage.error("Sprint goal must be unique within backlog"));
 
         backlogValidator = new FunctionBasedValidator<>(backlogProperty(), backlog -> {
             if (backlog == null) {
-                return ValidationMessage.error("Backlog must exist and not be empty");
+                return ValidationMessage.error("Backlog must exist");
             } else {
                 return null;
             }
@@ -169,7 +166,7 @@ public class SprintViewModel implements ViewModel {
 
         releaseValidator = new FunctionBasedValidator<>(releaseProperty(), release -> {
             if (release == null) {
-                return ValidationMessage.error("Release must exist");
+                return ValidationMessage.error("Release must not be empty");
             } else {
                 return null;
             }
