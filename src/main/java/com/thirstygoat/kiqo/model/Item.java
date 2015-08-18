@@ -28,7 +28,9 @@ public abstract class Item implements Serializable, Searchable {
 
     public String getShortName() {
         return shortNameProperty().get();
-    };
+    }
+
+    public void initBoundPropertySupport() {}
 
     public abstract StringProperty shortNameProperty();
 

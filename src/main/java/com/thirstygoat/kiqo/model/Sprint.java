@@ -53,6 +53,7 @@ public class Sprint extends Item {
         getStories().addAll(stories);
     }
 
+    @Override
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(backlog);
         bps.addPropertyChangeSupportFor(startDate);
