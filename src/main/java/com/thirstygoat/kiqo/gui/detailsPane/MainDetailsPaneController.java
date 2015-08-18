@@ -3,7 +3,10 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
+import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -46,8 +49,6 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private AnchorPane personDetailsPane;
     @FXML
-    private AnchorPane skillDetailsPane;
-    @FXML
     private AnchorPane storyDetailsPane;
     @FXML
     private AnchorPane teamDetailsPane;
@@ -64,8 +65,6 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
     @FXML
-    private SkillDetailsPaneController skillDetailsPaneController;
-    @FXML
     private StoryDetailsPaneController storyDetailsPaneController;
     @FXML
     private TeamDetailsPaneController teamDetailsPaneController;
@@ -77,8 +76,10 @@ public class MainDetailsPaneController implements Initializable {
     
     private Pane backlogDetailsPane;
     private Pane sprintDetailsPane;
+    private Pane skillDetailsPane;
     private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
     private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
+    private SkillViewModel skillViewModel;
     
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
@@ -122,6 +123,11 @@ public class MainDetailsPaneController implements Initializable {
         sprintDetailsPane = (Pane) sprintDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(sprintDetailsPane);
         sprintDetailsPaneViewModel = sprintDetailsPaneViewTuple.getViewModel();
+        
+        ViewTuple<SkillDetailsPaneView, SkillViewModel> skillDetailsPaneViewTuple = FluentViewLoader.fxmlView(SkillDetailsPaneView.class).load();
+        skillDetailsPane = (Pane) skillDetailsPaneViewTuple.getView();
+        stackPane.getChildren().add(skillDetailsPane);
+        skillViewModel = skillDetailsPaneViewTuple.getViewModel();
     }
 
     /**
@@ -164,7 +170,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showSkillDetailsPane(Skill skill) {
-        skillDetailsPaneController.showDetails(skill);
+        skillViewModel.load(skill, null);
         show(skillDetailsPane);
         showOptionButtons();
     }
