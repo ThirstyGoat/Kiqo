@@ -11,19 +11,19 @@ import de.saxsys.mvvmfx.ViewModel;
 public class SprintDetailsPaneViewModel implements Loadable<Sprint>, ViewModel {
 
     private SprintDetailsPaneDetailsViewModel sprintDetailsPaneDetailsViewModel;
-    private ScrumboardViewModel scrumboardViewModel;
+    private ScrumBoardViewModel scrumBoardViewModel;
 
     public void setDetailsViewModel(SprintDetailsPaneDetailsViewModel viewModel) {
         sprintDetailsPaneDetailsViewModel = viewModel;
     }
 
-    public void setScrumboardViewModel(ScrumboardViewModel viewModel) {
-        scrumboardViewModel = viewModel;
+    public void setScrumboardViewModel(ScrumBoardViewModel viewModel) {
+        scrumBoardViewModel = viewModel;
     }
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
         sprintDetailsPaneDetailsViewModel.load(sprint, organisation);
-        scrumboardViewModel.load(sprint, organisation);
+        scrumBoardViewModel.load(sprint, organisation);
     }
 }

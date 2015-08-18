@@ -20,11 +20,11 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private SprintDetailsPaneDetailsView detailsViewController; // Ignore naming convention here
     @FXML
-    private ScrumboardView scrumboardViewController; // Ignore naming convention here
+    private ScrumBoardView scrumBoardViewController; // Ignore naming convention here
     @FXML
     private AnchorPane detailsView;
     @FXML
-    private AnchorPane scrumboardView;
+    private AnchorPane scrumBoardView;
 
     @FXML
     private SegmentedButton segmentedButton;
@@ -49,16 +49,16 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
                 // Show Details View
                 show(detailsView);
             } else  if (newValue == scrumboardToggleButton) {
-                show(scrumboardView);
+                show(scrumBoardView);
             } else {
-                    hideAllViews();
+                hideAllViews();
             }
         });
 
         detailsToggleButton.setSelected(true);
 
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
-        viewModel.setScrumboardViewModel(scrumboardViewController.getViewModel());
+        viewModel.setScrumboardViewModel(scrumBoardViewController.getViewModel());
     }
 
     /**
@@ -79,7 +79,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         detailsView.setVisible(false);
         detailsView.setManaged(false);
 
-        scrumboardView.setVisible(false);
-        scrumboardView.setManaged(false);
+        scrumBoardView.setVisible(false);
+        scrumBoardView.setManaged(false);
     }
 }

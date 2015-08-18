@@ -4,11 +4,10 @@ import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -18,14 +17,14 @@ import java.util.Map;
 /**
  * Created by bradley on 14/08/15.
  */
-public class Scrumboard extends VBox {
+public class ScrumBoard extends VBox {
 
     // Maps story objects to Story Row objects
-    Map<Story, Label> map = new HashMap<>();
+    Map<Story, Node> map = new HashMap<>();
     private ListProperty<Story> stories = new SimpleListProperty<>();
-    private ObservableList<Label> storyRows = FXCollections.observableArrayList();
+    private ObservableList<Node> storyRows = FXCollections.observableArrayList();
 
-    public Scrumboard() {
+    public ScrumBoard() {
         draw();
     }
 
@@ -50,9 +49,9 @@ public class Scrumboard extends VBox {
 
     private void removeStoryRow(Story story) {
         // Lookup the corresponding StoryRow that this Story relates to
-        Label label = map.get(story);
+        Node node = map.get(story);
         // Remove that StoryRow from the Scrumboard
-        storyRows.remove(label);
+        storyRows.remove(node);
         // Clean up after ourselves
         map.remove(story);
     }

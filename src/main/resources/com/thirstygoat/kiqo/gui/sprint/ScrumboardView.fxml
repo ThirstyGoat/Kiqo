@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
-<?import com.thirstygoat.kiqo.gui.nodes.scrumboard.Scrumboard?>
+<?import com.thirstygoat.kiqo.gui.nodes.scrumboard.ScrumBoard?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumboardView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumBoardView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8">
     <children>
-        <Scrumboard fx:id="scrumboard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <ScrumBoard fx:id="scrumBoard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     </children>
 </AnchorPane>

@@ -1,6 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.gui.nodes.scrumboard.Scrumboard;
+import com.thirstygoat.kiqo.gui.nodes.scrumboard.ScrumBoard;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
@@ -12,20 +12,21 @@ import java.util.ResourceBundle;
 /**
  * Created by bradley on 14/08/15.
  */
-public class ScrumboardView implements FxmlView<ScrumboardViewModel>, Initializable {
+public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializable {
 
     @InjectViewModel
-    private ScrumboardViewModel viewModel;
+    private ScrumBoardViewModel viewModel;
 
     @FXML
-    private Scrumboard scrumboard;
+    private ScrumBoard scrumBoard;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        viewModel.setScrumboard(scrumboard);
+        // Pass the scrumboard through to the view model.
+        viewModel.setScrumBoard(scrumBoard);
     }
 
-    public ScrumboardViewModel getViewModel() {
+    public ScrumBoardViewModel getViewModel() {
         return viewModel;
     }
 }
