@@ -1,31 +1,21 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javafx.beans.binding.BooleanExpression;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.IFormViewModel;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 
 
 /**
  * Created by samschofield on 31/07/15.
  */
-public class SprintFormViewModel extends SprintViewModel implements IFormViewModel<Sprint> {
+public class SprintFormViewModel extends SprintViewModel {
     
     private final ObservableList<Story> sourceStories;
     private final BooleanProperty releaseEditableProperty;
@@ -96,7 +86,6 @@ public class SprintFormViewModel extends SprintViewModel implements IFormViewMod
         }
     }
 
-    @Override
     public void setExitStrategy(Runnable exitStrategy) {
         this.exitStrategy = exitStrategy;
     }
