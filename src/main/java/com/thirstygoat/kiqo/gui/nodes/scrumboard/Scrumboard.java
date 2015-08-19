@@ -36,8 +36,6 @@ public class ScrumBoard extends VBox {
             c.getAddedSubList().forEach(this::addStoryRow);
             c.getRemoved().forEach(this::removeStoryRow);
         });
-
-        Bindings.bindContent(getChildren(), storyRows);
     }
 
     private void addStoryRow(Story story) {

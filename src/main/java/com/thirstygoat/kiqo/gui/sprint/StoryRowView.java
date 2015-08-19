@@ -4,7 +4,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,20 +12,16 @@ import java.util.ResourceBundle;
 /**
  * Created by bradley on 14/08/15.
  */
-public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializable {
+public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable {
 
     @InjectViewModel
-    private ScrumBoardViewModel viewModel;
+    private StoryRowViewModel viewModel;
 
     @FXML
-    private VBox scrumBoardVBox;
+    private Label storyNameLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        viewModel.setScrumBoardVBox(scrumBoardVBox);
-    }
-
-    public ScrumBoardViewModel getViewModel() {
-        return viewModel;
+        storyNameLabel.textProperty().bind(viewModel.storyNameProperty());
     }
 }
