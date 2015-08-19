@@ -1,99 +1,121 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Item;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 
 
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatLabel<T extends Item> extends Control {
-    public final GoatLabelSkin skin;
-    private Label displayLabel;
-    private TextField editField;
-    private Button editButton;
-    private Button doneButton;
-    private T item;
-    private String fieldName;
-    private StringProperty currentVal;
-    private EditCommand command;
+public abstract class GoatLabel<T extends Item, C extends Control, S extends GoatLabelSkin> extends Control {
+    protected S skin;
+    protected Label displayLabel;
+    protected C editField;
+    protected Button editButton;
+    protected Button doneButton;
+    private ObjectProperty<EditCommand> commandProperty;
+    private ValidationVisualizer validationVisualizer;
+    private ObjectProperty<ValidationStatus> validationStatus;
+
+
+    protected abstract S initSkin();
+
+    public abstract C getEditField();
+
+    protected abstract void populateEditField();
 
     public GoatLabel() {
         super();
-        skin = new GoatLabelSkin(this) {
-            {
-                displayLabel = getDisplayLabel();
-                editField = getEditField();
-                editButton = getEditButton();
-                doneButton = getDoneButton();
-            }
-        };
+        setSkin();
+        setButtonBindings();
+        setValidation();
+    }
 
-        setSkin(skin);
+    private void setValidation() {
+        commandProperty = new SimpleObjectProperty<>();
+        validationVisualizer = new ControlsFxVisualizer();
+        validationStatus = new SimpleObjectProperty<>();
+        validationStatus.addListener((observable, oldValue, newValue) -> {
+            doneButton.disableProperty().bind(Bindings.not(validationStatus.get().validProperty()));
+            validationVisualizer.initVisualization(validationStatus.get(), editField, true);
+        });
+    }
 
+    private void setButtonBindings() {
         editButton.setOnAction(event -> {
             skin.showEdit();
-            editField.setText(displayLabel.getText());
+            populateEditField();
         });
 
         doneButton.setOnAction(event -> {
             skin.showDisplay();
-
-            displayLabel.textProperty().unbind();
-            displayLabel.setText(editField.getText());
-            displayLabel.textProperty().bind(currentVal);
-
-            if (!editField.getText().equals(currentVal.get())) {
-                command = new EditCommand<>(item, fieldName, editField.getText());
-                UndoManager.getUndoManager().doCommand(command);
-            }
+            doneAction();
         });
 
-        editField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
+        setEnterAction();
+    }
+
+    /**
+     * Performs an action when the enter key is pressed
+     * override if custom enter functionality is needed
+     */
+    protected void setEnterAction() {
+        skin.getEditField().setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER && validationStatus.get().isValid()) {
                 event.consume();
                 skin.showDisplay();
-
-                displayLabel.textProperty().unbind();
-                displayLabel.setText(editField.getText());
-                displayLabel.textProperty().bind(currentVal);
-
-                if (!editField.getText().equals(currentVal.get())) {
-                    command = new EditCommand<>(item, fieldName, editField.getText());
-                    UndoManager.getUndoManager().doCommand(command);
-                }
+                doneAction();
             }
         });
+    }
 
+    protected void doneAction() {
+        try {
+            UndoManager.getUndoManager().doCommand(commandProperty.get());
+        } catch (Exception e) {
+            // TODO remove this (it was only for use in development of this class)
+            System.out.println("You should really set the edit command for this label");
+        }
+    }
+
+    protected void setSkin() {
+        skin = initSkin();
+        displayLabel = skin.getDisplayLabel();
+        editField = (C) skin.getEditField();
+        editButton = skin.getEditButton();
+        doneButton = skin.getDoneButton();
     }
 
     public Button doneButton() {
         return doneButton;
     }
 
-    public StringProperty textProperty() {
+    public StringProperty displayTextProperty() {
         return displayLabel.textProperty();
     }
 
-    public TextField getEditField() {
-        return editField;
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return skin;
     }
 
-    public void setItem(T item, String fieldName, StringProperty currentVal) {
-        this.item = item;
-        this.fieldName = fieldName;
-        this.currentVal = currentVal;
+    public ObjectProperty<EditCommand> commandProperty() {
+        return commandProperty;
     }
 
-    public void setText(String text) {
-        displayLabel.textProperty().setValue(text);
+    public ObjectProperty<ValidationStatus> validationStatus() {
+        return validationStatus;
     }
 }
