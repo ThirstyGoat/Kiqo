@@ -13,12 +13,12 @@ public enum Status {
     IN_PROGRESS("In Progress", Color.LIGHTGOLDENRODYELLOW),
     PENDING("Pending", Color.LIGHTBLUE),
     BLOCKED("Blocked", Color.LIGHTSALMON),
-    READY("Ready", Color.LIGHTGREEN),
+    VERIFY("Verify", Color.LIGHTGREEN),
     DONE("Done", Color.GREENYELLOW),
     DEFERRED("Deferred", Color.LIGHTCORAL);
 
-    private String label;
     public Color color;
+    private String label;
 
     private Status(String label, Color color) {
         this.label = label;
