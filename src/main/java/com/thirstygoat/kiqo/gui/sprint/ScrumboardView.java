@@ -22,6 +22,7 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //
         viewModel.setScrumBoardVBox(scrumBoardVBox);
     }
 

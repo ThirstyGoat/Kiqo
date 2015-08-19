@@ -26,7 +26,6 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
-//        scrumBoardVBox.setStories(sprint.getStories());
         debug(sprint.getStories());
         this.organisation = organisation;
     }
