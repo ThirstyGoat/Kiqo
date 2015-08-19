@@ -300,6 +300,10 @@ public class AllocationFormController extends FormController<Allocation> {
         } else {
             valid = true;
         }
+        //TODO there is probably a nicer place to put this
+        if (endDatePicker.getValue() == null) {
+            endDatePicker.setValue(LocalDate.MAX);
+        }
         setCommand();
         return true;
     }
@@ -364,7 +368,11 @@ public class AllocationFormController extends FormController<Allocation> {
             }
 
             startDatePicker.setValue(allocation.getStartDate());
-            endDatePicker.setValue(allocation.getEndDate());
+            if (allocation.getEndDate().equals(LocalDate.MAX)) {
+                endDatePicker.setValue(null);
+            } else {
+                endDatePicker.setValue(allocation.getEndDate());
+            }
         }
 
         if (project == null) {
