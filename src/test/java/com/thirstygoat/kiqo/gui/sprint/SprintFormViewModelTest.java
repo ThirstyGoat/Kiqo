@@ -1,25 +1,19 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
+import com.thirstygoat.kiqo.model.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by leroy on 9/08/15.
@@ -35,6 +29,9 @@ public class SprintFormViewModelTest {
     private Sprint sprint;
     private Person po;
     private Team team;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -74,14 +71,14 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void newSprint_DoNothing_CommandTest() {
+    public void newSprint_doNothing_CommandTest() {
         viewModel.load(null, organisation);
         Assert.assertTrue("Command should be null if nothing was done",
                 viewModel.createCommand() == null);
     }
 
     @Test
-    public void newSprint_ValidFieldsTest() {
+    public void newSprint_validFieldsTest() {
         viewModel.load(null, organisation);
         populateFields(viewModel);
         String errorMessages = viewModel.allValidation().getErrorMessages().toString();
@@ -92,19 +89,11 @@ public class SprintFormViewModelTest {
                 command != null);
         Assert.assertTrue("Command should be of type CreatSprintCommand",
                 command.getClass().equals(CreateSprintCommand.class));
-
-        Exception ex = null;
-        try {
-            command.execute();
-        } catch (Exception e) {
-            ex = e;
-        }
-        Assert.assertTrue("Executing the command should not produce any exceptions\n" + ex,
-                ex == null);
+        command.execute();
     }
 
     @Test
-    public void existingSprint_DoNothingTest() {
+    public void existingSprint_doNothingTest() {
         viewModel.load(sprint, organisation);
         Assert.assertTrue("Command should be null if nothing was done",
                 (viewModel.createCommand() == null));
@@ -113,7 +102,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void existingSprint_ChangePropertyButThenUndoChange_CommandTest() {
+    public void existingSprint_changePropertyButThenUndoChange_CommandTest() {
         viewModel.load(sprint, organisation);
         String originalGoal = viewModel.goalProperty().get();
         Assert.assertTrue("Original property should not be null",
@@ -124,7 +113,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void existingSprint_ChangeProperty_CommandTest() {
+    public void existingSprint_changeProperty_CommandTest() {
         viewModel.load(sprint, organisation);
         viewModel.goalProperty().set("A different goal");
         Command command = viewModel.createCommand();
@@ -135,7 +124,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void existingSprint_AddValidStoryTest() {
+    public void existingSprint_addValidStoryTest() {
         viewModel.load(sprint, organisation);
         viewModel.stories().add(readyStory);
         Assert.assertTrue("There should be no validation errors",
@@ -151,7 +140,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void newSprint_OptionalFieldNullTest() {
+    public void newSprint_optionalFieldNullTest() {
         // Test that if optional fields are left blank that they are set to some sane default value rather than null
         viewModel.load(null, organisation);
         populateFields(viewModel);
@@ -166,7 +155,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void newSprint_GoalTest() {
+    public void newSprint_goalTest() {
         // Test that if optional fields are left blank that they are set to some sane default value rather than null
         Sprint sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
                 LocalDate.now().minusDays(11), LocalDate.now().minusDays(5), new ArrayList<>());
@@ -186,7 +175,7 @@ public class SprintFormViewModelTest {
     }
 
     @Test
-    public void existingSprint_EditingGoalNameToBeSameAsSelfTest() {
+    public void existingSprint_editingGoalNameToBeSameAsSelfTest() {
         // Test that a goal having the same shortName does not cause goalValidation to be invalid.
         Sprint sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
                 LocalDate.now().minusDays(11), LocalDate.now().minusDays(5), new ArrayList<>());
@@ -209,5 +198,12 @@ public class SprintFormViewModelTest {
         viewModel.goalProperty().set("sprintGoal");
         Assert.assertTrue("Editing the sprint allow the shortName to be set to the same as itself",
                 editingViewModel.goalValidation().isValid());
+    }
+
+    @Test
+    public void existingSprint_editNoChangesTest() {
+        viewModel.load(sprint, organisation);
+        viewModel.setExitStrategy(() -> {});
+        viewModel.okAction();
     }
 }
