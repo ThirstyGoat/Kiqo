@@ -1,37 +1,21 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.GoatModelWrapper;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UpdateListCommand;
-import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Created by samschofield on 31/07/15.
@@ -39,7 +23,8 @@ import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Organisation> organisationProperty;
     private final ObjectProperty<Sprint> sprintProperty;
-    private final ObservableList<Story> stories;
+    private final ListProperty<Story> stories;
+    private final ListProperty<Story> eligableStories;
     private final ObservableRuleBasedValidator goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
@@ -49,21 +34,17 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
-    private ModelWrapper<Sprint> sprintWrapper = new ModelWrapper<>();
-
-    private ListChangeListener<Story> storyListener = c -> stories().setAll(sprintWrapper.get().getStories());
+    private GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
         sprintProperty = new SimpleObjectProperty<>();
-        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
+        stories = new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
+        eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
 
         goalValidator = new ObservableRuleBasedValidator();
 
-        BooleanBinding rule1 = goalProperty().isNotNull();
-        BooleanBinding rule2 = goalProperty().length().greaterThan(0);
-        BooleanBinding rule3 = goalProperty().length().lessThan(20);
-        BooleanBinding rule4 = Bindings.createBooleanBinding(
+        BooleanBinding uniqueShortName = Bindings.createBooleanBinding(
                 () -> {
                     if (releaseProperty().get() == null) {
                         return true;
@@ -79,14 +60,14 @@ public class SprintViewModel implements ViewModel {
                     return true;
                 }, goalProperty(), releaseProperty());
 
-        goalValidator.addRule(rule1, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule2, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule3, ValidationMessage.error("Sprint goal must be unique and not empty"));
-        goalValidator.addRule(rule4, ValidationMessage.error("Sprint goal must be unique and not empty"));
+        goalValidator.addRule(goalProperty().isNotNull(), ValidationMessage.error("Sprint goal must not be empty"));
+        goalValidator.addRule(goalProperty().length().greaterThan(0), ValidationMessage.error("Sprint goal must not be empty"));
+        goalValidator.addRule(goalProperty().length().lessThan(20), ValidationMessage.error("Sprint goal must be less than 20 characters"));
+        goalValidator.addRule(uniqueShortName, ValidationMessage.error("Sprint goal must be unique within backlog"));
 
         backlogValidator = new FunctionBasedValidator<>(backlogProperty(), backlog -> {
             if (backlog == null) {
-                return ValidationMessage.error("Backlog must exist and not be empty");
+                return ValidationMessage.error("Backlog must exist");
             } else {
                 return null;
             }
@@ -169,7 +150,7 @@ public class SprintViewModel implements ViewModel {
 
         releaseValidator = new FunctionBasedValidator<>(releaseProperty(), release -> {
             if (release == null) {
-                return ValidationMessage.error("Release must exist");
+                return ValidationMessage.error("Release must not be empty");
             } else {
                 return null;
             }
@@ -185,10 +166,7 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
-            if (sprintWrapper.get() != null) {
-                sprintWrapper.get().getStories().removeListener(storyListener);
-            }
-            sprintWrapper.get().getStories().addListener(storyListener);
+            stories().clear();
             stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
@@ -197,6 +175,21 @@ public class SprintViewModel implements ViewModel {
             stories().clear();
         }
         sprintWrapper.reload();
+
+        // Listen for changes on model objects ObservableLists. This could be removed if ModelWrapper supported ListProperty
+        sprintWrapper.get().getStories().addListener(new ListChangeListener<Story>() {
+            @Override
+            public void onChanged(Change<? extends Story> change) {
+                stories().setAll(sprintWrapper.get().getStories());
+            }
+        });
+
+        // Set eligableStories list, and listen for changes to backlog so that the list is updated
+        eligableStories.setAll(storiesSupplier().get());
+        backlogProperty().addListener(observable -> {
+            eligableStories.setAll(storiesSupplier().get());
+        });
+
     }
 
     public void reset() {
@@ -208,6 +201,59 @@ public class SprintViewModel implements ViewModel {
         sprintWrapper.reload();
         stories().clear();
         stories().addAll(sprintProperty().get().getStories());
+    }
+
+    /**
+     * Supplies a list of eligable stories for this sprint
+     */
+    protected Supplier<List<Story>> storiesSupplier() {
+        return () -> {
+            List<Story> list = new ArrayList<>();
+            if (backlogProperty().get() != null) {
+                list.addAll(backlogProperty().get().getStories());
+                list.removeAll(stories);
+            }
+            return list;
+        };
+    }
+
+    /**
+     * Supplies a list of eligable backlogs for this sprint
+     */
+    protected Supplier<List<Backlog>> backlogsSupplier() {
+        return () -> {
+            List<Backlog> list = new ArrayList<>();
+            if (organisationProperty() != null) {
+                organisationProperty().get().getProjects().forEach((project) -> list.addAll(project.getBacklogs()));
+            }
+            return list;
+        };
+    }
+
+    /**
+     * Supplies a list of eligable teams for this sprint
+     */
+    protected Supplier<List<Team>> teamsSupplier() {
+        return () -> {
+            if (organisationProperty().get() != null) {
+                return organisationProperty().get().getTeams();
+            } else {
+                return new ArrayList<>();
+            }
+        };
+    }
+
+    /**
+     * Supplies a list of eligable releases for this sprint
+     */
+    protected Supplier<List<Release>> releasesSupplier() {
+        return () -> {
+            List<Release> list = new ArrayList<>();
+            if (organisationProperty().get() != null) {
+                organisationProperty().get().getProjects().forEach((project) -> list.addAll(project.getReleases()));
+            }
+            return list;
+        };
     }
 
     /**
@@ -225,6 +271,7 @@ public class SprintViewModel implements ViewModel {
             // Nothing changed
             return null;
         }
+
         if (sprintProperty.get() == null) {
             // new sprintProperty.get() command
             final Sprint sprint = new Sprint(goalProperty().get(), longNameProperty().get(),
@@ -321,8 +368,12 @@ public class SprintViewModel implements ViewModel {
         return sprintWrapper.field("release", Sprint::getRelease, Sprint::setRelease);
     }
 
-    public ObservableList<Story> stories() {
+    public ListProperty<Story> stories() {
         return stories;
+    }
+
+    public ListProperty<Story> eligableStories() {
+        return eligableStories;
     }
     
     public ValidationStatus goalValidation() {

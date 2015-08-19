@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.net.URL;
-import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.StringConverters;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,11 +12,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.StringConverters;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -82,7 +80,7 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
                 StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storyTableView.setItems(viewModel.stories());
+        storyTableView.itemsProperty().bind(viewModel.stories());
 
         placeHolder.textProperty().set(SprintDetailsPaneDetailsViewModel.PLACEHOLDER);
     }

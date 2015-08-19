@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-
+import com.google.gson.JsonSyntaxException;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.persistence.PersistenceManager;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,9 +11,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 
-import com.google.gson.JsonSyntaxException;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.persistence.PersistenceManager;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 
 // Methods are run in alphabetical order
@@ -53,6 +53,35 @@ public class PersistenceManagerTest {
             fw.write("{"); // lone opening brace == bad json
         }
 
+        PersistenceManager.loadOrganisation(f);
+    }
+
+    @Test
+    public void testLoad_sprint1File() {
+        final File f = new File(getClass().getResource("/save_files/sprint1.json").getFile());
+    }
+
+    @Test
+    public void testLoad_sprint2File() throws FileNotFoundException {
+        final File f = new File(getClass().getResource("/save_files/sprint2.json").getFile());
+        PersistenceManager.loadOrganisation(f);
+    }
+
+    @Test
+    public void testLoad_sprint3File() throws FileNotFoundException {
+        final File f = new File(getClass().getResource("/save_files/sprint3.json").getFile());
+        PersistenceManager.loadOrganisation(f);
+    }
+
+    @Test
+    public void testLoad_sprint4File() throws FileNotFoundException {
+        final File f = new File(getClass().getResource("/save_files/sprint4.json").getFile());
+        PersistenceManager.loadOrganisation(f);
+    }
+
+    @Test
+    public void testLoad_sprint5File() throws FileNotFoundException {
+        final File f = new File(getClass().getResource("/save_files/sprint5.json").getFile());
         PersistenceManager.loadOrganisation(f);
     }
 }

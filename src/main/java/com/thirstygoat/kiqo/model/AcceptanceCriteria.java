@@ -18,31 +18,39 @@ import com.thirstygoat.kiqo.search.SearchableField;
  */
 public class AcceptanceCriteria extends Item {
 
-    public final StringProperty criteria;
+    public final StringProperty criteria; // acts as shortName
     public final ObjectProperty<State> state;
-    public Story story;
+    public final ObjectProperty<Story> story;
 
     public AcceptanceCriteria() {
         this.criteria = new SimpleStringProperty("");
         this.state = new SimpleObjectProperty<>(State.NEITHER);
+        this.story = new SimpleObjectProperty<>(null);
     }
 
     public AcceptanceCriteria(String criteria, Story story) {
-        this.criteria = new SimpleStringProperty(criteria);
-        this.state = new SimpleObjectProperty<>(State.NEITHER);
-        this.story = story;
+        this();
+        setCriteria(criteria);
+        setStory(story);
     }
 
     public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.state};
     }
+    
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(criteria);
+        bps.addPropertyChangeSupportFor(state);
+        bps.addPropertyChangeSupportFor(story);
+    }
 
     public Story getStory() {
-        return story;
+        return story.get();
     }
 
     public void setStory(Story story) {
-        this.story = story;
+        this.story.set(story);
     }
 
     public String getCriteria() {

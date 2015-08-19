@@ -68,6 +68,21 @@
 	-fx-fill: green;
 }
 
+.task-card-minimised-shortName {
+    -fx-font-size: 10px;
+    -fx-text-alignment: left;
+}
+
+.task-card-minimised-hours {
+    -fx-font-size: 10px;
+    -fx-text-alignment: right;
+    -fx-alignment: center-right;
+}
+
+.warning-color {
+    -fx-background-color: #ffc0cb;
+}
+
 .advanced-search-list-result-title {
     -fx-font-weight: bolder;
 }

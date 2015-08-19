@@ -36,10 +36,10 @@
                 <Label text="Project:" GridPane.rowIndex="1"/>
                 <Label text="Release Date:" GridPane.rowIndex="2" />
                 <Label text="Description:" GridPane.rowIndex="3" />
-                <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <DatePicker fx:id="releaseDatePicker" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="shortNameTextField" promptText="Must be under 20 characters and unique." GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <TextField fx:id="projectTextField" promptText="Project this release is associated with." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <DatePicker fx:id="releaseDatePicker" promptText="dd/mm/yyyy" prefHeight="26.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                <TextField fx:id="descriptionTextField" promptText="Describe this release." GridPane.columnIndex="1" GridPane.rowIndex="3" />
             </children>
         </GridPane>
     </center>

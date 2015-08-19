@@ -1,0 +1,296 @@
+{
+  "0x1": {
+    "projects": [
+      "0x2",
+      "0x3"
+    ],
+    "people": [
+      "0x4"
+    ],
+    "releases": [],
+    "skills": [
+      "0x5",
+      "0x6",
+      "0x7"
+    ],
+    "teams": [
+      "0x8",
+      "0x9"
+    ],
+    "organisationName": "sprint5",
+    "poSkill": "0x5",
+    "smSkill": "0x6"
+  },
+  "0x2": {
+    "shortName": "First Project",
+    "longName": "First Project",
+    "releases": [
+      "0xa"
+    ],
+    "unallocatedStories": [
+      "0xb"
+    ],
+    "allocations": [
+      "0xc"
+    ],
+    "backlogs": [
+      "0xd"
+    ],
+    "sprints": [],
+    "description": "Test file for the first project"
+  },
+  "0x3": {
+    "shortName": "Another project",
+    "longName": "Another project",
+    "releases": [
+      "0xe"
+    ],
+    "unallocatedStories": [],
+    "allocations": [],
+    "backlogs": [
+      "0xf",
+      "0x10"
+    ],
+    "sprints": [],
+    "description": "Cool project"
+  },
+  "0x4": {
+    "shortName": "A cool person",
+    "longName": "A cool person",
+    "description": "Test",
+    "emailAddress": "Test",
+    "phoneNumber": "Test",
+    "department": "Test",
+    "skills": [
+      "0x5",
+      "0x6"
+    ]
+  },
+  "0x5": {
+    "shortName": "PO",
+    "description": "Product Owner"
+  },
+  "0x6": {
+    "shortName": "SM",
+    "description": "Scrum Master"
+  },
+  "0x7": {
+    "shortName": "Awesome skill",
+    "description": "really cool skill"
+  },
+  "0x8": {
+    "allocations": [
+      "0xc"
+    ],
+    "shortName": "An awesome team",
+    "description": "Really really cool",
+    "teamMembers": [],
+    "devTeam": []
+  },
+  "0x9": {
+    "allocations": [],
+    "shortName": "A team with a person",
+    "description": "person containing team",
+    "productOwner": "0x4",
+    "teamMembers": [
+      "0x4"
+    ],
+    "devTeam": []
+  },
+  "0xa": {
+    "shortName": "A rocking release",
+    "description": "Cool as release",
+    "project": "0x2",
+    "date": {
+      "year": 2015,
+      "month": 8,
+      "day": 19
+    },
+    "sprints": [
+      "0x11"
+    ]
+  },
+  "0xb": {
+    "shortName": "Cool story",
+    "longName": "Cool story",
+    "description": "cool",
+    "creator": "0x4",
+    "project": "0x2",
+    "priority": 10,
+    "estimate": 0,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": false,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
+  "0xc": {
+    "team": "0x8",
+    "project": "0x2",
+    "startDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 4
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 29
+    }
+  },
+  "0xd": {
+    "stories": [
+      "0x12"
+    ],
+    "shortName": "Sweet as backlog",
+    "longName": "Sweet as backlog",
+    "description": "Cool backlog",
+    "productOwner": "0x4",
+    "project": "0x2",
+    "scale": "FIBONACCI"
+  },
+  "0xe": {
+    "shortName": "nice release",
+    "description": "A story",
+    "project": "0x3",
+    "date": {
+      "year": 2015,
+      "month": 9,
+      "day": 5
+    },
+    "sprints": [
+      "0x13",
+      "0x14"
+    ]
+  },
+  "0xf": {
+    "stories": [],
+    "shortName": "Backlog without stor",
+    "longName": "Backlog without stories",
+    "description": "No story backlog",
+    "productOwner": "0x4",
+    "project": "0x3",
+    "scale": "FIBONACCI"
+  },
+  "0x10": {
+    "stories": [
+      "0x15"
+    ],
+    "shortName": "Backlog with story",
+    "longName": "Backlog with story",
+    "description": "has story",
+    "productOwner": "0x4",
+    "project": "0x3",
+    "scale": "FIBONACCI"
+  },
+  "0x11": {
+    "backlog": "0xd",
+    "startDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 16
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 19
+    },
+    "team": "0x9",
+    "release": "0xa",
+    "goal": "Goal",
+    "longName": "The best goal",
+    "description": "Cool as sprint",
+    "stories": []
+  },
+  "0x12": {
+    "shortName": "An awesome story",
+    "longName": "An awesome story",
+    "description": "Really cool story this is",
+    "creator": "0x4",
+    "project": "0x2",
+    "backlog": "0xd",
+    "priority": 1000,
+    "estimate": 0,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": false,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
+  "0x13": {
+    "backlog": "0x10",
+    "startDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 19
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 29
+    },
+    "team": "0x9",
+    "release": "0xe",
+    "goal": "Sprint with a story",
+    "longName": "Sprint with story",
+    "description": "this sprint has a story",
+    "stories": []
+  },
+  "0x14": {
+    "backlog": "0xf",
+    "startDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 19
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 29
+    },
+    "team": "0x9",
+    "release": "0xe",
+    "goal": "Sprint with a story",
+    "longName": "Sprint with story",
+    "description": "this sprint has a story",
+    "stories": []
+  },
+  "0x15": {
+    "shortName": "ready story",
+    "longName": "ready story",
+    "description": "story that is ready",
+    "creator": "0x4",
+    "project": "0x3",
+    "backlog": "0x10",
+    "priority": -10,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x16"
+    ],
+    "dependencies": [],
+    "isReady": false,
+    "tasks": [
+      "0x17"
+    ],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
+  "0x16": {
+    "criteria": "An AC",
+    "state": "NEITHER",
+    "story": "0x15"
+  },
+  "0x17": {
+    "shortName": "An Task",
+    "description": "A task",
+    "estimate": 100.0,
+    "status": "NOT_STARTED",
+    "story": "0x15"
+  },
+  "VERSION": "5.0"
+}

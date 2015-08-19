@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import com.thirstygoat.kiqo.search.SearchableField;
 
 
 /**
@@ -55,6 +51,18 @@ public class Sprint extends Item {
         setStartDate(startDate);
         setEndDate(endDate);
         getStories().addAll(stories);
+    }
+
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(backlog);
+        bps.addPropertyChangeSupportFor(startDate);
+        bps.addPropertyChangeSupportFor(endDate);
+        bps.addPropertyChangeSupportFor(team);
+        bps.addPropertyChangeSupportFor(release);
+        bps.addPropertyChangeSupportFor(goal);
+        bps.addPropertyChangeSupportFor(longName);
+        bps.addPropertyChangeSupportFor(description);
     }
 
     /**
