@@ -1,33 +1,24 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.util.Duration;
-
-import org.controlsfx.control.PopOver;
-
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -77,23 +68,14 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
                 StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
         storySelectionView.setHeader(new Label("Stories in Sprint:"));
-        storySelectionView.setSourceItems(viewModel.sourceStories());
-        storySelectionView.setTargetItems(viewModel.stories());
+        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.eligableStories());
+        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
 
-        viewModel.sourceStories().addListener((ListChangeListener<Story>) c -> {
-            storySelectionView.setSourceItems(viewModel.sourceStories());
-        });
-
-        viewModel.stories().addListener((ListChangeListener<Story>) c -> {
-            storySelectionView.setTargetItems(viewModel.stories());
-        });
-
-        releaseTextField.disableProperty().bind(viewModel.releaseEditableProperty().not());
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
         
-        FxUtils.setTextFieldSuggester(backlogTextField, viewModel.getBacklogsSupplier());
-        FxUtils.setTextFieldSuggester(teamTextField, viewModel.getTeamsSupplier());
-        FxUtils.setTextFieldSuggester(releaseTextField, viewModel.getReleasesSupplier());
+        FxUtils.setTextFieldSuggester(backlogTextField, viewModel.backlogsSupplier());
+        FxUtils.setTextFieldSuggester(teamTextField, viewModel.teamsSupplier());
+        FxUtils.setTextFieldSuggester(releaseTextField, viewModel.releasesSupplier());
 
         startDatePicker.setDayCellFactory(param -> new DateCell() {
             @Override
@@ -132,8 +114,6 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
                 }
             }
         });
-
-        viewModel.setListeners();
 
         Platform.runLater(() -> {
             goalTextField.requestFocus();
