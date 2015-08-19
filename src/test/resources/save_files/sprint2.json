@@ -1,0 +1,102 @@
+{
+  "0x1": {
+    "poSkill": "0x2",
+    "smSkill": "0x3",
+    "projects": [
+      "0x4"
+    ],
+    "people": [
+      "0x5"
+    ],
+    "skills": [
+      "0x2",
+      "0x3",
+      "0x6"
+    ],
+    "teams": [
+      "0x7",
+      "0x8"
+    ],
+    "organisationName": "sprint2"
+  },
+  "0x2": {
+    "shortName": "PO",
+    "description": "Product Owner"
+  },
+  "0x3": {
+    "shortName": "SM",
+    "description": "Scrum Master"
+  },
+  "0x4": {
+    "shortName": "First Project",
+    "longName": "First Project",
+    "releases": [
+      "0x9"
+    ],
+    "allocations": [
+      "0xa"
+    ],
+    "description": "Test file for the first project"
+  },
+  "0x5": {
+    "shortName": "A cool person",
+    "longName": "A cool person",
+    "description": "Test",
+    "userID": "Test",
+    "emailAddress": "Test",
+    "phoneNumber": "Test",
+    "department": "Test",
+    "skills": [
+      "0x2",
+      "0x3"
+    ]
+  },
+  "0x6": {
+    "shortName": "Awesome skill",
+    "description": "really cool skill"
+  },
+  "0x7": {
+    "allocations": [
+      "0xa"
+    ],
+    "shortName": "An awesome team",
+    "description": "Really really cool",
+    "teamMembers": [],
+    "devTeam": []
+  },
+  "0x8": {
+    "allocations": [],
+    "shortName": "A team with a person",
+    "description": "person containing team",
+    "productOwner": "0x5",
+    "teamMembers": [
+      "0x5"
+    ],
+    "devTeam": []
+  },
+  "0x9": {
+    "shortName": "A rocking release",
+    "description": "Cool as release",
+    "project": "0x4",
+    "date": {
+      "year": 2015,
+      "month": 8,
+      "day": 19
+    }
+  },
+  "0xa": {
+    "team": "0x7",
+    "project": "0x4",
+    "startDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 4
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 8,
+      "day": 29
+    }
+  },
+  "VERSION": 1.0
+}

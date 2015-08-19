@@ -29,6 +29,12 @@ public class Skill extends Item {
         this.shortName = new SimpleStringProperty(shortName);
         this.description = new SimpleStringProperty(description);
     }
+    
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(description);
+    }
 
     /**
      * @return a string array of the searchable fields for a model object
