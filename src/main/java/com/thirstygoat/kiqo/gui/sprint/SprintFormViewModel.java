@@ -8,7 +8,7 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.*;
 import javafx.collections.*;
 
-import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.*;
 
 
@@ -91,7 +91,10 @@ public class SprintFormViewModel extends SprintViewModel {
     }
 
     protected void okAction() {
-        UndoManager.getUndoManager().doCommand(createCommand());
+        final Command command = createCommand();
+        if (command != null) {
+            UndoManager.getUndoManager().doCommand(command);
+        }
         exitStrategy.run();
     }
 
