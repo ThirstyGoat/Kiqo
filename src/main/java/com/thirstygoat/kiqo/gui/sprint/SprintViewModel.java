@@ -266,12 +266,9 @@ public class SprintViewModel implements ViewModel {
             // Properties are not valid
             return null;
         }
-        if (sprintProperty().get() != null) {
-            if  (!sprintWrapper.isDifferent() && !stories().containsAll(sprintProperty().get().getStories())
-                    && !sprintProperty().get().getStories().containsAll(stories)) {
-                // Nothing changed
-                return null;
-            }
+        if  (!sprintWrapper.isDifferent() && !stories().containsAll(sprintProperty().get().getStories())
+                && !sprintProperty().get().getStories().containsAll(stories)) {
+            // Nothing changed
             return null;
         }
 
