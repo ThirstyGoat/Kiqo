@@ -23,13 +23,14 @@ public class Task extends Item {
     private final StringProperty description;
     private final FloatProperty estimate;
     private final ObjectProperty<Status> status;
-    private Story story;
+    private final ObjectProperty<Story> story;
 
     public Task() {
         shortName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
         estimate = new SimpleFloatProperty(0.0f);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
+        story = new SimpleObjectProperty<>(null);
     }
 
     public Task(String shortName, String description, Float estimate, Story story) {
@@ -37,7 +38,16 @@ public class Task extends Item {
         this.description = new SimpleStringProperty(description);
         this.estimate = new SimpleFloatProperty(estimate);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
-        this.story = story;
+        this.story = new SimpleObjectProperty<>(story);
+    }
+    
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(estimate);
+        bps.addPropertyChangeSupportFor(status);
+        bps.addPropertyChangeSupportFor(story);
     }
 
     public static Callback<Task, Observable[]> getWatchStrategy() {
@@ -57,11 +67,11 @@ public class Task extends Item {
     }
 
     public Story getStory() {
-        return story;
+        return story.get();
     }
 
     public void setStory(Story story) {
-        this.story = story;
+        this.story.set(story);
     }
 
     public ObjectProperty<Status> statusProperty() {
