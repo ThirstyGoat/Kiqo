@@ -131,6 +131,7 @@
 /* Icons */
 .people-icon {
     -glyph-name: "USERS";
+    /*-glyph-size: 40;*/
 }
 
 .comment-icon {
@@ -138,8 +139,9 @@
 }
 
 .clock-icon {
-    -glyph-name: "CLOCK-ALT";
+    -glyph-name: "CLOCK_ALT";
 }
+
 
 .calendar-icon {
     -glyph-name: "CALENDAR";

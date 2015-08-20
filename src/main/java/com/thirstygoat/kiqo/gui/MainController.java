@@ -1,44 +1,69 @@
 package com.thirstygoat.kiqo.gui;
 
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.logging.*;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
-import javafx.fxml.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
-import javafx.stage.*;
-
-import org.controlsfx.control.StatusBar;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.delete.*;
-import com.thirstygoat.kiqo.exceptions.*;
-import com.thirstygoat.kiqo.gui.backlog.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormView;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormViewModel;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
-import com.thirstygoat.kiqo.gui.menuBar.*;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.gui.skill.*;
-import com.thirstygoat.kiqo.gui.sprint.*;
+import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
+import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
+import com.thirstygoat.kiqo.gui.skill.SkillFormView;
+import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
+import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.persistence.PersistenceManager;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.*;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import org.controlsfx.control.StatusBar;
 
-import de.saxsys.mvvmfx.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for the primary view
@@ -852,6 +877,9 @@ public class MainController implements Initializable {
      */
     private <T> void dialog(T t, String type) {
         Platform.runLater(() -> {
+            System.out.println("DIALOG CALLED!?!?");
+
+
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
@@ -881,6 +909,21 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
+            } else if (type.equals("TaskCard")) {
+                System.out.println("TaskCard selected?!?");
+                ViewTuple<TaskCardExpandedView, TaskCardViewModel> taskFormTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
+                // viewModel
+                final TaskCardViewModel viewModel = taskFormTuple.getViewModel();
+
+                Task task = selectedOrganisationProperty.get().getProjects().get(0).getBacklogs().get(0).getStories().get(0).getTasks().get(1);
+
+//                viewModel.load(task, selectedOrganisationProperty.get());
+                // view
+                viewModel.setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(taskFormTuple.getView()));
+                System.out.println("mc: scene has been set");
+                viewModel.load(task, selectedOrganisationProperty.get());
+                stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
@@ -897,7 +940,7 @@ public class MainController implements Initializable {
                 formController.setStage(stage);
                 formController.setOrganisation(selectedOrganisationProperty.get());
                 formController.populateFields(t);
-                
+
                 stage.showAndWait();
                 if (formController.isValid()) {
                     doCommand(formController.getCommand());
@@ -1066,6 +1109,11 @@ public class MainController implements Initializable {
                 }
             });
         });
+    }
+
+    public void testTaskCard() {
+        dialog(null, "TaskCard");
+        return;
     }
 }
 

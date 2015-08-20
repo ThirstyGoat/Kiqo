@@ -7,6 +7,11 @@
   <MenuBar useSystemMenuBar="true" >
   <menus>
     <Menu mnemonicParsing="false" text="File">
+      <SeparatorMenuItem mnemonicParsing="false" />
+      <SeparatorMenuItem mnemonicParsing="false" />
+      <MenuItem mnemonicParsing="false" text="taskTest" fx:id="testTask" />
+      <SeparatorMenuItem mnemonicParsing="false" />
+      <SeparatorMenuItem mnemonicParsing="false" />
       <items>
         <Menu mnemonicParsing="false" text="New">
           <items>

@@ -27,6 +27,7 @@ public class TaskCard extends VBox {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
+//        colorProperty = new SimpleObjectProperty<>(Color.WHITE);
         draw();
 
         this.task = task;
@@ -106,6 +107,7 @@ public class TaskCard extends VBox {
         setVgrow(borderPane, Priority.ALWAYS);
 
         getChildren().add(borderPane);
+
     }
 
     public StringProperty shortNameProperty() {
