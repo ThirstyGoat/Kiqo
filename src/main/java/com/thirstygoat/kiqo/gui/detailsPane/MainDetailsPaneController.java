@@ -170,7 +170,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showSkillDetailsPane(Skill skill) {
-        skillViewModel.load(skill, null);
+        skillViewModel.load(skill, mainController.selectedOrganisationProperty.get());
         show(skillDetailsPane);
         showOptionButtons();
     }
