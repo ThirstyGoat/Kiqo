@@ -55,7 +55,6 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         skillProperty().set(skill);
         organisationProperty().set(organisation);
         modelWrapper.set(skill);
-        modelWrapper.reload();
     }
 
     protected Command createCommand() {
