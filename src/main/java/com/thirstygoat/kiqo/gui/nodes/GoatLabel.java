@@ -1,36 +1,34 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.model.Item;
+import java.util.function.Supplier;
 
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.*;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+
+import com.thirstygoat.kiqo.command.*;
+
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.visualization.*;
 
 
 /**
  * Created by samschofield on 6/08/15.
+ * @param <C> editField type
  */
-public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> extends Control {
-    protected S skin;
+public abstract class GoatLabel<C extends Control> extends Control {
+    protected GoatLabelSkin<C> skin;
     protected Label displayLabel;
     protected C editField;
     protected Button editButton;
     protected Button doneButton;
-    private ObjectProperty<EditCommand> commandProperty;
     private ValidationVisualizer validationVisualizer;
     private ObjectProperty<ValidationStatus> validationStatus;
+    private Supplier<Command> commandSupplier;
 
 
-    protected abstract S initSkin();
+    protected abstract GoatLabelSkin<C> initSkin();
 
     public abstract C getEditField();
 
@@ -44,7 +42,6 @@ public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> e
     }
 
     private void setValidation() {
-        commandProperty = new SimpleObjectProperty<>();
         validationVisualizer = new ControlsFxVisualizer();
         validationStatus = new SimpleObjectProperty<>();
         validationStatus.addListener((observable, oldValue, newValue) -> {
@@ -60,7 +57,6 @@ public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> e
         });
 
         doneButton.setOnAction(event -> {
-            skin.showDisplay();
             doneAction();
         });
 
@@ -73,25 +69,25 @@ public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> e
      */
     protected void setEnterAction() {
         skin.getEditField().setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER && validationStatus.get().isValid()) {
+            if (event.getCode() == KeyCode.ENTER) {
+                doneButton.fireEvent(event);
                 event.consume();
-                skin.showDisplay();
-                doneAction();
             }
         });
     }
 
     protected void doneAction() {
-        Command command = commandProperty.get();
+        Command command = commandSupplier.get();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }
+        skin.showDisplay();
     }
 
     protected void setSkin() {
         skin = initSkin();
         displayLabel = skin.getDisplayLabel();
-        editField = (C) skin.getEditField();
+        editField = skin.getEditField();
         editButton = skin.getEditButton();
         doneButton = skin.getDoneButton();
     }
@@ -105,15 +101,15 @@ public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> e
     }
 
     @Override
-    protected Skin<?> createDefaultSkin() {
+    protected GoatLabelSkin<C> createDefaultSkin() {
         return skin;
-    }
-
-    public ObjectProperty<EditCommand> commandProperty() {
-        return commandProperty;
     }
 
     public ObjectProperty<ValidationStatus> validationStatus() {
         return validationStatus;
+    }
+
+    public void setCommandSupplier(Supplier<Command> supplier) {
+        commandSupplier = supplier;
     }
 }

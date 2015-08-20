@@ -9,14 +9,14 @@ import javafx.scene.control.TextArea;
 /**
  * Created by samschofield on 7/08/15.
  */
-public class GoatLabelTextAreaSkin extends GoatLabelSkin {
+public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
 
     /**
      * Constructor for all SkinBase instances.
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatLabelTextAreaSkin(GoatLabel control) {
+    protected GoatLabelTextAreaSkin(GoatLabel<TextArea> control) {
         super(control);
     }
 
@@ -28,13 +28,13 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin {
     }
 
     @Override
-    protected Control createEditField() {
+    protected TextArea createEditField() {
         return new TextArea();
     }
 
     @Override
     protected void showEditField() {
-        TextArea textArea = (TextArea) editField;
+        TextArea textArea = editField;
         textArea.setMinHeight(Control.USE_PREF_SIZE);
         textArea.setMaxHeight(Control.USE_PREF_SIZE);
         textArea.setPrefRowCount(textArea.getText().split("\n").length);

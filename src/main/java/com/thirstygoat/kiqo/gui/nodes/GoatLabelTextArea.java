@@ -6,21 +6,21 @@ import javafx.scene.input.KeyCode;
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatLabelTextArea extends GoatLabel {
+public class GoatLabelTextArea extends GoatLabel<TextArea> {
 
     @Override
     protected void populateEditField() {
-        ((TextArea) editField).setText(displayLabel.getText());
+        editField.setText(displayLabel.getText());
     }
 
     @Override
-    protected GoatLabelSkin initSkin() {
+    protected GoatLabelSkin<TextArea> initSkin() {
         return new GoatLabelTextAreaSkin(this);
     }
 
     @Override
     public TextArea getEditField() {
-        return (TextArea) editField;
+        return editField;
     }
 
     @Override
@@ -36,7 +36,6 @@ public class GoatLabelTextArea extends GoatLabel {
                     getEditField().positionCaret(caretPos + 1);
                 } else {
                     event.consume();
-                    skin.showDisplay();
                     doneAction();
                 }
             }

@@ -2,9 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import javafx.scene.control.ComboBox;
 
-import com.thirstygoat.kiqo.model.Item;
-
-public class GoatLabelComboBox<T> extends GoatLabel<T, ComboBox<T>, GoatLabelComboBoxSkin<T>> {
+public class GoatLabelComboBox<T> extends GoatLabel<ComboBox<T>> {
 
     @Override
     protected GoatLabelComboBoxSkin<T> initSkin() {
@@ -20,5 +18,4 @@ public class GoatLabelComboBox<T> extends GoatLabel<T, ComboBox<T>, GoatLabelCom
     protected void populateEditField() {
         editField.setValue(editField.getConverter().fromString(displayLabel.getText()));
     }
-
 }
