@@ -3,27 +3,37 @@ package com.thirstygoat.kiqo.gui.skill;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Labeled;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.fxml.*;
+import javafx.scene.control.Label;
+
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.model.Scale;
+
+import de.saxsys.mvvmfx.*;
 
 /**
 * Created by Bradley Kirwan on 14/08/2015.
 */
 public class SkillDetailsPaneView implements FxmlView<SkillViewModel>, Initializable {
     @FXML
-    private Labeled shortNameLabel;
+    private GoatLabelTextField shortNameLabel;
     @FXML
-    private Labeled descriptionLabel;
+    private GoatLabelTextArea descriptionLabel;
 
     @InjectViewModel
     private SkillViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        shortNameLabel.textProperty().bindBidirectional(viewModel.shortNameProperty());
-        descriptionLabel.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        viewModel.skillProperty().addListener((observable, oldValue, newValue) -> {
+            shortNameLabel.displayTextProperty().bind(newValue.shortNameProperty());
+            descriptionLabel.displayTextProperty().bind(newValue.descriptionProperty());
+
+            shortNameLabel.getEditField().textProperty().bindBidirectional(viewModel.shortNameProperty());
+            descriptionLabel.getEditField().textProperty().bindBidirectional(viewModel.descriptionProperty());
+        });
+
+        shortNameLabel.commandProperty().bind(viewModel.commandProperty());
+        descriptionLabel.commandProperty().bind(viewModel.commandProperty());
     }
 }
