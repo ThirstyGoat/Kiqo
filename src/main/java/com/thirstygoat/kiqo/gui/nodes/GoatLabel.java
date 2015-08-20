@@ -1,8 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.model.Item;
+
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
@@ -19,7 +19,7 @@ import javafx.scene.input.KeyCode;
 /**
  * Created by samschofield on 6/08/15.
  */
-public abstract class GoatLabel<T extends Item, C extends Control, S extends GoatLabelSkin> extends Control {
+public abstract class GoatLabel<T, C extends Control, S extends GoatLabelSkin> extends Control {
     protected S skin;
     protected Label displayLabel;
     protected C editField;
@@ -82,11 +82,9 @@ public abstract class GoatLabel<T extends Item, C extends Control, S extends Goa
     }
 
     protected void doneAction() {
-        try {
-            UndoManager.getUndoManager().doCommand(commandProperty.get());
-        } catch (Exception e) {
-            // TODO remove this (it was only for use in development of this class)
-            System.out.println("You should really set the edit command for this label");
+        Command command = commandProperty.get();
+        if (command != null) {
+            UndoManager.getUndoManager().doCommand(command);
         }
     }
 

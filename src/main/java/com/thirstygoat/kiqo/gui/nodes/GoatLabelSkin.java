@@ -30,7 +30,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatLabelSkin(Control control) {
+    protected GoatLabelSkin(@SuppressWarnings("rawtypes") GoatLabel control) {
         super(control);
         mainView = createMainView();
         getChildren().add(mainView);
@@ -62,6 +62,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
 
     /**
      * Do any custom resizing etc
+     * Set size of everything when you switch to edit mode.
      */
     protected abstract void setSizing();
 

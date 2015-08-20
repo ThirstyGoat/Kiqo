@@ -15,7 +15,7 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatLabelTextFieldSkin(Control control) {
+    protected GoatLabelTextFieldSkin(GoatLabel control) {
         super(control);
     }
 
