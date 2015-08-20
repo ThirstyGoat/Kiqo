@@ -127,3 +127,20 @@
     -fx-text-fill: gainsboro;
     -fx-font-size: 12px;
 }
+
+/* Icons */
+.people-icon {
+    -glyph-name: "USERS";
+}
+
+.comment-icon {
+    -glyph-name: "COMMENT";
+}
+
+.clock-icon {
+    -glyph-name: "CLOCK-ALT";
+}
+
+.calendar-icon {
+    -glyph-name: "CALENDAR";
+}
