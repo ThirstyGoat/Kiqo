@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
@@ -74,5 +75,14 @@ public final class FxUtils {
                 setText(item != null ? item.getShortName() : null);
             }
         };
+    }
+
+    public static void limitShortNameToMaxLength(StringProperty shortNameTextProperty) {
+        shortNameTextProperty.addListener((observable, oldValue, newValue) -> {
+            // Restrict length of short name text field
+            if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextProperty.set(newValue.substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
+            }
+        });
     }
 }

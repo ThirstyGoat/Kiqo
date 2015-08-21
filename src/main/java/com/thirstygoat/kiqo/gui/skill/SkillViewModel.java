@@ -15,18 +15,17 @@ import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 
 public class SkillViewModel implements Loadable<Skill>, ViewModel {
-    private ModelWrapper<Skill> modelWrapper = new GoatModelWrapper<>();
-    
-    private ObjectProperty<Skill> skill = new SimpleObjectProperty<>(null);
-    private ObjectProperty<Command> command = new SimpleObjectProperty<>(null);
-
-    private ObjectProperty<Organisation> organisation = new SimpleObjectProperty<>(null);
+    private ModelWrapper<Skill> modelWrapper;    
+    private ObjectProperty<Skill> skill;
+    private ObjectProperty<Organisation> organisation;
 
     private ObservableRuleBasedValidator nameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     
     public SkillViewModel() {
-        command.bind(Bindings.createObjectBinding(this::createCommand, modelWrapper.differentProperty()));
+        modelWrapper = new GoatModelWrapper<>();
+        skill = new SimpleObjectProperty<>(null);
+        organisation = new SimpleObjectProperty<>(null);
         createValidators();
     }
     
@@ -89,10 +88,6 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     
     public ObjectProperty<Organisation> organisationProperty() {
         return organisation;
-    }
-
-    public ObjectProperty<Command> commandProperty() {
-        return command;
     }
     
     public ValidationStatus nameValidation() {

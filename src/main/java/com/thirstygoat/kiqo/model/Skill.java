@@ -21,8 +21,8 @@ public class Skill extends Item {
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
      */
     public Skill() {
-        shortName = new SimpleStringProperty();
-        description = new SimpleStringProperty();
+        shortName = new SimpleStringProperty("");
+        description = new SimpleStringProperty("");
     }
 
     public Skill(String shortName, String description) {
