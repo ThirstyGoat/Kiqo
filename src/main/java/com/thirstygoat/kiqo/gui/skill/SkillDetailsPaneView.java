@@ -26,11 +26,11 @@ public class SkillDetailsPaneView implements FxmlView<SkillViewModel>, Initializ
         viewModel.skillProperty().addListener((observable, oldValue, newValue) -> {
             shortNameLabel.displayTextProperty().bind(newValue.shortNameProperty());
             descriptionLabel.displayTextProperty().bind(newValue.descriptionProperty());
+            
+            shortNameLabel.getEditField().textProperty().bindBidirectional(viewModel.nameProperty());
+            descriptionLabel.getEditField().textProperty().bindBidirectional(viewModel.descriptionProperty());
         });
-
-        shortNameLabel.getEditField().textProperty().bindBidirectional(viewModel.nameProperty());
-        descriptionLabel.getEditField().textProperty().bindBidirectional(viewModel.descriptionProperty());
-
+        
         shortNameLabel.setCommandSupplier(viewModel::createCommand);
         descriptionLabel.setCommandSupplier(viewModel::createCommand);
         

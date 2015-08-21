@@ -51,9 +51,9 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
      */
     @Override
     public void load(Skill skill, Organisation organisation) {
-        skillProperty().set(skill);
-        organisationProperty().set(organisation);
         modelWrapper.set(skill);
+        organisationProperty().set(organisation);
+        skillProperty().set(skill);
     }
 
     protected Command createCommand() {
@@ -61,10 +61,10 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         if (skill.get() != null) {
             final ArrayList<Command> changes = new ArrayList<>();
     
-            if (!nameProperty().get().equals(skill.get().getShortName())) {
+            if (nameProperty().get() != null && !nameProperty().get().equals(skill.get().getShortName())) {
                 changes.add(new EditCommand<>(skill.get(), "shortName", nameProperty().get()));
             }
-            if (!descriptionProperty().get().equals(skill.get().getDescription())) {
+            if (descriptionProperty().get() != null && !descriptionProperty().get().equals(skill.get().getDescription())) {
                 changes.add(new EditCommand<>(skill.get(), "description", descriptionProperty().get()));
             }
             command = new CompoundCommand("Edit Skill", changes);
