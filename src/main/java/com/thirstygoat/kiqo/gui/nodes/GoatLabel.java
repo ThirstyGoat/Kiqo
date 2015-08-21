@@ -70,7 +70,7 @@ public abstract class GoatLabel<C extends Control> extends Control {
     protected void setEnterAction() {
         skin.getEditField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                doneButton.fireEvent(event);
+                doneButton.fire();
                 event.consume();
             }
         });

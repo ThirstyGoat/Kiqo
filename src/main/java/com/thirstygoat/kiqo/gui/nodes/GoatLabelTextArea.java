@@ -36,7 +36,7 @@ public class GoatLabelTextArea extends GoatLabel<TextArea> {
                     getEditField().positionCaret(caretPos + 1);
                 } else {
                     event.consume();
-                    doneAction();
+                    doneButton.fire();
                 }
             }
         });
