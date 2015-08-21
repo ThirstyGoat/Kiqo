@@ -24,9 +24,11 @@ public class SkillDetailsPaneView implements FxmlView<SkillViewModel>, Initializ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         viewModel.skillProperty().addListener((observable, oldValue, newValue) -> {
+            // attach labels to model
             shortNameLabel.displayTextProperty().bind(newValue.shortNameProperty());
             descriptionLabel.displayTextProperty().bind(newValue.descriptionProperty());
             
+            // attach textFields to viewModel
             shortNameLabel.getEditField().textProperty().bindBidirectional(viewModel.nameProperty());
             descriptionLabel.getEditField().textProperty().bindBidirectional(viewModel.descriptionProperty());
         });
