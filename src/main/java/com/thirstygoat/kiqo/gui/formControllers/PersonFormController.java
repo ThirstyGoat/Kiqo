@@ -38,8 +38,6 @@ import com.thirstygoat.kiqo.util.Utilities;
  * Created by james on 20/03/15.
  */
 public class PersonFormController extends FormController<Person> {
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
@@ -79,7 +77,7 @@ public class PersonFormController extends FormController<Person> {
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField, shortNameTextField, SHORT_NAME_SUGGESTED_LENGTH,
+        Utilities.setNameSuggester(longNameTextField, shortNameTextField, Utilities.SHORT_NAME_MAX_LENGTH,
                 shortNameModified);
         Platform.runLater(() -> {
             // wait for textfields to exist
@@ -368,13 +366,13 @@ public class PersonFormController extends FormController<Person> {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Auto populate short name text field
             if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
-                    Math.min(longNameTextField.getText().length(), SHORT_NAME_SUGGESTED_LENGTH)))) {
+                    Math.min(longNameTextField.getText().length(), Utilities.SHORT_NAME_MAX_LENGTH)))) {
                 shortNameModified.set(true);
             }
 
             // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
             }
         });
     }
