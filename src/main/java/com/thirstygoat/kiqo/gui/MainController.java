@@ -60,6 +60,9 @@ import com.thirstygoat.kiqo.command.delete.DeleteTeamCommand;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
 import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormView;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormViewModel;
+import com.thirstygoat.kiqo.gui.backlog.BacklogViewModel;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.AcceptanceCriteriaFormController;
 import com.thirstygoat.kiqo.gui.formControllers.AllocationFormController;
@@ -94,6 +97,25 @@ import com.thirstygoat.kiqo.util.Utilities;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.internal.viewloader.View;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import org.controlsfx.control.StatusBar;
 
 /**
  * Main controller for the primary view
@@ -913,9 +935,19 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
-            
-            if (type.equals("Sprint")) { // TODO replace with enum
-                ViewTuple<SprintFormView, SprintFormViewModel> sprintFormTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
+
+            if (type.equals("Backlog")) { // TODO replace with enum
+                ViewTuple<BacklogFormView, BacklogFormViewModel> backlogFormTuple =
+                        FluentViewLoader.fxmlView(BacklogFormView.class).load();
+                final BacklogFormViewModel viewModel = backlogFormTuple.getViewModel();
+                viewModel.load((Backlog) t, selectedOrganisationProperty().get());
+                viewModel.setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(backlogFormTuple.getView()));
+                viewModel.load((Backlog) t, selectedOrganisationProperty.get());
+                stage.showAndWait();
+            } else if (type.equals("Sprint")) { // TODO replace with enum
+                ViewTuple<SprintFormView, SprintFormViewModel> sprintFormTuple =
+                        FluentViewLoader.fxmlView(SprintFormView.class).load();
                 // viewModel
                 final SprintFormViewModel viewModel = sprintFormTuple.getViewModel();
                 viewModel.load((Sprint) t, selectedOrganisationProperty.get());

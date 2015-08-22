@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
+import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
+import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -12,9 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
-import com.thirstygoat.kiqo.gui.detailsPane.BacklogDetailsPaneViewModel;
-import com.thirstygoat.kiqo.model.Story;
 
 
 /**

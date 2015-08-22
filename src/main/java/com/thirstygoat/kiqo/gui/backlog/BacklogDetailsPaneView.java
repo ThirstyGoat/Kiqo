@@ -1,17 +1,14 @@
-package com.thirstygoat.kiqo.gui.detailsPane;
+package com.thirstygoat.kiqo.gui.backlog;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.util.StringConverters;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,7 +33,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewModel>, Initializable {
 
     @InjectViewModel
-    private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
+    private BacklogDetailsPaneViewModel viewModel;
     
     @FXML
     private Label shortNameLabel;
@@ -62,15 +59,16 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) { 
 
-        shortNameLabel.textProperty().bind(backlogDetailsPaneViewModel.shortNameProperty());
-        longNameLabel.textProperty().bind(backlogDetailsPaneViewModel.longNameProperty());
-        descriptionLabel.textProperty().bind(backlogDetailsPaneViewModel.descriptionProperty());
-        productOwnerLabel.textProperty().bind(backlogDetailsPaneViewModel.productOwnerStringProperty());
-        scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleStringProperty());
+        shortNameLabel.textProperty().bind(viewModel.shortNameProperty());
+        longNameLabel.textProperty().bind(viewModel.longNameProperty());
+        descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
+        productOwnerLabel.textProperty().bindBidirectional(viewModel.productOwnerProperty(),
+                StringConverters.personStringConverter(viewModel.organisationProperty()));
+        scaleLabel.textProperty().bindBidirectional(viewModel.scaleProperty(), StringConverters.scaleStringConverter());
         setHyperlink();
 
         shortNameTableColumn.setCellFactory(param -> {
-            StoryListCell storyListCell = new StoryListCell(backlogDetailsPaneViewModel);
+            StoryListCell storyListCell = new StoryListCell(viewModel);
             storyListCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() > 1) {
                     MainController.focusedItemProperty.set((Story) storyListCell.getTableRow().getItem());
@@ -79,14 +77,15 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
             return storyListCell;
         });
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storyTableView.setItems(backlogDetailsPaneViewModel.getStories());
+        storyTableView.setItems(viewModel.stories());
 
-        placeHolder.textProperty().set(backlogDetailsPaneViewModel.PLACEHOLDER);
+        placeHolder.textProperty().set(viewModel.PLACEHOLDER);
 
-        scaleLabel.textProperty().bind(backlogDetailsPaneViewModel.scaleProperty().asString());
+        scaleLabel.textProperty().bindBidirectional(viewModel.scaleProperty(), StringConverters.scaleStringConverter());
 
-        highlightCheckBox.selectedProperty().bindBidirectional(backlogDetailsPaneViewModel.highlightStoryStateProperty());
+        highlightCheckBox.selectedProperty().bindBidirectional(viewModel.highlightStoryStateProperty());
     }
+
 
     private void setHyperlink() {
         PopOver popOver = new PopOver();
