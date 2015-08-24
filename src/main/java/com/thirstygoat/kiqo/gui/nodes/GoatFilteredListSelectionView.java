@@ -1,39 +1,31 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.util.regex.Pattern;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-
 import org.controlsfx.control.SegmentedButton;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
 public class GoatFilteredListSelectionView<T extends Item> extends VBox {
-    private final ObjectProperty<ObservableList<T>> sourceItems;
-    private final ObjectProperty<ObservableList<T>> targetItems;
+    private final ListProperty<T> sourceItems;
+    private final ListProperty<T> targetItems;
     private final ObservableList<T> allItems;
     private ObjectProperty<Callback<T, Node>> targetCellGraphicFactory = new SimpleObjectProperty<>();
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
@@ -45,8 +37,8 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
 
     public GoatFilteredListSelectionView() {
-        sourceItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-        targetItems = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        sourceItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+        targetItems = new SimpleListProperty<>(FXCollections.observableArrayList());
         allItems = FXCollections.observableArrayList();
 
         createSkin();
@@ -58,6 +50,21 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
             textField.setText(value + " ");
             textField.setText(value);
         });
+
+        Predicate<List<? extends Item>> newItems =
+            list -> (sourceItems.isEmpty() || targetItems.isEmpty())
+                    && list.containsAll(sourceItems)
+                    && list.containsAll(targetItems);
+
+        ListChangeListener<T> refresh = c -> {
+            SHOWING initial = showing.get();
+            showing.set(SHOWING.Unselected);
+            showing.set(SHOWING.Selected);
+            showing.set(initial);
+        };
+
+        sourceItems.addListener(refresh);
+        targetItems.addListener(refresh);
     }
 
     public Node getFooter() {
@@ -117,7 +124,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         targetItemsProperty().set(targetItems);
     }
 
-    public ObjectProperty<ObservableList<T>> targetItemsProperty() {
+    public ListProperty<T> targetItemsProperty() {
         return targetItems;
     }
 
@@ -131,7 +138,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         sourceItemsProperty().set(sourceItems);
     }
 
-    public ObjectProperty<ObservableList<T>> sourceItemsProperty() {
+    public ListProperty<T> sourceItemsProperty() {
         return sourceItems;
     }
 
@@ -172,13 +179,14 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         showing.addListener((observable, oldValue, newValue) -> {
             allItems.clear();
             if (newValue == SHOWING.All) {
-                allItems.addAll(sourceItems.get());
                 allItems.addAll(targetItems.get());
+                allItems.addAll(sourceItems.get());
             } else if (newValue == SHOWING.Selected) {
                 allItems.addAll(targetItems.get());
             } else if (newValue == SHOWING.Unselected) {
-                allItems.addAll(sourceItems.get());
+                allItems.addAll(sourceItems);
             }
+            allItems.sort((i1, i2) -> i1.getShortName().compareTo(i2.getShortName()));
             // Trigger refresh of shown items by firing change event on the filter text field
             String value = textField.getText();
             textField.setText(value + " ");
