@@ -6677,7 +6677,6 @@
     "description": "",
     "stories": [
       "0x25c",
-      "0x261",
       "0x25d"
     ]
   },
@@ -6700,7 +6699,8 @@
     "description": "",
     "stories": [
       "0x262",
-      "0x263"
+      "0x263",
+      "0x261"
     ]
   },
   "0x25c": {
@@ -6821,7 +6821,7 @@
       "0x271"
     ],
     "dependencies": [],
-    "isReady": false,
+    "isReady": true,
     "tasks": [
       "0x272",
       "0x273",
