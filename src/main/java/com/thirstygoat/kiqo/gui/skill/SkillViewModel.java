@@ -68,6 +68,10 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         modelWrapper.reload();
     }
 
+    public void reload() {
+        modelWrapper.reload();
+    }
+
     protected Command createCommand() {
         final Command command;
         if (skill.get() != null) { // edit

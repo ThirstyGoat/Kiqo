@@ -1,13 +1,11 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.util.function.Supplier;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-
-import com.thirstygoat.kiqo.command.*;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import de.saxsys.mvvmfx.utils.validation.visualization.*;
@@ -25,7 +23,8 @@ public abstract class GoatLabel<C extends Control> extends Control {
     protected Button doneButton;
     private ValidationVisualizer validationVisualizer;
     private ObjectProperty<ValidationStatus> validationStatus;
-    private Supplier<Command> commandSupplier;
+    private ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>(event -> {});
+    private ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(event -> {});
 
 
     protected abstract GoatLabelSkin<C> initSkin();
@@ -60,6 +59,8 @@ public abstract class GoatLabel<C extends Control> extends Control {
             doneAction();
         });
 
+        skin.onCancel.bind(this.onCancel);
+
         setEnterAction();
     }
 
@@ -77,10 +78,7 @@ public abstract class GoatLabel<C extends Control> extends Control {
     }
 
     protected void doneAction() {
-        Command command = commandSupplier.get();
-        if (command != null) {
-            UndoManager.getUndoManager().doCommand(command);
-        }
+        onAction.get().handle(new ActionEvent());
         skin.showDisplay();
     }
 
@@ -109,7 +107,19 @@ public abstract class GoatLabel<C extends Control> extends Control {
         return validationStatus;
     }
 
-    public void setCommandSupplier(Supplier<Command> supplier) {
-        commandSupplier = supplier;
+    public void setOnAction(EventHandler<ActionEvent> action) {
+        onAction.set(action);
+    }
+
+    public EventHandler<ActionEvent> getOnAction() {
+        return onAction.get();
+    }
+
+    public void setOnCancel(EventHandler<ActionEvent> action) {
+        onCancel.set(action);
+    }
+
+    public EventHandler<ActionEvent> getOnCancel() {
+        return onCancel.get();
     }
 }

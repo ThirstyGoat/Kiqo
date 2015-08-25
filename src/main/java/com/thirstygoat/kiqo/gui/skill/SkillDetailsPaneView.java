@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.skill;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.fxml.*;
 
 import com.thirstygoat.kiqo.gui.nodes.*;
@@ -12,31 +13,18 @@ import de.saxsys.mvvmfx.*;
 /**
 * Created by Bradley Kirwan on 14/08/2015.
 */
-public class SkillDetailsPaneView implements FxmlView<SkillViewModel>, Initializable {
+public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>, Initializable {
     @FXML
     private GoatLabelTextField shortNameLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
     @InjectViewModel
-    private SkillViewModel viewModel;
+    private SkillDetailsPaneViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        viewModel.skillProperty().addListener((observable, oldValue, newValue) -> {
-            // attach labels to model
-            shortNameLabel.displayTextProperty().bind(newValue.shortNameProperty());
-            descriptionLabel.displayTextProperty().bind(newValue.descriptionProperty());
-            
-            // attach textFields to viewModel
-            shortNameLabel.getEditField().textProperty().bindBidirectional(viewModel.nameProperty());
-            descriptionLabel.getEditField().textProperty().bindBidirectional(viewModel.descriptionProperty());
-        });
-        
-        shortNameLabel.setCommandSupplier(viewModel::createCommand);
-        descriptionLabel.setCommandSupplier(viewModel::createCommand);
-        
-        shortNameLabel.validationStatus().set(viewModel.nameValidation());
-        descriptionLabel.validationStatus().set(viewModel.descriptionValidation());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.nameProperty(), viewModel.nameValidation());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 }

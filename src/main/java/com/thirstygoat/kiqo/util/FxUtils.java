@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
@@ -74,5 +79,23 @@ public final class FxUtils {
                 setText(item != null ? item.getShortName() : null);
             }
         };
+    }
+
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, StringProperty stringProperty,
+                                     ValidationStatus validationStatus) {
+        goatLabel.setOnAction(event -> viewModel.commitEdit());
+        goatLabel.setOnCancel(event -> viewModel.cancelEdit());
+        goatLabel.displayTextProperty().bind(stringProperty);
+        goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
+        goatLabel.validationStatus().set(validationStatus);
+    }
+
+    public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
+                                     StringProperty stringProperty, ValidationStatus validationStatus) {
+        goatLabel.setOnAction(event -> viewModel.commitEdit());
+        goatLabel.setOnCancel(event -> viewModel.cancelEdit());
+        goatLabel.displayTextProperty().bind(stringProperty);
+        goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
+        goatLabel.validationStatus().set(validationStatus);
     }
 }
