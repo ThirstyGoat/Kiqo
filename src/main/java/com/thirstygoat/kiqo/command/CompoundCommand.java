@@ -2,6 +2,8 @@ package com.thirstygoat.kiqo.command;
 
 import java.util.Collection;
 
+import com.thirstygoat.kiqo.util.Utilities;
+
 /**
  * Wraps several Commands into an atomic unit. Similar to the idea of
  * transactions in database theory.
@@ -29,7 +31,7 @@ public class CompoundCommand extends Command {
 
     @Override
     public String toString() {
-        return commands.size() + " changes";
+        return commands.size() + Utilities.pluralise(commands.size(), " change", " changes");
     }
 
     @Override

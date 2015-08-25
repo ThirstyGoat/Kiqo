@@ -67,7 +67,12 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
             if (descriptionProperty().get() != null && !descriptionProperty().get().equals(skill.get().getDescription())) {
                 changes.add(new EditCommand<>(skill.get(), "description", descriptionProperty().get()));
             }
-            command = new CompoundCommand("Edit Skill", changes);
+            
+            if (changes.size() > 0) {
+                command = new CompoundCommand("Edit Skill", changes);
+            } else {
+                command = null;
+            }
         } else {
             command = null;
         }
@@ -82,11 +87,11 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         return modelWrapper.field("description", Skill::getDescription, Skill::setDescription, "");
     }
 
-    public ObjectProperty<Skill> skillProperty() {
+    protected ObjectProperty<Skill> skillProperty() {
         return skill;
     }
     
-    public ObjectProperty<Organisation> organisationProperty() {
+    protected ObjectProperty<Organisation> organisationProperty() {
         return organisation;
     }
     
