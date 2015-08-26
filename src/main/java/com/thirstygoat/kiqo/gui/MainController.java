@@ -868,11 +868,10 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {
-                ViewTuple<SprintFormView, SprintFormViewModel> viewTuple =
+                ViewTuple<SprintFormView, SprintViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SprintFormView.class).load();
-                final SprintFormViewModel viewModel = viewTuple.getViewModel();
-                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
-                viewModel.setExitStrategy(() -> stage.close());
+                viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Skill.class.getSimpleName())) {

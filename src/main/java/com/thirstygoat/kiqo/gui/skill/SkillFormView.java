@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.gui.skill;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
+
 import javafx.application.Platform;
 import javafx.fxml.*;
 import javafx.scene.control.*;

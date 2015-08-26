@@ -18,8 +18,8 @@ import java.util.Arrays;
 /**
  * Created by leroy on 9/08/15.
  */
-public class SprintFormViewModelTest {
-    private SprintFormViewModel viewModel;
+public class SprintViewModelInteractionTest {
+    private SprintViewModel viewModel;
     private Organisation organisation;
     private Project project;
     private Release release;
@@ -35,7 +35,7 @@ public class SprintFormViewModelTest {
 
     @Before
     public void setup() {
-        viewModel = new SprintFormViewModel();
+        viewModel = new SprintViewModel();
         organisation = new Organisation();
         project = new Project("projectShortName", "projectLongName");
         po = new Person("PO", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
@@ -59,7 +59,7 @@ public class SprintFormViewModelTest {
      * Populate a SprintFormViewModel's fields with valid data.
      * @param viewModel
      */
-    public void populateFields(SprintFormViewModel viewModel) {
+    public void populateFields(SprintViewModel viewModel) {
         viewModel.goalProperty().set("goalShortName");
         viewModel.longNameProperty().set("goalLongName");
         viewModel.backlogProperty().set(backlog);
@@ -146,7 +146,7 @@ public class SprintFormViewModelTest {
         populateFields(viewModel);
         viewModel.createCommand().execute();
         Sprint newSprint = viewModel.sprintProperty().get();
-        SprintFormViewModel newViewModel = new SprintFormViewModel();
+        SprintViewModel newViewModel = new SprintViewModel();
         newViewModel.load(newSprint, organisation);
         Assert.assertFalse("Description should not be null",
                 newViewModel.descriptionProperty().get() == null);
@@ -193,17 +193,10 @@ public class SprintFormViewModelTest {
         viewModel.releaseProperty().set(null);
         Assert.assertTrue("The sprint shortname should be valid when no release is selected", viewModel.goalValidation().isValid());
 
-        SprintFormViewModel editingViewModel = new SprintFormViewModel();
+        SprintViewModel editingViewModel = new SprintViewModel();
         editingViewModel.load(sprint, organisation);
         viewModel.goalProperty().set("sprintGoal");
         Assert.assertTrue("Editing the sprint allow the shortName to be set to the same as itself",
                 editingViewModel.goalValidation().isValid());
-    }
-
-    @Test
-    public void existingSprint_editNoChangesTest() {
-        viewModel.load(sprint, organisation);
-        viewModel.setExitStrategy(() -> {});
-        viewModel.okAction();
     }
 }

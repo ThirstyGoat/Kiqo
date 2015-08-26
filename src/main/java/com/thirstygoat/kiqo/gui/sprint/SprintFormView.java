@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
+
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
@@ -14,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.util.Duration;
+
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -23,8 +26,10 @@ import java.util.ResourceBundle;
 /**
 * Created by Carina Blair on 3/08/2015.
 */
-public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializable {
+public class SprintFormView implements FxmlView<SprintViewModel>, Initializable {
 
+    private FormButtonHandler formButtonHandler;
+    
     @FXML
     private TextField nameTextField;
     @FXML
@@ -51,7 +56,7 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
     private Hyperlink whyHyperlink;
 
     @InjectViewModel
-    private SprintFormViewModel viewModel;
+    private SprintViewModel viewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -153,11 +158,19 @@ public class SprintFormView implements FxmlView<SprintFormViewModel>, Initializa
         validationVisualizer.initVisualization(viewModel.storiesValidation(), storySelectionView.getControl(), true);
     }
 
+    public void setExitStrategy(Runnable exitStrategy) {
+        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
+    }
+
     public void okAction() {
-        viewModel.okAction();
+        if (formButtonHandler != null) {
+            formButtonHandler.okAction();
+        }
     }
 
     public void cancelAction() {
-        viewModel.cancelAction();
+        if (formButtonHandler != null) {
+            formButtonHandler.cancelAction();
+        }
     }
 }
