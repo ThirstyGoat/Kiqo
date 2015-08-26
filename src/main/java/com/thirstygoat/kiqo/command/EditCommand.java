@@ -78,7 +78,6 @@ public class EditCommand<ModelObjectType, FieldType> extends Command {
     private void editField(Object value) {
         try {
             final Method writeMethod = this.propertyDescriptor.getWriteMethod();
-            EditCommand.LOGGER.log(Level.INFO, "Editing %s via %s", new Object[]{propertyDescriptor.getName(), writeMethod});
             writeMethod.invoke(this.subject, value);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
             EditCommand.LOGGER.log(Level.SEVERE, "Can't edit!", e);
