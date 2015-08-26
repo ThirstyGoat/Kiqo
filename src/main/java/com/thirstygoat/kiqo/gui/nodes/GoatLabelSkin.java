@@ -1,6 +1,10 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import javafx.animation.FadeTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
@@ -22,6 +26,8 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
     protected HBox displayView;
     protected HBox editView;
 
+    protected ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>();
+
     /**
      * Constructor for all SkinBase instances.
      *
@@ -34,6 +40,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
 
         editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue && !doneButton.isFocused()) {
+                onCancel.get().handle(new ActionEvent());
                 showDisplay();
             }
         });
