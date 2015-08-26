@@ -1,14 +1,9 @@
 package com.thirstygoat.kiqo.gui.skill;
 
-import static org.junit.Assert.fail;
-
-import java.util.*;
-
 import org.junit.*;
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
-import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 
@@ -18,14 +13,27 @@ public class SkillViewModelTest {
     @Before
     public void setUp() throws Exception {
         viewModel = new SkillViewModel();
+        viewModel.load(null, new Organisation());
+    }
+    
+    @Test
+    public final void testCreateCommand_new() {
+        Command command;
+        
+        command = viewModel.createCommand();
+        Assert.assertFalse(viewModel.nameValidation().isValid()); // just to be sure
+        Assert.assertNotNull("command must be generated (even when validation is not passing)", command);
+        Assert.assertEquals("command must be a CreateSkillCommand", CreateSkillCommand.class, command.getClass());
+    }
+
+    @Test
+    public final void testCreateCommand_edit() {
+        // set up an existing skill to be edited
         Skill skill = new Skill("name", "description");
         Organisation organisation = new Organisation();
         organisation.getSkills().add(skill);
         viewModel.load(skill, organisation);
-    }
-
-    @Test
-    public final void testCreateCommand() {
+        
         Command command;
         
         // no changes
