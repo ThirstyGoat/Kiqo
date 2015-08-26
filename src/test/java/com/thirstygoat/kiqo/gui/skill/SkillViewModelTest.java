@@ -87,7 +87,7 @@ public class SkillViewModelTest {
 
     @Test
     public final void testDescriptionValidation() {
-        Assert.assertTrue("Description should be valid by default.",
+        Assert.assertTrue("Must be valid initially.",
                 viewModel.descriptionValidation().validProperty().get());
 
         viewModel.descriptionProperty().set("Billy Goat");
@@ -97,5 +97,19 @@ public class SkillViewModelTest {
         viewModel.descriptionProperty().set("");
         Assert.assertTrue("Empty string should be recognised as valid.",
                 viewModel.descriptionValidation().validProperty().get());
+    }
+    
+    @Test
+    public final void testAllValidation() {
+        Assert.assertFalse("Must not be valid initially.",
+                viewModel.allValidation().validProperty().get());
+
+        viewModel.descriptionProperty().set("Billy Goat");
+        Assert.assertFalse("Must not be valid with partial validity.",
+                viewModel.allValidation().validProperty().get());
+        
+        viewModel.nameProperty().set("Name");
+        Assert.assertTrue("Must be valid when all contributors are valid.",
+                viewModel.allValidation().validProperty().get());
     }
 }
