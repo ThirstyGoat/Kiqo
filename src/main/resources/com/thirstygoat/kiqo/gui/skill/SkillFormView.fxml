@@ -8,7 +8,7 @@
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" onAction="#cancelAction" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Skill" onAction="#okAction" />
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Done" onAction="#okAction" />
             </children>
             <padding>
                 <Insets right="35.0" />
