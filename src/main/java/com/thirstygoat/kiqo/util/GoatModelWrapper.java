@@ -22,6 +22,7 @@ public class GoatModelWrapper<M extends Item> extends ModelWrapper<M> {
             oldItem.removePropertyChangeListener(listener);
         }
         super.set(model);
+        super.reload();
         // Set new property change listener
         M newItem = model;
         newItem.initBoundPropertySupport();

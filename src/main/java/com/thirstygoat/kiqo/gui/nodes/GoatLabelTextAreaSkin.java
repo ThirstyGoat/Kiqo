@@ -37,11 +37,12 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
         TextArea textArea = editField;
         textArea.setMinHeight(Control.USE_PREF_SIZE);
         textArea.setMaxHeight(Control.USE_PREF_SIZE);
-        textArea.setPrefRowCount(textArea.getText().split("\n").length);
+        String text = textArea.getText();
+        textArea.setPrefRowCount(text != null ? text.split("\n").length : 1);
         textArea.textProperty().addListener((observable1, oldValue1, newValue1) -> {
             String s = newValue1;
             char c = '\n';
-            textArea.setPrefRowCount(Math.max(s.replaceAll("[^" + c + "]", "").length(), 1));
+            textArea.setPrefRowCount(s != null ? Math.max(s.replaceAll("[^" + c + "]", "").length(), 1) : 1);
         });
         editView.setMinHeight(Control.USE_PREF_SIZE);
         editView.setMaxHeight(Control.USE_PREF_SIZE);
