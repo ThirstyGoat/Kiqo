@@ -27,8 +27,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     private SprintDetailsPaneDetailsViewModel viewModel;
 
     @FXML
-    private AnchorPane anchorPane;
-    @FXML
     private Label longNameLabel;
     @FXML
     private Label goalLabel;
@@ -52,10 +50,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        anchorPane.focusedProperty().addListener(observable -> {
-            viewModel.reload();
-        });
 
         longNameLabel.textProperty().bind(viewModel.longNameProperty());
         goalLabel.textProperty().bind(viewModel.goalProperty());
