@@ -6,6 +6,7 @@ import javafx.beans.binding.*;
 import javafx.beans.property.*;
 
 import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.*;
@@ -21,6 +22,7 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
 
     private ObservableRuleBasedValidator nameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
+    private CompositeValidator allValidator;
     
     public SkillViewModel() {
         modelWrapper = new GoatModelWrapper<>();
@@ -32,9 +34,12 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     private void createValidators() {
         nameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
-            { return skill.get() != null // null checks to prevent NPE
-                    && organisationProperty().get() != null
-                    && Utilities.shortnameIsUnique(nameProperty().get(), skill.get(), organisationProperty().get().getSkills()); 
+            { 
+                if (organisationProperty().get() != null) {
+                    return Utilities.shortnameIsUnique(nameProperty().get(), skillProperty().get(), organisationProperty().get().getSkills());
+                } else {
+                    return true; // no organisation means this isn't for real yet.
+                }
             }, 
             nameProperty());
         nameValidator.addRule(nameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
@@ -42,7 +47,9 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         nameValidator.addRule(nameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
         nameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
-        descriptionValidator = new ObservableRuleBasedValidator();
+        descriptionValidator = new ObservableRuleBasedValidator(); // always true
+        
+        allValidator = new CompositeValidator(nameValidator, descriptionValidator);
     }
 
     /**
@@ -51,14 +58,19 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
      */
     @Override
     public void load(Skill skill, Organisation organisation) {
-        modelWrapper.set(skill);
-        organisationProperty().set(organisation);
         skillProperty().set(skill);
+        organisationProperty().set(organisation);
+        if (skill != null) {
+            modelWrapper.set(skill);
+        } else {
+            modelWrapper.set(new Skill());
+        }
+        modelWrapper.reload();
     }
 
     protected Command createCommand() {
         final Command command;
-        if (skill.get() != null) {
+        if (skill.get() != null) { // edit
             final ArrayList<Command> changes = new ArrayList<>();
     
             if (nameProperty().get() != null && !nameProperty().get().equals(skill.get().getShortName())) {
@@ -73,8 +85,9 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
             } else {
                 command = null;
             }
-        } else {
-            command = null;
+        } else { // new
+            final Skill s = new Skill(nameProperty().get(), descriptionProperty().get());
+            command = new CreateSkillCommand(s, organisationProperty().get());
         }
         return command;
     }
@@ -101,5 +114,9 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     
     public ValidationStatus descriptionValidation() {
         return descriptionValidator.getValidationStatus();
+    }
+
+    public ValidationStatus allValidation() {
+        return allValidator.getValidationStatus();
     }
 }

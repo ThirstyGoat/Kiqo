@@ -3,12 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.formControllers.SkillFormController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.skill.SkillFormView">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Skill" />
+                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" onAction="#cancelAction" />
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Skill" onAction="#okAction" />
             </children>
             <padding>
                 <Insets right="35.0" />
@@ -18,10 +18,10 @@
     <center>
 <GridPane vgap="10.0">
   <children>
-    <Label text="Short Name:" GridPane.rowIndex="0" />
+    <Label text="Name:" GridPane.rowIndex="0" />
     <Label text="Description:" GridPane.rowIndex="1" />
-    <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-    <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <TextField fx:id="nameTextField" promptText="Must be under 20 characters and unique." GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <TextField fx:id="descriptionTextField" promptText="Describe this skill." GridPane.columnIndex="1" GridPane.rowIndex="1" />
   </children>
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
