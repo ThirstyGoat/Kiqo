@@ -35,9 +35,9 @@ public class Project extends Item {
         backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
         sprints = FXCollections.observableArrayList();
-        shortName = new SimpleStringProperty();
-        longName = new SimpleStringProperty();
-        description = new SimpleStringProperty();
+        shortName = new SimpleStringProperty("");
+        longName = new SimpleStringProperty("");
+        description = new SimpleStringProperty("");
     }
 
     /**

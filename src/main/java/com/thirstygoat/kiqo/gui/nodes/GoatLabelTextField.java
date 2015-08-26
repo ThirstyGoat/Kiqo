@@ -5,20 +5,20 @@ import javafx.scene.control.TextField;
 /**
  * Created by samschofield on 6/08/15.
  */
-public class GoatLabelTextField extends GoatLabel {
+public class GoatLabelTextField extends GoatLabel<TextField> {
 
     @Override
     protected void populateEditField() {
-        ((TextField) editField).setText(displayLabel.getText());
+        editField.setText(displayLabel.getText());
     }
 
     @Override
-    protected GoatLabelSkin initSkin() {
+    protected GoatLabelSkin<TextField> initSkin() {
         return new GoatLabelTextFieldSkin(this);
     }
 
     @Override
     public TextField getEditField() {
-        return (TextField) editField;
+        return editField;
     }
 }

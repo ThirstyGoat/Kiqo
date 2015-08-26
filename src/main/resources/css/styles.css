@@ -144,3 +144,15 @@
 .calendar-icon {
     -glyph-name: "CALENDAR";
 }
+
+.pane-header {
+	-fx-font-size: 2em;
+}
+
+.pane-type-indicator {
+	-fx-text-fill: #ccc;
+}
+
+.tooltip {
+	-fx-font-size: 1em;
+}

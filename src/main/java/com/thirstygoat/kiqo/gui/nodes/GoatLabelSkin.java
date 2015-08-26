@@ -1,13 +1,10 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
+import de.jensd.fx.glyphs.fontawesome.*;
 
 /**
  * Created by samschofield on 7/08/15.
@@ -30,7 +27,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatLabelSkin(Control control) {
+    protected GoatLabelSkin(@SuppressWarnings("rawtypes") GoatLabel control) {
         super(control);
         mainView = createMainView();
         getChildren().add(mainView);
@@ -62,6 +59,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
 
     /**
      * Do any custom resizing etc
+     * Set size of everything when you switch to edit mode.
      */
     protected abstract void setSizing();
 

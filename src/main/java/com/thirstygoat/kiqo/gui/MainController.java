@@ -1,99 +1,44 @@
 package com.thirstygoat.kiqo.gui;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
+import javafx.beans.property.*;
+import javafx.fxml.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.scene.layout.*;
+import javafx.stage.*;
 
 import org.controlsfx.control.StatusBar;
 
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.command.delete.DeleteBacklogCommand;
-import com.thirstygoat.kiqo.command.delete.DeletePersonCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteProjectCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteReleaseCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteSkillCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteSprintCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteStoryCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteTeamCommand;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
-import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
-import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.delete.*;
+import com.thirstygoat.kiqo.exceptions.*;
+import com.thirstygoat.kiqo.gui.backlog.*;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
-import com.thirstygoat.kiqo.gui.formControllers.AcceptanceCriteriaFormController;
-import com.thirstygoat.kiqo.gui.formControllers.AllocationFormController;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
-import com.thirstygoat.kiqo.gui.formControllers.ReportFormController;
-import com.thirstygoat.kiqo.gui.formControllers.TaskFormController;
-import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
-import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
+import com.thirstygoat.kiqo.gui.formControllers.*;
+import com.thirstygoat.kiqo.gui.menuBar.*;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
-import com.thirstygoat.kiqo.gui.sprint.SprintFormViewModel;
+import com.thirstygoat.kiqo.gui.skill.*;
+import com.thirstygoat.kiqo.gui.sprint.*;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.persistence.PersistenceManager;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
-import com.thirstygoat.kiqo.util.Utilities;
+import com.thirstygoat.kiqo.util.*;
 
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.*;
 
 /**
  * Main controller for the primary view
@@ -913,16 +858,28 @@ public class MainController implements Initializable {
             stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
-            
-            if (type.equals("Sprint")) { // TODO replace with enum
-                ViewTuple<SprintFormView, SprintFormViewModel> sprintFormTuple = FluentViewLoader.fxmlView(SprintFormView.class).load();
-                // viewModel
-                final SprintFormViewModel viewModel = sprintFormTuple.getViewModel();
-                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
-                // view
+
+            if (type.equals(Backlog.class.getSimpleName())) {
+                ViewTuple<BacklogFormView, BacklogFormViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(BacklogFormView.class).load();
+                final BacklogFormViewModel viewModel = viewTuple.getViewModel();
+                viewModel.load((Backlog) t, selectedOrganisationProperty.get());
                 viewModel.setExitStrategy(() -> stage.close());
-                stage.setScene(new Scene(sprintFormTuple.getView()));
-                viewModel.load((Sprint) t, selectedOrganisationProperty.get());
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Sprint.class.getSimpleName())) {
+                ViewTuple<SprintFormView, SprintViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(SprintFormView.class).load();
+                viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Skill.class.getSimpleName())) {
+                ViewTuple<SkillFormView, SkillViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(SkillFormView.class).load();
+                viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();

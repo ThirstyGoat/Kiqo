@@ -18,7 +18,7 @@ import com.thirstygoat.kiqo.model.Team;
 /**
 * Created by Sam Schofield on 21/07/2015.
 */
-public class SprintViewModelTest {
+public class SprintViewModelValidationTest {
     private SprintViewModel viewModel;
     
     @Before
@@ -85,7 +85,7 @@ public class SprintViewModelTest {
 
     @Test
     public void testLongNameValidation() {
-        SprintFormViewModel sprintFormViewModel = new SprintFormViewModel();
+        SprintViewModel sprintFormViewModel = new SprintViewModel();
 
         Assert.assertFalse("Must not be valid initially.",
                 sprintFormViewModel.longNameValidation().validProperty().get());

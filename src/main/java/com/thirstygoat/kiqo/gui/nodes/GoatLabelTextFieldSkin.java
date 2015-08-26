@@ -8,14 +8,14 @@ import javafx.scene.text.Text;
 /**
  * Created by samschofield on 7/08/15.
  */
-public class GoatLabelTextFieldSkin extends GoatLabelSkin {
+public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
 
     /**
      * Constructor for all SkinBase instances.
      *
      * @param control The control for which this Skin should attach to.
      */
-    protected GoatLabelTextFieldSkin(Control control) {
+    protected GoatLabelTextFieldSkin(GoatLabel<TextField> control) {
         super(control);
     }
 
@@ -26,20 +26,19 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin {
         displayView.setMinWidth(Control.USE_PREF_SIZE);
         stackPane.setAlignment(Pos.TOP_LEFT);
 
-        TextField textField = ((TextField) editField);
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+        editField.textProperty().addListener((observable, oldValue, newValue) -> {
             Text text = new Text(newValue);
-            text.setFont(textField.getFont()); // Set the same font, so the size is the same
+            text.setFont(editField.getFont()); // Set the same font, so the size is the same
             double width = text.getLayoutBounds().getWidth() // This big is the Text in the TextField
-                    + textField.getPadding().getLeft() + textField.getPadding().getRight() // Add the padding of the TextField
+                    + editField.getPadding().getLeft() + editField.getPadding().getRight() // Add the padding of the TextField
                     + 2d; // Add some spacing
-            textField.setPrefWidth(Math.max(width, 150)); // Set the width
-            textField.positionCaret(((TextField) editField).getCaretPosition());
+            editField.setPrefWidth(Math.max(width, 150)); // Set the width
+            editField.positionCaret(editField.getCaretPosition());
         });
     }
 
     @Override
-    protected Control createEditField() {
+    protected TextField createEditField() {
         return new TextField();
     }
 

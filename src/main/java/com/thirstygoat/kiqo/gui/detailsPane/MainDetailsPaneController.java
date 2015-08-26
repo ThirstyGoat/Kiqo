@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView;
+import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
@@ -170,7 +172,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showSkillDetailsPane(Skill skill) {
-        skillViewModel.load(skill, null);
+        skillViewModel.load(skill, mainController.selectedOrganisationProperty.get());
         show(skillDetailsPane);
         showOptionButtons();
     }

@@ -20,7 +20,6 @@ import javafx.collections.ObservableList;
  *
  */
 public class UndoManager {
-    private static final Logger LOGGER = Logger.getLogger(UndoManager.class.getName());
     private static UndoManager instance;
 
     public final StringProperty undoTypeProperty = new SimpleStringProperty("");
@@ -50,7 +49,6 @@ public class UndoManager {
      * @param command command to be executed
      */
     public void doCommand(final Command command) {
-        UndoManager.LOGGER.log(Level.INFO, "Doing command %s", command);
         command.execute();
         undoStack.push(command);
         if (undoStack.size() < savePosition) { // behind saveposition
@@ -70,7 +68,6 @@ public class UndoManager {
         command.redo();
         undoStack.push(command);
         updateUndoRedoTypes();
-        UndoManager.LOGGER.log(Level.INFO, "Redoing command %s", command);
         checkChangesSaved();
     }
 
@@ -83,7 +80,6 @@ public class UndoManager {
         command.undo();
         redoStack.push(command);
         updateUndoRedoTypes();
-        UndoManager.LOGGER.log(Level.INFO, "Undoing command %s", command);
         checkChangesSaved();
         if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
             branchPosition = undoStack.size();

@@ -45,6 +45,16 @@ public class Backlog extends Item {
         this.stories.addAll(stories);
     }
 
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(longName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(productOwner);
+        bps.addPropertyChangeSupportFor(project);
+        bps.addPropertyChangeSupportFor(scale);
+    }
+
     /**
      * @return a string array of the searchable fields for a model object
      */
