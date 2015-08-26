@@ -12,8 +12,8 @@ import com.thirstygoat.kiqo.command.*;
  * @author amy
  * 26/8/15
  */
-public final class FormButtonHandler {
-    private Supplier<Command> commandSupplier;
+public class FormButtonHandler {
+    private Supplier<? extends Command> commandSupplier;
     private Runnable exitStrategy;
     
     /**
@@ -21,7 +21,7 @@ public final class FormButtonHandler {
      * @param commandSupplier generates the command to be executed
      * @param exitStrategy called as the last statement in okAction and cancelAction (eg. `stage.close()`)
      */
-    public FormButtonHandler(Supplier<Command> commandSupplier, Runnable exitStrategy) {
+    public FormButtonHandler(Supplier<? extends Command> commandSupplier, Runnable exitStrategy) {
         this.commandSupplier = commandSupplier;
         this.exitStrategy = exitStrategy;
     }
