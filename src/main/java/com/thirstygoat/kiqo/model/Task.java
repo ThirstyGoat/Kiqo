@@ -41,6 +41,10 @@ public class Task extends Item {
         this.story = new SimpleObjectProperty<>(story);
     }
     
+    public static Callback<Task, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty()};
+    }
+
     @Override
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(shortName);
@@ -48,10 +52,6 @@ public class Task extends Item {
         bps.addPropertyChangeSupportFor(estimate);
         bps.addPropertyChangeSupportFor(status);
         bps.addPropertyChangeSupportFor(story);
-    }
-
-    public static Callback<Task, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty()};
     }
 
     /**

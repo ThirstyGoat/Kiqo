@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.model.Task;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.*;
@@ -20,23 +21,22 @@ public class TaskCard extends VBox {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
     final private BooleanProperty impedanceProperty;
+    private Task task;
 
-    public TaskCard() {
+    public TaskCard(Task task) {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
         draw();
-    }
 
-    public TaskCard(final String shortName, final float hours, final boolean impedance) {
-        shortNameProperty = new SimpleStringProperty(shortName);
-        hoursProperty = new SimpleFloatProperty(hours);
-        impedanceProperty = new SimpleBooleanProperty(impedance);
-        draw();
+        this.task = task;
+        shortNameProperty().bind(task.shortNameProperty());
+        hoursProperty().bind(task.estimateProperty());
     }
 
     private void draw() {
         GridPane gridPane = new GridPane();
+        gridPane.setStyle("-fx-background-color: darkgray");
         BorderPane borderPane = new BorderPane();
 
         Label shortNameLabel = new Label();
@@ -94,7 +94,7 @@ public class TaskCard extends VBox {
         gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints2);
         gridPane.getRowConstraints().add(rowConstraints);
 
-        setPrefHeight(150);
+        setPrefHeight(USE_COMPUTED_SIZE);
         setMaxHeight(150);
         setPrefWidth(150);
         setMaxWidth(150);
@@ -144,4 +144,7 @@ public class TaskCard extends VBox {
         hoursProperty.set(hours);
     }
 
+    public Task getTask() {
+        return task;
+    }
 }

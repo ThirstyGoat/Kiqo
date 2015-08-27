@@ -123,12 +123,14 @@ public class Main extends Application {
         scene.setOnDragDropped(event -> {
             final Dragboard db = event.getDragboard();
             final boolean success = false;
-            if (db.getFiles().size() > 1) {
-                GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
-                        "Drag and drop only supports individual files.");
-            } else {
-                final File file = db.getFiles().get(0);
-                mainController.openOrganisation(file);
+            if (db.hasFiles()) {
+                if (db.getFiles().size() > 1) {
+                    GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
+                            "Drag and drop only supports individual files.");
+                } else {
+                    final File file = db.getFiles().get(0);
+                    mainController.openOrganisation(file);
+                }
             }
             event.setDropCompleted(success);
             event.consume();

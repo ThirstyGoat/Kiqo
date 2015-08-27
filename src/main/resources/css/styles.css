@@ -156,3 +156,12 @@
 .tooltip {
 	-fx-font-size: 1em;
 }
+
+
+/******************************
+********* SCRUMBOARD **********
+*******************************/
+
+.scrumboard-story-row {
+    -fx-background-color: gainsboro;
+}
