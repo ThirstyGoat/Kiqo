@@ -1,9 +1,11 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 
 
 /**
@@ -25,6 +27,18 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
         displayLabel.maxWidthProperty().bind(mainView.widthProperty());
         displayView.setMaxWidth(Control.USE_PREF_SIZE);
         stackPane.setAlignment(Pos.TOP_LEFT);
+
+        ChangeListener listener = (observable, oldValue, newValue) -> {
+            // Credit to Daniel van Wichen for working out how to make a textArea resize properly
+            Text text = new Text(); // this is necessary to get the height of one row of text
+            text.setFont(editField.getFont());
+            text.setWrappingWidth(editField.getWidth() - 7.0 - 7.0 - 4.0); // values sourced from Modena.css
+            Double height = text.getLayoutBounds().getHeight(); // the height of one row of text
+            text.setText(editField.getText());
+            editField.setPrefRowCount((int) Math.round(text.getLayoutBounds().getHeight() / height));
+        };
+        editField.textProperty().addListener(listener);
+        editField.widthProperty().addListener(listener);
     }
 
     @Override
@@ -34,21 +48,17 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
 
     @Override
     protected void showEditField() {
-        TextArea textArea = editField;
-        textArea.setMinHeight(Control.USE_PREF_SIZE);
-        textArea.setMaxHeight(Control.USE_PREF_SIZE);
-        String text = textArea.getText();
-        textArea.setPrefRowCount(text != null ? text.split("\n").length : 1);
-        textArea.textProperty().addListener((observable1, oldValue1, newValue1) -> {
-            String s = newValue1;
-            char c = '\n';
-            textArea.setPrefRowCount(s != null ? Math.max(s.replaceAll("[^" + c + "]", "").length(), 1) : 1);
-        });
+        editField.setMinHeight(Control.USE_PREF_SIZE);
+        editField.setMaxHeight(Control.USE_PREF_SIZE);
         editView.setMinHeight(Control.USE_PREF_SIZE);
         editView.setMaxHeight(Control.USE_PREF_SIZE);
+        editField.setWrapText(true);
 
-        textArea.setWrapText(true);
+        // hiding the scrollbar
         ScrollBar scrollBarv = (ScrollBar)editField.lookup(".scroll-bar:vertical");
+        scrollBarv.setMaxWidth(Control.USE_PREF_SIZE);
+        scrollBarv.setMinWidth(Control.USE_PREF_SIZE);
+        scrollBarv.setPrefWidth(0.5);
         scrollBarv.setDisable(true);
         scrollBarv.setOpacity(0);
     }
