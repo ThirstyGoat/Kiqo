@@ -19,6 +19,7 @@ import javafx.collections.FXCollections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 
 /**
@@ -34,7 +35,7 @@ public class StoryViewModel implements ViewModel {
 
     private ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
     private ListProperty<Story> dependenciesProperty = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-    private ListProperty<Story> sourceStoriesProperty = new SimpleListProperty<>();
+    private ListProperty<Story> eligibleDependencies = new SimpleListProperty<>();
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
@@ -45,7 +46,7 @@ public class StoryViewModel implements ViewModel {
     private FunctionBasedValidator projectValidator;
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
-    private CompositeValidator formValidator;
+    private CompositeValidator allValidator;
 
     public StoryViewModel() {
         shortNameValidator = new ObservableRuleBasedValidator();
@@ -80,9 +81,9 @@ public class StoryViewModel implements ViewModel {
         creatorValidator = new FunctionBasedValidator<>(creatorProperty(),
             // Checks that the creator exists within the organisation and is set
             s -> {
-                if (organisation != null) {
-                    for (final Person p : organisation.getPeople()) {
-                        if (p.getShortName().equals(s)) {
+                if (organisationProperty().get() != null) {
+                    for (final Person p : organisationProperty().get().getPeople()) {
+                        if (p.getShortName().equals(s.getShortName())) {
                             return true;
                         }
                     }
@@ -114,36 +115,36 @@ public class StoryViewModel implements ViewModel {
             Utilities.emptinessPredicate(),
             ValidationMessage.error("Estimation Scale must not be empty"));
 
-        formValidator = new CompositeValidator();
-        formValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
+        allValidator = new CompositeValidator();
+        allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
     
     private void setStoryListProperties() {
         dependenciesProperty.get().clear();
-        sourceStoriesProperty.get().clear();
+        eligibleDependencies.get().clear();
         if (storyWrapper.get() != null) {
             if (projectProperty() != null) {
                 dependenciesProperty.get().addAll(storyWrapper.get().getDependencies());
                 if (storyWrapper.get().getBacklog() != null) {
-                    sourceStoriesProperty.get().addAll(storyWrapper.get().getBacklog().getStories());
+                    eligibleDependencies.get().addAll(storyWrapper.get().getBacklog().getStories());
                 } else {
-                    sourceStoriesProperty.get().addAll(projectProperty().get().getUnallocatedStories());
+                    eligibleDependencies.get().addAll(projectProperty().get().getUnallocatedStories());
                 }
 
                 ArrayList<Story> toRemove = new ArrayList<>();
-                for (Story story : sourceStoriesProperty.get()) {
+                for (Story story : eligibleDependencies.get()) {
                     if (checkCyclicDependency(story)) {
                         toRemove.add(story);
                     }
                 }
-                sourceStoriesProperty.get().removeAll(toRemove);
+                eligibleDependencies.get().removeAll(toRemove);
             }
-            sourceStoriesProperty.get().removeAll(storyWrapper.get().getDependencies());
-            sourceStoriesProperty.get().remove(storyWrapper.get()); // cannot depend on itself
+            eligibleDependencies.get().removeAll(storyWrapper.get().getDependencies());
+            eligibleDependencies.get().remove(storyWrapper.get()); // cannot depend on itself
         } else {
             if (projectProperty() != null) {
-                sourceStoriesProperty.get().addAll(projectProperty().get().getUnallocatedStories());
+                eligibleDependencies.get().addAll(projectProperty().get().getUnallocatedStories());
             }
         }
     }
@@ -167,6 +168,19 @@ public class StoryViewModel implements ViewModel {
             dependenciesProperty.clear();
         }
         storyWrapper.reload();
+    }
+
+    public void reload() {
+        storyWrapper.reload();
+        dependenciesProperty.setAll(story.getDependencies());
+    }
+
+    public Supplier<List<Project>> projectSupplier() {
+        return () -> organisationProperty().get().getProjects();
+    }
+
+    public Supplier<List<Person>> creatorSupplier() {
+        return () -> organisationProperty().get().getPeople();
     }
 
     public StringProperty shortNameProperty() {
@@ -205,12 +219,9 @@ public class StoryViewModel implements ViewModel {
         return storyWrapper.field("estimate", Story::getEstimate, Story::setEstimate, 0);
     }
 
-
     protected Story getStory() {
         return story;
     }
-
-
 
     public ObjectProperty<Organisation> organisationProperty() {
         return organisationProperty;
@@ -220,8 +231,8 @@ public class StoryViewModel implements ViewModel {
         return dependenciesProperty;
     }
 
-    public  ListProperty<Story> sourceStoriesProperty() {
-        return sourceStoriesProperty;
+    public  ListProperty<Story> eligibleDependencies() {
+        return eligibleDependencies;
     }
 
     public BooleanProperty getCreatorEditable () {
@@ -256,8 +267,8 @@ public class StoryViewModel implements ViewModel {
         return scaleValidator.getValidationStatus();
     }
 
-    public ValidationStatus formValidation() {
-        return formValidator.getValidationStatus();
+    public ValidationStatus allValidation() {
+        return allValidator.getValidationStatus();
     }
 
     public Command getCommand() {

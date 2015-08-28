@@ -1,9 +1,8 @@
 package com.thirstygoat.kiqo.gui.story;
 
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.command.create.CreateBacklogCommand;
-import com.thirstygoat.kiqo.gui.backlog.BacklogFormViewModel;
+import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
+import com.thirstygoat.kiqo.gui.formControllers.StoryFormViewModel;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,22 +16,26 @@ import java.util.Arrays;
 * Created by Carina Blair on 21/07/2015.
 */
 public class StoryFormViewModelTest {
-    private BacklogFormViewModel viewModel;
+    private StoryFormViewModel viewModel;
     private Organisation organisation;
     private Project project;
+    private Project secondProject;
     private Release release;
     private Backlog backlog;
     private Person po;
+    private Person creator;
     private Team team;
     private Story unreadyStory;
     private Story readyStory;
 
     @Before
     public void setup() {
-        viewModel = new BacklogFormViewModel();
+        viewModel = new StoryFormViewModel();
         organisation = new Organisation();
         project = new Project("projectShortName", "projectLongName");
+        secondProject = new Project("projectShortName2", "projectLongName2");
         po = new Person("PO", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        creator = new Person("BillyGoat", "", "", "", "", "", "", Arrays.asList());
         backlog = new Backlog("backlog", "blLongName", "blDescription", po, project, new ArrayList<>(), Scale.FIBONACCI);
         project.observableBacklogs().add(backlog);
         release = new Release("releaseShortName", project, LocalDate.now(), "releaseDescription");
@@ -40,6 +43,7 @@ public class StoryFormViewModelTest {
         organisation.getProjects().add(project);
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
+        organisation.getPeople().add(creator);
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
         readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
@@ -48,26 +52,21 @@ public class StoryFormViewModelTest {
     }
 
     /**
-     * Populate a BacklogViewModel's fields with valid data.
+     * Populate a StoryViewModel's fields with valid data.
      * @param viewModel
      */
-    public void populateFields(BacklogFormViewModel viewModel) {
-        viewModel.shortNameProperty().set("backlogShortName");
-        viewModel.longNameProperty().set("backlogLongNameProperty");
-        viewModel.productOwnerProperty().set(po);
+    public void populateFields(StoryFormViewModel viewModel) {
+        viewModel.shortNameProperty().set("storyShortName");
+        viewModel.longNameProperty().set("storyLongName");
+        viewModel.descriptionProperty().set("storyDescription");
+        viewModel.creatorProperty().set(creator);
         viewModel.projectProperty().set(project);
+        viewModel.priorityProperty().set(0);
         viewModel.scaleProperty().set(Scale.FIBONACCI);
     }
 
     @Test
-    public void newBacklog_DoNothing_CommandTest() {
-        viewModel.load(null, organisation);
-        Assert.assertTrue("Command should be null if nothing was done",
-                viewModel.getCommand() == null);
-    }
-
-    @Test
-    public void newBacklog_ValidFieldsTest() {
+    public void newStory_validFieldsTest() {
         viewModel.load(null, organisation);
         populateFields(viewModel);
         String errorMessages = viewModel.allValidation().getErrorMessages().toString();
@@ -76,8 +75,8 @@ public class StoryFormViewModelTest {
         Command command = viewModel.getCommand();
         Assert.assertTrue("Command should not be null if all fields are valid",
                 command != null);
-        Assert.assertTrue("Command should be of type CreateBacklogCommand",
-                command.getClass().equals(CreateBacklogCommand.class));
+        Assert.assertTrue("Command should be of type CreateStoryCommand",
+                command.getClass().equals(CreateStoryCommand.class));
 
         Exception ex = null;
         try {
@@ -90,48 +89,14 @@ public class StoryFormViewModelTest {
     }
 
     @Test
-    public void existingBacklog_EditingShortNameToBeSameAsSelfTest() {
-        Backlog backlog = new Backlog("aBacklog", "", "", po, project, new ArrayList<>(), Scale.FIBONACCI);
-        CreateBacklogCommand command = new CreateBacklogCommand(backlog);
-        command.execute();
+    public void existingStory_testChangeProject() {
+        Story duplicateShortName = new Story();
+        duplicateShortName.setShortName(readyStory.getShortName());
+        secondProject.observableUnallocatedStories().add(duplicateShortName);
 
-        viewModel.load(null, organisation);
-        viewModel.shortNameProperty().set("aBacklog");
-        Assert.assertTrue("The backlog short name should be valid when no project is selected",
-                viewModel.shortNameValidation().isValid());
-
-        viewModel.projectProperty().set(project);
-        Assert.assertFalse("The backlog short name should NOT be valid when a project is selected which has a backlog" +
-                " with the same short name", viewModel.shortNameValidation().isValid());
-
-        viewModel.projectProperty().set(null);
-        Assert.assertTrue("The backlog short name should be valid when no project is selected",
-                viewModel.shortNameValidation().isValid());
-
-        BacklogFormViewModel editingViewModel = new BacklogFormViewModel();
-        editingViewModel.load(backlog, organisation);
-        viewModel.shortNameProperty().set("aBacklog");
-        Assert.assertTrue("Editing the backlog should allow the same short name to be set as itself",
-                editingViewModel.shortNameValidation().isValid());
-    }
-
-    @Test
-    public void existingBacklog_settingStoriesTest() {
-        viewModel.load(backlog, organisation);
-        viewModel.stories().add(unreadyStory);
-        UndoManager.getUndoManager().doCommand(viewModel.getCommand());
-
-        Assert.assertTrue("backlog should contain a story",
-                backlog.getStories().contains(unreadyStory));
-    }
-
-    @Test
-    public void existingBacklog_existingStoriesLoadTest() {
-        backlog.observableStories().add(unreadyStory);
-        backlog.observableStories().add(readyStory);
-        viewModel.load(backlog, organisation);
-        System.out.println(viewModel.stories());
-        Assert.assertTrue("ViewModel stories property should contain two items",
-                viewModel.stories().size() == 2);
+        viewModel.load(readyStory, organisation);
+        viewModel.projectProperty().set(secondProject);
+        Assert.assertFalse("Story name must be unique within a project",
+                viewModel.shortNameValidation().isValid() );
     }
 }
