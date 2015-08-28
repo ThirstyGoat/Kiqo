@@ -92,11 +92,9 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         FxUtils.setTextFieldSuggester(creatorTextField, viewModel.creatorSupplier());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
 
-
-        setShortNameHandler();
-        setPrompts();
-
         Platform.runLater(() -> {
+            setPrompts();
+            setShortNameHandler();
             setValidationSupport();
             longNameTextField.requestFocus();
         });

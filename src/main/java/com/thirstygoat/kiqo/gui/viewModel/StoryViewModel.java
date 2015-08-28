@@ -35,7 +35,7 @@ public class StoryViewModel implements ViewModel {
 
     private ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
     private ListProperty<Story> dependenciesProperty = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-    private ListProperty<Story> eligibleDependencies = new SimpleListProperty<>();
+    private ListProperty<Story> eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
 
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
@@ -81,6 +81,7 @@ public class StoryViewModel implements ViewModel {
         creatorValidator = new FunctionBasedValidator<>(creatorProperty(),
             // Checks that the creator exists within the organisation and is set
             s -> {
+                if (s == null) return false;
                 if (organisationProperty().get() != null) {
                     for (final Person p : organisationProperty().get().getPeople()) {
                         if (p.getShortName().equals(s.getShortName())) {
