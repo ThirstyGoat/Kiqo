@@ -50,7 +50,6 @@ public class TeamFormController extends FormController<Team> {
 
     private static final Logger LOGGER = Logger.getLogger(TeamFormController.class.getName());
     private final ArrayList<Person> devTeam = new ArrayList<>();
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
     private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
@@ -130,8 +129,8 @@ public class TeamFormController extends FormController<Team> {
     private void setShortNameLengthRestrictor() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
             }
         });
     }

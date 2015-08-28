@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 /**
  * Created by leroy on 18/08/15.
  */
-public class GoatModelWrapper<M> extends ModelWrapper<M> {
+public class GoatModelWrapper<M extends Item> extends ModelWrapper<M> {
 
     PropertyChangeListener listener = propertyChangeEvent -> {
         reload(); // Reload fields from model when model changes
@@ -18,12 +18,13 @@ public class GoatModelWrapper<M> extends ModelWrapper<M> {
     public void set(M model) {
         // Remove old property change listener if item already set
         if (get() != null) {
-            Item oldItem = (Item) get();
+            M oldItem = get();
             oldItem.removePropertyChangeListener(listener);
         }
         super.set(model);
+        super.reload();
         // Set new property change listener
-        Item newItem = (Item) model;
+        M newItem = model;
         newItem.initBoundPropertySupport();
         newItem.addPropertyChangeListener(listener);
     }

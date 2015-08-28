@@ -3,27 +3,28 @@ package com.thirstygoat.kiqo.gui.skill;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Labeled;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import com.thirstygoat.kiqo.util.FxUtils;
+import javafx.fxml.*;
+
+import com.thirstygoat.kiqo.gui.nodes.*;
+
+import de.saxsys.mvvmfx.*;
 
 /**
 * Created by Bradley Kirwan on 14/08/2015.
 */
-public class SkillDetailsPaneView implements FxmlView<SkillViewModel>, Initializable {
+public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>, Initializable {
     @FXML
-    private Labeled shortNameLabel;
+    private GoatLabelTextField shortNameLabel;
     @FXML
-    private Labeled descriptionLabel;
+    private GoatLabelTextArea descriptionLabel;
 
     @InjectViewModel
-    private SkillViewModel viewModel;
+    private SkillDetailsPaneViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        shortNameLabel.textProperty().bindBidirectional(viewModel.shortNameProperty());
-        descriptionLabel.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.nameProperty(), viewModel.nameValidation());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 }

@@ -2,13 +2,11 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
@@ -22,7 +20,11 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private SprintDetailsPaneDetailsView detailsViewController; // Ignore naming convention here
     @FXML
+    private ScrumBoardView scrumBoardViewController; // Ignore naming convention here
+    @FXML
     private AnchorPane detailsView;
+    @FXML
+    private AnchorPane scrumBoardView;
 
     @FXML
     private SegmentedButton segmentedButton;
@@ -46,6 +48,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             } else if (newValue == detailsToggleButton) {
                 // Show Details View
                 show(detailsView);
+            } else  if (newValue == scrumboardToggleButton) {
+                show(scrumBoardView);
             } else {
                 hideAllViews();
             }
@@ -54,17 +58,18 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         detailsToggleButton.setSelected(true);
 
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
+        viewModel.setScrumboardViewModel(scrumBoardViewController.getViewModel());
     }
 
     /**
      * Hides all views and then shows the given view
-     * @param node View to be shown
+     * @param pane View to be shown
      */
-    private void show(Node node) {
+    private void show(Pane pane) {
         hideAllViews();
 
-        node.setManaged(true);
-        node.setVisible(true);
+        pane.setManaged(true);
+        pane.setVisible(true);
     }
 
     /**
@@ -73,5 +78,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private void hideAllViews() {
         detailsView.setVisible(false);
         detailsView.setManaged(false);
+
+        scrumBoardView.setVisible(false);
+        scrumBoardView.setManaged(false);
     }
 }

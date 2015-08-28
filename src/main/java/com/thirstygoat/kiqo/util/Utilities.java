@@ -24,7 +24,9 @@ import com.thirstygoat.kiqo.model.Project;
 /**
  * Created by bradley on 9/04/15.
  */
-public class Utilities {
+public final class Utilities {
+    public static final int SHORT_NAME_MAX_LENGTH = 20;
+    
     public static final Comparator<Item> LEXICAL_COMPARATOR = (item1, item2) -> {
         return item1.getShortName().compareToIgnoreCase(item2.getShortName());
     };

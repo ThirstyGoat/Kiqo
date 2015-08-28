@@ -31,7 +31,6 @@ import com.thirstygoat.kiqo.util.Utilities;
  * Created by james on 11/04/15.
  */
 public class ReleaseFormController extends FormController<Release> {
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;
     private Release release;
@@ -130,8 +129,8 @@ public class ReleaseFormController extends FormController<Release> {
     private void setShortNameLengthRestrictor() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
             }
         });
     }

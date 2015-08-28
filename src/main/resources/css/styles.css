@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url("Roboto-Regular.ttf");
+}
+
 .title {
 	-fx-font-weight: bold;
 	-fx-font-size: 24px;
@@ -126,4 +131,124 @@
 .advanced-search-result-tooltip {
     -fx-text-fill: gainsboro;
     -fx-font-size: 12px;
+}
+
+/* Icons */
+.people-icon {
+    -glyph-name: "USERS";
+}
+
+.comment-icon {
+    -glyph-name: "COMMENT";
+}
+
+.clock-icon {
+    -glyph-name: "CLOCK-ALT";
+}
+
+.calendar-icon {
+    -glyph-name: "CALENDAR";
+}
+
+.pane-header {
+	-fx-font-size: 2em;
+}
+
+.pane-type-indicator {
+	-fx-text-fill: #ccc;
+}
+
+.tooltip {
+	-fx-font-size: 1em;
+}
+
+/******************************
+********* SCRUMBOARD **********
+*******************************/
+
+.scrumboard-story-row {
+    -fx-background-color: #EEEEEE
+}
+
+.scrumboard-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0
+}
+
+.scrumboard-column-headings {
+    -fx-background-color: #E0E0E0;
+    -fx-border-color: transparent transparent #BDBDBD transparent;
+}
+
+.scrumboard-scrollpane:focused {
+    -fx-background-insets: 0;
+    -fx-background-color: inherit;
+}
+
+.scrumboard-stories-container {
+    -fx-spacing: 5
+}
+
+.task-container {
+    -fx-padding: 5;
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+/********* STORY CARDS **********/
+
+.story-card {
+    -fx-padding: 5;
+    -fx-background-color: #03a9f4
+}
+
+.story-card .name-label {
+    -fx-font: 13px "Roboto Bold";
+    -fx-text-fill: #fff;
+}
+
+.story-card .description-label {
+    -fx-font: 11px "Roboto";
+    -fx-text-fill: #fff;
+}
+
+.story-card .priority-label {
+    -fx-font: 11px "Roboto";
+    -fx-text-fill: #fff;
+}
+
+.story-card .estimate-label {
+    -fx-font: 11px "Roboto";
+    -fx-text-fill: #fff;
+}
+
+/********** TASK CARDS **********/
+
+.task-card {
+    /*-fx-cursor: OPEN_HAND;*/
+}
+
+.task-impedance-icon {
+    -fx-fill: #e5e5e5
+}
+
+.task-card.not-started {
+    -fx-background-color: #607d8b;
+}
+
+.task-card.in-progress {
+    -fx-background-color: #ff5722;
+}
+
+.task-card.verify {
+    -fx-background-color: #2196f3;
+}
+
+.task-card.done {
+    -fx-background-color: #4caf50;
+}
+
+.task-card * {
+    -fx-text-fill: #fff
 }

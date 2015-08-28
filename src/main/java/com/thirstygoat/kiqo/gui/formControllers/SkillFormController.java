@@ -26,7 +26,6 @@ import com.thirstygoat.kiqo.util.Utilities;
  * Created by james on 20/03/15.
  */
 public class SkillFormController extends FormController<Skill> {
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Skill skill;
     private String shortName;
@@ -107,8 +106,8 @@ public class SkillFormController extends FormController<Skill> {
     private void setShortNameHandler() {
         shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, SHORT_NAME_MAX_LENGTH));
+            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.model.Task;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.*;
@@ -20,19 +21,18 @@ public class TaskCard extends VBox {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
     final private BooleanProperty impedanceProperty;
+    private Task task;
 
-    public TaskCard() {
+    public TaskCard(Task task) {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
         draw();
-    }
 
-    public TaskCard(final String shortName, final float hours, final boolean impedance) {
-        shortNameProperty = new SimpleStringProperty(shortName);
-        hoursProperty = new SimpleFloatProperty(hours);
-        impedanceProperty = new SimpleBooleanProperty(impedance);
-        draw();
+        this.task = task;
+        shortNameProperty().bind(task.shortNameProperty());
+        hoursProperty().bind(task.estimateProperty());
+        getStyleClass().add("task-card");
     }
 
     private void draw() {
@@ -57,8 +57,8 @@ public class TaskCard extends VBox {
         shortNameLabel.textProperty().bind(shortNameProperty);
         hourLabel.textProperty().bind(hoursProperty.asString());
 
-        Insets mainInset = new Insets(10, 10, 10, 10);
-        Insets shortNameInset = new Insets(15, 0, 0, 0);
+        Insets mainInset = new Insets(5, 5, 5, 5);
+        Insets shortNameInset = new Insets(10, 0, 0, 0);
         Insets hourInset = new Insets(0, 0, 0, 0);
 
         shortNameLabel.setPadding(shortNameInset);
@@ -66,7 +66,8 @@ public class TaskCard extends VBox {
 
         FontAwesomeIconView impedanceIcon = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
         impedanceIcon.setSize("15px");
-        impedanceIcon.setFill(Color.ORANGERED);
+//        impedanceIcon.setFill(Color.ORANGERED);
+        impedanceIcon.getStyleClass().add("task-impedance-icon");
 
         impedanceIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -75,7 +76,8 @@ public class TaskCard extends VBox {
             }
         });
 
-        impedanceIcon.visibleProperty().bind(impedanceProperty);
+//        impedanceIcon.visibleProperty().bind(impedanceProperty);
+        impedanceIcon.visibleProperty().set(true);
 
         iconBox.getChildren().add(impedanceIcon);
 
@@ -94,9 +96,9 @@ public class TaskCard extends VBox {
         gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints2);
         gridPane.getRowConstraints().add(rowConstraints);
 
-        setPrefHeight(150);
+        setPrefHeight(USE_COMPUTED_SIZE);
         setMaxHeight(150);
-        setPrefWidth(150);
+        setPrefWidth(USE_COMPUTED_SIZE);
         setMaxWidth(150);
 
         borderPane.setPadding(mainInset);
@@ -144,4 +146,7 @@ public class TaskCard extends VBox {
         hoursProperty.set(hours);
     }
 
+    public Task getTask() {
+        return task;
+    }
 }

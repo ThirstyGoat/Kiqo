@@ -62,7 +62,6 @@ public class AllocationFormController extends FormController<Allocation> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        Platform.runLater(teamTextField::requestFocus);
     }
 
     private void setValidationSupport() {
@@ -301,6 +300,10 @@ public class AllocationFormController extends FormController<Allocation> {
         } else {
             valid = true;
         }
+        //TODO there is probably a nicer place to put this
+        if (endDatePicker.getValue() == null) {
+            endDatePicker.setValue(LocalDate.MAX);
+        }
         setCommand();
         return true;
     }
@@ -352,6 +355,7 @@ public class AllocationFormController extends FormController<Allocation> {
             // We are creating a new allocation (for an existing project)
             stage.setTitle("Create Allocation");
             okButton.setText("Create Allocation");
+            Platform.runLater(teamTextField::requestFocus);
         } else {
             // edit an existing allocation
             stage.setTitle("Edit Allocation");
@@ -359,10 +363,16 @@ public class AllocationFormController extends FormController<Allocation> {
 
             if (project != null) {
                 teamTextField.setText(allocation.getTeam().getShortName());
+            } else if (team != null) {
+                teamTextField.setText(allocation.getProject().getShortName());
             }
 
             startDatePicker.setValue(allocation.getStartDate());
-            endDatePicker.setValue(allocation.getEndDate());
+            if (allocation.getEndDate().equals(LocalDate.MAX)) {
+                endDatePicker.setValue(null);
+            } else {
+                endDatePicker.setValue(allocation.getEndDate());
+            }
         }
 
         if (project == null) {

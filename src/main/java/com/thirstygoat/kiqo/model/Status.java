@@ -9,20 +9,22 @@ import javafx.scene.paint.Color;
  * Created by samschofield on 23/07/15.
  */
 public enum Status {
-    NOT_STARTED("Not Started", Color.LIGHTGRAY),
-    IN_PROGRESS("In Progress", Color.LIGHTGOLDENRODYELLOW),
-    PENDING("Pending", Color.LIGHTBLUE),
-    BLOCKED("Blocked", Color.LIGHTSALMON),
-    READY("Ready", Color.LIGHTGREEN),
-    DONE("Done", Color.GREENYELLOW),
-    DEFERRED("Deferred", Color.LIGHTCORAL);
+    NOT_STARTED("Not Started", Color.LIGHTGRAY, "not-started"),
+    IN_PROGRESS("In Progress", Color.LIGHTGOLDENRODYELLOW, "in-progress"),
+    PENDING("Pending", Color.LIGHTBLUE, "pending"),
+    BLOCKED("Blocked", Color.LIGHTSALMON, "blocked"),
+    VERIFY("Verify", Color.LIGHTGREEN, "verify"),
+    DONE("Done", Color.GREENYELLOW, "done"),
+    DEFERRED("Deferred", Color.LIGHTCORAL, "deferred");
 
-    private String label;
     public Color color;
+    private String cssClass;
+    private String label;
 
-    private Status(String label, Color color) {
+    private Status(String label, Color color, String cssClass) {
         this.label = label;
         this.color = color;
+        this.cssClass = cssClass;
     }
 
     /**
@@ -50,6 +52,10 @@ public enum Status {
             strs.add(status.toString());
         }
         return strs;
+    }
+
+    public String getCssClass() {
+        return cssClass;
     }
 
     @Override
