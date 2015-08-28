@@ -7,6 +7,9 @@ import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -20,11 +23,16 @@ import java.util.stream.Collectors;
  */
 public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
+    private final int MAX_DESCRIPTION_LENGTH = 100;
+
     private GoatModelWrapper<Story> storyWrapper = new GoatModelWrapper<>();
     private Organisation organisation;
 
 
     private StringProperty storyName = new SimpleStringProperty();
+    private StringProperty description = new SimpleStringProperty();
+    private IntegerProperty priority = new SimpleIntegerProperty();
+    private StringProperty estimate = new SimpleStringProperty();
 
     // Task buckets
     private ObservableList<Task> toDoTasks = FXCollections.observableArrayList();
@@ -37,6 +45,12 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
         storyWrapper.set(story);
         this.organisation = organisation;
         storyNameProperty().bind(story.shortNameProperty());
+        descriptionProperty().bind(story.descriptionProperty());
+        priorityProperty().bind(story.priorityProperty());
+        estimateProperty().bind(Bindings.createStringBinding(() -> {
+            return story.getScale().getEstimates()[story.getEstimate()];
+        }, story.estimateProperty(), story.scaleProperty()));
+
 
         setTasks(story.getTasks());
         story.getTasks().addListener((ListChangeListener<Task>) c -> setTasks(story.getTasks()));
@@ -90,5 +104,29 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     public ObservableList<Task> getDoneTasks() {
         return doneTasks;
+    }
+
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public int getPriority() {
+        return priority.get();
+    }
+
+    public IntegerProperty priorityProperty() {
+        return priority;
+    }
+
+    public String getEstimate() {
+        return estimate.get();
+    }
+
+    public StringProperty estimateProperty() {
+        return estimate;
     }
 }

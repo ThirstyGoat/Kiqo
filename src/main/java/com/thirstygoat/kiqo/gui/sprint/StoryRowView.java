@@ -8,10 +8,12 @@ import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -44,7 +46,13 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     @FXML
     private Label storyNameLabel;
     @FXML
-    private VBox toDoTasks;
+    private Label descriptionLabel;
+    @FXML
+    private Label priorityLabel;
+    @FXML
+    private Label estimateLabel;
+    @FXML
+    private FlowPane toDoTasks;
     @FXML
     private FlowPane inProgressTasks;
     @FXML
@@ -55,6 +63,12 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         storyNameLabel.textProperty().bind(viewModel.storyNameProperty());
+        descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
+        descriptionLabel.managedProperty().bind(Bindings.createBooleanBinding(() -> {
+            return descriptionLabel.getText() == null || !descriptionLabel.getText().isEmpty();
+        }, descriptionLabel.textProperty()));
+        priorityLabel.textProperty().bind(viewModel.priorityProperty().asString());
+        estimateLabel.textProperty().bind(viewModel.estimateProperty());
 
         initialiseDragAndDrop();
         drawTasks();
@@ -63,6 +77,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     private void drawTasks() {
         Function<Task, TaskCard> fn = task -> {
             TaskCard tc = new TaskCard(task);
+            tc.getStyleClass().add(task.getStatus().getCssClass());
+            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
             return tc;
         };
@@ -88,6 +104,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     private void addDragHandler(TaskCard node) {
         node.setOnDragDetected(event -> {
             currentlyDraggingTaskCard = node;
+            node.setCursor(Cursor.CLOSED_HAND);
             Dragboard db = node.startDragAndDrop(TransferMode.MOVE);
 
             ClipboardContent cc = new ClipboardContent();
@@ -99,7 +116,10 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             event.consume();
         });
 
-        node.setOnDragDone(event -> currentlyDraggingTaskCard = null);
+        node.setOnDragDone(event -> {
+            currentlyDraggingTaskCard.setCursor(Cursor.OPEN_HAND);
+            currentlyDraggingTaskCard = null;
+        });
     }
 
     private void initialiseDragAndDrop() {
@@ -118,7 +138,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         EventHandler<DragEvent> dragOver = event -> {
             if (currentlyDraggingTaskCard != null) {
                 event.acceptTransferModes(TransferMode.MOVE);
-                ((Node)event.getSource()).setStyle("-fx-background-color: dimgray");
+                ((Node)event.getSource()).setStyle("-fx-background-color: #E0E0E0");
             }
         };
 

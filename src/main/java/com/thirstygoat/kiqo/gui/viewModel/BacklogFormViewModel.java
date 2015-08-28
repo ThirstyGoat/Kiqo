@@ -46,7 +46,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     private StringProperty descriptionProperty = new SimpleStringProperty("");
     private StringProperty productOwnerNameProperty = new SimpleStringProperty("");
     private StringProperty projectNameProperty = new SimpleStringProperty("");
-    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>(Scale.FIBONACCI);
+    private ObjectProperty<Scale> scaleProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> targetStoriesProperty = new SimpleObjectProperty<>();
     private ObjectProperty<ObservableList<Story>> sourceStoriesProperty = new SimpleObjectProperty<>();
 

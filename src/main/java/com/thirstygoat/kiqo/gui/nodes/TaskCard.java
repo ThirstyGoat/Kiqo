@@ -32,11 +32,11 @@ public class TaskCard extends VBox {
         this.task = task;
         shortNameProperty().bind(task.shortNameProperty());
         hoursProperty().bind(task.estimateProperty());
+        getStyleClass().add("task-card");
     }
 
     private void draw() {
         GridPane gridPane = new GridPane();
-        gridPane.setStyle("-fx-background-color: darkgray");
         BorderPane borderPane = new BorderPane();
 
         Label shortNameLabel = new Label();
@@ -57,8 +57,8 @@ public class TaskCard extends VBox {
         shortNameLabel.textProperty().bind(shortNameProperty);
         hourLabel.textProperty().bind(hoursProperty.asString());
 
-        Insets mainInset = new Insets(10, 10, 10, 10);
-        Insets shortNameInset = new Insets(15, 0, 0, 0);
+        Insets mainInset = new Insets(5, 5, 5, 5);
+        Insets shortNameInset = new Insets(10, 0, 0, 0);
         Insets hourInset = new Insets(0, 0, 0, 0);
 
         shortNameLabel.setPadding(shortNameInset);
@@ -66,7 +66,8 @@ public class TaskCard extends VBox {
 
         FontAwesomeIconView impedanceIcon = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
         impedanceIcon.setSize("15px");
-        impedanceIcon.setFill(Color.ORANGERED);
+//        impedanceIcon.setFill(Color.ORANGERED);
+        impedanceIcon.getStyleClass().add("task-impedance-icon");
 
         impedanceIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -75,7 +76,8 @@ public class TaskCard extends VBox {
             }
         });
 
-        impedanceIcon.visibleProperty().bind(impedanceProperty);
+//        impedanceIcon.visibleProperty().bind(impedanceProperty);
+        impedanceIcon.visibleProperty().set(true);
 
         iconBox.getChildren().add(impedanceIcon);
 
@@ -96,7 +98,7 @@ public class TaskCard extends VBox {
 
         setPrefHeight(USE_COMPUTED_SIZE);
         setMaxHeight(150);
-        setPrefWidth(150);
+        setPrefWidth(USE_COMPUTED_SIZE);
         setMaxWidth(150);
 
         borderPane.setPadding(mainInset);
