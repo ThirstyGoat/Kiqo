@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.gui.formControllers;
+package com.thirstygoat.kiqo.gui.story;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;

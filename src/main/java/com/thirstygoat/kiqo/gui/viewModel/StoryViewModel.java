@@ -220,7 +220,7 @@ public class StoryViewModel implements ViewModel {
         return storyWrapper.field("estimate", Story::getEstimate, Story::setEstimate, 0);
     }
 
-    protected Story getStory() {
+    public Story getStory() {
         return story;
     }
 

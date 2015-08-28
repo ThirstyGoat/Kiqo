@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.gui.story;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
-import com.thirstygoat.kiqo.gui.formControllers.StoryFormViewModel;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;

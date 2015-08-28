@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -101,6 +102,14 @@ public final class FxUtils {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bindBidirectional(objectProperty, stringConverter);
         goatLabel.getEditField().textProperty().bindBidirectional(objectProperty, stringConverter);
+        goatLabel.validationStatus().set(validationStatus);
+    }
+
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, IntegerProperty integerProperty,
+                                     ValidationStatus validationStatus, StringConverter stringConverter) {
+        initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bindBidirectional(integerProperty, stringConverter);
+        goatLabel.getEditField().textProperty().bindBidirectional(integerProperty, stringConverter);
         goatLabel.validationStatus().set(validationStatus);
     }
 

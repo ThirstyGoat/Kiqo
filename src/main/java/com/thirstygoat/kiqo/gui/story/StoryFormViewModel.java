@@ -1,5 +1,6 @@
-package com.thirstygoat.kiqo.gui.formControllers;
+package com.thirstygoat.kiqo.gui.story;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.viewModel.StoryViewModel;
 
@@ -15,8 +16,11 @@ public class StoryFormViewModel extends StoryViewModel {
     }
 
     protected void okAction() {
-        UndoManager.getUndoManager().doCommand(getCommand());
-        exitStrategy.run();
+        Command command = getCommand();
+        if(command != null) {
+            UndoManager.getUndoManager().doCommand(getCommand());
+            exitStrategy.run();
+        }
     }
 
     protected  void cancelAction() {
