@@ -10,7 +10,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -23,12 +25,16 @@ import java.util.ResourceBundle;
 public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializable {
 
     public static Node currentlyDraggingStoryRow;
+    public static Integer currentlyDraggingStoryInitialIndex = null;
+    public static Integer currentlyDraggingStoryFinalIndex = null;
 
     @InjectViewModel
     private ScrumBoardViewModel viewModel;
 
     @FXML
     private VBox scrumBoardVBox;
+    @FXML
+    private ScrollPane scrollPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -42,26 +48,53 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
                 event.acceptTransferModes(TransferMode.MOVE);
                 event.consume();
 
-                // Now let the magic begin
-                Node closestNode = null;
-                double closestNodePosition = Double.MAX_VALUE;
-                double cursorPosition = event.getY();
+                if (currentlyDraggingStoryInitialIndex == null) {
+                    currentlyDraggingStoryInitialIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
+                }
 
-                for (Node node : scrumBoardVBox.getChildren()) {
-                    // If cursor position falls within x bounds of node then check if should appear to left or right of node
-                    double thisNodeY = node.localToScene(Point2D.ZERO).getY();
-                    if (Math.abs(thisNodeY - cursorPosition) < closestNodePosition) {
-                        closestNode = node;
-                        closestNodePosition = Math.abs(thisNodeY - cursorPosition);
+                // Below is WIP adding auto scroll support when dragging in the top/bottom 10%
+                // Check if the user is dragging in the bottom/top 10 percent
+                // If it is, then we need to scroll down accordingly
+//                double scrumBoardTopPos = 0;
+//                double scrumBoardBottomPos = scrollPane.getBoundsInParent().getMaxY() - scrollPane.getBoundsInParent().getMinY();
+//                double scrumBoardHeight = scrumBoardBottomPos - scrumBoardTopPos;
+//
+//                System.out.println(scrumBoardTopPos + " " + scrumBoardBottomPos + ", " + scrumBoardHeight);
+//
+//                double cursorPos = event.getY();
+//                System.out.println("Cursor pos: " + cursorPos);
+//
+//                boolean inTop = cursorPos >= scrumBoardTopPos && cursorPos <= (scrumBoardTopPos + 0.1*scrumBoardHeight);
+//                boolean inBottom = cursorPos <= scrumBoardBottomPos && cursorPos >= (scrumBoardBottomPos - 0.1*scrumBoardHeight);
+//                System.out.println("In top? " + inTop);
+//                System.out.println("In bottom? " + inBottom);
+//
+//                double scrollPos = scrollPane.getVvalue();
+//                if (inBottom) {
+//                    scrollPane.setVvalue(Math.max(1, scrollPos*1.1));
+//                } else if (inTop) {
+//                    scrollPane.setVvalue(scrollPos*0.9);
+//                }
+
+                int index = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
+                for (Node storyRow : scrumBoardVBox.getChildren()) {
+                    double top = storyRow.getBoundsInParent().getMinY();
+                    double bottom = storyRow.getBoundsInParent().getMaxY();
+                    double mid = ((bottom-top)/2) + top;
+
+                    boolean inRange = event.getY() >= top && event.getY() <= bottom;
+                    if (inRange) {
+                        if (event.getY() <= mid) {
+                            // Dragged node should appear AT this index
+                            index = scrumBoardVBox.getChildren().indexOf(storyRow);
+                        } else {
+                            // Dragged node should appear AFTER this index
+                            index = scrumBoardVBox.getChildren().indexOf(storyRow) + 1;
+                        }
+                        break;
                     }
                 }
-                if (closestNode != null && cursorPosition <= closestNode.localToScene(Point2D.ZERO).getY()) {
-                    // Then the dragged node should appear above closest node
-                    moveStoryRow(currentlyDraggingStoryRow, scrumBoardVBox.getChildren().indexOf(closestNode));
-                } else {
-                    // Then the dragged node should appear below closest node
-                    moveStoryRow(currentlyDraggingStoryRow, scrumBoardVBox.getChildren().indexOf(closestNode) + 1);
-                }
+                moveStoryRow(currentlyDraggingStoryRow, index);
             }
         });
 
@@ -74,8 +107,11 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
         });
 
         scrumBoardVBox.setOnDragDone(event -> {
-            currentlyDraggingStoryRow = null;
+            currentlyDraggingStoryFinalIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
             getViewModel().updateStoryOrder();
+            currentlyDraggingStoryRow = null;
+            currentlyDraggingStoryInitialIndex = null;
+            currentlyDraggingStoryFinalIndex = null;
         });
     }
 
