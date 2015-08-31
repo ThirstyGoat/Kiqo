@@ -7,15 +7,16 @@ import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -28,8 +29,7 @@ import java.util.stream.Collectors;
 public class BacklogViewModel implements ViewModel {
     private final ObjectProperty<Organisation> organisationProperty;
 
-    private GoatModelWrapper<Backlog> backlogWrapper = new GoatModelWrapper<>();
-    private final ListProperty<Story> stories;
+    private ModelWrapper<Backlog> backlogWrapper = new GoatModelWrapper<>();
 
     private final ListProperty<Story> eligableStories;
 
@@ -42,18 +42,8 @@ public class BacklogViewModel implements ViewModel {
 
     public BacklogViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
-        stories = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
 
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-        // Update list of eligible stories when project changes.
-        projectProperty().addListener((observable -> {
-            // If project is changed to original project, then add the original stories back again
-            if (projectProperty().get() != null
-                    && projectProperty().get().getShortName().equals(backlogWrapper.get().getProject().getShortName())) {
-                stories().setAll(backlogWrapper.get().getStories());
-            }
-            eligableStories.setAll(storySupplier().get());
-        }));
         
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
@@ -104,33 +94,25 @@ public class BacklogViewModel implements ViewModel {
 
         if (backlog != null) {
             backlogWrapper.set(backlog);
-            stories().setAll(backlogWrapper.get().observableStories());
         } else {
             backlogWrapper.set(new Backlog());
             backlogWrapper.reset();
             backlogWrapper.commit();
-            stories().clear();
         }
         backlogWrapper.reload();
 
-        // Listen for changes on objects ObservableLists. This could be removed if ModelWrapper supported Lists.
-        backlogWrapper.get().observableStories()
-                .addListener((ListChangeListener) c -> stories().setAll(backlogWrapper.get().getStories()));
-
         eligableStories.setAll(storySupplier().get());
-        projectProperty().addListener(observable -> {
+        projectProperty().addListener(change -> {
             eligableStories.setAll(storySupplier().get());
         });
     }
 
     public void reset() {
         backlogWrapper.reset();
-        stories().clear();
     }
 
     public void reload() {
         backlogWrapper.reload();
-        stories.setAll(backlogWrapper.get().getStories());
     }
 
     protected Supplier<List<Project>> projectSupplier() {
@@ -162,7 +144,7 @@ public class BacklogViewModel implements ViewModel {
             return null;
         }
         if (!backlogWrapper.isDifferent() && !stories().containsAll(backlogWrapper.get().getStories())
-                && !backlogWrapper.get().getStories().containsAll(stories)) {
+                && !backlogWrapper.get().getStories().containsAll(stories())) {
             // Nothing changed
             return null;
         }
@@ -267,12 +249,12 @@ public class BacklogViewModel implements ViewModel {
         return backlogWrapper.field("backlog", Backlog::getScale, Backlog::setScale, Scale.FIBONACCI);
     }
 
-    public ListProperty<Story> eligableStories() {
-        return eligableStories;
+    public ListProperty<Story> stories() {
+        return backlogWrapper.field("stories", Backlog::getStories, Backlog::setStories, Collections.emptyList()); 
     }
 
-    public ListProperty<Story> stories() {
-        return stories;
+    public ListProperty<Story> eligableStories() {
+        return eligableStories;
     }
 
     public ValidationStatus shortNameValidation() {
