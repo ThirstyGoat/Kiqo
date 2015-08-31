@@ -212,6 +212,9 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
+              <nonFilteredFileExtensions>
+                <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+              </nonFilteredFileExtensions>
               <outputDirectory>${basedir}/target/deploy</outputDirectory>
               <resources>
                 <resource>
@@ -228,10 +231,6 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
-      </resource>
-      <resource>
-        <directory>src/main/resources/css</directory>
-        <filtering>false</filtering>
       </resource>
     </resources>
   </build>
