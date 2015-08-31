@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.util;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +21,10 @@ public class BoundPropertySupportTest {
         private BoundPropertySupport bps = new BoundPropertySupport(this);
         private StringProperty stringProperty = new SimpleStringProperty("");
         private ListProperty<String> listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+        private ObservableList<String> observableList = FXCollections.observableArrayList();
 
         public TestObject() {
+            bps.addPropertyChangeSupportFor(observableList);
             bps.addPropertyChangeSupportFor(listProperty);
             bps.addPropertyChangeSupportFor(stringProperty);
         }
@@ -32,6 +35,10 @@ public class BoundPropertySupportTest {
 
         public ListProperty<String> listProperty() {
             return listProperty;
+        }
+
+        public ObservableList<String> observableList() {
+            return observableList;
         }
 
         public final void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -68,17 +75,32 @@ public class BoundPropertySupportTest {
     }
 
     @Test
-    public void testAddItemToList() {
+    public void testAddItemToListProperty() {
         testObject.listProperty().add("a new item");
         Assert.assertTrue(propertyChanged.getValue().equals(true));
     }
 
     @Test
-    public void testRemoveItemFromList() {
+    public void testRemoveItemFromListProperty() {
         testObject.listProperty().add("a new item");
         propertyChanged.set(false);
 
         testObject.listProperty().remove(0);
+        Assert.assertTrue(propertyChanged.getValue().equals(true));
+    }
+
+    @Test
+    public void testAddItemToObservableList() {
+        testObject.observableList().add("a new item");
+        Assert.assertTrue(propertyChanged.getValue().equals(true));
+    }
+
+    @Test
+    public void testRemoveItemFromObservableList() {
+        testObject.observableList().add("thing");
+        propertyChanged.set(false);
+
+        testObject.observableList.remove(0);
         Assert.assertTrue(propertyChanged.getValue().equals(true));
     }
 }

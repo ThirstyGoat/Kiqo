@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -48,6 +49,10 @@ public final class BoundPropertySupport {
             // Note: var3 must be different to var2 otherwise the dirty hack doesn't work!
             BoundPropertySupport.this.changeHandler.firePropertyChange("fudge", "fudge", "more fudge");
         };
+    }
+
+    public void addPropertyChangeSupportFor(ObservableList observableList) {
+        observableList.addListener(this.listChangeListener);
     }
 
     public void addPropertyChangeSupportFor(ListProperty listProperty) {
