@@ -203,6 +203,11 @@
       <plugin>
         <!-- Packaging for Debian Linux (a bash script) -->
         <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
+        </configuration>
         <version>2.7</version>
         <executions>
           <execution>
