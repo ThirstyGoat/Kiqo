@@ -24,7 +24,7 @@
     </repository>
     <repository>
         <id>mvvmfx-mvn-repo</id>
-        <url>https://raw.github.com/lihop/mvvmFX/mvn-repo/</url>
+        <url>https://raw.github.com/ThirstyGoat/mvvmFX/mvn-repo/</url>
         <snapshots>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
