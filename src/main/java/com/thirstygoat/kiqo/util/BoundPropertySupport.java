@@ -15,19 +15,24 @@
  */
 package com.thirstygoat.kiqo.util;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public final class BoundPropertySupport {
 
     private final PropertyChangeSupport changeHandler;
     private final Map<ObservableValue<?>, String> propertyNameMap;
     private final ChangeListener<Object> changeListener;
+    private final ListChangeListener<Object> listChangeListener;
 
     public BoundPropertySupport(Object bean) {
         this.changeHandler = new PropertyChangeSupport(bean);
@@ -37,6 +42,17 @@ public final class BoundPropertySupport {
             String propertyName = BoundPropertySupport.this.propertyNameMap.get(observable);
             BoundPropertySupport.this.changeHandler.firePropertyChange(propertyName, oldValue, newValue);
         };
+
+        this.listChangeListener = change -> {
+            // Getting the actual observable, oldValue and newValue is too much work, so we just fudge them
+            // Note: var3 must be different to var2 otherwise the dirty hack doesn't work!
+            BoundPropertySupport.this.changeHandler.firePropertyChange("fudge", "fudge", "more fudge");
+        };
+    }
+
+    public void addPropertyChangeSupportFor(ListProperty listProperty) {
+        listProperty.addListener(this.listChangeListener);
+        listProperty.addListener(this.changeListener);
     }
 
     public void addPropertyChangeSupportFor(Property property) {
