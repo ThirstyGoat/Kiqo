@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumBoardView">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumBoardView">
     <children>
         <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <children>
@@ -59,7 +59,7 @@
                      </GridPane.margin></Label>
                  </children>
               </GridPane>
-               <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scrumboard-scrollpane">
+               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" styleClass="scrumboard-scrollpane">
                   <content>
                    <VBox fx:id="scrumBoardVBox" styleClass="scrumboard-stories-container" VBox.vgrow="ALWAYS" />
                   </content>

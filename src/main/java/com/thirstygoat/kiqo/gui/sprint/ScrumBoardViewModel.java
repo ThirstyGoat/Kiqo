@@ -57,7 +57,18 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
      * appropriate command to update the order in the model.
      */
     public void updateStoryOrder() {
-
+//        Story reOrderedStory = sprint.getStories().get(ScrumBoardView.currentlyDraggingStoryInitialIndex);
+//        int initialIndex = ScrumBoardView.currentlyDraggingStoryInitialIndex;
+//        int finalIndex = ScrumBoardView.currentlyDraggingStoryFinalIndex;
+//
+//        if (initialIndex != finalIndex) {
+//            System.out.println("Moved story from index: " + initialIndex + " to: " + finalIndex);
+//
+//            // Calculate priority changes
+//            Story previousStory = sprint.getStories().get(Math.max(0, finalIndex - 1));
+//            Story nextStory = sprint.getStories().get(Math.min(sprint.getStories().size() - 1, finalIndex));
+//            System.out.println("Prev Story Priority: " + previousStory.getPriority() + ", Next Story Priority: " + nextStory.getPriority());
+//        }
     }
 
     public ObservableList<Node> storyRowsProperty() {
