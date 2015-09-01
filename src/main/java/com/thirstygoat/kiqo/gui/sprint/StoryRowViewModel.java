@@ -48,7 +48,7 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
         descriptionProperty().bind(story.descriptionProperty());
         priorityProperty().bind(story.priorityProperty());
         estimateProperty().bind(Bindings.createStringBinding(() -> {
-            return story.getScale().getEstimates()[story.getEstimate()];
+            return story.getScale().getEstimates()[story.getEstimate() - 1];
         }, story.estimateProperty(), story.scaleProperty()));
 
 
