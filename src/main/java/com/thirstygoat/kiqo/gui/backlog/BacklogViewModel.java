@@ -27,27 +27,20 @@ import java.util.stream.Collectors;
  * @author amy
  *
  */
-public class BacklogViewModel implements ViewModel {
-    private final ObjectProperty<Organisation> organisationProperty;
-    private final ListProperty<Story> stories;
+public class BacklogViewModel extends ModelViewModel<Backlog> {
     private final ListProperty<Story> eligableStories;
+
     private final ObservableRuleBasedValidator shortNameValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Person> productOwnerValidator;
     private final FunctionBasedValidator<Project> projectValidator;
     private final CompositeValidator allValidator;
-    private GoatModelWrapper<Backlog> backlogWrapper = new GoatModelWrapper<>();
-
-    @Override
-    protected Supplier<Backlog> modelSupplier() {
-        return Backlog::new;
-    }
 
     public BacklogViewModel() {
 
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-        
+
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
         BooleanBinding rule2 = shortNameProperty().length().greaterThan(0);
@@ -69,48 +62,33 @@ public class BacklogViewModel implements ViewModel {
         longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
                 Utilities.emptinessPredicate(),
                 ValidationMessage.error("Name must not be empty."));
-        
+
         descriptionValidator = new FunctionBasedValidator<>(descriptionProperty(),
-                string -> { 
-                    return true; 
+                string -> {
+                    return true;
                 },
                 ValidationMessage.error("Description is not valid."));
-        
+
         productOwnerValidator = new FunctionBasedValidator<>(productOwnerProperty(),
                 person -> {
                     return person != null && person.getSkills().contains(organisationProperty().get().getPoSkill());
                 },
                 ValidationMessage.error("Product Owner must exist and possess the PO Skill."));
-        
+
         projectValidator = new FunctionBasedValidator<>(projectProperty(),
                 project -> {
                     return project != null;
                 },
                 ValidationMessage.error("Project must exist."));
-        
+
         allValidator = new CompositeValidator(shortNameValidator, longNameValidator, descriptionValidator,
                 productOwnerValidator, projectValidator);
     }
 
-    public void load(Backlog backlog, Organisation organisation) {
-        organisationProperty().set(organisation);
-
-        if (backlog != null) {
-            backlogWrapper.set(backlog);
-            stories().setAll(backlogWrapper.get().observableStories());
-        } else {
-            backlogWrapper.set(new Backlog());
-            backlogWrapper.reset();
-            backlogWrapper.commit();
-            stories().clear();
-        }
-        backlogWrapper.reload();
-
-        // Listen for changes on objects ObservableLists. This could be removed if ModelWrapper supported Lists.
-        backlogWrapper.get().observableStories()
-                .addListener((ListChangeListener<Story>) c -> {
-                    stories().setAll(backlogWrapper.get().getStories());
-                });
+    @Override
+    protected Supplier<Backlog> modelSupplier() {
+        return Backlog::new;
+    }
 
     @Override
     protected void afterLoad() {
@@ -271,23 +249,23 @@ public class BacklogViewModel implements ViewModel {
     public ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus longNameValidation() {
         return longNameValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus descriptionValidation() {
         return descriptionValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus productOwnerValidation() {
         return productOwnerValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus projectValidation() {
         return projectValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }

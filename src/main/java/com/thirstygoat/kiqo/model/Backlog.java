@@ -17,7 +17,7 @@ import com.thirstygoat.kiqo.search.SearchableField;
  * Created by leroy on 20/05/15.
  */
 public class Backlog extends Item {
-    private final ObservableList<Story> stories = FXCollections.observableArrayList(Story.getWatchStrategy());
+    private final ObservableList<Story> stories = FXCollections.observableArrayList();
     private StringProperty shortName;
     private StringProperty longName;
     private StringProperty description;
