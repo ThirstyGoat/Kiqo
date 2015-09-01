@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.SegmentedButton?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+   <children>
+       <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
+           <children>
+               <SegmentedButton fx:id="segmentedButton">
+                   <buttons>
+                       <ToggleButton fx:id="detailsToggleButton" text="Details" />
+                       <ToggleButton fx:id="loggingToggleButton" text="Logging"/>
+                   </buttons>
+               </SegmentedButton>
+           </children>
+       </HBox>
+      <GoatLabelTextField fx:id="shortNameLabel" maxWidth="1.7976931348623157E308">
+         <padding>
+            <Insets bottom="10.0" top="10.0" />
+         </padding>
+      </GoatLabelTextField>
+      <AnchorPane fx:id="mainAnchorPane" prefHeight="591.0" prefWidth="370.0">
+         <children>
+            <GridPane fx:id="loggingGridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="322.0" prefWidth="370.0"  vgap="10.0" visible="false">
+               <children>
+                  <HBox GridPane.valignment="TOP" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                     <children>
+                        <FontAwesomeIconView pickOnBounds="true"  styleClass="clock-icon" glyphSize="18" />
+
+                     </children>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="5.0" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
+                     </children>
+                  </HBox>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints maxHeight="93.0" minHeight="4.0" prefHeight="93.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+               </rowConstraints>
+            </GridPane>
+            <GridPane fx:id="detailsGridPane" prefHeight="322.0" prefWidth="370.0" vgap="10.0">
+               <children>
+                  <HBox GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP">
+                     <children>
+                        <FontAwesomeIconView fx:id="peopleIcon" glyphSize="15" styleClass="people-icon"/>
+                     </children>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </HBox>
+                  <FontAwesomeIconView GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>
+                  <GoatLabelTextArea fx:id="descriptionLabel" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP" GridPane.vgrow="SOMETIMES" />
+                  <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                  <GoatLabelTextArea fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                  <Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

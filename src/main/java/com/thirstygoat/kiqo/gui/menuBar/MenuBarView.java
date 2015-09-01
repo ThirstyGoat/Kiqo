@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.gui.menuBar;
 
+import com.thirstygoat.kiqo.gui.SideBarController;
+import com.thirstygoat.kiqo.gui.ToolBarController;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -9,12 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-
-import com.thirstygoat.kiqo.gui.SideBarController;
-import com.thirstygoat.kiqo.gui.ToolBarController;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 
 public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
@@ -76,6 +74,11 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     private ToolBarController toolBarController;
 
+
+
+    @FXML
+    private MenuItem testTask;
+
     @InjectViewModel
     private MenuBarViewModel viewModel;
 
@@ -129,6 +132,10 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
+
+        //TODO REMOVE
+        testTask.setOnAction(event -> viewModel.getMainController().testTaskCard());
+
         final long[] timestamp = {0};
         searchMenuItem.setAccelerator(new KeyCombination() {
             @Override
