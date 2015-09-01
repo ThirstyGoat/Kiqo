@@ -1,34 +1,37 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.SkinBase;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import de.jensd.fx.glyphs.fontawesome.*;
 
 /**
  * Created by samschofield on 7/08/15.
  */
-public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control> {
+public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> {
 
     protected Label displayLabel;
     protected Label defaultTextLabel;
-    private StackPane labelStackPane;
     protected C editField;
-
     protected Button editButton;
     protected Button doneButton;
-
     protected HBox mainView;
     protected StackPane stackPane;
     protected HBox displayView;
     protected HBox editView;
-
     protected ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>();
+    private StackPane labelStackPane;
 
     /**
      * Constructor for all SkinBase instances.
@@ -64,6 +67,7 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
                 showEditField();
             }
         });
+        showDebuglines();
     }
 
     /**

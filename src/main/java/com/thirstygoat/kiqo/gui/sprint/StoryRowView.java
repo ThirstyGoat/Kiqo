@@ -90,7 +90,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         Function<Task, TaskCard> fn = task -> {
             TaskCard tc = new TaskCard(task);
             tc.getStyleClass().add(task.getStatus().getCssClass());
-            tc.setCursor(Cursor.OPEN_HAND);
+//            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
             return tc;
         };
