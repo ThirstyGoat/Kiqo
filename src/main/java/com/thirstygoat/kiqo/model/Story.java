@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -19,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.util.Callback;
 
 /**
  * Created by leroy on 15/05/15.
@@ -84,6 +86,10 @@ public class Story extends Item {
         this.taskHours = new SimpleFloatProperty();
         this.inSprint = new SimpleBooleanProperty(inSprint);
 //        setTasksListener();
+    }
+
+    public static Callback<Story, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty()};
     }
 
     /**
@@ -184,12 +190,12 @@ public class Story extends Item {
         return creator;
     }
 
-    public ObjectProperty<Project> projectProperty() { 
-        return project; 
+    public ObjectProperty<Project> projectProperty() {
+        return project;
     }
 
-    public Project getProject() { 
-        return project.get(); 
+    public Project getProject() {
+        return project.get();
     }
 
     public void setProject(Project project) {
@@ -208,7 +214,7 @@ public class Story extends Item {
         this.backlog.set(backlog);
     }
 
-    public int getPriority() { 
+    public int getPriority() {
         return priority.get();
     }
 
@@ -227,8 +233,6 @@ public class Story extends Item {
     public ObservableList<Task> getTasks() {
         return tasks;
     }
-
-
 
     public Integer getEstimate() {
         return estimate.get();
@@ -254,14 +258,14 @@ public class Story extends Item {
         return scale;
     }
 
-    public boolean getIsReady() { 
-        return isReady.get(); 
+    public boolean getIsReady() {
+        return isReady.get();
     }
 
-    public void setIsReady(boolean isReady) { 
-        this.isReady.set(isReady); 
+    public void setIsReady(boolean isReady) {
+        this.isReady.set(isReady);
     }
-
+    
     public List<Story> getDependencies() {
         List<Story> list = new ArrayList<>();
         list.addAll(this.dependencies);
@@ -276,8 +280,8 @@ public class Story extends Item {
     public ObservableList<Story> observableDependencies() {
         return this.dependencies;
     }
-    
-    public BooleanProperty isReadyProperty() { 
-        return isReady; 
+
+    public BooleanProperty isReadyProperty() {
+        return isReady;
     }
 }

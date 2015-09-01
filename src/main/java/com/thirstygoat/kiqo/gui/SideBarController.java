@@ -125,8 +125,6 @@ public class SideBarController implements Initializable {
             mainController.focusedItemProperty.set(toShow);
         };
 
-
-
         // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
         tabViewPane.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
             // Remove the change listeners

@@ -88,9 +88,6 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
             } else if (selectionModel.selectedItemProperty().equals(this) && !getChildren().isEmpty()) {
                 // if first child deleted but more remain, select first remaining child
                 selectionModel.select(getChildren().get(0));
-            } else {
-                // else select tree node heading if that was the last child
-                selectionModel.select(this);
             }
         };
     }

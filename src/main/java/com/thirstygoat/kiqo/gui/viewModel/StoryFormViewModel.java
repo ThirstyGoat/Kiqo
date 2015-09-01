@@ -194,7 +194,7 @@ public class StoryFormViewModel extends FormController<Story> {
             descriptionProperty.set(story.getDescription());
             creatorNameProperty.set(story.getCreator().getShortName());
             projectNameProperty.set(story.getProject().getShortName());
-            priorityProperty.set(Integer.toString(story.getPriority()));
+            priorityProperty.set(Float.toString(story.getPriority()));
             scaleProperty.set(story.getScale());
             estimateProperty.set(story.getEstimate());
             backlogProperty.set(story.getBacklog());

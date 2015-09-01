@@ -27,15 +27,17 @@ import java.util.stream.Collectors;
  * @author amy
  *
  */
-public class BacklogViewModel extends ModelViewModel<Backlog> {
+public class BacklogViewModel implements ViewModel {
+    private final ObjectProperty<Organisation> organisationProperty;
+    private final ListProperty<Story> stories;
     private final ListProperty<Story> eligableStories;
-
     private final ObservableRuleBasedValidator shortNameValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final FunctionBasedValidator<String> descriptionValidator;
     private final FunctionBasedValidator<Person> productOwnerValidator;
     private final FunctionBasedValidator<Project> projectValidator;
     private final CompositeValidator allValidator;
+    private GoatModelWrapper<Backlog> backlogWrapper = new GoatModelWrapper<>();
 
     @Override
     protected Supplier<Backlog> modelSupplier() {
@@ -89,6 +91,26 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
         allValidator = new CompositeValidator(shortNameValidator, longNameValidator, descriptionValidator,
                 productOwnerValidator, projectValidator);
     }
+
+    public void load(Backlog backlog, Organisation organisation) {
+        organisationProperty().set(organisation);
+
+        if (backlog != null) {
+            backlogWrapper.set(backlog);
+            stories().setAll(backlogWrapper.get().observableStories());
+        } else {
+            backlogWrapper.set(new Backlog());
+            backlogWrapper.reset();
+            backlogWrapper.commit();
+            stories().clear();
+        }
+        backlogWrapper.reload();
+
+        // Listen for changes on objects ObservableLists. This could be removed if ModelWrapper supported Lists.
+        backlogWrapper.get().observableStories()
+                .addListener((ListChangeListener<Story>) c -> {
+                    stories().setAll(backlogWrapper.get().getStories());
+                });
 
     @Override
     protected void afterLoad() {

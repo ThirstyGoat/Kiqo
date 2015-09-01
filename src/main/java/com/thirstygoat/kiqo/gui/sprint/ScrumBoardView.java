@@ -108,7 +108,9 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 
         scrumBoardVBox.setOnDragDone(event -> {
             currentlyDraggingStoryFinalIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
-            getViewModel().updateStoryOrder();
+            if (!currentlyDraggingStoryInitialIndex.equals(currentlyDraggingStoryFinalIndex))
+                getViewModel().updateStoryOrder();
+
             currentlyDraggingStoryRow = null;
             currentlyDraggingStoryInitialIndex = null;
             currentlyDraggingStoryFinalIndex = null;

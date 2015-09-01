@@ -249,6 +249,6 @@
     -fx-background-color: #4caf50;
 }
 
-.task-card * {
+.task-card .label {
     -fx-text-fill: #fff
 }

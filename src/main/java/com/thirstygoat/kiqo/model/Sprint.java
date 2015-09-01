@@ -36,7 +36,7 @@ public class Sprint extends Item {
         goal = new SimpleStringProperty("");
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
-        stories = FXCollections.observableArrayList(Item.getWatchStrategy());
+        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
     }
 
     public Sprint(String goal, String longName, String description, Backlog backlog, Release release,
