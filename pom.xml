@@ -22,6 +22,14 @@
         <enabled>false</enabled>
       </releases>
     </repository>
+    <repository>
+        <id>mvvmfx-mvn-repo</id>
+        <url>https://raw.github.com/ThirstyGoat/mvvmFX/mvn-repo/</url>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -48,7 +56,8 @@
     <dependency>
       <groupId>de.saxsys</groupId>
       <artifactId>mvvmfx</artifactId>
-      <version>1.3.0</version>
+      <!-- custom version of mvvmfx -->
+      <version>1.4.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

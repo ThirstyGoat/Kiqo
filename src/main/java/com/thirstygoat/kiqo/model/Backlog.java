@@ -53,6 +53,7 @@ public class Backlog extends Item {
         bps.addPropertyChangeSupportFor(productOwner);
         bps.addPropertyChangeSupportFor(project);
         bps.addPropertyChangeSupportFor(scale);
+        bps.addPropertyChangeSupportFor(stories);
     }
 
     /**
