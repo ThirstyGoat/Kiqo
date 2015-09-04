@@ -16,6 +16,8 @@ import de.jensd.fx.glyphs.fontawesome.*;
 public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control> {
 
     protected Label displayLabel;
+    protected Label defaultTextLabel;
+    private StackPane labelStackPane;
     protected C editField;
 
     protected Button editButton;
@@ -81,14 +83,18 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
     protected abstract void showEditField();
 
     private HBox createMainView() {
-
         displayView = new HBox();
         displayView.setVisible(true);
         displayView.setSpacing(5);
         displayLabel = new Label();
         displayLabel.setWrapText(true);
+
+        defaultTextLabel = new Label();
+        labelStackPane = new StackPane();
+        labelStackPane.getChildren().addAll(displayLabel, defaultTextLabel);
+
         editButton = makeEditButton();
-        displayView.getChildren().addAll(displayLabel, editButton);
+        displayView.getChildren().addAll(labelStackPane, editButton);
 
         editView = new HBox();
         editView.setVisible(false);
@@ -115,6 +121,10 @@ public abstract class GoatLabelSkin<C extends Control> extends SkinBase<Control>
 
     public final Label getDisplayLabel() {
         return displayLabel;
+    }
+
+    public final Label getDefaultTextLabel() {
+        return defaultTextLabel;
     }
 
     public final C getEditField() {

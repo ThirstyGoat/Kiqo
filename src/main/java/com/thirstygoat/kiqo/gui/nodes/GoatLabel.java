@@ -18,6 +18,7 @@ import de.saxsys.mvvmfx.utils.validation.visualization.*;
 public abstract class GoatLabel<C extends Control> extends Control {
     protected GoatLabelSkin<C> skin;
     protected Label displayLabel;
+    protected Label defaultTextLabel;
     protected C editField;
     protected Button editButton;
     protected Button doneButton;
@@ -85,6 +86,7 @@ public abstract class GoatLabel<C extends Control> extends Control {
     protected void setSkin() {
         skin = initSkin();
         displayLabel = skin.getDisplayLabel();
+        defaultTextLabel = skin.getDefaultTextLabel();
         editField = skin.getEditField();
         editButton = skin.getEditButton();
         doneButton = skin.getDoneButton();
@@ -121,5 +123,24 @@ public abstract class GoatLabel<C extends Control> extends Control {
 
     public EventHandler<ActionEvent> getOnCancel() {
         return onCancel.get();
+    }
+
+    public void setDefaultText(String text) {
+        defaultTextLabel.setText(text);
+        defaultTextLabel.setStyle("-fx-text-fill: grey");
+
+        displayTextProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                displayLabel.setVisible(false);
+                displayLabel.setPrefWidth(0.1);
+                defaultTextLabel.setVisible(true);
+                defaultTextLabel.setPrefWidth(USE_COMPUTED_SIZE);
+            } else {
+                displayLabel.setVisible(true);
+                displayLabel.setPrefWidth(USE_COMPUTED_SIZE);
+                defaultTextLabel.setVisible(false);
+                defaultTextLabel.setPrefWidth(0.1);
+            }
+        });
     }
 }
