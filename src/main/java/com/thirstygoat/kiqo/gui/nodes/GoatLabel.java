@@ -26,7 +26,7 @@ public abstract class GoatLabel<C extends Control> extends Control {
     private ObjectProperty<ValidationStatus> validationStatus;
     private ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>(event -> {});
     private ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(event -> {});
-
+    public StringProperty defaultText = new SimpleStringProperty("");
 
     protected abstract GoatLabelSkin<C> initSkin();
 
@@ -125,8 +125,19 @@ public abstract class GoatLabel<C extends Control> extends Control {
         return onCancel.get();
     }
 
-    public void setDefaultText(String text) {
-        defaultTextLabel.setText(text);
+    public String getDefaultText() {
+        return defaultText.get();
+    }
+
+    public StringProperty defaultTextProperty() {
+        return defaultText;
+    }
+
+    public void setDefaultText(String defaultText) {
+        this.defaultText.set(defaultText);
+        this.defaultText.set(defaultText);
+
+        defaultTextLabel.setText(defaultText);
         defaultTextLabel.setStyle("-fx-text-fill: grey");
 
         displayTextProperty().addListener((observable, oldValue, newValue) -> {
