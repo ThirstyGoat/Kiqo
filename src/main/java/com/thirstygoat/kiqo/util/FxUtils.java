@@ -105,6 +105,15 @@ public final class FxUtils {
     }
 
     public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
+                                     StringProperty stringProperty, ValidationStatus validationStatus, String defaultText) {
+        initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bind(stringProperty);
+        goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
+        goatLabel.validationStatus().set(validationStatus);
+        goatLabel.setDefaultText(defaultText);
+    }
+
+    public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
                                      StringProperty stringProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bind(stringProperty);
