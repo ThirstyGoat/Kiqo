@@ -1,42 +1,30 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView;
+import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.person.PersonViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
-
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
+import com.thirstygoat.kiqo.model.*;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
-import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Switches between detail panes depending on type of content shown. NOTE: Does not implement IDetailsPaneController (different purpose).
@@ -49,8 +37,6 @@ public class MainDetailsPaneController implements Initializable {
     private StackPane stackPane;
     @FXML
     private AnchorPane projectDetailsPane;
-    @FXML
-    private AnchorPane personDetailsPane;
     @FXML
     private AnchorPane storyDetailsPane;
     @FXML
@@ -66,7 +52,7 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private ProjectDetailsPaneController projectDetailsPaneController;
     @FXML
-    private PersonDetailsPaneController personDetailsPaneController;
+    private PersonDetailsPaneView personDetailsPaneController;
     @FXML
     private StoryDetailsPaneController storyDetailsPaneController;
     @FXML
@@ -80,10 +66,14 @@ public class MainDetailsPaneController implements Initializable {
     private Pane backlogDetailsPane;
     private Pane sprintDetailsPane;
     private Pane skillDetailsPane;
+    private Pane personDetailsPane;
+
     private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
     private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
+
     private SkillViewModel skillViewModel;
-    
+    private PersonViewModel personViewModel;
+
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
 
@@ -131,6 +121,12 @@ public class MainDetailsPaneController implements Initializable {
         skillDetailsPane = (Pane) skillDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(skillDetailsPane);
         skillViewModel = skillDetailsPaneViewTuple.getViewModel();
+
+        ViewTuple<PersonDetailsPaneView, PersonDetailsPaneViewModel> personDetailsPaneViewTuple = FluentViewLoader.fxmlView(PersonDetailsPaneView.class).load();
+        personDetailsPane = (Pane) personDetailsPaneViewTuple.getView();
+        stackPane.getChildren().add(personDetailsPane);
+        personViewModel = personDetailsPaneViewTuple.getViewModel();
+
     }
 
     /**
@@ -185,7 +181,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showPersonDetailsPane(Person person) {
-        personDetailsPaneController.showDetails(person);
+        personViewModel.load(person, mainController.selectedOrganisationProperty.get());
         show(personDetailsPane);
         showOptionButtons();
     }
