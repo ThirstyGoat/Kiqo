@@ -5,8 +5,10 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -39,39 +41,69 @@ public class ToolBarController implements Initializable {
     }
 
     private void initializeButtons() {
-        Button projectButton = new Button();
-        projectButton.setOnAction(event -> {
+        HBox projectButton = new HBox();
+        projectButton.getChildren().addAll(new Label("Project"));
+        projectButton.setOnMouseClicked(event -> {
             mainController.newProject();
         });
-        Button personButton = new Button();
-        personButton.setOnAction(event -> {
+        HBox personButton = new HBox();
+        personButton.getChildren().addAll(new Label("Person"));
+        personButton.setOnMouseClicked(event -> {
             mainController.newPerson();
         });
-        Button skillButton = new Button();
-        skillButton.setOnAction(event -> {
+        HBox skillButton = new HBox();
+        skillButton.getChildren().addAll(new Label("Skill"));
+        skillButton.setOnMouseClicked(event -> {
             mainController.newSkill();
         });
-        Button teamButton = new Button();
-        teamButton.setOnAction(event -> {
+        HBox teamButton = new HBox();
+        teamButton.getChildren().addAll(new Label("Team"));
+        teamButton.setOnMouseClicked(event -> {
             mainController.newTeam();
         });
-        Button releaseButton = new Button();
-        releaseButton.setOnAction(event -> {
+        HBox releaseButton = new HBox();
+        releaseButton.getChildren().addAll(new Label("Release"));
+        releaseButton.setOnMouseClicked(event -> {
             mainController.newRelease();
         });
-        Button storyButton = new Button();
-        storyButton.setOnAction(event -> {
+        HBox storyButton = new HBox();
+        storyButton.getChildren().addAll(new Label("Story"));
+        storyButton.setOnMouseClicked(event -> {
             mainController.newStory();
         });
-        Button backlogButton = new Button();
-        backlogButton.setOnAction(event -> {
+        HBox backlogButton = new HBox();
+        backlogButton.getChildren().addAll(new Label("Backlog"));
+        backlogButton.setOnMouseClicked(event -> {
             mainController.newBacklog();
         });
-        Button sprintButton = new Button();
-        sprintButton.setOnAction(event -> {
+        HBox sprintButton = new HBox();
+        sprintButton.getChildren().addAll(new Label("Sprint"));
+        sprintButton.setOnMouseClicked(event -> {
             mainController.newSprint();
         });
 
+        PopOver newItemPopOver = new PopOver();
+        newItemPopOver.setDetachable(false);
+
+        HBox row1 = new HBox();
+        HBox row2 = new HBox();
+        HBox row3 = new HBox();
+
+        row1.getChildren().addAll(projectButton, personButton, skillButton);
+        row2.getChildren().addAll(teamButton, releaseButton, storyButton);
+        row3.getChildren().addAll(backlogButton, sprintButton);
+
+        VBox vb = new VBox();
+        vb.getChildren().addAll(row1,row2,row3);
+
+        newItemPopOver.setContentNode(vb);
+
+        newButton.setOnAction(event -> newItemPopOver.show(newButton));
+        newItemPopOver.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                newItemPopOver.hide();
+            }
+        });
 
     }
 
@@ -82,17 +114,6 @@ public class ToolBarController implements Initializable {
     private void addMenuItemHandlers() {
         undoButton.setOnAction(event -> mainController.undo());
         redoButton.setOnAction(event -> mainController.redo());
-
-        PopOver newItemPopOver = new PopOver();
-        GridPane gridpane = new GridPane();
-        newItemPopOver.setContentNode((new GridPane()));
-        newItemPopOver.setDetachable(false);
-        newButton.setOnAction(event -> newItemPopOver.show(newButton));
-        newItemPopOver.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                newItemPopOver.hide();
-            }
-        });
 
         reportButton.setOnAction(event -> mainController.statusReport());
         openButton.setOnAction(event -> mainController.openOrganisation(null));
