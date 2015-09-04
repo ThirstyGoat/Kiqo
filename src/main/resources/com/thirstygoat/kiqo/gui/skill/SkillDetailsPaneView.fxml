@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 
@@ -13,8 +12,8 @@
         <GridPane mouseTransparent="false" vgap="10.0">
           <children>            
             <Label text="Skill" styleClass="pane-type-indicator" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
-            <GoatLabelTextField styleClass="pane-header" fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+            <GoatLabelTextField styleClass="pane-header" fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" defaultText="Skill"/>
+            <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" defaultText="Description"/>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
