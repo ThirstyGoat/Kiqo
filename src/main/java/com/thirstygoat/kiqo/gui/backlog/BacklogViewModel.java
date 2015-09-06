@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -133,14 +132,17 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     @Override
     public Command getCommand() {
         final Command command;
-
         if (!allValidation().isValid()) {
-            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            return null;
-        } else if (!modelWrapper.isDirty()) {
-            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
+            // Properties are not valid
             return null;
         }
+        if (!modelWrapper.isDifferent() && !stories().containsAll(modelWrapper.get().getStories())
+                && !modelWrapper.get().getStories().containsAll(stories())) {
+            // Nothing changed
+            return null;
+        }
+        final ArrayList<Story> stories = new ArrayList<>();
+        stories.addAll(stories());
 
         if (modelWrapper.get().getShortName() == "") { // Must be a new backlog
             final Backlog backlog = new Backlog(shortNameProperty().get(), longNameProperty().get(),
@@ -149,7 +151,23 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
             command = new CreateBacklogCommand(backlog);
         } else {
             final ArrayList<Command> changes = new ArrayList<>();
-            super.addEditCommands.accept(changes);
+            if (!longNameProperty().getValue().equals(modelWrapper.get().getLongName())) {
+                changes.add(new EditCommand<>(modelWrapper.get(), "longName", longNameProperty().getValue()));
+            }
+            if (!shortNameProperty().getValue().equals(modelWrapper.get().getShortName())) {
+                changes.add(new EditCommand<>(modelWrapper.get(), "shortName", shortNameProperty().getValue()));
+            }
+            if (!descriptionProperty().getValue().equals(modelWrapper.get().getDescription())) {
+                changes.add(new EditCommand<>(modelWrapper.get(), "description", descriptionProperty().getValue()));
+            }
+
+            if (!productOwnerProperty().equals(modelWrapper.get().getProductOwner())) {
+                changes.add(new EditCommand<>(modelWrapper.get(), "productOwner", productOwnerProperty().get()));
+            }
+
+            if (scaleProperty().getValue() != modelWrapper.get().getScale()) {
+                changes.add(new EditCommand<>(modelWrapper.get(), "scale", scaleProperty().getValue()));
+            }
 
             // Stories being added to the backlog
             final ArrayList<Story> addedStories = new ArrayList<>(stories());
@@ -191,7 +209,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
             for (Story story : removedStories) {
                 changes.add(new RemoveStoryFromBacklogCommand(story, modelWrapper.get()));
             }
-            command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Backlog", changes);
+            command = new CompoundCommand("Edit Backlog", changes);
         }
         return command;
     }

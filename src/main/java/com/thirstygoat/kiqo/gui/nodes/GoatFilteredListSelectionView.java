@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class GoatFilteredListSelectionView<T extends Item> extends VBox {
+public class GoatFilteredListSelectionView<T extends Item> extends ScrollPane {
     private final ListProperty<T> sourceItems;
     private final ListProperty<T> targetItems;
     private final ObservableList<T> allItems;
@@ -194,7 +194,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         });
 
         HBox headerContainer = new HBox();
-        headerContainer.setPadding(new Insets(0, 0 ,5 ,0));
+        headerContainer.setPadding(new Insets(0, 0, 5, 0));
         BorderPane footerContainer = new BorderPane();
         footerContainer.setPadding(new Insets(5, 0, 0, 0));
 
