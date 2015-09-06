@@ -6,6 +6,8 @@ import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -13,6 +15,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -69,11 +72,32 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
         return organisationProperty;
     }
 
+    /**
+     * @return The {@link ValidationStatus} of a {@link CompositeValidator} which combines all other validators.
+     */
+    public abstract ValidationStatus allValidation();
+
+
+    /**
+     * @return A {@link Command} to be return by the getCommand method.
+     */
+    protected abstract Command createCommand();
+
      /**
      * @return A command that can be executed by UndoManager. In the case of a {@link ModelViewModel}, this should
      * be a command that will commit the changes cached by the ViewModel's ModelWrapper to the underlying model.
      */
-    public abstract Command getCommand();
+    public Command getCommand() {
+        if (!allValidation().isValid()) {
+            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
+            return null;
+        } else if (!modelWrapper.isDirty()) {
+            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
+            return null;
+        } else {
+            return createCommand();
+        }
+    }
 
     /**
      * Adds edit commands for all changed fields to the accepted list.

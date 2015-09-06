@@ -131,16 +131,8 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     }
 
     @Override
-    public Command getCommand() {
+    public Command createCommand() {
         final Command command;
-
-        if (!allValidation().isValid()) {
-            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            return null;
-        } else if (!modelWrapper.isDirty()) {
-            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
-            return null;
-        }
 
         if (modelWrapper.get().getShortName() == "") { // Must be a new backlog
             final Backlog backlog = new Backlog(shortNameProperty().get(), longNameProperty().get(),
