@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.skill;
 
 import java.util.ArrayList;
 
+import com.thirstygoat.kiqo.validation.ShortNameValidator;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
 
@@ -32,20 +33,8 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     }
     
     private void createValidators() {
-        nameValidator = new ObservableRuleBasedValidator();
-        BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
-            { 
-                if (organisationProperty().get() != null) {
-                    return Utilities.shortnameIsUnique(nameProperty().get(), skillProperty().get(), organisationProperty().get().getSkills());
-                } else {
-                    return true; // no organisation means this isn't for real yet.
-                }
-            }, 
-            nameProperty());
-        nameValidator.addRule(nameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
-        nameValidator.addRule(nameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
-        nameValidator.addRule(nameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
-        nameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
+        nameValidator = new ShortNameValidator<Skill>(nameProperty(), modelWrapper.get(),
+                organisationProperty().get()::getSkills, "organisation");
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
         
