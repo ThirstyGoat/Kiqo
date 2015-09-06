@@ -11,7 +11,7 @@ import com.thirstygoat.kiqo.model.Skill;
 public class SkillDetailsPaneViewModel extends SkillViewModel implements Editable {
 
     public void commitEdit() {
-        Command command = createCommand();
+        Command command = getCommand();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }

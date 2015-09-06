@@ -57,7 +57,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
+        formButtonHandler = new FormButtonHandler(() -> viewModel.getCommand(), exitStrategy);
     }
 
     public void okAction() {

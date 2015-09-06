@@ -1,7 +1,10 @@
 package com.thirstygoat.kiqo.gui.skill;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.function.Supplier;
 
+import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.validation.ShortNameValidator;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
@@ -16,7 +19,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 
-public class SkillViewModel implements Loadable<Skill>, ViewModel {
+public class SkillViewModel extends ModelViewModel<Skill> {
     private ModelWrapper<Skill> modelWrapper;    
     private ObjectProperty<Skill> skill;
     private ObjectProperty<Organisation> organisation;
@@ -31,37 +34,27 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         organisation = new SimpleObjectProperty<>(null);
         createValidators();
     }
-    
+
+    @Override
+    protected Supplier<Skill> modelSupplier() {
+        return Skill::new;
+    }
+
     private void createValidators() {
         nameValidator = new ShortNameValidator<Skill>(nameProperty(), modelWrapper.get(),
-                organisationProperty().get()::getSkills, "organisation");
-
+                organisationProperty().get() != null ? organisationProperty().get()::getSkills : ArrayList<Skill>::new,
+                "organisation");
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
         
         allValidator = new CompositeValidator(nameValidator, descriptionValidator);
     }
 
-    /**
-     * @param skill model object to be displayed
-     * @param organisation (ignored)
-     */
+    public void afterLoad() {
+        // Do nothing
+    }
+
     @Override
-    public void load(Skill skill, Organisation organisation) {
-        skillProperty().set(skill);
-        organisationProperty().set(organisation);
-        if (skill != null) {
-            modelWrapper.set(skill);
-        } else {
-            modelWrapper.set(new Skill());
-        }
-        modelWrapper.reload();
-    }
-
-    public void reload() {
-        modelWrapper.reload();
-    }
-
-    protected Command createCommand() {
+    public Command createCommand() {
         final Command command;
         if (skill.get() != null) { // edit
             final ArrayList<Command> changes = new ArrayList<>();
@@ -95,10 +88,6 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
 
     protected ObjectProperty<Skill> skillProperty() {
         return skill;
-    }
-    
-    protected ObjectProperty<Organisation> organisationProperty() {
-        return organisation;
     }
     
     public ValidationStatus nameValidation() {
