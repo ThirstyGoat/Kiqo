@@ -126,7 +126,7 @@ public class MainDetailsPaneController implements Initializable {
         sprintDetailsPane = (Pane) sprintDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(sprintDetailsPane);
         sprintDetailsPaneViewModel = sprintDetailsPaneViewTuple.getViewModel();
-        
+
         ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> skillDetailsPaneViewTuple = FluentViewLoader.fxmlView(SkillDetailsPaneView.class).load();
         skillDetailsPane = (Pane) skillDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(skillDetailsPane);
@@ -250,5 +250,6 @@ public class MainDetailsPaneController implements Initializable {
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
+        sprintDetailsPaneViewModel.getScrumBoardViewModel().setMainController(mainController);
     }
 }

@@ -223,6 +223,22 @@
     -fx-text-fill: #fff;
 }
 
+.add-task-button {
+    -fx-background-color: #FF7043;
+    -fx-border-color: transparent;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+.add-task-button:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0);
+}
+
+.add-task-button .single-icon {
+    -fx-fill: #fff;
+}
+
 /********** TASK CARDS **********/
 
 .task-card {
@@ -252,3 +268,4 @@
 .task-card .label {
     -fx-text-fill: #fff
 }
+

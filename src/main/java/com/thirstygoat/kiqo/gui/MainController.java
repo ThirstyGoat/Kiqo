@@ -558,13 +558,19 @@ public class MainController implements Initializable {
 
     public void createTask() {
         if (selectedOrganisationProperty.get() != null) {
-            taskDialog(null);
+            taskDialog(null, null);
+        }
+    }
+
+    public void createTask(Story story) {
+        if (selectedOrganisationProperty().get() != null) {
+            taskDialog(null, story);
         }
     }
 
     public void editTask(Task task) {
         if (selectedOrganisationProperty.get() != null) {
-            taskDialog(task);
+            taskDialog(task, null);
         }
     }
 
@@ -976,7 +982,9 @@ public class MainController implements Initializable {
         });
     }
 
-    private void taskDialog(Task task) {
+    private void taskDialog(Task task, Story story) {
+        story = (story == null) ? (Story) focusedItemProperty.getValue() : story;
+        final Story finalStory = story;
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
@@ -998,7 +1006,7 @@ public class MainController implements Initializable {
             final TaskFormController taskFormController = loader.getController();
             taskFormController.setStage(stage);
             taskFormController.setOrganisation(selectedOrganisationProperty.get());
-            taskFormController.setStory((Story) focusedItemProperty.getValue());
+            taskFormController.setStory(finalStory);
             taskFormController.populateFields(task);
             stage.showAndWait();
 

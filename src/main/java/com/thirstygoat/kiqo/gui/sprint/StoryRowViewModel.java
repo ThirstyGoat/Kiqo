@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Story;
@@ -24,6 +25,7 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     private GoatModelWrapper<Story> storyWrapper = new GoatModelWrapper<>();
     private Organisation organisation;
+    private MainController mainController;
 
 
     private StringProperty storyName = new SimpleStringProperty();
@@ -125,5 +127,13 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     public StringProperty estimateProperty() {
         return estimate;
+    }
+
+    public void newTask() {
+        mainController.createTask(storyWrapper.get());
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

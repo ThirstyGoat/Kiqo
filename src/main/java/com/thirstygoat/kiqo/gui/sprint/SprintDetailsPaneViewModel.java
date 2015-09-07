@@ -26,4 +26,8 @@ public class SprintDetailsPaneViewModel implements Loadable<Sprint>, ViewModel {
         sprintDetailsPaneDetailsViewModel.load(sprint, organisation);
         scrumBoardViewModel.load(sprint, organisation);
     }
+
+    public ScrumBoardViewModel getScrumBoardViewModel() {
+        return scrumBoardViewModel;
+    }
 }

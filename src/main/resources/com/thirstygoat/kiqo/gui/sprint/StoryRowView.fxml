@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="gridPane" alignment="CENTER_LEFT" prefHeight="270.0" prefWidth="747.0" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="CENTER_LEFT" prefHeight="270.0" prefWidth="747.0" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -17,11 +18,11 @@
     <RowConstraints maxHeight="1.7976931348623157E308" valignment="TOP" vgrow="ALWAYS" />
   </rowConstraints>
    <children>
-      <VBox>
+      <VBox spacing="5.0">
          <children>
             <VBox styleClass="story-card">
                <children>
-                   <Label fx:id="storyNameLabel" styleClass="name-label" text="Story name here" wrapText="true" />
+                  <Label fx:id="storyNameLabel" styleClass="name-label" text="Story name here" wrapText="true" />
                   <Label fx:id="descriptionLabel" maxHeight="50.0" styleClass="description-label" text="Description" wrapText="true" />
                   <HBox>
                      <children>
@@ -40,16 +41,16 @@
                   <Insets />
                </GridPane.margin>
             </VBox>
+            <Button fx:id="addTaskButton" mnemonicParsing="false" styleClass="add-task-button" text="New Task">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" styleClass="single-icon" />
+                </graphic>
+            </Button>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </VBox>
-      <AnchorPane>
-         <GridPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </GridPane.margin>
-      </AnchorPane>
 
        <FlowPane fx:id="toDoTasks" styleClass="task-container" GridPane.columnIndex="1" />
        <FlowPane fx:id="inProgressTasks" styleClass="task-container" GridPane.columnIndex="2" />

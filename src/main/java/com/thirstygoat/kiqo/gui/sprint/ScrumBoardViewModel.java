@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * Created by bradley on 14/08/15.
  */
 public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
+    private MainController mainController;
     private Organisation organisation;
     private Sprint sprint;
 
@@ -56,6 +58,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
         if (storyMap.get(story) == null) {
             ViewTuple<StoryRowView, StoryRowViewModel> viewTuple = FluentViewLoader.fxmlView(StoryRowView.class).load();
             viewTuple.getViewModel().load(story, organisation);
+            viewTuple.getViewModel().setMainController(mainController);
             mapStoryRow(story, viewTuple.getView());
             return viewTuple.getView();
         } else {
@@ -123,5 +126,9 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
     public ObservableList<Node> storyRowsProperty() {
         return storyRows;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }
