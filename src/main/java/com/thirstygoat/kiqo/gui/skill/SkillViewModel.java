@@ -68,7 +68,7 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         modelWrapper.reload();
     }
 
-    public void reload() {
+    protected void reload() {
         modelWrapper.reload();
     }
 
@@ -96,11 +96,11 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         return command;
     }
 
-    public StringProperty nameProperty() {
+    protected StringProperty nameProperty() {
         return modelWrapper.field("shortName", Skill::getShortName, Skill::setShortName, "");
     }
 
-    public StringProperty descriptionProperty() {
+    protected StringProperty descriptionProperty() {
         return modelWrapper.field("description", Skill::getDescription, Skill::setDescription, "");
     }
 
@@ -112,15 +112,15 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         return organisation;
     }
     
-    public ValidationStatus nameValidation() {
+    protected ValidationStatus nameValidation() {
         return nameValidator.getValidationStatus();
     }
     
-    public ValidationStatus descriptionValidation() {
+    protected ValidationStatus descriptionValidation() {
         return descriptionValidator.getValidationStatus();
     }
 
-    public ValidationStatus allValidation() {
+    protected ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }
 }

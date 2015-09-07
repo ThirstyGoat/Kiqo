@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.detailsPane;
 
 import com.thirstygoat.kiqo.gui.MainController;
 
+@Deprecated
 public interface IDetailsPaneController<T> {
     /**
      *
