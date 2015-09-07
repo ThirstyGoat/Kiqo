@@ -1,17 +1,16 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableItems;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project class represents a software project
@@ -109,6 +108,19 @@ public class Organisation implements Serializable {
      */
     public ObservableList<Skill> getSkills() {
         return skills;
+    }
+
+    public List<Skill> getSkillsList() {
+        // temp fix to allow undo add skill to person
+        final ArrayList<Skill> skills1 = new ArrayList<>();
+        skills1.addAll(skills);
+        return skills1;
+//        return Collections.unmodifiableList(skills);
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills.clear();
+        this.skills.addAll(skills);
     }
 
     /**

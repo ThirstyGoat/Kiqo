@@ -4,12 +4,12 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
@@ -17,13 +17,16 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.function.Supplier;
 
-public class PersonViewModel implements Loadable<Person>, ViewModel {
+public class PersonViewModel extends ModelViewModel<Person> {
     private ModelWrapper<Person> modelWrapper;
     private ObjectProperty<Person> person;
     private ObjectProperty<Organisation> organisation;
@@ -58,6 +61,19 @@ public class PersonViewModel implements Loadable<Person>, ViewModel {
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
         
         allValidator = new CompositeValidator(nameValidator, descriptionValidator);
+    }
+
+    @Override
+    protected Supplier<Person> modelSupplier() {
+        return Person::new;
+    }
+
+    @Override
+    protected void afterLoad() {
+//        eligableStories.setAll(storySupplier().get());
+//        projectProperty().addListener(change -> {
+//            eligableStories.setAll(storySupplier().get());
+//        });
     }
 
     /**
@@ -151,8 +167,12 @@ public class PersonViewModel implements Loadable<Person>, ViewModel {
         return modelWrapper.field("department", Person::getDepartment, Person::setDepartment, "");
     }
 
-//    public StringProperty skills() {
-//        return modelWrapper.field("skills", Person::observableSkills, Person::setSkills, "");
+    public ListProperty<Skill> skills() {
+        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, Collections.emptyList());
+    }
+
+//    public ListProperty<Skill> allSkills() {
+//        return modelWrapper.field("skills", Organisation::getSkills, Organisation::setSkills, Collections.emptyList());
 //    }
 
     public StringProperty descriptionProperty() {
@@ -163,10 +183,15 @@ public class PersonViewModel implements Loadable<Person>, ViewModel {
         return person;
     }
     
-    protected ObjectProperty<Organisation> organisationProperty() {
+    public ObjectProperty<Organisation> organisationProperty() {
         return organisation;
     }
-    
+
+    @Override
+    public Command getCommand() {
+        return null;
+    }
+
     public ValidationStatus nameValidation() {
         return nameValidator.getValidationStatus();
     }

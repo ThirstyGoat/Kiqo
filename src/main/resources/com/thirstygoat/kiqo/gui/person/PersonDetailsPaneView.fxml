@@ -20,7 +20,7 @@
             <GoatLabelTextField fx:id="emailLabel" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" defaultText="Email"/>
             <GoatLabelTextField fx:id="phoneLabel" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" defaultText="Phone Number"/>
             <GoatLabelTextField fx:id="departmentLabel" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" defaultText="Department"/>
-            <GoatLabelFilteredListSelectionView fx:id="skills" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2" defaultText="Skills"/>
+            <GoatLabelFilteredListSelectionView fx:id="skillsLabel" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2" defaultText="Skills"/>
             <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2" defaultText="Description"/>
           </children>
           <columnConstraints>
