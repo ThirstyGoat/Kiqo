@@ -134,6 +134,10 @@
 }
 
 /* Icons */
+.project-icon {
+    -glyph-name: "ROCKET";
+}
+
 .people-icon {
     -glyph-name: "USERS";
 }
@@ -156,6 +160,10 @@
 
 .pane-type-indicator {
 	-fx-text-fill: #ccc;
+}
+
+.field-label {
+	-fx-text-fill: #aaa;
 }
 
 .tooltip {
