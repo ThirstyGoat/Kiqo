@@ -93,7 +93,8 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             }
         });
 
-        impedanceIcon.visibleProperty().bind(impedanceProperty);
+//        impedanceIcon.visibleProperty().bind(impedanceProperty);
+        impedanceIcon.visibleProperty().set(true);
 
         iconBox.getChildren().add(impedanceIcon);
 
