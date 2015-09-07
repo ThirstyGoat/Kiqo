@@ -30,6 +30,7 @@ import com.thirstygoat.kiqo.util.Utilities;
 /**
  * Created by james on 11/04/15.
  */
+@Deprecated
 public class ReleaseFormController extends FormController<Release> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Organisation organisation;

@@ -12,24 +12,16 @@ import com.thirstygoat.kiqo.util.*;
 
 public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Editable {
 
-    private StringProperty projectNameProperty;
     private StringProperty dateStringProperty;
     
     public ReleaseDetailsPaneViewModel() {
         super();
-        projectNameProperty = new SimpleStringProperty("");
         dateStringProperty = new SimpleStringProperty("");
         dateStringProperty.bind(Bindings.createStringBinding(() -> {
             return dateProperty().get() != null 
                     ? dateProperty().get().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                     : "";
         }, dateProperty()));
-    }
-    
-    @Override
-    public void load(Release release, Organisation organisation) {
-        super.load(release, organisation);
-        projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
     }
 
     @Override
@@ -44,10 +36,6 @@ public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Edi
     public void cancelEdit() {
         reload();
     }
-    
-    protected StringProperty projectNameProperty() {
-        return projectNameProperty;
-    } 
     
     protected StringProperty dateStringProperty() {
         return dateStringProperty;

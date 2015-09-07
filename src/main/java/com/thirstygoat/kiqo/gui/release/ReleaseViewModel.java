@@ -21,13 +21,16 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     private ObjectProperty<Release> release;
     private ObjectProperty<Organisation> organisation;
     
+    private StringProperty projectNameProperty;
+    
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
     private ObservableRuleBasedValidator projectValidator;
     private ObservableRuleBasedValidator dateValidator;
 
-    protected ReleaseViewModel() {
+    public ReleaseViewModel() {
+        projectNameProperty = new SimpleStringProperty("");
         modelWrapper = new GoatModelWrapper<>();
         release = new SimpleObjectProperty<>(null);
         organisation = new SimpleObjectProperty<>(null);
@@ -65,6 +68,7 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         this.release.set(release);
         modelWrapper.set(release != null ? release : new Release());
         modelWrapper.reload();
+        projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
     }
 
     protected Command createCommand() {
@@ -112,6 +116,10 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     protected ObjectProperty<Project> projectProperty() {
         return modelWrapper.field("project", Release::getProject, Release::setProject, null);
     }
+    
+    protected StringProperty projectNameProperty() {
+        return projectNameProperty;
+    } 
 
     protected ObjectProperty<LocalDate> dateProperty() {
         return modelWrapper.field("date", Release::getDate, Release::setDate, null);

@@ -28,6 +28,7 @@ import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.*;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.release.*;
 import com.thirstygoat.kiqo.gui.skill.*;
 import com.thirstygoat.kiqo.gui.sprint.*;
 import com.thirstygoat.kiqo.gui.view.SearchView;
@@ -884,6 +885,13 @@ public class MainController implements Initializable {
                 ViewTuple<SkillFormView, SkillViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Release.class.getSimpleName())) {
+                ViewTuple<ReleaseFormView, ReleaseViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(ReleaseFormView.class).load();
+                viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
