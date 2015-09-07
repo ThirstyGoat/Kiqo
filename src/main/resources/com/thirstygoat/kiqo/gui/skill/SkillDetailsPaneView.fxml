@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 
