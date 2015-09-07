@@ -1,7 +1,8 @@
 package com.thirstygoat.kiqo.gui.release;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.function.Supplier;
 
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
@@ -20,7 +21,6 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     private ModelWrapper<Release> modelWrapper;
     private ObjectProperty<Release> release;
     private ObjectProperty<Organisation> organisation;
-    
     private StringProperty projectNameProperty;
     
     private ObservableRuleBasedValidator shortNameValidator;
@@ -28,12 +28,12 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     private CompositeValidator allValidator;
     private ObservableRuleBasedValidator projectValidator;
     private ObservableRuleBasedValidator dateValidator;
-
     public ReleaseViewModel() {
         projectNameProperty = new SimpleStringProperty("");
-        modelWrapper = new GoatModelWrapper<>();
         release = new SimpleObjectProperty<>(null);
         organisation = new SimpleObjectProperty<>(null);
+        modelWrapper = new GoatModelWrapper<>();
+        projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
         createValidators();
     }
     
@@ -42,10 +42,10 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
                 Project project = projectProperty().get();
-                if (organisation.get() != null && project != null) {
+                if (project != null) {
                     return Utilities.shortnameIsUnique(shortNameProperty().get(), release.get(), project.getReleases());
                 } else {
-                    return true; // no organisation or no project means this isn't for real yet.
+                    return true; // no project means this isn't for real yet.
                 }
             }, 
             shortNameProperty(), projectProperty());
@@ -85,7 +85,6 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         this.organisation.set(organisation);
         modelWrapper.set(release != null ? release : new Release());
         modelWrapper.reload();
-        projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
     }
 
     protected Command createCommand() {
@@ -100,6 +99,7 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
                 changes.add(new EditCommand<>(release.get(), "description", descriptionProperty().get()));
             }
             if (projectProperty().get() != null && !projectProperty().get().equals(release.get().getProject())) {
+                changes.add(new MoveItemCommand<>(release.get(), release.get().getProject().observableReleases(), projectProperty().get().observableReleases()));
                 changes.add(new EditCommand<>(release.get(), "project", projectProperty().get()));
             }
             if (dateProperty().get() != null && !dateProperty().get().equals(release.get().getDate())) {
@@ -121,7 +121,17 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     protected void reload() {
         modelWrapper.reload();
     }
-
+    
+    protected Supplier<List<Project>> projectsSupplier() {
+        return () -> {
+            List<Project> list = new ArrayList<>();
+            if (organisation.get() != null) {
+                list.addAll(organisation.get().getProjects());
+            }
+            return list;
+        };
+    }
+    
     protected StringProperty shortNameProperty() {
         return modelWrapper.field("shortName", Release::getShortName, Release::setShortName, "");
     }

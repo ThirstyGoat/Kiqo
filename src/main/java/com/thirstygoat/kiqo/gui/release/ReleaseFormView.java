@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.*;
 
 import javafx.application.Platform;
 import javafx.fxml.*;
@@ -39,8 +39,8 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {        
         bindToViewModel();
-
         attachValidators();
+        FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectsSupplier());
         
         Platform.runLater(() -> {
             shortNameTextField.requestFocus();
