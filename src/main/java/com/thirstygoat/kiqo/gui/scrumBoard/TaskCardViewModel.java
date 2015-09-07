@@ -9,10 +9,7 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
@@ -37,7 +34,7 @@ public class TaskCardViewModel implements ViewModel, Editable {
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private ObservableRuleBasedValidator teamValidator;
-    private ObservableRuleBasedValidator estimateValidator;
+    private FunctionBasedValidator estimateValidator;
     private CompositeValidator allValidator;
 
     public TaskCardViewModel() {
@@ -48,29 +45,20 @@ public class TaskCardViewModel implements ViewModel, Editable {
     }
 
     private void createValidators() {
-        // TODO add shortname unique within the story
+
+
+
         shortNameValidator = new ObservableRuleBasedValidator();
-        BooleanBinding uniqueName = Bindings.createBooleanBinding(() ->
-                {
-//                    if (organisationProperty().get() != null) {
-//                        return Utilities.shortnameIsUnique(shortNameProperty().get(), task.get(), organisationProperty().get().getSkills());
-//                    } else {
-//                        return true;
-//                    }
-                    return true;
-                },
-                shortNameProperty());
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
-        shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
-
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
 
         teamValidator = new ObservableRuleBasedValidator(); // TODO add team validation - people must be from the sprints assigned team
 
-        estimateValidator = new ObservableRuleBasedValidator();
-        estimateValidator.addRule(estimateProperty().greaterThanOrEqualTo(0), ValidationMessage.error("Estimate must be a positive value"));
+        estimateValidator = new FunctionBasedValidator<>(estimateProperty().asString(),
+                s -> s.matches("^[+]?([.]\\d+|\\d+[.]?\\d*)$") && s.length() > 0,
+                ValidationMessage.error("Estimate must be a positive number"));
 
         allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, teamValidator);
     }
@@ -99,7 +87,6 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     public void load(Task task) {
         this.task.set(task);
-//        this.organisation.set(organisation);
 
         if (task != null) {
             modelWrapper.set(task);

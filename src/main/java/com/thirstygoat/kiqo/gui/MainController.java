@@ -883,9 +883,6 @@ public class MainController implements Initializable {
      */
     private <T> void dialog(T t, String type) {
         Platform.runLater(() -> {
-            System.out.println("DIALOG CALLED!?!?");
-
-
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
