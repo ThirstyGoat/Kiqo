@@ -41,13 +41,14 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
-                if (organisation.get() != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), release.get(), organisation.get().getSkills());
+                Project project = projectProperty().get();
+                if (organisation.get() != null && project != null) {
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), release.get(), project.getReleases());
                 } else {
-                    return true; // no organisation means this isn't for real yet.
+                    return true; // no organisation or no project means this isn't for real yet.
                 }
             }, 
-            shortNameProperty());
+            shortNameProperty(), projectProperty());
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
@@ -58,14 +59,30 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         projectValidator = new ObservableRuleBasedValidator();
         projectValidator.addRule(projectProperty().isNotNull(), ValidationMessage.error("Project must not be empty"));
         
-        dateValidator = new ObservableRuleBasedValidator(); // TODO always true
+        dateValidator = new ObservableRuleBasedValidator();
+        BooleanBinding isAfterAllSprintsAreFinished = Bindings.createBooleanBinding(() -> {
+            if (release.get() != null) {
+                LocalDate date = dateProperty().get();
+                if (date != null) {
+                    for (Sprint sprint : release.get().getSprints()) {
+                        if (date.isBefore(sprint.getEndDate())) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }, dateProperty());
+        dateValidator.addRule(dateProperty().isNotNull(), ValidationMessage.error("Release date must not be empty"));
+        dateValidator.addRule(isAfterAllSprintsAreFinished, ValidationMessage.error("Release date must fall after any sprint within."));
         
-        allValidator = new CompositeValidator(shortNameValidator, descriptionValidator);
+        allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, projectValidator, dateValidator);
     }
     
     @Override
     public void load(Release release, Organisation organisation) {
         this.release.set(release);
+        this.organisation.set(organisation);
         modelWrapper.set(release != null ? release : new Release());
         modelWrapper.reload();
         projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
