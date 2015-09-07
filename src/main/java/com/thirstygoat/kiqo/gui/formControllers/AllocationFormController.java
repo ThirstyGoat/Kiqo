@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,7 +28,6 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
-import com.thirstygoat.kiqo.gui.nodes.GoatDatePicker;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
@@ -399,7 +399,7 @@ public class AllocationFormController extends FormController<Allocation> {
                         if (item.isAfter(endDatePicker.getValue().minusDays(1))) {
                             //date falls after the end date
                             setDisable(true);
-                            setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                            setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                         }
                     }
                     //remove the current allocation for if we are editing
@@ -407,7 +407,7 @@ public class AllocationFormController extends FormController<Allocation> {
                         if ((item.isAfter(allocation1.getStartDate().minusDays(2)) && item.isBefore(allocation1.getEndDate().plusDays(1)))) {
                             //date falls inside a previous allocation
                             setDisable(true);
-                            setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                            setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                         }
                     });
                 }
@@ -423,7 +423,7 @@ public class AllocationFormController extends FormController<Allocation> {
                     if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
                         //date is before the start date
                         setDisable(true);
-                        setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                        setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                     }
                 }
                 //remove the current allocation for if we are editing
@@ -431,11 +431,11 @@ public class AllocationFormController extends FormController<Allocation> {
                     if (item.isAfter(allocation1.getStartDate().minusDays(1)) && item.isBefore(allocation1.getEndDate().plusDays(2))) {
                         //date falls inside a previous allocation
                         setDisable(true);
-                        setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                        setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                     } else if (startDatePicker.getValue() != null) {
                         if (startDatePicker.getValue().isBefore(allocation1.getStartDate()) && item.isAfter(allocation1.getEndDate())) {
                             setDisable(true);
-                            setStyle(GoatDatePicker.DISABLED_CELL_STYLE);
+                            setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                         }
                     }
                 });
