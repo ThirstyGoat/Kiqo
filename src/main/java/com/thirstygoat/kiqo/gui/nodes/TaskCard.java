@@ -40,35 +40,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
     final private BooleanProperty impedanceProperty;
-    private Task task;
-//    private Stage stage;
-//    private TaskCardViewModel viewModel;
-    private ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
+    final private Task task;
 
     public TaskCard(Task task) {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
-
-//        stage = new Stage();
-//        stage.setResizable(false);
-//        Scene scene = new Scene(viewTuple.getView());
-//        stage.setScene();
-//        stage.initStyle(StageStyle.UNDECORATED);
-//        viewModel = viewTuple.getViewModel();
-//        viewModel.load(task);
-//        viewModel.setExitStrategy(() -> stage.close());
-
-
-//        stage.setScene(scene);
-
-//        stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (oldValue) {
-//                stage.setScene(null);
-//                stage.close();
-//            }
-//        });
-
         draw();
         this.task = task;
         shortNameProperty().bind(task.shortNameProperty());
@@ -159,87 +136,56 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             viewTuple.getViewModel().load(task);
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
-            view.setScaleX(0);
-            view.setScaleY(0);
 
 
             stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (oldValue) {
-//                    stage.setScene(null);
                     stage.close();
                 }
             });
 
             Scene scene = new Scene(view);
+
+//            view.setScaleX(0);
+//            view.setScaleY(0);
             stage.setScene(scene);
-            stage.setWidth(0.1);
-            stage.setHeight(0.1);
-
-
-            stage.setOpacity(0.5);
-
-            Timeline timeline = new Timeline();
-            Duration transitionTime = Duration.millis(500);
-//            timeline
-//            timeline.setRate(3);
-
-            KeyValue kv_width = new KeyValue(stage.minWidthProperty(), 400);
-            KeyFrame kf_width = new KeyFrame(transitionTime, kv_width);
-            KeyValue kv_height = new KeyValue(stage.minHeightProperty(), 400);
-            KeyFrame kf_height = new KeyFrame(transitionTime, kv_height);
-
-
-            KeyValue kv_scale_width = new KeyValue(view.scaleXProperty(), 1);
-            KeyFrame kf_scale_width = new KeyFrame(transitionTime, kv_scale_width);
-            KeyValue kv_scale_height = new KeyValue(view.scaleYProperty(), 1);
-            KeyFrame kf_scale_height = new KeyFrame(transitionTime, kv_scale_height);
-
-
-            KeyValue kv_stage_opacity = new KeyValue(stage.opacityProperty(), 1);
-            KeyFrame kf_stage_opacity = new KeyFrame(transitionTime.multiply(1.75), kv_stage_opacity);
-
-            Stage primaryStage = MainController.getPrimaryStage();
-
-
-            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-                stage.setX(primaryStage.getX() + (primaryStage.getWidth() / 2) - (newValue.doubleValue() / 2));
-            });
-
-            stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-                stage.setY(primaryStage.getY() + (primaryStage.getHeight() / 2) - (stage.getHeight() / 2));
-            });
-
-//            KeyValue kv_height_pos = new KeyValue(stageX, );
-//            KeyFrame kf_height_pos = new KeyFrame(transitionTime, kv_height_pos);
-//            KeyValue kv_width_pos = new KeyValue(stage.minWidthProperty(), 400);
-//            KeyFrame kf_width_pos = new KeyFrame(transitionTime, kv_width_pos);
-
-            timeline.getKeyFrames().addAll(kf_width, kf_height, kf_scale_width, kf_scale_height, kf_stage_opacity);//, kf_height_pos, kf_width_pos);
-            timeline.play();
+//            stage.setWidth(0.1);
+//            stage.setHeight(0.1);
+//            stage.setOpacity(0.5);
+//
+//            Timeline timeline = new Timeline();
+//            Duration transitionTime = Duration.millis(500);
+////            timeline.setRate(3);
+//
+//            KeyValue kv_width = new KeyValue(stage.minWidthProperty(), 400);
+//            KeyFrame kf_width = new KeyFrame(transitionTime, kv_width);
+//            KeyValue kv_height = new KeyValue(stage.minHeightProperty(), 400);
+//            KeyFrame kf_height = new KeyFrame(transitionTime, kv_height);
+//
+//
+//            KeyValue kv_scale_width = new KeyValue(view.scaleXProperty(), 1);
+//            KeyFrame kf_scale_width = new KeyFrame(transitionTime, kv_scale_width);
+//            KeyValue kv_scale_height = new KeyValue(view.scaleYProperty(), 1);
+//            KeyFrame kf_scale_height = new KeyFrame(transitionTime, kv_scale_height);
+//
+//
+//            KeyValue kv_stage_opacity = new KeyValue(stage.opacityProperty(), 1);
+//            KeyFrame kf_stage_opacity = new KeyFrame(transitionTime.multiply(1.75), kv_stage_opacity);
+//
+//            Stage primaryStage = MainController.getPrimaryStage();
+//
+//            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
+//                stage.setX(primaryStage.getX() + (primaryStage.getWidth() / 2) - (newValue.doubleValue() / 2));
+//            });
+//
+//            stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+//                stage.setY(primaryStage.getY() + (primaryStage.getHeight() / 2) - (stage.getHeight() / 2));
+//            });
+//
+//            timeline.getKeyFrames().addAll(kf_width, kf_height, kf_scale_width, kf_scale_height, kf_stage_opacity);
+//            timeline.play();
 
             stage.show();
-
-            double initialX = stage.getX();
-//            ScaleTransition st = new ScaleTransition(Duration.millis(200), view);
-////            st.setFromX(0.3);
-////            st.setFromY(0.3);
-//            st.setByX(.7); // don't ask me what its 0.7 and not 1.0 =\
-//            st.setByY(.7);
-//            st.play();
-
-//            stage.setHeight(scene.getHeight() * 0.3);
-//            stage.setWidth(scene.getWidth() * 0.3);
-
-//            view.scaleXProperty().addListener((observable, oldValue, newValue) -> System.out.println(scene.getWidth() * newValue.doubleValue()));
-//            view.scaleYProperty().addListener((observable, oldValue, newValue) -> stage.setHeight(scene.getHeight() * newValue.doubleValue()));
-//            view.scaleXProperty().addListener((observable, oldValue, newValue) -> stage.setWidth(newValue.doubleValue()));
-//            view.scaleYProperty().addListener((observable, oldValue, newValue) -> stage.setHeight(newValue.doubleValue()));
-
-
-
-
-
-
         });
     }
 

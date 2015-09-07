@@ -74,11 +74,6 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     private ToolBarController toolBarController;
 
-
-
-    @FXML
-    private MenuItem testTask;
-
     @InjectViewModel
     private MenuBarViewModel viewModel;
 
@@ -132,9 +127,6 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
-
-        //TODO REMOVE
-        testTask.setOnAction(event -> viewModel.getMainController().testTaskCard());
 
         final long[] timestamp = {0};
         searchMenuItem.setAccelerator(new KeyCombination() {

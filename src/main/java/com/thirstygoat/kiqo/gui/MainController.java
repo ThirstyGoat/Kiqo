@@ -915,24 +915,7 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
-            }
-//            else if (type.equals("TaskCard")) {
-//                System.out.println("TaskCard selected?!?");
-//                ViewTuple<TaskCardExpandedView, TaskCardViewModel> taskFormTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
-//                // viewModel
-//                final TaskCardViewModel viewModel = taskFormTuple.getViewModel();
-//
-//                Task task = selectedOrganisationProperty.get().getProjects().get(0).getBacklogs().get(0).getStories().get(0).getTasks().get(1);
-//
-////                viewModel.load(task, selectedOrganisationProperty.get());
-//                // view
-//                viewModel.setExitStrategy(() -> stage.close());
-//                stage.setScene(new Scene(taskFormTuple.getView()));
-//                System.out.println("mc: scene has been set");
-//                viewModel.load(task, selectedOrganisationProperty.get());
-//                stage.showAndWait();
-//            }
-            else {
+            } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
                 Pane root;
@@ -1119,11 +1102,6 @@ public class MainController implements Initializable {
                 }
             });
         });
-    }
-
-    public void testTaskCard() {
-        dialog(null, "TaskCard");
-        return;
     }
 }
 
