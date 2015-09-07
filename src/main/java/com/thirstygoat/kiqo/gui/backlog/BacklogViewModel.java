@@ -221,7 +221,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     }
 
     public ListProperty<Story> stories() {
-        return modelWrapper.field("stories", Backlog::getStories, Backlog::setStories, Collections.emptyList());
+        return modelWrapper.field("stories", Backlog::getStories, Backlog::setStories, Collections.<Story>emptyList());
     }
 
     public ListProperty<Story> eligableStories() {
