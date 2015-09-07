@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.person;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.util.FxUtils;
@@ -28,7 +29,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
     @FXML
     private GoatLabelTextField departmentLabel;
     @FXML
-    private GoatLabelTextField skillsLabel;
+    private GoatLabelFilteredListSelectionView skillsLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
