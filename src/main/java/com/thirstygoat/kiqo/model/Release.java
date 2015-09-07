@@ -115,4 +115,12 @@ public class Release extends Item implements Serializable {
         return "Release{shortName=" + shortName + ", project=" + project.get().getShortName() + ", date=" + date + ", description="
                 + description + "}";
     }
+    
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(project);
+        bps.addPropertyChangeSupportFor(date);
+    }
 }
