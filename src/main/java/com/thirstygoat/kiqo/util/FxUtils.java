@@ -1,15 +1,15 @@
 package com.thirstygoat.kiqo.util;
 
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
@@ -24,15 +24,15 @@ import java.util.stream.Collectors;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
-        
+
         // use a callback to get an up-to-date list, instead of just whatever exists at initialisation.
         // use a String converter so that the short name is used.
         final AutoCompletionBinding<E> binding = TextFields.bindAutoCompletion(textField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<E>>() {
-            
+
             @Override
             public Collection<E> call(AutoCompletionBinding.ISuggestionRequest request) {
                 List<E> list = listSupplier.get();
-            
+
                 // filter based on input string
                 if (textField.isFocused()) {
                     final Collection<E> suggestions = list.stream()
@@ -119,5 +119,13 @@ public final class FxUtils {
         goatLabel.getEditField().setItems(FXCollections.observableArrayList(items));
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.getEditField().setConverter(stringConverter);
+    }
+
+    public static <T extends Item> void initGoatLabel(GoatLabelFilteredListSelectionView<T> goatLabel,
+                                                      Editable viewModel, ListProperty<T> targetList,
+                                                      ObservableList<T> sourceList, Object o) {
+        initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bind(Bindings.concat(targetList));
+        goatLabel.getEditField().setSourceItems(sourceList);
     }
 }

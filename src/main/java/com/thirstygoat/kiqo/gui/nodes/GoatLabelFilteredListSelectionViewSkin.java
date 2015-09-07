@@ -3,8 +3,6 @@ package com.thirstygoat.kiqo.gui.nodes;
 import com.thirstygoat.kiqo.model.Item;
 import javafx.geometry.Pos;
 import javafx.scene.control.Control;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 /**
  * Created by samschofield on 7/08/15.
@@ -38,7 +36,7 @@ public class GoatLabelFilteredListSelectionViewSkin<T extends Item> extends Goat
 
     @Override
     protected GoatFilteredListSelectionView<T> createEditField() {
-        return new GoatFilteredListSelectionView<>();
+        return new GoatFilteredListSelectionView<T>();
     }
 
 
