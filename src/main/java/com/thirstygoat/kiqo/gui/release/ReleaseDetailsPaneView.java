@@ -7,28 +7,30 @@ import javafx.fxml.*;
 import javafx.scene.control.Label;
 
 import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.*;
 
 import de.saxsys.mvvmfx.*;
 
 public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewModel>, Initializable {
     @FXML
-    private GoatLabelTextField shortNameLabel;
+    private GoatLabelTextField shortNameTextField;
     @FXML
-    private Label projectLabel;
+    private GoatLabelTextField projectTextField;
     @FXML
-    private GoatLabelDatePicker releaseDateLabel;
+    private GoatLabelDatePicker releaseDatePicker;
     @FXML
-    private GoatLabelTextArea descriptionLabel;
+    private GoatLabelTextArea descriptionTextField;
 
     @InjectViewModel
     private ReleaseDetailsPaneViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
-        FxUtils.initGoatLabel(releaseDateLabel, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
-        projectLabel.textProperty().bind(viewModel.projectNameProperty());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Description");
+        FxUtils.initGoatLabel(shortNameTextField, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(projectTextField, viewModel, viewModel.projectProperty(), viewModel.projectValidation(),
+                StringConverters.projectStringConverter(viewModel.organisationProperty()));
+        FxUtils.setTextFieldSuggester(projectTextField.getEditField(), viewModel.projectSupplier());
+        FxUtils.initGoatLabel(releaseDatePicker, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
+        FxUtils.initGoatLabel(descriptionTextField, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Description");
     }
 }

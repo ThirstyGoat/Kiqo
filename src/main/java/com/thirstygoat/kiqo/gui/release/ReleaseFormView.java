@@ -49,7 +49,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     
     private void bindToViewModel() {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
-        projectTextField.textProperty().bindBidirectional(viewModel.projectNameProperty());
+        projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(), StringConverters.projectStringConverter(viewModel.organisationProperty()));
         releaseDatePicker.valueProperty().bindBidirectional(viewModel.dateProperty());
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());

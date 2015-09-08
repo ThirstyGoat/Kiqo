@@ -61,14 +61,10 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         
         dateValidator = new ObservableRuleBasedValidator();
         BooleanBinding isAfterAllSprintsAreFinished = Bindings.createBooleanBinding(() -> {
-            if (release.get() != null) {
-                LocalDate date = dateProperty().get();
-                if (date != null) {
-                    for (Sprint sprint : release.get().getSprints()) {
-                        if (date.isBefore(sprint.getEndDate())) {
-                            return false;
-                        }
-                    }
+            if (release.get() != null) { // new releases don't have sprints
+                LocalDate releaseDate = dateProperty().get();
+                if (releaseDate != null) {
+                    return release.get().getSprints().stream().allMatch(sprint -> releaseDate.isAfter(sprint.getEndDate()));
                 }
             }
             return true;
@@ -144,8 +140,8 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         return modelWrapper.field("project", Release::getProject, Release::setProject, null);
     }
     
-    protected StringProperty projectNameProperty() {
-        return projectNameProperty;
+    protected ObjectProperty<Organisation> organisationProperty() {
+        return organisation;
     } 
 
     protected ObjectProperty<LocalDate> dateProperty() {

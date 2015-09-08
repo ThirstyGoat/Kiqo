@@ -81,10 +81,6 @@ public class ReleaseViewModelTest {
         viewModel.projectProperty().set(null);
         Assert.assertFalse("Must not be null.",
                 viewModel.shortNameValidation().validProperty().get());
-        
-        viewModel.projectNameProperty().set("short");
-        Assert.assertFalse("Invalid input recognised as valid.",
-                viewModel.projectValidation().validProperty().get());
     }
 
     @Test

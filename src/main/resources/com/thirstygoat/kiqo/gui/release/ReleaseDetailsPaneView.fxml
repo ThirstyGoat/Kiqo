@@ -15,19 +15,19 @@
           <children>
             <HBox>
               <children>
-                <GoatLabelTextField maxWidth="-1" HBox.hgrow="ALWAYS" styleClass="pane-header" fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <GoatLabelTextField maxWidth="-1" HBox.hgrow="ALWAYS" styleClass="pane-header" fx:id="shortNameTextField" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Label styleClass="pane-type-indicator" text="Release" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <GoatLabelTextArea fx:id="descriptionTextField" />
             <Label text="Project" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <Label fx:id="projectLabel" text="" wrapText="true" />
+            <GoatLabelTextField fx:id="projectTextField" />
             <Label text="Date" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <GoatLabelDatePicker fx:id="releaseDateLabel" />
+            <GoatLabelDatePicker fx:id="releaseDatePicker" />
           </children>
         </VBox>
       </content>

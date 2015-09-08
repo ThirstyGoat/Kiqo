@@ -1,10 +1,14 @@
 package com.thirstygoat.kiqo.gui.release;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.util.Utilities;
 
 public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Editable {
@@ -36,5 +40,11 @@ public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Edi
     
     protected StringProperty dateStringProperty() {
         return dateStringProperty;
+    }
+
+    public Supplier<List<Project>> projectSupplier() {
+        return () -> {
+            return organisationProperty().get().getProjects();
+        };
     }
 }
