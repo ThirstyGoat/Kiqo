@@ -66,9 +66,6 @@ public final class FxUtils {
         });
     }
 
-    /**
-     * @return
-     */
     public static <T extends Item> ListCell<T> listCellFactory() {
         return new ListCell<T>() {
             @Override
@@ -79,7 +76,7 @@ public final class FxUtils {
         };
     }
 
-    private static void initGoatLabelActions(GoatLabel goatLabel, Editable viewModel) {
+    private static void initGoatLabelActions(GoatLabel<?> goatLabel, Editable viewModel) {
         goatLabel.setOnAction(event -> viewModel.commitEdit());
         goatLabel.setOnCancel(event -> viewModel.cancelEdit());
     }
