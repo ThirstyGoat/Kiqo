@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.StringConverters;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.beans.binding.Bindings;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
-
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+
+import javafx.beans.binding.Bindings;
+import javafx.fxml.*;
+import javafx.scene.control.*;
+
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.*;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -49,19 +45,17 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         longNameLabel.textProperty().bind(viewModel.longNameProperty());
         goalLabel.textProperty().bind(viewModel.goalProperty());
         startDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             if (viewModel.startDateProperty().get() != null) {
-                return viewModel.startDateProperty().get().format(datetimeFormat);
+                return viewModel.startDateProperty().get().format(Utilities.DATE_TIME_FORMATTER);
             }
             return "";
         }, viewModel.startDateProperty()));
         endDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             if (viewModel.endDateProperty().get() != null) {
-                return viewModel.endDateProperty().get().format(datetimeFormat);
+                return viewModel.endDateProperty().get().format(Utilities.DATE_TIME_FORMATTER);
             }
             return "";
         }, viewModel.endDateProperty()));

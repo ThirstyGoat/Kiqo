@@ -1,16 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import javafx.beans.property.*;
+import javafx.collections.*;
+
+import com.thirstygoat.kiqo.search.SearchableField;
+import com.thirstygoat.kiqo.util.Utilities;
 
 
 /**
@@ -70,11 +67,10 @@ public class Sprint extends Item {
      */
     @Override
     public List<SearchableField> getSearchableStrings() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         List<SearchableField> searchStrings = new ArrayList<>();
         searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
                 new SearchableField("Long Name", getLongName()),
-                new SearchableField("Start Date", getStartDate().format(dateTimeFormatter)), new SearchableField("End Date", getEndDate().format(dateTimeFormatter))));
+                new SearchableField("Start Date", getStartDate().format(Utilities.DATE_TIME_FORMATTER)), new SearchableField("End Date", getEndDate().format(Utilities.DATE_TIME_FORMATTER))));
         return searchStrings;
     }
 

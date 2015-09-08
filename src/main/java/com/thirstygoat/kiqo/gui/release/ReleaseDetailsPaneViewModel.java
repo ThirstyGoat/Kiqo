@@ -1,14 +1,11 @@
 package com.thirstygoat.kiqo.gui.release;
 
-import java.time.format.DateTimeFormatter;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
+import com.thirstygoat.kiqo.util.Utilities;
 
 public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Editable {
 
@@ -19,7 +16,7 @@ public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Edi
         dateStringProperty = new SimpleStringProperty("");
         dateStringProperty.bind(Bindings.createStringBinding(() -> {
             return dateProperty().get() != null 
-                    ? dateProperty().get().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    ? dateProperty().get().format(Utilities.DATE_TIME_FORMATTER)
                     : "";
         }, dateProperty()));
     }

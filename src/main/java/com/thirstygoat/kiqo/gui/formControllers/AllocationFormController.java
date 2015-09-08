@@ -2,36 +2,24 @@ package com.thirstygoat.kiqo.gui.formControllers;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
+import org.controlsfx.control.textfield.*;
+import org.controlsfx.validation.*;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by Amy on 23/04/15.
@@ -183,17 +171,10 @@ public class AllocationFormController extends FormController<Allocation> {
         startDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setConverter(new StringConverter<LocalDate>() {
-            String pattern = "dd/MM/yyyy";
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
-            {
-                endDatePicker.setPromptText(pattern.toLowerCase());
-            }
-
             @Override
             public String toString(LocalDate date) {
                 if (date != null && !date.equals(LocalDate.MAX)) {
-                    return dateFormatter.format(date);
+                    return Utilities.DATE_TIME_FORMATTER.format(date);
                 } else {
                     return "";
                 }
@@ -202,7 +183,7 @@ public class AllocationFormController extends FormController<Allocation> {
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
+                    return LocalDate.parse(string, Utilities.DATE_TIME_FORMATTER);
                 } else {
                     return LocalDate.MAX;
                 }

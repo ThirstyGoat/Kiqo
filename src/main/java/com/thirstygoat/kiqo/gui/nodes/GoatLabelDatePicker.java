@@ -1,8 +1,10 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
+import javafx.scene.control.DatePicker;
+
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
 * Created by Carina Blair on 8/08/2015.
@@ -23,7 +25,6 @@ public class GoatLabelDatePicker extends GoatLabel<DatePicker> {
 
     @Override
     protected void populateEditField() {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyy");
-        editField.setValue(LocalDate.parse(displayLabel.getText(), format));
+        editField.setValue(LocalDate.parse(displayLabel.getText(), Utilities.DATE_TIME_FORMATTER));
     }
 }
