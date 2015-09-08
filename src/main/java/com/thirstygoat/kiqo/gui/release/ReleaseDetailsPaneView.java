@@ -17,7 +17,7 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
     @FXML
     private Label projectLabel;
     @FXML
-    private Label releaseDateLabel;
+    private GoatLabelDatePicker releaseDateLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
@@ -27,8 +27,8 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(releaseDateLabel, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
         projectLabel.textProperty().bind(viewModel.projectNameProperty());
-        releaseDateLabel.textProperty().bind(viewModel.dateStringProperty());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Description");
     }
 }

@@ -4,8 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
+<?import com.thirstygoat.kiqo.gui.nodes.*?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
 <AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView">
@@ -28,7 +27,7 @@
             <Label text="Date" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <Label fx:id="releaseDateLabel" text="" wrapText="true" />
+            <GoatLabelDatePicker fx:id="releaseDateLabel" />
           </children>
         </VBox>
       </content>

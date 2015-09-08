@@ -1,26 +1,22 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
-import com.thirstygoat.kiqo.model.Item;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextField;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
+import javafx.util.*;
+
+import org.controlsfx.control.textfield.*;
+
+import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.model.Item;
+
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
@@ -96,8 +92,8 @@ public final class FxUtils {
         goatLabel.validationStatus().set(validationStatus);
     }
 
-    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, ObjectProperty objectProperty,
-                                     ValidationStatus validationStatus, StringConverter stringConverter) {
+    public static <T> void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, ObjectProperty<T> objectProperty,
+                                     ValidationStatus validationStatus, StringConverter<T> stringConverter) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bindBidirectional(objectProperty, stringConverter);
         goatLabel.getEditField().textProperty().bindBidirectional(objectProperty, stringConverter);
@@ -128,5 +124,13 @@ public final class FxUtils {
         goatLabel.getEditField().setItems(FXCollections.observableArrayList(items));
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.getEditField().setConverter(stringConverter);
+    }
+    
+    public static <T> void initGoatLabel(GoatLabelDatePicker goatLabel, Editable viewModel,
+                                          ObjectProperty<LocalDate> objectProperty, StringProperty stringProperty, ValidationStatus validationStatus) {
+        initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bindBidirectional(stringProperty);
+        goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
+        goatLabel.validationStatus().set(validationStatus);
     }
 }
