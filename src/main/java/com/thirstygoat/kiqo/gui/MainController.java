@@ -137,8 +137,19 @@ public class MainController implements Initializable {
     private void deleteStory(Story story) {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = {"Delete Story", "Cancel"};
-        final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
-                "Are you sure you want to delete the story " + story.getShortName() + "?", buttons);
+
+        String title = "Delete Story";
+        String heading = "Are you sure?";
+        String message = "Are you sure you want to delete the story " + story.getShortName() + "?";
+
+        if (command.inSprint()) {
+            heading = "This story is currently in Sprint";
+            message = "Deleting this story will remove it from the following " +
+                    Utilities.pluralise(command.getSprintsWithin().size(), "sprint", "sprints") + ":\n" +
+                    Utilities.concatenateItemsList(command.getSprintsWithin(), 5);
+        }
+
+        final String result = GoatDialog.createBasicButtonDialog(primaryStage, title, heading, message, buttons);
 
         if (result.equals("Delete Story")) {
             doCommand(command);
@@ -879,6 +890,8 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(SprintFormView.class).load();
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create " + type : "Edit " + type);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Skill.class.getSimpleName())) {
@@ -997,7 +1010,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/task.fxml"));

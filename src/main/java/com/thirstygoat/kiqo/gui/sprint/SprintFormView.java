@@ -11,10 +11,14 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import org.controlsfx.control.PopOver;
@@ -51,9 +55,17 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
     @FXML
     private Button okButton;
     @FXML
+    private Button prevButton;
+    @FXML
     private Button cancelButton;
     @FXML
     private Hyperlink whyHyperlink;
+    @FXML
+    private Label heading;
+    @FXML
+    private VBox detailsVBox;
+    @FXML
+    private VBox storiesVBox;
 
     @InjectViewModel
     private SprintViewModel viewModel;
@@ -72,7 +84,9 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogProperty(),
                 StringConverters.backlogStringConverter(viewModel.organisationProperty()));
 
-        storySelectionView.setHeader(new Label("Stories in Sprint:"));
+        Label headingLabel = new Label("Stories in Sprint");
+        headingLabel.getStyleClass().add("form-field-label");
+        storySelectionView.setHeader(headingLabel);
         storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.eligableStories());
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
 
@@ -127,6 +141,35 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         });
 
         setWhyHyperLink();
+        setNextButton();
+    }
+
+    private void setNextButton() {
+        EventHandler<ActionEvent> nextEventHandler = event -> {
+            detailsVBox.setVisible(false);
+            detailsVBox.setManaged(false);
+            storiesVBox.setVisible(true);
+
+            okButton.setText("Done");
+
+            prevButton.setDisable(false);
+
+            okButton.setOnAction(event1 -> okAction());
+        };
+
+        prevButton.setOnAction(event -> {
+            detailsVBox.setVisible(true);
+            detailsVBox.setManaged(true);
+            storiesVBox.setVisible(false);
+            storiesVBox.setManaged(false);
+
+            prevButton.setDisable(true);
+
+            okButton.setText("Add Stories");
+            okButton.setOnAction(nextEventHandler);
+        });
+
+        okButton.setOnAction(nextEventHandler);
     }
 
     private void setWhyHyperLink() {
@@ -159,7 +202,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
     }
 
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
+        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
     }
 
     public void okAction() {
@@ -172,5 +215,9 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         if (formButtonHandler != null) {
             formButtonHandler.cancelAction();
         }
+    }
+
+    public StringProperty headingTextProperty() {
+        return heading.textProperty();
     }
 }
