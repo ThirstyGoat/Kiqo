@@ -23,6 +23,15 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
+import com.thirstygoat.kiqo.gui.*;
+import com.thirstygoat.kiqo.gui.backlog.*;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.release.*;
+import com.thirstygoat.kiqo.gui.skill.*;
+import com.thirstygoat.kiqo.gui.sprint.*;
+import com.thirstygoat.kiqo.gui.team.*;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
+import com.thirstygoat.kiqo.model.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -42,13 +51,15 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private AnchorPane storyDetailsPane;
     @FXML
-    private AnchorPane teamDetailsPane;
+    private Button editButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private HBox buttonBox;
     @FXML
     private PersonDetailsPaneController personDetailsPaneController;
     @FXML
     private StoryDetailsPaneController storyDetailsPaneController;
-    @FXML
-    private TeamDetailsPaneController teamDetailsPaneController;
 
     private MainController mainController;
     private Pane[] panes;
@@ -58,11 +69,13 @@ public class MainDetailsPaneController implements Initializable {
     private Pane sprintDetailsPane;
     private Pane skillDetailsPane;
     private Pane releaseDetailsPane;
-    private BacklogDetailsPaneViewModel backlogDetailsPaneViewModel;
+    private Pane teamDetailsPane;
+    private Loadable<Backlog> backlogDetailsPaneViewModel;
     private ProjectDetailsPaneViewModel projectDetailsPaneViewModel;
     private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
-    private SkillDetailsPaneViewModel skillDetailsPaneViewModel;
-    private ReleaseDetailsPaneViewModel releaseDetailsPaneViewModel;
+    private Loadable<Skill> skillDetailsPaneViewModel;
+    private Loadable<Release> releaseDetailsPaneViewModel;
+    private Loadable<Team> teamDetailsPaneViewModel;
     
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
@@ -119,6 +132,11 @@ public class MainDetailsPaneController implements Initializable {
         releaseDetailsPane = (Pane) releaseDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(releaseDetailsPane);
         releaseDetailsPaneViewModel = releaseDetailsPaneViewTuple.getViewModel();
+        
+        ViewTuple<TeamDetailsPaneView, TeamDetailsPaneViewModel> teamDetailsPaneViewTuple = FluentViewLoader.fxmlView(TeamDetailsPaneView.class).load();
+        teamDetailsPane = (Pane) teamDetailsPaneViewTuple.getView();
+        stackPane.getChildren().add(teamDetailsPane);
+        teamDetailsPaneViewModel = teamDetailsPaneViewTuple.getViewModel();
     }
 
     /**
@@ -174,7 +192,7 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showTeamDetailsPane(Team team) {
-        teamDetailsPaneController.showDetails(team);
+        teamDetailsPaneViewModel.load(team, mainController.selectedOrganisationProperty.get());
         show(teamDetailsPane);
     }
 
@@ -219,7 +237,6 @@ public class MainDetailsPaneController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         projectDetailsPaneViewModel.mainControllerProperty().set(mainController);
-        teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
         sprintDetailsPaneViewModel.getScrumBoardViewModel().setMainController(mainController);

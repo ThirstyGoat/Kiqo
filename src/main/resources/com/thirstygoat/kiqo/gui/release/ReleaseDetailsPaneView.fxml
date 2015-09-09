@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import com.thirstygoat.kiqo.gui.nodes.*?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
 <AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView">
   <children>

@@ -21,7 +21,6 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     private ModelWrapper<Release> modelWrapper;
     private ObjectProperty<Release> release;
     private ObjectProperty<Organisation> organisation;
-    private StringProperty projectNameProperty;
     
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
@@ -29,11 +28,9 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     private ObservableRuleBasedValidator projectValidator;
     private ObservableRuleBasedValidator dateValidator;
     public ReleaseViewModel() {
-        projectNameProperty = new SimpleStringProperty("");
         release = new SimpleObjectProperty<>(null);
         organisation = new SimpleObjectProperty<>(null);
         modelWrapper = new GoatModelWrapper<>();
-        projectNameProperty.bindBidirectional(projectProperty(), StringConverters.projectStringConverter(organisation));
         createValidators();
     }
     
@@ -139,14 +136,14 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     protected ObjectProperty<Project> projectProperty() {
         return modelWrapper.field("project", Release::getProject, Release::setProject, null);
     }
-    
-    protected ObjectProperty<Organisation> organisationProperty() {
-        return organisation;
-    } 
 
     protected ObjectProperty<LocalDate> dateProperty() {
         return modelWrapper.field("date", Release::getDate, Release::setDate, null);
     }
+    
+    protected ObjectProperty<Organisation> organisationProperty() {
+        return organisation;
+    } 
     
     protected ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();

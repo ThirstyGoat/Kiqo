@@ -13,7 +13,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController;
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Organisation;
 
