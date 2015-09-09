@@ -44,12 +44,6 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private AnchorPane teamDetailsPane;
     @FXML
-    private Button editButton;
-    @FXML
-    private Button deleteButton;
-    @FXML
-    private HBox buttonBox;
-    @FXML
     private PersonDetailsPaneController personDetailsPaneController;
     @FXML
     private StoryDetailsPaneController storyDetailsPaneController;
@@ -76,9 +70,6 @@ public class MainDetailsPaneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         clear();
-
-        editButton.setOnAction(event -> mainController.editItem());
-        deleteButton.setOnAction(event -> mainController.deleteItem());
 
         loadDetailsPanes();
 
@@ -137,7 +128,6 @@ public class MainDetailsPaneController implements Initializable {
      */
     public void showDetailsPane(Item item) {
         detailsPane.setPadding(new Insets(20, 20, 20, 20));
-        buttonBox.setPadding(new Insets(0, 0, 0, 0));
         if (item == null) {
             clear();
         } else {
@@ -166,59 +156,47 @@ public class MainDetailsPaneController implements Initializable {
             node.setVisible(false);
         }
         infoPane.setVisible(true);
-
-        editButton.setVisible(false);
-        deleteButton.setVisible(false);
     }
 
     private void showSkillDetailsPane(Skill skill) {
         skillDetailsPaneViewModel.load(skill, mainController.selectedOrganisationProperty.get());
         show(skillDetailsPane);
-        showOptionButtons();
     }
 
     private void showProjectDetailsPane(Project project) {
         projectDetailsPaneViewModel.load(project, mainController.selectedOrganisationProperty.get());
         show(projectDetailsPane);
-        showOptionButtons();
     }
 
     private void showPersonDetailsPane(Person person) {
         personDetailsPaneController.showDetails(person);
         show(personDetailsPane);
-        showOptionButtons();
     }
 
     private void showTeamDetailsPane(Team team) {
         teamDetailsPaneController.showDetails(team);
         show(teamDetailsPane);
-        showOptionButtons();
     }
 
     private void showReleaseDetailPane(Release release) {
         releaseDetailsPaneViewModel.load(release, mainController.selectedOrganisationProperty.get());
         show(releaseDetailsPane);
-        showOptionButtons();
     }
 
     private void showStoryDetailPane(Story story) {
         detailsPane.setPadding(new Insets(0, 0, 0, 0));
-        buttonBox.setPadding(new Insets(0, 20, 20, 0));
         storyDetailsPaneController.showDetails(story);
         show(storyDetailsPane);
-        showOptionButtons();
     }
 
     private void showBacklogDetailsPane(Backlog backlog) {
         backlogDetailsPaneViewModel.load(backlog, mainController.selectedOrganisationProperty.get());
         show(backlogDetailsPane);
-        showOptionButtons();
     }
     
     private void showSprintDetailsPane(Sprint sprint) {
         sprintDetailsPaneViewModel.load(sprint, mainController.selectedOrganisationProperty.get());
         show(sprintDetailsPane);
-        showOptionButtons();
     }
 
     /**
@@ -236,11 +214,6 @@ public class MainDetailsPaneController implements Initializable {
 
     public void showSearchPane() {
         show(advancedSearchDetailsPane);
-    }
-
-    private void showOptionButtons() {
-        editButton.setVisible(true);
-        deleteButton.setVisible(true);
     }
 
     public void setMainController(MainController mainController) {
