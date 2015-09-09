@@ -35,7 +35,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private Label teamLabel;
     @FXML
-    private GoatLabelTextArea estimatedHoursLabel;
+    private GoatLabelTextField estimatedHoursLabel;
     @FXML
     private Label commentsLabel;
     @FXML
@@ -73,7 +73,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         });
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
-        FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(), viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
+//        FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(), viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
 
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
 //        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());
@@ -82,12 +82,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         // TODO add logging functionality
 
-        // debugging size problem
-//        descriptionLabel.setStyle("-fx-border-color: RED");
-
-        descriptionLabel.setStyle("-fx-border-color: orange");
-
-        detailsGridPane.setGridLinesVisible(true);
+//        detailsGridPane.setGridLinesVisible(true);
 
     }
 
