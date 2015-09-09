@@ -30,8 +30,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     @FXML
     private GoatLabelTextField longNameLabel;
     @FXML
-    private GoatLabelTextField goalLabel;
-    @FXML
     private GoatLabelTextField teamLabel;
     @FXML
     private GoatLabelTextField backlogLabel;
@@ -53,7 +51,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
-        FxUtils.initGoatLabel(goalLabel, viewModel, viewModel.goalProperty(), viewModel.goalValidation());
         FxUtils.initGoatLabel(startDateLabel, viewModel, viewModel.startDateProperty(),
                 viewModel.startDateStringProperty(), viewModel.startDateValidation());
         FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),

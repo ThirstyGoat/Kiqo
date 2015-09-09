@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
@@ -27,6 +29,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private AnchorPane scrumBoardView;
 
     @FXML
+    private GoatLabelTextField shortNameLabel;
+    @FXML
     private SegmentedButton segmentedButton;
     @FXML
     private ToggleButton detailsToggleButton;
@@ -39,6 +43,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         hideAllViews();
+
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.goalProperty(), viewModel.goalValidation());
 
         // Add listener on segmentedButton
         segmentedButton.getToggleGroup().selectedToggleProperty().addListener((obs, oldValue, newValue) -> {
