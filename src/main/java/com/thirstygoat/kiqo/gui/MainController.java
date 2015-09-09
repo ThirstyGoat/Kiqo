@@ -17,6 +17,8 @@ import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.project.ProjectFormView;
+import com.thirstygoat.kiqo.gui.project.ProjectFormViewModel;
 import com.thirstygoat.kiqo.gui.release.ReleaseFormView;
 import com.thirstygoat.kiqo.gui.release.ReleaseViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillFormView;
@@ -918,6 +920,14 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(BacklogFormView.class).load();
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
+                viewModel.setExitStrategy(stage::close);
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Project.class.getSimpleName())) {
+                ViewTuple<ProjectFormView, ProjectFormViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(ProjectFormView.class).load();
+                final ProjectFormViewModel viewModel = viewTuple.getViewModel();
+                viewModel.load((Project) t, selectedOrganisationProperty.get());
                 viewModel.setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();

@@ -66,6 +66,17 @@ public class Project extends Item {
         setDescription(description);
     }
 
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(longName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(releases);
+        bps.addPropertyChangeSupportFor(unallocatedStories);
+        bps.addPropertyChangeSupportFor(allocations);
+        bps.addPropertyChangeSupportFor(backlogs);
+    }
+
     /**
      * @return a string array of the searchable fields for a model object
      */
@@ -158,6 +169,10 @@ public class Project extends Item {
             }
         }
         return currentAllocations;
+    }
+
+    public void setAllocations(List<Allocation> allocations){
+        this.allocations.setAll(allocations);
     }
 
     public ObservableList<Release> observableReleases() {

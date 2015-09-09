@@ -18,7 +18,6 @@
   </bottom>
   <center>
     <StackPane fx:id="stackPane">
-        <fx:include fx:id="projectDetailsPane" source="project.fxml" />
         <fx:include fx:id="personDetailsPane" source="person.fxml" />
         <fx:include fx:id="teamDetailsPane" source="team.fxml" />
         <fx:include fx:id="storyDetailsPane" source="story.fxml" />
