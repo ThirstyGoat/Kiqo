@@ -134,7 +134,7 @@
          </padding>
          <children>
             <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelAction" styleClass="form-button" text="Cancel" />
-             <Button fx:id="prevButton" cancelButton="true" disable="true" mnemonicParsing="false" styleClass="form-button" text="Back" />
+             <Button fx:id="prevButton" disable="true" mnemonicParsing="false" styleClass="form-button, form-button-back" text="Back" />
              <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" prefWidth="100.0" styleClass="form-button" text="Add Stories" />
          </children>
       </HBox>
