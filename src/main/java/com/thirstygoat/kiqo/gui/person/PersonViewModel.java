@@ -17,10 +17,7 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,9 +168,9 @@ public class PersonViewModel extends ModelViewModel<Person> {
         return modelWrapper.field("skills", Person::getSkills, Person::setSkills, Collections.emptyList());
     }
 
-//    public ListProperty<Skill> allSkills() {
-//        return modelWrapper.field("skills", Organisation::getSkills, Organisation::setSkills, Collections.emptyList());
-//    }
+    public ListProperty<Skill> allSkills() {
+        return new SimpleListProperty<>(organisation.get().getSkills());
+    }
 
     public StringProperty descriptionProperty() {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");

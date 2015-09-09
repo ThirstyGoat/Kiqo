@@ -45,7 +45,12 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
         FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), null);
         FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), null);
         FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), null);
-//        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.organisationProperty().get().getSkills(), null);
+        // because otherwise the organisation property doesn't get set in time and we get a NPE
+        viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.allSkills(), null);
+            }
+        });
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 
