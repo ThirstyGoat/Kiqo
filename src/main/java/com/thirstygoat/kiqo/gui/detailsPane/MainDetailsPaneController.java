@@ -97,7 +97,8 @@ public class MainDetailsPaneController implements Initializable {
                 teamDetailsPane,
                 releaseDetailsPane,
                 sprintDetailsPane,
-                advancedSearchDetailsPane
+                advancedSearchDetailsPane,
+                infoPane
         };
         clear();
     }
