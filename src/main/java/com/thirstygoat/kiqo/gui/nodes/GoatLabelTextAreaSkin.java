@@ -33,9 +33,10 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
             Text text = new Text(); // this is necessary to get the height of one row of text
             text.setFont(editField.getFont());
             text.setWrappingWidth(editField.getWidth() - 7.0 - 7.0 - 4.0); // values sourced from Modena.css
-            Double height = text.getLayoutBounds().getHeight(); // the height of one row of text
+            Double rowHeight = text.getLayoutBounds().getHeight(); // the height of one row of text
             text.setText(editField.getText());
-            editField.setPrefRowCount((int) Math.round(text.getLayoutBounds().getHeight() / height));
+            editField.setPrefRowCount((int) Math.round(text.getLayoutBounds().getHeight() / rowHeight));
+            stackPane.setPrefHeight(text.getLayoutBounds().getHeight());
         };
         editField.textProperty().addListener(listener);
         editField.widthProperty().addListener(listener);
