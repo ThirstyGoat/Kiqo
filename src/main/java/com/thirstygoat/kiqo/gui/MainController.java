@@ -106,7 +106,7 @@ public class MainController implements Initializable {
     }
 
     public void setPrimaryStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        MainController.primaryStage = primaryStage;
         addClosePrompt();
         menuBarViewTuple.getViewModel().setMainController(this);
         detailsPaneController.setMainController(this);

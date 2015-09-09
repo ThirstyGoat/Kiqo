@@ -36,6 +36,8 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private StackPane stackPane;
     @FXML
+    private AnchorPane infoPane;
+    @FXML
     private AnchorPane personDetailsPane;
     @FXML
     private AnchorPane storyDetailsPane;
@@ -162,6 +164,8 @@ public class MainDetailsPaneController implements Initializable {
         for (final Node node : stackPane.getChildren()) {
             node.setVisible(false);
         }
+        infoPane.setVisible(true);
+
         editButton.setVisible(false);
         deleteButton.setVisible(false);
     }

@@ -348,3 +348,17 @@
     -fx-background-insets: -1;
     -fx-border-color: transparent;
 }
+
+/*********** DETAILS PANE INFO ****************/
+.details-pane-info .label {
+    -fx-font: 14px "Roboto";
+    -fx-text-fill: gray;
+}
+
+.details-pane-info .label.colored {
+    -fx-text-fill: #03a9f4;
+}
+
+.details-pane-info .heading {
+    -fx-font-size: 18px;
+}
