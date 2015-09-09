@@ -5,16 +5,17 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
 
 public class TeamDetailsPaneController implements Initializable, IDetailsPaneController<Team> {
 
     @FXML
-    private Label shortNameLabel;
+    private GoatLabelTextField shortNameLabel;
     @FXML
     private Label descriptionLabel;
     @FXML
@@ -31,7 +32,8 @@ public class TeamDetailsPaneController implements Initializable, IDetailsPaneCon
     @Override
     public void showDetails(final Team team) {
         if (team != null) {
-            shortNameLabel.textProperty().bind(team.shortNameProperty());
+            // TODO use intended interface
+            shortNameLabel.displayTextProperty().bind(team.shortNameProperty());
             descriptionLabel.textProperty().bind(team.descriptionProperty());
             teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(team.observableTeamMembers()));
 
@@ -75,7 +77,8 @@ public class TeamDetailsPaneController implements Initializable, IDetailsPaneCon
                 allocationsTableViewController.setItems(team.observableAllocations());
             }
         } else {
-            shortNameLabel.setText(null);
+            // TODO use intended interface
+            shortNameLabel.displayTextProperty().set(null);
             descriptionLabel.setText(null);
             teamMembersLabel.setText(null);
         }
