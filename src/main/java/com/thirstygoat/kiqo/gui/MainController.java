@@ -12,8 +12,10 @@ import javafx.beans.property.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.*;
 
 import org.controlsfx.control.StatusBar;
@@ -889,7 +891,6 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(SprintFormView.class).load();
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
-                stage.initStyle(StageStyle.UNDECORATED);
                 viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create " + type : "Edit " + type);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
@@ -923,7 +924,7 @@ public class MainController implements Initializable {
                 formController.setStage(stage);
                 formController.setOrganisation(selectedOrganisationProperty.get());
                 formController.populateFields(t);
-                
+
                 stage.showAndWait();
                 if (formController.isValid()) {
                     doCommand(formController.getCommand());
