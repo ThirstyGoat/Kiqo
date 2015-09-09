@@ -338,7 +338,7 @@
     -fx-background-color: #2196f3
 }
 
-.form .form-button:cancel {
+.form .form-button:cancel, .form-button-back {
     -fx-background-color: #607d8b
 }
 

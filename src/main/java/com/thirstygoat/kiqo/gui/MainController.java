@@ -873,7 +873,6 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
 
@@ -882,14 +881,14 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(BacklogFormView.class).load();
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
-                viewModel.setExitStrategy(() -> stage.close());
+                viewModel.setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {
                 ViewTuple<SprintFormView, SprintViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SprintFormView.class).load();
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
                 viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create " + type : "Edit " + type);
                 stage.setScene(new Scene(viewTuple.getView()));
@@ -898,14 +897,14 @@ public class MainController implements Initializable {
                 ViewTuple<SkillFormView, SkillViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Release.class.getSimpleName())) {
                 ViewTuple<ReleaseFormView, ReleaseViewModel> viewTuple =
                         FluentViewLoader.fxmlView(ReleaseFormView.class).load();
                 viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {
@@ -1097,4 +1096,3 @@ public class MainController implements Initializable {
         });
     }
 }
-
