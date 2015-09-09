@@ -127,5 +127,6 @@ public final class FxUtils {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bind(Bindings.concat(targetList));
         goatLabel.getEditField().setSourceItems(sourceList);
+        goatLabel.getEditField().setTargetItems(targetList);
     }
 }

@@ -18,20 +18,17 @@ public class GoatLabelFilteredListSelectionViewSkin<T extends Item> extends Goat
         super(control);
     }
 
-    /**
-     * Constructor for all SkinBase instances.
-     *
-     * @param control The control for which this Skin should attach to.
-     */
+    @Override
+    protected void hideEditField() {
+        // preventing the edit mode from hiding when the user clicks on anything, focused property not working
+        // properly
+    }
 
     @Override
     protected void setSizing() {
-
         displayView.setMaxWidth(Control.USE_PREF_SIZE);
         displayView.setMinWidth(Control.USE_PREF_SIZE);
         stackPane.setAlignment(Pos.TOP_LEFT);
-
-
     }
 
     @Override
@@ -39,13 +36,19 @@ public class GoatLabelFilteredListSelectionViewSkin<T extends Item> extends Goat
         return new GoatFilteredListSelectionView<T>();
     }
 
-
     @Override
     protected void showEditField() {
-        editField.setMinHeight(Control.USE_COMPUTED_SIZE);
-        editField.setMaxHeight(Control.USE_COMPUTED_SIZE);
-        editView.setMinHeight(Control.USE_COMPUTED_SIZE);
-        editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
+        editField.setMinHeight(Control.USE_PREF_SIZE);
+        editField.setMaxHeight(Control.USE_PREF_SIZE);
+        editView.setMinHeight(Control.USE_PREF_SIZE);
+        editView.setMaxHeight(Control.USE_PREF_SIZE);
+
+        // because this seems to be an appropriate size...
+        editField.setPrefHeight(200);
+        editView.setPrefHeight(200);
+
+        editView.setPrefWidth(Integer.MAX_VALUE);
+        editField.setPrefWidth(Integer.MAX_VALUE);
     }
 
 }
