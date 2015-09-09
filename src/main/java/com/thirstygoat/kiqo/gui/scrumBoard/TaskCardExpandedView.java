@@ -82,13 +82,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         // TODO add logging functionality
 
-        // debugging size problem
-//        descriptionLabel.setStyle("-fx-border-color: RED");
-
-        descriptionLabel.setStyle("-fx-border-color: orange");
-
-        detailsGridPane.setGridLinesVisible(true);
-
     }
 
 

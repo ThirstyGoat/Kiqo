@@ -67,7 +67,6 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
                 showEditField();
             }
         });
-        showDebuglines();
     }
 
     /**
