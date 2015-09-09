@@ -11,14 +11,12 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -77,12 +75,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
-        impedanceIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                newExpandedCard();
-            }
-        });
+        impedanceIcon.setOnMouseClicked(event -> newExpandedCard());
 
 //        impedanceIcon.visibleProperty().bind(impedanceProperty);
         impedanceIcon.visibleProperty().set(true);
@@ -139,6 +132,8 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             });
 
 
+
+            // Animation stuff
 //            view.setScaleX(0);
 //            view.setScaleY(0);
 //            stage.setWidth(0.1);
