@@ -13,24 +13,23 @@ import de.saxsys.mvvmfx.*;
 
 public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewModel>, Initializable {
     @FXML
-    private GoatLabelTextField shortNameLabel;
+    private GoatLabelTextField shortNameTextField;
     @FXML
-    private GoatLabelTextField projectLabel;
+    private GoatLabelTextField projectTextField;
     @FXML
     private GoatLabelDatePicker releaseDatePicker;
     @FXML
-    private GoatLabelTextArea descriptionLabel;
+    private GoatLabelTextArea descriptionTextField;
 
     @InjectViewModel
     private ReleaseDetailsPaneViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
-        FxUtils.initGoatLabel(projectLabel, viewModel, viewModel.projectProperty(), viewModel.projectValidation(),
-                StringConverters.projectStringConverter(viewModel.organisationProperty()));
-        FxUtils.setTextFieldSuggester(projectLabel.getEditField(), viewModel.projectSupplier());
+        FxUtils.initGoatLabel(shortNameTextField, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(projectTextField, viewModel, viewModel.projectProperty(), StringConverters.projectStringConverter(viewModel.organisationProperty()),
+                viewModel.projectValidation());
+        FxUtils.setTextFieldSuggester(projectTextField.getEditField(), viewModel.projectSupplier());
         FxUtils.initGoatLabel(releaseDatePicker, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Add a description...");
     }
 }

@@ -7,7 +7,6 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.*;
 import javafx.scene.control.Button;
 
-import com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.util.FxUtils;
 

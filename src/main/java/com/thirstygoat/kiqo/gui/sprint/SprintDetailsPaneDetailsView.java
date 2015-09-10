@@ -55,16 +55,16 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
                 viewModel.startDateStringProperty(), viewModel.startDateValidation());
         FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),
                 viewModel.endDateValidation());
-        FxUtils.initGoatLabel(releaseLabel, viewModel, viewModel.releaseProperty(), viewModel.releaseValidation(),
-                StringConverters.releaseStringConverter(viewModel.organisationProperty()));
+        FxUtils.initGoatLabel(releaseLabel, viewModel, viewModel.releaseProperty(),
+                StringConverters.releaseStringConverter(viewModel.organisationProperty()), viewModel.releaseValidation());
         FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
                 viewModel.descriptionValidation());
-        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(), viewModel.teamValidation(),
-                StringConverters.teamStringConverter(viewModel.organisationProperty()));
+        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(),
+                StringConverters.teamStringConverter(viewModel.organisationProperty()), viewModel.teamValidation());
         FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());
-        FxUtils.initGoatLabel(backlogLabel, viewModel, viewModel.backlogProperty(), viewModel.backlogValidation(),
-                StringConverters.backlogStringConverter(viewModel.organisationProperty()));
+        FxUtils.initGoatLabel(backlogLabel, viewModel, viewModel.backlogProperty(),
+                StringConverters.backlogStringConverter(viewModel.organisationProperty()), viewModel.backlogValidation());
         FxUtils.setTextFieldSuggester(backlogLabel.getEditField(), viewModel.backlogsSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
                 viewModel.descriptionValidation());
