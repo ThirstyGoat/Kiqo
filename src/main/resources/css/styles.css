@@ -154,8 +154,12 @@
     -glyph-name: "CALENDAR";
 }
 
-.pane-header {
+.pane-short-name {
 	-fx-font-size: 2em;
+}
+
+.pane-long-name {
+	-fx-font-style: italic;
 }
 
 .pane-type-indicator {

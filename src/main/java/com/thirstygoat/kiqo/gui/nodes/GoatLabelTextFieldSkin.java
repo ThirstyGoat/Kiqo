@@ -32,7 +32,7 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
             double width = text.getLayoutBounds().getWidth() // This big is the Text in the TextField
                     + editField.getPadding().getLeft() + editField.getPadding().getRight() // Add the padding of the TextField
                     + 2d; // Add some spacing
-            editField.setPrefWidth(Math.max(width, 150)); // Set the width
+            editField.setPrefWidth(width); // Set the width
             editField.positionCaret(editField.getCaretPosition());
         });
     }

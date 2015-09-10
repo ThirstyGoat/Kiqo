@@ -13,17 +13,18 @@
       <content>
         <VBox mouseTransparent="false" spacing="10.0">
           <children>
-            <HBox>
+            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
               <children>
-                <GoatLabelTextField maxWidth="-1" HBox.hgrow="ALWAYS" styleClass="pane-header" fx:id="shortNameTextField" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Label styleClass="pane-type-indicator" text="Release" />
+                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
+                <Label text="Release" styleClass="pane-type-indicator" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionTextField" />
+            <GoatLabelTextArea fx:id="descriptionLabel" />
             <Label text="Project" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <GoatLabelTextField fx:id="projectTextField" />
+            <GoatLabelTextField fx:id="projectLabel" />
             <Label text="Date" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
