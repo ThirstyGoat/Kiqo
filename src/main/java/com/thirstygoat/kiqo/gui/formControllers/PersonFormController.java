@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -51,6 +52,8 @@ public class PersonFormController extends FormController<Person> {
     private boolean usingPoSkillInBacklog;
     private ArrayList<Backlog> backlogsOwned = new ArrayList<>();
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -117,13 +120,6 @@ public class PersonFormController extends FormController<Person> {
         departmentTextField.setPromptText("What department do they work for?");
     }
 
-    /**
-     * Sets the skills list data and formatting
-     */
-    private void setUpSkillsList() {
-        skillsSelectionView.setHeader(new Label("Skills:"));
-    }
-
     private void setSkillsListSelectionViewData() {
         final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
 
@@ -144,7 +140,6 @@ public class PersonFormController extends FormController<Person> {
     @Override
     public void populateFields(final Person person) {
         this.person = person;
-        okButton.setText("Done");
 
         setSkillsListSelectionViewData();
 
@@ -161,6 +156,9 @@ public class PersonFormController extends FormController<Person> {
             departmentTextField.setText(person.getDepartment());
 
             setSkillRemovalHandlers();
+            okButton.setText("Done");
+        } else {
+            okButton.setText("Create Person");
         }
     }
 
@@ -182,71 +180,6 @@ public class PersonFormController extends FormController<Person> {
         poOfTeam = person.getTeam() != null && person.getTeam().getProductOwner() == person;
         smOfTeam = person.getTeam() != null && person.getTeam().getScrumMaster() == person;
         usingPoSkillInBacklog = usingPOBacklog;
-
-
-//        ListView<Skill> targetListView = skillsSelectionView.getTargetListView();
-//
-//        skillsSelectionView.skin.getMoveToSourceButton().setOnAction(event -> {
-//            if (targetListView.getSelectionModel().getSelectedItems().contains(poSkill)) {
-//                // Then they are trying to remove the PO skill
-//                if (poOfTeam || finalUsingPoSkillInBacklog) {
-//                    // Then they are a product owner, and owner of 1 or more backlogs
-//                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
-//                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
-//                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-//                            Utilities.concatenateItemsList(backlogsOwned, 5) : "";
-//                    GoatDialog.showAlertDialog(
-//                            stage,
-//                            "Can't remove skill",
-//                            "PO Skill can't be removed",
-//                            person.getShortName() + " is currently the PO of:\n" +
-//                            teamLine + backlogsLine
-//                    );
-//                    return;
-//                }
-//            }
-//            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
-//                GoatDialog.showAlertDialog(
-//                        stage,
-//                        "Can't remove skill",
-//                        "SM Skill can't be removed",
-//                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
-//                );
-//                return;
-//            }
-//            skillsSelectionView.skin.moveToSource();
-//        });
-//
-//        skillsSelectionView.skin.getMoveToSourceAllButton().setOnAction(event -> {
-//            if (targetListView.getItems().contains(poSkill)) {
-//                // Then they are trying to remove the PO skill
-//                if (poOfTeam || finalUsingPoSkillInBacklog) {
-//                    // Then they are a product owner, and owner of 1 or more backlogs
-//                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
-//                    final String backlogsLine = (finalUsingPoSkillInBacklog) ?
-//                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-//                                    Utilities.concatenateItemsList(backlogsOwned, 5) : "";
-//                    GoatDialog.showAlertDialog(
-//                            stage,
-//                            "Can't remove skill",
-//                            "PO Skill can't be removed",
-//                            person.getShortName() + " is currently the PO of:\n" +
-//                                    teamLine + backlogsLine
-//                    );
-//                    return;
-//                }
-//            }
-//            if (targetListView.getSelectionModel().getSelectedItems().contains(smSkill) && smOfTeam) {
-//                GoatDialog.showAlertDialog(
-//                        stage,
-//                        "Can't remove skill",
-//                        "SM Skill can't be removed",
-//                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
-//                );
-//                return;
-//            }
-//            skillsSelectionView.skin.moveToSourceAll();
-//        });
     }
 
     private void setButtonHandlers() {
@@ -393,6 +326,10 @@ public class PersonFormController extends FormController<Person> {
     @Override
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        setUpSkillsList();
+    }
+
+    @Override
+    public StringProperty headingProperty() {
+        return heading.textProperty();
     }
 }
