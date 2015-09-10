@@ -143,6 +143,10 @@ public class Team extends Item {
 //        return Collections.unmodifiableList(allocations);
     }
 
+    public void setAllocations(List<Allocation> allocations) {
+        this.allocations.setAll(allocations);
+    }
+
     public ObservableList<Allocation> observableAllocations() {
         return allocations;
     }
@@ -174,5 +178,6 @@ public class Team extends Item {
         bps.addPropertyChangeSupportFor(scrumMaster);
         bps.addPropertyChangeSupportFor(teamMembers);
         bps.addPropertyChangeSupportFor(devTeam);
+        bps.addPropertyChangeSupportFor(allocations);
     }
 }

@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.team;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.*;
 import javafx.scene.control.Label;
 
@@ -31,6 +32,7 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     private TeamDetailsPaneViewModel viewModel;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void initialize(URL location, ResourceBundle resources) {
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "No Description");
@@ -44,5 +46,15 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
         
         teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.teamMembersProperty()));
         devTeamLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.devTeamProperty()));
+
+        // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
+        // a listener is setup to set the items only when allocations is not null.
+        viewModel.allocations().addListener((ListChangeListener) change -> {
+            if (viewModel.allocations().get() != null) {
+                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM);
+                allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
+                allocationsTableViewController.setItems(viewModel.allocations());
+            }
+        });
     }
 }

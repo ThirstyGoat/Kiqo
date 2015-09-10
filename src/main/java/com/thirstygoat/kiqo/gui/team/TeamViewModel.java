@@ -172,6 +172,10 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     protected ListProperty<Person> devTeamProperty() {
         return modelWrapper.field("devTeam", Team::getDevTeam, Team::setDevTeam, new ArrayList<Person>());
     }
+
+    protected ListProperty<Allocation> allocations() {
+        return modelWrapper.field("allocations", Team::getAllocations, Team::setAllocations, new ArrayList<Allocation>());
+    }
     
     protected ObjectProperty<Organisation> organisationProperty() {
         return organisation;

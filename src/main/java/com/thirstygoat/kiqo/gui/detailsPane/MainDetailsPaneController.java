@@ -69,7 +69,7 @@ public class MainDetailsPaneController implements Initializable {
     private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
     private Loadable<Skill> skillDetailsPaneViewModel;
     private Loadable<Release> releaseDetailsPaneViewModel;
-    private Loadable<Team> teamDetailsPaneViewModel;
+    private TeamDetailsPaneViewModel teamDetailsPaneViewModel;
     
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
@@ -234,5 +234,6 @@ public class MainDetailsPaneController implements Initializable {
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
         sprintDetailsPaneViewModel.getScrumBoardViewModel().setMainController(mainController);
+        teamDetailsPaneViewModel.mainControllerProperty().set(mainController);
     }
 }
