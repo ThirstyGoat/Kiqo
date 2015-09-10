@@ -218,6 +218,7 @@ public class MainDetailsPaneController implements Initializable {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        projectDetailsPaneViewModel.mainControllerProperty().set(mainController);
         teamDetailsPaneController.setMainController(mainController);
         storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
