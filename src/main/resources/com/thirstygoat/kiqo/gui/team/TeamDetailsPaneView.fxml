@@ -11,9 +11,10 @@
       <content>
         <VBox mouseTransparent="false" spacing="10.0">
           <children>
-            <HBox>
+            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
               <children>
-                <GoatLabelTextField maxWidth="-1" HBox.hgrow="ALWAYS" styleClass="pane-header" fx:id="shortNameLabel" />
+                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
                 <Label styleClass="pane-type-indicator" text="Team" />
               </children>
             </HBox>
