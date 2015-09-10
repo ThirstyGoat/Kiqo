@@ -38,3 +38,10 @@ Javadoc for test code is in `/target/site/apidocs`
 Unit test reports are in `/target/surefire-reports`
 
 These reports and others can be viewed on the Maven-generated "website" based at `/target/site/index.html`
+
+Testing
+-------
+**Note:** The unit tests for report generator require internet access because they validate the produced yaml using a web-based validator.
+In most environments these tests will fail immediately when no internet connection is present.
+On the University of Canterbury lab machines, the tests will hang because the program detects and internet connections and waits for a reply.
+The solution is to enable internet using internet enabler.
