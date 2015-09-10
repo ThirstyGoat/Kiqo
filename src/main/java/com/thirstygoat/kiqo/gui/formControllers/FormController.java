@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.gui.formControllers;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -91,5 +93,13 @@ public abstract class FormController<T> implements Initializable {
                 binding.setUserInput(textField.getText());
             }
         });
+    }
+
+    /**
+     * Returns a heading property. Transitional as we move to new design of form dialogs
+     * @return
+     */
+    public StringProperty headingProperty() {
+        return new SimpleStringProperty();
     }
 }
