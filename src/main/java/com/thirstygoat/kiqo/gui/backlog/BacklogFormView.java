@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.gui.backlog;
 
-import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
@@ -11,18 +10,13 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,15 +25,7 @@ import java.util.ResourceBundle;
  * Created by lih18 on 20/05/15.
  */
 public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initializable {
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
-    private final ValidationSupport validationSupport = new ValidationSupport();
-    private Stage stage;
-    private boolean valid = false;
-    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
-    private Command command;
-    
-    // Begin FXML Injections
+
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -86,6 +72,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
         Platform.runLater(() -> {
             longNameTextField.requestFocus();
+            setPrompts();
             attachValidators();
         });
     }
@@ -101,7 +88,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
     private void setPrompts() {
         longNameTextField.setPromptText("Paddock");
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        shortNameTextField.setPromptText("Must be under 20 characters and unique");
         descriptionTextField.setPromptText("Describe this backlog");
     }
 

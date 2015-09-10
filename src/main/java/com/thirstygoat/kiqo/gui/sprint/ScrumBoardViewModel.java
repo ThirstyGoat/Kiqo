@@ -2,24 +2,19 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.concurrent.Task;
 import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +23,7 @@ import java.util.stream.Collectors;
  * Created by bradley on 14/08/15.
  */
 public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
+    private MainController mainController;
     private Organisation organisation;
     private Sprint sprint;
 
@@ -35,6 +31,9 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
     private Map<Node, Story> storyRowsMap = new HashMap<>();
     private Map<Story, Node> storyMap = new HashMap<>();
+
+    private ObservableList<Story> sortedStories;
+    private ListChangeListener<Story> listener;
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
@@ -56,6 +55,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
         if (storyMap.get(story) == null) {
             ViewTuple<StoryRowView, StoryRowViewModel> viewTuple = FluentViewLoader.fxmlView(StoryRowView.class).load();
             viewTuple.getViewModel().load(story, organisation);
+            viewTuple.getViewModel().setMainController(mainController);
             mapStoryRow(story, viewTuple.getView());
             return viewTuple.getView();
         } else {
@@ -69,11 +69,17 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
     private void populateStories(ObservableList<Story> stories) {
         storyRows.clear();
 
-        ObservableList<Story> sortedStories = new SortedList<>(stories, (o1, o2) -> {
+        // Remove old listener
+        if (sortedStories != null)
+            sortedStories.removeListener(listener);
+
+        // Create new SortedList for the new stories
+        sortedStories = new SortedList<>(stories, (o1, o2) -> {
             return Integer.compare(o2.getPriority(), o1.getPriority());
         });
 
-        sortedStories.addListener((ListChangeListener<Story>) c -> {
+        // Create new listener which listens for changes in new sorted stories list
+        listener = c -> {
             // Update stories appropriately (re-ordering/adding/removing)
             c.next();
 
@@ -83,13 +89,17 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
                 storyRows.setAll(sortedStories.stream().map(this::getStoryRow).collect(Collectors.toList()));
             }
 
-            // Add all stories that have been added to sprint
-            storyRows.addAll(c.getAddedSubList().stream().map(this::getStoryRow).collect(Collectors.toList()));
-
             // Remove all stories that have been deleted / removed from sprint
             storyRows.removeAll(c.getRemoved().stream().map(storyMap::get).collect(Collectors.toList()));
-        });
 
+            // Add all stories that have been added to sprint
+            storyRows.addAll(c.getAddedSubList().stream().map(this::getStoryRow).collect(Collectors.toList()));
+        };
+
+        // Add the listener to the new sorted stories
+        sortedStories.addListener(listener);
+
+        // Populate story rows with the new sorted stories
         storyRows.setAll(sortedStories.stream().map(this::getStoryRow).collect(Collectors.toList()));
     }
 
@@ -123,5 +133,9 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
     public ObservableList<Node> storyRowsProperty() {
         return storyRows;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

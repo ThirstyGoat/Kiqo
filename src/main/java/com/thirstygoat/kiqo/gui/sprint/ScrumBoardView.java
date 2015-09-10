@@ -3,17 +3,11 @@ package com.thirstygoat.kiqo.gui.sprint;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -108,7 +102,8 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 
         scrumBoardVBox.setOnDragDone(event -> {
             currentlyDraggingStoryFinalIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
-            if (!currentlyDraggingStoryInitialIndex.equals(currentlyDraggingStoryFinalIndex))
+            if (currentlyDraggingStoryInitialIndex != null &&
+                    !currentlyDraggingStoryInitialIndex.equals(currentlyDraggingStoryFinalIndex))
                 getViewModel().updateStoryOrder();
 
             currentlyDraggingStoryRow = null;

@@ -1,44 +1,73 @@
 package com.thirstygoat.kiqo.gui;
 
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.logging.*;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
-import javafx.fxml.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
-import javafx.stage.*;
-
-import org.controlsfx.control.StatusBar;
-
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.Main;
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.delete.*;
-import com.thirstygoat.kiqo.exceptions.*;
-import com.thirstygoat.kiqo.gui.backlog.*;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
+import com.thirstygoat.kiqo.exceptions.InvalidPersonException;
+import com.thirstygoat.kiqo.exceptions.InvalidProjectException;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormView;
+import com.thirstygoat.kiqo.gui.backlog.BacklogFormViewModel;
 import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
-import com.thirstygoat.kiqo.gui.menuBar.*;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
+import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.gui.skill.*;
-import com.thirstygoat.kiqo.gui.sprint.*;
+import com.thirstygoat.kiqo.gui.project.ProjectFormView;
+import com.thirstygoat.kiqo.gui.project.ProjectFormViewModel;
+import com.thirstygoat.kiqo.gui.release.ReleaseFormView;
+import com.thirstygoat.kiqo.gui.release.ReleaseViewModel;
+import com.thirstygoat.kiqo.gui.skill.SkillFormView;
+import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
+import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
+import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.persistence.PersistenceManager;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.*;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.*;
+import org.controlsfx.control.StatusBar;
 
-import de.saxsys.mvvmfx.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Main controller for the primary view
@@ -49,6 +78,7 @@ public class MainController implements Initializable {
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
+    private static Stage primaryStage;
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
     private final BooleanProperty mainToolbarVisible = new SimpleBooleanProperty(true);
@@ -70,10 +100,36 @@ public class MainController implements Initializable {
     private VBox menuBar;
     @FXML
     private ToolBarController toolBarController;
-
     private ViewTuple<MenuBarView, MenuBarViewModel> menuBarViewTuple;
-    private Stage primaryStage;
     private double dividerPosition;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(final Stage primaryStage) {
+        MainController.primaryStage = primaryStage;
+        addClosePrompt();
+        menuBarViewTuple.getViewModel().setMainController(this);
+        detailsPaneController.setMainController(this);
+        sideBarController.setMainController(this);
+
+        setStageTitleProperty();
+        setSearchShortcut();
+        GaussianBlur gaussianBlur = new GaussianBlur();
+        gaussianBlur.setRadius(5);
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(-0.1);
+        colorAdjust.setInput(gaussianBlur);
+
+        primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                primaryStage.getScene().getRoot().setEffect(null);
+            } else {
+                primaryStage.getScene().getRoot().setEffect(colorAdjust);
+            }
+        });
+    }
 
     public BooleanProperty mainToolbarVisibleProperty() {
         return mainToolbarVisible;
@@ -136,8 +192,19 @@ public class MainController implements Initializable {
     private void deleteStory(Story story) {
         final DeleteStoryCommand command = new DeleteStoryCommand(story);
         final String[] buttons = {"Delete Story", "Cancel"};
-        final String result = GoatDialog.createBasicButtonDialog(primaryStage, "Delete Story", "Are you sure?",
-                "Are you sure you want to delete the story " + story.getShortName() + "?", buttons);
+
+        String title = "Delete Story";
+        String heading = "Are you sure?";
+        String message = "Are you sure you want to delete the story " + story.getShortName() + "?";
+
+        if (command.inSprint()) {
+            heading = "This story is currently in Sprint";
+            message = "Deleting this story will remove it from the following " +
+                    Utilities.pluralise(command.getSprintsWithin().size(), "sprint", "sprints") + ":\n" +
+                    Utilities.concatenateItemsList(command.getSprintsWithin(), 5);
+        }
+
+        final String result = GoatDialog.createBasicButtonDialog(primaryStage, title, heading, message, buttons);
 
         if (result.equals("Delete Story")) {
             doCommand(command);
@@ -511,7 +578,6 @@ public class MainController implements Initializable {
         }
     }
 
-
     public void newProject() {
         if (selectedOrganisationProperty.get() != null) {
             dialog(null, "Project");
@@ -558,13 +624,19 @@ public class MainController implements Initializable {
 
     public void createTask() {
         if (selectedOrganisationProperty.get() != null) {
-            taskDialog(null);
+            taskDialog(null, null);
+        }
+    }
+
+    public void createTask(Story story) {
+        if (selectedOrganisationProperty().get() != null) {
+            taskDialog(null, story);
         }
     }
 
     public void editTask(Task task) {
         if (selectedOrganisationProperty.get() != null) {
-            taskDialog(task);
+            taskDialog(task, null);
         }
     }
 
@@ -821,7 +893,7 @@ public class MainController implements Initializable {
     private void saveStateChanges() {
         final StatusBar statusBar = new StatusBar();
         statusBar.setText(undoManager.changesSavedProperty().get() ? ALL_CHANGES_SAVED_TEXT : UNSAVED_CHANGES_TEXT);
-        
+
         // Add the status bar to the bottom of the window
         mainBorderPane.setBottom(statusBar);
 
@@ -855,7 +927,6 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
 
@@ -864,21 +935,38 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(BacklogFormView.class).load();
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
-                viewModel.setExitStrategy(() -> stage.close());
+                viewModel.setExitStrategy(stage::close);
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Project.class.getSimpleName())) {
+                ViewTuple<ProjectFormView, ProjectFormViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(ProjectFormView.class).load();
+                final ProjectFormViewModel viewModel = viewTuple.getViewModel();
+                viewModel.load((Project) t, selectedOrganisationProperty.get());
+                viewModel.setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {
                 ViewTuple<SprintFormView, SprintViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SprintFormView.class).load();
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create " + type : "Edit " + type);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Skill.class.getSimpleName())) {
                 ViewTuple<SkillFormView, SkillViewModel> viewTuple =
                         FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
-                viewTuple.getCodeBehind().setExitStrategy(() -> stage.close());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
+            } else if (type.equals(Release.class.getSimpleName())) {
+                ViewTuple<ReleaseFormView, ReleaseViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(ReleaseFormView.class).load();
+                viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {
@@ -897,7 +985,7 @@ public class MainController implements Initializable {
                 formController.setStage(stage);
                 formController.setOrganisation(selectedOrganisationProperty.get());
                 formController.populateFields(t);
-                
+
                 stage.showAndWait();
                 if (formController.isValid()) {
                     doCommand(formController.getCommand());
@@ -976,12 +1064,14 @@ public class MainController implements Initializable {
         });
     }
 
-    private void taskDialog(Task task) {
+    private void taskDialog(Task task, Story story) {
+        story = (story == null) ? (Story) focusedItemProperty.getValue() : story;
+        final Story finalStory = story;
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/task.fxml"));
@@ -998,7 +1088,7 @@ public class MainController implements Initializable {
             final TaskFormController taskFormController = loader.getController();
             taskFormController.setStage(stage);
             taskFormController.setOrganisation(selectedOrganisationProperty.get());
-            taskFormController.setStory((Story) focusedItemProperty.getValue());
+            taskFormController.setStory(finalStory);
             taskFormController.populateFields(task);
             stage.showAndWait();
 
@@ -1006,21 +1096,6 @@ public class MainController implements Initializable {
                 doCommand(taskFormController.getCommand());
             }
         });
-    }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public void setPrimaryStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        addClosePrompt();
-        menuBarViewTuple.getViewModel().setMainController(this);
-        detailsPaneController.setMainController(this);
-        sideBarController.setMainController(this);
-
-        setStageTitleProperty();
-        setSearchShortcut();
     }
 
     public MainDetailsPaneController getDetailsPaneController() {
@@ -1068,4 +1143,3 @@ public class MainController implements Initializable {
         });
     }
 }
-

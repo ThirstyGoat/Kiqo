@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.gui.menuBar;
 
+import com.thirstygoat.kiqo.gui.SideBarController;
+import com.thirstygoat.kiqo.gui.ToolBarController;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -9,12 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-
-import com.thirstygoat.kiqo.gui.SideBarController;
-import com.thirstygoat.kiqo.gui.ToolBarController;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 
 public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML

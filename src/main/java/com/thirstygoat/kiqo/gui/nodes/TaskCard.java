@@ -1,34 +1,43 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
+import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
 import com.thirstygoat.kiqo.model.Task;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.ViewTuple;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 /**
  * Created by james on 14/08/15.
  */
-public class TaskCard extends VBox {
+public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
     final private BooleanProperty impedanceProperty;
-    private Task task;
+    final private Task task;
 
     public TaskCard(Task task) {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
         draw();
-
         this.task = task;
         shortNameProperty().bind(task.shortNameProperty());
         hoursProperty().bind(task.estimateProperty());
@@ -66,13 +75,12 @@ public class TaskCard extends VBox {
 
         FontAwesomeIconView impedanceIcon = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
         impedanceIcon.setSize("15px");
-//        impedanceIcon.setFill(Color.ORANGERED);
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
         impedanceIcon.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //TODO add impedance event handling stuff - expanding or whatever
+                newExpandedCard();
             }
         });
 
@@ -108,6 +116,68 @@ public class TaskCard extends VBox {
         setVgrow(borderPane, Priority.ALWAYS);
 
         getChildren().add(borderPane);
+    }
+
+    private void newExpandedCard() {
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initOwner(MainController.getPrimaryStage());
+            ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
+            viewTuple.getViewModel().load(task);
+            viewTuple.getViewModel().setStage(stage);
+            Parent view = viewTuple.getView();
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+
+            stage.show();
+
+            MainController.getPrimaryStage().focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    stage.close();
+                }
+            });
+
+
+//            view.setScaleX(0);
+//            view.setScaleY(0);
+//            stage.setWidth(0.1);
+//            stage.setHeight(0.1);
+//            stage.setOpacity(0.5);
+//
+//            Timeline timeline = new Timeline();
+//            Duration transitionTime = Duration.millis(500);
+////            timeline.setRate(3);
+//
+//            KeyValue kv_width = new KeyValue(stage.minWidthProperty(), 400);
+//            KeyFrame kf_width = new KeyFrame(transitionTime, kv_width);
+//            KeyValue kv_height = new KeyValue(stage.minHeightProperty(), 400);
+//            KeyFrame kf_height = new KeyFrame(transitionTime, kv_height);
+//
+//
+//            KeyValue kv_scale_width = new KeyValue(view.scaleXProperty(), 1);
+//            KeyFrame kf_scale_width = new KeyFrame(transitionTime, kv_scale_width);
+//            KeyValue kv_scale_height = new KeyValue(view.scaleYProperty(), 1);
+//            KeyFrame kf_scale_height = new KeyFrame(transitionTime, kv_scale_height);
+//
+//
+//            KeyValue kv_stage_opacity = new KeyValue(stage.opacityProperty(), 1);
+//            KeyFrame kf_stage_opacity = new KeyFrame(transitionTime.multiply(1.75), kv_stage_opacity);
+//
+//            Stage primaryStage = MainController.getPrimaryStage();
+//
+//            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
+//                stage.setX(primaryStage.getX() + (primaryStage.getWidth() / 2) - (newValue.doubleValue() / 2));
+//            });
+//
+//            stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+//                stage.setY(primaryStage.getY() + (primaryStage.getHeight() / 2) - (stage.getHeight() / 2));
+//            });
+//
+//            timeline.getKeyFrames().addAll(kf_width, kf_height, kf_scale_width, kf_scale_height, kf_stage_opacity);
+//            timeline.play();
+
+        });
     }
 
     public StringProperty shortNameProperty() {

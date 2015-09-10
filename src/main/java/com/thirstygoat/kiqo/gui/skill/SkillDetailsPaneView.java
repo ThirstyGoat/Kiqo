@@ -20,6 +20,7 @@ public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
+
     @InjectViewModel
     private SkillDetailsPaneViewModel viewModel;
 

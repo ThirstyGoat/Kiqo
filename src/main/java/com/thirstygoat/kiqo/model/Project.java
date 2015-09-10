@@ -23,7 +23,7 @@ public class Project extends Item {
     private final ObservableList<Story> unallocatedStories;
     private final ObservableList<Allocation> allocations;
     private final ObservableList<Backlog> backlogs;
-    private final ObservableList<Sprint> sprints;
+//    private final ObservableList<Sprint> sprints;
     private final StringProperty description;
 
     /**
@@ -34,7 +34,7 @@ public class Project extends Item {
         unallocatedStories = FXCollections.observableArrayList(Item.getWatchStrategy());
         backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
-        sprints = FXCollections.observableArrayList();
+//        sprints = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty("");
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
@@ -64,6 +64,17 @@ public class Project extends Item {
         setShortName(shortName);
         setLongName(longName);
         setDescription(description);
+    }
+
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(longName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(releases);
+        bps.addPropertyChangeSupportFor(unallocatedStories);
+        bps.addPropertyChangeSupportFor(allocations);
+        bps.addPropertyChangeSupportFor(backlogs);
     }
 
     /**
@@ -160,6 +171,10 @@ public class Project extends Item {
         return currentAllocations;
     }
 
+    public void setAllocations(List<Allocation> allocations){
+        this.allocations.setAll(allocations);
+    }
+
     public ObservableList<Release> observableReleases() {
         return releases;
     }
@@ -170,10 +185,6 @@ public class Project extends Item {
 
     public ObservableList<Backlog> observableBacklogs() {
         return backlogs;
-    }
-
-    public ObservableList<Sprint> observableSprints() {
-        return sprints;
     }
 
     public List<Release> getReleases() {
@@ -232,17 +243,11 @@ public class Project extends Item {
      */
     public List<Sprint> getSprints() {
         final List<Sprint> sprints = new ArrayList<>();
-        sprints.addAll(this.sprints);
-        return sprints;
-    }
+        for (Release release : getReleases()) {
+            sprints.addAll(release.getSprints());
+        }
 
-    /**
-     *
-     * @param sprints list of sprints associated with this project
-     */
-    public void setSprints(final List<Sprint> sprints) {
-        this.sprints.clear();
-        this.sprints.addAll(sprints);
+        return sprints;
     }
 
     @Override

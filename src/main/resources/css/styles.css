@@ -134,6 +134,10 @@
 }
 
 /* Icons */
+.project-icon {
+    -glyph-name: "ROCKET";
+}
+
 .people-icon {
     -glyph-name: "USERS";
 }
@@ -143,7 +147,7 @@
 }
 
 .clock-icon {
-    -glyph-name: "CLOCK-ALT";
+    -glyph-name: "CLOCK_ALT";
 }
 
 .calendar-icon {
@@ -156,6 +160,10 @@
 
 .pane-type-indicator {
 	-fx-text-fill: #ccc;
+}
+
+.field-label {
+	-fx-text-fill: #aaa;
 }
 
 .tooltip {
@@ -204,7 +212,7 @@
 }
 
 .story-card .name-label {
-    -fx-font: 13px "Roboto Bold";
+    -fx-font: 14px "Roboto Bold";
     -fx-text-fill: #fff;
 }
 
@@ -221,6 +229,22 @@
 .story-card .estimate-label {
     -fx-font: 11px "Roboto";
     -fx-text-fill: #fff;
+}
+
+.add-task-button {
+    -fx-background-color: #FF7043;
+    -fx-border-color: transparent;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+.add-task-button:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0);
+}
+
+.add-task-button .single-icon {
+    -fx-fill: #fff;
 }
 
 /********** TASK CARDS **********/
@@ -251,4 +275,90 @@
 
 .task-card .label {
     -fx-text-fill: #fff
+}
+
+/********** FORM STYLING ************/
+.form-heading {
+    -fx-font: 18px "Roboto";
+    -fx-text-fill: dimgray;
+    -fx-border-color: transparent transparent gainsboro transparent;
+    -fx-padding: 0 0 5px 0;
+}
+
+.form-field-label {
+    -fx-text-fill: dimgray;
+    -fx-font: 14px "Roboto";
+    margin: 0 0 5px 0;
+}
+
+.form .bottom-gap {
+    margin: 0 0 15px 0;
+}
+
+.form .text-area, .form .text-field {
+    -fx-background-radius: 0;
+    -fx-border-color: gainsboro;
+    -fx-background-color: white;
+    -fx-border-insets: -1;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: 0
+}
+
+.form .text-area {
+    -fx-wrap-text: true
+}
+
+.form .text-area .content {
+    -fx-background-color: white
+}
+
+.form .text-area:focused {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+/*noinspection ALL*/
+.form .form-button {
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-font-family: "Roboto";
+    -fx-padding: 7 15
+}
+
+.form .form-button:disabled {
+    -fx-opacity: 0.5;
+}
+
+.form .form-button:pressed {
+    -fx-opacity: 0.5
+}
+
+.form .form-button:default {
+    -fx-background-color: #2196f3
+}
+
+.form .form-button:cancel, .form-button-back {
+    -fx-background-color: #607d8b
+}
+
+.form .date-picker > .arrow-button{
+    -fx-background-color: gainsboro;
+    -fx-background-radius: 0;
+    -fx-background-insets: -1;
+    -fx-border-color: transparent;
+}
+
+/*********** DETAILS PANE INFO ****************/
+.details-pane-info .label {
+    -fx-font: 14px "Roboto";
+    -fx-text-fill: gray;
+}
+
+.details-pane-info .label.colored {
+    -fx-text-fill: #03a9f4;
+}
+
+.details-pane-info .heading {
+    -fx-font-size: 18px;
 }

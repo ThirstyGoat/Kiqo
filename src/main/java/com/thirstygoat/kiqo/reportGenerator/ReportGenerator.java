@@ -21,7 +21,7 @@ import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.ApplicationInfo;
+import com.thirstygoat.kiqo.util.*;
 
 /**
  * Created by james, amy on 6/5/15.
@@ -45,7 +45,6 @@ public final class ReportGenerator {
     private static final String TASK_COMMENT =          " - ";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter TITLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private final List<Team> teams;
     private final List<Person> people;
@@ -238,7 +237,7 @@ public final class ReportGenerator {
     /**
      *  Generate backlog data.
      */
-    private List<String> generateBacklogReport(Backlog backlog) {
+    private static List<String> generateBacklogReport(Backlog backlog) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", backlog.getShortName()));
         lines.add(ReportUtils.valueLine("Name", backlog.getLongName()));
@@ -256,7 +255,7 @@ public final class ReportGenerator {
     /**
      * Generate story data.
      */
-    private List<String> generateStoryReport(Story story) {
+    private static List<String> generateStoryReport(Story story) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", story.getShortName()));
         lines.add(ReportUtils.valueLine("Name", story.getLongName()));
@@ -291,7 +290,7 @@ public final class ReportGenerator {
     /**
      *  Generate acceptance criteria data.
      */
-    private List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
+    private static List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
         final List<String> lines = new ArrayList<String>();
         lines.addAll(ReportUtils.valueLiteral("Criteria", acceptanceCriteria.getCriteria()));
         lines.add(ReportUtils.valueLine("State", acceptanceCriteria.getState()));
@@ -302,7 +301,7 @@ public final class ReportGenerator {
     /**
      *  Generate task data.
      */
-    private List<String> generateTaskReport(Task tasks) {
+    private static List<String> generateTaskReport(Task tasks) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", tasks.getShortName()));
         lines.add(ReportUtils.valueLine("Description", tasks.getDescription()));
@@ -315,22 +314,22 @@ public final class ReportGenerator {
     /**
      *  Generate release data.
      */
-    private List<String> generateReleaseReport(Release release) {
+    private static List<String> generateReleaseReport(Release release) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
         lines.add(ReportUtils.valueLine("Description", release.getDescription()));
-        lines.add(ReportUtils.valueLine("Date", release.getDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_TIME_FORMATTER)));
 
         return lines;
     }
 
-    private List<String> generateSprintReport(Sprint sprint) {
+    private static List<String> generateSprintReport(Sprint sprint) {
         final List<String> lines = new ArrayList<>();
         lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
         lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
         lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
-        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
         lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
 
         lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
@@ -383,7 +382,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.collectionLine("Current Allocation", allocations.isEmpty()));
         for (final Allocation allocation : allocations) {
             lines.add(ReportGenerator.ALLOCATION_COMMENT);
-            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationlReport(allocation)));
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateAllocationReport(allocation)));
         }
         return lines;
     }
@@ -411,7 +410,7 @@ public final class ReportGenerator {
     /**
      *  Generate skill data.
      */
-    private List<String> generateSkillReport(Skill skill) {
+    private static List<String> generateSkillReport(Skill skill) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", skill.getShortName()));
         lines.add(ReportUtils.valueLine("Description", skill.getDescription()));
@@ -421,11 +420,11 @@ public final class ReportGenerator {
     /**
      *  Generate skill data.
      */
-    private List<String> generateAllocationlReport(Allocation allocation) {
+    private static List<String> generateAllocationReport(Allocation allocation) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
-        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(ReportGenerator.DATE_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(ReportGenerator.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
         return lines;
     }
 }

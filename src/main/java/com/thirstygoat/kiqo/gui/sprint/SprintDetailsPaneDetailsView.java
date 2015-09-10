@@ -1,16 +1,17 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -27,21 +28,19 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     private SprintDetailsPaneDetailsViewModel viewModel;
 
     @FXML
-    private Label longNameLabel;
+    private GoatLabelTextField longNameLabel;
     @FXML
-    private Label goalLabel;
+    private GoatLabelTextField teamLabel;
     @FXML
-    private Label teamLabel;
+    private GoatLabelTextField backlogLabel;
     @FXML
-    private Label backlogLabel;
+    private GoatLabelDatePicker startDateLabel;
     @FXML
-    private Label startDateLabel;
+    private GoatLabelDatePicker endDateLabel;
     @FXML
-    private Label endDateLabel;
+    private GoatLabelTextField releaseLabel;
     @FXML
-    private Label releaseLabel;
-    @FXML
-    private Label descriptionLabel;
+    private GoatLabelTextField descriptionLabel;
     @FXML
     private TableView<Story> storyTableView;
     @FXML
@@ -51,27 +50,24 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     public void initialize(URL arg0, ResourceBundle arg1) {
         DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        longNameLabel.textProperty().bind(viewModel.longNameProperty());
-        goalLabel.textProperty().bind(viewModel.goalProperty());
-        startDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            if (viewModel.startDateProperty().get() != null) {
-                return viewModel.startDateProperty().get().format(datetimeFormat);
-            }
-            return "";
-        }, viewModel.startDateProperty()));
-        endDateLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            if (viewModel.endDateProperty().get() != null) {
-                return viewModel.endDateProperty().get().format(datetimeFormat);
-            }
-            return "";
-        }, viewModel.endDateProperty()));
-        releaseLabel.textProperty().bindBidirectional(viewModel.releaseProperty(),
+        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
+        FxUtils.initGoatLabel(startDateLabel, viewModel, viewModel.startDateProperty(),
+                viewModel.startDateStringProperty(), viewModel.startDateValidation());
+        FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),
+                viewModel.endDateValidation());
+        FxUtils.initGoatLabel(releaseLabel, viewModel, viewModel.releaseProperty(), viewModel.releaseValidation(),
                 StringConverters.releaseStringConverter(viewModel.organisationProperty()));
-        descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
-        teamLabel.textProperty().bindBidirectional(viewModel.teamProperty(),
+        FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
+                viewModel.descriptionValidation());
+        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(), viewModel.teamValidation(),
                 StringConverters.teamStringConverter(viewModel.organisationProperty()));
-        backlogLabel.textProperty().bindBidirectional(viewModel.backlogProperty(),
+        FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());
+        FxUtils.initGoatLabel(backlogLabel, viewModel, viewModel.backlogProperty(), viewModel.backlogValidation(),
                 StringConverters.backlogStringConverter(viewModel.organisationProperty()));
+        FxUtils.setTextFieldSuggester(backlogLabel.getEditField(), viewModel.backlogsSupplier());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
+                viewModel.descriptionValidation());
 
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.itemsProperty().bind(viewModel.stories());

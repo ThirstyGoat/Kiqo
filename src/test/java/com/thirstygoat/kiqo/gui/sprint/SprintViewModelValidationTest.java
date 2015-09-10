@@ -41,7 +41,6 @@ public class SprintViewModelValidationTest {
 
         Sprint sprint = new Sprint();
         sprint.setGoal("Sprint");
-        viewModel.backlogProperty().get().getProject().observableSprints().add(sprint);
         viewModel.goalProperty().set("Sprint");
 
         viewModel.goalProperty().set("Must be less than 20 characters");

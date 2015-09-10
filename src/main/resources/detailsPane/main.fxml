@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController">
-  <bottom>
-      <HBox fx:id="buttonBox" alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0" spacing="10">
-          <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
-          <Button fx:id="editButton" mnemonicParsing="false" text="Edit" />
-          <padding>
-              <Insets top="20.0" />
-          </padding>
-      </HBox>
-  </bottom>
   <center>
     <StackPane fx:id="stackPane">
-        <fx:include fx:id="projectDetailsPane" source="project.fxml" />
         <fx:include fx:id="teamDetailsPane" source="team.fxml" />
-        <fx:include fx:id="releaseDetailsPane" source="release.fxml" />
         <fx:include fx:id="storyDetailsPane" source="story.fxml" />
+        <fx:include fx:id="infoPane" source="info.fxml" />
     </StackPane>
   </center>
 </BorderPane>

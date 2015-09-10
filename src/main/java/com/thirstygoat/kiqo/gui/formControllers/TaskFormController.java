@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -38,6 +39,8 @@ public class TaskFormController extends FormController<Task> {
     private Task task;
     private MainController mainController;
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextField name;
     @FXML
@@ -116,13 +119,14 @@ public class TaskFormController extends FormController<Task> {
         if (task == null) {
             // We are creating a new allocation (for an existing project)
             stage.setTitle("Create Task");
+            heading.setText("Create Task");
             okButton.setText("Create Task");
         } else {
             // edit an existing allocation
             viewModel.setTask(task);
             stage.setTitle("Edit Task");
-            okButton.setText("Save");
-//            description.setText(task.getShortName());
+            heading.setText("Edit Task");
+            okButton.setText("Done");
         }
     }
     private void setValidationSupport() {
@@ -136,9 +140,7 @@ public class TaskFormController extends FormController<Task> {
         viewModel.setStory(story);
         setButtonHandlers();
         okButton.disableProperty().bind(viewModel.formValidation().validProperty().not());
-        Platform.runLater(() -> {
-            setValidationSupport();
-        });
+        Platform.runLater(this::setValidationSupport);
     }
 
     @Override

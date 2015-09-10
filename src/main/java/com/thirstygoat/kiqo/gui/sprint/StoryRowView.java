@@ -15,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,6 +54,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     @FXML
     private Label estimateLabel;
     @FXML
+    private Button addTaskButton;
+    @FXML
     private FlowPane toDoTasks;
     @FXML
     private FlowPane inProgressTasks;
@@ -72,13 +76,21 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
         initialiseDragAndDrop();
         drawTasks();
+        setAddTaskButton();
+    }
+
+    private void setAddTaskButton() {
+        addTaskButton.setOnAction(event -> {
+            // Open new task window for this story
+            viewModel.newTask();
+        });
     }
 
     private void drawTasks() {
         Function<Task, TaskCard> fn = task -> {
             TaskCard tc = new TaskCard(task);
             tc.getStyleClass().add(task.getStatus().getCssClass());
-            tc.setCursor(Cursor.OPEN_HAND);
+//            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
             return tc;
         };

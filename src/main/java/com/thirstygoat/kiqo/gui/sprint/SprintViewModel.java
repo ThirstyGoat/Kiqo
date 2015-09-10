@@ -9,6 +9,8 @@ import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
@@ -27,6 +29,7 @@ public class SprintViewModel implements ViewModel {
     private final ListProperty<Story> eligableStories;
     private final ObservableRuleBasedValidator goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
+    private final ObservableRuleBasedValidator descriptionValidator;
     private final FunctionBasedValidator<Backlog> backlogValidator;
     private final ObservableRuleBasedValidator storiesValidator;
     private final ObservableRuleBasedValidator startDateValidator;
@@ -82,6 +85,8 @@ public class SprintViewModel implements ViewModel {
                     }
                 },
                 ValidationMessage.error("Sprint name must be unique and not empty"));
+
+        descriptionValidator = new ObservableRuleBasedValidator(); // always true
 
         storiesValidator = new ObservableRuleBasedValidator();
         storiesValidator.addRule(
@@ -190,6 +195,9 @@ public class SprintViewModel implements ViewModel {
             eligableStories.setAll(storiesSupplier().get());
         });
 
+        // Upon backlog change, target stories should be reset
+        backlogProperty().addListener((observable, oldValue, newValue) -> stories().clear());
+
     }
 
     public void reset() {
@@ -257,7 +265,7 @@ public class SprintViewModel implements ViewModel {
     }
 
     /**
-     * 
+     *
      * @return command for creating or editing the active item. Null if no changes have been made.
      */
     public Command createCommand() {
@@ -316,10 +324,9 @@ public class SprintViewModel implements ViewModel {
             sprintProperty.get().getStories().stream().filter(s -> !stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
 
             stories.forEach(s -> {
-                changes.add(new EditCommand<>(s, "inSprint", true));
+                if (!s.getInSprint())
+                    changes.add(new EditCommand<>(s, "inSprint", true));
             });
-
-
 
             if (!changes.isEmpty()) {
                 command = new CompoundCommand("Edit Sprint", changes);
@@ -329,15 +336,15 @@ public class SprintViewModel implements ViewModel {
         }
         return command;
     }
-    
+
     public ObjectProperty<Organisation> organisationProperty() {
         return organisationProperty;
     }
-    
+
     public ObjectProperty<Sprint> sprintProperty() {
         return sprintProperty;
     }
-    
+
     public StringProperty goalProperty() {
         return sprintWrapper.field("goal", Sprint::getGoal, Sprint::setGoal, "");
     }
@@ -377,7 +384,7 @@ public class SprintViewModel implements ViewModel {
     public ListProperty<Story> eligableStories() {
         return eligableStories;
     }
-    
+
     public ValidationStatus goalValidation() {
         return goalValidator.getValidationStatus();
     }
@@ -400,6 +407,10 @@ public class SprintViewModel implements ViewModel {
 
     public ValidationStatus longNameValidation() {
         return longNameValidator.getValidationStatus();
+    }
+
+    public ValidationStatus descriptionValidation() {
+        return descriptionValidator.getValidationStatus();
     }
 
     public ValidationStatus releaseValidation() {
