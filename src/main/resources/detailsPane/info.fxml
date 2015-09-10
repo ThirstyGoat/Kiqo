@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="details-pane-info" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.detailsPane.DetailsPaneInfoController">
    <children>
       <VBox layoutX="184.0" layoutY="154.0" spacing="5.0">
@@ -12,7 +10,7 @@
             <Label styleClass="heading" text="No items are open" />
             <HBox>
                <children>
-                  <Label text="Search Everywhere with">
+                  <Label text="Search everywhere with">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
@@ -22,7 +20,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Label text="Toggle Toolbar with">
+                  <Label text="Toggle toolbar with">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
@@ -32,7 +30,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Label text="Drag and Drop file here to open">
+                  <Label text="Drag and drop file here to open">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
