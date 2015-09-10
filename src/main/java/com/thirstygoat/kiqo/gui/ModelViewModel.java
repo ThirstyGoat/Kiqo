@@ -1,13 +1,17 @@
 package com.thirstygoat.kiqo.gui;
 
 import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -68,4 +72,15 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
      * be a command that will commit the changes cached by the ViewModel's ModelWrapper to the underlying model.
      */
     public abstract Command getCommand();
+
+    /**
+     * Adds edit commands for all changed fields to the accepted list.
+     */
+    public Consumer<List<Command>> addEditCommands =
+            commands -> {
+                modelWrapper.getChangedFields().stream()
+                        .filter(field -> !field.getProperty().getClass().equals(SimpleListProperty.class))
+                        .forEach(field -> commands.add(new EditCommand<>(modelWrapper.get(), field.getFieldName(),
+                                field.getProperty().getValue())));
+            };
 }

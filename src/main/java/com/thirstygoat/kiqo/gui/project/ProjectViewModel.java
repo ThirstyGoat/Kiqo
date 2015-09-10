@@ -15,14 +15,15 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by leroy on 7/09/15.
  */
 public class ProjectViewModel extends ModelViewModel<Project> {
+    private static final Logger LOGGER = Logger.getLogger(ProjectViewModel.class.getName());
     private final ObservableRuleBasedValidator  shortNameValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final ObservableRuleBasedValidator descriptionValidator;
