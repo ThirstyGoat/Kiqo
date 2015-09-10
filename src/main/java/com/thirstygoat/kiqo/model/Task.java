@@ -1,18 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -24,6 +20,7 @@ public class Task extends Item {
     private final FloatProperty estimate;
     private final ObjectProperty<Status> status;
     private final ObjectProperty<Story> story;
+    private final ObservableList<Impediment> impediments;
 
     public Task() {
         shortName = new SimpleStringProperty("");
@@ -31,14 +28,16 @@ public class Task extends Item {
         estimate = new SimpleFloatProperty(0.0f);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
         story = new SimpleObjectProperty<>(null);
+        impediments = FXCollections.observableArrayList(Impediment.getWatchStrategy());
     }
 
     public Task(String shortName, String description, Float estimate, Story story) {
-        this.shortName = new SimpleStringProperty(shortName);
-        this.description = new SimpleStringProperty(description);
-        this.estimate = new SimpleFloatProperty(estimate);
-        status = new SimpleObjectProperty<>(Status.NOT_STARTED);
-        this.story = new SimpleObjectProperty<>(story);
+        this();
+        setShortName(shortName);
+        setDescription(description);
+        setEstimate(estimate);
+        setStatus(Status.NOT_STARTED);
+        setStory(story);
     }
     
     public static Callback<Task, Observable[]> getWatchStrategy() {
@@ -64,6 +63,10 @@ public class Task extends Item {
         searchableFields.add(new SearchableField("Description", getDescription()));
 
         return searchableFields;
+    }
+
+    public ObservableList<Impediment> getImpediments() {
+        return impediments;
     }
 
     public Story getStory() {
