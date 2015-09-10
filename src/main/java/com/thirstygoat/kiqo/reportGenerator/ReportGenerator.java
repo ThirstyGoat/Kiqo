@@ -1,5 +1,9 @@
 package com.thirstygoat.kiqo.reportGenerator;
 
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
+import com.thirstygoat.kiqo.util.Utilities;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,21 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.*;
 
 /**
  * Created by james, amy on 6/5/15.
@@ -43,6 +32,7 @@ public final class ReportGenerator {
     private static final String SPRINT_COMMENT =        " -  ### Sprint ###";
     private static final String AC_COMMENT =            " - ";
     private static final String TASK_COMMENT =          " - ";
+    private static final String IMPEDIMENT_COMMENT =          " - ";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter TITLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -76,6 +66,147 @@ public final class ReportGenerator {
             collectionLabel = type.getSimpleName() + "s";
         }
         return collectionLabel;
+    }
+
+    /**
+     *  Generate backlog data.
+     */
+    private static List<String> generateBacklogReport(Backlog backlog) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", backlog.getShortName()));
+        lines.add(ReportUtils.valueLine("Name", backlog.getLongName()));
+        lines.add(ReportUtils.valueLine("Product Owner", backlog.getProductOwner().getShortName()));
+        lines.add(ReportUtils.valueLine("Description", backlog.getDescription()));
+        lines.add(ReportUtils.valueLine("Scale", backlog.getScale().toString()));
+        lines.add(ReportUtils.collectionLine("Stories", backlog.getStories().isEmpty()));
+        for(final Story story : backlog.getStories()) {
+            lines.add(ReportGenerator.STORY_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
+        }
+        return lines;
+    }
+
+    /**
+     * Generate story data.
+     */
+    private static List<String> generateStoryReport(Story story) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", story.getShortName()));
+        lines.add(ReportUtils.valueLine("Name", story.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", story.getDescription()));
+        lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
+
+        lines.add(ReportUtils.collectionLine("Dependencies", story.getDependencies().isEmpty()));
+        for (final Story dependency : story.getDependencies()) {
+            lines.add(" - " + dependency.getShortName());
+        }
+
+        lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
+        lines.add(ReportUtils.valueLine("Scale", story.getScale()));
+        lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
+        lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
+
+        // Add unallocated stories that belong to this project to the report
+        lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
+        for (final AcceptanceCriteria acceptanceCriteria : story.getAcceptanceCriteria()) {
+            lines.add(ReportGenerator.AC_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
+        }
+        lines.add(ReportUtils.collectionLine("Task", story.observableTasks().isEmpty()));
+        for (final Task task : story.observableTasks()) {
+            lines.add(ReportGenerator.TASK_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTaskReport(task)));
+        }
+
+        return lines;
+    }
+
+    /**
+     *  Generate acceptance criteria data.
+     */
+    private static List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
+        final List<String> lines = new ArrayList<String>();
+        lines.addAll(ReportUtils.valueLiteral("Criteria", acceptanceCriteria.getCriteria()));
+        lines.add(ReportUtils.valueLine("State", acceptanceCriteria.getState()));
+
+        return lines;
+    }
+
+    /**
+     *  Generate task data.
+     */
+    private static List<String> generateTaskReport(Task tasks) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", tasks.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", tasks.getDescription()));
+        lines.add(ReportUtils.valueLine("Estimate", tasks.getEstimate()));
+        lines.add(ReportUtils.valueLine("Status", tasks.getStatus()));
+        lines.add(ReportUtils.collectionLine("Impediments", tasks.getImpediments().isEmpty()));
+        for (final Impediment impediment : tasks.getImpediments()) {
+            lines.add(ReportGenerator.IMPEDIMENT_COMMENT);
+            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateImpedimentReport(impediment)));
+        }
+
+        return lines;
+    }
+
+    /**
+     * Generate impediment data.
+     */
+    private static List<String> generateImpedimentReport(Impediment impediment) {
+        final List<String> lines = new ArrayList<>();
+        lines.add(ReportUtils.valueLine("Impediment", impediment.getImpediment()));
+        lines.add(ReportUtils.valueLine("Resolved Status", impediment.getResolved()));
+        return lines;
+    }
+
+    /**
+     *  Generate release data.
+     */
+    private static List<String> generateReleaseReport(Release release) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", release.getDescription()));
+        lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_TIME_FORMATTER)));
+
+        return lines;
+    }
+
+    private static List<String> generateSprintReport(Sprint sprint) {
+        final List<String> lines = new ArrayList<>();
+        lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
+        lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
+        lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
+        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
+
+        lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
+        for (final Story story : sprint.getStories()) {
+            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + story.getShortName());
+        }
+        return lines;
+    }
+
+    /**
+     *  Generate skill data.
+     */
+    private static List<String> generateSkillReport(Skill skill) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Short Name", skill.getShortName()));
+        lines.add(ReportUtils.valueLine("Description", skill.getDescription()));
+        return lines;
+    }
+
+    /**
+     *  Generate skill data.
+     */
+    private static List<String> generateAllocationReport(Allocation allocation) {
+        final List<String> lines = new ArrayList<String>();
+        lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
+        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
+        return lines;
     }
 
     /**
@@ -235,111 +366,6 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate backlog data.
-     */
-    private static List<String> generateBacklogReport(Backlog backlog) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Short Name", backlog.getShortName()));
-        lines.add(ReportUtils.valueLine("Name", backlog.getLongName()));
-        lines.add(ReportUtils.valueLine("Product Owner", backlog.getProductOwner().getShortName()));
-        lines.add(ReportUtils.valueLine("Description", backlog.getDescription()));
-        lines.add(ReportUtils.valueLine("Scale", backlog.getScale().toString()));
-        lines.add(ReportUtils.collectionLine("Stories", backlog.getStories().isEmpty()));
-        for(final Story story : backlog.getStories()) {
-            lines.add(ReportGenerator.STORY_COMMENT);
-            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
-        }
-        return lines;
-    }
-
-    /**
-     * Generate story data.
-     */
-    private static List<String> generateStoryReport(Story story) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Short Name", story.getShortName()));
-        lines.add(ReportUtils.valueLine("Name", story.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", story.getDescription()));
-        lines.add(ReportUtils.valueLine("Creator", story.getCreator().getShortName()));
-        
-        lines.add(ReportUtils.collectionLine("Dependencies", story.getDependencies().isEmpty()));
-        for (final Story dependency : story.getDependencies()) {
-            lines.add(" - " + dependency.getShortName());
-        }
-        
-        lines.add(ReportUtils.valueLine("Priority", story.getPriority()));
-        lines.add(ReportUtils.valueLine("Scale", story.getScale()));
-        lines.add(ReportUtils.valueLine("Estimate", story.getEstimate()));
-        lines.add(ReportUtils.valueLine("Ready", story.getIsReady()));
-
-        // Add unallocated stories that belong to this project to the report
-        lines.add(ReportUtils.collectionLine("Acceptance Criteria", story.getAcceptanceCriteria().isEmpty()));
-        for (final AcceptanceCriteria acceptanceCriteria : story.getAcceptanceCriteria()) {
-            lines.add(ReportGenerator.AC_COMMENT);
-            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateACReport(acceptanceCriteria)));
-        }
-        lines.add(ReportUtils.collectionLine("Task", story.observableTasks().isEmpty()));
-        for (final Task task : story.observableTasks()) {
-            lines.add(ReportGenerator.TASK_COMMENT);
-            lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateTaskReport(task)));
-        }
-
-        return lines;
-    }
-
-    /**
-     *  Generate acceptance criteria data.
-     */
-    private static List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
-        final List<String> lines = new ArrayList<String>();
-        lines.addAll(ReportUtils.valueLiteral("Criteria", acceptanceCriteria.getCriteria()));
-        lines.add(ReportUtils.valueLine("State", acceptanceCriteria.getState()));
-
-        return lines;
-    }
-
-    /**
-     *  Generate task data.
-     */
-    private static List<String> generateTaskReport(Task tasks) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Short Name", tasks.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", tasks.getDescription()));
-        lines.add(ReportUtils.valueLine("Estimate", tasks.getEstimate()));
-        lines.add(ReportUtils.valueLine("Status", tasks.getStatus()));
-
-        return lines;
-    }
-
-    /**
-     *  Generate release data.
-     */
-    private static List<String> generateReleaseReport(Release release) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", release.getDescription()));
-        lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_TIME_FORMATTER)));
-
-        return lines;
-    }
-
-    private static List<String> generateSprintReport(Sprint sprint) {
-        final List<String> lines = new ArrayList<>();
-        lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
-        lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
-        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
-        lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
-
-        lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
-        for (final Story story : sprint.getStories()) {
-            lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + story.getShortName());
-        }
-        return lines;
-    }
-
-    /**
      *  Generate team data including product owner information and current allocation.
      */
     private List<String> generateTeamReport(Team team) {
@@ -404,27 +430,6 @@ public final class ReportGenerator {
         for (final Skill skill : person.getSkills()) {
             lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + skill.getShortName());
         }
-        return lines;
-    }
-
-    /**
-     *  Generate skill data.
-     */
-    private static List<String> generateSkillReport(Skill skill) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Short Name", skill.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", skill.getDescription()));
-        return lines;
-    }
-
-    /**
-     *  Generate skill data.
-     */
-    private static List<String> generateAllocationReport(Allocation allocation) {
-        final List<String> lines = new ArrayList<String>();
-        lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
-        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
         return lines;
     }
 }

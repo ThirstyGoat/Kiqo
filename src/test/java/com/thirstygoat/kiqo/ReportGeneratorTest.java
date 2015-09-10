@@ -1,50 +1,20 @@
 package com.thirstygoat.kiqo;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.URLEncoder;
+import com.thirstygoat.kiqo.command.create.*;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.*;
+import java.net.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
-import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
-import com.thirstygoat.kiqo.command.create.CreateBacklogCommand;
-import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.create.CreateProjectCommand;
-import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
-import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
-import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
-import com.thirstygoat.kiqo.command.create.CreateTaskCommand;
-import com.thirstygoat.kiqo.command.create.CreateTeamCommand;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
 
 
 /**
@@ -70,6 +40,7 @@ public class ReportGeneratorTest{
     private Allocation allocation;
     private AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria("ac text", story);
     private Task task = new Task("Shortname task", "description task", (float) 5, story);
+    private Impediment impediment = new Impediment("Some impediment", true);
 
     @Before
     public void setUp() {
@@ -126,6 +97,9 @@ public class ReportGeneratorTest{
 
         sprint.getStories().addAll(story, story2);
         sprint.setBacklog(backlog);
+
+        CreateImpedimentCommand createImpedimentCommand = new CreateImpedimentCommand(impediment, task);
+        createImpedimentCommand.execute();
 
 
     }
