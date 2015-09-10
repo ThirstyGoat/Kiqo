@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,11 +9,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by james on 10/09/15.
  */
-public class Impediment {
+public class Impediment implements Searchable{
     private final StringProperty impediments;
     private final BooleanProperty resolved;
 
@@ -30,7 +35,7 @@ public class Impediment {
         return s -> new Observable[] {s.impedimentsProperty(), s.resolvedProperty()};
     }
 
-    public String getImpediments() {
+    public String getImpediment() {
         return impediments.get();
     }
 
@@ -52,5 +57,12 @@ public class Impediment {
 
     public BooleanProperty resolvedProperty() {
         return resolved;
+    }
+
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchString = new ArrayList<>();
+        searchString.add(new SearchableField("impediments", impediments.toString()));
+        return searchString;
     }
 }
