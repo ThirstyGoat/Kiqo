@@ -23,7 +23,9 @@ import java.util.regex.Pattern;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class GoatFilteredListSelectionView<T extends Item> extends VBox {
+public class GoatFilteredListSelectionView<T extends Item> extends Control {
+    private VBox mainView;
+    private final GoatFilteredListSelectionViewSkin skin;
     private final ListProperty<T> sourceItems;
     private final ListProperty<T> targetItems;
     private final ObservableList<T> allItems;
@@ -37,6 +39,18 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
 
     public GoatFilteredListSelectionView() {
+        super();
+        skin = new GoatFilteredListSelectionViewSkin(this) {
+            {
+                mainView = getMainView();
+                textField = getTextField();
+                listView = getListView();
+            }
+        };
+
+        setSkin(skin);
+        mainView = new VBox();
+
         sourceItems = new SimpleListProperty<>(FXCollections.observableArrayList());
         targetItems = new SimpleListProperty<>(FXCollections.observableArrayList());
         allItems = FXCollections.observableArrayList();
@@ -52,9 +66,9 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         });
 
         Predicate<List<? extends Item>> newItems =
-            list -> (sourceItems.isEmpty() || targetItems.isEmpty())
-                    && list.containsAll(sourceItems)
-                    && list.containsAll(targetItems);
+                list -> (sourceItems.isEmpty() || targetItems.isEmpty())
+                        && list.containsAll(sourceItems)
+                        && list.containsAll(targetItems);
 
         ListChangeListener<T> refresh = c -> {
             SHOWING initial = showing.get();
@@ -150,16 +164,27 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         textField.setMinHeight(30);
         textField.getStyleClass().add("filtered-list-view-text-field");
         textField.setPromptText("Type here to filter list...");
+
         listView = new ListView<>();
         listView.getStyleClass().add("filtered-list-view");
         listView.setItems(allItems);
-        VBox.setVgrow(listView, Priority.ALWAYS);
 
+        mainView.setVgrow(listView, Priority.ALWAYS);
         ToggleButton allToggleButton = new ToggleButton(SHOWING.All.toString());
         ToggleButton selectedToggleButton = new ToggleButton(SHOWING.Selected.toString());
         ToggleButton unSelectedToggleButton = new ToggleButton(SHOWING.Unselected.toString());
-        SegmentedButton showingSegmentedButton = new SegmentedButton(
-                allToggleButton, selectedToggleButton, unSelectedToggleButton);
+        SegmentedButton showingSegmentedButton =
+                new SegmentedButton(allToggleButton, selectedToggleButton, unSelectedToggleButton);
+
+        HBox headerContainer = new HBox();
+        headerContainer.setPadding(new Insets(0, 0, 5, 0));
+
+        BorderPane footerContainer = new BorderPane();
+        footerContainer.setPadding(new Insets(5, 0, 0, 0));
+        footerContainer.setLeft(showingSegmentedButton);
+
+        mainView.getChildren().addAll(headerContainer, textField, listView, footerContainer);
+        getChildren().add(mainView);
 
         showingSegmentedButton.setStyle("-fx-font-size: 11px");
         showingSegmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -193,16 +218,6 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
             textField.setText(value);
         });
 
-        HBox headerContainer = new HBox();
-        headerContainer.setPadding(new Insets(0, 0 ,5 ,0));
-        BorderPane footerContainer = new BorderPane();
-        footerContainer.setPadding(new Insets(5, 0, 0, 0));
-
-        footerContainer.setLeft(showingSegmentedButton);
-
-        getChildren().addAll(headerContainer, textField, listView, footerContainer);
-        setPrefHeight(USE_COMPUTED_SIZE);
-
         headerProperty().addListener((observable, oldValue, newValue) -> {
             headerContainer.getChildren().clear();
             headerContainer.getChildren().add(newValue);
@@ -211,6 +226,13 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
         footerProperty().addListener((observable, oldValue, newValue) -> {
             footerContainer.setRight(newValue);
         });
+//
+//        mainView.setStyle("-fx-border-color: orange");
+//        setStyle("-fx-border-color: pink");
+//        headerContainer.setStyle("-fx-border-color: red");
+//        footerContainer.setStyle("-fx-border-color: blue");
+//        textField.setStyle("-fx-border-color: black");
+//        listView.setStyle("-fx-border-color: yellow");
     }
 
     private void setDefaultCellFactory() {
