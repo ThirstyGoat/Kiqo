@@ -1,19 +1,21 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import javafx.beans.property.StringProperty;
+import java.util.function.Supplier;
 
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Editable;
 
 public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable {
     @Override
     public void commitEdit() {
-        // TODO Auto-generated method stub
-        
+        Command command = createCommand();
+        if (command != null) {
+            UndoManager.getUndoManager().doCommand(command);
+        }
     }
 
     @Override
     public void cancelEdit() {
-        // TODO Auto-generated method stub
-        
+        reload();
     }
 }

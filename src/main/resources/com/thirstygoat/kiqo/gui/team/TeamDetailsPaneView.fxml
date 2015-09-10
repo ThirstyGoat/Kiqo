@@ -23,11 +23,11 @@
               	<Label text="Product Owner" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" >
 	            	<VBox.margin><Insets bottom="-8"/></VBox.margin>
 		        </Label>
-	            <Label fx:id="poLabel" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+	            <GoatLabelTextField fx:id="poLabel" GridPane.rowIndex="1" GridPane.columnIndex="0" />
 	            <Label text="Scrum Master" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="1" >
 		            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 		        </Label>
-	            <Label fx:id="smLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+	            <GoatLabelTextField fx:id="smLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 	          </children>
 	        </GridPane>
             <Label text="Development Team" styleClass="field-label" >
