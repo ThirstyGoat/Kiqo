@@ -1,15 +1,17 @@
 package com.thirstygoat.kiqo.gui.release;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.fxml.*;
-import javafx.scene.control.Label;
-
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.*;
 
 public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewModel>, Initializable {
     @FXML
@@ -19,7 +21,7 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
     @FXML
     private GoatLabelDatePicker releaseDatePicker;
     @FXML
-    private GoatLabelTextArea descriptionTextField;
+    private GoatLabelTextArea descriptionTextArea;
 
     @InjectViewModel
     private ReleaseDetailsPaneViewModel viewModel;

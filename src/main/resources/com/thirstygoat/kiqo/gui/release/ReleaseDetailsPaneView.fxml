@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import javafx.geometry.Insets?>
-<?import com.thirstygoat.kiqo.gui.nodes.*?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
 <AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView">
   <children>
     <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -14,16 +15,16 @@
           <children>
             <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
               <children>
-                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                <GoatLabelTextField fx:id="shortNameTextField" styleClass="pane-short-name" />
                 <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
                 <Label text="Release" styleClass="pane-type-indicator" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <GoatLabelTextArea fx:id="descriptionTextArea" />
             <Label text="Project" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <GoatLabelTextField fx:id="projectLabel" />
+            <GoatLabelTextField fx:id="projectTextField" />
             <Label text="Date" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

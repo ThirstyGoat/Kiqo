@@ -1,16 +1,18 @@
 package com.thirstygoat.kiqo.gui.project;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.util.FxUtils;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.ListChangeListener;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.util.FxUtils;
-
-import de.saxsys.mvvmfx.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 25/03/2015.

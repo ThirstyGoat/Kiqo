@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
+import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
@@ -12,6 +13,8 @@ import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
+import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -23,15 +26,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
-import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.gui.backlog.*;
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
-import com.thirstygoat.kiqo.gui.release.*;
-import com.thirstygoat.kiqo.gui.skill.*;
-import com.thirstygoat.kiqo.gui.sprint.*;
-import com.thirstygoat.kiqo.gui.team.*;
-import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
-import com.thirstygoat.kiqo.model.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
