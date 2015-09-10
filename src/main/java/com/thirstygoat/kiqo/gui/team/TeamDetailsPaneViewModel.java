@@ -1,7 +1,5 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.function.Supplier;
-
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.Editable;
 

@@ -29,7 +29,7 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
         FxUtils.initGoatLabel(shortNameTextField, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(projectTextField, viewModel, viewModel.projectProperty(), StringConverters.projectStringConverter(viewModel.organisationProperty()),
                 viewModel.projectValidation());
-        FxUtils.setTextFieldSuggester(projectTextField.getEditField(), viewModel.projectSupplier());
+        FxUtils.setTextFieldSuggester(projectTextField.getEditField(), viewModel.projectsSupplier());
         FxUtils.initGoatLabel(releaseDatePicker, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
     }
 }

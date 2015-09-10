@@ -54,14 +54,13 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
        
-        // TODO write the other validators
-        productOwnerValidator = new ObservableRuleBasedValidator(); // TODO always true
-        scrumMasterValidator = new ObservableRuleBasedValidator(); // TODO always true
-        teamMembersValidator = new ObservableRuleBasedValidator(); // TODO always true
-        devTeamValidator = new ObservableRuleBasedValidator(); // TODO always true
+        // the other validators are input-constrained so need not be validated
+        productOwnerValidator = new ObservableRuleBasedValidator(); // always true
+        scrumMasterValidator = new ObservableRuleBasedValidator(); // always true
+        teamMembersValidator = new ObservableRuleBasedValidator(); // always true
+        devTeamValidator = new ObservableRuleBasedValidator(); // always true
 
         allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, productOwnerValidator, scrumMasterValidator, teamMembersValidator, devTeamValidator);
-
     }
 
     protected Command createCommand() {
@@ -126,11 +125,13 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
             Person currentScrumMaster = scrumMasterProperty().get();
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has po skill and does not currently have any other role in the team
-            return organisationProperty().get().getPeople().stream()
-                    .filter(person -> person.getSkills().contains(poSkill) 
-                            && !person.equals(currentScrumMaster)
-                            && !currentDevTeam.contains(person))
-                    .collect(Collectors.toList());
+            List<Person> eligiblePeople = organisationProperty().get().getPeople().stream()
+                    .filter(person -> {
+                        return person.getSkills().contains(poSkill) 
+                                && (currentScrumMaster == null || !person.equals(currentScrumMaster))
+                                && !currentDevTeam.contains(person);
+                    }).collect(Collectors.toList());
+            return eligiblePeople;
         };
     }
     
@@ -165,11 +166,11 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     }
     
     protected ListProperty<Person> teamMembersProperty() {
-        return modelWrapper.field("teamMembers", Team::getTeamMembers, Team::setTeamMembers, null);
+        return modelWrapper.field("teamMembers", Team::getTeamMembers, Team::setTeamMembers, new ArrayList<Person>());
     }
     
     protected ListProperty<Person> devTeamProperty() {
-        return modelWrapper.field("devTeam", Team::getDevTeam, Team::setDevTeam, null);
+        return modelWrapper.field("devTeam", Team::getDevTeam, Team::setDevTeam, new ArrayList<Person>());
     }
     
     protected ObjectProperty<Organisation> organisationProperty() {

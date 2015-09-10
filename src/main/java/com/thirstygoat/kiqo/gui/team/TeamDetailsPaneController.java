@@ -14,6 +14,7 @@ import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController.FirstColumn
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
 
+@Deprecated
 public class TeamDetailsPaneController implements Initializable, IDetailsPaneController<Team> {
 
     @FXML
