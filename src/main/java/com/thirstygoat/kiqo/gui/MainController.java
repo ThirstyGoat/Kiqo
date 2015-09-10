@@ -47,6 +47,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -114,6 +116,19 @@ public class MainController implements Initializable {
 
         setStageTitleProperty();
         setSearchShortcut();
+        GaussianBlur gaussianBlur = new GaussianBlur();
+        gaussianBlur.setRadius(5);
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(-0.1);
+        colorAdjust.setInput(gaussianBlur);
+
+        primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                primaryStage.getScene().getRoot().setEffect(null);
+            } else {
+                primaryStage.getScene().getRoot().setEffect(colorAdjust);
+            }
+        });
     }
 
     public BooleanProperty mainToolbarVisibleProperty() {
