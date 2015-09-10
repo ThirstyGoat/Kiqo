@@ -31,6 +31,6 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         FxUtils.setTextFieldSuggester(projectLabel.getEditField(), viewModel.projectSupplier());
         FxUtils.initGoatLabel(releaseDatePicker, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Description");
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Add a description...");
     }
 }
