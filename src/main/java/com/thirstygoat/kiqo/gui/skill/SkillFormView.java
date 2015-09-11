@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.Utilities;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -19,15 +20,15 @@ import de.saxsys.mvvmfx.utils.validation.visualization.*;
  * 26/8/15
  */
 public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
-    private FormButtonHandler formButtonHandler;
-    
     @InjectViewModel
     SkillViewModel viewModel;
-    
+    private FormButtonHandler formButtonHandler;
+    @FXML
+    private Label heading;
     @FXML
     private TextField nameTextField;
     @FXML
-    private TextField descriptionTextField;
+    private TextArea descriptionTextField;
     @FXML
     private Button okButton;
     @FXML
@@ -39,9 +40,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         
         attachValidators();
         
-        Platform.runLater(() -> {
-            nameTextField.requestFocus();
-        });
+        Platform.runLater(nameTextField::requestFocus);
     }
     
     private void bindToViewModel() {
@@ -59,7 +58,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
+        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
     }
 
     public void okAction() {
@@ -72,5 +71,13 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         if (formButtonHandler != null) {
             formButtonHandler.cancelAction();
         }
+    }
+
+    public StringProperty headingProperty() {
+        return heading.textProperty();
+    }
+
+    public void setOkButtonText(String string) {
+        okButton.setText(string);
     }
 }

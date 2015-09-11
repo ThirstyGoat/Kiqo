@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.*;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import de.saxsys.mvvmfx.*;
@@ -18,11 +19,11 @@ import de.saxsys.mvvmfx.utils.validation.visualization.*;
  * 26/8/15
  */
 public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializable {
-    private FormButtonHandler formButtonHandler;
-    
     @InjectViewModel
     ReleaseViewModel viewModel;
-    
+    private FormButtonHandler formButtonHandler;
+    @FXML
+    private Label heading;
     @FXML
     private TextField shortNameTextField;
     @FXML
@@ -30,7 +31,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     @FXML
     private DatePicker releaseDatePicker;
     @FXML
-    private TextField descriptionTextField;
+    private TextArea descriptionTextField;
     @FXML
     private Button okButton;
     @FXML
@@ -41,10 +42,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
         bindToViewModel();
         attachValidators();
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectsSupplier());
-        
-        Platform.runLater(() -> {
-            shortNameTextField.requestFocus();
-        });
+        Platform.runLater(shortNameTextField::requestFocus);
     }
     
     private void bindToViewModel() {
@@ -66,7 +64,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
+        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
     }
 
     public void okAction() {
@@ -79,5 +77,13 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
         if (formButtonHandler != null) {
             formButtonHandler.cancelAction();
         }
+    }
+
+    public StringProperty headingProperty() {
+        return heading.textProperty();
+    }
+
+    public void setOkButtonText(String string) {
+        okButton.setText(string);
     }
 }

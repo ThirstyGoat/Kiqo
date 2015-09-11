@@ -960,6 +960,9 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Skill" : "Edit Skill");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Skill" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Release.class.getSimpleName())) {
@@ -967,6 +970,9 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(ReleaseFormView.class).load();
                 viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Release" : "Edit Release");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Release" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {

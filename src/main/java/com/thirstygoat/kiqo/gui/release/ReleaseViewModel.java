@@ -61,7 +61,9 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
             if (release.get() != null) { // new releases don't have sprints
                 LocalDate releaseDate = dateProperty().get();
                 if (releaseDate != null) {
-                    return release.get().getSprints().stream().allMatch(sprint -> releaseDate.isAfter(sprint.getEndDate()));
+                    return release.get().getSprints().stream().allMatch(sprint -> {
+                        return releaseDate.isAfter(sprint.getEndDate()) || releaseDate.isEqual(sprint.getEndDate());
+                    });
                 }
             }
             return true;
