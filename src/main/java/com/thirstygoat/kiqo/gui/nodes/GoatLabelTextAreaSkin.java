@@ -20,6 +20,7 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
      */
     protected GoatLabelTextAreaSkin(GoatLabel<TextArea> control) {
         super(control);
+        displayView.setFillHeight(false);
     }
 
     @Override
@@ -36,10 +37,8 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
             Double rowHeight = text.getLayoutBounds().getHeight(); // the height of one row of text
             text.setText(editField.getText());
             editField.setPrefRowCount((int) Math.round(text.getLayoutBounds().getHeight() / rowHeight));
-            stackPane.setPrefHeight(text.getLayoutBounds().getHeight());
         };
         editField.textProperty().addListener(listener);
-        editField.widthProperty().addListener(listener);
     }
 
     @Override
@@ -56,7 +55,8 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
         editField.setWrapText(true);
 
         // hiding the scrollbar
-        ScrollBar scrollBarv = (ScrollBar)editField.lookup(".scroll-bar:vertical");
+
+        ScrollBar scrollBarv = (ScrollBar) editField.lookup(".scroll-bar:vertical");
         scrollBarv.setMaxWidth(Control.USE_PREF_SIZE);
         scrollBarv.setMinWidth(Control.USE_PREF_SIZE);
         scrollBarv.setPrefWidth(0.5);

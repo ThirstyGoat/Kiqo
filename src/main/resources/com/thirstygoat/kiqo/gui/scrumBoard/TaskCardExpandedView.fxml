@@ -35,17 +35,17 @@
                <children>
 
                   <VBox maxHeight="300" fx:id="detailsView" spacing="10">
-                     <HBox maxWidth="350" VBox.vgrow="ALWAYS">
-                        <FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />
-                        <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />
+                     <HBox spacing="5">
+                        <FontAwesomeIconView fx:id="peopleIcon"  glyphSize="15" styleClass="people-icon"/>
+                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" />
                      </HBox>
-                     <HBox>
-                        <FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon"/>
-                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                     <HBox spacing="5">
+                        <FontAwesomeIconView glyphSize="18" styleClass="clock-icon"/>
+                        <GoatLabelTextField fx:id="estimatedHoursLabel" />
                      </HBox>
-                     <HBox>
-                        <FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>
-                        <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                     <HBox maxWidth="350" spacing="5" alignment="TOP_LEFT">
+                        <FontAwesomeIconView glyphSize="18" styleClass="description-icon"/>
+                        <GoatLabelTextArea fx:id="descriptionLabel" />
                      </HBox>
                   </VBox>
 
