@@ -34,7 +34,7 @@
             <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
 
-                  <VBox maxHeight="300">
+                  <VBox maxHeight="300" fx:id="detailsView" spacing="10">
                      <HBox maxWidth="350" VBox.vgrow="ALWAYS">
                         <FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />
                         <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />
@@ -50,7 +50,7 @@
                   </VBox>
 
 
-                  <!--<GridPane fx:id="detailsGridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" vgap="5">-->
+                  <!--<GridPane fx:id="detailsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" vgap="5">-->
                   <!--<children>-->
                   <!--<FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />-->
                   <!--<GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />-->
