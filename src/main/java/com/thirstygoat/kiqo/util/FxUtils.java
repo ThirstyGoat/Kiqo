@@ -1,5 +1,21 @@
 package com.thirstygoat.kiqo.util;
 
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.util.*;
+
+import org.controlsfx.control.textfield.*;
+
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
@@ -216,6 +232,26 @@ public final class FxUtils {
         goatLabel.displayTextProperty().bindBidirectional(stringProperty);
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.validationStatus().set(validationStatus);
+    }
+
+    public static void enableShiftEnter(TextArea textArea, Runnable runnable) {
+        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
+        // Shift+Enter should create new line in the text area
+
+        textArea.setOnKeyPressed(event -> {
+            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
+            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
+            if (shiftEnter.match(event)) {
+                // force new line
+                textArea.appendText("\n");
+                event.consume();
+            } else if (enter.match(event)) {
+                event.consume();
+                try {
+                    runnable.run();
+                } catch (Exception ignored) {}
+            }
+        });
     }
 
     public static <T extends Item> void initGoatLabel(GoatLabelFilteredListSelectionView<T> goatLabel,

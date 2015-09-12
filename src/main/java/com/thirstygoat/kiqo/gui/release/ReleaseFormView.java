@@ -31,7 +31,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     @FXML
     private DatePicker releaseDatePicker;
     @FXML
-    private TextArea descriptionTextField;
+    private TextArea descriptionTextArea;
     @FXML
     private Button okButton;
     @FXML
@@ -43,13 +43,14 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
         attachValidators();
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectsSupplier());
         Platform.runLater(shortNameTextField::requestFocus);
+        FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
     }
     
     private void bindToViewModel() {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(), StringConverters.projectStringConverter(viewModel.organisationProperty()));
         releaseDatePicker.valueProperty().bindBidirectional(viewModel.dateProperty());
-        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        descriptionTextArea.textProperty().bindBidirectional(viewModel.descriptionProperty());
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
     }
 
@@ -59,7 +60,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
             validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
             validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
             validationVisualizer.initVisualization(viewModel.dateValidation(), releaseDatePicker, true);
-            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
+            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
         });
     }
     

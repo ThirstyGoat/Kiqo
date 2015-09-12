@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.Utilities;
 
+import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,7 +29,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     @FXML
     private TextField nameTextField;
     @FXML
-    private TextArea descriptionTextField;
+    private TextArea descriptionTextArea;
     @FXML
     private Button okButton;
     @FXML
@@ -39,13 +40,14 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         bindToViewModel();
         
         attachValidators();
-        
         Platform.runLater(nameTextField::requestFocus);
+
+        FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
     }
     
     private void bindToViewModel() {
         nameTextField.textProperty().bindBidirectional(viewModel.nameProperty());
-        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        descriptionTextArea.textProperty().bindBidirectional(viewModel.descriptionProperty());
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
     }
 
@@ -53,7 +55,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         Platform.runLater(() -> { // wait for textfields to exist
             ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
             validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
-            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
+            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
         });
     }
     

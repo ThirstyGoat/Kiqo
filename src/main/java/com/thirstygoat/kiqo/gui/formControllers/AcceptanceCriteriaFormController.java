@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -57,21 +58,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         });
         cancelButton.setOnAction(event -> cancel());
 
-        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
-        // Shift+Enter should create new line in the text area
-
-        acTextArea.setOnKeyPressed(event -> {
-            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
-            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
-            if (shiftEnter.match(event)) {
-                // force new line
-                acTextArea.appendText("\n");
-                event.consume();
-            } else if (enter.match(event)) {
-                event.consume();
-                okButton.fire();
-            }
-        });
+        FxUtils.enableShiftEnter(acTextArea, okButton::fire);
     }
 
     private void cancel() {
