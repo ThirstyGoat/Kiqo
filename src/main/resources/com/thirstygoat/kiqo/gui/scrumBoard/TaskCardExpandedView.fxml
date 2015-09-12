@@ -51,28 +51,28 @@
 
 
                   <!--<GridPane fx:id="detailsGridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" vgap="5">-->
-                     <!--<children>-->
-                        <!--<FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />-->
-                        <!--<GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />-->
+                  <!--<children>-->
+                  <!--<FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />-->
+                  <!--<GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />-->
 
-                        <!--<FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon"/>-->
-                        <!--<Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />-->
+                  <!--<FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon"/>-->
+                  <!--<Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />-->
 
-                        <!--<FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>-->
-                        <!--<GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />-->
+                  <!--<FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>-->
+                  <!--<GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />-->
 
-                        <!--&lt;!&ndash;<Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />&ndash;&gt;-->
-                     <!--</children>-->
-                     <!--<rowConstraints>-->
-                        <!--<RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                        <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                        <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                        <!--<RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />-->
-                     <!--</rowConstraints>-->
-                     <!--<columnConstraints>-->
-                        <!--<ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />-->
-                        <!--<ColumnConstraints hgrow="NEVER" minWidth="10.0" />-->
-                     <!--</columnConstraints>-->
+                  <!--&lt;!&ndash;<Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />&ndash;&gt;-->
+                  <!--</children>-->
+                  <!--<rowConstraints>-->
+                  <!--<RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
+                  <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
+                  <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
+                  <!--<RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />-->
+                  <!--</rowConstraints>-->
+                  <!--<columnConstraints>-->
+                  <!--<ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />-->
+                  <!--<ColumnConstraints hgrow="NEVER" minWidth="10.0" />-->
+                  <!--</columnConstraints>-->
                   <!--</GridPane>-->
 
 
@@ -102,13 +102,13 @@
                            </children>
                         </HBox>
                      </children>
-                      <columnConstraints>
-                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                      </columnConstraints>
-                      <rowConstraints>
-                          <RowConstraints  minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />
-                      </rowConstraints>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints  minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />
+                     </rowConstraints>
                   </GridPane>
                </children>
             </AnchorPane>
