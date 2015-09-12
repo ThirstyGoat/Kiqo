@@ -154,6 +154,10 @@
     -glyph-name: "CALENDAR";
 }
 
+.description-icon {
+    -glyph-name: "FILE_TEXT_ALT";
+}
+
 .pane-header {
 	-fx-font-size: 2em;
 }
@@ -202,6 +206,10 @@
     -fx-padding: 5;
     -fx-hgap: 5;
     -fx-vgap: 5;
+}
+
+.expanded-task-header {
+    -fx-font-size: 1.5em;
 }
 
 /********* STORY CARDS **********/

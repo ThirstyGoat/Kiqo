@@ -1,21 +1,8 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.scene.control.*;
-import javafx.util.*;
-
-import org.controlsfx.control.textfield.*;
-
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
-
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
@@ -29,6 +16,7 @@ import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -125,13 +113,12 @@ public final class FxUtils {
     public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
                                      StringProperty stringProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.getEditField().setStyle("-fx-background-color: deeppink");
         goatLabel.displayTextProperty().bind(stringProperty);
         goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
         goatLabel.validationStatus().set(validationStatus);
     }
 
-    public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel,
                                      FloatProperty floatProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bind(floatProperty.asString());
