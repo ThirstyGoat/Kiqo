@@ -134,7 +134,7 @@ public final class FxUtils {
         goatLabel.validationStatus().set(validationStatus);
     }
 
-    public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel,
                                      FloatProperty floatProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bind(floatProperty.asString());
