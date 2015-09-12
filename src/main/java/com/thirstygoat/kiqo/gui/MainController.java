@@ -1046,7 +1046,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/acceptanceCriteria.fxml"));
@@ -1062,6 +1062,8 @@ public class MainController implements Initializable {
             final AcceptanceCriteriaFormController acceptanceCriteriaFormController = loader.getController();
             acceptanceCriteriaFormController.setStage(stage);
             acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
+            acceptanceCriteriaFormController.headingProperty().set(
+                    acceptanceCriteria == null ? "Create Acceptance Criteria" : "Edit Acceptance Criteria");
 
             acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
             acceptanceCriteriaFormController.populateFields(acceptanceCriteria);

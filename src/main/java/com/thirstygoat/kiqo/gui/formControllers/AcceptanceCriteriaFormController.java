@@ -7,8 +7,10 @@ import java.util.ResourceBundle;
 import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -37,6 +39,8 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     private MainController mainController;
 
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextArea acTextArea;
     @FXML
@@ -108,7 +112,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         } else {
             // edit an existing allocation
             stage.setTitle("Edit Acceptance Criteria");
-            okButton.setText("Save");
+            okButton.setText("Done");
             acTextArea.setText(acceptanceCriteria.criteria.get());
         }
     }
@@ -124,5 +128,10 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    @Override
+    public StringProperty headingProperty() {
+        return heading.textProperty();
     }
 }
