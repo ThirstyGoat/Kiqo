@@ -1,10 +1,7 @@
 package com.thirstygoat.kiqo.util;
 
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabel;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.FloatProperty;
