@@ -12,7 +12,7 @@
         <GridPane mouseTransparent="false" vgap="10.0">
           <children>            
             <Label text="Person" styleClass="pane-type-indicator" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
-            <GoatLabelTextField styleClass="pane-header" fx:id="longNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" defaultText="Name"/>
+            <GoatLabelTextField styleClass="pane-short-name" fx:id="longNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" defaultText="Name" />
             <GoatLabelTextField fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" defaultText="Short Name"/>
             <GoatLabelTextField fx:id="userIdLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" defaultText="User ID"/>
             <GoatLabelTextField fx:id="emailLabel" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" defaultText="Email"/>
