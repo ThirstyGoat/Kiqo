@@ -129,7 +129,6 @@ public final class FxUtils {
     public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
                                      StringProperty stringProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.getEditField().setStyle("-fx-background-color: deeppink");
         goatLabel.displayTextProperty().bind(stringProperty);
         goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
         goatLabel.validationStatus().set(validationStatus);
