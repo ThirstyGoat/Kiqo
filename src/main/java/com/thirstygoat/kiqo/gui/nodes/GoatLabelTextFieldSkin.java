@@ -39,7 +39,30 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
 
     @Override
     protected TextField createEditField() {
-        return new TextField();
+        return new TextField() {
+            @Override
+            public void replaceText(int start, int end, String text) {
+                if (restrictToNumericInput) {
+                    if (text.matches("[0-9.]")) {
+                        super.replaceText(start, end, text);
+                    }
+                } else {
+                    super.replaceText(start, end, text);
+                }
+
+            }
+
+            @Override
+            public void replaceSelection(String text) {
+                if (restrictToNumericInput) {
+                    if (!text.matches("[0-9.]")) {
+                        super.replaceSelection(text);
+                    }
+                } else {
+                    super.replaceSelection(text);
+                }
+            }
+        };
     }
 
     @Override

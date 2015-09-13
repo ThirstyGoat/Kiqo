@@ -17,6 +17,8 @@ import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -136,6 +138,7 @@ public final class FxUtils {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.displayTextProperty().bind(floatProperty.asString());
         goatLabel.getEditField().textProperty().bindBidirectional(floatProperty, new NumberStringConverter());
+        goatLabel.restrictToNumericInput(true);
         goatLabel.validationStatus().set(validationStatus);
     }
     
