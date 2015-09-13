@@ -34,55 +34,20 @@
             <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
 
-                  <VBox maxHeight="300">
-                     <HBox maxWidth="350" VBox.vgrow="ALWAYS">
-                        <FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />
-                        <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />
+                  <VBox maxHeight="300" fx:id="detailsView" spacing="10">
+                     <HBox spacing="5">
+                        <FontAwesomeIconView fx:id="peopleIcon"  glyphSize="15" styleClass="people-icon"/>
+                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" />
                      </HBox>
-                     <HBox>
-                        <FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon"/>
-                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                     <HBox spacing="5">
+                        <FontAwesomeIconView glyphSize="18" styleClass="clock-icon"/>
+                        <GoatLabelTextField fx:id="estimatedHoursLabel"/>
                      </HBox>
-                     <HBox>
-                        <FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>
-                        <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                     <HBox maxWidth="350" spacing="5" alignment="TOP_LEFT">
+                        <FontAwesomeIconView glyphSize="18" styleClass="description-icon"/>
+                        <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..."/>
                      </HBox>
                   </VBox>
-
-
-                  <!--<GridPane fx:id="detailsGridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" vgap="5">-->
-                  <!--<children>-->
-                  <!--<FontAwesomeIconView GridPane.columnIndex="0" GridPane.rowIndex="0" glyphSize="15" styleClass="description-icon" />-->
-                  <!--<GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="01" GridPane.rowIndex="0" GridPane.columnSpan="2" />-->
-
-                  <!--<FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon"/>-->
-                  <!--<Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />-->
-
-                  <!--<FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>-->
-                  <!--<GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />-->
-
-                  <!--&lt;!&ndash;<Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />&ndash;&gt;-->
-                  <!--</children>-->
-                  <!--<rowConstraints>-->
-                  <!--<RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                  <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                  <!--<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />-->
-                  <!--<RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />-->
-                  <!--</rowConstraints>-->
-                  <!--<columnConstraints>-->
-                  <!--<ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />-->
-                  <!--<ColumnConstraints hgrow="NEVER" minWidth="10.0" />-->
-                  <!--</columnConstraints>-->
-                  <!--</GridPane>-->
-
-
-
-
-
-
-
-
-
 
                   <GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>

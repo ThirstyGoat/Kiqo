@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Model class for Person. Created by james on 17/03/15.
@@ -81,6 +80,18 @@ public class Person extends Item {
     @Override
     public StringProperty shortNameProperty() {
         return shortName;
+    }
+
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(longName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(userId);
+        bps.addPropertyChangeSupportFor(emailAddress);
+        bps.addPropertyChangeSupportFor(phoneNumber);
+        bps.addPropertyChangeSupportFor(department);
+        bps.addPropertyChangeSupportFor(skills);
     }
 
     public StringProperty longNameProperty() {

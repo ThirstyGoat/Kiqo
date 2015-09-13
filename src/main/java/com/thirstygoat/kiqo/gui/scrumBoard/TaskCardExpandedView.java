@@ -15,6 +15,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
@@ -41,7 +42,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private TextField spentEffortTextField;
     @FXML
-    private GridPane detailsGridPane;
+    private VBox detailsView;
     @FXML
     private GridPane loggingGridPane;
     @FXML
@@ -65,7 +66,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 segmentedButton.getToggleGroup().selectToggle(oldValue);
             } else {
                 if (newValue == detailsToggleButton) {
-                    showNode(detailsGridPane);
+                    showNode(detailsView);
                 } else if (newValue == loggingToggleButton) {
                     showNode(loggingGridPane);
                 }
@@ -83,7 +84,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         // TODO add logging functionality
 
-//        detailsGridPane.setGridLinesVisible(true);
+//        detailsView.setGridLinesVisible(true);
 
     }
 

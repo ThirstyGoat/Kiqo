@@ -77,7 +77,7 @@ public class SearchableItems {
                 return stories;
         }
         return getSearchables();
-	}
+    }
 
     public void removeSearchable(Searchable searchable) {
         searchableItems.remove(searchable);

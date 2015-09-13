@@ -1,44 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.formControllers.TeamFormController">
-  <bottom>
-    <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
-      <children>
-        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-        <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Team" />
-      </children>
-      <padding>
-        <Insets right="35.0" />
-      </padding>
-    </HBox>
-  </bottom>
-  <center>
-      <GridPane vgap="10.0" >
-          <columnConstraints>
-              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="183.0" />
-              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="347.0" />
-          </columnConstraints>
-          <rowConstraints>
-              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints />
-            <RowConstraints />
-          </rowConstraints>
-          <padding>
-              <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-          </padding>
-          <children>
-              <Label text="Short Name:" />
-              <Label text="Description:" GridPane.rowIndex="1" />
-              <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" />
-              <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-              <GoatFilteredListSelectionView prefHeight="200" fx:id="peopleListSelectionView" GridPane.rowIndex="3" GridPane.columnSpan="2" />
-              <Label text="If a role is disabled, the Person lacks the necessary skill for that role." GridPane.rowIndex="5" GridPane.columnSpan="2" GridPane.columnIndex="0" />
-          </children>
-      </GridPane>
-  </center>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="form" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.formControllers.TeamFormController">
+   <center>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="477.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label styleClass="form-field-label" text="Short Name">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="shortNameTextField">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </TextField>
+            <Label styleClass="form-field-label" text="Description">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="descriptionTextField">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </TextField>
+            <Label styleClass="form-field-label" text="Team Members">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Label>
+             <GoatFilteredListSelectionView prefHeight="200" fx:id="peopleListSelectionView">
+                 <VBox.margin>
+                     <Insets bottom="5.0" />
+                 </VBox.margin>
+             </GoatFilteredListSelectionView>
+             <Label styleClass="form-field-label" style="-fx-font-size:11px" text="If a role is disabled, the Person lacks the necessary skill for that role." />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" />
+         </padding>
+         <children>
+            <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" styleClass="form-button" text="Cancel" />
+            <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" styleClass="form-button" text="Create Team" />
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <Label fx:id="heading" maxWidth="1.7976931348623157E308" styleClass="form-heading" text="Create Team" BorderPane.alignment="CENTER_LEFT">
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
 </BorderPane>

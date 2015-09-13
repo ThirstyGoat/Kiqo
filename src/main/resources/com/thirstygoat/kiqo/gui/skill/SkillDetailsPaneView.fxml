@@ -4,26 +4,24 @@
 <?import javafx.scene.layout.*?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
-        <GridPane mouseTransparent="false" vgap="10.0">
-          <children>            
-            <Label text="Skill" styleClass="pane-type-indicator" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
-            <GoatLabelTextField styleClass="pane-header" fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+        <VBox mouseTransparent="false" spacing="10.0">
+          <children>
+            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
+              <children>
+                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
+            	<Label text="Skill" styleClass="pane-type-indicator" />
+              </children>
+            </HBox>
+            <GoatLabelTextArea fx:id="descriptionLabel" />
           </children>
-          <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          </columnConstraints>
-          <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-          </rowConstraints>
-        </GridPane>
+        </VBox>
       </content>
     </ScrollPane>
   </children>

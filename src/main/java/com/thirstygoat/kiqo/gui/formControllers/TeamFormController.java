@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -62,6 +63,8 @@ public class TeamFormController extends FormController<Team> {
     private Person scrumMaster;
     private Person productOwner;
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextField shortNameTextField;
     @FXML
@@ -241,7 +244,6 @@ public class TeamFormController extends FormController<Team> {
 
         footer.setRight(legend);
         peopleListSelectionView.setFooter(footer);
-        peopleListSelectionView.setHeader(new Label("Team Members:"));
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
@@ -414,7 +416,6 @@ public class TeamFormController extends FormController<Team> {
     @Override
     public void populateFields(Team team) {
         this.team = team;
-        okButton.setText("Done");
 
         if (team != null) {
             // We are editing an existing team
@@ -422,11 +423,15 @@ public class TeamFormController extends FormController<Team> {
             shortNameTextField.setText(team.getShortName());
             descriptionTextField.setText(team.getDescription());
             targetPeople.addAll(team.getTeamMembers());
+            okButton.setText("Done");
 
             productOwner = team.getProductOwner();
             scrumMaster = team.getScrumMaster();
             devTeam.addAll(team.getDevTeam().stream().collect(Collectors.toList()));
+        } else {
+            okButton.setText("Create Team");
         }
+
         populatePeopleListView();
     }
 
@@ -434,5 +439,10 @@ public class TeamFormController extends FormController<Team> {
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
         setListSelectionViewSettings();
+    }
+
+    @Override
+    public StringProperty headingProperty() {
+        return heading.textProperty();
     }
 }

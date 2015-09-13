@@ -1,20 +1,16 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import com.thirstygoat.kiqo.gui.detailsPane.AllocationsTableViewController;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
-import com.thirstygoat.kiqo.util.FxUtils;
-import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.collections.ListChangeListener;
+import javafx.fxml.*;
+import javafx.scene.control.Label;
+
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.*;
 
 public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, Initializable {
     @FXML

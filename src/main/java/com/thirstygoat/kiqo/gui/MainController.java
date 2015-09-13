@@ -952,7 +952,7 @@ public class MainController implements Initializable {
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
-                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create " + type : "Edit " + type);
+                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create Sprint" : "Edit Sprint");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Skill.class.getSimpleName())) {
@@ -980,8 +980,10 @@ public class MainController implements Initializable {
                     return;
                 }
                 final Scene scene = new Scene(root);
+                stage.initStyle(StageStyle.UNDECORATED);
                 stage.setScene(scene);
                 final FormController<T> formController = loader.getController();
+                formController.headingProperty().set(t == null ? "Create " + type : "Edit " + type);
                 formController.setStage(stage);
                 formController.setOrganisation(selectedOrganisationProperty.get());
                 formController.populateFields(t);

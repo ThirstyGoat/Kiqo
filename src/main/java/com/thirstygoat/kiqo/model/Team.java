@@ -143,6 +143,10 @@ public class Team extends Item {
 //        return Collections.unmodifiableList(allocations);
     }
 
+    public void setAllocations(List<Allocation> allocations) {
+        this.allocations.setAll(allocations);
+    }
+
     public ObservableList<Allocation> observableAllocations() {
         return allocations;
     }
@@ -164,5 +168,16 @@ public class Team extends Item {
         sb.append(", devTeam=" + Utilities.commaSeparatedValues(getDevTeam()));
         sb.append('}');
         return sb.toString();
+    }
+    
+    @Override
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(shortName);
+        bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(productOwner);
+        bps.addPropertyChangeSupportFor(scrumMaster);
+        bps.addPropertyChangeSupportFor(teamMembers);
+        bps.addPropertyChangeSupportFor(devTeam);
+        bps.addPropertyChangeSupportFor(allocations);
     }
 }

@@ -1,36 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" fx:controller="com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneView">
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <GridPane mouseTransparent="false" vgap="10.0">
-            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
-                <font>
-                    <Font name="System Bold" size="12.0" fx:id="x1" />
-                </font>
-            </Label>
-            <Label font="$x1" text="Short Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <Label font="$x1" text="Allocations:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <GoatLabelTextField fx:id="longNameLabel" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
-            <GoatLabelTextField fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <GoatLabelTextField fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <fx:include source="/detailsPane/allocationsTableView.fxml" fx:id="allocationsTableView" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" GridPane.vgrow="ALWAYS"/>
-            <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-1" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-        </GridPane>
+        <VBox mouseTransparent="false" spacing="10.0">
+          <children>
+            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
+              <children>
+                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                <GoatLabelTextField fx:id="longNameLabel" styleClass="pane-long-name" />
+                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
+                <Label styleClass="pane-type-indicator" text="Project" />
+              </children>
+            </HBox>
+            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <Label text="Allocations" styleClass="field-label" >
+	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+	        </Label>
+            <fx:include source="../nodes/allocationsTableView.fxml" fx:id="allocationsTableView" VBox.vgrow="ALWAYS"/>
+          </children>
+        </VBox>
     </ScrollPane>
 </AnchorPane>

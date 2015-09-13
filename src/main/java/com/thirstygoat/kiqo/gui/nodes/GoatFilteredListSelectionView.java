@@ -148,10 +148,10 @@ public class GoatFilteredListSelectionView<T extends Item> extends VBox {
     private void createSkin() {
         textField = new TextField();
         textField.setMinHeight(30);
-        textField.setStyle("-fx-border-radius: 4 4 0 0; -fx-background-radius: 4 4 0 0;");
+        textField.getStyleClass().add("filtered-list-view-text-field");
         textField.setPromptText("Type here to filter list...");
         listView = new ListView<>();
-        listView.setStyle("-fx-border-radius: 0 0 4 4; -fx-background-radius: 0 0 4 4;");
+        listView.getStyleClass().add("filtered-list-view");
         listView.setItems(allItems);
         VBox.setVgrow(listView, Priority.ALWAYS);
 

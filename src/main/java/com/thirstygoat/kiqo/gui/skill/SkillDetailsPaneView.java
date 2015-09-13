@@ -20,7 +20,6 @@ public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
-
     @InjectViewModel
     private SkillDetailsPaneViewModel viewModel;
 
@@ -28,6 +27,6 @@ public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>
     public void initialize(URL location, ResourceBundle resources) {
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.nameProperty(), viewModel.nameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(), "Description");
+                viewModel.descriptionValidation(),  "Add a description...");
     }
 }

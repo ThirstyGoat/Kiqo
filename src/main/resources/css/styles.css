@@ -158,8 +158,12 @@
     -glyph-name: "FILE_TEXT_ALT";
 }
 
-.pane-header {
+.pane-short-name {
 	-fx-font-size: 2em;
+}
+
+.pane-long-name {
+	-fx-font-style: italic;
 }
 
 .pane-type-indicator {
@@ -355,6 +359,24 @@
     -fx-background-radius: 0;
     -fx-background-insets: -1;
     -fx-border-color: transparent;
+}
+
+.form .filtered-list-view-text-field {
+    -fx-background-radius: 0;
+}
+
+.form .filtered-list-view {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: -1, 0;
+    -fx-background-color: white;
+    -fx-border-color: gainsboro
+}
+
+.form .filtered-list-view:focused {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
 }
 
 /*********** DETAILS PANE INFO ****************/

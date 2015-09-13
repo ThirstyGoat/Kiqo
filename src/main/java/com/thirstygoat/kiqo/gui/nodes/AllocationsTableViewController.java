@@ -1,4 +1,4 @@
-package com.thirstygoat.kiqo.gui.detailsPane;
+package com.thirstygoat.kiqo.gui.nodes;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -32,7 +32,6 @@ import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
 import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
