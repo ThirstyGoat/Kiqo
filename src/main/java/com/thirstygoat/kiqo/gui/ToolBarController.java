@@ -6,11 +6,14 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -65,7 +68,6 @@ public class ToolBarController implements Initializable {
         personButton.setOnAction(event -> {
             mainController.newPerson();
         });
-//        vb.getChildren().add(personButton);
 
         Button skillButton = new Button();
         FontAwesomeIconView skillIcon = new FontAwesomeIconView(FontAwesomeIcon.PUZZLE_PIECE);
@@ -135,7 +137,6 @@ public class ToolBarController implements Initializable {
         newItemPopOver.setDetachable(false);
         newItemPopOver.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
 
-
         GridPane gridPane = new GridPane();
 
         gridPane.add(projectButton, 0, 0);
@@ -144,17 +145,25 @@ public class ToolBarController implements Initializable {
         gridPane.add(teamButton, 0, 1);
         gridPane.add(releaseButton, 1, 1);
         gridPane.add(storyButton, 2, 1);
+        gridPane.setHgrow(storyButton, Priority.ALWAYS);
         gridPane.add(backlogButton, 0, 2);
         gridPane.add(sprintButton, 1, 2);
 
-        gridPane.setMargin(projectButton, new Insets(5,10,5,10));
-        gridPane.setMargin(personButton, new   Insets(5,10,5,10));
-        gridPane.setMargin(skillButton, new  Insets(5,10,5,10));
-        gridPane.setMargin(teamButton, new   Insets(5,10,5,10));
-        gridPane.setMargin(releaseButton, new   Insets(5,10,5,10));
-        gridPane.setMargin(storyButton, new   Insets(5,10,5,10));
-        gridPane.setMargin(backlogButton, new  Insets(5,10,5,10));
-        gridPane.setMargin(sprintButton, new   Insets(5,10,5,10));
+        Insets inset = new Insets(5,10,5,10);
+
+        gridPane.setMargin(projectButton,inset);
+        gridPane.setMargin(personButton, inset);
+        gridPane.setMargin(skillButton, inset);
+        gridPane.setMargin(teamButton, inset);
+        gridPane.setMargin(releaseButton, inset);
+        gridPane.setMargin(storyButton, inset);
+        gridPane.setMargin(backlogButton, inset);
+        gridPane.setMargin(sprintButton, inset);
+
+        ColumnConstraints column = new ColumnConstraints();
+        gridPane.getColumnConstraints().addAll(column, column, column);
+        column.setHalignment(HPos.CENTER);
+
 
         newItemPopOver.setContentNode(gridPane);
         newButton.setOnAction(event -> newItemPopOver.show(newButton));

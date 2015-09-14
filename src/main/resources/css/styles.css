@@ -79,6 +79,10 @@
     -fx-animated: true;
 }
 
+.toolbar-newbutton:hover {
+    -fx-background-color: darkgray;
+}
+
 .task-card-minimised-shortName {
     -fx-font-size: 10px;
     -fx-text-alignment: left;
