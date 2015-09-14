@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10.0" fillWidth="true" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.menuBar.AboutController" >
+	<padding>
+	  <Insets topRightBottomLeft="10.0" />
+	</padding>
+	<children>
+	  <Label wrapText="true" fx:id="productLabel" />
+	  <Label wrapText="true" fx:id="companyLabel" graphicTextGap="10.0" contentDisplay="TOP" />
+	  <HBox>
+	    <children>
+	      <Region HBox.hgrow="ALWAYS" />
+	      <Button text="Close" defaultButton="true" onAction="#close" />
+	    </children>
+	  </HBox>
+	</children>
+</VBox>
+
