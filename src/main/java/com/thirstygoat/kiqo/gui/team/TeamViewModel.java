@@ -116,7 +116,7 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
         this.team.set(team);
         this.organisation.set(organisation);
         modelWrapper.set(team != null ? team : new Team());
-        modelWrapper.reload();
+        this.reload();
     }
 
     protected Supplier<List<Person>> productOwnerSupplier() {

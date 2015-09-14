@@ -19,26 +19,10 @@
               </children>
             </HBox>
             <GoatLabelTextArea fx:id="descriptionLabel" />
-            <GridPane hgap="10.0" >
-	          <children>
-              	<Label text="Product Owner" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" >
-	            	<VBox.margin><Insets bottom="-8"/></VBox.margin>
-		        </Label>
-	            <GoatLabelTextField fx:id="poLabel" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-	            <Label text="Scrum Master" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="1" >
-		            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-		        </Label>
-	            <GoatLabelTextField fx:id="smLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-	          </children>
-	        </GridPane>
-            <Label text="Development Team" styleClass="field-label" >
+            <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-            <Label fx:id="devTeamLabel" />
-            <Label text="All Team Members" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-	        <Label fx:id="teamMembersLabel" />
+	        <ListView fx:id="teamMemberList" />
 	        <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
