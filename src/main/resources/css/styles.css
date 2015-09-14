@@ -73,6 +73,12 @@
 	-fx-fill: green;
 }
 
+.toolbar-newbutton{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+    -fx-animated: true;
+}
+
 .task-card-minimised-shortName {
     -fx-font-size: 10px;
     -fx-text-alignment: left;
@@ -91,6 +97,7 @@
 .advanced-search-list-result-title {
     -fx-font-weight: bolder;
 }
+
 /* Advanced Search */
 
 .advanced-search-result-title-label {
@@ -139,7 +146,19 @@
 }
 
 .people-icon {
+    -glyph-name: "USER";
+}
+
+.team-icon {
     -glyph-name: "USERS";
+}
+
+.skill-icon {
+    -glyph-name: "PUZZLE";
+}
+
+.sprint-icon {
+    -glyph-name: "FLAG-CHECKERED";
 }
 
 .comment-icon {

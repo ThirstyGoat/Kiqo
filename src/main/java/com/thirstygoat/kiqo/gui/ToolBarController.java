@@ -1,14 +1,16 @@
 package com.thirstygoat.kiqo.gui;
 
 import com.thirstygoat.kiqo.command.UndoManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -41,63 +43,120 @@ public class ToolBarController implements Initializable {
     }
 
     private void initializeButtons() {
-        HBox projectButton = new HBox();
-        projectButton.getChildren().addAll(new Label("Project"));
-        projectButton.setOnMouseClicked(event -> {
+
+        Button projectButton = new Button();
+        FontAwesomeIconView projectIcon = new FontAwesomeIconView(FontAwesomeIcon.ROCKET);
+        projectButton.setGraphic(projectIcon);
+        projectIcon.setGlyphSize(20);
+        projectButton.setText("Project");
+        projectButton.getStyleClass().add("toolbar-newbutton");
+        projectButton.setContentDisplay(ContentDisplay.TOP);
+        projectButton.setOnAction(event -> {
             mainController.newProject();
         });
-        HBox personButton = new HBox();
-        personButton.getChildren().addAll(new Label("Person"));
-        personButton.setOnMouseClicked(event -> {
+
+        Button personButton = new Button();
+        FontAwesomeIconView personIcon = new FontAwesomeIconView(FontAwesomeIcon.USER);
+        personButton.setGraphic(personIcon);
+        personIcon.setGlyphSize(20);
+        personButton.setText("Person");
+        personButton.getStyleClass().add("toolbar-newbutton");
+        personButton.setContentDisplay(ContentDisplay.TOP);
+        personButton.setOnAction(event -> {
             mainController.newPerson();
         });
-        HBox skillButton = new HBox();
-        skillButton.getChildren().addAll(new Label("Skill"));
-        skillButton.setOnMouseClicked(event -> {
+//        vb.getChildren().add(personButton);
+
+        Button skillButton = new Button();
+        FontAwesomeIconView skillIcon = new FontAwesomeIconView(FontAwesomeIcon.PUZZLE_PIECE);
+        skillButton.setGraphic(skillIcon);
+        skillIcon.setGlyphSize(20);
+        skillButton.setText("Skill");
+        skillButton.getStyleClass().add("toolbar-newbutton");
+        skillButton.setContentDisplay(ContentDisplay.TOP);
+        skillButton.setOnAction(event -> {
             mainController.newSkill();
         });
-        HBox teamButton = new HBox();
-        teamButton.getChildren().addAll(new Label("Team"));
-        teamButton.setOnMouseClicked(event -> {
+        Button teamButton = new Button();
+        FontAwesomeIconView teamIcon = new FontAwesomeIconView(FontAwesomeIcon.USERS);
+        teamButton.setGraphic(teamIcon);
+        teamIcon.setGlyphSize(20);
+        teamButton.setText("Team");
+        teamButton.getStyleClass().add("toolbar-newbutton");
+        teamButton.setContentDisplay(ContentDisplay.TOP);
+        teamButton.setOnAction(event -> {
             mainController.newTeam();
         });
-        HBox releaseButton = new HBox();
-        releaseButton.getChildren().addAll(new Label("Release"));
-        releaseButton.setOnMouseClicked(event -> {
+
+        Button releaseButton = new Button();
+        FontAwesomeIconView releaseIcon = new FontAwesomeIconView(FontAwesomeIcon.CALENDAR);
+        releaseButton.setGraphic(releaseIcon);
+        releaseIcon.setGlyphSize(20);
+        releaseButton.setText("Release");
+        releaseButton.getStyleClass().add("toolbar-newbutton");
+        releaseButton.setContentDisplay(ContentDisplay.TOP);
+        releaseButton.setOnAction(event -> {
             mainController.newRelease();
         });
-        HBox storyButton = new HBox();
-        storyButton.getChildren().addAll(new Label("Story"));
-        storyButton.setOnMouseClicked(event -> {
+        Button storyButton = new Button();
+        FontAwesomeIconView storyIcon = new FontAwesomeIconView(FontAwesomeIcon.BOOK);
+        storyButton.setGraphic(storyIcon);
+        storyIcon.setGlyphSize(20);
+        storyButton.setText("Story");
+        storyButton.getStyleClass().add("toolbar-newbutton");
+        storyButton.setContentDisplay(ContentDisplay.TOP);
+        storyButton.setOnAction(event -> {
             mainController.newStory();
         });
-        HBox backlogButton = new HBox();
-        backlogButton.getChildren().addAll(new Label("Backlog"));
-        backlogButton.setOnMouseClicked(event -> {
+
+        Button backlogButton = new Button();
+        FontAwesomeIconView backlogIcon = new FontAwesomeIconView(FontAwesomeIcon.LIST);
+        backlogButton.setGraphic(backlogIcon);
+        backlogIcon.setGlyphSize(20);
+        backlogButton.setText("Backlog");
+        backlogButton.getStyleClass().add("toolbar-newbutton");
+        backlogButton.setContentDisplay(ContentDisplay.TOP);
+        backlogButton.setOnAction(event -> {
             mainController.newBacklog();
         });
-        HBox sprintButton = new HBox();
-        sprintButton.getChildren().addAll(new Label("Sprint"));
-        sprintButton.setOnMouseClicked(event -> {
+
+        Button sprintButton = new Button();
+        FontAwesomeIconView sprintIcon = new FontAwesomeIconView(FontAwesomeIcon.FLAG_CHECKERED);
+        sprintButton.setGraphic(sprintIcon);
+        sprintIcon.setGlyphSize(20);
+        sprintButton.setText("Sprint");
+        sprintButton.getStyleClass().add("toolbar-newbutton");
+        sprintButton.setContentDisplay(ContentDisplay.TOP);
+        sprintButton.setOnAction(event -> {
             mainController.newSprint();
         });
 
         PopOver newItemPopOver = new PopOver();
         newItemPopOver.setDetachable(false);
+        newItemPopOver.setArrowLocation(PopOver.ArrowLocation.TOP_LEFT);
 
-        HBox row1 = new HBox();
-        HBox row2 = new HBox();
-        HBox row3 = new HBox();
 
-        row1.getChildren().addAll(projectButton, personButton, skillButton);
-        row2.getChildren().addAll(teamButton, releaseButton, storyButton);
-        row3.getChildren().addAll(backlogButton, sprintButton);
+        GridPane gridPane = new GridPane();
 
-        VBox vb = new VBox();
-        vb.getChildren().addAll(row1,row2,row3);
+        gridPane.add(projectButton, 0, 0);
+        gridPane.add(personButton, 1, 0);
+        gridPane.add(skillButton, 2, 0);
+        gridPane.add(teamButton, 0, 1);
+        gridPane.add(releaseButton, 1, 1);
+        gridPane.add(storyButton, 2, 1);
+        gridPane.add(backlogButton, 0, 2);
+        gridPane.add(sprintButton, 1, 2);
 
-        newItemPopOver.setContentNode(vb);
+        gridPane.setMargin(projectButton, new Insets(5,10,5,10));
+        gridPane.setMargin(personButton, new   Insets(5,10,5,10));
+        gridPane.setMargin(skillButton, new  Insets(5,10,5,10));
+        gridPane.setMargin(teamButton, new   Insets(5,10,5,10));
+        gridPane.setMargin(releaseButton, new   Insets(5,10,5,10));
+        gridPane.setMargin(storyButton, new   Insets(5,10,5,10));
+        gridPane.setMargin(backlogButton, new  Insets(5,10,5,10));
+        gridPane.setMargin(sprintButton, new   Insets(5,10,5,10));
 
+        newItemPopOver.setContentNode(gridPane);
         newButton.setOnAction(event -> newItemPopOver.show(newButton));
         newItemPopOver.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
