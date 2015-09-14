@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -121,12 +122,12 @@ public class UtilitiesTest {
 
     @Test
     public void testCommaSeparatedValuesProperty() throws Exception {
-
+        // TODO not implemented
     }
 
     @Test
     public void testShortnameIsUniqueMultiple() throws Exception {
-
+        // TODO not implemented
     }
 
     @Test
@@ -154,7 +155,30 @@ public class UtilitiesTest {
 
     @Test
     public void testSetNameSuggester() throws Exception {
+        StringProperty longName = new SimpleStringProperty("");
+        StringProperty shortName = new SimpleStringProperty("");
+        BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
+                
+        Utilities.setNameSuggester(longName, shortName, shortNameModified);
 
+        Assert.assertEquals("config does not affect longName value", "", longName.get());
+        Assert.assertEquals("config does not affect shortName value", "", shortName.get());
+        
+        longName.set("name");
+        Assert.assertEquals("basic name suggestion is propagated", longName.get(), shortName.get());
+        
+        longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH + " characters..................");
+        Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH, shortName.get().length());
+        
+        longName.set("shorter name again");
+        Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
+        
+        shortName.set("direct shortName edit");
+        Assert.assertTrue("direct edit is registered with the modified property", shortNameModified.get());
+        Assert.assertNotEquals("shortName is not propagated to longName", longName.get(), shortName.get());
+        longName.set("longName edit");
+        Assert.assertNotEquals("direct edit disconnects propagation", longName.get(), shortName.get());
+        
     }
 
     @Test

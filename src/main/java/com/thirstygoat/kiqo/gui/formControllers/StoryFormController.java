@@ -73,8 +73,7 @@ public class StoryFormController extends FormController<Story> {
         setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField, shortNameTextField, Utilities.SHORT_NAME_MAX_LENGTH,
-                shortNameModified);
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty(), shortNameModified);
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
         setStoryCycleHyperLinkInfo();

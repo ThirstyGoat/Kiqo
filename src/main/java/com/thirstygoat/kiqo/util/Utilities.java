@@ -144,19 +144,30 @@ public final class Utilities {
     }
 
     /**
-     * Sets up the listener for changes in the source name, that the the target name can be populated with a suggestion
-     * @param source the source name
-     * @param target the target name
-     * @param suggestedLength the maximum length for a suggestion
-     * @param targetModified whether or not the target was modified
+     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
+     * up to a certain number of characters.
+     * @param longName source
+     * @param shortName target
+     * @param shortNameModified whether or not the target was modified
      */
-    public static void setNameSuggester(TextField source, TextField target, int suggestedLength,
-                                        BooleanProperty targetModified) {
-        source.textProperty().addListener((observable, oldValue, newValue) -> {
-            final String suggestedName = newValue.substring(0, Math.min(newValue.length(),
-                    suggestedLength));
-            if (!targetModified.get()) {
-                target.setText(suggestedName);
+    public static void setNameSuggester(StringProperty longName, StringProperty shortName, BooleanProperty shortNameModified) {
+        shortName.addListener((observable, oldValue, newValue) -> {
+            final String truncatedLongName = longName.get().substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH));
+            final String truncatedShortName = newValue.substring(0, Math.min(newValue.length(), Utilities.SHORT_NAME_MAX_LENGTH));
+            // if shortName is modified directly, disconnect suggester
+            if (!truncatedShortName.equals(truncatedLongName)) {
+                shortNameModified.set(true);
+            }
+            // in any case, truncate the short name to the character limit
+            if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortName.set(truncatedShortName); // override newValue
+            }
+        });
+        
+        longName.addListener((observable, oldValue, newValue) -> {
+            // Propagate edit to shortName, which will deal with truncation.
+            if (!shortNameModified.get()) {
+                shortName.set(newValue);
             }
         });
     }
