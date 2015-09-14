@@ -10,6 +10,7 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -32,11 +33,11 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private Task task;
 
     public TaskCard(Task task) {
+        this.task = task;
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
         draw();
-        this.task = task;
         shortNameProperty().bind(task.shortNameProperty());
         hoursProperty().bind(task.estimateProperty());
         getStyleClass().add("task-card");
@@ -75,11 +76,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
-        impedanceIcon.setOnMouseClicked(event -> newExpandedCard());
+        setOnMouseClicked(event -> newExpandedCard());
 
-//        impedanceIcon.visibleProperty().bind(impedanceProperty);
-        impedanceIcon.visibleProperty().set(true);
+        impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.getImpediments()));
+//        impedanceIcon.visibleProperty().set(true);
 
+        impedanceIcon.setStyle(("fx-fill : oldlace"));
         iconBox.getChildren().add(impedanceIcon);
 
         ColumnConstraints columnConstraints = new ColumnConstraints(10, 100, 100);

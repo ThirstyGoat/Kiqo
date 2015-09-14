@@ -4,18 +4,17 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -36,18 +35,15 @@ public class TaskCardViewModel implements ViewModel, Editable {
     private ObservableRuleBasedValidator teamValidator;
     private FunctionBasedValidator estimateValidator;
     private CompositeValidator allValidator;
+    private StringProperty textFieldString = new SimpleStringProperty("");
 
     public TaskCardViewModel() {
         task = new SimpleObjectProperty<>();
         organisation = new SimpleObjectProperty<>();
         createValidators();
-
     }
 
     private void createValidators() {
-
-
-
         shortNameValidator = new ObservableRuleBasedValidator();
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
@@ -87,12 +83,10 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     public void load(Task task) {
         this.task.set(task);
-
         if (task != null) {
             modelWrapper.set(task);
         }
         modelWrapper.reload();
-
     }
 
     public void setStage(Stage stage) {
@@ -103,20 +97,28 @@ public class TaskCardViewModel implements ViewModel, Editable {
         this.exitStrategy = exitStrategy;
     }
 
+    public StringProperty textFieldString() {
+        return textFieldString;
+    }
+
     public ObjectProperty<Organisation> organisationProperty() {
         return organisation;
     }
 
     public StringProperty shortNameProperty() {
-        return modelWrapper.field("shortName", Task::getShortName, Task::setShortName);
+        return modelWrapper.field("shortName", Task::shortNameProperty);
     }
 
     public StringProperty descriptionProperty() {
-        return modelWrapper.field("description", Task::getDescription, Task::setDescription);
+        return modelWrapper.field("description", Task::descriptionProperty);
     }
 
     public FloatProperty estimateProperty() {
-        return modelWrapper.field("estimate", Task::getEstimate, Task::setEstimate);
+        return modelWrapper.field("estimate", Task::estimateProperty);
+    }
+
+    public ObservableList<Impediment> impedimentsObservableList() {
+        return modelWrapper.field("impediments", Task::getImpediments, Task::setImpediments);
     }
 
     public ObjectProperty<Task> getTask() {
@@ -146,6 +148,21 @@ public class TaskCardViewModel implements ViewModel, Editable {
     @Override
     public void cancelEdit() {
 
+    }
+
+    public void addImpediment() {
+        if (!textFieldString.get().isEmpty()) {
+            CreateImpedimentCommand createImpedimentCommand = new CreateImpedimentCommand(new Impediment(textFieldString.get(), false), task.get());
+            UndoManager.getUndoManager().doCommand(createImpedimentCommand);
+            textFieldString.set("");
+        }
+    }
+
+    public void removeImpediment(Impediment impediment) {
+        if (impediment != null) {
+            DeleteImpedimentCommand deleteImpedimentCommand = new DeleteImpedimentCommand(impediment, task.get());
+            UndoManager.getUndoManager().doCommand(deleteImpedimentCommand);
+        }
     }
 
 

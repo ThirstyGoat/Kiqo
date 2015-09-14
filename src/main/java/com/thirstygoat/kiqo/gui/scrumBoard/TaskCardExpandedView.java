@@ -1,17 +1,18 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
+import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -57,7 +58,14 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private ToggleButton loggingToggleButton;
     @FXML
     private HBox buttonsHBox;
-
+    @FXML
+    private Button addImpedimentButton;
+    @FXML
+    private Button removeImpedimentButton;
+    @FXML
+    private TextField impedimentTextField;
+    @FXML
+    private ListView<Impediment> impedimentsListView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,15 +85,35 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(), viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
 
+
+
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
 //        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());
 
-        // TODO implement the comments/impediments
+
+        impedimentsListView.setCellFactory(param -> new ImpedimentListCell());
+        impedimentsListView.setItems(viewModel.impedimentsObservableList());
+        impedimentTextField.textProperty().bindBidirectional(viewModel.textFieldString());
+        impedimentTextField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                viewModel.addImpediment();
+            }
+        });
+
+        addImpedimentButton.setOnAction(e -> viewModel.addImpediment());
+        addImpedimentButton.disableProperty().bind(Bindings.isEmpty(impedimentTextField.textProperty()));
+        removeImpedimentButton.setOnAction(
+                        e -> {
+                            int place = impedimentsListView.getSelectionModel().getSelectedIndex();
+                            viewModel.removeImpediment(impedimentsListView.getSelectionModel().getSelectedItem());
+                            impedimentsListView.getSelectionModel().select((place > 0) ? place - 1 : 0);
+
+                        });
+        removeImpedimentButton.disableProperty().bind(
+                        Bindings.isNull(impedimentsListView.getSelectionModel().selectedItemProperty()));
+
 
         // TODO add logging functionality
-
-//        detailsView.setGridLinesVisible(true);
-
     }
 
 

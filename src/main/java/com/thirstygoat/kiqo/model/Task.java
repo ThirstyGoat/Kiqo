@@ -51,6 +51,7 @@ public class Task extends Item {
         bps.addPropertyChangeSupportFor(estimate);
         bps.addPropertyChangeSupportFor(status);
         bps.addPropertyChangeSupportFor(story);
+        bps.addPropertyChangeSupportFor(impediments);
     }
 
     /**
@@ -67,6 +68,10 @@ public class Task extends Item {
 
     public ObservableList<Impediment> getImpediments() {
         return impediments;
+    }
+
+    public void setImpediments(List<Impediment> impediments) {
+        this.impediments.setAll(impediments);
     }
 
     public Story getStory() {

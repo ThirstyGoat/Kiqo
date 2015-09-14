@@ -623,7 +623,6 @@
       "0x258",
       "0x259"
     ],
-    "sprints": [],
     "description": "Project management for the real world"
   },
   "0x3": {
@@ -6883,14 +6882,18 @@
     "description": "",
     "estimate": 1.0,
     "status": "NOT_STARTED",
-    "story": "0x25c"
+    "story": "0x25c",
+    "impediments": []
   },
   "0x267": {
     "shortName": "Implement commands",
     "description": "Implement commands for AC model and unit test.",
     "estimate": 2.0,
     "status": "NOT_STARTED",
-    "story": "0x25c"
+    "story": "0x25c",
+    "impediments": [
+      "0x277"
+    ]
   },
   "0x268": {
     "criteria": "Add estimation scales",
@@ -6947,21 +6950,24 @@
     "description": "Create search interface",
     "estimate": 3.0,
     "status": "NOT_STARTED",
-    "story": "0x261"
+    "story": "0x261",
+    "impediments": []
   },
   "0x273": {
     "shortName": "Search shortcut",
     "description": "Implement a shortchut for search",
     "estimate": 1.0,
     "status": "NOT_STARTED",
-    "story": "0x261"
+    "story": "0x261",
+    "impediments": []
   },
   "0x274": {
     "shortName": "Design view",
     "description": "Implement this design in FXML",
     "estimate": 1.0,
     "status": "NOT_STARTED",
-    "story": "0x261"
+    "story": "0x261",
+    "impediments": []
   },
   "0x275": {
     "criteria": "ac",
@@ -6972,6 +6978,10 @@
     "criteria": "ac3",
     "state": "NEITHER",
     "story": "0x263"
+  },
+  "0x277": {
+    "impediments": "ewq",
+    "resolved": false
   },
   "VERSION": "5.0"
 }
