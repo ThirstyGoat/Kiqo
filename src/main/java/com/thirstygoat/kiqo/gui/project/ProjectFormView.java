@@ -44,7 +44,7 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty(), new SimpleBooleanProperty(false));
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         
         Platform.runLater(() -> {
             setPrompts();

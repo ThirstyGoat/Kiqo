@@ -154,12 +154,11 @@ public class UtilitiesTest {
     }
 
     @Test
-    public void testSetNameSuggester() throws Exception {
+    public void testSetNameSuggester_basic() throws Exception {
         StringProperty longName = new SimpleStringProperty("");
         StringProperty shortName = new SimpleStringProperty("");
-        BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
                 
-        Utilities.setNameSuggester(longName, shortName, shortNameModified);
+        Utilities.setNameSuggester(longName, shortName);
 
         Assert.assertEquals("config does not affect longName value", "", longName.get());
         Assert.assertEquals("config does not affect shortName value", "", shortName.get());
@@ -172,13 +171,25 @@ public class UtilitiesTest {
         
         longName.set("shorter name again");
         Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
-        
+    }
+    
+    @Test
+    public void testSetNameSuggester_disableEnable() throws Exception {
+        StringProperty longName = new SimpleStringProperty("");
+        StringProperty shortName = new SimpleStringProperty("");
+                
+        Utilities.setNameSuggester(longName, shortName);
+
+        // direct short name edit which does not match long name will disable suggester
         shortName.set("direct shortName edit");
-        Assert.assertTrue("direct edit is registered with the modified property", shortNameModified.get());
         Assert.assertNotEquals("shortName is not propagated to longName", longName.get(), shortName.get());
         longName.set("longName edit");
-        Assert.assertNotEquals("direct edit disconnects propagation", longName.get(), shortName.get());
+        Assert.assertNotEquals("direct non-matching edit disconnects propagation", longName.get(), shortName.get());
         
+        // direct short name edit which matches long name will re-enable suggester
+        shortName.set("longName edit"); // re-match longName
+        longName.set("new name should copy");
+        Assert.assertEquals("direct matching edit reconnects propagation", longName.get(), shortName.get());
     }
 
     @Test

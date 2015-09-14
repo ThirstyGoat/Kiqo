@@ -40,7 +40,6 @@ public class StoryFormController extends FormController<Story> {
     private final ValidationSupport validationSupport = new ValidationSupport();
     private StoryFormViewModel viewModel;
     private Stage stage;
-    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
     private Command command;
     // Begin FXML Injections
@@ -70,10 +69,9 @@ public class StoryFormController extends FormController<Story> {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         viewModel = new StoryFormViewModel();
-        setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty(), shortNameModified);
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         priorityTextField.setText(Integer.toString(Story.DEFAULT_PRIORITY));
         Platform.runLater(longNameTextField::requestFocus);
         setStoryCycleHyperLinkInfo();
@@ -120,7 +118,6 @@ public class StoryFormController extends FormController<Story> {
 
         if (story != null) {
             // We are editing an existing story
-            shortNameModified.set(true);
             projectTextField.setText(story.getProject().getShortName());
         }
     }
@@ -178,26 +175,6 @@ public class StoryFormController extends FormController<Story> {
         });
 
         cancelButton.setOnAction(event -> stage.close());
-    }
-
-
-    /**
-     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
-     * up to a certain number of characters
-     */
-    private void setShortNameHandler() {
-        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Auto populate short name text field
-            if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
-                    Math.min(longNameTextField.getText().length(), Utilities.SHORT_NAME_MAX_LENGTH)))) {
-                shortNameModified.set(true);
-            }
-
-            // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
-            }
-        });
     }
 
     @Override

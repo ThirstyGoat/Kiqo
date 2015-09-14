@@ -68,7 +68,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty(), new SimpleBooleanProperty(false));
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
         FxUtils.setTextFieldSuggester(productOwnerTextField, viewModel.productOwnerSupplier());
 

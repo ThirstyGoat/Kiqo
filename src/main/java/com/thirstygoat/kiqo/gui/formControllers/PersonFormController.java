@@ -45,7 +45,6 @@ public class PersonFormController extends FormController<Person> {
     private Organisation organisation;
     private Person person;
     private boolean valid = false;
-    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command command;
     private boolean poOfTeam;
     private boolean smOfTeam;
@@ -79,7 +78,7 @@ public class PersonFormController extends FormController<Person> {
     public void initialize(URL location, ResourceBundle resources) {
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty(), shortNameModified);
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         Platform.runLater(() -> {
             // wait for textfields to exist
             setValidationSupport();
@@ -143,7 +142,6 @@ public class PersonFormController extends FormController<Person> {
 
         if (person != null) {
             // We are editing an existing Person
-            shortNameModified.set(true);
 
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
