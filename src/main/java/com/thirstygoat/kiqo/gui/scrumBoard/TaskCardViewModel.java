@@ -10,8 +10,6 @@ import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -45,7 +43,6 @@ public class TaskCardViewModel implements ViewModel, Editable {
     }
 
     private void createValidators() {
-
 
 
         shortNameValidator = new ObservableRuleBasedValidator();

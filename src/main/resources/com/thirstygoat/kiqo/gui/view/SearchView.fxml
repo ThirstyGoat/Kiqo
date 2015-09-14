@@ -5,17 +5,19 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<StackPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../searchViewStyle.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.view.SearchView">
-   <children>
-      <VBox prefWidth="500.0">
-         <children>
-            <TextField fx:id="searchTextField" promptText="Kiqo Search" styleClass="search-text-field">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </TextField>
-            <ListView fx:id="searchResultsListView" prefWidth="500.0" style="-fx-border-style: none;" styleClass="search-list-view"/>
-         </children>
-      </VBox>
-   </children>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../searchViewStyle.css" xmlns="http://javafx.com/javafx/8"
+           fx:controller="com.thirstygoat.kiqo.gui.view.SearchView">
+    <children>
+        <VBox prefWidth="500.0">
+            <children>
+                <TextField fx:id="searchTextField" promptText="Kiqo Search" styleClass="search-text-field">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </TextField>
+                <ListView fx:id="searchResultsListView" prefWidth="500.0" style="-fx-border-style: none;"
+                          styleClass="search-list-view"/>
+            </children>
+        </VBox>
+    </children>
 </StackPane>

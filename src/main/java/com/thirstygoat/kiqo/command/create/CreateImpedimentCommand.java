@@ -7,7 +7,7 @@ import com.thirstygoat.kiqo.model.Task;
 /**
  * Created by james on 10/09/15.
  */
-public class CreateImpedimentCommand extends CreateCommand{
+public class CreateImpedimentCommand extends CreateCommand {
     final private Impediment impediment;
     final private Task task;
 

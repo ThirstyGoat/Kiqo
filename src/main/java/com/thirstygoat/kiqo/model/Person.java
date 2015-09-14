@@ -41,17 +41,17 @@ public class Person extends Item {
     /**
      * Create new Person
      *
-     * @param shortName a unique short name for the person
-     * @param longName a long/full name for the person
-     * @param description a description for the person
-     * @param userId a userId for the person
+     * @param shortName    a unique short name for the person
+     * @param longName     a long/full name for the person
+     * @param description  a description for the person
+     * @param userId       a userId for the person
      * @param emailAddress a email address for the person
-     * @param phoneNumber a phone number for the person
-     * @param department a department the person works in
-     * @param skills list of skills the person has
+     * @param phoneNumber  a phone number for the person
+     * @param department   a department the person works in
+     * @param skills       list of skills the person has
      */
     public Person(String shortName, String longName, String description, String userId, String emailAddress, String phoneNumber,
-            String department, List<Skill> skills) {
+                  String department, List<Skill> skills) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);

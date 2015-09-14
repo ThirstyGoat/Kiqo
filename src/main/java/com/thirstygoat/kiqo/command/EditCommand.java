@@ -1,5 +1,7 @@
 package com.thirstygoat.kiqo.command;
 
+import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -7,15 +9,12 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thirstygoat.kiqo.exceptions.FieldNotFoundException;
-
 /**
  * Overwrites a field value
  *
- * @author amy
  * @param <ModelObjectType> Type of the model object that declares the field
- * @param <FieldType> Type of the field that will be edited
- *
+ * @param <FieldType>       Type of the field that will be edited
+ * @author amy
  */
 public class EditCommand<ModelObjectType, FieldType> extends Command {
     private static final Logger LOGGER = Logger.getLogger(EditCommand.class.getName());
@@ -26,14 +25,10 @@ public class EditCommand<ModelObjectType, FieldType> extends Command {
     private String type = "Edit";
 
     /**
-     * @param subject
-     *            model object where the field belongs
-     * @param fieldName
-     *            name of the field
-     * @param newVal
-     *            class of the field
-     * @throws FieldNotFoundException
-     *             if subject does not have a field named fieldName
+     * @param subject   model object where the field belongs
+     * @param fieldName name of the field
+     * @param newVal    class of the field
+     * @throws FieldNotFoundException if subject does not have a field named fieldName
      */
     public EditCommand(final ModelObjectType subject, final String fieldName, final FieldType newVal) throws FieldNotFoundException {
         this.subject = subject;

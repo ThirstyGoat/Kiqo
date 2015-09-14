@@ -1,8 +1,9 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -16,10 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatListSelectionView;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Project;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Carina and James on 27/05/15.
@@ -56,9 +55,9 @@ public class ReportFormController implements Initializable {
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
-                valid = true;
-                stage.close();
-                    });
+            valid = true;
+            stage.close();
+        });
         cancelButton.setOnAction(event -> stage.close());
     }
 
@@ -129,7 +128,7 @@ public class ReportFormController implements Initializable {
         return level;
     }
 
-    public void setStage(Stage stage)  {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 

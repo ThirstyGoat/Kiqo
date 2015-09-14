@@ -8,14 +8,15 @@ import com.thirstygoat.kiqo.model.Team;
  * Command to create a project
  *
  * @author amy
- *
  */
 public class CreateTeamCommand extends CreateCommand {
-    private Team team;
     private final Organisation organisation;
+    private Team team;
+
     /**
      * Constructor
-     * @param team team to be "created"
+     *
+     * @param team         team to be "created"
      * @param organisation organisation to which this team belongs
      */
     public CreateTeamCommand(Team team, Organisation organisation) {

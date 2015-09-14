@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
@@ -19,6 +18,8 @@ import java.util.Arrays;
  * Created by leroy on 9/08/15.
  */
 public class SprintViewModelInteractionTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private SprintViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -29,9 +30,6 @@ public class SprintViewModelInteractionTest {
     private Sprint sprint;
     private Person po;
     private Team team;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -57,6 +55,7 @@ public class SprintViewModelInteractionTest {
 
     /**
      * Populate a SprintFormViewModel's fields with valid data.
+     *
      * @param viewModel
      */
     public void populateFields(SprintViewModel viewModel) {
@@ -106,7 +105,8 @@ public class SprintViewModelInteractionTest {
         viewModel.load(sprint, organisation);
         String originalGoal = viewModel.goalProperty().get();
         Assert.assertTrue("Original property should not be null",
-                originalGoal != null); viewModel.goalProperty().set("A different goal");
+                originalGoal != null);
+        viewModel.goalProperty().set("A different goal");
         viewModel.goalProperty().set(originalGoal);
         Assert.assertTrue("Command should be null if something was done, but then undone",
                 viewModel.createCommand() == null);

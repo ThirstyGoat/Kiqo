@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.command;
 
-import java.time.LocalDate;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.thirstygoat.kiqo.command.delete.DeleteSprintCommand;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
 
 /**
  * Created by bradley on 14/04/15.

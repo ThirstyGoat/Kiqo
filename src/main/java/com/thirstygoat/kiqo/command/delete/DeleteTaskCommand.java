@@ -5,7 +5,7 @@ import com.thirstygoat.kiqo.model.Task;
 
 /**
  * Created by Carina Blair on 23/07/2015.
- *
+ * <p>
  * Command to delete a task from a project.
  */
 public class DeleteTaskCommand extends DeleteCommand {
@@ -31,10 +31,15 @@ public class DeleteTaskCommand extends DeleteCommand {
     public void addToModel() {
         story.observableTasks().add(storyIndex, task);
     }
-    @Override
-    public String toString() {return "<Delete Task: \"" + task.getShortName() + "\">";}
 
     @Override
-    public String getType() {return "Delete Task";}
+    public String toString() {
+        return "<Delete Task: \"" + task.getShortName() + "\">";
+    }
+
+    @Override
+    public String getType() {
+        return "Delete Task";
+    }
 
 }

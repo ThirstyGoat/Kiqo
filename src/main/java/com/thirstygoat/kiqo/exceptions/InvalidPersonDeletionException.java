@@ -7,7 +7,7 @@ import com.thirstygoat.kiqo.model.Person;
  */
 public class InvalidPersonDeletionException extends Exception {
 
-        public InvalidPersonDeletionException(Person person) {
-            super(person + " is currently PO of one or more backlogs.");
-        }
+    public InvalidPersonDeletionException(Person person) {
+        super(person + " is currently PO of one or more backlogs.");
+    }
 }

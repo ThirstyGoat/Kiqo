@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by james on 10/09/15.
  */
-public class Impediment implements Searchable{
+public class Impediment implements Searchable {
     private final StringProperty impediments;
     private final BooleanProperty resolved;
 
@@ -32,7 +32,7 @@ public class Impediment implements Searchable{
     }
 
     public static Callback<Impediment, Observable[]> getWatchStrategy() {
-        return s -> new Observable[] {s.impedimentsProperty(), s.resolvedProperty()};
+        return s -> new Observable[]{s.impedimentsProperty(), s.resolvedProperty()};
     }
 
     public String getImpediment() {

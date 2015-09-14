@@ -1,45 +1,26 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Stack;
-import java.util.stream.Collectors;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.formControllers.FormController;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -78,78 +59,78 @@ public class StoryFormViewModel extends FormController<Story> {
 
     public StoryFormViewModel() {
         shortNameValidator = new FunctionBasedValidator<>(shortNameProperty,
-            // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
-            s -> {
-                if (s.length() == 0 || s.length() > 20) {
-                    return false;
-                }
-
-                final Project project = projectProperty.get();
-                if (project == null) {
-                    return true;
-                } else {
-                    Collection<Collection<? extends Item>> existingStories = new ArrayList<>();
-                    existingStories.add(project.getUnallocatedStories());
-                    existingStories.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
-
-                    return Utilities.shortnameIsUniqueMultiple(s, story, existingStories);
-                }
-            },
-            ValidationMessage.error("Short name must be unique and not empty"));
-
-        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
-            // Checks that the long name isn't empty
-            s -> s != null && !s.isEmpty(),
-            ValidationMessage.error("Name must not be empty"));
-
-        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
-            // Always valid as description isn't required and has no constraints
-            s -> true,
-            ValidationMessage.error(""));
-
-        creatorValidator = new FunctionBasedValidator<>(creatorNameProperty,
-            // Checks that the creator exists within the organisation and is set
-            s -> {
-                if (organisation != null) {
-                    for (final Person p : organisation.getPeople()) {
-                        if (p.getShortName().equals(s)) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            },
-            ValidationMessage.error("Person must already exist"));
-
-        projectValidator = new FunctionBasedValidator<>(projectProperty,
-            // Checks that the project exists and is set
-            Utilities.emptinessPredicate(),
-            ValidationMessage.error("Project must already exist"));
-
-        priorityValidator = new FunctionBasedValidator<>(priorityProperty,
-            s -> {
-                try {
-                    int i = Integer.parseInt(s);
-                    if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+                // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
+                s -> {
+                    if (s.length() == 0 || s.length() > 20) {
                         return false;
                     }
-                } catch (NumberFormatException e) {
+
+                    final Project project = projectProperty.get();
+                    if (project == null) {
+                        return true;
+                    } else {
+                        Collection<Collection<? extends Item>> existingStories = new ArrayList<>();
+                        existingStories.add(project.getUnallocatedStories());
+                        existingStories.addAll(project.getBacklogs().stream().map(Backlog::observableStories).collect(Collectors.toList()));
+
+                        return Utilities.shortnameIsUniqueMultiple(s, story, existingStories);
+                    }
+                },
+                ValidationMessage.error("Short name must be unique and not empty"));
+
+        longNameValidator = new FunctionBasedValidator<>(longNameProperty,
+                // Checks that the long name isn't empty
+                s -> s != null && !s.isEmpty(),
+                ValidationMessage.error("Name must not be empty"));
+
+        descriptionValidator = new FunctionBasedValidator<>(descriptionProperty,
+                // Always valid as description isn't required and has no constraints
+                s -> true,
+                ValidationMessage.error(""));
+
+        creatorValidator = new FunctionBasedValidator<>(creatorNameProperty,
+                // Checks that the creator exists within the organisation and is set
+                s -> {
+                    if (organisation != null) {
+                        for (final Person p : organisation.getPeople()) {
+                            if (p.getShortName().equals(s)) {
+                                return true;
+                            }
+                        }
+                    }
                     return false;
-                }
-                return true;
-            },
-            ValidationMessage.error("Priority must be an integer between "
-                + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
+                },
+                ValidationMessage.error("Person must already exist"));
+
+        projectValidator = new FunctionBasedValidator<>(projectProperty,
+                // Checks that the project exists and is set
+                Utilities.emptinessPredicate(),
+                ValidationMessage.error("Project must already exist"));
+
+        priorityValidator = new FunctionBasedValidator<>(priorityProperty,
+                s -> {
+                    try {
+                        int i = Integer.parseInt(s);
+                        if (i < Story.MIN_PRIORITY || i > Story.MAX_PRIORITY) {
+                            return false;
+                        }
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                    return true;
+                },
+                ValidationMessage.error("Priority must be an integer between "
+                        + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
         scaleValidator = new FunctionBasedValidator<>(scaleProperty,
-            Utilities.emptinessPredicate(),
-            ValidationMessage.error("Estimation Scale must not be empty"));
+                Utilities.emptinessPredicate(),
+                ValidationMessage.error("Estimation Scale must not be empty"));
 
         formValidator = new CompositeValidator();
         formValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
-    
+
     private void setStoryListProperties() {
         targetStoriesProperty.get().clear();
         sourceStoriesProperty.get().clear();
@@ -159,7 +140,7 @@ public class StoryFormViewModel extends FormController<Story> {
                 if (story.getBacklog() != null) {
                     sourceStoriesProperty.get().addAll(story.getBacklog().getStories());
                 } else {
-                    sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories()); 
+                    sourceStoriesProperty.get().addAll(projectProperty.get().getUnallocatedStories());
                 }
 
                 ArrayList<Story> toRemove = new ArrayList<>();
@@ -187,7 +168,7 @@ public class StoryFormViewModel extends FormController<Story> {
     private void reloadFromModel() {
         targetStoriesProperty.set(FXCollections.observableArrayList());
         sourceStoriesProperty.set(FXCollections.observableArrayList());
-        
+
         if (story != null) {
             shortNameProperty.set(story.getShortName());
             longNameProperty.set(story.getLongName());
@@ -223,7 +204,7 @@ public class StoryFormViewModel extends FormController<Story> {
     public StringProperty descriptionProperty() {
         return descriptionProperty;
     }
-    
+
     public StringProperty creatorNameProperty() {
         return creatorNameProperty;
     }
@@ -232,13 +213,17 @@ public class StoryFormViewModel extends FormController<Story> {
         return projectNameProperty;
     }
 
-    public ObjectProperty<Backlog> backlogProperty() { return backlogProperty; }
-    
+    public ObjectProperty<Backlog> backlogProperty() {
+        return backlogProperty;
+    }
+
     public ObjectProperty<Project> projectProperty() {
         return projectProperty;
     }
-    
-    public StringProperty priorityProperty() { return priorityProperty; }
+
+    public StringProperty priorityProperty() {
+        return priorityProperty;
+    }
 
     public ObjectProperty<Scale> scaleProperty() {
         return scaleProperty;
@@ -247,16 +232,16 @@ public class StoryFormViewModel extends FormController<Story> {
     public IntegerProperty estimateProperty() {
         return estimateProperty;
     }
-    
-    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() { 
+
+    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() {
         return targetStoriesProperty;
     }
 
-    public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { 
+    public ObjectProperty<ObservableList<Story>> sourceStoriesProperty() {
         return sourceStoriesProperty;
     }
 
-    public BooleanProperty getCreatorEditable () {
+    public BooleanProperty getCreatorEditable() {
         return creatorEditable;
     }
 
@@ -268,7 +253,9 @@ public class StoryFormViewModel extends FormController<Story> {
         return longNameValidator.getValidationStatus();
     }
 
-    public ValidationStatus descriptionValidation() { return descriptionValidator.getValidationStatus(); }
+    public ValidationStatus descriptionValidation() {
+        return descriptionValidator.getValidationStatus();
+    }
 
     public ValidationStatus creatorValidation() {
         return creatorValidator.getValidationStatus();
@@ -313,7 +300,9 @@ public class StoryFormViewModel extends FormController<Story> {
     }
 
     @Override
-    public Command getCommand() { return command; }
+    public Command getCommand() {
+        return command;
+    }
 
     public void setCommand() {
         if (story == null) {
@@ -334,7 +323,7 @@ public class StoryFormViewModel extends FormController<Story> {
                 changes.add(new EditCommand<>(story, "description", descriptionProperty.getValue()));
             }
             // creator can't be changed
-            
+
             if (!projectProperty.get().equals(story.getProject())) {
                 if (story.getBacklog() != null) {
                     changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), projectProperty.get().observableUnallocatedStories()));
@@ -353,7 +342,7 @@ public class StoryFormViewModel extends FormController<Story> {
             if (scaleProperty.getValue() != story.getScale()) {
                 changes.add(new EditCommand<>(story, "scale", scaleProperty.getValue()));
             }
-            
+
 //            // Stories being added as dependencies
 //            final ArrayList<Story> addedStories = new ArrayList<>(targetStoriesProperty.get());
 //            addedStories.removeAll(story.getDependencies());
@@ -398,6 +387,7 @@ public class StoryFormViewModel extends FormController<Story> {
     /**
      * Performs a depth first search on the given dependency to see if it can reach itself
      * No need to worry about cycles up further up the graph because we check for cycles before they can be added
+     *
      * @param dependency the dependency to check
      * @return boolean true if a cycle has been found
      */
@@ -421,7 +411,9 @@ public class StoryFormViewModel extends FormController<Story> {
     }
 
     @Override
-    public boolean isValid() { return valid; }
+    public boolean isValid() {
+        return valid;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

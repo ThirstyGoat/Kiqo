@@ -5,7 +5,6 @@ import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
@@ -20,7 +19,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -28,12 +26,12 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
-* Created by Carina Blair on 3/08/2015.
-*/
+ * Created by Carina Blair on 3/08/2015.
+ */
 public class SprintFormView implements FxmlView<SprintViewModel>, Initializable {
 
     private FormButtonHandler formButtonHandler;
-    
+
     @FXML
     private TextField nameTextField;
     @FXML
@@ -91,7 +89,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
-        
+
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.backlogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.teamsSupplier());
         FxUtils.setTextFieldSuggester(releaseTextField, viewModel.releasesSupplier());

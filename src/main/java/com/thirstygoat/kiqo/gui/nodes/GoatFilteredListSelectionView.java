@@ -24,11 +24,11 @@ import java.util.regex.Pattern;
  * Created by Bradley Kirwan on 7/08/15.
  */
 public class GoatFilteredListSelectionView<T extends Item> extends Control {
-    private VBox mainView;
     private final GoatFilteredListSelectionViewSkin skin;
     private final ListProperty<T> sourceItems;
     private final ListProperty<T> targetItems;
     private final ObservableList<T> allItems;
+    private VBox mainView;
     private ObjectProperty<Callback<T, Node>> targetCellGraphicFactory = new SimpleObjectProperty<>();
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
     private TextField textField;
@@ -321,7 +321,6 @@ public class GoatFilteredListSelectionView<T extends Item> extends Control {
     }
 
     /**
-     * 
      * @return Control which semantically symbolises the input (to be used for validation visualisation).
      */
     public Control getControl() {

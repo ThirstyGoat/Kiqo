@@ -1,26 +1,21 @@
 package com.thirstygoat.kiqo.gui.menuBar;
 
-import java.io.IOException;
-import java.util.logging.*;
-
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.SideBarController;
+import com.thirstygoat.kiqo.gui.SideBarController.TabOption;
+import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.gui.SideBarController.TabOption;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
-
-import de.saxsys.mvvmfx.ViewModel;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuBarViewModel implements ViewModel {
     private static final Logger LOGGER = Logger.getLogger(MenuBarViewModel.class.getSimpleName());
@@ -219,7 +214,7 @@ public class MenuBarViewModel implements ViewModel {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setResizable(false);
         stage.setTitle("About Kiqo");
-        
+
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MenuBarViewModel.class.getClassLoader().getResource("com/thirstygoat/kiqo/gui/menuBar/About.fxml"));
         Pane root;

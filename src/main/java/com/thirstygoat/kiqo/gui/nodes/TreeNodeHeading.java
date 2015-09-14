@@ -1,9 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import com.thirstygoat.kiqo.model.Item;
 
 /**
  * A class so we can have nice headings in our tree view

@@ -39,9 +39,9 @@ public class Task extends Item {
         setStatus(Status.NOT_STARTED);
         setStory(story);
     }
-    
+
     public static Callback<Task, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty()};
+        return p -> new Observable[]{p.shortNameProperty(), p.estimateProperty(), p.statusProperty()};
     }
 
     @Override
@@ -135,8 +135,9 @@ public class Task extends Item {
         Task task = (Task) o;
 
         if (!shortName.get().equals(task.shortName.get())) return false;
-        if (description.get() != null ? !description.get().equals(task.description.get()) : task.description.get() != null) return false;
-        if (estimate.get() !=(task.estimate.get())) return false;
+        if (description.get() != null ? !description.get().equals(task.description.get()) : task.description.get() != null)
+            return false;
+        if (estimate.get() != (task.estimate.get())) return false;
         return !(status.get() != null ? !status.get().equals(task.status.get()) : task.status.get() != null);
 
     }

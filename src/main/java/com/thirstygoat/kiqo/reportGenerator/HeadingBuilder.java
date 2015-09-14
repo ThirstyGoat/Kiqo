@@ -31,7 +31,7 @@ public class HeadingBuilder {
 
     private static String jumboHeading(String[] lines, int headingWidth) {
         final StringBuilder heading = new StringBuilder();
-        final String divider = (String.join("", Collections.nCopies(headingWidth , HeadingBuilder.COMMENT_STR)));
+        final String divider = (String.join("", Collections.nCopies(headingWidth, HeadingBuilder.COMMENT_STR)));
 
         heading.append("\n");
         heading.append(divider);
@@ -60,7 +60,7 @@ public class HeadingBuilder {
         return heading.toString();
     }
 
-    public static String makeHeading (String[] lines, int headingWidth, Style style) {
+    public static String makeHeading(String[] lines, int headingWidth, Style style) {
         String heading = null;
         switch (style) {
             case JUMBO:

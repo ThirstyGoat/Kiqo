@@ -24,6 +24,7 @@ public class GoatLabelTextField extends GoatLabel<TextField> {
 
     /**
      * Restricts the input to the text field to be only [0-9.] if restrict is true, allows all input otherwise.
+     *
      * @param restrict
      */
     public void restrictToNumericInput(boolean restrict) {

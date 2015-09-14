@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo.gui.nodes;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-
 import org.controlsfx.control.ListSelectionView;
 
 /**

@@ -18,12 +18,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 /**
-* Created by Carina Blair on 3/08/2015.
-*/
+ * Created by Carina Blair on 3/08/2015.
+ */
 public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneDetailsViewModel>, Initializable {
-    
+
     private Label placeHolder = new Label();
-    
+
     @InjectViewModel
     private SprintDetailsPaneDetailsViewModel viewModel;
 

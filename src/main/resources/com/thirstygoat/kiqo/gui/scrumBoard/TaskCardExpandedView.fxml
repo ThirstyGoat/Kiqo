@@ -8,79 +8,88 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
-   <children>
-      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="TOP_LEFT">
-               <children>
-                  <GoatLabelTextField styleClass="expanded-task-header" fx:id="shortNameLabel"/>
-                  <Region HBox.hgrow="ALWAYS"/>
-                  <VBox alignment="TOP_RIGHT">
-                     <children>
-                        <SegmentedButton fx:id="segmentedButton">
-                           <buttons>
-                              <ToggleButton fx:id="detailsToggleButton" text="Details" />
-                              <ToggleButton fx:id="loggingToggleButton" text="Logging"/>
-                           </buttons>
-                        </SegmentedButton>
-                     </children>
-                  </VBox>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" />
-               </padding>
-            </HBox>
-            <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
-               <children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" stylesheets="@/css/styles.css"
+            xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
+    <children>
+        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="TOP_LEFT">
+                    <children>
+                        <GoatLabelTextField styleClass="expanded-task-header" fx:id="shortNameLabel"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="TOP_RIGHT">
+                            <children>
+                                <SegmentedButton fx:id="segmentedButton">
+                                    <buttons>
+                                        <ToggleButton fx:id="detailsToggleButton" text="Details"/>
+                                        <ToggleButton fx:id="loggingToggleButton" text="Logging"/>
+                                    </buttons>
+                                </SegmentedButton>
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0"/>
+                    </padding>
+                </HBox>
+                <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
+                    <children>
 
-                  <VBox maxHeight="300" fx:id="detailsView" spacing="10">
-                     <HBox spacing="5">
-                        <FontAwesomeIconView fx:id="peopleIcon"  glyphSize="15" styleClass="people-icon"/>
-                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" />
-                     </HBox>
-                     <HBox spacing="5">
-                        <FontAwesomeIconView glyphSize="18" styleClass="clock-icon"/>
-                        <GoatLabelTextField fx:id="estimatedHoursLabel"/>
-                     </HBox>
-                     <HBox maxWidth="350" spacing="5" alignment="TOP_LEFT">
-                        <FontAwesomeIconView glyphSize="18" styleClass="description-icon"/>
-                        <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..."/>
-                     </HBox>
-                  </VBox>
+                        <VBox maxHeight="300" fx:id="detailsView" spacing="10">
+                            <HBox spacing="5">
+                                <FontAwesomeIconView fx:id="peopleIcon" glyphSize="15" styleClass="people-icon"/>
+                                <Label fx:id="teamLabel" alignment="TOP_LEFT"
+                                       text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more"
+                                       wrapText="true"/>
+                            </HBox>
+                            <HBox spacing="5">
+                                <FontAwesomeIconView glyphSize="18" styleClass="clock-icon"/>
+                                <GoatLabelTextField fx:id="estimatedHoursLabel"/>
+                            </HBox>
+                            <HBox maxWidth="350" spacing="5" alignment="TOP_LEFT">
+                                <FontAwesomeIconView glyphSize="18" styleClass="description-icon"/>
+                                <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..."/>
+                            </HBox>
+                        </VBox>
 
-                  <GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <HBox GridPane.valignment="TOP" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                           <children>
-                              <FontAwesomeIconView pickOnBounds="true"  styleClass="clock-icon" glyphSize="18" />
+                        <GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                  AnchorPane.topAnchor="0.0">
+                            <children>
+                                <HBox GridPane.valignment="TOP" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <children>
+                                        <FontAwesomeIconView pickOnBounds="true" styleClass="clock-icon"
+                                                             glyphSize="18"/>
 
-                           </children>
-                           <padding>
-                              <Insets top="3.0" />
-                           </padding>
-                        </HBox>
-                        <HBox spacing="5.0" GridPane.columnIndex="1">
-                           <children>
-                              <TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints  minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                  </GridPane>
-               </children>
-            </AnchorPane>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-   </children>
+                                    </children>
+                                    <padding>
+                                        <Insets top="3.0"/>
+                                    </padding>
+                                </HBox>
+                                <HBox spacing="5.0" GridPane.columnIndex="1">
+                                    <children>
+                                        <TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308"
+                                                   HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="loggingButton" mnemonicParsing="false" text="Log"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="-1" prefHeight="-1" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </children>
 </AnchorPane>

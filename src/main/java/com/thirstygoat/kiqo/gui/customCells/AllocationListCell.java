@@ -1,5 +1,8 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,16 +16,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Organisation;
-
 /**
  * Created by amy on 25/07/15.
  */
 public class AllocationListCell extends TableCell<Allocation, String> {
     private AllocationsTableViewController vm;
-    
+
     private ObjectProperty<Organisation> organisationProperty;
 
     public AllocationListCell(ObjectProperty<Organisation> organisationProperty, AllocationsTableViewController allocationsTableViewController) {
@@ -43,10 +42,11 @@ public class AllocationListCell extends TableCell<Allocation, String> {
 
         return colorProperty;
     }
-    
+
     /**
      * Converts model state directly into color.
      * This replaces CSS because Java code can't read CSS files and we need this information dynamically.
+     *
      * @param allocation model object for display
      * @return color representing color state
      */

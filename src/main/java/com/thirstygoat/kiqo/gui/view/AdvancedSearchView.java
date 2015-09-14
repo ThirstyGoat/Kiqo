@@ -1,26 +1,20 @@
 package com.thirstygoat.kiqo.gui.view;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import com.thirstygoat.kiqo.search.AdvancedSearchListCell;
 import com.thirstygoat.kiqo.search.SearchResult;
 import com.thirstygoat.kiqo.search.SearchableItems;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by bradley on 31/07/15.

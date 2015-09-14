@@ -1,25 +1,31 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
-import org.controlsfx.control.textfield.*;
-import org.controlsfx.validation.*;
-
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.command.create.CreateAllocationCommand;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Amy on 23/04/15.
@@ -54,7 +60,7 @@ public class AllocationFormController extends FormController<Allocation> {
 
     private void setValidationSupport() {
         Predicate<String> projectValidation;
-        if(team == null) {
+        if (team == null) {
             projectValidation = s -> {
                 for (final Team t : organisation.getTeams()) {
                     if (t.getShortName().equals(teamTextField.getText())) {
@@ -103,7 +109,7 @@ public class AllocationFormController extends FormController<Allocation> {
                 final LocalDate aEnd = (a.getEndDate() == null) ? LocalDate.MAX : a.getEndDate();
                 final LocalDate bEnd = (endDatePicker.getValue() == null) ? LocalDate.MAX : endDatePicker.getValue();
 
-                if(startDatePicker.getValue() != null) {
+                if (startDatePicker.getValue() != null) {
                     if ((a.getStartDate().isBefore(bEnd)) && (aEnd.isAfter(startDatePicker.getValue())) && !a.equals(allocation)) {
                         dateRangesOverlap = true;
                         break;
@@ -212,9 +218,9 @@ public class AllocationFormController extends FormController<Allocation> {
 
                     @Override
                     public String toString(Team team) {
-                return team.getShortName();
-            }
-        });
+                        return team.getShortName();
+                    }
+                });
 
         teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -227,39 +233,39 @@ public class AllocationFormController extends FormController<Allocation> {
     }
 
     private AutoCompletionBinding<Project> setTextFieldAutoCompletionBindingProject() {
-            // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
-            // uses a String converter so that the Team's short name is used.
-            final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(teamTextField,
-                    request -> {
-                        return organisation.getProjects().stream()
-                                .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                                .collect(Collectors.toList());
-                    }, new StringConverter<Project>() {
-                        @Override
-                        public Project fromString(String string) {
-                            for (final Project project : organisation.getProjects()) {
-                                if (project.getShortName().equals(string)) {
-                                    return project;
-                                }
+        // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
+        // uses a String converter so that the Team's short name is used.
+        final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(teamTextField,
+                request -> {
+                    return organisation.getProjects().stream()
+                            .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
+                            .collect(Collectors.toList());
+                }, new StringConverter<Project>() {
+                    @Override
+                    public Project fromString(String string) {
+                        for (final Project project : organisation.getProjects()) {
+                            if (project.getShortName().equals(string)) {
+                                return project;
                             }
-                            return null;
                         }
+                        return null;
+                    }
 
-                        @Override
-                        public String toString(Project project) {
-                            return project.getShortName();
-                        }
-                    });
+                    @Override
+                    public String toString(Project project) {
+                        return project.getShortName();
+                    }
+                });
 
-            teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    // forces suggestion list to show
-                    binding.setUserInput("");
-                }
-            });
+        teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // forces suggestion list to show
+                binding.setUserInput("");
+            }
+        });
 
-            return binding;
-        }
+        return binding;
+    }
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
@@ -273,6 +279,7 @@ public class AllocationFormController extends FormController<Allocation> {
 
     /**
      * Performs validation checks and displays error popovers where applicable
+     *
      * @return all fields are valid
      */
     private boolean validate() {
@@ -323,7 +330,7 @@ public class AllocationFormController extends FormController<Allocation> {
     }
 
     @Override
-    public void setStage(Stage stage)  {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
@@ -395,34 +402,34 @@ public class AllocationFormController extends FormController<Allocation> {
             }
         });
 
-    endDatePicker.setDayCellFactory(param -> new DateCell() {
-        @Override
-        public void updateItem(LocalDate item, boolean empty) {
-            super.updateItem(item, empty);
-            if (team != null) {
-                if (startDatePicker.getValue() != null) {
-                    if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
-                        //date is before the start date
-                        setDisable(true);
-                        setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
-                    }
-                }
-                //remove the current allocation for if we are editing
-                team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
-                    if (item.isAfter(allocation1.getStartDate().minusDays(1)) && item.isBefore(allocation1.getEndDate().plusDays(2))) {
-                        //date falls inside a previous allocation
-                        setDisable(true);
-                        setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
-                    } else if (startDatePicker.getValue() != null) {
-                        if (startDatePicker.getValue().isBefore(allocation1.getStartDate()) && item.isAfter(allocation1.getEndDate())) {
+        endDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (team != null) {
+                    if (startDatePicker.getValue() != null) {
+                        if (item.isBefore(startDatePicker.getValue().plusDays(1))) {
+                            //date is before the start date
                             setDisable(true);
                             setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
                         }
                     }
-                });
+                    //remove the current allocation for if we are editing
+                    team.getAllocations().stream().filter(a -> a != allocation).forEach(allocation1 -> {
+                        if (item.isAfter(allocation1.getStartDate().minusDays(1)) && item.isBefore(allocation1.getEndDate().plusDays(2))) {
+                            //date falls inside a previous allocation
+                            setDisable(true);
+                            setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
+                        } else if (startDatePicker.getValue() != null) {
+                            if (startDatePicker.getValue().isBefore(allocation1.getStartDate()) && item.isAfter(allocation1.getEndDate())) {
+                                setDisable(true);
+                                setStyle(GoatLabelDatePicker.DISABLED_CELL_STYLE);
+                            }
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
     }
 
     /**

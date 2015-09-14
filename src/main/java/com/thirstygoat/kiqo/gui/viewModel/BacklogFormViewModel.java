@@ -1,11 +1,11 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreateBacklogCommand;
+import com.thirstygoat.kiqo.gui.formControllers.FormController;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,25 +14,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.RemoveStoryFromBacklogCommand;
-import com.thirstygoat.kiqo.command.create.CreateBacklogCommand;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
-* Created by Carina Blair on 19/07/2015.
-*/
+ * Created by Carina Blair on 19/07/2015.
+ */
 public class BacklogFormViewModel extends FormController<Backlog> {
     private Backlog backlog;
     private Person productOwner;
@@ -62,7 +52,7 @@ public class BacklogFormViewModel extends FormController<Backlog> {
 
     public Predicate<String> getShortNameValidation() {
         return s -> {
-            if (s.length() == 0|| s.length() > 20) {
+            if (s.length() == 0 || s.length() > 20) {
                 return false;
             }
             final Project project = projectProperty.get();
@@ -133,7 +123,9 @@ public class BacklogFormViewModel extends FormController<Backlog> {
         return Utilities.emptinessPredicate();
     }
 
-    public StringProperty shortNameProperty() { return shortNameProperty; }
+    public StringProperty shortNameProperty() {
+        return shortNameProperty;
+    }
 
     public StringProperty longNameProperty() {
         return longNameProperty;
@@ -143,17 +135,25 @@ public class BacklogFormViewModel extends FormController<Backlog> {
         return descriptionProperty;
     }
 
-    public StringProperty productOwnerNameProperty() {return productOwnerNameProperty; }
+    public StringProperty productOwnerNameProperty() {
+        return productOwnerNameProperty;
+    }
 
     public StringProperty projectNameProperty() {
         return projectNameProperty;
     }
 
-    public ObjectProperty<Scale> scaleProperty() { return scaleProperty; }
+    public ObjectProperty<Scale> scaleProperty() {
+        return scaleProperty;
+    }
 
-    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() { return targetStoriesProperty;}
+    public ObjectProperty<ObservableList<Story>> targetStoriesProperty() {
+        return targetStoriesProperty;
+    }
 
-    public  ObjectProperty<ObservableList<Story>> sourceStoriesProperty() { return sourceStoriesProperty;}
+    public ObjectProperty<ObservableList<Story>> sourceStoriesProperty() {
+        return sourceStoriesProperty;
+    }
 
     private void setStoryListProperties() {
         if (projectProperty.get() != null) {
@@ -222,19 +222,21 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     public List<Story> getConflictingScales() {
-    // add any story without the same scale to the array
-    List<Story> conflicts = new ArrayList<>();
+        // add any story without the same scale to the array
+        List<Story> conflicts = new ArrayList<>();
 
-    for (Story story : targetStoriesProperty.get()) {
-        if (story.getScale() != scaleProperty().get()) {
-            conflicts.add(story);
+        for (Story story : targetStoriesProperty.get()) {
+            if (story.getScale() != scaleProperty().get()) {
+                conflicts.add(story);
+            }
         }
-    }
         return conflicts;
     }
 
     @Override
-    public Command getCommand() { return command; }
+    public Command getCommand() {
+        return command;
+    }
 
     public void setCommand() {
         final ArrayList<Story> stories = new ArrayList<>();
@@ -312,7 +314,9 @@ public class BacklogFormViewModel extends FormController<Backlog> {
     }
 
     @Override
-    public boolean isValid() { return valid; }
+    public boolean isValid() {
+        return valid;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

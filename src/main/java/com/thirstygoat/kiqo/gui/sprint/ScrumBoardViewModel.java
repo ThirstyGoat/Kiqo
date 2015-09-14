@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Organisation;
@@ -16,7 +18,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -103,7 +106,8 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
         storyRows.setAll(sortedStories.stream().map(this::getStoryRow).collect(Collectors.toList()));
     }
 
-    /**c
+    /**
+     * c
      * Checks if the order of stories shown in the ScrumBoard has changed, if so, creates the
      * appropriate command to update the order in the model.
      */
@@ -112,7 +116,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
         Story movedStory = storyRowsMap.get(movedStoryRow);
 
         int movedStoryIndex = storyRows.indexOf(movedStoryRow);
-        Node prevStoryRow = storyRows.get(Math.max(movedStoryIndex-1, 0));
+        Node prevStoryRow = storyRows.get(Math.max(movedStoryIndex - 1, 0));
         Node nextStoryRow = storyRows.get(Math.min(movedStoryIndex + 1, storyRows.size() - 1));
 
         int prevPriority = Story.MAX_PRIORITY;
@@ -126,7 +130,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
             nextPriority = storyRowsMap.get(nextStoryRow).getPriority();
         }
 
-        int newPriority = (prevPriority+nextPriority)/2;
+        int newPriority = (prevPriority + nextPriority) / 2;
         Command command = new EditCommand<>(movedStory, "priority", newPriority);
         UndoManager.getUndoManager().doCommand(command);
     }

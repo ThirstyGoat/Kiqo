@@ -32,14 +32,14 @@ public class Match {
     public List<int[]> getMatchPositions() {
         List<int[]> matchSegments = new ArrayList<>();
         if (similarity == 1.0) {
-            matchSegments.add(new int[] {0, matchedField.getFieldValue().length()});
+            matchSegments.add(new int[]{0, matchedField.getFieldValue().length()});
             return matchSegments;
         }
 
         String queryLowerCase = searchResult.getSearchQuery().toLowerCase();
         int lastIndex = getMatchedString().toLowerCase().indexOf(queryLowerCase);
         while (lastIndex >= 0) {  // indexOf returns -1 if no match found
-            matchSegments.add(new int[] {lastIndex, lastIndex + queryLowerCase.length()});
+            matchSegments.add(new int[]{lastIndex, lastIndex + queryLowerCase.length()});
             lastIndex = getMatchedString().toLowerCase().indexOf(queryLowerCase, lastIndex + 1);
         }
         return matchSegments;

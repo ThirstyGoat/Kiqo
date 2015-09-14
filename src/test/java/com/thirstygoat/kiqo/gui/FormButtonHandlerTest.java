@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class FormButtonHandlerTest {
     private boolean commandSupplied;

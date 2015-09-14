@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.model.Story;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Created by leroy on 15/05/15.

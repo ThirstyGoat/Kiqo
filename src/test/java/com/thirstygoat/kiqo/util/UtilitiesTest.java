@@ -1,20 +1,19 @@
 package com.thirstygoat.kiqo.util;
 
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
-
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
 
 
 /**
@@ -134,7 +133,7 @@ public class UtilitiesTest {
     public void testShortNameIsUnique() throws Exception {
         // Person should really be a subclass of Primate. Oh well.
         class Primate extends Person {
-            Primate (String shortName) {
+            Primate(String shortName) {
                 this.setShortName(shortName);
             }
         }
@@ -145,7 +144,7 @@ public class UtilitiesTest {
         Primate nonUniquelyNamed = new Primate("Rafiki");
 
         Assert.assertTrue(Utilities.shortnameIsUnique(uniquelyNamed.getShortName(), uniquelyNamed, fictionalPrimates));
-        Assert.assertFalse(Utilities.shortnameIsUnique(nonUniquelyNamed.getShortName(), nonUniquelyNamed,fictionalPrimates));
+        Assert.assertFalse(Utilities.shortnameIsUnique(nonUniquelyNamed.getShortName(), nonUniquelyNamed, fictionalPrimates));
 
         // Now try checking uniqueness when item is already in the Collection.
         fictionalPrimates.add(uniquelyNamed);
@@ -157,27 +156,27 @@ public class UtilitiesTest {
     public void testSetNameSuggester_basic() throws Exception {
         StringProperty longName = new SimpleStringProperty("");
         StringProperty shortName = new SimpleStringProperty("");
-                
+
         Utilities.setNameSuggester(longName, shortName);
 
         Assert.assertEquals("config does not affect longName value", "", longName.get());
         Assert.assertEquals("config does not affect shortName value", "", shortName.get());
-        
+
         longName.set("name");
         Assert.assertEquals("basic name suggestion is propagated", longName.get(), shortName.get());
-        
+
         longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH + " characters..................");
         Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH, shortName.get().length());
-        
+
         longName.set("shorter name again");
         Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
     }
-    
+
     @Test
     public void testSetNameSuggester_disableEnable() throws Exception {
         StringProperty longName = new SimpleStringProperty("");
         StringProperty shortName = new SimpleStringProperty("");
-                
+
         Utilities.setNameSuggester(longName, shortName);
 
         // direct short name edit which does not match long name will disable suggester
@@ -185,7 +184,7 @@ public class UtilitiesTest {
         Assert.assertNotEquals("shortName is not propagated to longName", longName.get(), shortName.get());
         longName.set("longName edit");
         Assert.assertNotEquals("direct non-matching edit disconnects propagation", longName.get(), shortName.get());
-        
+
         // direct short name edit which matches long name will re-enable suggester
         shortName.set("longName edit"); // re-match longName
         longName.set("new name should copy");

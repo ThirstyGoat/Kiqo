@@ -1,12 +1,13 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.List;
-
 import com.thirstygoat.kiqo.model.Item;
+
+import java.util.List;
 
 /**
  * Created by samschofield on 25/04/15.
  * Command for moving an item from one collection to another
+ *
  * @param <T> Type of Item to be moved
  */
 public class MoveItemCommand<T extends Item> extends Command {
@@ -18,9 +19,8 @@ public class MoveItemCommand<T extends Item> extends Command {
 
 
     /**
-     *
-     * @param item The item to move
-     * @param position The current position of the item
+     * @param item        The item to move
+     * @param position    The current position of the item
      * @param destination The desired destination for the item
      */
     public MoveItemCommand(final T item, final List<? super T> position, final List<? super T> destination) {
@@ -36,12 +36,11 @@ public class MoveItemCommand<T extends Item> extends Command {
     }
 
     /**
-     *
-     * @param item item to move
-     * @param position list that item is in
-     * @param posIndex index of item in the collection it is in
+     * @param item        item to move
+     * @param position    list that item is in
+     * @param posIndex    index of item in the collection it is in
      * @param destination list item will be moved to
-     * @param destIndex index that the item will be positioned at in the list it is moved to
+     * @param destIndex   index that the item will be positioned at in the list it is moved to
      */
     public MoveItemCommand(final T item, final List<? super T> position, final int posIndex, final List<? super T> destination, final int destIndex) {
         this.item = item;

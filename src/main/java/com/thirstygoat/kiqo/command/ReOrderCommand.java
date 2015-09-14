@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Command to move an object to a new index within a list
+ *
  * @param <T> Type of object to be moved
  */
 public class ReOrderCommand<T> extends Command {
@@ -14,8 +15,9 @@ public class ReOrderCommand<T> extends Command {
 
     /**
      * Command to move an item to a new index within a list
-     * @param list List in which item belongs to
-     * @param item Item to be moved in the list
+     *
+     * @param list     List in which item belongs to
+     * @param item     Item to be moved in the list
      * @param newIndex The index to move the item to (within the list)
      */
     public ReOrderCommand(List<T> list, T item, int newIndex) {

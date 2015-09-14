@@ -1,11 +1,15 @@
 package com.thirstygoat.kiqo.gui.release;
 
-import java.time.LocalDate;
-
-import org.junit.*;
-
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
 
 public class ReleaseViewModelTest {
     ReleaseViewModel viewModel;
@@ -28,7 +32,7 @@ public class ReleaseViewModelTest {
         viewModel.shortNameProperty().set("");
         Assert.assertFalse("Must not be an empty string.",
                 viewModel.shortNameValidation().validProperty().get());
-        
+
         viewModel.shortNameProperty().set(null);
         Assert.assertFalse("Must not be null.",
                 viewModel.shortNameValidation().validProperty().get());
@@ -43,7 +47,7 @@ public class ReleaseViewModelTest {
         Release secondRelease = new Release(SHARED_NAME, project, LocalDate.now(), "arbitrary description");
         project.observableReleases().add(secondRelease);
         viewModel.projectProperty().set(project);
-        
+
         viewModel.shortNameProperty().set("unique");
         Assert.assertTrue("Unique name must be valid.",
                 viewModel.shortNameValidation().validProperty().get());
@@ -73,11 +77,11 @@ public class ReleaseViewModelTest {
     public void testProjectValidation() {
         Assert.assertFalse("Must not be valid initially.",
                 viewModel.projectValidation().validProperty().get());
-        
+
         viewModel.projectProperty().set(new Project("short", "long"));
         Assert.assertTrue("Valid input not recognised as valid.",
                 viewModel.projectValidation().validProperty().get());
-        
+
         viewModel.projectProperty().set(null);
         Assert.assertFalse("Must not be null.",
                 viewModel.shortNameValidation().validProperty().get());
@@ -87,22 +91,22 @@ public class ReleaseViewModelTest {
     public void testDateValidation() {
         Assert.assertFalse("Must not be valid initially.",
                 viewModel.dateValidation().validProperty().get());
-        
+
         viewModel.dateProperty().set(null);
         Assert.assertFalse("Must not be null.",
                 viewModel.dateValidation().validProperty().get());
-        
+
         viewModel.dateProperty().set(LocalDate.now());
         Assert.assertTrue("Valid input not recognised as valid.",
                 viewModel.dateValidation().validProperty().get());
-        
+
         // sprint logic needs model info
         Release release = new Release();
         Sprint sprint = new Sprint();
         sprint.setEndDate(LocalDate.of(1, 1, 2));
         release.getSprints().add(sprint);
         viewModel.load(release, new Organisation());
-        
+
         viewModel.dateProperty().set(LocalDate.of(1, 1, 1));
         Assert.assertFalse("Must not be after constituent sprint's endDate.",
                 viewModel.dateValidation().validProperty().get());

@@ -1,34 +1,19 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.StringProperty;
 import junit.framework.TestCase;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 25/04/15.
  */
 public class MoveItemCommandTest extends TestCase {
 
-    private static final class MockObject extends Item {
-
-        @Override
-        public String getShortName() {
-            return null;
-        }
-
-        @Override
-        public StringProperty shortNameProperty() {
-            return null;
-        }
-
-    }
-
     public void test() {
         final MockObject mockObject = new MockObject();
-        final ArrayList<Item> position  = new ArrayList<>();
+        final ArrayList<Item> position = new ArrayList<>();
         final ArrayList<Item> destination = new ArrayList<>();
 
         position.add(mockObject);
@@ -61,7 +46,7 @@ public class MoveItemCommandTest extends TestCase {
 
     public void testItemNotInList() {
         final MockObject mockObject = new MockObject();
-        final ArrayList<Item> position  = new ArrayList<>();
+        final ArrayList<Item> position = new ArrayList<>();
         final ArrayList<Item> destination = new ArrayList<>();
 
         try {
@@ -71,6 +56,20 @@ public class MoveItemCommandTest extends TestCase {
         }
 
         // TODO implement me
+    }
+
+    private static final class MockObject extends Item {
+
+        @Override
+        public String getShortName() {
+            return null;
+        }
+
+        @Override
+        public StringProperty shortNameProperty() {
+            return null;
+        }
+
     }
 
 }

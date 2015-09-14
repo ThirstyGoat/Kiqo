@@ -22,6 +22,16 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
     protected static final Logger LOGGER = Logger.getLogger(ModelViewModel.class.getName());
     protected final GoatModelWrapper<T> modelWrapper = new GoatModelWrapper<>();
     private final ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
+    /**
+     * Adds edit commands for all changed fields to the accepted list.
+     */
+    public Consumer<List<Command>> addEditCommands =
+            commands -> {
+                modelWrapper.getChangedFields().stream()
+                        .filter(field -> !field.getProperty().getClass().equals(SimpleListProperty.class))
+                        .forEach(field -> commands.add(new EditCommand<>(modelWrapper.get(), field.getFieldName(),
+                                field.getProperty().getValue())));
+            };
 
     /**
      * @return A method reference to the no-args constructor of T. For example, if T is an instance of Backlog then you
@@ -39,7 +49,8 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
 
     /**
      * Load an item into the ModelWrapper, and set the organisationProperty.
-     * @param item The item to load into the viewModels wrapper. If item is null, then a new item will be created.
+     *
+     * @param item         The item to load into the viewModels wrapper. If item is null, then a new item will be created.
      * @param organisation The organisation within which the viewModel is being loaded.
      */
     public void load(T item, Organisation organisation) {
@@ -64,25 +75,14 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
     public void reload() {
         modelWrapper.reload();
     }
-    
+
     public ObjectProperty<Organisation> organisationProperty() {
         return organisationProperty;
     }
 
-     /**
+    /**
      * @return A command that can be executed by UndoManager. In the case of a {@link ModelViewModel}, this should
      * be a command that will commit the changes cached by the ViewModel's ModelWrapper to the underlying model.
      */
     public abstract Command getCommand();
-
-    /**
-     * Adds edit commands for all changed fields to the accepted list.
-     */
-    public Consumer<List<Command>> addEditCommands =
-            commands -> {
-                modelWrapper.getChangedFields().stream()
-                        .filter(field -> !field.getProperty().getClass().equals(SimpleListProperty.class))
-                        .forEach(field -> commands.add(new EditCommand<>(modelWrapper.get(), field.getFieldName(),
-                                field.getProperty().getValue())));
-            };
 }

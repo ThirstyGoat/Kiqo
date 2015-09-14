@@ -1,15 +1,15 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.TreeItem;
-
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.scene.control.SelectionModel;
+import javafx.scene.control.TreeItem;
 
 
 /**
  * Represents a collection of Projects for display in a TreeView
+ *
  * @author Bradley Kirwan
  */
 public class BacklogsTreeItem extends GoatTreeItem<Backlog> {

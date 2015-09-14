@@ -1,36 +1,43 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.function.Predicate;
-
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
-import javafx.beans.value.*;
-import javafx.collections.*;
-import javafx.collections.transformation.SortedList;
-import javafx.scene.control.TextField;
-
 import com.thirstygoat.kiqo.model.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by bradley on 9/04/15.
  */
 public final class Utilities {
     public static final int SHORT_NAME_MAX_LENGTH = 20;
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");    
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final Comparator<Item> LEXICAL_COMPARATOR = (item1, item2) -> {
         return item1.getShortName().compareToIgnoreCase(item2.getShortName());
     };
 
     public static <E extends Item> SortedList<E> createSortedList(ObservableList<E> list) {
-        return list.sorted((item1, item2) -> {return item1.getShortName().compareToIgnoreCase(item2.getShortName()); });
+        return list.sorted((item1, item2) -> {
+            return item1.getShortName().compareToIgnoreCase(item2.getShortName());
+        });
     }
 
     /**
      * Given a list of Items, returns a comma separated list of those items shortName.
+     *
      * @param items A list of items.
-     * @param max The maximum number of items to print.
+     * @param max   The maximum number of items to print.
      * @return
      */
     public static String concatenateItemsList(List<? extends Item> items, int max) {
@@ -39,7 +46,7 @@ public final class Utilities {
 
         // The true maximum can never be greater than the number of items.
         // So if max is greater than items.size() we make items.size() the new max.
-        max = (max < items.size()) ? max: items.size();
+        max = (max < items.size()) ? max : items.size();
 
         // If max is negative, then for our purposes it may as well be zero.
         // This prevents errors that occur from subtracting negative numbers.
@@ -111,6 +118,7 @@ public final class Utilities {
 
     /**
      * Convenience method for checking short name uniqueness across multiple collections
+     *
      * @param shortName
      * @param item
      * @param collections
@@ -127,9 +135,10 @@ public final class Utilities {
 
     /**
      * Checks whether the given shortname is unique among the given Collection.
+     *
      * @param shortName Short Name to be checked
-     * @param item Item being changed
-     * @param items items among which the name must be unique
+     * @param item      Item being changed
+     * @param items     items among which the name must be unique
      * @return shortName is unique among items
      */
     public static boolean shortnameIsUnique(String shortName, Item item, Collection<? extends Item> items) {
@@ -147,7 +156,8 @@ public final class Utilities {
     /**
      * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
      * up to a certain number of characters.
-     * @param longName source
+     *
+     * @param longName  source
      * @param shortName target
      */
     public static void setNameSuggester(StringProperty longName, StringProperty shortName) {
@@ -158,13 +168,13 @@ public final class Utilities {
             // if shortName is modified directly, disable suggester. 
             // but if shortname is modified to match longName, enable it again.
             isSuggesterEnabled.set(truncatedShortName.equals(truncatedLongName));
-            
+
             // in any case, truncate the short name to the character limit
             if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
                 shortName.set(truncatedShortName); // override newValue
             }
         });
-        
+
         longName.addListener((observable, oldValue, newValue) -> {
             // Propagate edit to shortName, which will deal with truncation.
             if (isSuggesterEnabled.get()) {
@@ -175,6 +185,7 @@ public final class Utilities {
 
     /**
      * Strips file extension from a file name
+     *
      * @param line
      * @return file name with extension stripped
      */
@@ -200,7 +211,8 @@ public final class Utilities {
 
 
     /**
-     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not. 
+     * Creates an generic predicate that takes an objectProperty and checks to see if it is a null value or not.
+     *
      * @return predicate that checks for null values
      */
     public static <T extends Object> Predicate<T> emptinessPredicate() {

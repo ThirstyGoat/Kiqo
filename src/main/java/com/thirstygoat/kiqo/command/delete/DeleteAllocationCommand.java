@@ -6,7 +6,6 @@ import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Command to delete a person from a project.
- *
  */
 public class DeleteAllocationCommand extends DeleteCommand {
     private final Allocation allocation;

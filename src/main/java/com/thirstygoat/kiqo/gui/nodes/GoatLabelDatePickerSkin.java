@@ -1,17 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.animation.FadeTransition;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.SkinBase;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 /**
  * Created by Carina Blair on 8/08/2015.

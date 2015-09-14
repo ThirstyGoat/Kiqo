@@ -1,21 +1,20 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableItems;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableItems;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project class represents a software project
- *
+ * <p>
  * Generic getter/setter from http://stackoverflow.com/a/28673716
  */
 public class Organisation implements Serializable {
@@ -74,7 +73,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return ObservableList of people in project
      */
     public ObservableList<Person> getPeople() {
@@ -82,7 +80,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return A list of people with the Product Owner (PO) skill
      */
     public List<Person> getEligiblePOs() {
@@ -96,7 +93,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return ObservableList of releases
      */
     public ObservableList<Release> getReleases() {
@@ -104,7 +100,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return ObservableList of skills in project
      */
     public ObservableList<Skill> getSkills() {
@@ -112,7 +107,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return save location of project
      */
     public File getSaveLocation() {
@@ -120,7 +114,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @param saveLocation Save location of project
      */
     public void setSaveLocation(final File saveLocation) {
@@ -133,7 +126,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return ObservableList of teams
      */
     public ObservableList<Team> getTeams() {
@@ -141,7 +133,6 @@ public class Organisation implements Serializable {
     }
 
     /**
-     *
      * @return Observable list of projects
      */
     public ObservableList<Project> getProjects() {

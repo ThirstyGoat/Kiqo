@@ -1,18 +1,17 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-
 import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.detailsPane.*;
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController.FirstColumnType;
+import com.thirstygoat.kiqo.gui.detailsPane.IDetailsPaneController;
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 @Deprecated
 public class TeamDetailsPaneController implements Initializable, IDetailsPaneController<Team> {

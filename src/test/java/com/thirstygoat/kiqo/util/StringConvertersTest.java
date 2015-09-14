@@ -1,21 +1,13 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.*;
 import javafx.util.StringConverter;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by leroy on 21/07/15.
@@ -104,7 +96,7 @@ public class StringConvertersTest {
         Assert.assertEquals("Null should return empty string",
                 "", releaseStringConverter.toString(null));
     }
-    
+
     @Test
     public void teamStringConverterTest() {
         Team teamInOrganisation = new Team();

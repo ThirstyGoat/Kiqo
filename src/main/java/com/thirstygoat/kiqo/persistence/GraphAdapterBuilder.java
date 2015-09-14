@@ -16,26 +16,17 @@
 
 package com.thirstygoat.kiqo.persistence;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
-import com.google.gson.JsonElement;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
+import com.google.gson.*;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.ObjectConstructor;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Writes a graph of objects as a list of named nodes.
@@ -50,6 +41,7 @@ public final class GraphAdapterBuilder {
         instanceCreators = new HashMap<Type, InstanceCreator<?>>();
         constructorConstructor = new ConstructorConstructor(instanceCreators);
     }
+
     public GraphAdapterBuilder addType(Type type) {
         final ObjectConstructor<?> objectConstructor = constructorConstructor.get(TypeToken.get(type));
         final InstanceCreator<Object> instanceCreator = new InstanceCreator<Object>() {
@@ -94,7 +86,8 @@ public final class GraphAdapterBuilder {
             final TypeAdapter<T> typeAdapter = gson.getDelegateAdapter(this, type);
             final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
             return new TypeAdapter<T>() {
-                @Override public void write(JsonWriter out, T value) throws IOException {
+                @Override
+                public void write(JsonWriter out, T value) throws IOException {
                     if (value == null) {
                         out.nullValue();
                         return;
@@ -143,7 +136,8 @@ public final class GraphAdapterBuilder {
                     }
                 }
 
-                @Override public T read(JsonReader in) throws IOException {
+                @Override
+                public T read(JsonReader in) throws IOException {
                     if (in.peek() == JsonToken.NULL) {
                         in.nextNull();
                         return null;
@@ -190,7 +184,7 @@ public final class GraphAdapterBuilder {
                     try {
                         @SuppressWarnings("unchecked") // graph.map guarantees consistency between value and T
                         final
-                                Element<T> element = (Element<T>) graph.map.get(currentName);
+                        Element<T> element = (Element<T>) graph.map.get(currentName);
                         // now that we know the typeAdapter for this name, go from JsonElement to 'T'
                         if (element.value == null) {
                             element.typeAdapter = typeAdapter;
@@ -211,7 +205,7 @@ public final class GraphAdapterBuilder {
          * before that value is fully populated. This is useful to deserialize
          * values that directly or indirectly reference themselves: we can hand
          * out an instance before read() returns.
-         *
+         * <p>
          * <p>Gson should only ever call this method when we're expecting it to;
          * that is only when we've called back into Gson to deserialize a tree.
          */

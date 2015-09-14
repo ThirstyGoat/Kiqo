@@ -1,20 +1,13 @@
 package com.thirstygoat.kiqo.gui.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.search.AdvancedSearch;
 import com.thirstygoat.kiqo.search.SearchResult;
 import com.thirstygoat.kiqo.search.SearchableItems;
-
 import de.saxsys.mvvmfx.ViewModel;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Created by bradley on 31/07/15.

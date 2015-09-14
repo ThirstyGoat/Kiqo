@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Carina on 3/05/2015, Edited by James on 6//08/15
  */
 
-public class ReportGeneratorTest{
+public class ReportGeneratorTest {
     private Organisation organisation = new Organisation(true);
     private Project project = new Project("proj1", "Project 1", "Project description");
     private Release release = new Release("release short name", project, LocalDate.now().minusDays(1),
@@ -106,10 +106,11 @@ public class ReportGeneratorTest{
 
     /**
      * Sends a query to yaml-online-parser.appspot.com and check to see if the output is valid.
+     *
      * @param reportStr
      * @return the reponse from the website
      * @throws IOException if the website is unreachable (no internet connection), if you have an internet connection
-     * try running the yaml-online-parser.appspot.com through http://downforeveryoneorjustme.com/
+     *                     try running the yaml-online-parser.appspot.com through http://downforeveryoneorjustme.com/
      */
     public Boolean reportTestHelper(String reportStr) throws IOException {
         String url = "http://yaml-online-parser.appspot.com/ajax?";
@@ -120,11 +121,11 @@ public class ReportGeneratorTest{
             URL obj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 
-            Map<String,Object> params = new LinkedHashMap<>();
+            Map<String, Object> params = new LinkedHashMap<>();
             params.put("yaml", reportStr);
             params.put("type", "json");
 
-            for (Map.Entry<String,Object> param : params.entrySet()) {
+            for (Map.Entry<String, Object> param : params.entrySet()) {
                 if (postData.length() != 0) postData.append('&');
                 postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                 postData.append('=');
@@ -141,8 +142,8 @@ public class ReportGeneratorTest{
             conn.getOutputStream().write(postDataBytes);
 
             Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            for ( int c = in.read(); c != -1; c = in.read() ) {
-                response.append(((char)c));
+            for (int c = in.read(); c != -1; c = in.read()) {
+                response.append(((char) c));
             }
 
         } catch (MalformedURLException e) {
@@ -157,7 +158,7 @@ public class ReportGeneratorTest{
 
 
     /**
-     *  Test to see if the person report is valid yaml
+     * Test to see if the person report is valid yaml
      */
     @Test
     public void testGeneratePersonReport() {
@@ -174,7 +175,7 @@ public class ReportGeneratorTest{
 
 
     /**
-     *  Test to see if the person report is valid yaml
+     * Test to see if the person report is valid yaml
      */
     @Test
     public void testGenerateTeamReport() {
@@ -191,7 +192,7 @@ public class ReportGeneratorTest{
 
 
     /**
-     *  Test to see if the backlog report is valid yaml
+     * Test to see if the backlog report is valid yaml
      */
     @Test
     public void testGenerateBacklogReport() {
@@ -208,7 +209,7 @@ public class ReportGeneratorTest{
 
 
     /**
-     *  Test to see if the project report is valid yaml
+     * Test to see if the project report is valid yaml
      */
     @Test
     public void testGenerateProjectReport() {
@@ -224,7 +225,7 @@ public class ReportGeneratorTest{
     }
 
     /**
-     *  Test to see if the organisation report is valid yaml
+     * Test to see if the organisation report is valid yaml
      */
     @Test
     public void testGenerateOrganisationReport() {

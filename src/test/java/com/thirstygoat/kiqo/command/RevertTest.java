@@ -1,14 +1,13 @@
 package com.thirstygoat.kiqo.command;
 
-import java.lang.reflect.Field;
-
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Skill;
+import java.lang.reflect.Field;
 
 
 /**
@@ -17,6 +16,15 @@ import com.thirstygoat.kiqo.model.Skill;
 public class RevertTest {
     private UndoManager undoManager;
     private Organisation organisation;
+
+    /**
+     * Helper function to get the private Skill field from a CreateSkillCommand.
+     */
+    private static Skill getPrivateSkill(CreateSkillCommand createSkillCommand) throws NoSuchFieldException, IllegalAccessException {
+        Field privateSkill = createSkillCommand.getClass().getDeclaredField("skill");
+        privateSkill.setAccessible(true);
+        return (Skill) privateSkill.get(createSkillCommand);
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -55,7 +63,6 @@ public class RevertTest {
         Assert.assertEquals(10, undoManager.savePosition);
         Assert.assertEquals(10, undoManager.branchPosition);
     }
-
 
     /**
      * Have full stack, undo, undo, undo, doCommand (so it has branched), doCommand and branchPosition should be 7
@@ -109,8 +116,9 @@ public class RevertTest {
 
     /**
      * Test revert when saved, done commands then reverted
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBasicRevertPastSavePos() throws NoSuchFieldException, IllegalAccessException {
@@ -134,8 +142,9 @@ public class RevertTest {
 
     /**
      * Test revert when saved, undone commands then reverted
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBasicRevertBeforeSavePos() throws NoSuchFieldException, IllegalAccessException {
@@ -156,8 +165,9 @@ public class RevertTest {
     /**
      * Test revert when saved, undone commands then do commands then revert
      * do do do save undo undo do revert
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBranchRevert() throws NoSuchFieldException, IllegalAccessException {
@@ -189,8 +199,9 @@ public class RevertTest {
     /**
      * Test revert when saved, undone commands then do commands then revert
      * do do do save undo undo do do undo do revert
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBranchBranchRevert() throws NoSuchFieldException, IllegalAccessException {
@@ -227,10 +238,10 @@ public class RevertTest {
     }
 
     /**
-     *
      * do do do save undo undo save do do revert
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBranchRevertWithSaves() throws NoSuchFieldException, IllegalAccessException {
@@ -260,10 +271,10 @@ public class RevertTest {
     }
 
     /**
-     *
      * do do do save undo undo revert do do revert
-     * @throws NoSuchFieldException 
-     * @throws IllegalAccessException 
+     *
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @Test
     public void testBranchRevertAndGoPastSavePos() throws NoSuchFieldException, IllegalAccessException {
@@ -290,16 +301,6 @@ public class RevertTest {
         for (int i = 9; i > 0; i--) {
             Assert.assertEquals(String.valueOf(i), getPrivateSkill((CreateSkillCommand) undoManager.undoStack.pop()).getShortName());
         }
-    }
-
-    /**
-     * Helper function to get the private Skill field from a CreateSkillCommand.
-     *
-     */
-    private static Skill getPrivateSkill(CreateSkillCommand createSkillCommand) throws NoSuchFieldException, IllegalAccessException {
-        Field privateSkill = createSkillCommand.getClass().getDeclaredField("skill");
-        privateSkill.setAccessible(true);
-        return (Skill) privateSkill.get(createSkillCommand);
     }
 
 }

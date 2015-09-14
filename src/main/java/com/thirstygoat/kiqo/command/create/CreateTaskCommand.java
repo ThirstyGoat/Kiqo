@@ -27,11 +27,15 @@ public class CreateTaskCommand extends CreateCommand {
         story.observableTasks().remove(task);
     }
 
-   @Override
-   public String toString() { return "<Create Task: \"" + task.getShortName() + "\">"; }
+    @Override
+    public String toString() {
+        return "<Create Task: \"" + task.getShortName() + "\">";
+    }
 
     @Override
-    public String getType() {return "Create Task"; }
+    public String getType() {
+        return "Create Task";
+    }
 
 }
 

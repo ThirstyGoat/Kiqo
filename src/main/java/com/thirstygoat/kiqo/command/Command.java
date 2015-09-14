@@ -4,9 +4,8 @@ package com.thirstygoat.kiqo.command;
  * Represents a command to be performed (eg. a modification to the model). Subclasses can accept configuration data
  * through a constructor, if necessary. If execute() does not create an object, T should be set to &lt;Void&gt;.
  *
- * @author amy
- *
  * @param <T> Return type of execute() method
+ * @author amy
  */
 public abstract class Command {
 

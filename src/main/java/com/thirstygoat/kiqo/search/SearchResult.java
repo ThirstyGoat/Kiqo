@@ -1,17 +1,18 @@
 package com.thirstygoat.kiqo.search;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.thirstygoat.kiqo.model.AcceptanceCriteria;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Task;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
  * SearchResult encapsulates a Searchable and allows provides access to
  * Class specific information
+ *
  * @author Bradley
  */
 public class SearchResult {
@@ -36,6 +37,7 @@ public class SearchResult {
 
     /**
      * Returns the result text to be shown in the list of SearchResults
+     *
      * @return Result Text
      */
     public String getResultText() {
@@ -49,13 +51,14 @@ public class SearchResult {
     /**
      * Returns the Item that this search result relates to. (The Item that can be displayed in the details pane)
      * Eg, an AC relates to the Story item that owns it
+     *
      * @return Item to be displayed in the details pane
      */
     public Item getItem() {
         if (searchable.getClass() == AcceptanceCriteria.class) {
-            return ((AcceptanceCriteria)searchable).getStory();
+            return ((AcceptanceCriteria) searchable).getStory();
         } else if (searchable.getClass() == Task.class) {
-            return ((Task)searchable).getStory();
+            return ((Task) searchable).getStory();
         }
 
         return (Item) searchable;

@@ -6,14 +6,13 @@ import com.thirstygoat.kiqo.model.Skill;
 
 /**
  * Command to add a Skill to a Project
- *
  */
 public class CreateSkillCommand extends CreateCommand {
     private final Skill skill;
     private final Organisation organisation;
 
     /**
-     * @param skill Skill created
+     * @param skill        Skill created
      * @param organisation organisation that the skill is to be associated with
      */
     public CreateSkillCommand(final Skill skill, final Organisation organisation) {

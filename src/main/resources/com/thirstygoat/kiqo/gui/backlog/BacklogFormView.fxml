@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.backlog.BacklogFormView">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0"
+            fx:controller="com.thirstygoat.kiqo.gui.backlog.BacklogFormView">
     <bottom>
-        <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0"
+              style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="cancelButton" onAction="#cancelAction" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="okButton" onAction="#okAction" defaultButton="true" mnemonicParsing="false" text="Done" />
+                <Button fx:id="cancelButton" onAction="#cancelAction" cancelButton="true" mnemonicParsing="false"
+                        text="Cancel"/>
+                <Button fx:id="okButton" onAction="#okAction" defaultButton="true" mnemonicParsing="false" text="Done"/>
             </children>
             <padding>
-                <Insets right="35.0" />
+                <Insets right="35.0"/>
             </padding>
         </HBox>
     </bottom>
     <center>
-<GridPane vgap="10.0" >
-    <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints />
-      <RowConstraints />
-    </rowConstraints>
-    <padding>
-        <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-    </padding>
-    <children>
-        <Label text="Name:" />
-        <Label text="Short Name:" GridPane.rowIndex="1" />
-        <Label text="Description:" GridPane.rowIndex="2" />
-        <Label text="Project:" GridPane.rowIndex="3" />
-        <Label text="Product Owner:" GridPane.rowIndex="4" />
-        <Label text="Estimation Scale:" GridPane.rowIndex="5" />
-        <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
-        <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <TextField fx:id="productOwnerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <ComboBox fx:id="scaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-    </children>
-   </GridPane>
+        <GridPane vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+            <padding>
+                <Insets bottom="35.0" left="35.0" right="35.0" top="35.0"/>
+            </padding>
+            <children>
+                <Label text="Name:"/>
+                <Label text="Short Name:" GridPane.rowIndex="1"/>
+                <Label text="Description:" GridPane.rowIndex="2"/>
+                <Label text="Project:" GridPane.rowIndex="3"/>
+                <Label text="Product Owner:" GridPane.rowIndex="4"/>
+                <Label text="Estimation Scale:" GridPane.rowIndex="5"/>
+                <TextField fx:id="longNameTextField" GridPane.columnIndex="1"/>
+                <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <TextField fx:id="projectTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <TextField fx:id="productOwnerTextField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <ComboBox fx:id="scaleComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
+                          GridPane.rowIndex="5"/>
+                <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" GridPane.columnSpan="2"
+                                               GridPane.rowIndex="6"/>
+            </children>
+        </GridPane>
     </center>
 </BorderPane>

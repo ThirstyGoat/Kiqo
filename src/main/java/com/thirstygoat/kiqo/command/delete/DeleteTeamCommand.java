@@ -1,13 +1,13 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.exceptions.InvalidPersonDeletionException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,7 +21,7 @@ public class DeleteTeamCommand extends DeleteCommand {
     private boolean deleteTeamMembers = false;
 
     /**
-     * @param team the team to be deleted
+     * @param team         the team to be deleted
      * @param organisation the project to delete the team from
      */
     public DeleteTeamCommand(final Team team, final Organisation organisation) {

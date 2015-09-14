@@ -1,14 +1,13 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.time.LocalDate;
-
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.DatePicker;
 
-import com.thirstygoat.kiqo.util.Utilities;
+import java.time.LocalDate;
 
 /**
-* Created by Carina Blair on 8/08/2015.
-*/
+ * Created by Carina Blair on 8/08/2015.
+ */
 public class GoatLabelDatePicker extends GoatLabel<DatePicker> {
 
     public static final String DISABLED_CELL_STYLE = "-fx-background-color: #ffc0cb";

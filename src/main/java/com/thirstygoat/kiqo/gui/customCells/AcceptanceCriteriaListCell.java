@@ -1,8 +1,13 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import java.util.Map;
-
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,13 +24,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
+import java.util.Map;
 
 
 public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
@@ -37,7 +36,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         this.listView = listView;
         this.images = images;
     }
-    
+
     @Override
     protected void updateItem(final AcceptanceCriteria item, final boolean empty) {
         // calling super here is very important
@@ -54,7 +53,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
             final ImageView imageView = new ImageView();
             Button stateButton = new Button("", imageView);
-            
+
             stateButton.setOnAction(new StateButtonHandler(imageView, item.state, images));
             borderPane.setRight(stateButton);
 
@@ -65,7 +64,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         }
         super.updateItem(item, empty);
     }
-    
+
     private void initialiseDragAndDrop(AcceptanceCriteria ac) {
 
         // Called when the dragged item is over another cell

@@ -7,13 +7,14 @@ import java.util.List;
 
 /**
  * Created by james on 6/05/15.
- *
+ * <p>
  * The purpose of this class is to provide utility functions that will be used during the construction of the report.
  */
 public class ReportUtils {
 
     /**
      * Generates and returns three '-'
+     *
      * @return a string consisting of ---
      */
     public static String dashes() {
@@ -23,6 +24,7 @@ public class ReportUtils {
     /**
      * Generates whitespace/indentation using spaces.
      * The amount of spaces depends on the 'size' parameter passed.
+     *
      * @param size the number of spaces to be indented by
      * @return a string consisting of whitespace indentation
      */
@@ -32,7 +34,8 @@ public class ReportUtils {
 
     /**
      * Takes a list of strings and indents each element by 'size' amount of space characters (whitespace).
-     * @param size the number/amount of indentation.
+     *
+     * @param size    the number/amount of indentation.
      * @param strings the list of strings to be indented.
      * @return a list of strings, indented to required size.
      */
@@ -48,8 +51,9 @@ public class ReportUtils {
     /**
      * Generates a "valueName: value" string.
      * This method invokes the toString method of value if available or replaces an empty string with '~'.
+     *
      * @param valueName the string to be placed before the colon.
-     * @param value the object whose toString value will be placed after the colon.
+     * @param value     the object whose toString value will be placed after the colon.
      * @return a string of "valueName: value".
      */
     public static String valueLine(String valueName, Object value) {
@@ -59,14 +63,15 @@ public class ReportUtils {
     /**
      * Generates a list of strings representing a literal string which may contain newline characters
      * and other special characters.
+     *
      * @param valueName the string to be placed before the colon.
-     * @param value the object whose toString value will be placed after the colon in an indented literal block.
+     * @param value     the object whose toString value will be placed after the colon in an indented literal block.
      * @return a list of strings.
      */
     public static List<String> valueLiteral(String valueName, Object value) {
         final List<String> lines = new ArrayList<>();
         lines.add(valueName + ": |");
-        for(String line : value.toString().split(System.getProperty("line.separator"))) {
+        for (String line : value.toString().split(System.getProperty("line.separator"))) {
             lines.add("  " + line);
         }
         return lines;
@@ -74,7 +79,8 @@ public class ReportUtils {
 
     /**
      * Generates a "str: ~" string if isEmpty, otherwise "str: ".
-     * @param str the string to be placed before the colon.
+     *
+     * @param str     the string to be placed before the colon.
      * @param isEmpty the boolean value to determine if the "~" should be added or not.
      * @return "str: ~" or "str: "
      */

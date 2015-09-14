@@ -74,7 +74,7 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
                 for (Node storyRow : scrumBoardVBox.getChildren()) {
                     double top = storyRow.getBoundsInParent().getMinY();
                     double bottom = storyRow.getBoundsInParent().getMaxY();
-                    double mid = ((bottom-top)/2) + top;
+                    double mid = ((bottom - top) / 2) + top;
 
                     boolean inRange = event.getY() >= top && event.getY() <= bottom;
                     if (inRange) {
@@ -120,7 +120,7 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
             // If we are moving a story row after its initial position, then removing the story row from the list will
             // off set al indices by 1 that appears AFTER -> Therefore, we subtract 1 from the index to avoid an
             // IndexOutOfBoundsException and subsequent catastrophe
-            index = index > initialIndex ? index-1 : index;
+            index = index > initialIndex ? index - 1 : index;
             scrumBoardVBox.getChildren().add(index, node);
         }
     }

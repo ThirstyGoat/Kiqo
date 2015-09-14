@@ -17,39 +17,6 @@ public class BoundPropertySupportTest {
     private PropertyChangeListener listener;
     private TestObject testObject;
 
-    private class TestObject {
-        private BoundPropertySupport bps = new BoundPropertySupport(this);
-        private StringProperty stringProperty = new SimpleStringProperty("");
-        private ListProperty<String> listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-        private ObservableList<String> observableList = FXCollections.observableArrayList();
-
-        public TestObject() {
-            bps.addPropertyChangeSupportFor(observableList);
-            bps.addPropertyChangeSupportFor(listProperty);
-            bps.addPropertyChangeSupportFor(stringProperty);
-        }
-
-        public StringProperty stringProperty() {
-            return stringProperty;
-        }
-
-        public ListProperty<String> listProperty() {
-            return listProperty;
-        }
-
-        public ObservableList<String> observableList() {
-            return observableList;
-        }
-
-        public final void addPropertyChangeListener(PropertyChangeListener listener) {
-            this.bps.addChangeListener(listener);
-        }
-
-        public final void removePropertyChangeListener(PropertyChangeListener listener) {
-            this.bps.removeChangeListener(listener);
-        }
-    }
-
     @Before
     public void setup() {
         propertyChanged = new SimpleBooleanProperty(false);
@@ -102,5 +69,38 @@ public class BoundPropertySupportTest {
 
         testObject.observableList.remove(0);
         Assert.assertTrue(propertyChanged.getValue().equals(true));
+    }
+
+    private class TestObject {
+        private BoundPropertySupport bps = new BoundPropertySupport(this);
+        private StringProperty stringProperty = new SimpleStringProperty("");
+        private ListProperty<String> listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+        private ObservableList<String> observableList = FXCollections.observableArrayList();
+
+        public TestObject() {
+            bps.addPropertyChangeSupportFor(observableList);
+            bps.addPropertyChangeSupportFor(listProperty);
+            bps.addPropertyChangeSupportFor(stringProperty);
+        }
+
+        public StringProperty stringProperty() {
+            return stringProperty;
+        }
+
+        public ListProperty<String> listProperty() {
+            return listProperty;
+        }
+
+        public ObservableList<String> observableList() {
+            return observableList;
+        }
+
+        public final void addPropertyChangeListener(PropertyChangeListener listener) {
+            this.bps.addChangeListener(listener);
+        }
+
+        public final void removePropertyChangeListener(PropertyChangeListener listener) {
+            this.bps.removeChangeListener(listener);
+        }
     }
 }

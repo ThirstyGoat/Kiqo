@@ -1,28 +1,32 @@
 package com.thirstygoat.kiqo.gui.release;
 
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.util.*;
-
-import javafx.application.Platform;
-import javafx.fxml.*;
-import javafx.scene.control.*;
-import de.saxsys.mvvmfx.*;
-import de.saxsys.mvvmfx.utils.validation.visualization.*;
-
 /**
  * Connects the GUI form to the viewModel. NB: Requires that {@link #setExitStrategy(Runnable)} is called.
+ *
  * @author amy
- * 26/8/15
+ *         26/8/15
  */
 public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializable {
-    private FormButtonHandler formButtonHandler;
-    
     @InjectViewModel
     ReleaseViewModel viewModel;
-    
+    private FormButtonHandler formButtonHandler;
     @FXML
     private TextField shortNameTextField;
     @FXML
@@ -35,18 +39,18 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     private Button okButton;
     @FXML
     private Button cancelButton;
-    
+
     @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {        
+    public void initialize(URL arg0, ResourceBundle arg1) {
         bindToViewModel();
         attachValidators();
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectsSupplier());
-        
+
         Platform.runLater(() -> {
             shortNameTextField.requestFocus();
         });
     }
-    
+
     private void bindToViewModel() {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(), StringConverters.projectStringConverter(viewModel.organisationProperty()));
@@ -64,7 +68,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
             validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
         });
     }
-    
+
     public void setExitStrategy(Runnable exitStrategy) {
         formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
     }

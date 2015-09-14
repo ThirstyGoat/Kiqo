@@ -1,11 +1,13 @@
 package com.thirstygoat.kiqo.gui.skill;
 
-import org.junit.*;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.Utilities;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SkillViewModelTest {
     SkillViewModel viewModel;
@@ -15,11 +17,11 @@ public class SkillViewModelTest {
         viewModel = new SkillViewModel();
         viewModel.load(null, new Organisation());
     }
-    
+
     @Test
     public final void testCreateCommand_new() {
         Command command;
-        
+
         command = viewModel.createCommand();
         Assert.assertFalse(viewModel.nameValidation().isValid()); // just to be sure
         Assert.assertNotNull("command must be generated (even when validation is not passing)", command);
@@ -33,9 +35,9 @@ public class SkillViewModelTest {
         Organisation organisation = new Organisation();
         organisation.getSkills().add(skill);
         viewModel.load(skill, organisation);
-        
+
         Command command;
-        
+
         // no changes
         command = viewModel.createCommand();
         Assert.assertNull("command must be null if no changes made", command);
@@ -44,13 +46,13 @@ public class SkillViewModelTest {
         viewModel.nameProperty().set("Valid name");
         command = viewModel.createCommand();
         Assert.assertEquals("command must include all changes (1)", "1 change", command.toString());
-        
+
         // failing validation
         viewModel.nameProperty().set("Invalid name because it is too long");
         command = viewModel.createCommand();
         Assert.assertFalse(viewModel.nameValidation().isValid()); // just to be sure
         Assert.assertEquals("command must include all changes (1) even when validation is not passing", "1 change", command.toString());
-        
+
         // multiple changes
         viewModel.nameProperty().set("New name");
         viewModel.descriptionProperty().set("New description");
@@ -70,7 +72,7 @@ public class SkillViewModelTest {
         viewModel.nameProperty().set("");
         Assert.assertFalse("Must not be an empty string.",
                 viewModel.nameValidation().validProperty().get());
-        
+
         viewModel.nameProperty().set(null);
         Assert.assertFalse("Must not be null.",
                 viewModel.nameValidation().validProperty().get());
@@ -83,7 +85,7 @@ public class SkillViewModelTest {
         final String SHARED_NAME = "not unique";
         Skill secondSkill = new Skill(SHARED_NAME, "arbitrary description");
         viewModel.organisationProperty().get().getSkills().add(secondSkill);
-        
+
         viewModel.nameProperty().set("unique");
         Assert.assertTrue("Unique name must be valid.",
                 viewModel.nameValidation().validProperty().get());
@@ -106,7 +108,7 @@ public class SkillViewModelTest {
         Assert.assertTrue("Empty string should be recognised as valid.",
                 viewModel.descriptionValidation().validProperty().get());
     }
-    
+
     @Test
     public final void testAllValidation() {
         Assert.assertFalse("Must not be valid initially.",
@@ -115,7 +117,7 @@ public class SkillViewModelTest {
         viewModel.descriptionProperty().set("Billy Goat");
         Assert.assertFalse("Must not be valid with partial validity.",
                 viewModel.allValidation().validProperty().get());
-        
+
         viewModel.nameProperty().set("Name");
         Assert.assertTrue("Must be valid when all contributors are valid.",
                 viewModel.allValidation().validProperty().get());

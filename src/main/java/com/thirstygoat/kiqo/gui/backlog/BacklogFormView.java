@@ -3,14 +3,14 @@ package com.thirstygoat.kiqo.gui.backlog;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +27,8 @@ import java.util.ResourceBundle;
  */
 public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initializable {
 
+    @InjectViewModel
+    BacklogFormViewModel viewModel;
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -45,9 +47,6 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
     private Button okButton;
     @FXML
     private Button cancelButton;
-
-    @InjectViewModel
-    BacklogFormViewModel viewModel;
 
     @Override
     public void initialize(final URL location, ResourceBundle resources) {

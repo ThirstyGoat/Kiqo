@@ -1,8 +1,13 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.viewModel.TaskFormViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,18 +18,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
-
 import org.controlsfx.validation.ValidationSupport;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.viewModel.TaskFormViewModel;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
-
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Amy on 23/04/15.
@@ -108,7 +105,7 @@ public class TaskFormController extends FormController<Task> {
     }
 
     @Override
-    public void setStage(Stage stage)  {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
@@ -129,6 +126,7 @@ public class TaskFormController extends FormController<Task> {
             okButton.setText("Done");
         }
     }
+
     private void setValidationSupport() {
         ValidationVisualizer visualizer = new ControlsFxVisualizer();
         visualizer.initVisualization(viewModel.nameValidation(), name, true);

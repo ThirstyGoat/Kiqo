@@ -1,13 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -29,7 +28,7 @@ public class Skill extends Item {
         this.shortName = new SimpleStringProperty(shortName);
         this.description = new SimpleStringProperty(description);
     }
-    
+
     @Override
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(shortName);

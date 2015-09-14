@@ -6,7 +6,6 @@ import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Command to add a Skill to a Project
- *
  */
 public class CreateAcceptanceCriteriaCommand extends CreateCommand {
     private final AcceptanceCriteria acceptanceCriteria;
@@ -14,7 +13,7 @@ public class CreateAcceptanceCriteriaCommand extends CreateCommand {
 
     /**
      * @param acceptanceCriteria Skill created
-     * @param story story that the acceptanceCriteria is to be associated with
+     * @param story              story that the acceptanceCriteria is to be associated with
      */
     public CreateAcceptanceCriteriaCommand(final AcceptanceCriteria acceptanceCriteria, final Story story) {
         super(acceptanceCriteria);

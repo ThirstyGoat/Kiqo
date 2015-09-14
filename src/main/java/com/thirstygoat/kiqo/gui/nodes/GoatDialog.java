@@ -6,13 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,11 +25,11 @@ public final class GoatDialog {
     /**
      * Creates a dialog box and returns the name of the button the user clicked on.
      *
-     * @param owner Stage that owns this dialog
-     * @param title Title to appear for the window
-     * @param headerText Header text shown in the dialog (Larger than message)
+     * @param owner       Stage that owns this dialog
+     * @param title       Title to appear for the window
+     * @param headerText  Header text shown in the dialog (Larger than message)
      * @param messageText Standard message text to be shown in the dialog
-     * @param buttons String array of button labels
+     * @param buttons     String array of button labels
      * @return Button name that was clicked on
      */
     public static String createBasicButtonDialog(final Stage owner, final String title, final String headerText,
@@ -72,15 +66,15 @@ public final class GoatDialog {
     /**
      * Creates a dialog box and returns the name of the button the user clicked on.
      *
-     * @param owner Stage that owns this dialog
-     * @param title Title to appear for the window
+     * @param owner      Stage that owns this dialog
+     * @param title      Title to appear for the window
      * @param headerText Header text shown in the dialog (Larger than message)
      * @param customNode Custom node to be displayed in the
-     * @param buttons String array of button labels
+     * @param buttons    String array of button labels
      * @return Button name that was clicked on
      */
     public static String createCustomNodeDialog(final Stage owner, final String title, final String headerText,
-                                                 final Node customNode, final String[] buttons) {
+                                                final Node customNode, final String[] buttons) {
         final String[] selectedProperty = new String[1];
         selectedProperty[0] = "-1";
         setup(owner);
@@ -117,6 +111,7 @@ public final class GoatDialog {
 
     /**
      * Sets up the structure and properties of nodes in the window.
+     *
      * @param owner Stage that owns this dialog
      */
     public static void setup(final Stage owner) {
@@ -166,10 +161,10 @@ public final class GoatDialog {
     /**
      * Display an alert dialog to the user.
      *
-     * @param owner Stage that owns this dialog
-     * @param title window title
+     * @param owner      Stage that owns this dialog
+     * @param title      window title
      * @param headerText internal heading
-     * @param message detail message
+     * @param message    detail message
      */
     public static void showAlertDialog(final Stage owner, final String title, final String headerText,
                                        final String message) {

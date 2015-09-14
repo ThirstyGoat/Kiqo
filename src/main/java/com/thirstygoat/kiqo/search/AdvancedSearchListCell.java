@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.search;
 
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -8,8 +9,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 
 /**
  * Created by bradley on 1/08/15.
@@ -85,8 +84,8 @@ public class AdvancedSearchListCell extends ListCell<SearchResult> {
 
         for (int[] matchPos : match.getMatchPositions()) {
             if (shownChars < MAX_MATCH_DISPLAY_LENGTH) {
-                int startPos = shownChars > 0 ? lastIndex : Math.max(0, matchPos[0]-20);
-                int endPos = Math.min(MAX_MATCH_DISPLAY_LENGTH-shownChars+startPos, matchPos[0]);
+                int startPos = shownChars > 0 ? lastIndex : Math.max(0, matchPos[0] - 20);
+                int endPos = Math.min(MAX_MATCH_DISPLAY_LENGTH - shownChars + startPos, matchPos[0]);
                 if (shownChars == 0 && startPos > 0) {
                     leadingEllipsis = true;
                 }

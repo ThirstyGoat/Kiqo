@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.search;
 
-import java.util.regex.Pattern;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by leroy on 25/07/15.
@@ -24,6 +24,7 @@ public class AdvancedSearch extends Search {
 
     /**
      * Executes the search
+     *
      * @return ObservableList<SearchResult> containing the results of the search
      */
     public ObservableList<SearchResult> execute() {

@@ -24,10 +24,11 @@ public class PersistenceManager {
     private static Gson gson;
     private static boolean isOldJSON = false;
     private static String revertVersion;
+
     /**
      * Saves the given Organisation to the given filepath as organisation_shortname.json FILE PATH MUST BE VALID
      *
-     * @param filePath Path to the location where the organisation is to be saved
+     * @param filePath     Path to the location where the organisation is to be saved
      * @param organisation Organisation to be saved
      * @throws IOException Cannot write to file
      */
@@ -58,10 +59,10 @@ public class PersistenceManager {
      * @param file - Path to the organisation.json
      * @return Organisation loaded from the organisation.json file in the organisation directory
      * @throws FileNotFoundException File does not exist, or insufficient permissions
-     * @throws JsonIOException Internal JSON IO problem
-     * @throws JsonSyntaxException Malformed JSON structure
-     * @throws ClassCastException Problem casting the JsonParsers return value to a JsonObject. For example
-     * if the JsonParser is parsing an empty file it will return a JsonNull object which cannot be cast to a JsonObject.
+     * @throws JsonIOException       Internal JSON IO problem
+     * @throws JsonSyntaxException   Malformed JSON structure
+     * @throws ClassCastException    Problem casting the JsonParsers return value to a JsonObject. For example
+     *                               if the JsonParser is parsing an empty file it will return a JsonNull object which cannot be cast to a JsonObject.
      */
     public static Organisation loadOrganisation(final File file) throws JsonIOException, JsonSyntaxException,
             ClassCastException, FileNotFoundException {
@@ -113,6 +114,7 @@ public class PersistenceManager {
 
     /**
      * Creates the GSON object
+     *
      * @param isOldFile if the file is from a previous version or not (alters the typeAdapter for organisation
      */
     private static void createGson(boolean isOldFile) {
@@ -141,7 +143,7 @@ public class PersistenceManager {
         gsonBuilder.registerTypeAdapter(ObjectProperty.class, new ObjectPropertyDeserializer());
         gsonBuilder.registerTypeAdapter(BooleanProperty.class, new BooleanPropertyDeserializer());
 
-        if(isOldFile) {
+        if (isOldFile) {
             gsonBuilder.registerTypeAdapter(Organisation.class, new OrganisationDeserializer());
         }
 
@@ -185,7 +187,7 @@ public class PersistenceManager {
         @Override
         public ObservableList<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            final Type type = ((ParameterizedType)typeOfT).getActualTypeArguments()[0];
+            final Type type = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
                 PersistenceManager.createGson(false);
             }
@@ -281,7 +283,7 @@ public class PersistenceManager {
         @Override
         public ObjectProperty<?> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
-            final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
+            final Type objectType = ((ParameterizedType) type).getActualTypeArguments()[0];
             if (PersistenceManager.gson == null) {
                 PersistenceManager.createGson(false);
             }
@@ -290,7 +292,7 @@ public class PersistenceManager {
 
         @Override
         public JsonElement serialize(ObjectProperty<?> o, Type type, JsonSerializationContext jsonSerializationContext) {
-            final Type objectType = ((ParameterizedType)type).getActualTypeArguments()[0];
+            final Type objectType = ((ParameterizedType) type).getActualTypeArguments()[0];
             if (o != null && o.get() != null) {
                 if (PersistenceManager.gson == null) {
                     PersistenceManager.createGson(false);

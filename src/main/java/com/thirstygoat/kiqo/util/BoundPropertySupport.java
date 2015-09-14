@@ -17,7 +17,6 @@ package com.thirstygoat.kiqo.util;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;

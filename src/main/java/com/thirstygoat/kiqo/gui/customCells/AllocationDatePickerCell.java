@@ -1,12 +1,11 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
-import java.time.LocalDate;
-
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.model.Allocation;
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.model.Allocation;
+import java.time.LocalDate;
 
 /**
  * Created by bradley on 30/04/15.
@@ -52,7 +51,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
 
     private void startDateValidation(LocalDate date) {
         final com.thirstygoat.kiqo.model.Allocation allocation =
-                (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+                (com.thirstygoat.kiqo.model.Allocation) getTableRow().getItem();
         // Check to make sure that start date comes before end date if end date is set
         if (date == null || date == LocalDate.MAX) {
             // Alert the user that this is not allowed
@@ -98,7 +97,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
 
     private void endDateValidation(LocalDate date) {
         final com.thirstygoat.kiqo.model.Allocation allocation =
-                (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+                (com.thirstygoat.kiqo.model.Allocation) getTableRow().getItem();
         // Check to make sure that end date comes after start date
         LocalDate newDate = date == null ? LocalDate.MAX : date;
         if (!newDate.isAfter(allocation.getStartDate())) {
@@ -148,7 +147,7 @@ public class AllocationDatePickerCell extends DatePickerCell<Allocation> {
 
     private void revertDate() {
         final com.thirstygoat.kiqo.model.Allocation allocation =
-                (com.thirstygoat.kiqo.model.Allocation)getTableRow().getItem();
+                (com.thirstygoat.kiqo.model.Allocation) getTableRow().getItem();
         getDatePicker().valueProperty().removeListener(datePickerListener);
         if (type == ValidationType.START_DATE) {
             updateItem(allocation.getStartDate(), false);

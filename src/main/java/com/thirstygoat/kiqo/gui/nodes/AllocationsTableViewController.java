@@ -1,9 +1,13 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
+import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Team;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,28 +17,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import org.controlsfx.control.PopOver;
 
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
-import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Team;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 
 /**
@@ -139,19 +132,19 @@ public class AllocationsTableViewController implements Initializable {
     }
 
     private void deleteAllocation() {
-            final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
+        final Allocation selectedAllocation = allocationsTableView.getSelectionModel().getSelectedItem();
 
-            final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
+        final DeleteAllocationCommand command = new DeleteAllocationCommand(selectedAllocation);
 
-            final String[] buttons = {"Delete Allocation", "Cancel"};
-            final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
-                    "Delete Project", "Are you sure?",
-                    "Are you sure you want to delete the allocation on this project for team " +
-                            selectedAllocation.getTeam().getShortName() + "?", buttons);
+        final String[] buttons = {"Delete Allocation", "Cancel"};
+        final String result = GoatDialog.createBasicButtonDialog(mainController.getPrimaryStage(),
+                "Delete Project", "Are you sure?",
+                "Are you sure you want to delete the allocation on this project for team " +
+                        selectedAllocation.getTeam().getShortName() + "?", buttons);
 
-            if (result.equals("Delete Allocation")) {
-                mainController.doCommand(command);
-            }
+        if (result.equals("Delete Allocation")) {
+            mainController.doCommand(command);
+        }
     }
 
     /**
@@ -268,7 +261,7 @@ public class AllocationsTableViewController implements Initializable {
         return highlightCheckBox.selectedProperty();
     }
 
-    public enum  FirstColumnType {
+    public enum FirstColumnType {
         PROJECT, TEAM
     }
 }

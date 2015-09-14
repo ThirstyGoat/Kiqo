@@ -1,16 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -23,7 +22,7 @@ public class Project extends Item {
     private final ObservableList<Story> unallocatedStories;
     private final ObservableList<Allocation> allocations;
     private final ObservableList<Backlog> backlogs;
-//    private final ObservableList<Sprint> sprints;
+    //    private final ObservableList<Sprint> sprints;
     private final StringProperty description;
 
     /**
@@ -44,7 +43,7 @@ public class Project extends Item {
      * Create new Project
      *
      * @param shortName a unique short name for the project
-     * @param longName long name for project
+     * @param longName  long name for project
      */
     public Project(final String shortName, final String longName) {
         this();
@@ -55,8 +54,8 @@ public class Project extends Item {
     /**
      * Create a new project
      *
-     * @param shortName a unique short name for the project
-     * @param longName long name for project
+     * @param shortName   a unique short name for the project
+     * @param longName    long name for project
      * @param description description of the project
      */
     public Project(final String shortName, final String longName, final String description) {
@@ -89,7 +88,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @return Description of the project
      */
     public String getDescription() {
@@ -97,7 +95,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @param description Description of the project
      */
     public void setDescription(final String description) {
@@ -105,7 +102,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @return longName Long name of the project
      */
     public String getLongName() {
@@ -113,7 +109,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @param longName Long name for the project
      */
     public void setLongName(final String longName) {
@@ -126,7 +121,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @param shortName Short name of the project
      */
     public void setShortName(final String shortName) {
@@ -148,6 +142,7 @@ public class Project extends Item {
 
     /**
      * Gets the array of team allocations
+     *
      * @return The ObservableList of Team Allocations
      */
     public List<Allocation> getAllocations() {
@@ -156,11 +151,14 @@ public class Project extends Item {
         return allocations;
     }
 
+    public void setAllocations(List<Allocation> allocations) {
+        this.allocations.setAll(allocations);
+    }
+
     /**
-     *
      * @return List of allocations which are current
      */
-    public List<Allocation> getCurrentAllocations()  {
+    public List<Allocation> getCurrentAllocations() {
         final LocalDate now = LocalDate.now();
         final ArrayList<Allocation> currentAllocations = new ArrayList<>();
         for (Allocation allocation : getAllocations()) {
@@ -169,10 +167,6 @@ public class Project extends Item {
             }
         }
         return currentAllocations;
-    }
-
-    public void setAllocations(List<Allocation> allocations){
-        this.allocations.setAll(allocations);
     }
 
     public ObservableList<Release> observableReleases() {
@@ -219,7 +213,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @return list of backlogs associated with this project.
      */
     public List<Backlog> getBacklogs() {
@@ -229,7 +222,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @param backlogs list of backlogs associated with this project
      */
     public void setBacklogs(final List<Backlog> backlogs) {
@@ -238,7 +230,6 @@ public class Project extends Item {
     }
 
     /**
-     *
      * @return list of sprints associated with this project.
      */
     public List<Sprint> getSprints() {

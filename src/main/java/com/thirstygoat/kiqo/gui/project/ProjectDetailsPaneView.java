@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 25/03/2015.
- *
  */
 public class ProjectDetailsPaneView implements FxmlView<ProjectDetailsPaneViewModel>, Initializable {
 

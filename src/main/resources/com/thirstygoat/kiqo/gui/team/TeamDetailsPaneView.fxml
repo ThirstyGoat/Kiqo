@@ -1,51 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import com.thirstygoat.kiqo.gui.nodes.*?>
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView">
-  <children>
-    <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <content>
-        <VBox mouseTransparent="false" spacing="10.0">
-          <children>
-            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
-              <children>
-                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
-                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
-                <Label styleClass="pane-type-indicator" text="Team" />
-              </children>
-            </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
-            <GridPane hgap="10.0" >
-	          <children>
-              	<Label text="Product Owner" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" >
-	            	<VBox.margin><Insets bottom="-8"/></VBox.margin>
-		        </Label>
-	            <GoatLabelTextField fx:id="poLabel" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-	            <Label text="Scrum Master" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="1" >
-		            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-		        </Label>
-	            <GoatLabelTextField fx:id="smLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-	          </children>
-	        </GridPane>
-            <Label text="Development Team" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-            <Label fx:id="devTeamLabel" />
-            <Label text="All Team Members" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-	        <Label fx:id="teamMembersLabel" />
-	        <Label text="Allocations" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-            <fx:include source="../nodes/allocationsTableView.fxml" fx:id="allocationsTableView" />
-          </children>
-        </VBox>
-      </content>
-    </ScrollPane>
-  </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0"
+            fx:controller="com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView">
+    <children>
+        <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <content>
+                <VBox mouseTransparent="false" spacing="10.0">
+                    <children>
+                        <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
+                            <children>
+                                <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name"/>
+                                <Region maxWidth="-1" HBox.hgrow="ALWAYS"/>
+                                <Label styleClass="pane-type-indicator" text="Team"/>
+                            </children>
+                        </HBox>
+                        <GoatLabelTextArea fx:id="descriptionLabel"/>
+                        <GridPane hgap="10.0">
+                            <children>
+                                <Label text="Product Owner" styleClass="field-label" GridPane.rowIndex="0"
+                                       GridPane.columnIndex="0">
+                                    <VBox.margin>
+                                        <Insets bottom="-8"/>
+                                    </VBox.margin>
+                                </Label>
+                                <GoatLabelTextField fx:id="poLabel" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <Label text="Scrum Master" styleClass="field-label" GridPane.rowIndex="0"
+                                       GridPane.columnIndex="1">
+                                    <VBox.margin>
+                                        <Insets bottom="-8"/>
+                                    </VBox.margin>
+                                </Label>
+                                <GoatLabelTextField fx:id="smLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            </children>
+                        </GridPane>
+                        <Label text="Development Team" styleClass="field-label">
+                            <VBox.margin>
+                                <Insets bottom="-8"/>
+                            </VBox.margin>
+                        </Label>
+                        <Label fx:id="devTeamLabel"/>
+                        <Label text="All Team Members" styleClass="field-label">
+                            <VBox.margin>
+                                <Insets bottom="-8"/>
+                            </VBox.margin>
+                        </Label>
+                        <Label fx:id="teamMembersLabel"/>
+                        <Label text="Allocations" styleClass="field-label">
+                            <VBox.margin>
+                                <Insets bottom="-8"/>
+                            </VBox.margin>
+                        </Label>
+                        <fx:include source="../nodes/allocationsTableView.fxml" fx:id="allocationsTableView"/>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
 </AnchorPane>

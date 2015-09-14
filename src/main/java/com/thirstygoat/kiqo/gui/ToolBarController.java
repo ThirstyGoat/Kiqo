@@ -149,9 +149,9 @@ public class ToolBarController implements Initializable {
         gridPane.add(backlogButton, 0, 2);
         gridPane.add(sprintButton, 1, 2);
 
-        Insets inset = new Insets(5,10,5,10);
+        Insets inset = new Insets(5, 10, 5, 10);
 
-        gridPane.setMargin(projectButton,inset);
+        gridPane.setMargin(projectButton, inset);
         gridPane.setMargin(personButton, inset);
         gridPane.setMargin(skillButton, inset);
         gridPane.setMargin(teamButton, inset);
@@ -187,7 +187,6 @@ public class ToolBarController implements Initializable {
         openButton.setOnAction(event -> mainController.openOrganisation(null));
         saveButton.setOnAction(event -> mainController.saveOrganisation(false));
     }
-
 
 
     private void setListenersOnUndoManager() {

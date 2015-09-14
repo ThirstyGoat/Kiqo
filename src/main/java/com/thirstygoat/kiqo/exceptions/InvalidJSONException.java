@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
  */
 public class InvalidJSONException extends FileNotFoundException {
 
-        public InvalidJSONException(File file) {
-            super("JSON File: " + file + " is corrupt");
-        }
+    public InvalidJSONException(File file) {
+        super("JSON File: " + file + " is corrupt");
+    }
 }

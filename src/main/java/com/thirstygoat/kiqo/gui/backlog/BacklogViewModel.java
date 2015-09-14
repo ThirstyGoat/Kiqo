@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 
 /**
  * Model ViewModel
- * @author amy
  *
+ * @author amy
  */
 public class BacklogViewModel extends ModelViewModel<Backlog> {
     private final ListProperty<Story> eligableStories;

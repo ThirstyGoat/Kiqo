@@ -1,20 +1,18 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.util.Comparator;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.Comparator;
 
 public class GoatTreeItemTest {
     private static final SelectionModel<TreeItem<Item>> selectionModel = new SelectionModel<TreeItem<Item>>() {
@@ -95,7 +93,7 @@ public class GoatTreeItemTest {
 
     @Before
     public void setUp() throws Exception {
-        reservoir = new MockObject[] {
+        reservoir = new MockObject[]{
                 new MockObject("a"),
                 new MockObject("b"),
                 new MockObject("c"),
@@ -121,7 +119,7 @@ public class GoatTreeItemTest {
     @Test
     public void test_add() {
         // order of insertion: add to empty list, prepend, append, insert
-        for (final int i : new int[] {1, 0, 3, 2} ) {
+        for (final int i : new int[]{1, 0, 3, 2}) {
             observableList.add(reservoir[i]);
             assertListsAreEquivalent();
         }
@@ -178,7 +176,7 @@ public class GoatTreeItemTest {
         final ObservableList<TreeItem<Item>> children = goatTreeItem.getChildren();
         final int size = children.size();
         final Item[] items = new MockObject[size];
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             items[i] = children.get(i).getValue();
         }
         return items;
@@ -186,6 +184,7 @@ public class GoatTreeItemTest {
 
     private static class MockObject extends Item {
         private final StringProperty shortNameProperty;
+
         public MockObject(String label) {
             shortNameProperty = new SimpleStringProperty(label);
         }

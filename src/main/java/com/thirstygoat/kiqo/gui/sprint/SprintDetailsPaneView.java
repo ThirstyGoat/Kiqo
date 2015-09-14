@@ -15,8 +15,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
-* Created by Bradley Kirwan on 14/08/2015.
-*/
+ * Created by Bradley Kirwan on 14/08/2015.
+ */
 public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewModel>, Initializable {
 
     @FXML
@@ -54,7 +54,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             } else if (newValue == detailsToggleButton) {
                 // Show Details View
                 show(detailsView);
-            } else  if (newValue == scrumboardToggleButton) {
+            } else if (newValue == scrumboardToggleButton) {
                 show(scrumBoardView);
             } else {
                 hideAllViews();
@@ -69,6 +69,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
 
     /**
      * Hides all views and then shows the given view
+     *
      * @param pane View to be shown
      */
     private void show(Pane pane) {

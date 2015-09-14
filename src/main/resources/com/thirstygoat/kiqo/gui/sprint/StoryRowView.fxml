@@ -1,60 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="CENTER_LEFT" prefHeight="270.0"
+          prefWidth="747.0" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css"
+          xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="1.7976931348623157E308" valignment="TOP" vgrow="ALWAYS"/>
+    </rowConstraints>
+    <children>
+        <VBox spacing="5.0">
+            <children>
+                <VBox styleClass="story-card">
+                    <children>
+                        <Label fx:id="storyNameLabel" styleClass="name-label" text="Story name here" wrapText="true"/>
+                        <Label fx:id="descriptionLabel" maxHeight="50.0" styleClass="description-label"
+                               text="Description" wrapText="true"/>
+                        <HBox>
+                            <children>
+                                <Label maxHeight="50.0" minWidth="55.0" styleClass="priority-label" text="Priority:"
+                                       wrapText="true"/>
+                                <Label fx:id="priorityLabel" maxHeight="50.0" styleClass="priority-label" text="10"
+                                       wrapText="true"/>
+                            </children>
+                        </HBox>
+                        <HBox>
+                            <children>
+                                <Label maxHeight="50.0" minWidth="55.0" styleClass="estimate-label" text="Estimate:"
+                                       wrapText="true"/>
+                                <Label fx:id="estimateLabel" maxHeight="50.0" styleClass="estimate-label" text="10"
+                                       wrapText="true"/>
+                            </children>
+                        </HBox>
+                    </children>
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                </VBox>
+                <Button fx:id="addTaskButton" mnemonicParsing="false" styleClass="add-task-button" text="New Task">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"/>
+                    </graphic>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </VBox>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="CENTER_LEFT" prefHeight="270.0" prefWidth="747.0" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints maxHeight="1.7976931348623157E308" valignment="TOP" vgrow="ALWAYS" />
-  </rowConstraints>
-   <children>
-      <VBox spacing="5.0">
-         <children>
-            <VBox styleClass="story-card">
-               <children>
-                  <Label fx:id="storyNameLabel" styleClass="name-label" text="Story name here" wrapText="true" />
-                  <Label fx:id="descriptionLabel" maxHeight="50.0" styleClass="description-label" text="Description" wrapText="true" />
-                  <HBox>
-                     <children>
-                        <Label maxHeight="50.0" minWidth="55.0" styleClass="priority-label" text="Priority:" wrapText="true" />
-                        <Label fx:id="priorityLabel" maxHeight="50.0" styleClass="priority-label" text="10" wrapText="true" />
-                     </children>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <Label maxHeight="50.0" minWidth="55.0" styleClass="estimate-label" text="Estimate:" wrapText="true" />
-                        <Label fx:id="estimateLabel" maxHeight="50.0" styleClass="estimate-label" text="10" wrapText="true" />
-                     </children>
-                  </HBox>
-               </children>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </VBox>
-            <Button fx:id="addTaskButton" mnemonicParsing="false" styleClass="add-task-button" text="New Task">
-                <graphic>
-                    <FontAwesomeIconView glyphName="PLUS" styleClass="single-icon" />
-                </graphic>
-            </Button>
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </VBox>
-
-       <FlowPane fx:id="toDoTasks" styleClass="task-container" GridPane.columnIndex="1" />
-       <FlowPane fx:id="inProgressTasks" styleClass="task-container" GridPane.columnIndex="2" />
-       <FlowPane fx:id="verifyTasks" styleClass="task-container" GridPane.columnIndex="3" />
-       <FlowPane fx:id="doneTasks" styleClass="task-container" GridPane.columnIndex="4" />
-   </children>
+        <FlowPane fx:id="toDoTasks" styleClass="task-container" GridPane.columnIndex="1"/>
+        <FlowPane fx:id="inProgressTasks" styleClass="task-container" GridPane.columnIndex="2"/>
+        <FlowPane fx:id="verifyTasks" styleClass="task-container" GridPane.columnIndex="3"/>
+        <FlowPane fx:id="doneTasks" styleClass="task-container" GridPane.columnIndex="4"/>
+    </children>
 </GridPane>

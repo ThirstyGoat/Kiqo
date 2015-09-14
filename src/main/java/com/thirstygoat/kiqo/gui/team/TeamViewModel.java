@@ -1,26 +1,35 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
-
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.GoatModelWrapper;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class TeamViewModel implements Loadable<Team>, ViewModel {
     private ModelWrapper<Team> modelWrapper;
     private ObjectProperty<Team> team;
     private ObjectProperty<Organisation> organisation;
-    
+
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private ObservableRuleBasedValidator productOwnerValidator;
@@ -35,25 +44,25 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
         modelWrapper = new GoatModelWrapper<>();
         createValidators();
     }
-    
+
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
-        BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
-            { 
-                if (organisation.get() != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), team.get(), organisation.get().getTeams());
-                } else {
-                    return true; // no project means this isn't for real yet.
-                }
-            }, 
-            shortNameProperty(), organisationProperty());
+        BooleanBinding uniqueName = Bindings.createBooleanBinding(() ->
+                {
+                    if (organisation.get() != null) {
+                        return Utilities.shortnameIsUnique(shortNameProperty().get(), team.get(), organisation.get().getTeams());
+                    } else {
+                        return true; // no project means this isn't for real yet.
+                    }
+                },
+                shortNameProperty(), organisationProperty());
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
         shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
-       
+
         // the other validators are input-constrained so need not be validated
         productOwnerValidator = new ObservableRuleBasedValidator(); // always true
         scrumMasterValidator = new ObservableRuleBasedValidator(); // always true
@@ -106,7 +115,7 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
 
         return new CompoundCommand("Edit Team", changes);
     }
-    
+
     protected void reload() {
         modelWrapper.reload();
     }
@@ -127,14 +136,14 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
             // person has po skill and does not currently have any other role in the team
             List<Person> eligiblePeople = organisationProperty().get().getPeople().stream()
                     .filter(person -> {
-                        return person.getSkills().contains(poSkill) 
+                        return person.getSkills().contains(poSkill)
                                 && (currentScrumMaster == null || !person.equals(currentScrumMaster))
                                 && !currentDevTeam.contains(person);
                     }).collect(Collectors.toList());
             return eligiblePeople;
         };
     }
-    
+
     protected Supplier<List<Person>> scrumMasterSupplier() {
         return () -> {
             Skill smSkill = organisationProperty().get().getSmSkill();
@@ -142,13 +151,13 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has sm skill and does not currently have any other role in the team
             return organisationProperty().get().getPeople().stream()
-                    .filter(person -> person.getSkills().contains(smSkill) 
+                    .filter(person -> person.getSkills().contains(smSkill)
                             && !person.equals(currentProductOwner)
                             && !currentDevTeam.contains(person))
                     .collect(Collectors.toList());
         };
     }
-    
+
     protected StringProperty shortNameProperty() {
         return modelWrapper.field("shortName", Team::getShortName, Team::setShortName, "");
     }
@@ -156,19 +165,19 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     protected StringProperty descriptionProperty() {
         return modelWrapper.field("description", Team::getDescription, Team::setDescription, "");
     }
-    
+
     protected ObjectProperty<Person> productOwnerProperty() {
         return modelWrapper.field("productOwner", Team::getProductOwner, Team::setProductOwner, null);
     }
-    
+
     protected ObjectProperty<Person> scrumMasterProperty() {
         return modelWrapper.field("scrumMaster", Team::getScrumMaster, Team::setScrumMaster, null);
     }
-    
+
     protected ListProperty<Person> teamMembersProperty() {
         return modelWrapper.field("teamMembers", Team::getTeamMembers, Team::setTeamMembers, new ArrayList<Person>());
     }
-    
+
     protected ListProperty<Person> devTeamProperty() {
         return modelWrapper.field("devTeam", Team::getDevTeam, Team::setDevTeam, new ArrayList<Person>());
     }
@@ -176,35 +185,35 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     protected ListProperty<Allocation> allocations() {
         return modelWrapper.field("allocations", Team::getAllocations, Team::setAllocations, new ArrayList<Allocation>());
     }
-    
+
     protected ObjectProperty<Organisation> organisationProperty() {
         return organisation;
-    } 
-    
+    }
+
     protected ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus descriptionValidation() {
         return descriptionValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus productOwnerValidation() {
         return productOwnerValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus scrumMasterValidation() {
         return scrumMasterValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus teamMembersValidation() {
         return teamMembersValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus devTeamValidation() {
         return devTeamValidator.getValidationStatus();
     }
-    
+
     protected ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }

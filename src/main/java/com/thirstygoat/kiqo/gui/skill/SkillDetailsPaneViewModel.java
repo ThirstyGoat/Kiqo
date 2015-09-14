@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.skill;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Editable;
 
 /**

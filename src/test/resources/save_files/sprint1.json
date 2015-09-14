@@ -1,1 +1,61 @@
-{"0x1":{"people":["0x2"],"skills":["0x3","0x4","0x5"],"teams":["0x6","0x7"],"shortName":"First Project","longName":"First Project","description":"Test file for the first project","poSkill":"0x3","smSkill":"0x4"},"0x2":{"shortName":"A cool person","longName":"A cool person","description":"Test","userID":"Test","emailAddress":"Test","phoneNumber":"Test","department":"Test","skills":["0x3","0x4"]},"0x3":{"shortName":"PO","description":"Product Owner"},"0x4":{"shortName":"SM","description":"Scrum Master"},"0x5":{"shortName":"Awesome skill","description":"really cool skill"},"0x6":{"shortName":"An awesome team","description":"Really really cool","teamMembers":[],"devTeam":[]},"0x7":{"shortName":"A team with a person","description":"person containing team","productOwner":"0x2","teamMembers":["0x2"],"devTeam":[]}}
+{
+  "0x1": {
+    "people": [
+      "0x2"
+    ],
+    "skills": [
+      "0x3",
+      "0x4",
+      "0x5"
+    ],
+    "teams": [
+      "0x6",
+      "0x7"
+    ],
+    "shortName": "First Project",
+    "longName": "First Project",
+    "description": "Test file for the first project",
+    "poSkill": "0x3",
+    "smSkill": "0x4"
+  },
+  "0x2": {
+    "shortName": "A cool person",
+    "longName": "A cool person",
+    "description": "Test",
+    "userID": "Test",
+    "emailAddress": "Test",
+    "phoneNumber": "Test",
+    "department": "Test",
+    "skills": [
+      "0x3",
+      "0x4"
+    ]
+  },
+  "0x3": {
+    "shortName": "PO",
+    "description": "Product Owner"
+  },
+  "0x4": {
+    "shortName": "SM",
+    "description": "Scrum Master"
+  },
+  "0x5": {
+    "shortName": "Awesome skill",
+    "description": "really cool skill"
+  },
+  "0x6": {
+    "shortName": "An awesome team",
+    "description": "Really really cool",
+    "teamMembers": [],
+    "devTeam": []
+  },
+  "0x7": {
+    "shortName": "A team with a person",
+    "description": "person containing team",
+    "productOwner": "0x2",
+    "teamMembers": [
+      "0x2"
+    ],
+    "devTeam": []
+  }
+}

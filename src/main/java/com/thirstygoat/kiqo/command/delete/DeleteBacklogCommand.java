@@ -1,11 +1,11 @@
 package com.thirstygoat.kiqo.command.delete;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Story;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Carina on 20/05/2015.
@@ -19,6 +19,7 @@ public class DeleteBacklogCommand extends DeleteCommand {
 
     /**
      * Delete a backlog and either delete its stories or move them to being unallocated
+     *
      * @param backlog
      */
     public DeleteBacklogCommand(final Backlog backlog) {
@@ -26,7 +27,7 @@ public class DeleteBacklogCommand extends DeleteCommand {
         this.project = backlog.getProject();
         this.backlog = backlog;
 
-        for (final Story story  : backlog.getStories()) {
+        for (final Story story : backlog.getStories()) {
             stories.put(backlog.getStories().indexOf(story), story);
         }
     }
@@ -64,7 +65,7 @@ public class DeleteBacklogCommand extends DeleteCommand {
         }
 
         // if we deleted the stories put them back, otherwise they will be moved back with moveItemCommands in MC
-        if(deleteStories) {
+        if (deleteStories) {
             for (final Map.Entry<Integer, Story> entry : stories.entrySet()) {
                 backlog.observableStories().add(entry.getKey(), entry.getValue());
             }

@@ -22,7 +22,7 @@ public class DeleteSprintCommand extends DeleteCommand {
         sprint.getRelease().getSprints().remove(sprint);
     }
 
-    
+
     @Override
     public void addToModel() {
         sprint.getRelease().getSprints().add(index, sprint);

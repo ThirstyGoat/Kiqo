@@ -29,13 +29,12 @@ import java.util.ResourceBundle;
 
 /**
  * Created by Bradley on 25/03/2015.
- *
  */
 public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewModel>, Initializable {
 
     @InjectViewModel
     private BacklogDetailsPaneViewModel viewModel;
-    
+
     @FXML
     private GoatLabelTextField shortNameLabel;
     @FXML
@@ -60,7 +59,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
 
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(),viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
         FxUtils.initGoatLabel(productOwnerLabel, viewModel, viewModel.productOwnerProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()),

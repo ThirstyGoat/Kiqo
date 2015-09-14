@@ -1,29 +1,29 @@
 package com.thirstygoat.kiqo.gui.skill;
 
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.util.Utilities;
-
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.*;
-import javafx.scene.control.*;
-import de.saxsys.mvvmfx.*;
-import de.saxsys.mvvmfx.utils.validation.visualization.*;
-
 /**
  * Connects the GUI form to the viewModel. NB: Requires that {@link #setExitStrategy(Runnable)} is called.
+ *
  * @author amy
- * 26/8/15
+ *         26/8/15
  */
 public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
-    private FormButtonHandler formButtonHandler;
-    
     @InjectViewModel
     SkillViewModel viewModel;
-    
+    private FormButtonHandler formButtonHandler;
     @FXML
     private TextField nameTextField;
     @FXML
@@ -32,18 +32,18 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     private Button okButton;
     @FXML
     private Button cancelButton;
-    
+
     @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {        
+    public void initialize(URL arg0, ResourceBundle arg1) {
         bindToViewModel();
-        
+
         attachValidators();
-        
+
         Platform.runLater(() -> {
             nameTextField.requestFocus();
         });
     }
-    
+
     private void bindToViewModel() {
         nameTextField.textProperty().bindBidirectional(viewModel.nameProperty());
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
@@ -57,7 +57,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
             validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
         });
     }
-    
+
     public void setExitStrategy(Runnable exitStrategy) {
         formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
     }

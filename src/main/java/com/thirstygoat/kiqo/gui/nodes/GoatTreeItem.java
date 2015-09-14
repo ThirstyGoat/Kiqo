@@ -1,20 +1,20 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.thirstygoat.kiqo.model.Item;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TreeItem;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a textual heading and a collection of items for display in a TreeView
- * @author Bradley Kirwan
+ *
  * @param <E> Element type for the collection of items
+ * @author Bradley Kirwan
  */
 public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
     protected final Map<Item, TreeItem<Item>> treeItemMap;
@@ -38,6 +38,7 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     /**
      * Initialises a new TreeItem and adds children if required. Beware lack of type-checking (due to TreeView limitation); callers must ensure that item is an E.
+     *
      * @param item value of new TreeItem (assumed to be an instance of type &lt;E&gt;)
      * @return a new TreeItem to represent this item in a TreeView
      */
@@ -47,6 +48,7 @@ public class GoatTreeItem<E extends Item> extends TreeItem<Item> {
 
     /**
      * Adds a collection as children to the textual heading TreeItem
+     *
      * @param items items added as children to the textual heading TreeItem
      */
     public void setItems(ObservableList<? extends Item> items) {

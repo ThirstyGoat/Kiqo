@@ -13,6 +13,7 @@ import javafx.beans.property.StringProperty;
  */
 public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implements Editable {
 
+    public static final String PLACEHOLDER = "No stories in sprint";
     private StringProperty startDateStringProperty;
     private StringProperty endDateStringProperty;
 
@@ -35,7 +36,7 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
 
     public void commitEdit() {
         Command command = createCommand();
-        if (command != null ) {
+        if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }
     }
@@ -43,8 +44,6 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
     public void cancelEdit() {
         reload();
     }
-
-    public static final String PLACEHOLDER = "No stories in sprint";
 
     protected StringProperty startDateStringProperty() {
         return startDateStringProperty;

@@ -3,44 +3,46 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController">
-  <children>
-    <TableView fx:id="allocationsTableView" prefHeight="200.0" prefWidth="-1.0">
-      <columns>
-        <TableColumn text="Team" fx:id="teamTableColumn" />
-        <TableColumn text="Start Date" fx:id="startDateTableColumn" />
-        <TableColumn text="End Date" fx:id="endDateTableColumn" />
-      </columns>
-    </TableView>
-    <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <left>
-          <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnSpan="2" GridPane.rowIndex="6">
-              <children>
-                  <CheckBox fx:id="highlightCheckBox" selected="true" mnemonicParsing="false" text="Highlight Allocation States" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-                  <Hyperlink fx:id="highlightHyperLink" text="What do these colours mean?">
-                      <font>
-                          <Font size="11.0" />
-                      </font>
-                  </Hyperlink>
-              </children>
-          </HBox>
-      </left>
-      <right>
-        <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
-          <children>
-            <Button fx:id="allocateTeamButton" disable="true" mnemonicParsing="false" text="+" />
-            <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false" text="-" />
-            <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false" text="Edit" />
-          </children>
-        </HBox>
-      </right>
-    </BorderPane>
-  </children>
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+          fx:controller="com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController">
+    <children>
+        <TableView fx:id="allocationsTableView" prefHeight="200.0" prefWidth="-1.0">
+            <columns>
+                <TableColumn text="Team" fx:id="teamTableColumn"/>
+                <TableColumn text="Start Date" fx:id="startDateTableColumn"/>
+                <TableColumn text="End Date" fx:id="endDateTableColumn"/>
+            </columns>
+        </TableView>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <left>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                    <children>
+                        <CheckBox fx:id="highlightCheckBox" selected="true" mnemonicParsing="false"
+                                  text="Highlight Allocation States" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+                        <Hyperlink fx:id="highlightHyperLink" text="What do these colours mean?">
+                            <font>
+                                <Font size="11.0"/>
+                            </font>
+                        </Hyperlink>
+                    </children>
+                </HBox>
+            </left>
+            <right>
+                <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
+                    <children>
+                        <Button fx:id="allocateTeamButton" disable="true" mnemonicParsing="false" text="+"/>
+                        <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false" text="-"/>
+                        <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false" text="Edit"/>
+                    </children>
+                </HBox>
+            </right>
+        </BorderPane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
 </GridPane>

@@ -1,50 +1,17 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.NoSuchElementException;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.NoSuchElementException;
 
 /**
  * Tests the UndoManager class
  *
  * @author amy
  * @see UndoManager
- *
  */
 public class UndoManagerTest {
-    class MockCommand extends Command {
-        boolean done = false;
-
-        @Override
-        public void execute() {
-            done = true;
-        }
-
-        public boolean isDone() {
-            return done;
-        }
-
-        @Override
-        public void undo() {
-            done = false;
-        }
-
-        @Override
-        public String getType() {
-            return "";
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            builder.append("MockCommand\\{done='");
-            builder.append(done);
-            builder.append("\\}");
-            return builder.toString();
-        }
-    }
-
     /**
      * Tests that redoCommand throws the correct exception when there is nothing
      * available to redo.
@@ -93,5 +60,37 @@ public class UndoManagerTest {
         Assert.assertTrue("Command should be executed", cmd.isDone());
         undoManager.undoCommand();
         Assert.assertFalse("Command should be undone", cmd.isDone());
+    }
+
+    class MockCommand extends Command {
+        boolean done = false;
+
+        @Override
+        public void execute() {
+            done = true;
+        }
+
+        public boolean isDone() {
+            return done;
+        }
+
+        @Override
+        public void undo() {
+            done = false;
+        }
+
+        @Override
+        public String getType() {
+            return "";
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("MockCommand\\{done='");
+            builder.append(done);
+            builder.append("\\}");
+            return builder.toString();
+        }
     }
 }

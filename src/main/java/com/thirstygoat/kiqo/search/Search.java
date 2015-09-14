@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.search;
 
-import java.util.List;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.List;
 
 
 /**
@@ -27,6 +27,7 @@ public class Search {
 
     /**
      * Executes the search
+     *
      * @return ObservableList<SearchResult> containing the results of the search
      */
     public ObservableList<SearchResult> execute() {

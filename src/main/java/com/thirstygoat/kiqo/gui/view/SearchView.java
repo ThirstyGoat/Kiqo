@@ -1,8 +1,9 @@
 package com.thirstygoat.kiqo.gui.view;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
+import com.thirstygoat.kiqo.search.SearchResult;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -13,11 +14,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
-import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
-import com.thirstygoat.kiqo.search.SearchResult;
-
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 /**
@@ -88,9 +86,9 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
 
         viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
-                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 10);
+                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size()) * 30 + 10);
                 searchResultsListView.getScene().getWindow().setHeight(
-                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 63);
+                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size()) * 30 + 63);
             } else {
                 searchResultsListView.getScene().getWindow().setHeight(61);
             }

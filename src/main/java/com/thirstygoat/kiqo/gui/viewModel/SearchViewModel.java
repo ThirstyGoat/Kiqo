@@ -1,8 +1,12 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.search.Search;
+import com.thirstygoat.kiqo.search.SearchResult;
+import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -18,14 +22,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.search.Search;
-import com.thirstygoat.kiqo.search.SearchResult;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.commands.Action;
-import de.saxsys.mvvmfx.utils.commands.Command;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by leroy on 24/07/15.

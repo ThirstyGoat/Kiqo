@@ -278,7 +278,7 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     public void skillsTab() {
         viewModel.skillsTabAction();
     }
-    
+
     @FXML
     public void about() {
         viewModel.aboutAction();

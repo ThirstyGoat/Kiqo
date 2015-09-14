@@ -1,8 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -10,7 +8,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,9 +34,9 @@ public class AcceptanceCriteria extends Item {
     }
 
     public static Callback<AcceptanceCriteria, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.state};
+        return p -> new Observable[]{p.shortNameProperty(), p.state};
     }
-    
+
     @Override
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(criteria);
@@ -59,6 +58,7 @@ public class AcceptanceCriteria extends Item {
 
     /**
      * For introspection
+     *
      * @param criteria Criteria to be set
      */
     // for introspection
@@ -76,9 +76,9 @@ public class AcceptanceCriteria extends Item {
 
     @Override
     public String toString() {
-        return "AcceptanceCriteria{" 
-                + "criteria=" + criteria.get() 
-                + "state=" + state.get() 
+        return "AcceptanceCriteria{"
+                + "criteria=" + criteria.get()
+                + "state=" + state.get()
                 + '}';
     }
 

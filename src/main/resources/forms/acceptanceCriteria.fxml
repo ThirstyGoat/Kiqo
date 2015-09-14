@@ -6,38 +6,44 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.formControllers.AcceptanceCriteriaFormController">
-  <bottom>
-    <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
-      <children>
-        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-        <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Acceptance Criteria" />
-      </children>
-      <padding>
-        <Insets right="35.0" />
-      </padding>
-    </HBox>
-  </bottom>
-  <center>
-      <GridPane vgap="10.0">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="com.thirstygoat.kiqo.gui.formControllers.AcceptanceCriteriaFormController">
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0"
+              style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel"/>
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false"
+                        text="Create Acceptance Criteria"/>
+            </children>
+            <padding>
+                <Insets right="35.0"/>
+            </padding>
+        </HBox>
+    </bottom>
+    <center>
+        <GridPane vgap="10.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="183.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="183.0"/>
                 <!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="347.0" />-->
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <padding>
-                <Insets bottom="35.0" left="35.0" right="35.0" top="10.0" />
+                <Insets bottom="35.0" left="35.0" right="35.0" top="10.0"/>
             </padding>
             <children>
                 <Label text="Acceptance Criteria:" GridPane.rowIndex="0">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Label>
-                <TextArea fx:id="acTextArea" maxHeight="1.7976931348623157E308" prefHeight="78.0" prefWidth="530.0" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <font>
+                        <Font name="System Bold" size="13.0"/>
+                    </font>
+                </Label>
+                <TextArea fx:id="acTextArea" maxHeight="1.7976931348623157E308" prefHeight="78.0" prefWidth="530.0"
+                          wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             </children>
         </GridPane>
-  </center>
+    </center>
 </BorderPane>

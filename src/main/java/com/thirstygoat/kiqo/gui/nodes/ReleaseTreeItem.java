@@ -1,15 +1,15 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.TreeItem;
-
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Sprint;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.scene.control.SelectionModel;
+import javafx.scene.control.TreeItem;
 
 /**
  * Represents a collection of sprints for display in a TreeView under a release
+ *
  * @author Sam Schofield
  */
 public class ReleaseTreeItem extends GoatTreeItem<Sprint> {

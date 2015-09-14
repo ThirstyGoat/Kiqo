@@ -10,6 +10,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
 
 /**
  * A wrapper to remove/add Searchables to the search index as they are deleted and reinstated.
+ *
  * @author amy
  */
 public abstract class DeleteCommand extends Command {

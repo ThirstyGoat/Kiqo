@@ -15,7 +15,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -23,7 +22,7 @@ import java.util.logging.Level;
  * Created by leroy on 7/09/15.
  */
 public class ProjectViewModel extends ModelViewModel<Project> {
-    private final ObservableRuleBasedValidator  shortNameValidator;
+    private final ObservableRuleBasedValidator shortNameValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final ObservableRuleBasedValidator descriptionValidator;
     private final CompositeValidator allValidator;
@@ -101,7 +100,9 @@ public class ProjectViewModel extends ModelViewModel<Project> {
     }
 
 
-    /** Model Properties **/
+    /**
+     * Model Properties
+     **/
 
     public StringProperty shortNameProperty() {
         return modelWrapper.field("shortName", Project::shortNameProperty, "");
@@ -134,7 +135,9 @@ public class ProjectViewModel extends ModelViewModel<Project> {
     }
 
 
-    /** Validation Statuses **/
+    /**
+     * Validation Statuses
+     **/
 
     public ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();

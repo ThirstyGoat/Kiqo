@@ -31,8 +31,8 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
     protected HBox displayView;
     protected HBox editView;
     protected ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>();
-    private StackPane labelStackPane;
     protected boolean restrictToNumericInput = false;
+    private StackPane labelStackPane;
 
     /**
      * Constructor for all SkinBase instances.

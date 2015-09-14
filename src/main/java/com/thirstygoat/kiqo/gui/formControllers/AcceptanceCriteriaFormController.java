@@ -1,9 +1,13 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Story;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -14,14 +18,9 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.create.CreateAcceptanceCriteriaCommand;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Story;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Created by Amy on 23/04/15.
@@ -107,7 +106,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
     }
 
     @Override
-    public void setStage(Stage stage)  {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 

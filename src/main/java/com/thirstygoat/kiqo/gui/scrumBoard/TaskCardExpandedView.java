@@ -89,7 +89,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     }
 
 
-
     private void showNode(Node node) {
         for (Node node1 : mainAnchorPane.getChildren()) {
             node1.setManaged(false);

@@ -5,7 +5,6 @@ import com.thirstygoat.kiqo.model.Story;
 
 /**
  * Command to delete a acceptanceCriteria from a project.
- *
  */
 public class DeleteAcceptanceCriteriaCommand extends DeleteCommand {
 

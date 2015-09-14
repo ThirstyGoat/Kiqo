@@ -7,31 +7,39 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="749.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView">
-  <children>
-    <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <content>
-        <VBox mouseTransparent="false" spacing="10.0">
-          <children>
-            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
-              <children>
-                <GoatLabelTextField fx:id="shortNameTextField" styleClass="pane-short-name" />
-                <Region maxWidth="-1" HBox.hgrow="ALWAYS" />
-                <Label text="Release" styleClass="pane-type-indicator" />
-              </children>
-            </HBox>
-            <GoatLabelTextArea fx:id="descriptionTextArea" />
-            <Label text="Project" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-            <GoatLabelTextField fx:id="projectTextField" />
-            <Label text="Date" styleClass="field-label" >
-	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
-	        </Label>
-            <GoatLabelDatePicker fx:id="releaseDatePicker" />
-          </children>
-        </VBox>
-      </content>
-    </ScrollPane>
-  </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0"
+            xmlns="http://javafx.com/javafx/2.2"
+            fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView">
+    <children>
+        <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <content>
+                <VBox mouseTransparent="false" spacing="10.0">
+                    <children>
+                        <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
+                            <children>
+                                <GoatLabelTextField fx:id="shortNameTextField" styleClass="pane-short-name"/>
+                                <Region maxWidth="-1" HBox.hgrow="ALWAYS"/>
+                                <Label text="Release" styleClass="pane-type-indicator"/>
+                            </children>
+                        </HBox>
+                        <GoatLabelTextArea fx:id="descriptionTextArea"/>
+                        <Label text="Project" styleClass="field-label">
+                            <VBox.margin>
+                                <Insets bottom="-8"/>
+                            </VBox.margin>
+                        </Label>
+                        <GoatLabelTextField fx:id="projectTextField"/>
+                        <Label text="Date" styleClass="field-label">
+                            <VBox.margin>
+                                <Insets bottom="-8"/>
+                            </VBox.margin>
+                        </Label>
+                        <GoatLabelDatePicker fx:id="releaseDatePicker"/>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
 </AnchorPane>

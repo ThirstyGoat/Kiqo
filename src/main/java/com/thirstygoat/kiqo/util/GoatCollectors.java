@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Created by leroy on 11/08/15.

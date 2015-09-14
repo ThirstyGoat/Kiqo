@@ -27,8 +27,19 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class PersonViewModel extends ModelViewModel<Person> {
+    /**
+     * Supplies skills which can be added to a persons list of skills.
+     */
+    public Supplier<List<Skill>> availableSkillsSupplier =
+            () -> {
+                if (organisationProperty().get() != null) {
+                    return organisationProperty().get().getSkills().stream()
+                            .filter(skill -> !skills().contains(skill))
+                            .collect(Collectors.toList());
+                }
+                return Collections.emptyList();
+            };
     private ListProperty<Skill> availableSkills;
-
     private ObservableRuleBasedValidator nameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
@@ -37,7 +48,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
         availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
         createValidators();
     }
-    
+
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
@@ -48,36 +59,24 @@ public class PersonViewModel extends ModelViewModel<Person> {
         availableSkills.setAll(availableSkillsSupplier.get());
     }
 
-    /**
-     * Supplies skills which can be added to a persons list of skills.
-     */
-    public Supplier<List<Skill>> availableSkillsSupplier =
-            () -> { if (organisationProperty().get() != null) {
-                return organisationProperty().get().getSkills().stream()
-                        .filter(skill -> !skills().contains(skill))
-                        .collect(Collectors.toList());
-            }
-                return Collections.emptyList();
-            };
-
     private void createValidators() {
         nameValidator = new ObservableRuleBasedValidator();
-        BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
-            { 
-                if (organisationProperty().get() != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(), organisationProperty().get().getSkills());
-                } else {
-                    return true; // no organisation means this isn't for real yet.
-                }
-            }, 
-            shortNameProperty());
+        BooleanBinding uniqueName = Bindings.createBooleanBinding(() ->
+                {
+                    if (organisationProperty().get() != null) {
+                        return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(), organisationProperty().get().getSkills());
+                    } else {
+                        return true; // no organisation means this isn't for real yet.
+                    }
+                },
+                shortNameProperty());
         nameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         nameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         nameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
         nameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
-        
+
         allValidator = new CompositeValidator(nameValidator, descriptionValidator);
     }
 
@@ -86,7 +85,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
         final ArrayList<Skill> skills = new ArrayList<>();
         skills.addAll(skills().get());
 
-        if (modelWrapper.get()  == null) {
+        if (modelWrapper.get() == null) {
             final Person p = new Person(shortNameProperty().get(), longNameProperty().get(),
                     descriptionProperty().get(), userIdProperty().get(), emailProperty().get(),
                     phoneNumberProperty().get(), departmentProperty().get(), skills);
@@ -97,10 +96,10 @@ public class PersonViewModel extends ModelViewModel<Person> {
 
             if (!(skills.containsAll(modelWrapper.get().getSkills())
                     && modelWrapper.get().getSkills().containsAll(skills))) {
-                changes.add(new EditCommand<>(modelWrapper.get() , "skills", skills));
+                changes.add(new EditCommand<>(modelWrapper.get(), "skills", skills));
             }
 
-            return new CompoundCommand("Edit Person" , changes);
+            return new CompoundCommand("Edit Person", changes);
         }
     }
 
@@ -139,11 +138,11 @@ public class PersonViewModel extends ModelViewModel<Person> {
     protected ListProperty<Skill> availableSkills() {
         return availableSkills;
     }
-    
+
     public ValidationStatus nameValidation() {
         return nameValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus descriptionValidation() {
         return descriptionValidator.getValidationStatus();
     }

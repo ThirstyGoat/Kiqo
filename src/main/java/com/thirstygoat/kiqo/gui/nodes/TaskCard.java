@@ -132,7 +132,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             });
 
 
-
             // Animation stuff
 //            view.setScaleX(0);
 //            view.setScaleY(0);
@@ -188,7 +187,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     }
 
     public BooleanProperty impedanceProperty() {
-        return  impedanceProperty;
+        return impedanceProperty;
     }
 
     public boolean getImpedanceProperty() {

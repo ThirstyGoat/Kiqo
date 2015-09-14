@@ -9,8 +9,6 @@ import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
@@ -265,7 +263,6 @@ public class SprintViewModel implements ViewModel {
     }
 
     /**
-     *
      * @return command for creating or editing the active item. Null if no changes have been made.
      */
     public Command createCommand() {
@@ -420,7 +417,7 @@ public class SprintViewModel implements ViewModel {
     public ValidationStatus storiesValidation() {
         return storiesValidator.getValidationStatus();
     }
-    
+
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }

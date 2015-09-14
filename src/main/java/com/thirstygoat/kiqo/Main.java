@@ -1,15 +1,7 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-import java.util.Date;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
-
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +10,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import java.io.File;
+import java.util.Date;
+import java.util.logging.*;
 
 /**
  * Main entry point for application
@@ -32,7 +25,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         Level level = Level.OFF;
-        if (args.length > 0 ) {
+        if (args.length > 0) {
             for (String arg : args) {
                 if (arg.equals("-v")) {
                     level = Level.ALL;
@@ -52,6 +45,7 @@ public class Main extends Application {
 
     /**
      * Configure default logging behaviour for all classes in **this package** to print to stdout with a custom formatter, including intelligent string formatting.
+     *
      * @param level minimum logging level displayed
      */
     private static void setupLogging(Level level) {

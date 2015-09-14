@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
-* Created by Carina Blair on 21/07/2015.
-*/
+ * Created by Carina Blair on 21/07/2015.
+ */
 public class ProjectFormViewModelTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private ProjectFormViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -26,9 +28,6 @@ public class ProjectFormViewModelTest {
     private Team team;
     private Story unreadyStory;
     private Story readyStory;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -49,11 +48,13 @@ public class ProjectFormViewModelTest {
         project.observableUnallocatedStories().add(unreadyStory);
         project.observableUnallocatedStories().add(readyStory);
 
-        viewModel.setExitStrategy(() -> {}); // not running in a JavaFX thread so no special exit action needed
+        viewModel.setExitStrategy(() -> {
+        }); // not running in a JavaFX thread so no special exit action needed
     }
 
     /**
      * Populate a ProjectFormViewModel's fields with valid data.
+     *
      * @param viewModel
      */
     public void populateFields(ProjectFormViewModel viewModel) {

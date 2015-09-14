@@ -1,9 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,8 +9,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableField;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by bradley on 27/03/15.
@@ -48,8 +47,10 @@ public class Team extends Item {
         List<SearchableField> searchString = new ArrayList<>();
         searchString.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription())));
         searchString.add(new SearchableField("Members", Utilities.commaSeparatedValues(teamMembers)));
-        if (productOwnerProperty().get() != null) searchString.add(new SearchableField("PO", getProductOwner().getShortName()));
-        if (scrumMasterProperty().get() != null) searchString.add(new SearchableField("SM", getScrumMaster().getShortName()));
+        if (productOwnerProperty().get() != null)
+            searchString.add(new SearchableField("PO", getProductOwner().getShortName()));
+        if (scrumMasterProperty().get() != null)
+            searchString.add(new SearchableField("SM", getScrumMaster().getShortName()));
         return searchString;
     }
 
@@ -169,7 +170,7 @@ public class Team extends Item {
         sb.append('}');
         return sb.toString();
     }
-    
+
     @Override
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(shortName);

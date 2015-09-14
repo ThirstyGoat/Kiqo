@@ -1,16 +1,20 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.collections.ListChangeListener;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, Initializable {
     @FXML
@@ -43,7 +47,7 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
 
 //      FxUtils.initGoatLabel(teamMembersLabel, viewModel, viewModel.teamMembersProperty(), viewModel.teamMembersValidation(), "None");
 //      FxUtils.initGoatLabel(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.devTeamValidation(), "None");
-        
+
         teamMembersLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.teamMembersProperty()));
         devTeamLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.devTeamProperty()));
 

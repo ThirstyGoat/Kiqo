@@ -34,7 +34,7 @@ public final class FxUtils {
             @Override
             public Collection<E> call(AutoCompletionBinding.ISuggestionRequest request) {
                 List<E> list = listSupplier.get();
-            
+
                 // filter based on input string
                 if (textField.isFocused()) {
                     final Collection<E> suggestions = list.stream()
@@ -89,7 +89,8 @@ public final class FxUtils {
 
     /**
      * Binds a GoatLabel to a StringProperty.
-     * @param goatLabel control
+     *
+     * @param goatLabel      control
      * @param stringProperty property to be displayed/edited
      */
     private static void bindStringProperty(GoatLabel<? extends TextInputControl> goatLabel, StringProperty stringProperty) {
@@ -99,22 +100,23 @@ public final class FxUtils {
 
     /**
      * Binds a GoatLabel to an ObjectProperty using a StringConverter.
-     * 
-     * @param goatLabel control
-     * @param objectProperty property to be displayed/edited
+     *
+     * @param goatLabel       control
+     * @param objectProperty  property to be displayed/edited
      * @param stringConverter
      */
     private static <T> void bindObjectProperty(GoatLabel<? extends TextInputControl> goatLabel, ObjectProperty<T> objectProperty,
-            StringConverter<T> stringConverter) {
+                                               StringConverter<T> stringConverter) {
         goatLabel.displayTextProperty().bindBidirectional(objectProperty, stringConverter);
         goatLabel.getEditField().textProperty().bindBidirectional(objectProperty, stringConverter);
     }
 
     /**
      * Configures a GoatLabel for a StringProperty.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param stringProperty property to be displayed/edited
+     *
+     * @param goatLabel        control
+     * @param editable         viewModel
+     * @param stringProperty   property to be displayed/edited
      * @param validationStatus status of the Validator for this field
      */
     public static void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable, StringProperty stringProperty,
@@ -140,17 +142,18 @@ public final class FxUtils {
         goatLabel.restrictToNumericInput(true);
         goatLabel.validationStatus().set(validationStatus);
     }
-    
+
     /**
      * Configures a GoatLabel for an ObjectProperty using a StringConverter.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param objectProperty property to be displayed/edited
-     * @param stringConverter converter to translate the value of objectProperty between an Object and a String
+     *
+     * @param goatLabel        control
+     * @param editable         viewModel
+     * @param objectProperty   property to be displayed/edited
+     * @param stringConverter  converter to translate the value of objectProperty between an Object and a String
      * @param validationStatus status of the Validator for this field
      */
     public static <T> void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable, ObjectProperty<T> objectProperty,
-                                     StringConverter<T> stringConverter, ValidationStatus validationStatus) {
+                                         StringConverter<T> stringConverter, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
         bindObjectProperty(goatLabel, objectProperty, stringConverter);
         goatLabel.validationStatus().set(validationStatus);
@@ -158,11 +161,12 @@ public final class FxUtils {
 
     /**
      * Configures a GoatLabel for a StringProperty, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param stringProperty property to be displayed/edited
+     *
+     * @param goatLabel        control
+     * @param editable         viewModel
+     * @param stringProperty   property to be displayed/edited
      * @param validationStatus status of the Validator for this field
-     * @param defaultText placeholder text to display when property is null or empty
+     * @param defaultText      placeholder text to display when property is null or empty
      */
     public static void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable,
                                      StringProperty stringProperty, ValidationStatus validationStatus, String defaultText) {
@@ -172,25 +176,27 @@ public final class FxUtils {
 
     /**
      * Configures a GoatLabel for an ObjectProperty using a StringConverter, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param objectProperty property to be displayed/edited
-     * @param stringConverter converter to translate the value of objectProperty between an Object and a String
+     *
+     * @param goatLabel        control
+     * @param editable         viewModel
+     * @param objectProperty   property to be displayed/edited
+     * @param stringConverter  converter to translate the value of objectProperty between an Object and a String
      * @param validationStatus status of the Validator for this field
-     * @param defaultText placeholder text to display when property is null or empty
+     * @param defaultText      placeholder text to display when property is null or empty
      */
     public static <T> void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable,
-            ObjectProperty<T> objectProperty, StringConverter<T> stringConverter, ValidationStatus validationStatus, String defaultText) {
+                                         ObjectProperty<T> objectProperty, StringConverter<T> stringConverter, ValidationStatus validationStatus, String defaultText) {
         initGoatLabel(goatLabel, editable, objectProperty, stringConverter, validationStatus);
         goatLabel.setDefaultText(defaultText);
     }
-    
+
     /**
      * Configures a GoatLabelComboBox for an ObjectProperty using a StringConverter, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param items list of options in ComboBox
-     * @param objectProperty property to be displayed/edited
+     *
+     * @param goatLabel       control
+     * @param editable        viewModel
+     * @param items           list of options in ComboBox
+     * @param objectProperty  property to be displayed/edited
      * @param stringConverter converter to translate the value of objectProperty between an Object and a String
      */
     public static <T> void initGoatLabel(GoatLabelComboBox<T> goatLabel, Editable editable,
@@ -201,17 +207,18 @@ public final class FxUtils {
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.getEditField().setConverter(stringConverter);
     }
-    
+
     /**
      * Configures a GoatLabelDatePicker for an ObjectProperty&lt;LocalDate&gt;, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param objectProperty property to be displayed (assumes this is bound to stringProperty)
-     * @param stringProperty property to be edited (assumes this is bound to objectProperty)
+     *
+     * @param goatLabel        control
+     * @param editable         viewModel
+     * @param objectProperty   property to be displayed (assumes this is bound to stringProperty)
+     * @param stringProperty   property to be edited (assumes this is bound to objectProperty)
      * @param validationStatus status of the Validator for this field
      */
     public static <T> void initGoatLabel(GoatLabelDatePicker goatLabel, Editable editable,
-                                          ObjectProperty<LocalDate> objectProperty, StringProperty stringProperty, ValidationStatus validationStatus) {
+                                         ObjectProperty<LocalDate> objectProperty, StringProperty stringProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
         goatLabel.displayTextProperty().bindBidirectional(stringProperty);
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);

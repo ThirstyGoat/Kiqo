@@ -1,16 +1,8 @@
 package com.thirstygoat.kiqo.util;
 
+import com.thirstygoat.kiqo.model.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.util.StringConverter;
-
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Status;
-import com.thirstygoat.kiqo.model.Team;
 
 /**
  * Created by leroy on 21/07/15.
@@ -21,7 +13,7 @@ public class StringConverters {
 
     public static StringConverter<Project> projectStringConverter(Organisation organisation) {
         return new StringConverter<Project>() {
-           @Override
+            @Override
             public String toString(Project project) {
                 return project != null ? project.getShortName() : "";
             }
@@ -119,7 +111,7 @@ public class StringConverters {
             public Scale fromString(String string) {
                 return Scale.getEnum(string);
             }
-    
+
             @Override
             public String toString(Scale scale) {
                 return scale != null ? scale.toString() : "";
@@ -156,7 +148,7 @@ public class StringConverters {
             @Override
             public Team fromString(String shortName) {
                 if (organisationProperty.get() != null) {
-                    for (final Team team : organisationProperty.get().getTeams()){
+                    for (final Team team : organisationProperty.get().getTeams()) {
                         if (team.getShortName().equals(shortName)) {
                             return team;
                         }

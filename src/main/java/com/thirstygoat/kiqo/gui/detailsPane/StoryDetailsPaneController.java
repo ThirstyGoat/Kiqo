@@ -1,34 +1,5 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-
-import org.controlsfx.control.PopOver;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -43,6 +14,23 @@ import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import org.controlsfx.control.PopOver;
+
+import java.net.URL;
+import java.util.*;
 
 public class StoryDetailsPaneController implements Initializable, IDetailsPaneController<Story> {
 
@@ -139,7 +127,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
                         return Float.toString(totalHours);
 
-                }, story.observableTasks()
+                    }, story.observableTasks()
             ));
             setScale();
 
@@ -322,7 +310,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         storyEstimateSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             // set the sliders label to the estimate string if the value > 0
             if (newValue.intValue() > 0) {
-                storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue())-1]);
+                storyEstimateSliderLabel.setText(story.getScale().getEstimates()[(newValue.intValue()) - 1]);
             } else {
                 storyEstimateSliderLabel.setText("-");
             }
@@ -331,7 +319,7 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
         storyEstimateSlider.setOnMouseReleased(event -> {
             if (story.getEstimate() != storyEstimateSlider.getValue()) {
                 List<Command> commands = new ArrayList<>();
-                if (((int)storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
+                if (((int) storyEstimateSlider.getValue()) == 0 && story.getIsReady()) {
                     commands.add(new EditCommand<>(story, "isReady", false));
                 }
                 commands.add(new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue()));
@@ -363,8 +351,6 @@ public class StoryDetailsPaneController implements Initializable, IDetailsPaneCo
 
         PopOver estimateWhyPopOver = new PopOver(tf2);
         estimateWhyPopOver.setDetachable(false);
-
-
 
 
         estimateWhy.setOnAction((e) -> estimateWhyPopOver.show(estimateWhy));

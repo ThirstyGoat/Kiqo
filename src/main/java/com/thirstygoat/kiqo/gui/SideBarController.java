@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.gui;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.nodes.GoatTreeItem;
+import com.thirstygoat.kiqo.gui.nodes.ProjectsTreeItem;
+import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,33 +13,15 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.util.Callback;
-
 import org.controlsfx.glyphfont.FontAwesome;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatTreeItem;
-import com.thirstygoat.kiqo.gui.nodes.ProjectsTreeItem;
-import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Created by samschofield and James on 14/05/15.
@@ -205,7 +186,7 @@ public class SideBarController implements Initializable {
         final Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
         if (tabListViewMap.get(selectedTab.getId()).getClass() != TreeView.class) {
             @SuppressWarnings("unchecked")
-            final ListView<Item> castedListView = (ListView<Item>)tabListViewMap.get(selectedTab.getId());
+            final ListView<Item> castedListView = (ListView<Item>) tabListViewMap.get(selectedTab.getId());
             castedListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 mainController.focusedItemProperty.set(newValue);
             });
@@ -239,7 +220,7 @@ public class SideBarController implements Initializable {
                                 Node node = null;
                                 if (item.getShortName().equals("Releases")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.CALENDAR);
-                                }  else if (item.getShortName().equals("Backlogs")) {
+                                } else if (item.getShortName().equals("Backlogs")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.LIST);
                                 } else if (item.getShortName().equals("Unallocated Stories")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.BOOK);
@@ -294,7 +275,9 @@ public class SideBarController implements Initializable {
     }
 
     private void selectItem(Item newValue) {
-        if (newValue == null) { return; }
+        if (newValue == null) {
+            return;
+        }
         Class itemClass = newValue.getClass();
         if (itemClass == Project.class || itemClass == Backlog.class || itemClass == Story.class ||
                 itemClass == Release.class || itemClass == TreeNodeHeading.class) {
@@ -302,13 +285,13 @@ public class SideBarController implements Initializable {
             projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));
         } else if (itemClass == Team.class) {
             tabViewPane.getSelectionModel().select(teamsTab);
-            teamsListView.getSelectionModel().select((Team)newValue);
+            teamsListView.getSelectionModel().select((Team) newValue);
         } else if (itemClass == Person.class) {
             tabViewPane.getSelectionModel().select(peopleTab);
-            peopleListView.getSelectionModel().select((Person)newValue);
+            peopleListView.getSelectionModel().select((Person) newValue);
         } else if (itemClass == Skill.class) {
             tabViewPane.getSelectionModel().select(skillsTab);
-            skillsListView.getSelectionModel().select((Skill)newValue);
+            skillsListView.getSelectionModel().select((Skill) newValue);
         } else if (itemClass == Sprint.class) {
             tabViewPane.getSelectionModel().select(projectTab);
             projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));

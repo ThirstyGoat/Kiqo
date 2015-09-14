@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by samschofield on 21/04/15.

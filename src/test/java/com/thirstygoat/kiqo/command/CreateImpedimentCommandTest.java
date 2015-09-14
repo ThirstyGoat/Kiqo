@@ -43,7 +43,7 @@ public class CreateImpedimentCommandTest {
     @Test
     public void testRemoveFromModel() throws Exception {
 
-        Assert.assertFalse("Shouldn't be in the model",task.getImpediments().contains(impediment));
+        Assert.assertFalse("Shouldn't be in the model", task.getImpediments().contains(impediment));
 
         createImpedimentCommand.execute();
 

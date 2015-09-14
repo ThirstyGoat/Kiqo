@@ -1,18 +1,20 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Story;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wraps the commands needed when a story is removed from a backlog into a single
  * command
+ *
  * @author Bradley Kirwan
  */
 public class RemoveStoryFromBacklogCommand extends Command {
     private CompoundCommand compoundCommand;
+
     public RemoveStoryFromBacklogCommand(Story story, Backlog backlog) {
         List<Command> commands = new ArrayList<>();
         commands.add(new MoveItemCommand<>(story, backlog.observableStories(),

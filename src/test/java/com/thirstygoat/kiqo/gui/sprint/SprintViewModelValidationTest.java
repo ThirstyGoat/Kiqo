@@ -1,31 +1,25 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Sprint;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Team;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 /**
-* Created by Sam Schofield on 21/07/2015.
-*/
+ * Created by Sam Schofield on 21/07/2015.
+ */
 public class SprintViewModelValidationTest {
     private SprintViewModel viewModel;
-    
+
     @Before
     public void setUp() {
         viewModel = new SprintViewModel();
     }
-    
+
     @Test
     public void testGoalValidator() {
         viewModel.goalProperty().setValue("");

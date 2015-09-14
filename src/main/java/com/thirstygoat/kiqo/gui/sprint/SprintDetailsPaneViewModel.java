@@ -3,10 +3,8 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Sprint;
-import de.saxsys.mvvmfx.ViewModel;
 
 /**
  * Created by Carina Blair on 5/08/2015.

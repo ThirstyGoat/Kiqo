@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
-* Created by Carina Blair on 21/07/2015.
-*/
+ * Created by Carina Blair on 21/07/2015.
+ */
 public class BacklogFormViewModelTest {
     private BacklogFormViewModel viewModel;
     private Organisation organisation;
@@ -45,11 +45,13 @@ public class BacklogFormViewModelTest {
         project.observableUnallocatedStories().add(unreadyStory);
         project.observableUnallocatedStories().add(readyStory);
 
-        viewModel.setExitStrategy(() -> {}); // not running in a JavaFX thread so no special exit action needed
+        viewModel.setExitStrategy(() -> {
+        }); // not running in a JavaFX thread so no special exit action needed
     }
 
     /**
      * Populate a BacklogViewModel's fields with valid data.
+     *
      * @param viewModel
      */
     public void populateFields(BacklogFormViewModel viewModel) {

@@ -10,6 +10,7 @@ import com.thirstygoat.kiqo.search.SearchableItems;
 
 /**
  * A wrapper to add/remove Searchables to the search index as they are "created" and "uncreated" in the model.
+ *
  * @author amy
  */
 public abstract class CreateCommand extends Command {
@@ -19,7 +20,7 @@ public abstract class CreateCommand extends Command {
         super();
         this.obj = obj;
     }
-    
+
     /**
      * Adds the searchable to the model and the search index.
      */
@@ -33,7 +34,7 @@ public abstract class CreateCommand extends Command {
             }
         }
     }
-    
+
     /**
      * Removes the searchable from the search index and the model.
      */
@@ -47,7 +48,7 @@ public abstract class CreateCommand extends Command {
      * Add the object to the model (used in {@link #execute()}).
      */
     protected abstract void addToModel();
-    
+
     /**
      * Remove the object from the model (used in {@link #undo()}).
      */

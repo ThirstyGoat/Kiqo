@@ -12,8 +12,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
-* Created by Bradley Kirwan on 14/08/2015.
-*/
+ * Created by Bradley Kirwan on 14/08/2015.
+ */
 public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>, Initializable {
     @FXML
     private GoatLabelTextField shortNameLabel;
@@ -27,6 +27,6 @@ public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>
     public void initialize(URL location, ResourceBundle resources) {
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.nameProperty(), viewModel.nameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(),  "Add a description...");
+                viewModel.descriptionValidation(), "Add a description...");
     }
 }

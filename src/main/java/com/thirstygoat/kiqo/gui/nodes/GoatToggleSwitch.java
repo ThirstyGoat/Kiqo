@@ -62,7 +62,7 @@ public class GoatToggleSwitch extends Group {
 
     protected void update() {
         // Create and set a gradient for the inside of the button
-        final Stop[] mainStops = new Stop[] {
+        final Stop[] mainStops = new Stop[]{
                 new Stop(0.0, boolProperty.get() ? Color.BLUE : Color.GRAY),
                 new Stop(1.0, boolProperty.get() ? Color.DODGERBLUE : Color.DARKGRAY)
         };
@@ -129,7 +129,7 @@ public class GoatToggleSwitch extends Group {
         middleRec.setArcHeight(REC_ARC);
 
         // Create and set a gradient for the inside of the button
-        Stop[] middleStops = new Stop[] {
+        Stop[] middleStops = new Stop[]{
                 new Stop(0.0, Color.WHITE),
                 new Stop(1.0, Color.GRAY)
         };

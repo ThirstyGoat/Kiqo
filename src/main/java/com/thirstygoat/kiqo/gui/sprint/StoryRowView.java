@@ -16,19 +16,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -150,7 +147,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         EventHandler<DragEvent> dragOver = event -> {
             if (currentlyDraggingTaskCard != null) {
                 event.acceptTransferModes(TransferMode.MOVE);
-                ((Node)event.getSource()).setStyle("-fx-background-color: #E0E0E0");
+                ((Node) event.getSource()).setStyle("-fx-background-color: #E0E0E0");
             }
         };
 
@@ -200,7 +197,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         });
 
         EventHandler<DragEvent> dragExitEvent = event -> {
-            ((Node)event.getSource()).setStyle("-fx-background-color: transparent");
+            ((Node) event.getSource()).setStyle("-fx-background-color: transparent");
         };
 
         toDoTasks.setOnDragExited(dragExitEvent);

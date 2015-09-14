@@ -8,7 +8,6 @@ import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Command to delete a person from a project.
- *
  */
 public class DeletePersonCommand extends DeleteCommand {
     private final Organisation organisation;
@@ -21,7 +20,7 @@ public class DeletePersonCommand extends DeleteCommand {
     private int index;
 
     /**
-     * @param person Person to be deleted
+     * @param person       Person to be deleted
      * @param organisation organisation to which the person belongs
      * @throws InvalidPersonDeletionException person is PO of one or more backlogs
      */

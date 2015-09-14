@@ -1,15 +1,14 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.Searchable;
+import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
-import com.thirstygoat.kiqo.search.Searchable;
-import com.thirstygoat.kiqo.search.SearchableField;
 
 
 /**
@@ -25,10 +24,10 @@ public class Allocation implements Searchable {
     /**
      * Creates a new allocation, checks that the start date is before the end date.
      *
-     * @param team the team for the allocation
+     * @param team      the team for the allocation
      * @param startDate the start date for the allocation
-     * @param endDate the end date for the allocation
-     * @param project the project for the allocation
+     * @param endDate   the end date for the allocation
+     * @param project   the project for the allocation
      */
     public Allocation(Team team, LocalDate startDate, LocalDate endDate, Project project) {
         this.team = team;
@@ -40,6 +39,7 @@ public class Allocation implements Searchable {
 
     /**
      * Calculates whether this allocation is currently in effect, according to the system time.
+     *
      * @return true if allocation is current
      */
     public boolean isCurrent() {
@@ -49,6 +49,7 @@ public class Allocation implements Searchable {
 
     /**
      * Calculates whether this allocation will start in the future, according to the system time.
+     *
      * @return true if allocation is in the future
      */
     public boolean isFuture() {
@@ -85,7 +86,6 @@ public class Allocation implements Searchable {
     }
 
     /**
-     *
      * @return the project the allocation belongs to
      */
     public Project getProject() {
@@ -93,7 +93,6 @@ public class Allocation implements Searchable {
     }
 
     /**
-     *
      * @return team the team for the allocation
      */
     public Team getTeam() {

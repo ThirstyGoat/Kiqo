@@ -11,7 +11,7 @@ public class SearchAlgorithm {
      * Here's an optimized version of the dice coefficient calculation. It takes
      * advantage of the fact that a bigram of 2 chars can be stored in 1 int, and
      * applies a matching algorithm of O(n*log(n)) instead of O(n*n).
-     *
+     * <p>
      * <p>Note that, at the time of writing, this implementation differs from the
      * other implementations on this page. Where the other algorithms incorrectly
      * store the generated bigrams in a set (discarding duplicates), this
@@ -22,8 +22,8 @@ public class SearchAlgorithm {
      * @param s The first string
      * @param t The second String
      * @return The dice coefficient between the two input strings. Returns 0 if one
-     *         or both of the strings are {@code null}. Also returns 0 if one or both
-     *         of the strings contain less than 2 characters and are not equal.
+     * or both of the strings are {@code null}. Also returns 0 if one or both
+     * of the strings contain less than 2 characters and are not equal.
      * @author Jelle Fresen
      */
     public static double diceCoefficient(String s, String t) {
@@ -38,26 +38,26 @@ public class SearchAlgorithm {
             return 0;
 
         // Create the bigrams for string s:
-        final int n = s.length()-1;
+        final int n = s.length() - 1;
         final int[] sPairs = new int[n];
         for (int i = 0; i <= n; i++)
             if (i == 0)
                 sPairs[i] = s.charAt(i) << 16;
             else if (i == n)
-                sPairs[i-1] |= s.charAt(i);
+                sPairs[i - 1] |= s.charAt(i);
             else
-                sPairs[i] = (sPairs[i-1] |= s.charAt(i)) << 16;
+                sPairs[i] = (sPairs[i - 1] |= s.charAt(i)) << 16;
 
         // Create the bigrams for string t:
-        final int m = t.length()-1;
+        final int m = t.length() - 1;
         final int[] tPairs = new int[m];
         for (int i = 0; i <= m; i++)
             if (i == 0)
                 tPairs[i] = t.charAt(i) << 16;
             else if (i == m)
-                tPairs[i-1] |= t.charAt(i);
+                tPairs[i - 1] |= t.charAt(i);
             else
-                tPairs[i] = (tPairs[i-1] |= t.charAt(i)) << 16;
+                tPairs[i] = (tPairs[i - 1] |= t.charAt(i)) << 16;
 
         // Sort the bigram lists:
         Arrays.sort(sPairs);
@@ -65,19 +65,16 @@ public class SearchAlgorithm {
 
         // Count the matches:
         int matches = 0, i = 0, j = 0;
-        while (i < n && j < m)
-        {
-            if (sPairs[i] == tPairs[j])
-            {
+        while (i < n && j < m) {
+            if (sPairs[i] == tPairs[j]) {
                 matches += 2;
                 i++;
                 j++;
-            }
-            else if (sPairs[i] < tPairs[j])
+            } else if (sPairs[i] < tPairs[j])
                 i++;
             else
                 j++;
         }
-        return (double)matches/(n+m);
+        return (double) matches / (n + m);
     }
 }

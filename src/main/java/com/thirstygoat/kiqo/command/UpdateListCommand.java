@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.command;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.collections.ObservableList;
 
 public final class UpdateListCommand<T> extends Command {
 
@@ -19,7 +19,7 @@ public final class UpdateListCommand<T> extends Command {
         this.observableList = observableList;
         this.type = type;
     }
-    
+
     @Override
     public void execute() {
         observableList.setAll(newContents);

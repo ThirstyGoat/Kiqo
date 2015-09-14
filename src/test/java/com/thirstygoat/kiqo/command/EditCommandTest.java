@@ -80,8 +80,7 @@ public class EditCommandTest {
         }
 
         /**
-         * @param value
-         *            the value to set
+         * @param value the value to set
          */
         public void setValue(final int value) {
             this.value = value;

@@ -3,7 +3,6 @@ package com.thirstygoat.kiqo;
 import com.google.gson.JsonSyntaxException;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.persistence.PersistenceManager;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;

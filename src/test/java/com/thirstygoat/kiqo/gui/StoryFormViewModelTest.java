@@ -1,18 +1,12 @@
 package com.thirstygoat.kiqo.gui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
+import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.gui.viewModel.StoryFormViewModel;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Story;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class StoryFormViewModelTest {
@@ -39,17 +33,17 @@ public class StoryFormViewModelTest {
         // validating uniqueness within project requires model data
         final String projectName = "project shortName";
         final String storyName = "story shortName";
-        
+
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project(projectName, "longName");
         Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false);
         project.setUnallocatedStories(new ArrayList<>(Arrays.asList(story)));
-        
+
         Organisation organisation = new Organisation();
         organisation.getPeople().add(creator);
         organisation.getProjects().add(project);
         storyFormViewModel.setOrganisation(organisation);
-        
+
         // set project field
         storyFormViewModel.projectNameProperty().set(projectName);
 
@@ -99,7 +93,7 @@ public class StoryFormViewModelTest {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
         Organisation organisation = new Organisation();
         storyFormViewModel.setOrganisation(organisation);
-        
+
         Assert.assertFalse("Must not be valid initially.",
                 storyFormViewModel.creatorValidation().validProperty().get());
 
@@ -125,7 +119,7 @@ public class StoryFormViewModelTest {
         StoryFormViewModel storyFormViewModel = new StoryFormViewModel();
         Organisation organisation = new Organisation();
         storyFormViewModel.setOrganisation(organisation);
-        
+
         Assert.assertFalse("Must not be valid initially.",
                 storyFormViewModel.projectValidation().validProperty().get());
 
@@ -136,19 +130,19 @@ public class StoryFormViewModelTest {
         storyFormViewModel.projectNameProperty().set("");
         Assert.assertFalse("Must not be empty.",
                 storyFormViewModel.projectValidation().validProperty().get());
-        
+
         final String projectName = "project shortName";
 
         storyFormViewModel.projectNameProperty().set(projectName);
         Assert.assertFalse("Project must exist.",
                 storyFormViewModel.projectValidation().validProperty().get());
-        
+
         Project project = new Project(projectName, "longName");
         // must set projectNameProperty so that projectProperty gets set.
         storyFormViewModel.projectNameProperty().set(projectName);
         Assert.assertFalse("Project must exist in organisation.",
                 storyFormViewModel.projectValidation().validProperty().get());
-        
+
         organisation.getProjects().add(project);
         storyFormViewModel.projectNameProperty().set("");
         storyFormViewModel.projectNameProperty().set(projectName);

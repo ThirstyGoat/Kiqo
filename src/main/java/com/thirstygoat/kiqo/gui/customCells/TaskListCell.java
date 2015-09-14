@@ -1,6 +1,14 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
+import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Task;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -14,15 +22,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
-import com.thirstygoat.kiqo.model.Status;
-import com.thirstygoat.kiqo.model.Task;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
@@ -38,7 +37,7 @@ public class TaskListCell extends ListCell<Task> {
         // calling super here is very important
         if (!empty) {
             initialiseDragAndDrop(task);
-            
+
             final GridPane gridPane = new GridPane();
             Text name = new Text();
             name.textProperty().bind(task.shortNameProperty());
@@ -74,7 +73,7 @@ public class TaskListCell extends ListCell<Task> {
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
 
-            gridPane.add(name,0, 0);
+            gridPane.add(name, 0, 0);
             gridPane.add(description, 0, 1);
             gridPane.add(statusComboBox, 1, 0);
             gridPane.add(estimate, 2, 0);
@@ -97,7 +96,7 @@ public class TaskListCell extends ListCell<Task> {
         }
         super.updateItem(task, empty);
     }
-    
+
     private void initialiseDragAndDrop(Task task) {
 
         // Called when the dragged item is over another cell

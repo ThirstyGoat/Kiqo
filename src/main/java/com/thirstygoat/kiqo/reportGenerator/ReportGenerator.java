@@ -14,25 +14,25 @@ import java.util.List;
 
 /**
  * Created by james, amy on 6/5/15.
- *
+ * <p>
  * ReportGenerator provides the functionality to generate reports based on the current model of story #134 - Status Reports.
- *
+ * <p>
  * This class will need to be constantly updated upon changing the current model, or adding additional classes that are
  * required in a report.
  */
 public final class ReportGenerator {
-    private static final String PROJECT_COMMENT =       " -  ### Project ###";
-    private static final String TEAM_COMMENT =          " -  ### Team ###";
-    private static final String PERSON_COMMENT =        " -  ### Person ###";
-    private static final String RELEASE_COMMENT =       " -  ### Release ###";
-    private static final String SKILL_COMMENT =         " -  ### Skill ###";
-    private static final String BACKLOG_COMMENT =       " -  ### Backlog ###";
-    private static final String STORY_COMMENT =         " -  ### Story ###";
-    private static final String ALLOCATION_COMMENT =    " -  ### Allocation ###";
-    private static final String SPRINT_COMMENT =        " -  ### Sprint ###";
-    private static final String AC_COMMENT =            " - ";
-    private static final String TASK_COMMENT =          " - ";
-    private static final String IMPEDIMENT_COMMENT =          " - ";
+    private static final String PROJECT_COMMENT = " -  ### Project ###";
+    private static final String TEAM_COMMENT = " -  ### Team ###";
+    private static final String PERSON_COMMENT = " -  ### Person ###";
+    private static final String RELEASE_COMMENT = " -  ### Release ###";
+    private static final String SKILL_COMMENT = " -  ### Skill ###";
+    private static final String BACKLOG_COMMENT = " -  ### Backlog ###";
+    private static final String STORY_COMMENT = " -  ### Story ###";
+    private static final String ALLOCATION_COMMENT = " -  ### Allocation ###";
+    private static final String SPRINT_COMMENT = " -  ### Sprint ###";
+    private static final String AC_COMMENT = " - ";
+    private static final String TASK_COMMENT = " - ";
+    private static final String IMPEDIMENT_COMMENT = " - ";
     private static final int WIDTH = 80;
     private static final int INDENT_SIZE = 4;
     private static final DateTimeFormatter TITLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -42,6 +42,7 @@ public final class ReportGenerator {
 
     /**
      * Constructor for report generator
+     *
      * @param organisation the organisation the report will be generated for
      */
     public ReportGenerator(Organisation organisation) {
@@ -69,7 +70,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate backlog data.
+     * Generate backlog data.
      */
     private static List<String> generateBacklogReport(Backlog backlog) {
         final List<String> lines = new ArrayList<String>();
@@ -79,7 +80,7 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Description", backlog.getDescription()));
         lines.add(ReportUtils.valueLine("Scale", backlog.getScale().toString()));
         lines.add(ReportUtils.collectionLine("Stories", backlog.getStories().isEmpty()));
-        for(final Story story : backlog.getStories()) {
+        for (final Story story : backlog.getStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
         }
@@ -122,7 +123,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate acceptance criteria data.
+     * Generate acceptance criteria data.
      */
     private static List<String> generateACReport(AcceptanceCriteria acceptanceCriteria) {
         final List<String> lines = new ArrayList<String>();
@@ -133,7 +134,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate task data.
+     * Generate task data.
      */
     private static List<String> generateTaskReport(Task tasks) {
         final List<String> lines = new ArrayList<String>();
@@ -161,7 +162,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate release data.
+     * Generate release data.
      */
     private static List<String> generateReleaseReport(Release release) {
         final List<String> lines = new ArrayList<String>();
@@ -189,7 +190,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate skill data.
+     * Generate skill data.
      */
     private static List<String> generateSkillReport(Skill skill) {
         final List<String> lines = new ArrayList<String>();
@@ -199,7 +200,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate skill data.
+     * Generate skill data.
      */
     private static List<String> generateAllocationReport(Allocation allocation) {
         final List<String> lines = new ArrayList<String>();
@@ -211,6 +212,7 @@ public final class ReportGenerator {
 
     /**
      * Generates a string which contains all of the content of the report including the header.
+     *
      * @return a string consisting of the report data.
      */
     public String generateReport() {
@@ -241,10 +243,10 @@ public final class ReportGenerator {
      */
     private String generateHeader() {
         final String[] title = new String[]{
-            "Organisation: " + organisation.organisationNameProperty().get(),
-            "",
-            "Generated " + LocalDateTime.now().format(ReportGenerator.TITLE_DATE_FORMATTER),
-            "by " + ApplicationInfo.getProperty("name") + " " + ApplicationInfo.getProperty("version")
+                "Organisation: " + organisation.organisationNameProperty().get(),
+                "",
+                "Generated " + LocalDateTime.now().format(ReportGenerator.TITLE_DATE_FORMATTER),
+                "by " + ApplicationInfo.getProperty("name") + " " + ApplicationInfo.getProperty("version")
         };
         return HeadingBuilder.makeHeading(title, ReportGenerator.WIDTH, HeadingBuilder.Style.JUMBO);
     }
@@ -269,6 +271,7 @@ public final class ReportGenerator {
 
     /**
      * Generates the report data for the organisation.
+     *
      * @param organisation the organisation the report will be generated for.
      * @return string consisting of the organisation report data
      */
@@ -310,7 +313,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate project data including releases and allocations
+     * Generate project data including releases and allocations
      */
     private List<String> generateProjectReport(Project project) {
         final List<String> lines = new LinkedList<>();
@@ -328,7 +331,7 @@ public final class ReportGenerator {
 
         // Add unallocated stories that belong to this project to the report
         lines.add(ReportUtils.collectionLine("Unallocated Stories", project.getUnallocatedStories().isEmpty()));
-        for(final Story story : project.getUnallocatedStories()) {
+        for (final Story story : project.getUnallocatedStories()) {
             lines.add(ReportGenerator.STORY_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generateStoryReport(story)));
         }
@@ -366,7 +369,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate team data including product owner information and current allocation.
+     * Generate team data including product owner information and current allocation.
      */
     private List<String> generateTeamReport(Team team) {
         teams.remove(team);
@@ -414,7 +417,7 @@ public final class ReportGenerator {
     }
 
     /**
-     *  Generate person data including skills.
+     * Generate person data including skills.
      */
     private List<String> generatePersonReport(Person person) {
         people.remove(person);
