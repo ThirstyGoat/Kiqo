@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.gui.person;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -28,7 +30,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
     @FXML
     private GoatLabelTextField departmentLabel;
     @FXML
-    private GoatLabelTextField skillsLabel;
+    private GoatLabelFilteredListSelectionView<Skill> skillsLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
@@ -43,7 +45,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
         FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), null);
         FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), null);
         FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), null);
-//        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.longNameProperty(), viewModel.nameValidation());
+        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 
