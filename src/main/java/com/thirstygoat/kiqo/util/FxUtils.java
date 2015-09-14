@@ -4,13 +4,11 @@ import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -222,9 +220,10 @@ public final class FxUtils {
 
     public static <T extends Item> void initGoatLabel(GoatLabelFilteredListSelectionView<T> goatLabel,
                                                       Editable viewModel, ListProperty<T> targetList,
-                                                      ObservableList<T> sourceList, Object o) {
+                                                      ListProperty<T> sourceList) {
         initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.displayTextProperty().bind(Bindings.concat(targetList));
-        goatLabel.getEditField().setSourceItems(sourceList);
+        goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
+        goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
+        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
     }
 }
