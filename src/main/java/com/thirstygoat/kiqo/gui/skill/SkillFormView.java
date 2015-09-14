@@ -4,8 +4,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
+import com.thirstygoat.kiqo.util.Utilities;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import de.saxsys.mvvmfx.*;
@@ -34,7 +36,7 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {        
         bindToViewModel();
-
+        
         attachValidators();
         
         Platform.runLater(() -> {
