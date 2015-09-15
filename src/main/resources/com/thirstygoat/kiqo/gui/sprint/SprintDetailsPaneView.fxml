@@ -10,9 +10,10 @@
   <children>
     <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="10">
       <children>
-        <HBox fillHeight="false" alignment="TOP_LEFT" spacing="5" >
+            <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
           <children>
-            <GoatLabelTextField styleClass="pane-short-name" fx:id="shortNameLabel"/>
+            <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+			<GoatLabelTextField fx:id="longNameLabel" styleClass="pane-long-name"/>
             <Region HBox.hgrow="ALWAYS"/>
             <VBox alignment="TOP_RIGHT">
               <children>
