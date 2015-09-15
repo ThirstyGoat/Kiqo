@@ -129,7 +129,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
     }
 
     public ListProperty<Skill> skills() {
-        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, new ArrayList<>());
+        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, new ArrayList<Skill>());
     }
 
     public StringProperty descriptionProperty() {
