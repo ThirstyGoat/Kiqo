@@ -7,7 +7,6 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToolBar;
@@ -52,6 +51,7 @@ public class ToolBarController implements Initializable {
         projectButton.setGraphic(projectIcon);
         projectIcon.setGlyphSize(20);
         projectButton.setText("Project");
+        projectButton.setPrefSize(50,50);
         projectButton.getStyleClass().add("toolbar-newbutton");
         projectButton.setContentDisplay(ContentDisplay.TOP);
         projectButton.setOnAction(event -> {
@@ -63,6 +63,7 @@ public class ToolBarController implements Initializable {
         personButton.setGraphic(personIcon);
         personIcon.setGlyphSize(20);
         personButton.setText("Person");
+        personButton.setPrefSize(50,50);
         personButton.getStyleClass().add("toolbar-newbutton");
         personButton.setContentDisplay(ContentDisplay.TOP);
         personButton.setOnAction(event -> {
@@ -74,6 +75,7 @@ public class ToolBarController implements Initializable {
         skillButton.setGraphic(skillIcon);
         skillIcon.setGlyphSize(20);
         skillButton.setText("Skill");
+        skillButton.setPrefSize(50,50);
         skillButton.getStyleClass().add("toolbar-newbutton");
         skillButton.setContentDisplay(ContentDisplay.TOP);
         skillButton.setOnAction(event -> {
@@ -84,6 +86,7 @@ public class ToolBarController implements Initializable {
         teamButton.setGraphic(teamIcon);
         teamIcon.setGlyphSize(20);
         teamButton.setText("Team");
+        teamButton.setPrefSize(50,50);
         teamButton.getStyleClass().add("toolbar-newbutton");
         teamButton.setContentDisplay(ContentDisplay.TOP);
         teamButton.setOnAction(event -> {
@@ -95,6 +98,7 @@ public class ToolBarController implements Initializable {
         releaseButton.setGraphic(releaseIcon);
         releaseIcon.setGlyphSize(20);
         releaseButton.setText("Release");
+        releaseButton.setPrefSize(50,50);
         releaseButton.getStyleClass().add("toolbar-newbutton");
         releaseButton.setContentDisplay(ContentDisplay.TOP);
         releaseButton.setOnAction(event -> {
@@ -105,6 +109,7 @@ public class ToolBarController implements Initializable {
         storyButton.setGraphic(storyIcon);
         storyIcon.setGlyphSize(20);
         storyButton.setText("Story");
+        storyButton.setPrefSize(50,50);
         storyButton.getStyleClass().add("toolbar-newbutton");
         storyButton.setContentDisplay(ContentDisplay.TOP);
         storyButton.setOnAction(event -> {
@@ -116,6 +121,7 @@ public class ToolBarController implements Initializable {
         backlogButton.setGraphic(backlogIcon);
         backlogIcon.setGlyphSize(20);
         backlogButton.setText("Backlog");
+        backlogButton.setPrefSize(50,50);
         backlogButton.getStyleClass().add("toolbar-newbutton");
         backlogButton.setContentDisplay(ContentDisplay.TOP);
         backlogButton.setOnAction(event -> {
@@ -127,6 +133,7 @@ public class ToolBarController implements Initializable {
         sprintButton.setGraphic(sprintIcon);
         sprintIcon.setGlyphSize(20);
         sprintButton.setText("Sprint");
+        sprintButton.setPrefSize(50,50);
         sprintButton.getStyleClass().add("toolbar-newbutton");
         sprintButton.setContentDisplay(ContentDisplay.TOP);
         sprintButton.setOnAction(event -> {
@@ -148,17 +155,6 @@ public class ToolBarController implements Initializable {
         gridPane.setHgrow(storyButton, Priority.ALWAYS);
         gridPane.add(backlogButton, 0, 2);
         gridPane.add(sprintButton, 1, 2);
-
-        Insets inset = new Insets(5,10,5,10);
-
-        gridPane.setMargin(projectButton,inset);
-        gridPane.setMargin(personButton, inset);
-        gridPane.setMargin(skillButton, inset);
-        gridPane.setMargin(teamButton, inset);
-        gridPane.setMargin(releaseButton, inset);
-        gridPane.setMargin(storyButton, inset);
-        gridPane.setMargin(backlogButton, inset);
-        gridPane.setMargin(sprintButton, inset);
 
         ColumnConstraints column = new ColumnConstraints();
         gridPane.getColumnConstraints().addAll(column, column, column);
