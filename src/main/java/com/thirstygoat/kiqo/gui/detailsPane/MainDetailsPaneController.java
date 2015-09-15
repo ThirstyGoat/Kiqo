@@ -1,26 +1,16 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
-import com.sun.istack.internal.NotNull;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.Loadable;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.nodes.DraggableTab;
 import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView;
 import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.person.PersonViewModel;
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneView;
 import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView;
 import com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
-import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView;
-import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
@@ -29,28 +19,18 @@ import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
-import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
-import com.thirstygoat.kiqo.model.*;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
-import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Skill;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.ViewTuple;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
@@ -73,78 +53,15 @@ public class MainDetailsPaneController implements Initializable {
     private TabPane tabPane;
 
     private MainController mainController;
-    private Pane[] panes;
-
-    private Pane backlogDetailsPane;
-    private Pane projectDetailsPane;
-    private Pane sprintDetailsPane;
-    private Pane skillDetailsPane;
-    private Pane personDetailsPane;
-    private Pane releaseDetailsPane;
-    private Pane teamDetailsPane;
-    
-    private Loadable<Backlog> backlogDetailsPaneViewModel;
-    private ProjectDetailsPaneViewModel projectDetailsPaneViewModel;
-    private SprintDetailsPaneViewModel sprintDetailsPaneViewModel;
-    private Loadable<Skill> skillDetailsPaneViewModel;
-    private Loadable<Release> releaseDetailsPaneViewModel;
-    private TeamDetailsPaneViewModel teamDetailsPaneViewModel;
-    private PersonDetailsPaneViewModel personViewModel;
-    
-    private Pane advancedSearchDetailsPane;
-    private AdvancedSearchViewModel advancedSearchViewModel;
 
     private Map<Item, Tab> tabMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadDetailsPanes();
-
-        // Advanced Search
-        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
-        advancedSearchDetailsPane = (Pane) advancedSearchViewTuple.getView();
-        advancedSearchViewModel = advancedSearchViewTuple.getViewModel();
-        
-        panes = new Pane[] {
-                projectDetailsPane,
-                personDetailsPane,
-                backlogDetailsPane,
-                skillDetailsPane,
-                teamDetailsPane,
-                releaseDetailsPane,
-                sprintDetailsPane,
-                advancedSearchDetailsPane,
-        };
-    }
-
-    private void loadDetailsPanes() {
-        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> backlogDetailsPaneViewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
-        backlogDetailsPane = (Pane) backlogDetailsPaneViewTuple.getView();
-        backlogDetailsPaneViewModel = backlogDetailsPaneViewTuple.getViewModel();
-
-        ViewTuple<ProjectDetailsPaneView, ProjectDetailsPaneViewModel> projectDetailsPaneViewTuple = FluentViewLoader.fxmlView(ProjectDetailsPaneView.class).load();
-        projectDetailsPane = (AnchorPane) projectDetailsPaneViewTuple.getView();
-        projectDetailsPaneViewModel = projectDetailsPaneViewTuple.getViewModel();
-        
-        ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> sprintDetailsPaneViewTuple = FluentViewLoader.fxmlView(SprintDetailsPaneView.class).load();
-        sprintDetailsPane = (Pane) sprintDetailsPaneViewTuple.getView();
-        sprintDetailsPaneViewModel = sprintDetailsPaneViewTuple.getViewModel();
-
-        ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> skillDetailsPaneViewTuple = FluentViewLoader.fxmlView(SkillDetailsPaneView.class).load();
-        skillDetailsPane = (Pane) skillDetailsPaneViewTuple.getView();
-        skillDetailsPaneViewModel = skillDetailsPaneViewTuple.getViewModel();
-
-        ViewTuple<PersonDetailsPaneView, PersonDetailsPaneViewModel> personDetailsPaneViewTuple = FluentViewLoader.fxmlView(PersonDetailsPaneView.class).load();
-        personDetailsPane = (Pane) personDetailsPaneViewTuple.getView();
-        personViewModel = personDetailsPaneViewTuple.getViewModel();
-        
-        ViewTuple<ReleaseDetailsPaneView, ReleaseDetailsPaneViewModel> releaseDetailsPaneViewTuple = FluentViewLoader.fxmlView(ReleaseDetailsPaneView.class).load();
-        releaseDetailsPane = (Pane) releaseDetailsPaneViewTuple.getView();
-        releaseDetailsPaneViewModel = releaseDetailsPaneViewTuple.getViewModel();
-        
-        ViewTuple<TeamDetailsPaneView, TeamDetailsPaneViewModel> teamDetailsPaneViewTuple = FluentViewLoader.fxmlView(TeamDetailsPaneView.class).load();
-        teamDetailsPane = (Pane) teamDetailsPaneViewTuple.getView();
-        teamDetailsPaneViewModel = teamDetailsPaneViewTuple.getViewModel();
+        // Listen for changes in the number of tabs shown so we can display the info screen when necessary
+        tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
+            tabPane.setVisible(!tabPane.getTabs().isEmpty());
+        });
     }
 
     private Node getDetailsPane(Item item) {
@@ -182,11 +99,7 @@ public class MainDetailsPaneController implements Initializable {
 
             tabPane.getSelectionModel().select(chosenTab);
         } else {
-            Tab tab = new Tab();
-
-            // Bind the tab heading text to the short name of the shown item
-            tab.textProperty().bind(item.shortNameProperty());
-
+            Tab tab = new DraggableTab(item.shortNameProperty());
             Node contentNode = getDetailsPane(item);
             tab.setContent(contentNode);
             contentNode.getStyleClass().add("details-pane-tab");
@@ -236,10 +149,11 @@ public class MainDetailsPaneController implements Initializable {
         // Old school way of loading a details pane
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainController.class.getClassLoader().getResource("detailsPane/story.fxml"));
-        ((StoryDetailsPaneController) loader.getController()).setMainController(mainController);
-        ((StoryDetailsPaneController) loader.getController()).showDetails(story);
         try {
-            return loader.load();
+            Node node = loader.load();
+            ((StoryDetailsPaneController) loader.getController()).setMainController(mainController);
+            ((StoryDetailsPaneController) loader.getController()).showDetails(story);
+            return node;
         } catch (IOException ignored) {}
         return null;
     }
@@ -253,32 +167,24 @@ public class MainDetailsPaneController implements Initializable {
     private Node getSprintDetailsPane(Sprint sprint) {
         ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(SprintDetailsPaneView.class).load();
         viewTuple.getViewModel().load(sprint, mainController.selectedOrganisationProperty.get());
+        viewTuple.getViewModel().getScrumBoardViewModel().setMainController(mainController);
         return viewTuple.getView();
     }
 
-    /**
-     * Shows the appropriate pane
-     * @param pane Pane to be shown
-     */
-    private void show(Pane pane) {
-        // Hide all panes initially, then show the appropriate pane
-        for (final Pane p : panes) {
-            p.setVisible(false);
-        }
-
-        pane.setVisible(true);
-    }
-
     public void showSearchPane() {
-        show(advancedSearchDetailsPane);
+        // Advanced Search
+        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
+
+        // TODO, update heading to display what the search was for
+        StringProperty advancedSearchHeading = new SimpleStringProperty("Advanced Search");
+
+        Tab tab = new DraggableTab(advancedSearchHeading);
+        tab.setContent(advancedSearchViewTuple.getView());
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
     }
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-//        projectDetailsPaneViewModel.mainControllerProperty().set(mainController);
-//        storyDetailsPaneController.setMainController(mainController);
-//        advancedSearchViewModel.setMainController(mainController);
-//        sprintDetailsPaneViewModel.getScrumBoardViewModel().setMainController(mainController);
-//        teamDetailsPaneViewModel.mainControllerProperty().set(mainController);
     }
 }

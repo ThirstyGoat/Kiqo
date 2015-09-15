@@ -12,11 +12,14 @@ import java.util.ResourceBundle;
 public class DetailsPaneInfoController implements Initializable {
     @FXML
     private Label toolbarShortcutLabel;
+    @FXML
+    private Label itemListShortcutLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (com.sun.javafx.PlatformUtil.isMac()) {
             toolbarShortcutLabel.setText("\u2318 + /");
+            itemListShortcutLabel.setText("\u2318 + L");
         }
     }
 }

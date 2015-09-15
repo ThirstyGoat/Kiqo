@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController">
 <center>
-    <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS"/>
+    <StackPane>
+        <children>
+            <fx:include source="info.fxml" />
+            <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS"/>
+        </children>
+    </StackPane>
 </center>
 </BorderPane>
