@@ -9,12 +9,13 @@ import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 19/08/15.
@@ -135,5 +136,9 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    public void showStoryInDetailsPane() {
+        MainController.focusedItemProperty.setValue(storyWrapper.get());
     }
 }
