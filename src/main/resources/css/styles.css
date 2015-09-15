@@ -402,6 +402,15 @@
     -fx-background-radius: 0;
 }
 
+
+.helperlink { /* Details Pane */
+    -fx-font-size: 11px;
+}
+
+.form .helperlink {
+    -fx-font-size: 10px;
+}
+
 /*********** DETAILS PANE INFO ****************/
 .details-pane-info .label {
     -fx-font: 14px "Roboto";
