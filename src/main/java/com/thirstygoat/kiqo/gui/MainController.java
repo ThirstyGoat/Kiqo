@@ -936,6 +936,8 @@ public class MainController implements Initializable {
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
                 viewModel.setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Backlog" : "Edit Backlog");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Project.class.getSimpleName())) {

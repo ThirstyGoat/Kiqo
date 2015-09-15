@@ -330,7 +330,7 @@
     margin: 0 0 15px 0;
 }
 
-.form .text-area, .form .text-field {
+.form .text-area, .form .text-field, .form .combo-box {
     -fx-background-radius: 0;
     -fx-border-color: gainsboro;
     -fx-background-color: white;
