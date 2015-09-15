@@ -12,7 +12,7 @@
             <fx:include fx:id="sideBar" source="sidebar.fxml" />
           </children>
         </VBox>
-        <fx:include fx:id="detailsPane" source="detailsPane/main.fxml" />
+        <fx:include fx:id="detailsPane" source="detailsPane/main2.fxml" />
       </items>
     </SplitPane>
   </center>

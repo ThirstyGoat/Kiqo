@@ -388,7 +388,12 @@
     -fx-background-radius: 0;
 }
 
-/*********** DETAILS PANE INFO ****************/
+/*********** DETAILS PANE ****************/
+
+.details-pane-tab {
+    -fx-padding: 10;
+}
+
 .details-pane-info .label {
     -fx-font: 14px "Roboto";
     -fx-text-fill: gray;
