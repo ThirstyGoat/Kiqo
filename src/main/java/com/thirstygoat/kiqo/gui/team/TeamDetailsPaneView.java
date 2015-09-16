@@ -34,8 +34,8 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
                         viewModel.descriptionValidation(), "Add a description...");
-        final Callback<ListView<TeamMemberListItemViewModel>, ListCell<TeamMemberListItemViewModel>> createForFxmlView = CachedViewModelCellFactory.createForFxmlView(TeamMemberListItemView.class);
-        FxUtils.initGoatLabel(teamMemberList, viewModel, viewModel.teamMemberViewModels(), viewModel.eligibleTeamMembers(), createForFxmlView);
+        FxUtils.initGoatLabel(teamMemberList, viewModel, viewModel.teamMemberViewModels(), viewModel.eligibleTeamMembers(), 
+                CachedViewModelCellFactory.createForFxmlView(TeamMemberListItemView.class), TeamMemberListItemViewModel::shortNameProperty);
 
         // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
         // a listener is setup to set the items only when allocations is not null.

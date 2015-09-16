@@ -1,29 +1,24 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.model.Item;
+import java.util.regex.Pattern;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
+
 import org.controlsfx.control.SegmentedButton;
 
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
 /**
+ * NB: This doesn't actually act like a ListView, beware.
  * Created by Bradley Kirwan on 7/08/15.
+ * @param <T> type of list elements
  */
-public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this doesn't actually act like a listview
+public class GoatFilteredListSelectionView<T> extends ListView<T> {
     private VBox mainView;
     private final GoatFilteredListSelectionViewSkin skin;
     private final ListProperty<T> sourceItems;
@@ -37,9 +32,11 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
     private ObjectProperty<Node> footer = new SimpleObjectProperty<>();
 
     private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
+    private Callback<T, StringProperty> stringPropertyCallback;
 
     public GoatFilteredListSelectionView() {
         super();
+        stringPropertyCallback = t -> new SimpleStringProperty(t != null ? t.toString() : "");
         skin = new GoatFilteredListSelectionViewSkin(this) {
             {
                 mainView = getMainView();
@@ -64,11 +61,6 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
             textField.setText(value + " ");
             textField.setText(value);
         });
-
-        Predicate<List<? extends Item>> newItems =
-                list -> (sourceItems.isEmpty() || targetItems.isEmpty())
-                        && list.containsAll(sourceItems)
-                        && list.containsAll(targetItems);
 
         ListChangeListener<T> refresh = c -> {
             SHOWING initial = showing.get();
@@ -105,6 +97,10 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
         return header;
     }
 
+    public void setStringPropertyCallback(Callback<T, StringProperty> stringPropertyCallback) {
+        this.stringPropertyCallback = stringPropertyCallback;
+    }
+
     public Callback<T, Node> getTargetCellGraphicFactory() {
         return targetCellGraphicFactory.get();
     }
@@ -120,12 +116,16 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
 
             String regex = Pattern.quote(newValue.toLowerCase());
             allItems.forEach(t -> {
-                if (t.toString().toLowerCase().matches(".*" + regex + ".*")) { // TODO toString
+                if (stringPropertyCallback.call(t).get().toLowerCase().matches(".*" + regex + ".*")) {
                     shownItems.add(t);
                 }
             });
             listView.setItems(shownItems);
         });
+    }
+    
+    public void resetFilter() {
+        textField.textProperty().set("");
     }
 
     public ObservableList<T> getTargetItems() {
@@ -169,7 +169,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
         listView.getStyleClass().add("filtered-list-view");
         listView.setItems(allItems);
 
-        mainView.setVgrow(listView, Priority.ALWAYS);
+        VBox.setVgrow(listView, Priority.ALWAYS);
         ToggleButton allToggleButton = new ToggleButton(SHOWING.All.toString());
         ToggleButton selectedToggleButton = new ToggleButton(SHOWING.Selected.toString());
         ToggleButton unSelectedToggleButton = new ToggleButton(SHOWING.Unselected.toString());
@@ -211,7 +211,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
             } else if (newValue == SHOWING.Unselected) {
                 allItems.addAll(sourceItems);
             }
-            allItems.sort((i1, i2) -> i1.toString().compareTo(i2.toString())); //TODO
+            allItems.sort((i1, i2) -> stringPropertyCallback.call(i1).get().compareTo(stringPropertyCallback.call(i2).get()));
             // Trigger refresh of shown items by firing change event on the filter text field
             String value = textField.getText();
             textField.setText(value + " ");
@@ -226,19 +226,12 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this
         footerProperty().addListener((observable, oldValue, newValue) -> {
             footerContainer.setRight(newValue);
         });
-//
-//        mainView.setStyle("-fx-border-color: orange");
-//        setStyle("-fx-border-color: pink");
-//        headerContainer.setStyle("-fx-border-color: red");
-//        footerContainer.setStyle("-fx-border-color: blue");
-//        textField.setStyle("-fx-border-color: black");
-//        listView.setStyle("-fx-border-color: yellow");
     }
 
     private void setDefaultCellFactory() {
-        Callback<T, Node> defaultCellFactory = param -> {
+        Callback<T, Node> defaultCellFactory = t -> {
             Label label = new Label();
-            label.textProperty().bind(Bindings.createStringBinding(param::toString)); //TODO toString stringProperty
+            label.textProperty().bind(stringPropertyCallback.call(t));
             return label;
         };
 

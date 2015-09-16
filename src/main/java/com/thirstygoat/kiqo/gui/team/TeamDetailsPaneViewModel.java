@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.*;
+import javafx.util.Callback;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.*;
+import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.GoatCollectors;
 
 public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable {
@@ -47,15 +49,20 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
     }
 
     public ObservableList<TeamMemberListItemViewModel> eligibleTeamMembers() {
-        final ObservableList<TeamMemberListItemViewModel> list;
-        if (organisationProperty().get() != null) {
-            list = organisationProperty().get().getPeople().stream()
-                    .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
-                    .map(TeamMemberListItemViewModel::new).collect(GoatCollectors.toObservableList());
-        } else {
-            list = FXCollections.observableArrayList();
-        }
-        return list;
+        final Callback<ObservableList<Person>, ObservableList<TeamMemberListItemViewModel>> callback = allPeople -> allPeople.stream()
+                .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
+                .map(TeamMemberListItemViewModel::new).collect(GoatCollectors.toObservableList());
+
+        final ObservableList<TeamMemberListItemViewModel> list = callback.call(organisationProperty().get().getPeople());
         
+        organisationProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                list.setAll(callback.call(newValue.getPeople()));
+            } else {
+                list.clear();
+            }
+        });
+        
+        return list;
     }
 }

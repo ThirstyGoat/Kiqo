@@ -16,6 +16,4 @@ import javafx.scene.control.Control;
  * @param <T> The type of data displayed in the 
  */
 public abstract class BiControl<D extends Control, E extends Control, T> extends Control {
-    public abstract T getData();
-    public abstract void setData(T data);
 }
