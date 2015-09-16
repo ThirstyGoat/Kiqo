@@ -52,9 +52,7 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
             modelWrapper.reset();
             modelWrapper.commit();
         }
-        modelWrapper.reload();
-
-        afterLoad();
+        reload();
     }
 
     public void reset() {
@@ -62,6 +60,7 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
     }
 
     public void reload() {
+        afterLoad();
         modelWrapper.reload();
     }
     
