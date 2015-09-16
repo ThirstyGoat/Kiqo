@@ -1,5 +1,8 @@
 package com.thirstygoat.kiqo.gui.detailsPane;
 
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView;
@@ -7,31 +10,45 @@ import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView;
 import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.person.PersonViewModel;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
 import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneView;
 import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneView;
 import com.thirstygoat.kiqo.gui.release.ReleaseDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.model.AdvancedSearchViewModel;
+import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView;
+import com.thirstygoat.kiqo.gui.person.PersonDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.project.ProjectDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
-import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
-import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
+import com.thirstygoat.kiqo.model.*;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
-import javafx.beans.property.SimpleObjectProperty;
+import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Skill;
+import de.saxsys.mvvmfx.FluentViewLoader;
+import de.saxsys.mvvmfx.ViewTuple;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -48,6 +65,18 @@ public class MainDetailsPaneController implements Initializable {
     private StackPane stackPane;
     @FXML
     private AnchorPane infoPane;
+    @FXML
+    private AnchorPane storyDetailsPane;
+    @FXML
+    private Button editButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private HBox buttonBox;
+    @FXML
+    private PersonDetailsPaneView personDetailsPaneController;
+    @FXML
+    private StoryDetailsPaneController storyDetailsPaneController;
 
     private MainController mainController;
     private Pane[] panes;
@@ -59,7 +88,6 @@ public class MainDetailsPaneController implements Initializable {
     private Pane personDetailsPane;
     private Pane releaseDetailsPane;
     private Pane teamDetailsPane;
-    private Pane storyDetailsPane;
     
     private Loadable<Backlog> backlogDetailsPaneViewModel;
     private ProjectDetailsPaneViewModel projectDetailsPaneViewModel;
@@ -68,10 +96,7 @@ public class MainDetailsPaneController implements Initializable {
     private Loadable<Release> releaseDetailsPaneViewModel;
     private TeamDetailsPaneViewModel teamDetailsPaneViewModel;
     private PersonDetailsPaneViewModel personViewModel;
-    private StoryDetailsPaneViewModel storyDetailsPaneViewModel;
-
-    private StoryDetailsPaneView storyDetailsPaneView;
-
+    
     private Pane advancedSearchDetailsPane;
     private AdvancedSearchViewModel advancedSearchViewModel;
 
@@ -137,12 +162,6 @@ public class MainDetailsPaneController implements Initializable {
         teamDetailsPane = (Pane) teamDetailsPaneViewTuple.getView();
         stackPane.getChildren().add(teamDetailsPane);
         teamDetailsPaneViewModel = teamDetailsPaneViewTuple.getViewModel();
-
-        ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> storyDetailsPaneViewTuple = FluentViewLoader.fxmlView(StoryDetailsPaneView.class).load();
-        storyDetailsPane = (Pane) storyDetailsPaneViewTuple.getView();
-        stackPane.getChildren().add(storyDetailsPane);
-        storyDetailsPaneViewModel = storyDetailsPaneViewTuple.getViewModel();
-        storyDetailsPaneView = storyDetailsPaneViewTuple.getCodeBehind();
     }
 
     /**
@@ -208,9 +227,9 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private void showStoryDetailPane(Story story) {
-        storyDetailsPaneViewModel.load(story, mainController.selectedOrganisationProperty.get());
+        detailsPane.setPadding(new Insets(0, 0, 0, 0));
+        storyDetailsPaneController.showDetails(story);
         show(storyDetailsPane);
-        storyDetailsPaneView.showDetails(new SimpleObjectProperty<>(storyDetailsPaneViewModel.getStory()));
     }
 
     private void showBacklogDetailsPane(Backlog backlog) {
@@ -243,7 +262,7 @@ public class MainDetailsPaneController implements Initializable {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         projectDetailsPaneViewModel.mainControllerProperty().set(mainController);
-        storyDetailsPaneView.setMainController(mainController);
+        storyDetailsPaneController.setMainController(mainController);
         advancedSearchViewModel.setMainController(mainController);
         sprintDetailsPaneViewModel.getScrumBoardViewModel().setMainController(mainController);
         teamDetailsPaneViewModel.mainControllerProperty().set(mainController);

@@ -4,21 +4,21 @@ import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.property.*;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
-
+        
         // use a callback to get an up-to-date list, instead of just whatever exists at initialisation.
         // use a String converter so that the short name is used.
         final AutoCompletionBinding<E> binding = TextFields.bindAutoCompletion(textField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<E>>() {
-
+            
             @Override
             public Collection<E> call(AutoCompletionBinding.ISuggestionRequest request) {
                 List<E> list = listSupplier.get();
@@ -122,14 +122,6 @@ public final class FxUtils {
                                      ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
         bindStringProperty(goatLabel, stringProperty);
-        goatLabel.validationStatus().set(validationStatus);
-    }
-
-    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, IntegerProperty integerProperty,
-                                     ValidationStatus validationStatus, StringConverter stringConverter) {
-        initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.displayTextProperty().bindBidirectional(integerProperty, stringConverter);
-        goatLabel.getEditField().textProperty().bindBidirectional(integerProperty, stringConverter);
         goatLabel.validationStatus().set(validationStatus);
     }
 
@@ -225,34 +217,5 @@ public final class FxUtils {
         goatLabel.displayTextProperty().bindBidirectional(stringProperty);
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.validationStatus().set(validationStatus);
-    }
-
-    public static void enableShiftEnter(TextArea textArea, Runnable runnable) {
-        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
-        // Shift+Enter should create new line in the text area
-
-        textArea.setOnKeyPressed(event -> {
-            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
-            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
-            if (shiftEnter.match(event)) {
-                // force new line
-                textArea.appendText("\n");
-                event.consume();
-            } else if (enter.match(event)) {
-                event.consume();
-                try {
-                    runnable.run();
-                } catch (Exception ignored) {}
-            }
-        });
-    }
-
-    public static <T extends Item> void initGoatLabel(GoatLabelFilteredListSelectionView<T> goatLabel,
-                                                      Editable viewModel, ListProperty<T> targetList,
-                                                      ListProperty<T> sourceList) {
-        initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
-        goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
-        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
     }
 }

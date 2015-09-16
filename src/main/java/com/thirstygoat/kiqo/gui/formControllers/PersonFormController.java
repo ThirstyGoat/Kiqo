@@ -45,6 +45,7 @@ public class PersonFormController extends FormController<Person> {
     private Organisation organisation;
     private Person person;
     private boolean valid = false;
+    private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private Command command;
     private boolean poOfTeam;
     private boolean smOfTeam;
@@ -76,9 +77,11 @@ public class PersonFormController extends FormController<Person> {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setShortNameHandler();
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
+        Utilities.setNameSuggester(longNameTextField, shortNameTextField, Utilities.SHORT_NAME_MAX_LENGTH,
+                shortNameModified);
         Platform.runLater(() -> {
             // wait for textfields to exist
             setValidationSupport();
@@ -142,6 +145,7 @@ public class PersonFormController extends FormController<Person> {
 
         if (person != null) {
             // We are editing an existing Person
+            shortNameModified.set(true);
 
             longNameTextField.setText(person.getLongName());
             shortNameTextField.setText(person.getShortName());
@@ -285,6 +289,25 @@ public class PersonFormController extends FormController<Person> {
         }
         setCommand();
         return true;
+    }
+
+    /**
+     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
+     * up to a certain number of characters
+     */
+    private void setShortNameHandler() {
+        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Auto populate short name text field
+            if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
+                    Math.min(longNameTextField.getText().length(), Utilities.SHORT_NAME_MAX_LENGTH)))) {
+                shortNameModified.set(true);
+            }
+
+            // Restrict length of short name text field
+            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
+            }
+        });
     }
 
     @Override

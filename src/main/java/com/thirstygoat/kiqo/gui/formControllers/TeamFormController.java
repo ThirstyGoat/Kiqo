@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

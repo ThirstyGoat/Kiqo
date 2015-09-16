@@ -10,7 +10,7 @@ import com.thirstygoat.kiqo.gui.Editable;
 public class PersonDetailsPaneViewModel extends PersonViewModel implements Editable {
 
     public void commitEdit() {
-        Command command = getCommand();
+        Command command = createCommand();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }

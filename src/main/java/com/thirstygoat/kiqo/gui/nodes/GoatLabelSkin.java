@@ -44,7 +44,12 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
         mainView = createMainView();
         getChildren().add(mainView);
 
-        hideEditField();
+        editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && !doneButton.isFocused()) {
+                onCancel.get().handle(new ActionEvent());
+                showDisplay();
+            }
+        });
 
         editField.setMinHeight(5);
         editField.setMaxHeight(5);
@@ -61,16 +66,6 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
                 editView.setMaxHeight(5);
             } else {
                 showEditField();
-            }
-        });
-    }
-
-    protected void hideEditField() {
-        editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (!newValue && !doneButton.isFocused()) {
-                onCancel.get().handle(new ActionEvent());
-                showDisplay();
             }
         });
     }

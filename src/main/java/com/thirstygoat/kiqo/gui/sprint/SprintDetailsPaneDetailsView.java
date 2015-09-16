@@ -1,16 +1,21 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.fxml.*;
-import javafx.scene.control.*;
-
-import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.*;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
-import de.saxsys.mvvmfx.*;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -21,7 +26,9 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     
     @InjectViewModel
     private SprintDetailsPaneDetailsViewModel viewModel;
-    
+
+    @FXML
+    private GoatLabelTextField longNameLabel;
     @FXML
     private GoatLabelTextField teamLabel;
     @FXML
@@ -33,7 +40,7 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     @FXML
     private GoatLabelTextField releaseLabel;
     @FXML
-    private GoatLabelTextArea descriptionLabel;
+    private GoatLabelTextField descriptionLabel;
     @FXML
     private TableView<Story> storyTableView;
     @FXML
@@ -41,6 +48,9 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        DateTimeFormatter datetimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(startDateLabel, viewModel, viewModel.startDateProperty(),
                 viewModel.startDateStringProperty(), viewModel.startDateValidation());
         FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),
@@ -49,7 +59,7 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
                 StringConverters.releaseStringConverter(viewModel.organisationProperty()), viewModel.releaseValidation());
         FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(), "Add a description...");
+                viewModel.descriptionValidation());
         FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(),
                 StringConverters.teamStringConverter(viewModel.organisationProperty()), viewModel.teamValidation());
         FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());

@@ -1,14 +1,6 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
-import com.thirstygoat.kiqo.model.Status;
-import com.thirstygoat.kiqo.model.Task;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -22,6 +14,15 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.DragContainer;
+import com.thirstygoat.kiqo.gui.detailsPane.StoryDetailsPaneController;
+import com.thirstygoat.kiqo.model.Status;
+import com.thirstygoat.kiqo.model.Task;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
@@ -114,10 +115,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = StoryDetailsPaneController.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), t);
@@ -130,10 +131,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = StoryDetailsPaneController.draggingTask;
                 listView.getItems().remove(t);
             }
             event.consume();
@@ -141,10 +142,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (StoryDetailsPaneController.draggingTask != null) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = StoryDetailsPaneController.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
@@ -165,15 +166,15 @@ public class TaskListCell extends ListCell<Task> {
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            if (StoryDetailsPaneView.draggingTask != null) {
-                Task t = StoryDetailsPaneView.draggingTask;
+            if (StoryDetailsPaneController.draggingTask != null) {
+                Task t = StoryDetailsPaneController.draggingTask;
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
                 if (!listView.getItems().contains(t)) {
                     listView.getItems().add(prevIndex, t);
                 }
-                StoryDetailsPaneView.draggingTask = null;
+                StoryDetailsPaneController.draggingTask = null;
             }
             event.consume();
         };
@@ -189,7 +190,7 @@ public class TaskListCell extends ListCell<Task> {
             setCursor(Cursor.CLOSED_HAND);
             getParent().setOnDragDone(mContextDragDone);
 
-            StoryDetailsPaneView.draggingTask = task;
+            StoryDetailsPaneController.draggingTask = task;
 
             // begin drag ops
             ClipboardContent content = new ClipboardContent();

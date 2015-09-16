@@ -5,6 +5,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="detailsPane" fx:controller="com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController">
   <center>
     <StackPane fx:id="stackPane">
+        <fx:include fx:id="storyDetailsPane" source="story.fxml" />
         <fx:include fx:id="infoPane" source="info.fxml" />
     </StackPane>
   </center>

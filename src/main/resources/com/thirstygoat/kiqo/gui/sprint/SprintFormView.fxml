@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
+<?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="1.7976931348623157E308" prefHeight="463.0" prefWidth="475.0" styleClass="form" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintFormView">
    <center>
        <StackPane BorderPane.alignment="CENTER">
@@ -114,7 +115,11 @@
               <Insets bottom="10.0" />
               </VBox.margin>
               </GoatFilteredListSelectionView>
-              <Hyperlink fx:id="whyHyperlink" text="Why can't I see all stories?" GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="helperlink" />
+              <Hyperlink fx:id="whyHyperlink" text="Why can't I see all stories?" GridPane.columnIndex="0" GridPane.rowIndex="9">
+              <font>
+              <Font size="10.0" />
+              </font>
+              </Hyperlink>
               <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
               </padding>

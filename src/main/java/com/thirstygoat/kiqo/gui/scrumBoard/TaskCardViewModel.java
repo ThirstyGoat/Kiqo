@@ -14,6 +14,7 @@ import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
@@ -72,6 +73,9 @@ public class TaskCardViewModel implements ViewModel, Editable {
         if (estimateProperty().get() != task.get().estimateProperty().get()) {
             changes.add(new EditCommand<>(task.get(), "estimate", estimateProperty().get()));
         }
+        if (blockedProperty().get() != task.get().blockedProperty().get()) {
+            changes.add(new EditCommand<>(task.get(), "blocked", blockedProperty().get()));
+        }
 
         if (changes.size() > 0) {
             command = new CompoundCommand("Edit Skill", changes);
@@ -114,7 +118,11 @@ public class TaskCardViewModel implements ViewModel, Editable {
     }
 
     public FloatProperty estimateProperty() {
-        return modelWrapper.field("estimate", Task::estimateProperty);
+        return modelWrapper.field("estimate", Task::getEstimate, Task::setEstimate);
+    }
+
+    public BooleanProperty blockedProperty() {
+        return modelWrapper.field("isBlocked", Task::isBlocked, Task::setBlocked);
     }
 
     public ObservableList<Impediment> impedimentsObservableList() {

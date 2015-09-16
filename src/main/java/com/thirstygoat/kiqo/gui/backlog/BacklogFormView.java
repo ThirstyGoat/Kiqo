@@ -3,22 +3,20 @@ package com.thirstygoat.kiqo.gui.backlog;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,14 +26,12 @@ import java.util.ResourceBundle;
  */
 public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initializable {
 
-    @InjectViewModel
-    BacklogFormViewModel viewModel;
     @FXML
     private TextField longNameTextField;
     @FXML
     private TextField shortNameTextField;
     @FXML
-    private TextArea descriptionTextArea;
+    private TextField descriptionTextField;
     @FXML
     private TextField projectTextField;
     @FXML
@@ -45,23 +41,18 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
     @FXML
     private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
-    private VBox detailsVBox;
-    @FXML
-    private VBox storiesVBox;
-    @FXML
-    private Label heading;
-    @FXML
     private Button okButton;
     @FXML
     private Button cancelButton;
-    @FXML
-    private Button prevButton;
+
+    @InjectViewModel
+    BacklogFormViewModel viewModel;
 
     @Override
     public void initialize(final URL location, ResourceBundle resources) {
         longNameTextField.textProperty().bindBidirectional(viewModel.longNameProperty());
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
-        descriptionTextArea.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(),
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         productOwnerTextField.textProperty().bindBidirectional(viewModel.productOwnerProperty(),
@@ -70,58 +61,27 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
         scaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         scaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
 
+        storySelectionView.setHeader(new Label("Stories in Project:"));
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
         storySelectionView.sourceItemsProperty().bind(viewModel.eligableStories());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
         FxUtils.setTextFieldSuggester(productOwnerTextField, viewModel.productOwnerSupplier());
-        FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
 
         Platform.runLater(() -> {
             longNameTextField.requestFocus();
             setPrompts();
             attachValidators();
         });
-
-        setNextButton();
-    }
-
-    private void setNextButton() {
-        EventHandler<ActionEvent> nextEventHandler = event -> {
-            detailsVBox.setVisible(false);
-            detailsVBox.setManaged(false);
-            storiesVBox.setVisible(true);
-
-            okButton.setText("Done");
-
-            prevButton.setDisable(false);
-
-            okButton.setOnAction(event1 -> okAction());
-        };
-
-        prevButton.setOnAction(event -> {
-            detailsVBox.setVisible(true);
-            detailsVBox.setManaged(true);
-            storiesVBox.setVisible(false);
-            storiesVBox.setManaged(false);
-
-            prevButton.setDisable(true);
-
-            okButton.setText("Add Stories");
-            okButton.setOnAction(nextEventHandler);
-        });
-
-        okButton.setOnAction(nextEventHandler);
     }
 
     private void attachValidators() {
         ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
         validationVisualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
         validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
-        validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
+        validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
         validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
         validationVisualizer.initVisualization(viewModel.productOwnerValidation(), productOwnerTextField, true);
     }
@@ -129,7 +89,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
     private void setPrompts() {
         longNameTextField.setPromptText("Paddock");
         shortNameTextField.setPromptText("Must be under 20 characters and unique");
-        descriptionTextArea.setPromptText("Describe this backlog");
+        descriptionTextField.setPromptText("Describe this backlog");
     }
 
     public void okAction() {
@@ -138,9 +98,5 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
     public void cancelAction() {
         viewModel.cancelAction();
-    }
-
-    public StringProperty headingProperty() {
-        return heading.textProperty();
     }
 }

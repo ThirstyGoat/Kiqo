@@ -4,12 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.util.Utilities;
 
-import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import de.saxsys.mvvmfx.*;
@@ -21,15 +17,15 @@ import de.saxsys.mvvmfx.utils.validation.visualization.*;
  * 26/8/15
  */
 public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
+    private FormButtonHandler formButtonHandler;
+    
     @InjectViewModel
     SkillViewModel viewModel;
-    private FormButtonHandler formButtonHandler;
-    @FXML
-    private Label heading;
+    
     @FXML
     private TextField nameTextField;
     @FXML
-    private TextArea descriptionTextArea;
+    private TextField descriptionTextField;
     @FXML
     private Button okButton;
     @FXML
@@ -38,16 +34,17 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {        
         bindToViewModel();
-        
-        attachValidators();
-        Platform.runLater(nameTextField::requestFocus);
 
-        FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
+        attachValidators();
+        
+        Platform.runLater(() -> {
+            nameTextField.requestFocus();
+        });
     }
     
     private void bindToViewModel() {
         nameTextField.textProperty().bindBidirectional(viewModel.nameProperty());
-        descriptionTextArea.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
     }
 
@@ -55,12 +52,12 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         Platform.runLater(() -> { // wait for textfields to exist
             ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
             validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
-            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
+            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField, false);
         });
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
+        formButtonHandler = new FormButtonHandler(() -> viewModel.createCommand(), exitStrategy);
     }
 
     public void okAction() {
@@ -73,13 +70,5 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         if (formButtonHandler != null) {
             formButtonHandler.cancelAction();
         }
-    }
-
-    public StringProperty headingProperty() {
-        return heading.textProperty();
-    }
-
-    public void setOkButtonText(String string) {
-        okButton.setText(string);
     }
 }

@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.gui.menuBar;
 
-import java.io.IOException;
-import java.util.logging.*;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -10,20 +7,14 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.*;
 
 import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.gui.SideBarController.TabOption;
-import com.thirstygoat.kiqo.gui.formControllers.FormController;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.SideBarController;
 
 import de.saxsys.mvvmfx.ViewModel;
 
 public class MenuBarViewModel implements ViewModel {
-    private static final Logger LOGGER = Logger.getLogger(MenuBarViewModel.class.getSimpleName());
     private MainController mainController;
     private BooleanProperty mainControllerIsSet;
     private BooleanProperty changesSaved;
@@ -166,7 +157,7 @@ public class MenuBarViewModel implements ViewModel {
         this.mainController = mainController;
         mainControllerIsSet.set(true);
         changesSaved.bind(mainController.changesSavedProperty());
-        itemIsSelected.bind(Bindings.isNotNull(MainController.focusedItemProperty));
+        itemIsSelected.bind(Bindings.isNotNull(mainController.focusedItemProperty));
         listIsVisible.addListener((observable, oldValue, newValue) -> {
             mainController.setListVisible(newValue);
         });
@@ -209,29 +200,7 @@ public class MenuBarViewModel implements ViewModel {
         return toolBarIsVisible;
     }
 
-    public ObjectProperty<TabOption> selectedTab() {
+    public ObjectProperty selectedTab() {
         return selectedTab;
-    }
-
-    protected void aboutAction() {
-        final Stage stage = new Stage();
-        stage.initOwner(MainController.getPrimaryStage());
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.setResizable(false);
-        stage.setTitle("About Kiqo");
-        
-        final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MenuBarViewModel.class.getClassLoader().getResource("com/thirstygoat/kiqo/gui/menuBar/About.fxml"));
-        Pane root;
-        try {
-            root = loader.load();
-        } catch (final IOException e) {
-            MenuBarViewModel.LOGGER.log(Level.SEVERE, "Can't load fxml", e);
-            return;
-        }
-        ((AboutController) loader.getController()).setCloseAction(stage::close);
-        final Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
     }
 }

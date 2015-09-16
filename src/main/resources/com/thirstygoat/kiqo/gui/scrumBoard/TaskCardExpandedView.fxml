@@ -13,20 +13,24 @@
          <children>
             <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
                <children>
-                  <SegmentedButton fx:id="segmentedButton">
-                     <buttons>
-                        <ToggleButton fx:id="detailsToggleButton" text="Details" />
-                        <ToggleButton fx:id="loggingToggleButton" text="Logging"/>
-                     </buttons>
-                  </SegmentedButton>
+                  <GoatLabelTextField styleClass="expanded-task-header" fx:id="shortNameLabel"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <VBox alignment="TOP_RIGHT">
+                     <children>
+                        <SegmentedButton fx:id="segmentedButton">
+                           <buttons>
+                              <ToggleButton fx:id="detailsToggleButton" text="Details" />
+                              <ToggleButton fx:id="loggingToggleButton" text="Logging"/>
+                           </buttons>
+                        </SegmentedButton>
+                     </children>
+                  </VBox>
                </children>
-            </HBox>
-            <GoatLabelTextField fx:id="shortNameLabel" maxWidth="1.7976931348623157E308">
                <padding>
-                  <Insets bottom="10.0" top="10.0" />
+                  <Insets bottom="10.0" />
                </padding>
-            </GoatLabelTextField>
-            <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="NEVER">
+            </HBox>
+            <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
                   <GridPane fx:id="detailsGridPane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" maxHeight="170">
                      <children>
@@ -36,6 +40,8 @@
                         <FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>
                         <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                         <!--<Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />-->
+                        <FontAwesomeIconView fx:id="blockedIcon"  glyphSize="18" styleClass="blocked-icon" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <CheckBox fx:id="blockedCheckBox" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />
@@ -47,6 +53,7 @@
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
+
                   <GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -122,12 +121,12 @@ public class UtilitiesTest {
 
     @Test
     public void testCommaSeparatedValuesProperty() throws Exception {
-        // TODO not implemented
+
     }
 
     @Test
     public void testShortnameIsUniqueMultiple() throws Exception {
-        // TODO not implemented
+
     }
 
     @Test
@@ -154,42 +153,8 @@ public class UtilitiesTest {
     }
 
     @Test
-    public void testSetNameSuggester_basic() throws Exception {
-        StringProperty longName = new SimpleStringProperty("");
-        StringProperty shortName = new SimpleStringProperty("");
-                
-        Utilities.setNameSuggester(longName, shortName);
+    public void testSetNameSuggester() throws Exception {
 
-        Assert.assertEquals("config does not affect longName value", "", longName.get());
-        Assert.assertEquals("config does not affect shortName value", "", shortName.get());
-        
-        longName.set("name");
-        Assert.assertEquals("basic name suggestion is propagated", longName.get(), shortName.get());
-        
-        longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH + " characters..................");
-        Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH, shortName.get().length());
-        
-        longName.set("shorter name again");
-        Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
-    }
-    
-    @Test
-    public void testSetNameSuggester_disableEnable() throws Exception {
-        StringProperty longName = new SimpleStringProperty("");
-        StringProperty shortName = new SimpleStringProperty("");
-                
-        Utilities.setNameSuggester(longName, shortName);
-
-        // direct short name edit which does not match long name will disable suggester
-        shortName.set("direct shortName edit");
-        Assert.assertNotEquals("shortName is not propagated to longName", longName.get(), shortName.get());
-        longName.set("longName edit");
-        Assert.assertNotEquals("direct non-matching edit disconnects propagation", longName.get(), shortName.get());
-        
-        // direct short name edit which matches long name will re-enable suggester
-        shortName.set("longName edit"); // re-match longName
-        longName.set("new name should copy");
-        Assert.assertEquals("direct matching edit reconnects propagation", longName.get(), shortName.get());
     }
 
     @Test

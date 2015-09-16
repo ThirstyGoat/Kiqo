@@ -62,11 +62,7 @@
         <RadioMenuItem mnemonicParsing="false" text="Skills" toggleGroup="$selectedTab" onAction="#skillsTab" fx:id="listShowSkillsMenuItem" />
       </items>
     </Menu>
-	<Menu mnemonicParsing="false" text="Help">
-      <items>
-        <MenuItem mnemonicParsing="false" text="About" onAction="#about" />
-      </items>
-    </Menu>
+
   </menus>
   </MenuBar>
 </children>

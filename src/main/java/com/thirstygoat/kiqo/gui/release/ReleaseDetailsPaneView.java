@@ -33,6 +33,5 @@ public class ReleaseDetailsPaneView implements FxmlView<ReleaseDetailsPaneViewMo
                 viewModel.projectValidation());
         FxUtils.setTextFieldSuggester(projectTextField.getEditField(), viewModel.projectsSupplier());
         FxUtils.initGoatLabel(releaseDatePicker, viewModel, viewModel.dateProperty(), viewModel.dateStringProperty(), viewModel.dateValidation());
-        FxUtils.initGoatLabel(descriptionTextArea, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 }
