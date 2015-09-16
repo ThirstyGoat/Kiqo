@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import com.thirstygoat.kiqo.gui.nodes.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView">
   <children>
@@ -22,7 +23,7 @@
             <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <ListView fx:id="teamMemberList" />
+	        <FilteredListBiControl fx:id="teamMemberList" />
 	        <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

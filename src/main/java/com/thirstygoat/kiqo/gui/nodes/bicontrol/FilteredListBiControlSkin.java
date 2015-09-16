@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.ListProperty;
 import javafx.event.*;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 
 public class FilteredListBiControlSkin<S extends Item> extends ListBiControlSkin<S> {
     private Runnable onCommit;
@@ -13,13 +14,15 @@ public class FilteredListBiControlSkin<S extends Item> extends ListBiControlSkin
 
     public FilteredListBiControlSkin(FilteredListBiControl<S> listBiControl, 
             Runnable onCommit, Runnable onCancel, 
-            ListProperty<S> selectedList, ListProperty<S> eligibleList) {
+            ListProperty<S> selectedList, ListProperty<S> eligibleList,
+            Callback<ListView<S>, ListCell<S>> displayCellFactory) {
         super(listBiControl);
         this.onCommit = onCommit;
         this.onCancel = onCancel;
         editView.setTargetItems(selectedList);
         editView.setSourceItems(eligibleList);
         displayView.setItems(selectedList);
+        displayView.setCellFactory(displayCellFactory);
     }
     
     @Override
