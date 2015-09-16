@@ -25,6 +25,8 @@ import com.thirstygoat.kiqo.gui.skill.SkillFormView;
 import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
 import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
+import com.thirstygoat.kiqo.gui.story.StoryFormView;
+import com.thirstygoat.kiqo.gui.story.StoryFormViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
@@ -977,6 +979,16 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Release" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
+            }  else if (type.equals(Story.class.getSimpleName())) {
+                    ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
+                    // viewModel
+                    final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    // view
+                    viewModel.setExitStrategy(() -> stage.close());
+                    stage.setScene(new Scene(storyFormTuple.getView()));
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
