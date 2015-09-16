@@ -278,11 +278,25 @@ public final class FxUtils {
     public static <T extends Item> void initGoatLabel(FilteredListBiControl<T> listBiControl,
                                                       Editable viewModel, ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
+        Callback<ListView<T>, ListCell<T>> cellFactory = view -> {
+            return new ListCell<T>() {
+                @Override
+                protected void updateItem(T item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null && !empty) {
+                        textProperty().bind(item.shortNameProperty());
+                    } else {
+                        textProperty().unbind();
+                    }
+                }
+            };
+        };
         listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl, 
                 viewModel::commitEdit, 
                 viewModel::cancelEdit,
                 targetList,
-                sourceList));
+                sourceList,
+                cellFactory));
     }
 <<<<<<< Upstream, based on origin/master
 

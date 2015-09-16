@@ -13,7 +13,6 @@ import com.thirstygoat.kiqo.model.Item;
  * @param <S> type of list elements
  */
 public abstract class ListBiControlSkin<S extends Item> extends BiControlSkin<ListView<S>, GoatFilteredListSelectionView<S>, ObservableList<S>> {
-
     protected ListBiControlSkin(FilteredListBiControl<S> listBiControl) {
         super(listBiControl);
         editView.itemsProperty().set(listBiControl.getData()); // TODO setItems?
@@ -23,19 +22,6 @@ public abstract class ListBiControlSkin<S extends Item> extends BiControlSkin<Li
     @Override
     protected ListView<S> makeDisplayView() {
         ListView<S> listView = new ListView<S>();
-        listView.setCellFactory(view -> {
-            return new ListCell<S>() {
-                @Override
-                protected void updateItem(S item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null && !empty) {
-                        textProperty().bind(item.shortNameProperty());
-                    } else {
-                        textProperty().unbind();
-                    }
-                }
-            };
-        });
         return listView;
     }
     

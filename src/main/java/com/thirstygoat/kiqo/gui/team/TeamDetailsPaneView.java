@@ -1,21 +1,17 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
-import com.thirstygoat.kiqo.util.FxUtils;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.viewlist.CachedViewModelCellFactory;
-import de.saxsys.mvvmfx.utils.viewlist.ViewListCellFactory;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
+import javafx.collections.ListChangeListener;
+import javafx.fxml.*;
+
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
+import com.thirstygoat.kiqo.util.FxUtils;
+
+import de.saxsys.mvvmfx.*;
+import de.saxsys.mvvmfx.utils.viewlist.*;
 
 public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, Initializable {
     @FXML
@@ -23,7 +19,7 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     @FXML
     private GoatLabelTextArea descriptionLabel;
     @FXML
-    private ListView<TeamMemberListItemViewModel> teamMemberList;
+    private FilteredListBiControl<TeamMemberListItemViewModel> teamMemberList;
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
 
@@ -38,7 +34,7 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
                         viewModel.descriptionValidation(), "No Description");
 
         teamMemberList.itemsProperty().bind(viewModel.teamMemberViewModels());
-        ViewListCellFactory < TeamMemberListItemViewModel > cellFactory =
+        ViewListCellFactory<TeamMemberListItemViewModel> cellFactory =
                         CachedViewModelCellFactory.createForFxmlView(TeamMemberListItemView.class);
         teamMemberList.setCellFactory(cellFactory);
 
