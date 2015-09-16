@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
+import javafx.collections.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.util.*;
@@ -14,7 +14,6 @@ import javafx.util.converter.NumberStringConverter;
 
 import org.controlsfx.control.textfield.*;
 
-import com.thirstygoat.kiqo.command.UpdateListCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
@@ -138,6 +137,14 @@ public final class FxUtils {
         goatLabel.restrictToNumericInput(true);
         goatLabel.validationStatus().set(validationStatus);
     }
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel,
+            IntegerProperty intProperty, ValidationStatus validationStatus) {
+            initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bind(intProperty.asString());
+        goatLabel.getEditField().textProperty().bindBidirectional(intProperty, new NumberStringConverter());
+        goatLabel.restrictToNumericInput(true);
+        goatLabel.validationStatus().set(validationStatus);
+    }
     
     /**
      * Configures a GoatLabel for an ObjectProperty using a StringConverter.
@@ -249,7 +256,6 @@ public final class FxUtils {
                                                       Editable viewModel,
                                                       ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
-        
         Callback<ListView<T>, ListCell<T>> displayCellFactory = listView -> {
             return new ListCell<T>() {
                 @Override
@@ -263,7 +269,15 @@ public final class FxUtils {
                 }
             };
         };
+        initGoatLabel(listBiControl, viewModel, targetList, sourceList, displayCellFactory);
+    }
+    
+    public static <T> void initGoatLabel(FilteredListBiControl<T> listBiControl,
+            Editable viewModel,
+            ListProperty<T> targetList,
+            ObservableList<T> sourceList,
+            Callback<ListView<T>, ListCell<T>> displayCellFactory) {        
         listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl,
-                viewModel::commitEdit, viewModel::cancelEdit, targetList, sourceList, displayCellFactory ));
+                viewModel::commitEdit, viewModel::cancelEdit, targetList, sourceList, displayCellFactory));
     }
 }

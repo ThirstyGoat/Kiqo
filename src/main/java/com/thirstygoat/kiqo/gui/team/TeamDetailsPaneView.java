@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.*;
+import javafx.scene.control.*;
+import javafx.util.Callback;
 
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
@@ -31,12 +33,9 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     public void initialize(URL location, ResourceBundle resources) {
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                        viewModel.descriptionValidation(), "No Description");
-
-        teamMemberList.itemsProperty().bind(viewModel.teamMemberViewModels());
-        ViewListCellFactory<TeamMemberListItemViewModel> cellFactory =
-                        CachedViewModelCellFactory.createForFxmlView(TeamMemberListItemView.class);
-        teamMemberList.setCellFactory(cellFactory);
+                        viewModel.descriptionValidation(), "Add a description...");
+        final Callback<ListView<TeamMemberListItemViewModel>, ListCell<TeamMemberListItemViewModel>> createForFxmlView = CachedViewModelCellFactory.createForFxmlView(TeamMemberListItemView.class);
+        FxUtils.initGoatLabel(teamMemberList, viewModel, viewModel.teamMemberViewModels(), viewModel.eligibleTeamMembers(), createForFxmlView);
 
         // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
         // a listener is setup to set the items only when allocations is not null.

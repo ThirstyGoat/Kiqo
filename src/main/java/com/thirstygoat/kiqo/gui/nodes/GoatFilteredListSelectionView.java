@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class GoatFilteredListSelectionView<T extends Item> extends ListView<T> { // TODO this doesn't actually act like a listview
+public class GoatFilteredListSelectionView<T> extends ListView<T> { // TODO this doesn't actually act like a listview
     private VBox mainView;
     private final GoatFilteredListSelectionViewSkin skin;
     private final ListProperty<T> sourceItems;
@@ -120,7 +120,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends ListView<T> {
 
             String regex = Pattern.quote(newValue.toLowerCase());
             allItems.forEach(t -> {
-                if (t.getShortName().toLowerCase().matches(".*" + regex + ".*")) {
+                if (t.toString().toLowerCase().matches(".*" + regex + ".*")) { // TODO toString
                     shownItems.add(t);
                 }
             });
@@ -211,7 +211,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends ListView<T> {
             } else if (newValue == SHOWING.Unselected) {
                 allItems.addAll(sourceItems);
             }
-            allItems.sort((i1, i2) -> i1.getShortName().compareTo(i2.getShortName()));
+            allItems.sort((i1, i2) -> i1.toString().compareTo(i2.toString())); //TODO
             // Trigger refresh of shown items by firing change event on the filter text field
             String value = textField.getText();
             textField.setText(value + " ");
@@ -238,7 +238,7 @@ public class GoatFilteredListSelectionView<T extends Item> extends ListView<T> {
     private void setDefaultCellFactory() {
         Callback<T, Node> defaultCellFactory = param -> {
             Label label = new Label();
-            label.textProperty().bind(param.shortNameProperty());
+            label.textProperty().bind(Bindings.createStringBinding(param::toString)); //TODO toString stringProperty
             return label;
         };
 

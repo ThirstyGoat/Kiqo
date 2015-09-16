@@ -1,20 +1,20 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import com.thirstygoat.kiqo.model.Item;
-
 import javafx.beans.property.ListProperty;
-import javafx.event.*;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
-public class FilteredListBiControlSkin<S extends Item> extends ListBiControlSkin<S> {
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
+
+public class FilteredListBiControlSkin<S> extends ListBiControlSkin<S> {
     private Runnable onCommit;
     private Runnable onCancel; // TODO
 
     public FilteredListBiControlSkin(FilteredListBiControl<S> listBiControl, 
             Runnable onCommit, Runnable onCancel, 
-            ListProperty<S> selectedList, ListProperty<S> eligibleList,
+            ListProperty<S> selectedList, ObservableList<S> eligibleList,
             Callback<ListView<S>, ListCell<S>> displayCellFactory) {
         super(listBiControl);
         this.onCommit = onCommit;

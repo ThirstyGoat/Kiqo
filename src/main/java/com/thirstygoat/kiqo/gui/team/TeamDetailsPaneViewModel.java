@@ -1,17 +1,14 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.MainController;
-import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-
 import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.beans.property.*;
+import javafx.collections.*;
+
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.gui.*;
+import com.thirstygoat.kiqo.util.GoatCollectors;
 
 public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable {
 
@@ -47,5 +44,18 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
     @Override
     public void cancelEdit() {
         reload();
+    }
+
+    public ObservableList<TeamMemberListItemViewModel> eligibleTeamMembers() {
+        final ObservableList<TeamMemberListItemViewModel> list;
+        if (organisationProperty().get() != null) {
+            list = organisationProperty().get().getPeople().stream()
+                    .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
+                    .map(TeamMemberListItemViewModel::new).collect(GoatCollectors.toObservableList());
+        } else {
+            list = FXCollections.observableArrayList();
+        }
+        return list;
+        
     }
 }
