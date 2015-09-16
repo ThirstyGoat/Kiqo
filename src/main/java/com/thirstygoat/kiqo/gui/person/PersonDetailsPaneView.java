@@ -31,7 +31,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
     @FXML
     private GoatLabelTextField departmentLabel;
     @FXML
-    private ListBiControl<Skill> skillsLabel;
+    private FilteredListBiControl<Skill> skillsLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 

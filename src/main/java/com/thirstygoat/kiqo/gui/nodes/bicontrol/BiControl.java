@@ -16,8 +16,4 @@ import javafx.scene.control.Control;
 public abstract class BiControl<D extends Control, E extends Control, T> extends Control {
     public abstract T getData();
     public abstract void setData(T data);
-   
-    @Override
-    public abstract BiControlSkin<D, E, T> createDefaultSkin();
-
 }

@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -15,12 +16,88 @@ import de.jensd.fx.glyphs.fontawesome.*;
  * @param <T> type of data to display
  */
 public abstract class BiControlSkin<D extends Control, E extends Control, T> extends SkinBase<BiControl<D, E, T>> {
-    private static class EditButton extends Button {
+    private final EditButton editButton;
+    private final Button doneButton;
+    protected final E editView;
+    protected final D displayView;
+
+    protected BiControlSkin(BiControl<D, E, T> control) {
+        super(control);
+        
+        editButton = makeEditButton();
+        doneButton = makeDoneButton();
+        editView = makeEditView();
+        displayView = makeDisplayView();
+        Parent parent = new HBox(new StackPane(editView, displayView), new StackPane(editButton, doneButton));
+
+        editButton.setVisible(false);
+        displayView.setVisible(true);
+        editView.setVisible(false);
+        doneButton.setVisible(false);
+        
+        /* interactions */
+        // show/hide pencil
+        parent.hoverProperty().addListener(editButton.getFadeAction());
+        editButton.visibleProperty().bind(parent.hoverProperty());
+        
+        editButton.setOnAction(this::onEditAction);
+        doneButton.setOnAction(this::onDoneAction);
+        editView.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && !doneButton.isFocused()) {
+                onCancelAction(new ActionEvent());
+            }
+        });
+        
+        getChildren().add(parent);
+    }
+
+    protected void showEditView() {
+        displayView.setVisible(false);
+        editView.setVisible(true);
+        doneButton.setVisible(true);
+    }
+    
+    protected void showDisplayView() {
+        displayView.setVisible(true);
+        editView.setVisible(false);
+        doneButton.setVisible(false);
+    }
+
+    protected EditButton makeEditButton() {
+        return new EditButton();
+    }
+    
+    protected Button makeDoneButton() {
+        Button button = new Button();
+        FontAwesomeIconView doneIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
+        doneIcon.setStyle("-fx-fill: green");
+        button.setGraphic(doneIcon);
+        return button;
+    }
+
+    protected abstract E makeEditView();
+
+    protected abstract D makeDisplayView();
+
+    protected void onEditAction(@SuppressWarnings("unused") ActionEvent event) {
+        showEditView();
+    }
+
+    protected void onDoneAction(@SuppressWarnings("unused") ActionEvent event) {
+        showDisplayView();
+    }
+    
+    protected void onCancelAction(@SuppressWarnings("unused") ActionEvent event) {
+        showDisplayView();
+    }
+    
+
+    static class EditButton extends Button {
         final FadeTransition fade;
         public EditButton() {
             super();
             FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
-
+    
             pencilIcon.setStyle("-fx-fill: grey");
             setGraphic(pencilIcon);
             setStyle("-fx-background-color: transparent;" +
@@ -32,7 +109,7 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
             fade.setFromValue(0);
             fade.setToValue(1);
         }
-
+    
         protected ChangeListener<Boolean> getFadeAction() {
             return (observable, oldValue, newValue) -> {
                 if (newValue) {
@@ -44,62 +121,5 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
                 }
             };
         }
-    }
-
-    private final EditButton editButton;
-    private final Button doneButton;
-    protected final E editView;
-    protected final D displayView;
-
-    protected BiControlSkin(BiControl<D, E, T> control) {
-        super(control);
-        editButton = makeEditButton();
-        doneButton = makeDoneButton();
-        editView = makeEditView();
-        displayView = makeDisplayView();
-        Parent parent = new HBox(new StackPane(editView, displayView), new StackPane(editButton, doneButton));
-
-        showDisplayMode();
-        /* interactions */
-        // show/hide pencil
-        parent.hoverProperty().addListener(editButton.getFadeAction());
-        editButton.visibleProperty().bind(parent.hoverProperty());
-        
-        editButton.setOnAction(event -> {
-            showEditMode();
-        });
-        doneButton.setOnAction(event -> {
-            showDisplayMode();
-        });
-        
-        getChildren().add(parent);
-    }
-
-    private void showEditMode() {
-        displayView.setVisible(false);
-        editView.setVisible(true);
-        doneButton.setVisible(true);
-    }
-    
-    private void showDisplayMode() {
-        displayView.setVisible(true);
-        editView.setVisible(false);
-        doneButton.setVisible(false);
-    }
-
-    protected abstract E makeEditView();
-    
-    protected abstract D makeDisplayView();
-
-    private static EditButton makeEditButton() {
-        return new EditButton();
-    }
-    
-    private static Button makeDoneButton() {
-        Button button = new Button();
-        FontAwesomeIconView doneIcon = new FontAwesomeIconView(FontAwesomeIcon.CHECK);
-        doneIcon.setStyle("-fx-fill: green");
-        button.setGraphic(doneIcon);
-        return button;
     }
 }

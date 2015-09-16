@@ -1,11 +1,20 @@
 package com.thirstygoat.kiqo.util;
 
+<<<<<<< Upstream, based on origin/master
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+=======
+import java.time.LocalDate;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+>>>>>>> eb8b0f4 Implemented databinding and button actions for ListBiControl.
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+<<<<<<< Upstream, based on origin/master
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -24,6 +33,22 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+=======
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.util.*;
+import javafx.util.converter.NumberStringConverter;
+
+import org.controlsfx.control.textfield.*;
+
+import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
+import com.thirstygoat.kiqo.model.Item;
+
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+>>>>>>> eb8b0f4 Implemented databinding and button actions for ListBiControl.
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
@@ -250,13 +275,14 @@ public final class FxUtils {
 =======
     }
 
-    public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
+    public static <T extends Item> void initGoatLabel(FilteredListBiControl<T> listBiControl,
                                                       Editable viewModel, ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
-        initGoatLabelActions(listBiControl, viewModel);
-        listBiControl.targetItemsProperty().bindBidirectional(targetList);
-        listBiControl.sourceItemsProperty().bind(sourceList);
-        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl));
+        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl, 
+                viewModel::commitEdit, 
+                viewModel::cancelEdit,
+                targetList,
+                sourceList));
     }
 
     public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
