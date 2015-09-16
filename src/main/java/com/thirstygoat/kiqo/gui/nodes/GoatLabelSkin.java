@@ -67,7 +67,6 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
 
     protected void hideEditField() {
         editField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
             if (!newValue && !doneButton.isFocused()) {
                 onCancel.get().handle(new ActionEvent());
                 showDisplay();
