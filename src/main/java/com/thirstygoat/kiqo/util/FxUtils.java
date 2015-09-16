@@ -284,6 +284,7 @@ public final class FxUtils {
                 targetList,
                 sourceList));
     }
+<<<<<<< Upstream, based on origin/master
 
     public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
                                                       Editable viewModel, ListProperty<T> targetList,
@@ -293,4 +294,6 @@ public final class FxUtils {
         listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl));
 >>>>>>> 6a246e9 Created FilteredListBiControl and its inheritance hierarchy. 
     }
+=======
+>>>>>>> a1d40a0 Tidy up after rebase.
 }
