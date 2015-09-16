@@ -256,28 +256,20 @@ public final class FxUtils {
                                                       Editable viewModel,
                                                       ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
-        Callback<ListView<T>, ListCell<T>> displayCellFactory = listView -> {
-            return new ListCell<T>() {
-                @Override
-                protected void updateItem(T item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null && !empty) {
-                        textProperty().bind(item.shortNameProperty());
-                    } else {
-                        textProperty().unbind();
-                    }
-                }
-            };
-        };
-        initGoatLabel(listBiControl, viewModel, targetList, sourceList, displayCellFactory);
+        initGoatLabel(listBiControl, viewModel, targetList, sourceList, null, Item::shortNameProperty);
     }
     
     public static <T> void initGoatLabel(FilteredListBiControl<T> listBiControl,
-            Editable viewModel,
-            ListProperty<T> targetList,
-            ObservableList<T> sourceList,
-            Callback<ListView<T>, ListCell<T>> displayCellFactory) {        
+                Editable viewModel,
+                ListProperty<T> targetList,
+                ObservableList<T> sourceList,
+                Callback<ListView<T>, ListCell<T>> displayCellFactory, 
+                Callback<T, StringProperty> stringPropertyCallback) {
+        listBiControl.selectedItems().bindBidirectional(targetList);
+        listBiControl.allItems().set(sourceList); // TODO check this works
         listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl,
-                viewModel::commitEdit, viewModel::cancelEdit, targetList, sourceList, displayCellFactory));
+                viewModel::commitEdit, viewModel::cancelEdit, 
+                displayCellFactory,
+                stringPropertyCallback));
     }
 }

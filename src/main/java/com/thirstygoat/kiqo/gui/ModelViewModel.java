@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public abstract class ModelViewModel<T extends Item> implements ViewModel, Loadable<T> {
     protected static final Logger LOGGER = Logger.getLogger(ModelViewModel.class.getName());
     protected final GoatModelWrapper<T> modelWrapper = new GoatModelWrapper<>();
-    private final ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>(null);
 
     /**
      * @return A method reference to the no-args constructor of T. For example, if T is an instance of Backlog then you

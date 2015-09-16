@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -28,8 +29,13 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         doneButton = makeDoneButton();
         editView = makeEditView();
         displayView = makeDisplayView();
-        Parent parent = new HBox(new StackPane(editView, displayView), new StackPane(editButton, doneButton));
-
+        final StackPane viewsPane = new StackPane(editView, displayView);
+        final StackPane buttonsPane = new StackPane(editButton, doneButton);
+        HBox parent = new HBox(viewsPane, buttonsPane);
+        parent.setAlignment(Pos.TOP_LEFT);
+        parent.setStyle("-fx-background-color: blue"); //TODO
+        HBox.setHgrow(viewsPane, Priority.ALWAYS);
+        
         editButton.setVisible(false);
         displayView.setVisible(true);
         editView.setVisible(false);

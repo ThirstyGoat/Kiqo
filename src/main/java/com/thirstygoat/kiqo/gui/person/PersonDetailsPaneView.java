@@ -49,5 +49,4 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
         FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
-
 }
