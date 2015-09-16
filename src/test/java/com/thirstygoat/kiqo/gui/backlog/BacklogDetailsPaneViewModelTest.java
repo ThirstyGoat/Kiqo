@@ -1,12 +1,15 @@
 package com.thirstygoat.kiqo.gui.backlog;
 
 import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.persistence.PersistenceManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,5 +74,27 @@ public class BacklogDetailsPaneViewModelTest {
         backlog.observableStories().remove(unreadyStory);
         Assert.assertTrue("Story was removed from model, so details pane should have updated",
                 viewModel.stories().isEmpty());
+    }
+
+
+    /**
+     * Checks that updating the scale of a backlog updates the scale of its stories
+     */
+    @Test
+    public void testUpdateBacklogScaleUpdatesStoriesScale() throws FileNotFoundException {
+
+        Organisation o = PersistenceManager.loadOrganisation(new File(getClass().getResource("/save_files/backlog1.json").getFile()));
+        backlog = o.getProjects().get(0).getBacklogs().get(0);
+        BacklogDetailsPaneViewModel backlogViewModel = new BacklogDetailsPaneViewModel();
+        backlogViewModel.load(backlog, o);
+
+        for (Story story : backlog.getStories()) {
+            Assert.assertEquals("Story scale was initialised to Fib", story.getScale(), Scale.FIBONACCI);
+        }
+        backlogViewModel.scaleProperty().setValue(Scale.DOG_BREEDS);
+        backlogViewModel.commitEdit();
+        for (Story story : backlog.getStories()) {
+            Assert.assertEquals("Story scale should be same as backlog scale", backlog.getScale(), story.getScale());
+        }
     }
 }
