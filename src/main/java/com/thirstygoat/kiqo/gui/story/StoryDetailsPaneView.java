@@ -341,8 +341,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                         viewModel.creatorValidation());
 
         FxUtils.setTextFieldSuggester(creatorLabel.getEditField(), viewModel.creatorSupplier());
-        FxUtils.initGoatLabel(priorityLabel, viewModel, viewModel.priorityProperty(), viewModel.priorityValidation(),
-                new NumberStringConverter());
+        FxUtils.initGoatLabel(priorityLabel, viewModel, viewModel.priorityProperty(), viewModel.priorityValidation());
     }
 
     private void initSlider() {

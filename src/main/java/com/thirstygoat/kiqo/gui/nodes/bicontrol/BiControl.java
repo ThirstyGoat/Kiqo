@@ -12,6 +12,8 @@ import javafx.scene.control.Control;
  *
  * @param <E> The control to use for editing data. For example {@link com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView}
  *           or {@link javafx.scene.control.TextField}.
+ *           
+ * @param <T> The type of data displayed in the 
  */
 public abstract class BiControl<D extends Control, E extends Control, T> extends Control {
     public abstract T getData();
