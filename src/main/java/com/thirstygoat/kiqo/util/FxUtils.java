@@ -246,5 +246,25 @@ public final class FxUtils {
         goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
         goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
         goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
+<<<<<<< Upstream, based on origin/master
+=======
+    }
+
+    public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
+                                                      Editable viewModel, ListProperty<T> targetList,
+                                                      ListProperty<T> sourceList) {
+        initGoatLabelActions(listBiControl, viewModel);
+        listBiControl.targetItemsProperty().bindBidirectional(targetList);
+        listBiControl.sourceItemsProperty().bind(sourceList);
+        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl));
+    }
+
+    public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
+                                                      Editable viewModel, ListProperty<T> targetList,
+                                                      ListProperty<T> sourceList) {
+        //listBiControl.targetItemsProperty().bindBidirectional(targetList);
+        //listBiControl.sourceItemsProperty().bind(sourceList);
+        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl));
+>>>>>>> 6a246e9 Created FilteredListBiControl and its inheritance hierarchy. 
     }
 }
