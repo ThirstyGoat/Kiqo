@@ -1,26 +1,31 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
+public class TeamViewModel extends ModelViewModel<Team> {
 
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.gui.Loadable;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
-
-public class TeamViewModel implements Loadable<Team>, ViewModel {
-    private ModelWrapper<Team> modelWrapper;
-    private ObjectProperty<Team> team;
-    private ObjectProperty<Organisation> organisation;
-    
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private ObservableRuleBasedValidator productOwnerValidator;
@@ -30,18 +35,26 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     private CompositeValidator allValidator;
 
     public TeamViewModel() {
-        team = new SimpleObjectProperty<>(null);
-        organisation = new SimpleObjectProperty<>(null);
-        modelWrapper = new GoatModelWrapper<>();
         createValidators();
+    }
+
+    @Override
+    protected Supplier<Team> modelSupplier() {
+        return Team::new;
+    }
+
+    @Override
+    protected void afterLoad() {
+        // Do nothing
     }
     
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
-                if (organisation.get() != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), team.get(), organisation.get().getTeams());
+                if (organisationProperty().get() != null) {
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(),
+                                    organisationProperty().get().getTeams());
                 } else {
                     return true; // no project means this isn't for real yet.
                 }
@@ -63,40 +76,31 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
         allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, productOwnerValidator, scrumMasterValidator, teamMembersValidator, devTeamValidator);
     }
 
-    protected Command createCommand() {
+    @Override
+    @SuppressWarnings("unchecked")
+    public Command getCommand() {
         // edit command
         final ArrayList<Command> changes = new ArrayList<>();
+        super.addEditCommands.accept(changes);
 
-        if (!shortNameProperty().get().equals(team.get().getShortName())) {
-            changes.add(new EditCommand<>(team.get(), "shortName", shortNameProperty().get()));
-        }
-        if (!descriptionProperty().get().equals(team.get().getDescription())) {
-            changes.add(new EditCommand<>(team.get(), "description", descriptionProperty().get()));
-        }
-        if (!(teamMembersProperty().get().containsAll(team.get().getTeamMembers()) && team.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
-            changes.add(new EditCommand<>(team.get(), "teamMembers", teamMembersProperty().get()));
+        if (!(teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())
+                        && modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
+            changes.add(new EditCommand<>(modelWrapper.get(), "teamMembers", teamMembersProperty().get()));
         }
 
-        if (productOwnerProperty().get() != team.get().getProductOwner()) {
-            changes.add(new EditCommand<>(team.get(), "productOwner", productOwnerProperty().get()));
-        }
-
-        if (scrumMasterProperty().get() != team.get().getScrumMaster()) {
-            changes.add(new EditCommand<>(team.get(), "scrumMaster", scrumMasterProperty().get()));
-        }
-
-        if (!(devTeamProperty().get().containsAll(team.get().getDevTeam()) && team.get().getDevTeam().containsAll(devTeamProperty().get()))) {
-            changes.add(new EditCommand<>(team.get(), "devTeam", devTeamProperty().get()));
+        if (!(devTeamProperty().get().containsAll(modelWrapper.get().getDevTeam())
+                        && modelWrapper.get().getDevTeam().containsAll(devTeamProperty().get()))) {
+            changes.add(new EditCommand<>(modelWrapper.get(), "devTeam", devTeamProperty().get()));
         }
 
         final ArrayList<Person> newMembers = new ArrayList<>(teamMembersProperty().get());
-        newMembers.removeAll(team.get().getTeamMembers());
-        final ArrayList<Person> oldMembers = new ArrayList<>(team.get().getTeamMembers());
+        newMembers.removeAll(modelWrapper.get().getTeamMembers());
+        final ArrayList<Person> oldMembers = new ArrayList<>(modelWrapper.get().getTeamMembers());
         oldMembers.removeAll(teamMembersProperty().get());
 
         // Loop through all the new members and add a command to set their team
         // Set the person's team field to this team
-        changes.addAll(newMembers.stream().map(person -> new EditCommand<>(person, "team", team))
+        changes.addAll(newMembers.stream().map(person -> new EditCommand<>(person, "team", modelWrapper.get()))
                 .collect(Collectors.toList()));
 
         // Loop through all the old members and add a command to remove their team
@@ -105,18 +109,6 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
                 .collect(Collectors.toList()));
 
         return new CompoundCommand("Edit Team", changes);
-    }
-    
-    protected void reload() {
-        modelWrapper.reload();
-    }
-
-    @Override
-    public void load(Team team, Organisation organisation) {
-        this.team.set(team);
-        this.organisation.set(organisation);
-        modelWrapper.set(team != null ? team : new Team());
-        modelWrapper.reload();
     }
 
     protected Supplier<List<Person>> productOwnerSupplier() {
@@ -176,10 +168,6 @@ public class TeamViewModel implements Loadable<Team>, ViewModel {
     protected ListProperty<Allocation> allocations() {
         return modelWrapper.field("allocations", Team::getAllocations, Team::setAllocations, new ArrayList<Allocation>());
     }
-    
-    protected ObjectProperty<Organisation> organisationProperty() {
-        return organisation;
-    } 
     
     protected ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();
