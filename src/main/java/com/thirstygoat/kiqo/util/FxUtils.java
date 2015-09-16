@@ -1,40 +1,12 @@
 package com.thirstygoat.kiqo.util;
 
-<<<<<<< Upstream, based on origin/master
-import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.model.Item;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-=======
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
->>>>>>> eb8b0f4 Implemented databinding and button actions for ListBiControl.
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-<<<<<<< Upstream, based on origin/master
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import javafx.util.converter.NumberStringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-=======
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.util.*;
@@ -42,13 +14,13 @@ import javafx.util.converter.NumberStringConverter;
 
 import org.controlsfx.control.textfield.*;
 
+import com.thirstygoat.kiqo.command.UpdateListCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
 import com.thirstygoat.kiqo.model.Item;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
->>>>>>> eb8b0f4 Implemented databinding and button actions for ListBiControl.
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
@@ -271,14 +243,14 @@ public final class FxUtils {
         goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
         goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
         goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
-<<<<<<< Upstream, based on origin/master
-=======
     }
 
     public static <T extends Item> void initGoatLabel(FilteredListBiControl<T> listBiControl,
-                                                      Editable viewModel, ListProperty<T> targetList,
+                                                      Editable viewModel,
+                                                      ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
-        Callback<ListView<T>, ListCell<T>> cellFactory = view -> {
+        
+        Callback<ListView<T>, ListCell<T>> displayCellFactory = listView -> {
             return new ListCell<T>() {
                 @Override
                 protected void updateItem(T item, boolean empty) {
@@ -291,23 +263,7 @@ public final class FxUtils {
                 }
             };
         };
-        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl, 
-                viewModel::commitEdit, 
-                viewModel::cancelEdit,
-                targetList,
-                sourceList,
-                cellFactory));
+        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl,
+                viewModel::commitEdit, viewModel::cancelEdit, targetList, sourceList, displayCellFactory ));
     }
-<<<<<<< Upstream, based on origin/master
-
-    public static <T extends Item> void initGoatLabel(ListBiControl<T> listBiControl,
-                                                      Editable viewModel, ListProperty<T> targetList,
-                                                      ListProperty<T> sourceList) {
-        //listBiControl.targetItemsProperty().bindBidirectional(targetList);
-        //listBiControl.sourceItemsProperty().bind(sourceList);
-        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl));
->>>>>>> 6a246e9 Created FilteredListBiControl and its inheritance hierarchy. 
-    }
-=======
->>>>>>> a1d40a0 Tidy up after rebase.
 }
