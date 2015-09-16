@@ -6,7 +6,7 @@
 <center>
     <StackPane>
         <children>
-            <fx:include source="info.fxml" />
+            <fx:include fx:id="infoPane" source="info.fxml" />
             <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS"/>
         </children>
     </StackPane>

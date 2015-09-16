@@ -23,6 +23,7 @@ import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
 import com.thirstygoat.kiqo.model.Backlog;
 import com.thirstygoat.kiqo.model.Release;
 import com.thirstygoat.kiqo.model.Skill;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
@@ -30,8 +31,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
@@ -49,6 +49,8 @@ public class MainDetailsPaneController implements Initializable {
     @FXML
     private BorderPane detailsPane;
     @FXML
+    private AnchorPane infoPane;
+    @FXML
     private TabPane tabPane;
 
     private MainController mainController;
@@ -61,10 +63,9 @@ public class MainDetailsPaneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         optimizedDetailsPane = new OptimizedDetailsPane();
 
-        // Listen for changes in the number of tabs shown so we can display the info screen when necessary
-        tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
-            tabPane.setVisible(!tabPane.getTabs().isEmpty());
-        });
+        tabPane.visibleProperty().bind(Bindings.isNotEmpty(tabPane.getTabs()));
+        infoPane.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
+
     }
 
     private Node getDetailsPane(Item item) {
@@ -103,6 +104,10 @@ public class MainDetailsPaneController implements Initializable {
             tabPane.getSelectionModel().select(chosenTab);
         } else {
             Tab tab = new DraggableTab(item.shortNameProperty());
+            tab.setContextMenu(generateContextMenu(item, tab));
+            tab.setOnClosed(event -> {
+                MainController.focusedItemProperty.set(null); // Potentially hacky
+            });
             Node contentNode = getDetailsPane(item);
             tab.setContent(contentNode);
             contentNode.getStyleClass().add("details-pane-tab");
@@ -116,7 +121,29 @@ public class MainDetailsPaneController implements Initializable {
         }
     }
 
+    private ContextMenu generateContextMenu(Item item, Tab tab) {
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem closeTabMenuItem = new MenuItem("Close Tab");
+        MenuItem closeAllMenuItem = new MenuItem("Close All Tabs");
+        MenuItem closeOthersMenuItem = new MenuItem("Close Other Tabs");
 
+        closeTabMenuItem.setOnAction(event -> tab.getTabPane().getTabs().remove(tab));
+        closeAllMenuItem.setOnAction(event -> tab.getTabPane().getTabs().clear());
+        closeOthersMenuItem.setOnAction(event -> tab.getTabPane().getTabs().removeIf(tab1 -> tab1 != tab));
+
+        MenuItem editMenuItem = new MenuItem("Edit");
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+
+        editMenuItem.setOnAction(event -> mainController.editItem(item));
+        deleteMenuItem.setOnAction(event -> mainController.deleteItem(item));
+
+        contextMenu.getItems().addAll(
+                closeTabMenuItem, closeOthersMenuItem,
+                closeAllMenuItem, new SeparatorMenuItem(),
+                editMenuItem, deleteMenuItem);
+
+        return contextMenu;
+    }
 
     private Node getSkillDetailsPane(Skill skill) {
         ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getSkillViewTuple();

@@ -83,7 +83,7 @@ public class OptimizedDetailsPane {
 
     public ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> getSprintViewTuple() {
         ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> tmp = sprintViewTuple;
-        loadSkillViewTuple();
+        loadSprintViewTuple();
         return tmp;
     }
 

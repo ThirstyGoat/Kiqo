@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.util.TreeMouseEventDispatcher;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventDispatcher;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -24,6 +27,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 import org.controlsfx.glyphfont.FontAwesome;
@@ -46,7 +50,6 @@ import com.thirstygoat.kiqo.util.Utilities;
  * Created by samschofield and James on 14/05/15.
  */
 public class SideBarController implements Initializable {
-    private final ContextMenu contextMenu = new ContextMenu();
     private final Map<String, Control> tabListViewMap = new HashMap<>();
     private final ObjectProperty<TabOption> selectedTabProperty = new SimpleObjectProperty<>(TabOption.PROJECTS);
     @FXML
@@ -72,7 +75,7 @@ public class SideBarController implements Initializable {
     /**
      * Attaches cell factory and selection listener to the list view.
      */
-    private static <T extends Item> void initialiseListView(ListView<T> listView, ContextMenu contextMenu) {
+    private <T extends Item> void initialiseListView(ListView<T> listView) {
         // derived from example at
         // http://docs.oracle.com/javafx/2/api/javafx/scene/control/Cell.html
         listView.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
@@ -85,7 +88,11 @@ public class SideBarController implements Initializable {
                         super.updateItem(item, empty);
                         setText(empty ? "" : item.getShortName());
                         if (item != null) {
-                            setContextMenu(contextMenu);
+                            setOnMouseClicked(event -> {
+                                if (event.getClickCount() == 2)
+                                    MainController.focusedItemProperty.set(item);
+                            });
+                            setContextMenu(generateContextMenu(item));
                         }
                     }
                 };
@@ -111,67 +118,18 @@ public class SideBarController implements Initializable {
         tabListViewMap.put(teamsTab.getId(), teamsListView);
         tabListViewMap.put(peopleTab.getId(), peopleListView);
         tabListViewMap.put(skillsTab.getId(), skillsListView);
+    }
 
-        // Create listeners for lists
-        final ChangeListener<Item> listViewChangeListener = (o, oldValue, newValue) -> {
-            MainController.focusedItemProperty.set(newValue);
-        };
+    private ContextMenu generateContextMenu(Item item) {
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editContextMenu = new MenuItem("Edit");
+        final MenuItem deleteContextMenu = new MenuItem("Delete");
+        contextMenu.getItems().add(editContextMenu);
+        contextMenu.getItems().add(deleteContextMenu);
+        editContextMenu.setOnAction(event -> mainController.editItem(item));
+        deleteContextMenu.setOnAction(event -> mainController.deleteItem(item));
 
-        final ChangeListener<TreeItem<Item>> treeViewChangeListener = (o, oldValue, newValue) -> {
-            Item toShow = (newValue != null) ? newValue.getValue() : null;
-            if (newValue != null && newValue.getValue().getClass() == TreeNodeHeading.class) {
-                toShow = null;
-            }
-            MainController.focusedItemProperty.set(toShow);
-        };
-
-        // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
-        tabViewPane.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
-            // Remove the change listeners
-            projectTreeView.getSelectionModel().selectedItemProperty().removeListener(treeViewChangeListener);
-            peopleListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
-            teamsListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
-            skillsListView.getSelectionModel().selectedItemProperty().removeListener(listViewChangeListener);
-
-            // Add the change listener on the appropriate TreeView/ListView
-            if (newValue == projectTab) {
-                if (mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
-                selectedTabProperty.set(TabOption.PROJECTS);
-                final int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
-                projectTreeView.getSelectionModel().select(null);
-                projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
-                projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
-            } else if (newValue == peopleTab) {
-                if (mainController.selectedOrganisationProperty.get().getPeople().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
-                selectedTabProperty.set(TabOption.PEOPLE);
-                final int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
-                peopleListView.getSelectionModel().select(null);
-                peopleListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
-                peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
-            } else if (newValue == teamsTab) {
-                if (mainController.selectedOrganisationProperty.get().getTeams().isEmpty()) {
-                    MainController.focusedItemProperty.set(null);
-                }
-                selectedTabProperty.set(TabOption.TEAMS);
-                final int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
-                teamsListView.getSelectionModel().select(null);
-                teamsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
-                teamsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
-            } else if (newValue == skillsTab) {
-                selectedTabProperty.set(TabOption.SKILLS);
-                final int selectedIndex = skillsListView.getSelectionModel().selectedIndexProperty().get();
-                skillsListView.getSelectionModel().select(null);
-                skillsListView.getSelectionModel().selectedItemProperty().addListener(listViewChangeListener);
-                skillsListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
-            }
-        });
-
-        // Initially select the project tab
-        projectTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewChangeListener);
+        return contextMenu;
     }
 
     private void initializeListViews() {
@@ -184,18 +142,7 @@ public class SideBarController implements Initializable {
         listViews.add(skillsListView);
         listViews.add(teamsListView);
 
-        // All these ListViews share a single context menu
-        final MenuItem editContextMenu = new MenuItem("Edit");
-        final MenuItem deleteContextMenu = new MenuItem("Delete");
-        contextMenu.getItems().add(editContextMenu);
-        contextMenu.getItems().add(deleteContextMenu);
-        editContextMenu.setOnAction(event -> mainController.editItem());
-        deleteContextMenu.setOnAction(event -> mainController.deleteItem());
-
-        for (final ListView<? extends Item> listView : listViews) {
-            SideBarController.initialiseListView(listView, contextMenu);
-        }
-        setListViewListener();
+        listViews.forEach(this::initialiseListView);
     }
 
     /**
@@ -224,21 +171,22 @@ public class SideBarController implements Initializable {
         projectTreeView.setCellFactory(new Callback<TreeView<Item>, TreeCell<Item>>() {
             @Override
             public TreeCell<Item> call(TreeView<Item> param) {
-
                 return new TreeCell<Item>() {
                     @Override
                     protected void updateItem(Item item, boolean empty) {
-                        if (item != null) {
+                        if (item != null && !empty) {
                             FontAwesome fontAwesome = new FontAwesome();
                             textProperty().bind(item.shortNameProperty());
                             if (item.getClass() != TreeNodeHeading.class) {
-                                setContextMenu(contextMenu);
+                                EventDispatcher originalDispatcher = getEventDispatcher();
+                                setEventDispatcher(new TreeMouseEventDispatcher(originalDispatcher, item));
+                                setContextMenu(generateContextMenu(item));
                                 setGraphic(null);
                             } else {
                                 Node node = null;
                                 if (item.getShortName().equals("Releases")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.CALENDAR);
-                                }  else if (item.getShortName().equals("Backlogs")) {
+                                } else if (item.getShortName().equals("Backlogs")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.LIST);
                                 } else if (item.getShortName().equals("Unallocated Stories")) {
                                     node = fontAwesome.create(FontAwesome.Glyph.BOOK);

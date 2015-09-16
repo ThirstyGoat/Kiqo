@@ -430,24 +430,27 @@ public class MainController implements Initializable {
      * Convenience method to delete the currently selected Item
      */
     public void deleteItem() {
+        deleteItem(focusedItemProperty.get());
+    }
+
+    public void deleteItem(Item item) {
         Platform.runLater(() -> {
-            final Item focusedObject = focusedItemProperty.get();
-            if (focusedObject instanceof Project) {
-                deleteProject((Project) focusedObject);
-            } else if (focusedObject instanceof Person) {
-                deletePerson((Person) focusedObject);
-            } else if (focusedObject instanceof Skill) {
-                deleteSkill((Skill) focusedObject);
-            } else if (focusedObject instanceof Team) {
-                deleteTeam((Team) focusedObject);
-            } else if (focusedObject instanceof Release) {
-                deleteRelease((Release) focusedObject);
-            } else if (focusedObject.getClass() == Story.class) {
-                deleteStory((Story) focusedObject);
-            } else if (focusedObject.getClass() == Backlog.class) {
-                deleteBacklog((Backlog) focusedObject);
-            } else if (focusedObject.getClass() == Sprint.class) {
-                deleteSprint((Sprint) focusedObject);
+            if (item instanceof Project) {
+                deleteProject((Project) item);
+            } else if (item instanceof Person) {
+                deletePerson((Person) item);
+            } else if (item instanceof Skill) {
+                deleteSkill((Skill) item);
+            } else if (item instanceof Team) {
+                deleteTeam((Team) item);
+            } else if (item instanceof Release) {
+                deleteRelease((Release) item);
+            } else if (item.getClass() == Story.class) {
+                deleteStory((Story) item);
+            } else if (item.getClass() == Backlog.class) {
+                deleteBacklog((Backlog) item);
+            } else if (item.getClass() == Sprint.class) {
+                deleteSprint((Sprint) item);
             }
         });
     }
@@ -457,16 +460,19 @@ public class MainController implements Initializable {
      * (Note that the PO and SM skills can not be edited)
      */
     public void editItem() {
-        final Item focusedObject = focusedItemProperty.get();
-        if (focusedObject != null && focusedObject.getClass() == Skill.class) {
-            if (focusedObject == selectedOrganisationProperty().get().getPoSkill() ||
-                    focusedObject == selectedOrganisationProperty().get().getSmSkill()) {
+        editItem(focusedItemProperty.get());
+    }
+
+    public void editItem(Item item) {
+        if (item != null && item.getClass() == Skill.class) {
+            if (item == selectedOrganisationProperty().get().getPoSkill() ||
+                    item == selectedOrganisationProperty().get().getSmSkill()) {
                 GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
                         "The Product Owner and Scrum Master skills cannot be edited.");
                 return;
             }
         }
-        dialog(focusedObject);
+        dialog(item);
     }
 
     /**
