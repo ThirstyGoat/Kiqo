@@ -69,7 +69,11 @@ public class AllocationListCell extends TableCell<Allocation, String> {
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        final Allocation allocation = (Allocation) getTableRow().getItem();
+        Allocation allocation = null;
+        if (getTableRow() != null) {
+            allocation = (Allocation) getTableRow().getItem();
+        }
+
         if (!empty && allocation != null) {
 
             final HBox hbox = new HBox();

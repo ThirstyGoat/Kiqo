@@ -114,7 +114,7 @@ public class SideBarController implements Initializable {
 
         // Create listeners for lists
         final ChangeListener<Item> listViewChangeListener = (o, oldValue, newValue) -> {
-            mainController.focusedItemProperty.set(newValue);
+            MainController.focusedItemProperty.set(newValue);
         };
 
         final ChangeListener<TreeItem<Item>> treeViewChangeListener = (o, oldValue, newValue) -> {
@@ -122,7 +122,7 @@ public class SideBarController implements Initializable {
             if (newValue != null && newValue.getValue().getClass() == TreeNodeHeading.class) {
                 toShow = null;
             }
-            mainController.focusedItemProperty.set(toShow);
+            MainController.focusedItemProperty.set(toShow);
         };
 
         // Add the listener only when the tab is in focus, when it is out of focus, remove the listener
@@ -136,7 +136,7 @@ public class SideBarController implements Initializable {
             // Add the change listener on the appropriate TreeView/ListView
             if (newValue == projectTab) {
                 if (mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
-                    mainController.focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 selectedTabProperty.set(TabOption.PROJECTS);
                 final int selectedIndex = projectTreeView.getSelectionModel().selectedIndexProperty().get();
@@ -145,7 +145,7 @@ public class SideBarController implements Initializable {
                 projectTreeView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == peopleTab) {
                 if (mainController.selectedOrganisationProperty.get().getPeople().isEmpty()) {
-                    mainController.focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 selectedTabProperty.set(TabOption.PEOPLE);
                 final int selectedIndex = peopleListView.getSelectionModel().selectedIndexProperty().get();
@@ -154,7 +154,7 @@ public class SideBarController implements Initializable {
                 peopleListView.getSelectionModel().select(selectedIndex == -1 ? 0 : selectedIndex);
             } else if (newValue == teamsTab) {
                 if (mainController.selectedOrganisationProperty.get().getTeams().isEmpty()) {
-                    mainController.focusedItemProperty.set(null);
+                    MainController.focusedItemProperty.set(null);
                 }
                 selectedTabProperty.set(TabOption.TEAMS);
                 final int selectedIndex = teamsListView.getSelectionModel().selectedIndexProperty().get();
@@ -216,7 +216,6 @@ public class SideBarController implements Initializable {
                     && mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
                 mainController.focusedItemProperty.set(null);
             }
-
         });
 
     }

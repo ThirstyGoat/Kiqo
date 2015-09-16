@@ -67,7 +67,10 @@ public class StoryListCell extends TableCell<Story, String> {
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        final Story story = (Story) getTableRow().getItem();
+        Story story = null;
+        if (getTableRow() != null) {
+            story = (Story) getTableRow().getItem();
+        }
         if (!empty && story != null) {
 
             final HBox hbox = new HBox();

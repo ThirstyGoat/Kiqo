@@ -17,7 +17,6 @@ import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
-import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
@@ -54,10 +53,14 @@ public class MainDetailsPaneController implements Initializable {
 
     private MainController mainController;
 
+    private OptimizedDetailsPane optimizedDetailsPane;
+
     private Map<Item, Tab> tabMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        optimizedDetailsPane = new OptimizedDetailsPane();
+
         // Listen for changes in the number of tabs shown so we can display the info screen when necessary
         tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
             tabPane.setVisible(!tabPane.getTabs().isEmpty());
@@ -107,40 +110,42 @@ public class MainDetailsPaneController implements Initializable {
             // Add the tab to the map, so we can easily show it if necessary
             tabMap.put(item, tab);
 
-            // Add the tab to the tabpane, and select it
+            // Add the tab to the TabPane, and select it
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().select(tab);
         }
     }
 
+
+
     private Node getSkillDetailsPane(Skill skill) {
-        ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(SkillDetailsPaneView.class).load();
+        ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getSkillViewTuple();
         viewTuple.getViewModel().load(skill, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
 
     private Node getProjectDetailsPane(Project project) {
-        ViewTuple<ProjectDetailsPaneView, ProjectDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(ProjectDetailsPaneView.class).load();
+        ViewTuple<ProjectDetailsPaneView, ProjectDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getProjectViewTuple();
         viewTuple.getViewModel().mainControllerProperty().set(mainController);
         viewTuple.getViewModel().load(project, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
 
     private Node getPersonDetailsPane(Person person) {
-        ViewTuple<PersonDetailsPaneView, PersonDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(PersonDetailsPaneView.class).load();
+        ViewTuple<PersonDetailsPaneView, PersonDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getPersonViewTuple();
         viewTuple.getViewModel().load(person, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
 
     private Node getTeamDetailsPane(Team team) {
-        ViewTuple<TeamDetailsPaneView, TeamDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(TeamDetailsPaneView.class).load();
+        ViewTuple<TeamDetailsPaneView, TeamDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getTeamViewTuple();
         viewTuple.getViewModel().mainControllerProperty().set(mainController);
         viewTuple.getViewModel().load(team, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
 
     private Node getReleaseDetailsPane(Release release) {
-        ViewTuple<ReleaseDetailsPaneView, ReleaseDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(ReleaseDetailsPaneView.class).load();
+        ViewTuple<ReleaseDetailsPaneView, ReleaseDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getReleaseViewTuple();
         viewTuple.getViewModel().load(release, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
@@ -159,13 +164,13 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private Node getBacklogDetailsPane(Backlog backlog) {
-        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(BacklogDetailsPaneView.class).load();
+        ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getBacklogViewTuple();
         viewTuple.getViewModel().load(backlog, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
 
     private Node getSprintDetailsPane(Sprint sprint) {
-        ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> viewTuple = FluentViewLoader.fxmlView(SprintDetailsPaneView.class).load();
+        ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getSprintViewTuple();
         viewTuple.getViewModel().load(sprint, mainController.selectedOrganisationProperty.get());
         viewTuple.getViewModel().getScrumBoardViewModel().setMainController(mainController);
         return viewTuple.getView();
@@ -173,7 +178,7 @@ public class MainDetailsPaneController implements Initializable {
 
     public void showSearchPane() {
         // Advanced Search
-        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load();
+        ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = optimizedDetailsPane.getSearchViewTuple();
 
         // TODO, update heading to display what the search was for
         StringProperty advancedSearchHeading = new SimpleStringProperty("Advanced Search");
