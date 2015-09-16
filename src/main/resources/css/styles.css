@@ -149,6 +149,10 @@
     -glyph-name: "ROCKET";
 }
 
+.blocked-icon {
+    -glyph-name: "BAN";
+}
+
 .people-icon {
     -glyph-name: "USER";
 }
@@ -297,6 +301,10 @@
 }
 
 .task-card.in-progress {
+    -fx-background-color: #ff5722;
+}
+
+.task-card.blocked {
     -fx-background-color: #ff5722;
 }
 
