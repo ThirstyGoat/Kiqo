@@ -128,12 +128,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);
             stage.setScene(scene);
-
             stage.show();
 
             MainController.getPrimaryStage().focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    stage.close();
+                    // Platform.runLater fixes concurrentModException when closing app with changes and expanded task card open
+                    Platform.runLater(() -> stage.close());
                 }
             });
 
