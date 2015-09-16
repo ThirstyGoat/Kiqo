@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Bradley Kirwan on 7/08/15.
  */
-public class GoatFilteredListSelectionView<T extends Item> extends Control {
+public class GoatFilteredListSelectionView<T extends Item> extends ListView<T> { // TODO this doesn't actually act like a listview
     private VBox mainView;
     private final GoatFilteredListSelectionViewSkin skin;
     private final ListProperty<T> sourceItems;

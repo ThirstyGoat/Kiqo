@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.thirstygoat.kiqo.gui.nodes.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
@@ -53,7 +54,7 @@
             <Label text="Skills" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <GoatLabelFilteredListSelectionView fx:id="skillsLabel" defaultText="Add skills..." />
+	        <ListBiControl fx:id="skillsLabel" />
           </children>
         </VBox>
       </content>
