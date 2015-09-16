@@ -1,33 +1,18 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.util.*;
-
-import org.controlsfx.control.textfield.*;
-
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.model.Item;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
@@ -137,6 +122,14 @@ public final class FxUtils {
                                      ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
         bindStringProperty(goatLabel, stringProperty);
+        goatLabel.validationStatus().set(validationStatus);
+    }
+
+    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel, IntegerProperty integerProperty,
+                                     ValidationStatus validationStatus, StringConverter stringConverter) {
+        initGoatLabelActions(goatLabel, viewModel);
+        goatLabel.displayTextProperty().bindBidirectional(integerProperty, stringConverter);
+        goatLabel.getEditField().textProperty().bindBidirectional(integerProperty, stringConverter);
         goatLabel.validationStatus().set(validationStatus);
     }
 
