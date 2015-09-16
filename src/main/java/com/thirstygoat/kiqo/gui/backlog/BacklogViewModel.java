@@ -217,7 +217,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     }
 
     public ObjectProperty<Scale> scaleProperty() {
-        return modelWrapper.field("backlog", Backlog::getScale, Backlog::setScale, Scale.FIBONACCI);
+        return modelWrapper.field("scale", Backlog::getScale, Backlog::setScale, Scale.FIBONACCI);
     }
 
     public ListProperty<Story> stories() {
