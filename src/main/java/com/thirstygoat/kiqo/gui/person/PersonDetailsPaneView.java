@@ -39,12 +39,12 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), null);
-        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), null);
-        FxUtils.initGoatLabel(userIdLabel, viewModel, viewModel.userIdProperty(), null);
-        FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), null);
-        FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), null);
-        FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), null);
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
+        FxUtils.initGoatLabel(userIdLabel, viewModel, viewModel.userIdProperty(), viewModel.userIdValidation());
+        FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), viewModel.emailValidation());
+        FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), viewModel.phoneNumberValidation());
+        FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), viewModel.departmentValidation());
         FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }

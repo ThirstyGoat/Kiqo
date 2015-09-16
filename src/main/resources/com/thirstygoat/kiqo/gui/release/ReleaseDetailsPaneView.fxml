@@ -20,7 +20,7 @@
                 <Label text="Release" styleClass="pane-type-indicator" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionTextArea" />
+            <GoatLabelTextArea fx:id="descriptionTextArea" defaultText="Add a description..."/>
             <Label text="Project" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

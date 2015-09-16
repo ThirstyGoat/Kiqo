@@ -29,7 +29,12 @@ import java.util.stream.Collectors;
 public class PersonViewModel extends ModelViewModel<Person> {
     private ListProperty<Skill> availableSkills;
 
-    private ObservableRuleBasedValidator nameValidator;
+    private ObservableRuleBasedValidator shortNameValidator;
+    private ObservableRuleBasedValidator longNameValidator;
+    private ObservableRuleBasedValidator userIdValidator;
+    private ObservableRuleBasedValidator emailValidator;
+    private ObservableRuleBasedValidator phoneNumberValidator;
+    private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
 
@@ -61,7 +66,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
             };
 
     private void createValidators() {
-        nameValidator = new ObservableRuleBasedValidator();
+        shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
                 if (organisationProperty().get() != null) {
@@ -71,14 +76,19 @@ public class PersonViewModel extends ModelViewModel<Person> {
                 }
             }, 
             shortNameProperty());
-        nameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
-        nameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
-        nameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
-        nameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
+        shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
+        shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
+        shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
+        shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
+        longNameValidator = new ObservableRuleBasedValidator(); // always true
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
+        userIdValidator = new ObservableRuleBasedValidator(); // always true
+        emailValidator = new ObservableRuleBasedValidator(); // always true
+        phoneNumberValidator = new ObservableRuleBasedValidator(); // always true
+        departmentValidator = new ObservableRuleBasedValidator(); // always true
         
-        allValidator = new CompositeValidator(nameValidator, descriptionValidator);
+        allValidator = new CompositeValidator(shortNameValidator, descriptionValidator);
     }
 
     @Override
@@ -140,8 +150,28 @@ public class PersonViewModel extends ModelViewModel<Person> {
         return availableSkills;
     }
     
-    public ValidationStatus nameValidation() {
-        return nameValidator.getValidationStatus();
+    public ValidationStatus shortNameValidation() {
+        return shortNameValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus longNameValidation() {
+        return longNameValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus userIdValidation() {
+        return userIdValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus emailValidation() {
+        return emailValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus phoneNumberValidation() {
+        return phoneNumberValidator.getValidationStatus();
+    }
+    
+    public ValidationStatus departmentValidation() {
+        return departmentValidator.getValidationStatus();
     }
     
     public ValidationStatus descriptionValidation() {
