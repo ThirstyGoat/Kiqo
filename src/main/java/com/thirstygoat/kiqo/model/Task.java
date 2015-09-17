@@ -22,6 +22,7 @@ public class Task extends Item {
     private final ObjectProperty<Status> status;
     private final ObjectProperty<Story> story;
     private final ObservableList<Impediment> impediments;
+    private final ObservableList<Effort> loggedEffort;
 
     public Task() {
         shortName = new SimpleStringProperty("");
@@ -31,6 +32,7 @@ public class Task extends Item {
         story = new SimpleObjectProperty<>(null);
         blocked = new SimpleBooleanProperty(false);
         impediments = FXCollections.observableArrayList(Impediment.getWatchStrategy());
+        loggedEffort = FXCollections.observableArrayList();
     }
 
     public Task(String shortName, String description, Float estimate, Story story) {
@@ -55,6 +57,7 @@ public class Task extends Item {
         bps.addPropertyChangeSupportFor(story);
         bps.addPropertyChangeSupportFor(impediments);
         bps.addPropertyChangeSupportFor(blocked);
+        bps.addPropertyChangeSupportFor(loggedEffort);
     }
 
     /**
@@ -75,6 +78,14 @@ public class Task extends Item {
 
     public void setImpediments(List<Impediment> impediments) {
         this.impediments.setAll(impediments);
+    }
+
+    public ObservableList<Effort> getLoggedEffort() {
+        return loggedEffort;
+    }
+
+    public void setLoggedEffort(List<Effort> loggedEffort) {
+        this.loggedEffort.setAll(loggedEffort);
     }
 
     public Story getStory() {
