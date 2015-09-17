@@ -132,6 +132,7 @@ public class PersistenceManager {
                 .addType(Task.class)
                 .addType(Sprint.class)
                 .addType(Impediment.class)
+                .addType(Effort.class)
                 .registerOn(gsonBuilder);
 
         gsonBuilder.registerTypeAdapter(ObservableList.class, new ObservableListDeserializer());
