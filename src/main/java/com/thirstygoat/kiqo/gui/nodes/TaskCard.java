@@ -12,6 +12,7 @@ import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -130,13 +131,11 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             stage.setScene(scene);
             stage.show();
 
-            MainController.getPrimaryStage().focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    // Platform.runLater fixes concurrentModException when closing app with changes and expanded task card open
-                    Platform.runLater(() -> stage.close());
-                }
-            });
+            ChangeListener<Boolean> focusedChangeListener = (observable, oldValue, newValue) -> {
+                Platform.runLater(stage::close);
+            };
 
+            stage.focusedProperty().addListener(focusedChangeListener);
 
 
             // Animation stuff
