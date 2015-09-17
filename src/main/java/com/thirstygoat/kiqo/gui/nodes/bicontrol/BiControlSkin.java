@@ -1,14 +1,15 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
+import de.jensd.fx.glyphs.fontawesome.*;
+
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.Parent;
 import javafx.util.Duration;
-import de.jensd.fx.glyphs.fontawesome.*;
 
 /**
  * Created by leroy on 16/09/15.
@@ -17,7 +18,7 @@ import de.jensd.fx.glyphs.fontawesome.*;
  * @param <T> type of data to display
  */
 public abstract class BiControlSkin<D extends Control, E extends Control, T> extends SkinBase<BiControl<D, E, T>> {
-    private final EditButton editButton;
+    private final Button editButton;
     private final Button doneButton;
     private final Button cancelButton;
     protected final E editView;
@@ -50,9 +51,6 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         getChildren().add(parent);
     }
 
-    /**
-     * @param parent
-     */
     private void attachListeners() {
         // prevent focusTraversal when hidden
         editButton.focusTraversableProperty().bind(editButton.visibleProperty());
@@ -89,8 +87,14 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         }
     }
 
-    private EditButton makeEditButton() {
-        return new EditButton();
+    @SuppressWarnings("static-method")
+    private Button makeEditButton() {
+        Button button = new Button();
+        FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
+        icon.setStyle("-fx-fill: grey");   
+        button.setStyle("-fx-background-color: transparent; -fx-padding: 0px;");
+        button.setGraphic(icon);
+        return button;
     }
     
     @SuppressWarnings("static-method")
@@ -131,7 +135,8 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         HBox.setHgrow(viewsPane, Priority.ALWAYS);
 
         // show/hide pencil
-        parent.hoverProperty().addListener(editButton.getFadeAction());
+//        parent.hoverProperty().addListener(editButton.getFadeAction()); TODO
+        
         
         return parent;
     }
@@ -151,17 +156,19 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
     }
 
 
+    @Deprecated
     class EditButton extends Button {
         final FadeTransition fade;
+        
         public EditButton() {
             super();
             FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
     
             pencilIcon.setStyle("-fx-fill: grey");
             setGraphic(pencilIcon);
-            setStyle("-fx-background-color: transparent;" +
-                            "-fx-padding: 0px;" +
-                            "-fx-animated: true;");
+            setStyle("-fx-background-color: transparent;" 
+                    + "-fx-padding: 0px;" 
+                    + "-fx-animated: true;");
             // Make the edit button fade on hover
             fade = new FadeTransition(Duration.millis(400), this);
             fade.setAutoReverse(true);
