@@ -143,17 +143,17 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             double stageWidth = 400;
             double stageHeight = 400;
 
-            stage.setOpacity(0);
-            stage.show();
+//            stage.setOpacity(0);
             stage.setX(parentX + parentWidth / 2 - stageWidth / 2);
             stage.setY(parentY + parentHeight / 2 - stageHeight / 2);
-            Platform.runLater(() -> stage.setOpacity(1));
+            stage.show();
+//            Platform.runLater(() -> stage.setOpacity(1));
 
-            ChangeListener<Boolean> focusedChangeListener = (observable, oldValue, newValue) -> {
-                Platform.runLater(stage::close);
-            };
-
-            stage.focusedProperty().addListener(focusedChangeListener);
+            parentWindow.focusedProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue) {
+                    Platform.runLater(stage::close);
+                }
+            });
         });
     }
 
