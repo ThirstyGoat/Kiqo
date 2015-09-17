@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Task;
@@ -126,6 +127,10 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     public ObservableList<Impediment> impedimentsObservableList() {
         return modelWrapper.field("impediments", Task::getImpediments, Task::setImpediments);
+    }
+
+    public ObservableList<Effort> loggedEffort() {
+        return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
     }
 
     public ObjectProperty<Task> getTask() {

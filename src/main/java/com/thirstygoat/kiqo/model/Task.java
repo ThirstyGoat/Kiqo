@@ -2,13 +2,15 @@ package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Supplier;
 
 
 /**
@@ -32,7 +34,7 @@ public class Task extends Item {
         story = new SimpleObjectProperty<>(null);
         blocked = new SimpleBooleanProperty(false);
         impediments = FXCollections.observableArrayList(Impediment.getWatchStrategy());
-        loggedEffort = FXCollections.observableArrayList();
+        loggedEffort = FXCollections.observableArrayList(Effort.getWatchStrategy());
     }
 
     public Task(String shortName, String description, Float estimate, Story story) {
@@ -70,6 +72,16 @@ public class Task extends Item {
         searchableFields.add(new SearchableField("Description", getDescription()));
 
         return searchableFields;
+    }
+
+    public FloatProperty spentEffortProperty() {
+        FloatProperty spentEffort = new SimpleFloatProperty();
+        spentEffort.bind(Bindings.createDoubleBinding(
+                        () -> loggedEffort.stream()
+                            .mapToDouble(Effort::getDuration)
+                            .sum(),
+        loggedEffort));
+        return spentEffort;
     }
 
     public ObservableList<Impediment> getImpediments() {

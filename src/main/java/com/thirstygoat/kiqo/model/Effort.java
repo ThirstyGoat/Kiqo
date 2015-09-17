@@ -2,7 +2,9 @@ package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.util.Callback;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by leroy on 17/09/15.
  */
-public class Effort implements Searchable{
+public class Effort implements Searchable {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
     private final ObjectProperty<LocalDateTime> logTime;
@@ -97,5 +99,9 @@ public class Effort implements Searchable{
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
         return searchStrings;
+    }
+
+    public static Callback<Effort, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.duration};
     }
 }
