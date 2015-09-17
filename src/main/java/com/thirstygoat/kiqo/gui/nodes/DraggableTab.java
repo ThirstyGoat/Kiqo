@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -16,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -133,19 +136,29 @@ public class DraggableTab extends Tab {
                     final Stage newStage = new Stage();
                     final TabPane pane = new TabPane();
                     tabPanes.add(pane);
+
+
+
                     newStage.setOnHiding(t1 -> tabPanes.remove(pane));
                     getTabPane().getTabs().remove(DraggableTab.this);
                     pane.getTabs().add(DraggableTab.this);
+
+                    tabPaneProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != pane)
+                            pane.getTabs().remove(DraggableTab.this);
+                    });
+
                     pane.getTabs().addListener((ListChangeListener.Change<? extends Tab> change) -> {
                         if (pane.getTabs().isEmpty()) {
                             newStage.hide();
                         }
                     });
 
-                    Scene scene = new Scene(pane);
+                    BorderPane borderPane = new BorderPane();
+                    borderPane.setCenter(pane);
+                    Scene scene = new Scene(borderPane);
                     scene.getStylesheets().add(this.getClass().getResource("/css/styles.css").toExternalForm());
                     newStage.setScene(scene);
-                    newStage.initOwner(MainController.getPrimaryStage());
                     newStage.initStyle(StageStyle.DECORATED);
                     newStage.setHeight(getContent().getBoundsInLocal().getHeight() + 50);
                     newStage.setWidth(getContent().getBoundsInLocal().getWidth() + 50);

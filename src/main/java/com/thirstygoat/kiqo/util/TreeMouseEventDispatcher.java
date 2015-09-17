@@ -10,12 +10,13 @@ import javafx.scene.input.MouseEvent;
 
 public class TreeMouseEventDispatcher implements EventDispatcher {
     private final EventDispatcher originalDispatcher;
-
     private Item item;
+    private MainController mainController;
 
-    public TreeMouseEventDispatcher(EventDispatcher originalDispatcher, Item item) {
+    public TreeMouseEventDispatcher(EventDispatcher originalDispatcher, Item item, MainController mainController) {
         this.originalDispatcher = originalDispatcher;
         this.item = item;
+        this.mainController = mainController;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class TreeMouseEventDispatcher implements EventDispatcher {
                     && ((MouseEvent) event).getClickCount() >= 2) {
 
                 if (!event.isConsumed()) {
-                    MainController.focusedItemProperty.set(item);
+                    mainController.showDetailsPane(item);
                 }
 
                 event.consume();

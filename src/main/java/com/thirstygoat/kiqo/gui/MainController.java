@@ -451,7 +451,10 @@ public class MainController implements Initializable {
                 deleteBacklog((Backlog) item);
             } else if (item.getClass() == Sprint.class) {
                 deleteSprint((Sprint) item);
+            } else {
+                return;
             }
+            getDetailsPaneController().closeTab(item);
         });
     }
 
@@ -1149,5 +1152,10 @@ public class MainController implements Initializable {
                 }
             });
         });
+    }
+
+    public <T extends Item> void showDetailsPane(T item) {
+        MainController.focusedItemProperty.set(item);
+        detailsPaneController.showDetailsPane(item);
     }
 }

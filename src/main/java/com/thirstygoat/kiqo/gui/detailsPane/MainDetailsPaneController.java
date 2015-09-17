@@ -26,7 +26,6 @@ import com.thirstygoat.kiqo.model.Skill;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -62,10 +61,8 @@ public class MainDetailsPaneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         optimizedDetailsPane = new OptimizedDetailsPane();
-
         tabPane.visibleProperty().bind(Bindings.isNotEmpty(tabPane.getTabs()));
         infoPane.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
-
     }
 
     private Node getDetailsPane(Item item) {
@@ -97,11 +94,16 @@ public class MainDetailsPaneController implements Initializable {
             // We check to make sure the tab hasn't been closed before showing it
             Tab chosenTab = tabMap.get(item);
 
-            if (!tabPane.getTabs().contains(chosenTab)) {
+            if (tabPane.getTabs().contains(chosenTab)) {
+                tabPane.getSelectionModel().select(chosenTab);
+            } else if (chosenTab.getTabPane() != null) {
+                // Then this tab lies within another tab pane, which we need to grab and show
+                chosenTab.getTabPane().getParent().getScene().getWindow().requestFocus();
+            } else {
+                // Then this tab has previously been created, but is not displayed anywhere, display it
                 tabPane.getTabs().add(chosenTab);
+                tabPane.getSelectionModel().select(chosenTab);
             }
-
-            tabPane.getSelectionModel().select(chosenTab);
         } else {
             Tab tab = new DraggableTab(item.shortNameProperty());
             tab.setContextMenu(generateContextMenu(item, tab));
@@ -218,5 +220,17 @@ public class MainDetailsPaneController implements Initializable {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    public void closeTab(Item item) {
+        if (item == null)
+            return;
+
+        if (tabMap.containsKey(item)) {
+            Tab tab = tabMap.get(item);
+
+            if (tab.getTabPane() != null)
+                tab.getTabPane().getTabs().remove(tab);
+        }
     }
 }

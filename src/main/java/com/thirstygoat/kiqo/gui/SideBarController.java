@@ -89,8 +89,9 @@ public class SideBarController implements Initializable {
                         setText(empty ? "" : item.getShortName());
                         if (item != null) {
                             setOnMouseClicked(event -> {
-                                if (event.getClickCount() == 2)
-                                    MainController.focusedItemProperty.set(item);
+                                if (event.getClickCount() == 2) {
+                                    mainController.showDetailsPane(item);
+                                }
                             });
                             setContextMenu(generateContextMenu(item));
                         }
@@ -145,28 +146,6 @@ public class SideBarController implements Initializable {
         listViews.forEach(this::initialiseListView);
     }
 
-    /**
-     * sets a change listener on the selected item of the selected listView
-     */
-    private void setListViewListener() {
-        final Tab selectedTab = tabViewPane.getSelectionModel().getSelectedItem();
-        if (tabListViewMap.get(selectedTab.getId()).getClass() != TreeView.class) {
-            @SuppressWarnings("unchecked")
-            final ListView<Item> castedListView = (ListView<Item>)tabListViewMap.get(selectedTab.getId());
-            castedListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                mainController.focusedItemProperty.set(newValue);
-            });
-        }
-
-        mainController.selectedOrganisationProperty.get().getProjects().addListener((ListChangeListener<Project>) c -> {
-            if (tabViewPane.getSelectionModel().getSelectedItem() == projectTab
-                    && mainController.selectedOrganisationProperty.get().getProjects().isEmpty()) {
-                mainController.focusedItemProperty.set(null);
-            }
-        });
-
-    }
-
     private void setListViewData() {
         projectTreeView.setCellFactory(new Callback<TreeView<Item>, TreeCell<Item>>() {
             @Override
@@ -179,7 +158,7 @@ public class SideBarController implements Initializable {
                             textProperty().bind(item.shortNameProperty());
                             if (item.getClass() != TreeNodeHeading.class) {
                                 EventDispatcher originalDispatcher = getEventDispatcher();
-                                setEventDispatcher(new TreeMouseEventDispatcher(originalDispatcher, item));
+                                setEventDispatcher(new TreeMouseEventDispatcher(originalDispatcher, item, mainController));
                                 setContextMenu(generateContextMenu(item));
                                 setGraphic(null);
                             } else {
