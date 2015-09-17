@@ -31,7 +31,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
     final private BooleanProperty impedanceProperty;
-    final private BooleanProperty isBlockedProperty;
     final private Task task;
 
     public TaskCard(Task task) {
@@ -39,13 +38,10 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
-        isBlockedProperty = new SimpleBooleanProperty();
-        isBlockedProperty.bindBidirectional(task.blockedProperty());
         draw();
         shortNameProperty().bind(task.shortNameProperty());
         hoursProperty().bind(task.estimateProperty());
         getStyleClass().add("task-card");
-
     }
 
     /**
@@ -177,10 +173,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
 
     public void setHoursProperty(Float hours) {
         hoursProperty.set(hours);
-    }
-
-    public BooleanProperty isBlockedProperty() {
-        return isBlockedProperty;
     }
 
     public Task getTask() {

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.formControllers.StoryFormController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.story.StoryFormView">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Story" />
+                <Button fx:id="cancelButton" onAction="#cancelAction" cancelButton="true" mnemonicParsing="false" text="Cancel" />
+                <Button fx:id="okButton" onAction="#okAction" defaultButton="true" mnemonicParsing="false" text="Create Story" />
             </children>
             <padding>
                 <Insets right="35.0" />

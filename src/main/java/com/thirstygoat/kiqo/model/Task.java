@@ -18,7 +18,6 @@ public class Task extends Item {
     private final StringProperty shortName;
     private final StringProperty description;
     private final FloatProperty estimate;
-    private final BooleanProperty blocked;
     private final ObjectProperty<Status> status;
     private final ObjectProperty<Story> story;
     private final ObservableList<Impediment> impediments;
@@ -29,7 +28,6 @@ public class Task extends Item {
         estimate = new SimpleFloatProperty(0.0f);
         status = new SimpleObjectProperty<>(Status.NOT_STARTED);
         story = new SimpleObjectProperty<>(null);
-        blocked = new SimpleBooleanProperty(false);
         impediments = FXCollections.observableArrayList(Impediment.getWatchStrategy());
     }
 
@@ -54,7 +52,6 @@ public class Task extends Item {
         bps.addPropertyChangeSupportFor(status);
         bps.addPropertyChangeSupportFor(story);
         bps.addPropertyChangeSupportFor(impediments);
-        bps.addPropertyChangeSupportFor(blocked);
     }
 
     /**
@@ -119,18 +116,6 @@ public class Task extends Item {
 
     public void setDescription(String description) {
         descriptionProperty().setValue(description);
-    }
-
-    public boolean isBlocked() {
-        return blocked.get();
-    }
-
-    public void setBlocked(boolean blocked) {
-        this.blocked.set(blocked);
-    }
-
-    public BooleanProperty blockedProperty() {
-        return blocked;
     }
 
     @Override

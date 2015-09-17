@@ -58,8 +58,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private HBox buttonsHBox;
     @FXML
-    private CheckBox blockedCheckBox;
-    @FXML
     private Button addImpedimentButton;
     @FXML
     private Button removeImpedimentButton;
@@ -85,10 +83,8 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(), viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
-        blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
-        blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            viewModel.commitEdit();
-        });
+
+
 
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
 //        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());

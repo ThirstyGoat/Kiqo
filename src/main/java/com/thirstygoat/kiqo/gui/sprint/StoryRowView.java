@@ -18,12 +18,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,8 +33,6 @@ import java.util.stream.Collectors;
  */
 public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable {
 
-    private static final String BLOCKED_CSS = "blocked";
-
     @InjectViewModel
     private StoryRowViewModel viewModel;
 
@@ -44,6 +40,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     @FXML
     private GridPane gridPane;
+    @FXML
+    private VBox storyCard;
     @FXML
     private Label storyNameLabel;
     @FXML
@@ -76,6 +74,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         initialiseDragAndDrop();
         drawTasks();
         setAddTaskButton();
+        initialiseDoubleClick();
     }
 
     private void setAddTaskButton() {
@@ -85,31 +84,12 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         });
     }
 
-    /**
-     * Listens to the taskscards blocked property and changes its colour accordingly
-     * @param taskCard
-     */
-    private void setBlockedListener(TaskCard taskCard) {
-        if (taskCard.isBlockedProperty().get()) {
-            taskCard.getStyleClass().add(BLOCKED_CSS);
-        }
-        taskCard.isBlockedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                taskCard.getStyleClass().add(BLOCKED_CSS);
-            } else {
-                taskCard.getStyleClass().remove(BLOCKED_CSS);
-                taskCard.getStyleClass().add(taskCard.getTask().getStatus().getCssClass());
-            }
-        });
-    }
-
     private void drawTasks() {
         Function<Task, TaskCard> fn = task -> {
             TaskCard tc = new TaskCard(task);
             tc.getStyleClass().add(task.getStatus().getCssClass());
 //            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
-            setBlockedListener(tc);
             return tc;
         };
 
@@ -150,6 +130,15 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             currentlyDraggingTaskCard.setCursor(Cursor.OPEN_HAND);
             currentlyDraggingTaskCard = null;
         });
+    }
+
+    private void initialiseDoubleClick() {
+
+            storyCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1) {
+                    viewModel.showStoryInDetailsPane();
+                }
+            });
     }
 
     private void initialiseDragAndDrop() {

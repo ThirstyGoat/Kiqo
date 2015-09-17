@@ -15,6 +15,8 @@ import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -178,16 +180,9 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     private Node getStoryDetailsPane(Story story) {
-        // Old school way of loading a details pane
-        final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainController.class.getClassLoader().getResource("detailsPane/story.fxml"));
-        try {
-            Node node = loader.load();
-            ((StoryDetailsPaneController) loader.getController()).setMainController(mainController);
-            ((StoryDetailsPaneController) loader.getController()).showDetails(story);
-            return node;
-        } catch (IOException ignored) {}
-        return null;
+        ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getStoryViewTuple();
+        viewTuple.getViewModel().load(story, mainController.selectedOrganisationProperty.get());
+        return viewTuple.getView();
     }
 
     private Node getBacklogDetailsPane(Backlog backlog) {

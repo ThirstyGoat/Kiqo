@@ -1,41 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
-
+<?import javafx.scene.layout.RowConstraints?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.gui.person.PersonDetailsPaneView">
   <children>
     <ScrollPane id="ScrollPane" fitToWidth="true" prefHeight="-1.0" prefViewportHeight="0.0" prefViewportWidth="0.0" prefWidth="-1.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
-        <GridPane mouseTransparent="false" vgap="10.0">
-          <children>            
-            <Label text="Person" styleClass="pane-type-indicator" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
-            <GoatLabelTextField styleClass="pane-short-name" fx:id="longNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" defaultText="Name" />
-            <GoatLabelTextField fx:id="shortNameLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" defaultText="Short Name"/>
-            <GoatLabelTextField fx:id="userIdLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" defaultText="User ID"/>
-            <GoatLabelTextField fx:id="emailLabel" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" defaultText="Email"/>
-            <GoatLabelTextField fx:id="phoneLabel" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" defaultText="Phone Number"/>
-            <GoatLabelTextField fx:id="departmentLabel" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" defaultText="Department"/>
-            <GoatLabelTextField fx:id="skills" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2" defaultText="Skills"/>
-            <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2" defaultText="Description"/>
+        <VBox mouseTransparent="false" spacing="10.0">
+          <children>
+          	<HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5">
+          		<children>
+            		<GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+					<GoatLabelTextField fx:id="longNameLabel" styleClass="pane-long-name"/>
+            		<Region HBox.hgrow="ALWAYS"/>
+            		<Label text="Person" styleClass="pane-type-indicator" />
+            	</children>
+            </HBox>
+            <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..."/>
+            
+	        <HBox spacing="10" >
+	        	<children>
+	        		<VBox spacing="10" >
+	        			<children>
+		        			<Label text="User ID" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="userIdLabel" defaultText="None" />
+							<Label text="Phone" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="phoneLabel" defaultText="None" />
+	        			</children>
+	        		</VBox>
+	        		<VBox spacing="10" >
+	        			<children>
+				        	<Label text="Email" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="emailLabel" defaultText="None" />
+				            <Label text="Department" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="departmentLabel" defaultText="None" />
+	        			</children>
+        			</VBox>
+	        	</children>
+	        </HBox>
+            <Label text="Skills" styleClass="field-label" >
+	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+	        </Label>
+	        <GoatLabelFilteredListSelectionView fx:id="skillsLabel" defaultText="Add skills..." />
           </children>
-          <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          </columnConstraints>
-          <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-          </rowConstraints>
-        </GridPane>
+        </VBox>
       </content>
     </ScrollPane>
   </children>

@@ -25,6 +25,8 @@ import com.thirstygoat.kiqo.gui.skill.SkillFormView;
 import com.thirstygoat.kiqo.gui.skill.SkillViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintFormView;
 import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
+import com.thirstygoat.kiqo.gui.story.StoryFormView;
+import com.thirstygoat.kiqo.gui.story.StoryFormViewModel;
 import com.thirstygoat.kiqo.gui.view.SearchView;
 import com.thirstygoat.kiqo.gui.viewModel.SearchViewModel;
 import com.thirstygoat.kiqo.model.*;
@@ -942,6 +944,8 @@ public class MainController implements Initializable {
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
                 viewModel.setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Backlog" : "Edit Backlog");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Project.class.getSimpleName())) {
@@ -966,6 +970,9 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Skill" : "Edit Skill");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Skill" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Release.class.getSimpleName())) {
@@ -973,8 +980,21 @@ public class MainController implements Initializable {
                         FluentViewLoader.fxmlView(ReleaseFormView.class).load();
                 viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Release" : "Edit Release");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Release" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
+            }  else if (type.equals(Story.class.getSimpleName())) {
+                    ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
+                    // viewModel
+                    final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    // view
+                    viewModel.setExitStrategy(() -> stage.close());
+                    stage.setScene(new Scene(storyFormTuple.getView()));
+                    viewModel.load((Story) t, selectedOrganisationProperty.get());
+                    stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
@@ -1046,7 +1066,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/acceptanceCriteria.fxml"));
@@ -1062,6 +1082,8 @@ public class MainController implements Initializable {
             final AcceptanceCriteriaFormController acceptanceCriteriaFormController = loader.getController();
             acceptanceCriteriaFormController.setStage(stage);
             acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
+            acceptanceCriteriaFormController.headingProperty().set(
+                    acceptanceCriteria == null ? "Create Acceptance Criteria" : "Edit Acceptance Criteria");
 
             acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
             acceptanceCriteriaFormController.populateFields(acceptanceCriteria);

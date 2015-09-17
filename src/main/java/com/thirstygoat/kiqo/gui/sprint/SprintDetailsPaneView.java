@@ -31,6 +31,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private GoatLabelTextField shortNameLabel;
     @FXML
+    private GoatLabelTextField longNameLabel;
+    @FXML
     private SegmentedButton segmentedButton;
     @FXML
     private ToggleButton detailsToggleButton;
@@ -45,6 +47,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         hideAllViews();
 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.goalProperty(), viewModel.goalValidation());
+        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
+
 
         // Add listener on segmentedButton
         segmentedButton.getToggleGroup().selectedToggleProperty().addListener((obs, oldValue, newValue) -> {

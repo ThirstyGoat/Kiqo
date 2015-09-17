@@ -127,17 +127,21 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
         deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
-        final long[] timestamp = {0};
         searchMenuItem.setAccelerator(new KeyCombination() {
+            private final long ONE_SECOND = 1;
+            private long timeOfFirstPress = 0;
+
             @Override
             public boolean match(KeyEvent event) {
                 if (event.getCode() == KeyCode.SHIFT) {
-                    long diff = System.currentTimeMillis() / 1000L - timestamp[0];
-                    if (diff < 1) {
-                        timestamp[0] = 0;
+                    Long timeOfEvent = System.currentTimeMillis() / 1000L;
+                    if (timeOfEvent - timeOfFirstPress < ONE_SECOND) {
                         return true;
+                    } else {
+                        timeOfFirstPress = timeOfEvent;
                     }
-                    timestamp[0] = System.currentTimeMillis() / 1000L;
+                } else {
+                    timeOfFirstPress = 0; // reset if SHIFT not pressed
                 }
                 return false;
             }
@@ -273,5 +277,10 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     public void skillsTab() {
         viewModel.skillsTabAction();
+    }
+    
+    @FXML
+    public void about() {
+        viewModel.aboutAction();
     }
 }

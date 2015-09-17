@@ -4,10 +4,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -37,6 +40,8 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     // Begin FXML Injections
     @FXML
+    private Label heading;
+    @FXML
     private TextArea acTextArea;
     @FXML
     private Button okButton;
@@ -57,21 +62,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         });
         cancelButton.setOnAction(event -> cancel());
 
-        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
-        // Shift+Enter should create new line in the text area
-
-        acTextArea.setOnKeyPressed(event -> {
-            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
-            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
-            if (shiftEnter.match(event)) {
-                // force new line
-                acTextArea.appendText("\n");
-                event.consume();
-            } else if (enter.match(event)) {
-                event.consume();
-                okButton.fire();
-            }
-        });
+        FxUtils.enableShiftEnter(acTextArea, okButton::fire);
     }
 
     private void cancel() {
@@ -121,7 +112,7 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
         } else {
             // edit an existing allocation
             stage.setTitle("Edit Acceptance Criteria");
-            okButton.setText("Save");
+            okButton.setText("Done");
             acTextArea.setText(acceptanceCriteria.criteria.get());
         }
     }
@@ -137,5 +128,10 @@ public class AcceptanceCriteriaFormController extends FormController<AcceptanceC
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    @Override
+    public StringProperty headingProperty() {
+        return heading.textProperty();
     }
 }

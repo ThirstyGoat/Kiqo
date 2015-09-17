@@ -73,6 +73,16 @@
 	-fx-fill: green;
 }
 
+.toolbar-newbutton{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+    -fx-animated: true;
+}
+
+.toolbar-newbutton:hover {
+    -fx-background-color: darkgray;
+}
+
 .task-card-minimised-shortName {
     -fx-font-size: 10px;
     -fx-text-alignment: left;
@@ -143,7 +153,19 @@
 }
 
 .people-icon {
+    -glyph-name: "USER";
+}
+
+.team-icon {
     -glyph-name: "USERS";
+}
+
+.skill-icon {
+    -glyph-name: "PUZZLE";
+}
+
+.sprint-icon {
+    -glyph-name: "FLAG-CHECKERED";
 }
 
 .comment-icon {
@@ -281,17 +303,16 @@
     -fx-background-color: #ff5722;
 }
 
+.task-card.blocked {
+    -fx-background-color: #ff5722;
+}
+
 .task-card.verify {
     -fx-background-color: #2196f3;
 }
 
 .task-card.done {
     -fx-background-color: #4caf50;
-}
-
-.task-card.blocked {
-    -fx-background-color: #a7a7a7;
-    -fx-effect: dropshadow( gaussian , rgba(214, 42, 33, 0.7), 20,0.1,0,0 );
 }
 
 .task-card .label {
@@ -316,7 +337,7 @@
     margin: 0 0 15px 0;
 }
 
-.form .text-area, .form .text-field {
+.form .text-area, .form .text-field, .form .combo-box {
     -fx-background-radius: 0;
     -fx-border-color: gainsboro;
     -fx-background-color: white;
@@ -386,6 +407,15 @@
     -fx-background-color: white;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+}
+
+
+.helperlink { /* Details Pane */
+    -fx-font-size: 11px;
+}
+
+.form .helperlink {
+    -fx-font-size: 10px;
 }
 
 /*********** DETAILS PANE ****************/
