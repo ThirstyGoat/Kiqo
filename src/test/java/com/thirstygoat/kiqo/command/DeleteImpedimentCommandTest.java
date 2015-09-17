@@ -16,7 +16,7 @@ import java.io.File;
  * Created by james on 10/09/15.
  */
 public class DeleteImpedimentCommandTest {
-    DeleteImpedimentCommand deleteImpedimentCommand;
+    private DeleteImpedimentCommand deleteImpedimentCommand;
     private MainController mainController = new MainController();
     private Organisation organisation;
     private Task task;

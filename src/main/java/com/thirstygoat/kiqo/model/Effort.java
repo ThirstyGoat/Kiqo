@@ -6,13 +6,12 @@ import javafx.beans.property.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by leroy on 17/09/15.
  */
-public class Effort {
+public class Effort implements Searchable{
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
     private final ObjectProperty<LocalDateTime> logTime;
@@ -38,16 +37,16 @@ public class Effort {
         this.comment = new SimpleStringProperty(comment);
     }
 
-    public void setPerson(Person person) {
-        this.person.set(person);
-    }
-
     public ObjectProperty<Person> personProperty() {
         return person;
     }
 
     public Person getPerson() {
         return person.get();
+    }
+
+    public void setPerson(Person person) {
+        this.person.set(person);
     }
 
     public Task getTask() {
@@ -58,10 +57,6 @@ public class Effort {
         return logTime.get();
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime.set(endTime);
-    }
-
     public ObjectProperty<LocalDateTime> endTimeProperty() {
         return endTime;
     }
@@ -70,8 +65,8 @@ public class Effort {
         return endTime.get();
     }
 
-    public void setDuration(Float duration) {
-        this.duration.set(duration);
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime.set(endTime);
     }
 
     public FloatProperty durationProperty() {
@@ -82,8 +77,8 @@ public class Effort {
         return duration.get();
     }
 
-    public void setComment(String comment) {
-        this.comment.set(comment);
+    public void setDuration(Float duration) {
+        this.duration.set(duration);
     }
 
     public StringProperty commentProperty() {
@@ -92,5 +87,15 @@ public class Effort {
 
     public String getComment() {
         return comment.get();
+    }
+
+    public void setComment(String comment) {
+        this.comment.set(comment);
+    }
+
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchStrings = new ArrayList<>();
+        return searchStrings;
     }
 }
