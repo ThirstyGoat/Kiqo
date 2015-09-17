@@ -53,7 +53,7 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
                 .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
                 .map(TeamMemberListItemViewModel::new).collect(GoatCollectors.toObservableList());
 
-        final ObservableList<TeamMemberListItemViewModel> list = callback.call(organisationProperty().get().getPeople());
+        final ObservableList<TeamMemberListItemViewModel> list = FXCollections.observableArrayList();
         
         organisationProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

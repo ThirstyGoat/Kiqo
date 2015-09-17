@@ -4,7 +4,6 @@ import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
@@ -21,9 +20,13 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
     private final Button doneButton;
     protected final E editView;
     protected final D displayView;
+    protected Runnable onCommit;
+    protected Runnable onCancel;
 
-    protected BiControlSkin(BiControl<D, E, T> control) {
+    protected BiControlSkin(BiControl<D, E, T> control, Runnable onCommit, Runnable onCancel) {
         super(control);
+        this.onCommit = onCommit;
+        this.onCancel = onCancel;
         
         editButton = makeEditButton();
         doneButton = makeDoneButton();
@@ -31,28 +34,36 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         displayView = makeDisplayView();
         final StackPane viewsPane = new StackPane(editView, displayView);
         final StackPane buttonsPane = new StackPane(editButton, doneButton);
+        buttonsPane.setAlignment(Pos.TOP_CENTER);
         HBox parent = new HBox(viewsPane, buttonsPane);
-        parent.setAlignment(Pos.TOP_LEFT);
-        parent.setStyle("-fx-background-color: blue"); //TODO
         HBox.setHgrow(viewsPane, Priority.ALWAYS);
         
         editButton.setVisible(false);
-        displayView.setVisible(true);
-        editView.setVisible(false);
         doneButton.setVisible(false);
+        editView.setVisible(false);
+        displayView.setVisible(true);
         
         /* interactions */
+        // prevent focusTraversal when hidden
+        doneButton.focusTraversableProperty().bind(doneButton.visibleProperty());
+        editView.focusTraversableProperty().bind(editView.visibleProperty());
+        displayView.focusTraversableProperty().bind(displayView.visibleProperty());
+        
         // show/hide pencil
         parent.hoverProperty().addListener(editButton.getFadeAction());
         editButton.visibleProperty().bind(parent.hoverProperty());
         
         editButton.setOnAction(this::onEditAction);
         doneButton.setOnAction(this::onDoneAction);
-        editView.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && !doneButton.isFocused()) {
-                onCancelAction(new ActionEvent());
-            }
-        });
+        
+        // attach cancelAction TODO needs work
+//        ChangeListener<? super Boolean> focusListener = (observable, oldValue, newValue) -> {
+//            if (!newValue && !doneButton.isFocused()) {
+//                onCancelAction(new ActionEvent());
+//            }
+//        };
+//        editView.focusedProperty().addListener(focusListener);
+//        parent.focusedProperty().addListener(focusListener);
         
         getChildren().add(parent);
     }
@@ -89,14 +100,16 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         showEditView();
     }
 
-    protected void onDoneAction(@SuppressWarnings("unused") ActionEvent event) {
-        showDisplayView();
-    }
-    
     protected void onCancelAction(@SuppressWarnings("unused") ActionEvent event) {
         showDisplayView();
+        onCancel.run();
     }
-    
+
+    protected void onDoneAction(@SuppressWarnings("unused") ActionEvent event) {
+        showDisplayView();
+        onCommit.run();
+    }
+
 
     static class EditButton extends Button {
         final FadeTransition fade;
