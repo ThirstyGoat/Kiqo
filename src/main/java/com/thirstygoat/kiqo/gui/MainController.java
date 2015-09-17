@@ -479,9 +479,10 @@ public class MainController implements Initializable {
 
     /**
      * Exits the application after prompting to save unsaved changes.
-     * <p/>
+     * <p>
      * We could just call primaryStage.close(), but that is a force close, and
      * then we can't prompt for saving changes
+     * </p>
      */
     public void exit() {
         primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
