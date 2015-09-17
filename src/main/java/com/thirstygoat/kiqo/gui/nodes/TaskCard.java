@@ -8,6 +8,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -20,6 +21,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -31,6 +34,7 @@ import javafx.stage.Window;
 public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private StringProperty shortNameProperty;
     final private FloatProperty hoursProperty;
+    final private FloatProperty spentEffortProperty;
     final private BooleanProperty impedanceProperty;
     final private BooleanProperty isBlockedProperty;
     final private Task task;
@@ -39,12 +43,14 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         this.task = task;
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
+        spentEffortProperty = new SimpleFloatProperty();
         impedanceProperty = new SimpleBooleanProperty(false);
         isBlockedProperty = new SimpleBooleanProperty();
         isBlockedProperty.bindBidirectional(task.blockedProperty());
         draw();
         shortNameProperty().bind(task.shortNameProperty());
         hoursProperty().bind(task.estimateProperty());
+        spentEffortProperty.bind(task.spentEffortProperty());
         getStyleClass().add("task-card");
     }
 
@@ -55,13 +61,16 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         GridPane gridPane = new GridPane();
         BorderPane borderPane = new BorderPane();
         Label shortNameLabel = new Label();
-        Label hourLabel = new Label();
+
+        Text effortText = new Text();
+        Text estimateText = new Text();
+        TextFlow timeTextFlow = new TextFlow(effortText, new Text("/"), estimateText);
+
         HBox iconBox = new HBox();
 
         iconBox.setAlignment(Pos.BOTTOM_RIGHT);
 
-        hourLabel.getStylesheets().add("css/styles.css");
-        hourLabel.getStyleClass().add("task-card-minimised-hours");
+        timeTextFlow.getStyleClass().add("task-card-minimised-hours");
 
         shortNameLabel.getStylesheets().add("css/styles.css");
         shortNameLabel.getStyleClass().add("task-card-minimised-shortName");
@@ -69,14 +78,15 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         shortNameLabel.setMaxWidth(130);
 
         shortNameLabel.textProperty().bind(shortNameProperty);
-        hourLabel.textProperty().bind(hoursProperty.asString());
+        estimateText.textProperty().bind(hoursProperty.asString());
+        effortText.textProperty().bind(spentEffortProperty.asString());
 
         Insets mainInset = new Insets(5, 5, 5, 5);
         Insets shortNameInset = new Insets(10, 0, 0, 0);
         Insets hourInset = new Insets(0, 0, 0, 0);
 
         shortNameLabel.setPadding(shortNameInset);
-        hourLabel.setPadding(hourInset);
+        timeTextFlow.setPadding(hourInset);
 
         FontAwesomeIconView impedanceIcon = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
         impedanceIcon.setSize("15px");
@@ -99,7 +109,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         RowConstraints rowConstraints = new RowConstraints(10);
         rowConstraints.setVgrow(Priority.SOMETIMES);
 
-        gridPane.add(hourLabel, 0, 0, 2, 1);
+        gridPane.add(timeTextFlow, 0, 0, 2, 1);
         gridPane.add(shortNameLabel, 0, 1, 2, 1);
         gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints2);
         gridPane.getRowConstraints().add(rowConstraints);

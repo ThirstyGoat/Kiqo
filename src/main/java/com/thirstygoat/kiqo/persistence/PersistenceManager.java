@@ -200,6 +200,8 @@ public class PersistenceManager {
                 observableList = FXCollections.observableArrayList(Task.getWatchStrategy());
             } else if (Item.class.isAssignableFrom((Class<?>) type)) {
                 observableList = FXCollections.observableArrayList(Item.getWatchStrategy());
+            } else if (Effort.class.isAssignableFrom((Class<?>) type)) {
+                observableList = FXCollections.observableArrayList(Effort.getWatchStrategy());
             } else {
                 observableList = FXCollections.observableArrayList();
             }
