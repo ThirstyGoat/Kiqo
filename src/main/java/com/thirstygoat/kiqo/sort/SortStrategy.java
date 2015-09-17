@@ -22,6 +22,10 @@ public abstract class SortStrategy<E, C, D> {
         this.comparableGetter = comparableGetter;
     }
 
+    public Function<E, C> getComparableGetter() {
+        return comparableGetter;
+    }
+
     public void setData(D data) {
         this.data = data;
     }
