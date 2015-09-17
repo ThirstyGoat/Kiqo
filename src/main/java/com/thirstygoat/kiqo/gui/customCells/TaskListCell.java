@@ -75,13 +75,14 @@ public class TaskListCell extends ListCell<Task> {
             ToggleButton blockedButton = new ToggleButton();
             blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
             blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
-            blockedButton.setStyle("-fx-background-color: transparent;");
+            blockedButton.getStyleClass().add("blocked-button");
+
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
 
 
-            gridPane.add(name,0, 0);
+            gridPane.add(name, 0, 0);
             gridPane.add(description, 0, 1);
             gridPane.add(statusComboBox, 1, 0);
             gridPane.add(blockedButton, 2, 0);

@@ -445,3 +445,24 @@
 .expanded-task-headings {
     -fx-font: 11px "Roboto Italic";
 }
+
+/************ STORY DETAILS PANE TASK BUTTON ************/
+
+.blocked-button {
+    -fx-background-color: transparent;
+}
+
+.blocked-button * {
+    -fx-fill: #E8E8EE;
+}
+
+.blocked-button:selected * {
+    -fx-fill: red;
+}
+
+.blocked-button:pressed * {
+    -fx-fill: darkgrey;
+}
+
+.blocked-button * {
+}
