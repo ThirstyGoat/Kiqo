@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.property.*;
 import javafx.collections.*;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.util.*;
@@ -256,7 +257,7 @@ public final class FxUtils {
                                                       Editable viewModel,
                                                       ListProperty<T> targetList,
                                                       ListProperty<T> sourceList) {
-        initGoatLabel(listBiControl, viewModel, targetList, sourceList, null, Item::shortNameProperty);
+        initGoatLabel(listBiControl, viewModel, targetList, sourceList, null, null, Item::shortNameProperty);
     }
     
     public static <T> void initGoatLabel(FilteredListBiControl<T> listBiControl,
@@ -264,12 +265,14 @@ public final class FxUtils {
                 ListProperty<T> targetList,
                 ObservableList<T> sourceList,
                 Callback<ListView<T>, ListCell<T>> displayCellFactory, 
+                Callback<T, Node> editCellFactory, 
                 Callback<T, StringProperty> stringPropertyCallback) {
         listBiControl.selectedItems().bindBidirectional(targetList);
         listBiControl.allItems().set(sourceList); // TODO check this works
         listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl,
                 viewModel::commitEdit, viewModel::cancelEdit, 
                 displayCellFactory,
+                editCellFactory,
                 stringPropertyCallback));
     }
 }

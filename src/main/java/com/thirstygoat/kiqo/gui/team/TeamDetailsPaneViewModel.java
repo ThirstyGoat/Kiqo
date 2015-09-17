@@ -15,21 +15,25 @@ import com.thirstygoat.kiqo.util.GoatCollectors;
 public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable {
 
     private ObjectProperty<MainController> mainControllerProperty = new SimpleObjectProperty<>();
-    private ListProperty<TeamMemberListItemViewModel> teamMemberViewModels =
+    private ListProperty<PersonListItemViewModel> teamMemberViewModels =
                     new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public ObjectProperty<MainController> mainControllerProperty() {
         return mainControllerProperty;
     }
 
-    public ListProperty<TeamMemberListItemViewModel> teamMemberViewModels() {
+    public ListProperty<PersonListItemViewModel> teamMemberViewModels() {
         return teamMemberViewModels;
     }
 
     @Override
     public void afterLoad() {
         Runnable mapPeople = () -> teamMemberViewModels.setAll(teamMembersProperty().stream()
-                        .map(TeamMemberListItemViewModel::new)
+                        .map(person -> {
+                            PersonListItemViewModel listItemViewModel = new PersonListItemViewModel();
+                            listItemViewModel.load(person, organisationProperty().get());
+                            return listItemViewModel;
+                        })
                         .collect(Collectors.toList()));
         modelWrapper.onModelChange(change -> Platform.runLater(mapPeople));
         mapPeople.run();
@@ -48,12 +52,16 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
         reload();
     }
 
-    public ObservableList<TeamMemberListItemViewModel> eligibleTeamMembers() {
-        final Callback<ObservableList<Person>, ObservableList<TeamMemberListItemViewModel>> callback = allPeople -> allPeople.stream()
+    public ObservableList<PersonListItemViewModel> eligibleTeamMembers() {
+        final Callback<ObservableList<Person>, ObservableList<PersonListItemViewModel>> callback = allPeople -> allPeople.stream()
                 .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
-                .map(TeamMemberListItemViewModel::new).collect(GoatCollectors.toObservableList());
+                .map(person -> {
+                    PersonListItemViewModel listItemViewModel = new PersonListItemViewModel();
+                    listItemViewModel.load(person, organisationProperty().get());
+                    return listItemViewModel;
+                }).collect(GoatCollectors.toObservableList());
 
-        final ObservableList<TeamMemberListItemViewModel> list = FXCollections.observableArrayList();
+        final ObservableList<PersonListItemViewModel> list = FXCollections.observableArrayList();
         
         organisationProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
@@ -8,10 +7,9 @@
 <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	  fx:controller="com.thirstygoat.kiqo.gui.team.TeamMemberListItemView">
 	<children>
-		<GoatLabelTextField fx:id="shortNameLabel" style="-fx-font-size: 1.1em;"/>
-		<Label fx:id="descriptionLabel" style="-fx-font-size: 0.8em;"/>
+		<Label fx:id="shortNameLabel" />
 		<Region HBox.hgrow="ALWAYS"/>
-		<Label fx:id="roleBadge" styleClass="roleBadge"/>
+		<Label fx:id="roleBadge" />
 	</children>
 	<padding>
 		<Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
