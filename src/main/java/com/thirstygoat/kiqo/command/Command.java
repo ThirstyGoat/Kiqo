@@ -5,8 +5,6 @@ package com.thirstygoat.kiqo.command;
  * through a constructor, if necessary. If execute() does not create an object, T should be set to &lt;Void&gt;.
  *
  * @author amy
- *
- * @param <T> Return type of execute() method
  */
 public abstract class Command {
 

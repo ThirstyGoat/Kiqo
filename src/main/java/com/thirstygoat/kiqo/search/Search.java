@@ -1,7 +1,11 @@
 package com.thirstygoat.kiqo.search;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.sort.AnchoredSortStrategy;
+import com.thirstygoat.kiqo.sort.SortStrategy;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -46,6 +50,18 @@ public class Search {
                 // only care about the first searchable string (short name) for this basic search implementation
             }
         }
+
+        // Sort the results
+        SortStrategy<SearchResult, String, String> sortStrategy = new AnchoredSortStrategy<>();
+        sortStrategy.setData(getQueryLowerCase().trim());
+        sortStrategy.setComparableGetter(SearchResult::getResultText);
+        // Sort results alphabetically
+        results.sort((e1, e2) -> sortStrategy.getComparableGetter().apply(e1)
+                        .compareTo(sortStrategy.getComparableGetter().apply(e2)));
+        // Sort results using sort strategy
+        ArrayList<SearchResult> sorted = new ArrayList<>(sortStrategy.sorted(results));
+        results.setAll(sorted);
+
         return results;
     }
 }
