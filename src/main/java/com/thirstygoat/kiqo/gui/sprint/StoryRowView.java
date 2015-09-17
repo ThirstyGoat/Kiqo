@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
  */
 public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable {
 
+    private static final String BLOCKED_CSS = "blocked";
+
     @InjectViewModel
     private StoryRowViewModel viewModel;
 
@@ -84,12 +86,31 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         });
     }
 
+    /**
+     * Listens to the taskscards blocked property and changes its colour accordingly
+     * @param taskCard
+     */
+    private void setBlockedListener(TaskCard taskCard) {
+        if (taskCard.isBlockedProperty().get()) {
+            taskCard.getStyleClass().add(BLOCKED_CSS);
+        }
+        taskCard.isBlockedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                taskCard.getStyleClass().add(BLOCKED_CSS);
+            } else {
+                taskCard.getStyleClass().remove(BLOCKED_CSS);
+                taskCard.getStyleClass().add(taskCard.getTask().getStatus().getCssClass());
+            }
+        });
+    }
+
     private void drawTasks() {
         Function<Task, TaskCard> fn = task -> {
             TaskCard tc = new TaskCard(task);
             tc.getStyleClass().add(task.getStatus().getCssClass());
 //            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
+            setBlockedListener(tc);
             return tc;
         };
 

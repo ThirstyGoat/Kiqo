@@ -303,16 +303,17 @@
     -fx-background-color: #ff5722;
 }
 
-.task-card.blocked {
-    -fx-background-color: #ff5722;
-}
-
 .task-card.verify {
     -fx-background-color: #2196f3;
 }
 
 .task-card.done {
     -fx-background-color: #4caf50;
+}
+
+.task-card.blocked {
+    -fx-background-color: #a7a7a7;
+    -fx-effect: dropshadow( gaussian , rgba(214, 42, 33, 0.7), 20,0.1,0,0 );
 }
 
 .task-card .label {

@@ -28,7 +28,6 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
     private Organisation organisation;
     private MainController mainController;
 
-
     private StringProperty storyName = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
     private IntegerProperty priority = new SimpleIntegerProperty();
