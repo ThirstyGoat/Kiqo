@@ -80,13 +80,7 @@ public class TaskListCell extends ListCell<Task> {
             statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
 
             CheckBox blockedCheckBox = new CheckBox();
-            blockedCheckBox.setSelected(false);
-            blockedCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-                }
-            });
+            blockedCheckBox.selectedProperty().bindBidirectional(task.blockedProperty());
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
@@ -109,8 +103,8 @@ public class TaskListCell extends ListCell<Task> {
             column4.setPercentWidth(5);
             column2.setHalignment(HPos.LEFT);
             column3.setHalignment(HPos.LEFT);
-            column4.setHalignment(HPos.RIGHT);
-            gridPane.getColumnConstraints().addAll(column1, column2, column3);
+            column4.setHalignment(HPos.LEFT);
+            gridPane.getColumnConstraints().addAll(column1, column2, column3, column4);
 
             setGraphic(gridPane);
         } else {
