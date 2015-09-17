@@ -118,19 +118,6 @@ public class MainController implements Initializable {
 
         setStageTitleProperty();
         setSearchShortcut();
-        GaussianBlur gaussianBlur = new GaussianBlur();
-        gaussianBlur.setRadius(5);
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(-0.1);
-        colorAdjust.setInput(gaussianBlur);
-
-        primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                primaryStage.getScene().getRoot().setEffect(null);
-            } else {
-                primaryStage.getScene().getRoot().setEffect(colorAdjust);
-            }
-        });
     }
 
     public BooleanProperty mainToolbarVisibleProperty() {
@@ -835,6 +822,8 @@ public class MainController implements Initializable {
         primaryStage.setOnCloseRequest(event -> {
             if (!promptForUnsavedChanges()) {
                 event.consume();
+            } else {
+                Platform.exit();
             }
         });
     }

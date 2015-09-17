@@ -40,6 +40,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     private TaskCard currentlyDraggingTaskCard;
 
+    private ScrumBoardViewModel scrumBoardViewModel;
+
     @FXML
     private GridPane gridPane;
     @FXML
@@ -154,7 +156,6 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     }
 
     private void initialiseDoubleClick() {
-
             storyCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() > 1) {
                     viewModel.showStoryInDetailsPane();
@@ -164,7 +165,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     private void initialiseDragAndDrop() {
         gridPane.setOnDragDetected(event -> {
-            ScrumBoardView.currentlyDraggingStoryRow = gridPane;
+            scrumBoardViewModel.currentlyDraggingStoryRow = gridPane;
             Dragboard dragboard = gridPane.startDragAndDrop(TransferMode.MOVE);
 
             ClipboardContent cc = new ClipboardContent();
@@ -235,5 +236,9 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         inProgressTasks.setOnDragExited(dragExitEvent);
         verifyTasks.setOnDragExited(dragExitEvent);
         doneTasks.setOnDragExited(dragExitEvent);
+    }
+
+    public void setScrumBoardViewModel(ScrumBoardViewModel scrumBoardViewModel) {
+        this.scrumBoardViewModel = scrumBoardViewModel;
     }
 }

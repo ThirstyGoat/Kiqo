@@ -17,11 +17,6 @@ import java.util.ResourceBundle;
  * Created by bradley on 14/08/15.
  */
 public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializable {
-
-    public static Node currentlyDraggingStoryRow;
-    public static Integer currentlyDraggingStoryInitialIndex = null;
-    public static Integer currentlyDraggingStoryFinalIndex = null;
-
     @InjectViewModel
     private ScrumBoardViewModel viewModel;
 
@@ -38,12 +33,12 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 
     private void initialiseDragAndDrop() {
         scrumBoardVBox.setOnDragOver(event -> {
-            if (currentlyDraggingStoryRow != null) {
+            if (viewModel.currentlyDraggingStoryRow != null) {
                 event.acceptTransferModes(TransferMode.MOVE);
                 event.consume();
 
-                if (currentlyDraggingStoryInitialIndex == null) {
-                    currentlyDraggingStoryInitialIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
+                if (viewModel.currentlyDraggingStoryInitialIndex == null) {
+                    viewModel.currentlyDraggingStoryInitialIndex = scrumBoardVBox.getChildren().indexOf(viewModel.currentlyDraggingStoryRow);
                 }
 
                 // Below is WIP adding auto scroll support when dragging in the top/bottom 10%
@@ -70,7 +65,7 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 //                    scrollPane.setVvalue(scrollPos*0.9);
 //                }
 
-                int index = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
+                int index = scrumBoardVBox.getChildren().indexOf(viewModel.currentlyDraggingStoryRow);
                 for (Node storyRow : scrumBoardVBox.getChildren()) {
                     double top = storyRow.getBoundsInParent().getMinY();
                     double bottom = storyRow.getBoundsInParent().getMaxY();
@@ -88,27 +83,27 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
                         break;
                     }
                 }
-                moveStoryRow(currentlyDraggingStoryRow, index);
+                moveStoryRow(viewModel.currentlyDraggingStoryRow, index);
             }
         });
 
         scrumBoardVBox.setOnDragDropped(event -> {
-            if (currentlyDraggingStoryRow != null && !scrumBoardVBox.getChildren().contains(currentlyDraggingStoryRow)) {
-                scrumBoardVBox.getChildren().add(currentlyDraggingStoryRow);
-                currentlyDraggingStoryRow = null;
+            if (viewModel.currentlyDraggingStoryRow != null && !scrumBoardVBox.getChildren().contains(viewModel.currentlyDraggingStoryRow)) {
+                scrumBoardVBox.getChildren().add(viewModel.currentlyDraggingStoryRow);
+                viewModel.currentlyDraggingStoryRow = null;
             }
             event.setDropCompleted(true);
         });
 
         scrumBoardVBox.setOnDragDone(event -> {
-            currentlyDraggingStoryFinalIndex = scrumBoardVBox.getChildren().indexOf(currentlyDraggingStoryRow);
-            if (currentlyDraggingStoryInitialIndex != null &&
-                    !currentlyDraggingStoryInitialIndex.equals(currentlyDraggingStoryFinalIndex))
+            viewModel.currentlyDraggingStoryFinalIndex = scrumBoardVBox.getChildren().indexOf(viewModel.currentlyDraggingStoryRow);
+            if (viewModel.currentlyDraggingStoryInitialIndex != null &&
+                    !viewModel.currentlyDraggingStoryInitialIndex.equals(viewModel.currentlyDraggingStoryFinalIndex))
                 getViewModel().updateStoryOrder();
 
-            currentlyDraggingStoryRow = null;
-            currentlyDraggingStoryInitialIndex = null;
-            currentlyDraggingStoryFinalIndex = null;
+            viewModel.currentlyDraggingStoryRow = null;
+            viewModel.currentlyDraggingStoryInitialIndex = null;
+            viewModel.currentlyDraggingStoryFinalIndex = null;
         });
     }
 

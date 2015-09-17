@@ -23,10 +23,12 @@ import java.util.stream.Collectors;
  * Created by bradley on 14/08/15.
  */
 public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
+    public Node currentlyDraggingStoryRow;
+    public Integer currentlyDraggingStoryInitialIndex = null;
+    public Integer currentlyDraggingStoryFinalIndex = null;
     private MainController mainController;
     private Organisation organisation;
     private Sprint sprint;
-
     private ObservableList<Node> storyRows = FXCollections.observableArrayList();
 
     private Map<Node, Story> storyRowsMap = new HashMap<>();
@@ -56,6 +58,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
             ViewTuple<StoryRowView, StoryRowViewModel> viewTuple = FluentViewLoader.fxmlView(StoryRowView.class).load();
             viewTuple.getViewModel().load(story, organisation);
             viewTuple.getViewModel().setMainController(mainController);
+            viewTuple.getCodeBehind().setScrumBoardViewModel(this);
             mapStoryRow(story, viewTuple.getView());
             return viewTuple.getView();
         } else {
@@ -108,7 +111,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
      * appropriate command to update the order in the model.
      */
     public void updateStoryOrder() {
-        Node movedStoryRow = ScrumBoardView.currentlyDraggingStoryRow;
+        Node movedStoryRow = currentlyDraggingStoryRow;
         Story movedStory = storyRowsMap.get(movedStoryRow);
 
         int movedStoryIndex = storyRows.indexOf(movedStoryRow);

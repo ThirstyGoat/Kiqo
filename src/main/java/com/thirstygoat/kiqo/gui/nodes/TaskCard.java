@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 
 /**
@@ -125,14 +126,28 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             // probably should add one expanded task card to the scrumboard and load the task into it rather than independent tuples for each one
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
-            stage.initOwner(MainController.getPrimaryStage());
+            Window parentWindow = getParent().getScene().getWindow();
+            stage.initOwner(parentWindow);
             ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
             viewTuple.getViewModel().load(task);
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);
             stage.setScene(scene);
+
+            double parentWidth = parentWindow.getWidth();
+            double parentHeight = parentWindow.getHeight();
+            double parentX = parentWindow.getX();
+            double parentY = parentWindow.getY();
+
+            double stageWidth = 400;
+            double stageHeight = 400;
+
+            stage.setOpacity(0);
             stage.show();
+            stage.setX(parentX + parentWidth / 2 - stageWidth / 2);
+            stage.setY(parentY + parentHeight / 2 - stageHeight / 2);
+            Platform.runLater(() -> stage.setOpacity(1));
 
             ChangeListener<Boolean> focusedChangeListener = (observable, oldValue, newValue) -> {
                 Platform.runLater(stage::close);
