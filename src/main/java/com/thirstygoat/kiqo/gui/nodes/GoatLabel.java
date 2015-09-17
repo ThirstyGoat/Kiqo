@@ -1,14 +1,19 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import de.saxsys.mvvmfx.utils.validation.visualization.*;
 
 
 /**
@@ -16,23 +21,18 @@ import de.saxsys.mvvmfx.utils.validation.visualization.*;
  * @param <C> editField type
  */
 public abstract class GoatLabel<C extends Control> extends Control {
+    public StringProperty defaultText = new SimpleStringProperty("");
     protected GoatLabelSkin<C> skin;
     protected Label displayLabel;
     protected Label defaultTextLabel;
     protected C editField;
     protected Button editButton;
     protected Button doneButton;
+    double customMaxHeight = 20000;
     private ValidationVisualizer validationVisualizer;
     private ObjectProperty<ValidationStatus> validationStatus;
     private ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>(event -> {});
     private ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>(event -> {});
-    public StringProperty defaultText = new SimpleStringProperty("");
-
-    protected abstract GoatLabelSkin<C> initSkin();
-
-    public abstract C getEditField();
-
-    protected abstract void populateEditField();
 
     public GoatLabel() {
         super();
@@ -40,6 +40,12 @@ public abstract class GoatLabel<C extends Control> extends Control {
         setButtonBindings();
         setValidation();
     }
+
+    protected abstract GoatLabelSkin<C> initSkin();
+
+    public abstract C getEditField();
+
+    protected abstract void populateEditField();
 
     private void setValidation() {
         validationVisualizer = new ControlsFxVisualizer();
@@ -109,28 +115,24 @@ public abstract class GoatLabel<C extends Control> extends Control {
         return validationStatus;
     }
 
-    public void setOnAction(EventHandler<ActionEvent> action) {
-        onAction.set(action);
-    }
-
     public EventHandler<ActionEvent> getOnAction() {
         return onAction.get();
     }
 
-    public void setOnCancel(EventHandler<ActionEvent> action) {
-        onCancel.set(action);
+    public void setOnAction(EventHandler<ActionEvent> action) {
+        onAction.set(action);
     }
 
     public EventHandler<ActionEvent> getOnCancel() {
         return onCancel.get();
     }
 
-    public String getDefaultText() {
-        return defaultText.get();
+    public void setOnCancel(EventHandler<ActionEvent> action) {
+        onCancel.set(action);
     }
 
-    public StringProperty defaultTextProperty() {
-        return defaultText;
+    public String getDefaultText() {
+        return defaultText.get();
     }
 
     public void setDefaultText(String defaultText) {
@@ -153,5 +155,13 @@ public abstract class GoatLabel<C extends Control> extends Control {
                 defaultTextLabel.setPrefWidth(0.1);
             }
         });
+    }
+
+    public StringProperty defaultTextProperty() {
+        return defaultText;
+    }
+
+    public double getCustomMaxHeight() {
+        return customMaxHeight;
     }
 }

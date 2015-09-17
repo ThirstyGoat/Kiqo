@@ -70,6 +70,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         segmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 segmentedButton.getToggleGroup().selectToggle(oldValue);
@@ -80,6 +81,8 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                     showNode(loggingGridPane);
                 }
             }
+
+
         });
 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());

@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Control;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
@@ -62,5 +63,14 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
         scrollBarv.setPrefWidth(0.5);
         scrollBarv.setDisable(true);
         scrollBarv.setOpacity(0);
+    }
+
+    public void setCustomMaxHeight() {
+        System.out.println("set");
+        editField.setPrefHeight(50);
+        editField.setMaxHeight(50);  // this does nothing
+        displayLabel.setMaxHeight(50);
+        displayLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
+        //        displayLabel.setWrapText(true);
     }
 }

@@ -2,8 +2,7 @@
 
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
@@ -14,7 +13,7 @@
             <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
                <children>
                   <GoatLabelTextField styleClass="expanded-task-header" fx:id="shortNameLabel"/>
-                  <Region HBox.hgrow="ALWAYS"/>
+                  <Region HBox.hgrow="ALWAYS" />
                   <VBox alignment="TOP_RIGHT">
                      <children>
                         <SegmentedButton fx:id="segmentedButton">
@@ -32,25 +31,49 @@
             </HBox>
             <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
-                  <GridPane fx:id="detailsGridPane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" maxHeight="170">
+                  <GridPane fx:id="detailsGridPane" maxHeight="170" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <GoatLabelTextArea fx:id="descriptionLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" />
-                        <FontAwesomeIconView fx:id="peopleIcon" GridPane.columnIndex="0" GridPane.rowIndex="1" glyphSize="15" styleClass="people-icon" />
-                        <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-                        <FontAwesomeIconView  GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" glyphSize="18" styleClass="clock-icon"/>
-                        <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                        <!--<Label fx:id="commentsLabel" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />-->
-                        <FontAwesomeIconView fx:id="blockedIcon"  glyphSize="18" styleClass="blocked-icon" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                        <CheckBox fx:id="blockedCheckBox" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                         <!-- Estimated hours-->
+                         <Label styleClass="expanded-task-headings" text="Estimated Hours" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                             <padding>
+                                 <Insets bottom="2" />
+                             </padding>
+                         </Label>
+                         <!--<Label fx:id="estimatedHoursLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />-->
+                         <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                         <!-- Blocked status-->
+                         <Label styleClass="expanded-task-headings" text="Blocked" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                             <padding>
+                                 <Insets bottom="2" right="5"/>
+                             </padding>
+                         </Label>
+                         <CheckBox fx:id="blockedCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                         <!-- Rest of the fields-->
+                         <Label styleClass="expanded-task-headings" text="Assigned People" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                             <padding>
+                                 <Insets bottom="2" top="10" />
+                             </padding>
+                         </Label>
+                         <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                         <Label styleClass="expanded-task-headings" text="Description" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                             <padding>
+                                 <Insets bottom="2" top="10" />
+                             </padding>
+                         </Label>
+                         <GoatLabelTextArea fx:id="descriptionLabel" GridPane.rowIndex="5"  defaultText="Description" GridPane.columnSpan="2"/>
+
                      </children>
                      <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="25.0" prefWidth="30.0" />
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" percentWidth="50" />
+                        <ColumnConstraints hgrow="NEVER" percentWidth="50" halignment="RIGHT"/>
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" maxHeight="100"/>
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="100" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
 
@@ -58,7 +81,6 @@
                      <children>
                         <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
                            <children>
-                              <!--<FontAwesomeIconView pickOnBounds="true"  styleClass="clock-icon" glyphSize="18" />-->
 
                            </children>
                            <padding>
@@ -87,7 +109,7 @@
                   <ListView fx:id="impedimentsListView" maxHeight="250.0" prefHeight="250.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
-                        <TextField fx:id="impedimentTextField" HBox.hgrow="ALWAYS" promptText="Impediment description..."/>
+                        <TextField fx:id="impedimentTextField" promptText="Impediment description..." HBox.hgrow="ALWAYS" />
                         <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
                         <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
                      </children>

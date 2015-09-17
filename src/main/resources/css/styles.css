@@ -2,6 +2,10 @@
     font-family: 'Roboto';
     src: url("Roboto-Regular.ttf");
 }
+@font-face {
+    font-family: 'Roboto Italic';
+    src: url("Roboto-Italic.ttf");
+}
 
 .title {
 	-fx-font-weight: bold;
@@ -436,4 +440,8 @@
 
 .details-pane-info .heading {
     -fx-font-size: 18px;
+}
+
+.expanded-task-headings {
+    -fx-font: 11px "Roboto Italic";
 }
