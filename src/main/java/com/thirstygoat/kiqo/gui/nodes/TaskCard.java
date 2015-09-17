@@ -48,13 +48,14 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
 
     }
 
+    /**
+     * Sets up the view for the expanded task card.
+     */
     private void draw() {
         GridPane gridPane = new GridPane();
         BorderPane borderPane = new BorderPane();
-
         Label shortNameLabel = new Label();
         Label hourLabel = new Label();
-
         HBox iconBox = new HBox();
 
         iconBox.setAlignment(Pos.BOTTOM_RIGHT);
@@ -81,12 +82,11 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
+        // open the expanded card
         setOnMouseClicked(event -> newExpandedCard());
 
         impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.getImpediments()));
-//        impedanceIcon.visibleProperty().set(true);
 
-        impedanceIcon.setStyle(("fx-fill : oldlace"));
         iconBox.getChildren().add(impedanceIcon);
 
         ColumnConstraints columnConstraints = new ColumnConstraints(10, 100, 100);
@@ -118,8 +118,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         getChildren().add(borderPane);
     }
 
+    /**
+     * Display the expanded task card
+     */
     private void newExpandedCard() {
         Platform.runLater(() -> {
+            // probably should add one expanded task card to the scrumboard and load the task into it rather than independent tuples for each one
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
             stage.initOwner(MainController.getPrimaryStage());
@@ -136,47 +140,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             };
 
             stage.focusedProperty().addListener(focusedChangeListener);
-
-
-            // Animation stuff
-//            view.setScaleX(0);
-//            view.setScaleY(0);
-//            stage.setWidth(0.1);
-//            stage.setHeight(0.1);
-//            stage.setOpacity(0.5);
-//
-//            Timeline timeline = new Timeline();
-//            Duration transitionTime = Duration.millis(500);
-////            timeline.setRate(3);
-//
-//            KeyValue kv_width = new KeyValue(stage.minWidthProperty(), 400);
-//            KeyFrame kf_width = new KeyFrame(transitionTime, kv_width);
-//            KeyValue kv_height = new KeyValue(stage.minHeightProperty(), 400);
-//            KeyFrame kf_height = new KeyFrame(transitionTime, kv_height);
-//
-//
-//            KeyValue kv_scale_width = new KeyValue(view.scaleXProperty(), 1);
-//            KeyFrame kf_scale_width = new KeyFrame(transitionTime, kv_scale_width);
-//            KeyValue kv_scale_height = new KeyValue(view.scaleYProperty(), 1);
-//            KeyFrame kf_scale_height = new KeyFrame(transitionTime, kv_scale_height);
-//
-//
-//            KeyValue kv_stage_opacity = new KeyValue(stage.opacityProperty(), 1);
-//            KeyFrame kf_stage_opacity = new KeyFrame(transitionTime.multiply(1.75), kv_stage_opacity);
-//
-//            Stage primaryStage = MainController.getPrimaryStage();
-//
-//            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-//                stage.setX(primaryStage.getX() + (primaryStage.getWidth() / 2) - (newValue.doubleValue() / 2));
-//            });
-//
-//            stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-//                stage.setY(primaryStage.getY() + (primaryStage.getHeight() / 2) - (stage.getHeight() / 2));
-//            });
-//
-//            timeline.getKeyFrames().addAll(kf_width, kf_height, kf_scale_width, kf_scale_height, kf_stage_opacity);
-//            timeline.play();
-
         });
     }
 
