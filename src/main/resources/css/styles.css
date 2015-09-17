@@ -437,3 +437,24 @@
 .details-pane-info .heading {
     -fx-font-size: 18px;
 }
+
+/************ STORY DETAILS PANE TASK BUTTON ************/
+
+.blocked-button {
+    -fx-background-color: transparent;
+}
+
+.blocked-button * {
+    -fx-fill: #E8E8EE;
+}
+
+.blocked-button:selected * {
+    -fx-fill: red;
+}
+
+.blocked-button:pressed * {
+    -fx-fill: darkgrey;
+}
+
+.blocked-button * {
+}
