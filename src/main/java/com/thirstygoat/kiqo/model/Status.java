@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.model;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.scene.paint.Color;
 
 /**
  * Created by samschofield on 23/07/15.
@@ -12,7 +12,6 @@ public enum Status {
     NOT_STARTED("Not Started", Color.LIGHTGRAY, "not-started"),
     IN_PROGRESS("In Progress", Color.LIGHTGOLDENRODYELLOW, "in-progress"),
     PENDING("Pending", Color.LIGHTBLUE, "pending"),
-    BLOCKED("Blocked", Color.LIGHTSALMON, "blocked"),
     VERIFY("Verify", Color.LIGHTGREEN, "verify"),
     DONE("Done", Color.GREENYELLOW, "done"),
     DEFERRED("Deferred", Color.LIGHTCORAL, "deferred");

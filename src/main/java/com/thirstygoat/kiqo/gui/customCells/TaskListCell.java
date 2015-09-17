@@ -9,6 +9,8 @@ import com.thirstygoat.kiqo.gui.DragContainer;
 import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -16,6 +18,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
@@ -69,25 +72,36 @@ public class TaskListCell extends ListCell<Task> {
             });
             statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
 
+            ToggleButton blockedButton = new ToggleButton();
+            blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
+            blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
+            blockedButton.getStyleClass().add("blocked-button");
+
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
 
-            gridPane.add(name,0, 0);
+
+            gridPane.add(name, 0, 0);
             gridPane.add(description, 0, 1);
             gridPane.add(statusComboBox, 1, 0);
-            gridPane.add(estimate, 2, 0);
+            gridPane.add(blockedButton, 2, 0);
+            gridPane.add(estimate, 3, 0);
             GridPane.setRowSpan(statusComboBox, 2);
-            GridPane.setRowSpan(estimate, 2);
+            GridPane.setRowSpan(estimate, 1);
 
             ColumnConstraints column1 = new ColumnConstraints();
             ColumnConstraints column2 = new ColumnConstraints();
             ColumnConstraints column3 = new ColumnConstraints();
-            column1.setPercentWidth(70);
-            column2.setPercentWidth(25);
-            column3.setPercentWidth(5);
-            column3.setHalignment(HPos.RIGHT);
-            gridPane.getColumnConstraints().addAll(column1, column2, column3);
+            ColumnConstraints column4 = new ColumnConstraints();
+            column1.setPercentWidth(65);
+            column2.setPercentWidth(20);
+            column3.setPercentWidth(10);
+            column4.setPercentWidth(5);
+            column2.setHalignment(HPos.LEFT);
+            column3.setHalignment(HPos.LEFT);
+            column4.setHalignment(HPos.LEFT);
+            gridPane.getColumnConstraints().addAll(column1, column2, column3, column4);
 
             setGraphic(gridPane);
         } else {
