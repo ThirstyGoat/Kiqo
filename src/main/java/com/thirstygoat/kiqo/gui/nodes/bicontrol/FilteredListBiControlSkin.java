@@ -12,11 +12,12 @@ import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
  */
 public class FilteredListBiControlSkin<S> extends BiControlSkin<ListView<S>, GoatFilteredListSelectionView<S>, ListProperty<S>> {
     private static final double PREF_HEIGHT = 200;
+    
     public FilteredListBiControlSkin(FilteredListBiControl<S> listBiControl, 
             Runnable onCommit, Runnable onCancel, 
             Callback<ListView<S>, ListCell<S>> displayCellFactory, 
             Callback<S, StringProperty> stringPropertyCallback) {
-        super(listBiControl, onCommit, onCancel);
+        super(listBiControl, onCommit, onCancel, true);
         
         displayView.setItems(listBiControl.selectedItems());
         displayView.setCellFactory(displayCellFactory != null ? displayCellFactory : createDefaultCellFactory(stringPropertyCallback));
@@ -25,7 +26,7 @@ public class FilteredListBiControlSkin<S> extends BiControlSkin<ListView<S>, Goa
         editView.setSourceItems(listBiControl.allItems());
         editView.setStringPropertyCallback(stringPropertyCallback);
     }
-
+    
     private Callback<ListView<S>, ListCell<S>> createDefaultCellFactory(Callback<S, StringProperty> stringPropertyCallback) {
         return listView -> {
             return new ListCell<S>() {

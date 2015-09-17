@@ -3,12 +3,10 @@ package com.thirstygoat.kiqo.gui.person;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.*;
 
 import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.FxUtils;
 
