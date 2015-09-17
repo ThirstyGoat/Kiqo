@@ -17,26 +17,21 @@ import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
+import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
 import com.thirstygoat.kiqo.model.*;
 import de.saxsys.mvvmfx.ViewTuple;
-import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
-import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Release;
-import com.thirstygoat.kiqo.model.Skill;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,6 +177,8 @@ public class MainDetailsPaneController implements Initializable {
     private Node getStoryDetailsPane(Story story) {
         ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getStoryViewTuple();
         viewTuple.getViewModel().load(story, mainController.selectedOrganisationProperty.get());
+        viewTuple.getCodeBehind().showDetails(story);
+        viewTuple.getCodeBehind().setMainController(mainController);
         return viewTuple.getView();
     }
 

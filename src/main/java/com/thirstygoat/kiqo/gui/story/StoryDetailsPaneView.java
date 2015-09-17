@@ -96,11 +96,11 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @InjectViewModel
     private StoryDetailsPaneViewModel viewModel;
 
-    public void showDetails(final ObjectProperty<Story> story) {
-        this.story = story;
-        if (story.get() != null) {
+    public void showDetails(final Story story) {
+        this.story.set(story);
+        if (story != null) {
 
-            story.get().observableTasks().addListener((ListChangeListener<Task>) c -> {
+            story.observableTasks().addListener((ListChangeListener<Task>) c -> {
                 c.next();
                 c.getAddedSubList().forEach(task -> {
                     task.estimateProperty().addListener((observable, oldValue, newValue) -> {
@@ -108,44 +108,44 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                         // Extractor is not being called properly when an item is removed from a list and then
                         // added back [as is the case when re-ordering]
                         Task tmpTask = new Task();
-                        story.get().observableTasks().add(tmpTask);
-                        story.get().observableTasks().remove(tmpTask);
+                        story.observableTasks().add(tmpTask);
+                        story.observableTasks().remove(tmpTask);
                     });
                 });
             });
-            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.get().observableDependencies()));
+            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.observableDependencies()));
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
-            storyScaleLabel.textProperty().bind(story.get().scaleProperty().asString());
+            storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
             totalHoursLabel.textProperty().unbind();
 
             totalHoursLabel.textProperty().bind(Bindings.createStringBinding(() -> {
                         float totalHours = 0;
-                        for (Task task : story.get().observableTasks()) {
+                        for (Task task : story.observableTasks()) {
                             totalHours += task.getEstimate();
                         }
 
                         return Float.toString(totalHours);
 
-                }, story.get().observableTasks()
+                }, story.observableTasks()
             ));
             setScale();
 
 
             if (isReadyListener != null) {
                 isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
-                story.get().isReadyProperty().removeListener(modelIsReadyListener);
+                story.isReadyProperty().removeListener(modelIsReadyListener);
             }
             isReadyListener = (observable, oldValue, newValue) -> {
-                if (story.get().getIsReady() != newValue) {
+                if (story.getIsReady() != newValue) {
                     Command command = new EditCommand<>(story, "isReady", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
             };
             modelIsReadyListener = (observable, oldValue, newValue) -> isReadyCheckBox.setSelected(newValue);
-            isReadyCheckBox.setSelected(story.get().getIsReady());
+            isReadyCheckBox.setSelected(story.getIsReady());
             isReadyCheckBox.selectedProperty().addListener(isReadyListener);
-            story.get().isReadyProperty().addListener(modelIsReadyListener);
+            story.isReadyProperty().addListener(modelIsReadyListener);
         } else {
             totalHoursLabel.setText("0.0");
             System.out.println(isReadyCheckBox);
@@ -160,7 +160,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
-        acListView.setItems(story.get().getAcceptanceCriteria());
+        acListView.setItems(story.getAcceptanceCriteria());
 
         addACButton.setOnAction(event -> mainController.createAC());
         removeACButton.setOnAction(event -> deleteAC());
@@ -168,7 +168,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
-        taskListView.setItems(story.get().observableTasks());
+        taskListView.setItems(story.observableTasks());
 
         addTaskButton.setOnAction(event -> mainController.createTask());
         removeTaskButton.setOnAction(event -> deleteTask());
@@ -179,19 +179,19 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         // Story must have non-null estimate
         // Story must be in a backlog
 
-        BooleanBinding nullBacklogBinding = Bindings.isNull(story.get().backlogProperty());
-        BooleanBinding emptyACBinding = Bindings.size(story.get().getAcceptanceCriteria()).isEqualTo(0);
-        BooleanBinding noEstimateBinding = Bindings.equal(story.get().estimateProperty(), 0);
+        BooleanBinding nullBacklogBinding = Bindings.isNull(story.backlogProperty());
+        BooleanBinding emptyACBinding = Bindings.size(story.getAcceptanceCriteria()).isEqualTo(0);
+        BooleanBinding noEstimateBinding = Bindings.equal(story.estimateProperty(), 0);
 
         // Bind the disable property
-        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding).or(story.get().inSprintProperty()));
+        isReadyCheckBox.disableProperty().bind(nullBacklogBinding.or(emptyACBinding).or(noEstimateBinding).or(story.inSprintProperty()));
         readyWhy.visibleProperty().bind(isReadyCheckBox.disabledProperty());
 
         setIsReadyCheckBoxInfo();
         setEstimateHyperlink();
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
-        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()).or(story.get().inSprintProperty()));
+        storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()).or(story.inSprintProperty()));
     }
 
     private void deleteTask() {
