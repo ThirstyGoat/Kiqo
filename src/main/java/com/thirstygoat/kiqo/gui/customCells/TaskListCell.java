@@ -11,15 +11,6 @@ import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.gui.DragContainer;
-import com.thirstygoat.kiqo.model.Status;
-import com.thirstygoat.kiqo.model.Task;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -84,6 +75,7 @@ public class TaskListCell extends ListCell<Task> {
             ToggleButton blockedButton = new ToggleButton();
             blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
             blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
+            blockedButton.setStyle("-fx-background-color: transparent;");
 
             Text estimate = new Text();
             estimate.textProperty().bind(task.estimateProperty().asString());
