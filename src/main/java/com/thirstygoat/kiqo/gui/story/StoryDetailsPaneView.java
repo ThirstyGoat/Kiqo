@@ -92,6 +92,9 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     private Label totalHoursLabel;
     @FXML
     private Hyperlink estimateWhy;
+    @FXML
+    private Label totalLoggedHours;
+
 
     @InjectViewModel
     private StoryDetailsPaneViewModel viewModel;
@@ -192,6 +195,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()).or(story.inSprintProperty()));
+
+//        totalLoggedHours.textProperty().bind(story.totalLoggedHours());
     }
 
     private void deleteTask() {
