@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.*;
@@ -11,7 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 
-import org.controlsfx.control.SegmentedButton;
+import org.controlsfx.control.*;
 
 /**
  * NB: This doesn't actually act like a ListView, beware.
@@ -20,7 +21,7 @@ import org.controlsfx.control.SegmentedButton;
  */
 public class GoatFilteredListSelectionView<T> extends ListView<T> {
     private VBox mainView;
-    private final GoatFilteredListSelectionViewSkin skin;
+    private final GoatFilteredListSelectionViewSkin<T> skin;
     private final ListProperty<T> sourceItems;
     private final ListProperty<T> targetItems;
     private final ObservableList<T> allItems;
@@ -36,8 +37,10 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
 
     public GoatFilteredListSelectionView() {
         super();
+        setFocusTraversable(false);
+        
         stringPropertyCallback = t -> new SimpleStringProperty(t != null ? t.toString() : "");
-        skin = new GoatFilteredListSelectionViewSkin(this) {
+        skin = new GoatFilteredListSelectionViewSkin<T>(this) {
             {
                 mainView = getMainView();
                 textField = getTextField();
@@ -126,6 +129,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
     
     public void resetFilter() {
         textField.textProperty().set("");
+        Platform.runLater(textField::requestFocus);
     }
 
     public ObservableList<T> getTargetItems() {
@@ -177,7 +181,6 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
                 new SegmentedButton(allToggleButton, selectedToggleButton, unSelectedToggleButton);
 
         HBox headerContainer = new HBox();
-        headerContainer.setPadding(new Insets(0, 0, 5, 0));
 
         BorderPane footerContainer = new BorderPane();
         footerContainer.setPadding(new Insets(5, 0, 0, 0));
@@ -241,9 +244,11 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         listView.setCellFactory(param -> new ListCell<T>() {
             @Override
             protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
                 if (item != null && !empty) {
                     CheckBox checkBox = new CheckBox();
                     checkBox.setSelected(isInTargetList(item));
+                    checkBox.setFocusTraversable(false);
 
                     checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                         if (newValue) {
