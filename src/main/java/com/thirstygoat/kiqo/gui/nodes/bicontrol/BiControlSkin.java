@@ -31,13 +31,11 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         this.onCancel = onCancel;
         
         editButton = makeEditButton();
-        editButton.setVisible(false);
         doneButton = makeDoneButton();
-        doneButton.setVisible(false);
         editView = makeEditView();
-        editView.setVisible(false);
         displayView = makeDisplayView();
-        displayView.setVisible(true);
+
+        showDisplayView();
 
         if (addCancelButton) {
             cancelButton = makeCancelButton();
@@ -82,7 +80,7 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
     }
     
     protected void showDisplayView() {
-        editButton.setVisible(false);
+        editButton.setVisible(true);
         displayView.setVisible(true);
         editView.setVisible(false);
         doneButton.setVisible(false);
@@ -123,6 +121,7 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         if (cancelButton != null) {
             final VBox vBox = new VBox(doneButton, cancelButton);
             vBox.setFillWidth(true);
+            cancelButton.setMaxWidth(Double.MAX_VALUE);
             buttonsPane = new StackPane(vBox, editButton);
         } else {
             buttonsPane = new StackPane(doneButton, editButton);
@@ -180,8 +179,8 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
                         fade.setCycleCount(2);
                         fade.playFrom(Duration.millis(400));
                     }
-                    setVisible(newValue);
                 }
+                setVisible(newValue);
             };
         }
     }
