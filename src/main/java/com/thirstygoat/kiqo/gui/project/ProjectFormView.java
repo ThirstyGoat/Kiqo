@@ -5,6 +5,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,6 +13,8 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.thirstygoat.kiqo.util.Utilities;
 
 /**
  * Created by Bradley, James on 13/03/15.
@@ -41,6 +44,8 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
+        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
+        
         Platform.runLater(() -> {
             setPrompts();
             attachValidators();

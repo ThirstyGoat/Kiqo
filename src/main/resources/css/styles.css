@@ -73,6 +73,16 @@
 	-fx-fill: green;
 }
 
+.toolbar-newbutton{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+    -fx-animated: true;
+}
+
+.toolbar-newbutton:hover {
+    -fx-background-color: darkgray;
+}
+
 .task-card-minimised-shortName {
     -fx-font-size: 10px;
     -fx-text-alignment: left;
@@ -143,7 +153,19 @@
 }
 
 .people-icon {
+    -glyph-name: "USER";
+}
+
+.team-icon {
     -glyph-name: "USERS";
+}
+
+.skill-icon {
+    -glyph-name: "PUZZLE";
+}
+
+.sprint-icon {
+    -glyph-name: "FLAG-CHECKERED";
 }
 
 .comment-icon {
@@ -316,7 +338,7 @@
     margin: 0 0 15px 0;
 }
 
-.form .text-area, .form .text-field {
+.form .text-area, .form .text-field, .form .combo-box {
     -fx-background-radius: 0;
     -fx-border-color: gainsboro;
     -fx-background-color: white;
@@ -386,6 +408,15 @@
     -fx-background-color: white;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+}
+
+
+.helperlink { /* Details Pane */
+    -fx-font-size: 11px;
+}
+
+.form .helperlink {
+    -fx-font-size: 10px;
 }
 
 /*********** DETAILS PANE ****************/

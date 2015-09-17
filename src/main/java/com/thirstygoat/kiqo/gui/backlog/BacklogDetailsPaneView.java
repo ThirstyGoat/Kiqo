@@ -62,7 +62,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(),viewModel.shortNameValidation());
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation(), "Add a description...");
         FxUtils.initGoatLabel(productOwnerLabel, viewModel, viewModel.productOwnerProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()),
                 viewModel.productOwnerValidation());
         FxUtils.setTextFieldSuggester(productOwnerLabel.getEditField(), viewModel.productOwnerSupplier());

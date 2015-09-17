@@ -13,6 +13,8 @@ import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneView;
 import com.thirstygoat.kiqo.gui.skill.SkillDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneView;
 import com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneViewModel;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView;
 import com.thirstygoat.kiqo.gui.team.TeamDetailsPaneViewModel;
 import com.thirstygoat.kiqo.gui.view.AdvancedSearchView;
@@ -32,6 +34,7 @@ public class OptimizedDetailsPane {
     private ViewTuple<BacklogDetailsPaneView, BacklogDetailsPaneViewModel> backlogViewTuple;
     private ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> sprintViewTuple;
     private ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> searchViewTuple;
+    private ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> storyViewTuple;
 
     public OptimizedDetailsPane() {
         // Initially load all the view tuples so we're always ready!
@@ -43,6 +46,7 @@ public class OptimizedDetailsPane {
         loadBacklogViewTuple();
         loadSprintViewTuple();
         loadSearchViewTuple();
+        loadStoryViewTuple();
     }
 
     public ViewTuple<SkillDetailsPaneView, SkillDetailsPaneViewModel> getSkillViewTuple() {
@@ -91,7 +95,12 @@ public class OptimizedDetailsPane {
         ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> tmp = searchViewTuple;
         loadSearchViewTuple();
         return tmp;
+    }
 
+    public ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> getStoryViewTuple() {
+        ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> tmp = storyViewTuple;
+        loadSearchViewTuple();
+        return tmp;
     }
 
     private void loadSkillViewTuple() {
@@ -124,6 +133,10 @@ public class OptimizedDetailsPane {
 
     private void loadSearchViewTuple() {
         Platform.runLater(() -> searchViewTuple = FluentViewLoader.fxmlView(AdvancedSearchView.class).load());
+    }
+
+    private void loadStoryViewTuple() {
+        Platform.runLater(() -> storyViewTuple = FluentViewLoader.fxmlView(StoryDetailsPaneView.class).load());
     }
 
 }

@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.gui.person;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -28,7 +30,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
     @FXML
     private GoatLabelTextField departmentLabel;
     @FXML
-    private GoatLabelTextField skillsLabel;
+    private GoatLabelFilteredListSelectionView<Skill> skillsLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
@@ -37,13 +39,13 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), null);
-        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), null);
-        FxUtils.initGoatLabel(userIdLabel, viewModel, viewModel.userIdProperty(), null);
-        FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), null);
-        FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), null);
-        FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), null);
-//        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.longNameProperty(), viewModel.nameValidation());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
+        FxUtils.initGoatLabel(userIdLabel, viewModel, viewModel.userIdProperty(), viewModel.userIdValidation());
+        FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), viewModel.emailValidation());
+        FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), viewModel.phoneNumberValidation());
+        FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), viewModel.departmentValidation());
+        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 

@@ -18,12 +18,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,6 +42,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     @FXML
     private GridPane gridPane;
+    @FXML
+    private VBox storyCard;
     @FXML
     private Label storyNameLabel;
     @FXML
@@ -76,6 +76,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         initialiseDragAndDrop();
         drawTasks();
         setAddTaskButton();
+        initialiseDoubleClick();
     }
 
     private void setAddTaskButton() {
@@ -150,6 +151,15 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             currentlyDraggingTaskCard.setCursor(Cursor.OPEN_HAND);
             currentlyDraggingTaskCard = null;
         });
+    }
+
+    private void initialiseDoubleClick() {
+
+            storyCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1) {
+                    viewModel.showStoryInDetailsPane();
+                }
+            });
     }
 
     private void initialiseDragAndDrop() {

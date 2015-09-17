@@ -136,4 +136,8 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
+    public void showStoryInDetailsPane() {
+        MainController.focusedItemProperty.setValue(storyWrapper.get());
+    }
 }

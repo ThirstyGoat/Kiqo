@@ -14,7 +14,6 @@ import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
-import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 

@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.backlog;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.Story;
 import javafx.beans.property.ListProperty;
@@ -18,7 +19,10 @@ public class BacklogFormViewModel extends BacklogViewModel {
     }
 
     protected void okAction() {
-        UndoManager.getUndoManager().doCommand(getCommand());
+        Command command = getCommand();
+        if (command != null ) {
+            UndoManager.getUndoManager().doCommand(command);
+        }
         exitStrategy.run();
     }
 
