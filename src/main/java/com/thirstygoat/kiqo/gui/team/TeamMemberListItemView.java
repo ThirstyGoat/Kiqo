@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -21,11 +20,7 @@ public class TeamMemberListItemView implements FxmlView<PersonListItemViewModel>
     public void initialize() {
         shortNameLabel.textProperty().bind(viewModel.shortNameProperty());
 
-        roleBadge.textProperty().bind(Bindings.createStringBinding(() -> {
-            return viewModel.roleProperty().get().getName();
-        }, viewModel.roleProperty()));
-        roleBadge.styleProperty().bind(Bindings.createStringBinding(() -> {
-            return viewModel.roleProperty().get().getStyle();
-        }, viewModel.roleProperty()));
+        roleBadge.textProperty().bind(viewModel.roleProperty().asString());
+        roleBadge.textFillProperty().bind(viewModel.roleColorBinding());
     }
 }
