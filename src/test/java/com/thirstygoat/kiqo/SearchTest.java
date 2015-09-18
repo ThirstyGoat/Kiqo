@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo;
 
+import com.thirstygoat.kiqo.search.AdvancedSearch;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,5 +71,43 @@ public class SearchTest {
         Assert.assertEquals("Should not find deleted item", 0, search.execute().size());
         command.undo();
         Assert.assertEquals("Should find un-deleted item", 1, search.execute().size());
+    }
+
+    @Test
+     public void testStarRegexSearch() {
+        AdvancedSearch search = new AdvancedSearch("*", SearchableItems.SCOPE.ORGANISATION);
+        search.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search.execute().size());
+
+        AdvancedSearch search1 = new AdvancedSearch(".*", SearchableItems.SCOPE.ORGANISATION);
+        search1.setRegexEnabled(true);
+        Assert.assertEquals(".* should return all fields", 3, search1.execute().size());
+
+        AdvancedSearch search2 = new AdvancedSearch("***", SearchableItems.SCOPE.ORGANISATION);
+        search2.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search2.execute().size());
+    }
+
+    @Test
+    public void testPlusRegexSearch() {
+        AdvancedSearch search = new AdvancedSearch("+", SearchableItems.SCOPE.ORGANISATION);
+        search.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search.execute().size());
+
+        AdvancedSearch search1 = new AdvancedSearch(".+", SearchableItems.SCOPE.ORGANISATION);
+        search1.setRegexEnabled(true);
+        Assert.assertEquals(".+ should return all fields", 3, search1.execute().size());
+
+        AdvancedSearch search2 = new AdvancedSearch("+++", SearchableItems.SCOPE.ORGANISATION);
+        search2.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search2.execute().size());
+
+        AdvancedSearch search3 = new AdvancedSearch("+*", SearchableItems.SCOPE.ORGANISATION);
+        search3.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search3.execute().size());
+
+        AdvancedSearch search4 = new AdvancedSearch("*+", SearchableItems.SCOPE.ORGANISATION);
+        search4.setRegexEnabled(true);
+        Assert.assertEquals("no exception should be thrown", 0, search4.execute().size());
     }
 }

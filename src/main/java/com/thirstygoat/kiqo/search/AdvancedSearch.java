@@ -30,6 +30,17 @@ public class AdvancedSearch extends Search {
         ObservableList<SearchResult> results = FXCollections.observableArrayList();
 
         String escapedQuery = Pattern.quote(getQueryLowerCase().trim());
+        String regexQuery = getQuery();
+        // because *, + need to be escaped in regex or we get PatternSyntaxException
+        if (regexQuery.charAt(0) == '*') {
+            regexQuery = "\\\\*" + regexQuery.substring(1);
+        }
+        if (regexQuery.charAt(0) == '+') {
+            regexQuery = "\\\\+" + regexQuery.substring(1);
+        }
+        regexQuery = regexQuery.replaceAll("\\*\\*", "*\\\\*");
+        regexQuery = regexQuery.replaceAll("\\+\\*", "+\\\\*");
+        regexQuery = regexQuery.replaceAll("\\+\\+", "+\\\\+");
 
         // Loop through all the Searchable objects in the "database"
         for (Searchable searchable : SearchableItems.getInstance().getSearchables(scope)) {
@@ -41,7 +52,7 @@ public class AdvancedSearch extends Search {
 
                 // If RegEx, perform comparison using String.matches, otherwise use Dice Coefficient algorithm
                 if (regexEnabled) {
-                    if (searchableField.getFieldValue().matches(getQuery())) {
+                    if (searchableField.getFieldValue().matches(regexQuery)) {
                         searchResult.addMatch(new Match(searchResult, searchableField, 1.0)); // 1.0 similarity used since [when using RegEx]
                         // results must exactly match the RegEx, therefore matches always have 1.0 similarity
                     }
