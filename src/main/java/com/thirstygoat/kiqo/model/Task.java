@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -9,9 +8,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.StoryCompletenessVisualiser?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" alignment="CENTER_LEFT" prefHeight="270.0" prefWidth="747.0" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -14,6 +15,7 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="1.7976931348623157E308" valignment="TOP" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="1.7976931348623157E308" valignment="TOP" vgrow="ALWAYS" />
   </rowConstraints>
    <children>
       <VBox spacing="5.0">
@@ -54,5 +56,7 @@
        <FlowPane fx:id="inProgressTasks" styleClass="task-container" GridPane.columnIndex="2" />
        <FlowPane fx:id="verifyTasks" styleClass="task-container" GridPane.columnIndex="3" />
        <FlowPane fx:id="doneTasks" styleClass="task-container" GridPane.columnIndex="4" />
+
+       <StoryCompletenessVisualiser fx:id="storyVisualiser" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="5"></StoryCompletenessVisualiser>
    </children>
 </GridPane>
