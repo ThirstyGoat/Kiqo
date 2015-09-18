@@ -10,10 +10,8 @@ import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
-import com.thirstygoat.kiqo.model.AcceptanceCriteria;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
@@ -38,6 +36,7 @@ import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>, Initializable {
@@ -92,6 +91,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     private Label totalHoursLabel;
     @FXML
     private Hyperlink estimateWhy;
+    @FXML
+    private Label totalLoggedHours;
 
     @InjectViewModel
     private StoryDetailsPaneViewModel viewModel;
@@ -192,6 +193,16 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         // Disable storyEstimateSlider if there are no acceptance criteria.
         storyEstimateSlider.disableProperty().bind(Bindings.isEmpty(acListView.getItems()).or(story.inSprintProperty()));
+
+        totalLoggedHours.textProperty().bind(story.spentEffortProperty().asString());
+
+        totalHoursLabel.setOnMouseClicked(event -> {
+            story.getTasks().get(0).getLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), 3.0f, "blah"));
+        });
+
+        story.spentEffortProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println(newValue);
+        });
     }
 
     private void deleteTask() {

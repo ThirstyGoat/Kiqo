@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -16,7 +17,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import com.thirstygoat.kiqo.search.SearchableField;
@@ -64,7 +67,6 @@ public class Story extends Item {
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty(0.0f);
         this.inSprint = new SimpleBooleanProperty(false);
-//        setTasksListener();
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
@@ -85,11 +87,25 @@ public class Story extends Item {
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty();
         this.inSprint = new SimpleBooleanProperty(inSprint);
-//        setTasksListener();
     }
 
     public static Callback<Story, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty()};
+    }
+
+    public FloatProperty spentEffortProperty() {
+        FloatProperty spentEffort = new SimpleFloatProperty(0.0f);
+        spentEffort.bind(Bindings.createDoubleBinding(() -> {
+                    System.out.println("called");
+                    double runningTotal = 0;
+                    for (Task task : getTasks()) {
+                        runningTotal += task.getLoggedEffort().stream().mapToDouble(Effort::getDuration).sum();
+                        System.out.println(runningTotal);
+                    }
+                    return runningTotal;
+                },
+                getTasks()));
+        return spentEffort;
     }
 
     /**

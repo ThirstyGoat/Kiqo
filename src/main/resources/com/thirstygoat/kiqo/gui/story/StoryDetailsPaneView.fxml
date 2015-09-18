@@ -27,16 +27,18 @@
                                         <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Ready:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Depends on:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                                        <Label font="$x1" text="Total hours:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
                                         <GoatLabelTextField fx:id="longNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                         <GoatLabelTextField fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <GoatLabelTextField fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                         <GoatLabelTextField fx:id="creatorLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                         <GoatLabelTextField fx:id="priorityLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        <Label fx:id="totalLoggedHours" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                         <Label fx:id="dependenciesLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                        <Label fx:id="storyScaleLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                                        <Label font="$x1" text="Estimation Scale:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
-                                        <Label font="$x1" text="Estimate:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
-                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                        <Label fx:id="storyScaleLabel" text="" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                        <Label font="$x1" text="Estimation Scale:" GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="TOP" />
+                                        <Label font="$x1" text="Estimate:" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.valignment="TOP" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="9">
                                             <children>
                                                 <Slider fx:id="storyEstimateSlider" blockIncrement="1.0" majorTickUnit="1.0" max="11.0" maxWidth="609.0" minorTickCount="0" prefHeight="16.0" prefWidth="288.0" showTickMarks="true" snapToTicks="true">
                                                     <cursor>

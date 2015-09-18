@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -47,7 +48,7 @@ public class Task extends Item {
     }
     
     public static Callback<Task, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty()};
+        return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty(), p.getLoggedEffort()};
     }
 
     @Override
@@ -77,10 +78,10 @@ public class Task extends Item {
     public FloatProperty spentEffortProperty() {
         FloatProperty spentEffort = new SimpleFloatProperty();
         spentEffort.bind(Bindings.createDoubleBinding(
-                        () -> loggedEffort.stream()
-                            .mapToDouble(Effort::getDuration)
-                            .sum(),
-        loggedEffort));
+                () -> getLoggedEffort().stream()
+                        .mapToDouble(Effort::getDuration)
+                        .sum(),
+                getLoggedEffort()));
         return spentEffort;
     }
 
