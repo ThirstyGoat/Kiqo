@@ -76,6 +76,12 @@ public class TaskListCell extends ListCell<Task> {
             statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
 
             ToggleButton blockedButton = new ToggleButton();
+            blockedButton.selectedProperty().setValue(task.isBlocked());
+
+            blockedButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                Command changeBlockedProperty = new EditCommand<>(task, "blocked", newValue);
+                UndoManager.getUndoManager().doCommand(changeBlockedProperty);
+            });
             blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
             blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
             blockedButton.getStyleClass().add("blocked-button");
