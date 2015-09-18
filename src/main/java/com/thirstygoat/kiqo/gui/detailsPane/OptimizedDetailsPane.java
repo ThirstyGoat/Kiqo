@@ -99,7 +99,7 @@ public class OptimizedDetailsPane {
 
     public ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> getStoryViewTuple() {
         ViewTuple<StoryDetailsPaneView, StoryDetailsPaneViewModel> tmp = storyViewTuple;
-        loadSearchViewTuple();
+        loadStoryViewTuple();
         return tmp;
     }
 

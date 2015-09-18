@@ -96,11 +96,9 @@ public class Story extends Item {
     public FloatProperty spentEffortProperty() {
         FloatProperty spentEffort = new SimpleFloatProperty(0.0f);
         spentEffort.bind(Bindings.createDoubleBinding(() -> {
-                    System.out.println("called");
                     double runningTotal = 0;
                     for (Task task : getTasks()) {
                         runningTotal += task.getLoggedEffort().stream().mapToDouble(Effort::getDuration).sum();
-                        System.out.println(runningTotal);
                     }
                     return runningTotal;
                 },
