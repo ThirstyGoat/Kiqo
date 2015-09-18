@@ -157,7 +157,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         }
 
         acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images));
-        taskListView.setCellFactory(param -> new TaskListCell(param));
+        taskListView.setCellFactory(TaskListCell::new);
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
@@ -198,10 +198,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         totalHoursLabel.setOnMouseClicked(event -> {
             story.getTasks().get(0).getLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), 3.0f, "blah"));
-        });
-
-        story.spentEffortProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println(newValue);
         });
     }
 

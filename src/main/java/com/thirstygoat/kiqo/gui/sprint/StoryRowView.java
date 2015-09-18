@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.nodes.TaskCard;
@@ -24,6 +25,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -222,8 +225,12 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             if (currentlyDraggingTaskCard != null) {
                 Status currentStatus = currentlyDraggingTaskCard.getTask().getStatus();
                 if (currentStatus != Status.DONE) {
-                    Command moveCommand = new EditCommand<>(currentlyDraggingTaskCard.getTask(), "status", Status.DONE);
-                    UndoManager.getUndoManager().doCommand(moveCommand);
+                    List<Command> changes = new ArrayList<>();
+                    changes.add(new EditCommand<>(currentlyDraggingTaskCard.getTask(), "status", Status.DONE));
+                    if (currentlyDraggingTaskCard.getTask().isBlocked())
+                        changes.add(new EditCommand<>(currentlyDraggingTaskCard.getTask(), "blocked", false));
+                    Command command = new CompoundCommand("Move Task", changes);
+                    UndoManager.getUndoManager().doCommand(command);
                 }
             }
         });

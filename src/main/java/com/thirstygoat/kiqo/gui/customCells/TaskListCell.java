@@ -1,10 +1,7 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.MoveItemCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.gui.DragContainer;
 import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.model.Status;
@@ -25,6 +22,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
@@ -61,8 +61,11 @@ public class TaskListCell extends ListCell<Task> {
 
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != task.getStatus()) {
-                    Command command = new EditCommand<>(task, "status", newValue);
-                    UndoManager.getUndoManager().doCommand(command);
+                    List<Command> changes = new ArrayList<>();
+                    changes.add(new EditCommand<>(task, "status", newValue));
+                    if (newValue == Status.DONE)
+                        changes.add(new EditCommand<>(task, "blocked", false));
+                    UndoManager.getUndoManager().doCommand(new CompoundCommand("Edit Task", changes));
                 }
             });
 
