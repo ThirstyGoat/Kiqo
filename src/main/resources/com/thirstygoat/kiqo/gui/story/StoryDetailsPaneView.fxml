@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.SegmentedButton?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView">
     <children>
-        <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+        <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <content>
                 <VBox>
                     <children>
@@ -40,7 +40,7 @@
                             </padding>
                         </HBox>
                         <AnchorPane fx:id="mainAnchorPane">
-                            <VBox fx:id="detailsVbox" mouseTransparent="false" spacing="10.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+                            <VBox fx:id="detailsVbox" mouseTransparent="false" spacing="10.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                                 <children>
                                     <GoatLabelTextField fx:id="descriptionLabel" defaultText="Add a description..."/>
 
