@@ -28,12 +28,16 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -93,12 +97,39 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     private Hyperlink estimateWhy;
     @FXML
     private Label totalLoggedHours;
+    @FXML
+    private AnchorPane mainAnchorPane;
+    @FXML
+    private VBox detailsVbox;
+    @FXML
+    private VBox acAndTaskVbox;
+    @FXML
+    private SegmentedButton segmentedButton;
+    @FXML
+    private ToggleButton detailsToggleButton;
+    @FXML
+    private ToggleButton acAndTaskToggleButton;
 
     @InjectViewModel
     private StoryDetailsPaneViewModel viewModel;
 
     public void showDetails(final Story story) {
         this.story.set(story);
+
+        segmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                segmentedButton.getToggleGroup().selectToggle(oldValue);
+            } else {
+                if (newValue == detailsToggleButton) {
+                    showNode(detailsVbox);
+                } else if (newValue == acAndTaskToggleButton) {
+                    showNode(acAndTaskVbox);
+                }
+            }
+
+
+        });
+
         if (story != null) {
 
             story.observableTasks().addListener((ListChangeListener<Task>) c -> {
@@ -412,5 +443,14 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         story.get().estimateProperty().addListener((observable, oldValue, newValue) -> {
             storyEstimateSlider.setValue(newValue.intValue());
         });
+    }
+
+    private void showNode(Node node) {
+        for (Node node1 : mainAnchorPane.getChildren()) {
+            node1.setManaged(false);
+            node1.setVisible(false);
+        }
+        node.setManaged(true);
+        node.setVisible(true);
     }
 }

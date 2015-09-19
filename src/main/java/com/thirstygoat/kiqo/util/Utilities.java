@@ -1,17 +1,21 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.function.Predicate;
-
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
-import javafx.beans.value.*;
-import javafx.collections.*;
-import javafx.collections.transformation.SortedList;
-import javafx.scene.control.TextField;
-
 import com.thirstygoat.kiqo.model.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by bradley on 9/04/15.
@@ -74,6 +78,9 @@ public final class Utilities {
                     concatenatedString += ", ";
                 }
             }
+        }
+        else {
+            concatenatedString = "-";
         }
 
         return concatenatedString;
