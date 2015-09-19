@@ -184,4 +184,11 @@ public class Sprint extends Item {
         this.stories = stories;
     }
 
+    public double totalSprintEstimate() {
+        double total = 0;
+        for (Story story : stories) {
+            total += story.getTaskHours();
+        }
+        return total;
+    }
 }

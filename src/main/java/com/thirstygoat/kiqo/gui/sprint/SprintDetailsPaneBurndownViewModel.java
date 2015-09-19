@@ -30,8 +30,8 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         burndownData.clear();
         long days = LocalDate.now().toEpochDay() - sprintProperty().get().startDateProperty().get().toEpochDay();
         for (int i = 0; i < days; i++) {
-            burndownData.add(new XYChart.Data<>(i, Math.max(sprintProperty().get().totalSprintEstimate()
-                    - sprintProperty().get().hoursLoggedAtDay(i), 0)));
+//            burndownData.add(new XYChart.Data<>(i, Math.max(sprintProperty().get().totalSprintEstimate()
+//                    - sprintProperty().get().hoursLoggedAtDay(i), 0)));
         }
     }
 
