@@ -310,6 +310,10 @@ public class StoryViewModel implements ViewModel {
                 changes.add(new EditCommand<>(story, "scale", scaleProperty().getValue()));
             }
 
+            if (estimateProperty().getValue() != story.getEstimate()) {
+                changes.add(new EditCommand<>(story, "estimate", estimateProperty().getValue()));
+            }
+
             if (!(dependenciesProperty.get().containsAll(story.getDependencies())
                     && story.getDependencies().containsAll(dependenciesProperty.get()))) {
                 changes.add(new EditCommand<>(story, "dependencies", dependenciesProperty.get()));

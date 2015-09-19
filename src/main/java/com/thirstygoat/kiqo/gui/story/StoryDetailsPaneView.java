@@ -322,18 +322,11 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             } else {
                 storyEstimateSliderLabel.setText("-");
             }
+            viewModel.estimateProperty().setValue(newValue);
         });
 
         storyEstimateSlider.setOnMouseReleased(event -> {
-            if (story.get().getEstimate() != storyEstimateSlider.getValue()) {
-                List<Command> commands = new ArrayList<>();
-                if (((int)storyEstimateSlider.getValue()) == 0 && story.get().getIsReady()) {
-                    commands.add(new EditCommand<>(story, "isReady", false));
-                }
-                commands.add(new EditCommand<>(story, "estimate", (int) storyEstimateSlider.getValue()));
-                CompoundCommand command = new CompoundCommand("Edit Estimation", commands);
-                UndoManager.getUndoManager().doCommand(command);
-            }
+            viewModel.commitEdit();
         });
     }
 
