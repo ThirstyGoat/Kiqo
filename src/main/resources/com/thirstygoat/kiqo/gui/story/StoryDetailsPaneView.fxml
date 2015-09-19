@@ -27,7 +27,7 @@
                                         <Label font="$x1" text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Ready:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                         <Label font="$x1" text="Depends on:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP" />
-                                        <Label font="$x1" text="Total hours:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                                        <Label font="$x1" text="Total hours:" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
                                         <GoatLabelTextField fx:id="longNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                         <GoatLabelTextField fx:id="shortNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <GoatLabelTextField fx:id="descriptionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -83,6 +83,8 @@
                                         <RowConstraints />
                                         <RowConstraints />
                                         <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
                                     </rowConstraints>
                                     <padding>
                                         <Insets left="20.0" right="20.0" top="20.0" />
@@ -109,31 +111,6 @@
                                                 <Insets bottom="25.0" />
                                             </GridPane.margin>
                                         </HBox>
-                                        <GridPane prefHeight="10.0" prefWidth="727.0" GridPane.columnSpan="2" GridPane.rowIndex="3" HBox.hgrow="SOMETIMES">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="625.0" minWidth="10.0" prefWidth="574.0" />
-                                                <ColumnConstraints hgrow="NEVER" maxWidth="655.0" minWidth="10.0" prefWidth="153.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                            <children>
-                                                <Label text="Tasks" GridPane.valignment="TOP">
-                                                    <font>
-                                                        <Font name="System Bold" size="12.0" />
-                                                    </font></Label>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.vgrow="NEVER">
-                                                    <children>
-                                                        <Label contentDisplay="RIGHT" font="$x1" prefHeight="30.0" text="Total Hours: " />
-                                                        <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
-                                                            <font>
-                                                                <Font size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </GridPane>
                                         <ListView fx:id="taskListView" prefHeight="200" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                         <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                             <children>
@@ -142,6 +119,21 @@
                                                 <Button fx:id="editTaskButton" text="Edit" />
                                             </children>
                                         </HBox>
+                              <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <children>
+                                    <Label contentDisplay="RIGHT" font="$x1" prefHeight="30.0" text="Total Hours: " />
+                                    <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <Label text="Tasks" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
                                     </children>
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
@@ -151,9 +143,10 @@
                                         <RowConstraints />
                                         <RowConstraints />
                                         <RowConstraints />
+                              <RowConstraints vgrow="NEVER" />
                                         <RowConstraints />
                                         <RowConstraints />
-                                        <RowConstraints />
+                              <RowConstraints />
                                     </rowConstraints>
                                     <padding>
                                         <Insets left="20.0" right="20.0" top="20.0" />
