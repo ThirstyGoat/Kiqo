@@ -24,7 +24,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private ScrumBoardView scrumBoardViewController; // Ignore naming convention here
     @FXML
-    private SprintDetailsPaneBurndownView burndownViewController; // Ignore naming convention here
+    private SprintDetailsPaneBurnDownView burndownViewController; // Ignore naming convention here
     @FXML
     private AnchorPane detailsView;
     @FXML
