@@ -7,7 +7,7 @@
     <children>
         <LineChart fx:id="burndownChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefHeight="10000">
             <xAxis>
-                <NumberAxis label="Date" lowerBound="0" tickUnit="1" />
+                <NumberAxis label="Days" lowerBound="0" tickUnit="1" />
             </xAxis>
             <yAxis>
                 <NumberAxis label="Hours" lowerBound="0" tickUnit="1" />
