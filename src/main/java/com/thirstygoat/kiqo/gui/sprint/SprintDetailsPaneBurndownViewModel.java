@@ -1,23 +1,22 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.model.Sprint;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.chart.XYChart;
 
 
-/**
- * Created by Carina Blair on 5/08/2015.
- */
+
 public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implements Editable {
 
     private ObjectProperty<XYChart.Series<Number, Number>> targetLineSeriesProperty = new SimpleObjectProperty<>();
     private static int sum = 0;
-    private SprintDetailsPaneBurndownViewModel viewModel;
 
     public SprintDetailsPaneBurndownViewModel() {
         super();
-
     }
 
     public void addData() {
