@@ -111,6 +111,15 @@ public class Story extends Item {
         return spentEffort;
     }
 
+    public FloatProperty totalEstimateProperty() {
+        FloatProperty totalEstimate = new SimpleFloatProperty();
+        totalEstimate.bind(Bindings.createDoubleBinding(
+                        () -> getTasks().stream()
+                                        .mapToDouble(Task::getEstimate).sum(),
+                        getTasks()));
+        return totalEstimate;
+    }
+
     /**
      * @return a string array of the searchable fields for a model object
      */
