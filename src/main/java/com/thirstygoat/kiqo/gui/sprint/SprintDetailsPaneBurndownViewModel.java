@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
-
+import java.time.LocalDate;
 
 
 public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implements Editable {
@@ -17,9 +17,31 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
     private ObservableList<XYChart.Data<Number, Number>> burndownData = FXCollections.observableArrayList();
     private ObjectProperty<ObservableList<XYChart.Data<Number, Number>>> burndownDataProperty = new SimpleObjectProperty<>(burndownData);
 
-
     public SprintDetailsPaneBurndownViewModel() {
         super();
+        sprintWrapper.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            drawTargetLine();
+            drawBurndownLine();
+        });
+
+    }
+
+    private void drawBurndownLine() {
+        burndownData.clear();
+        long days = LocalDate.now().toEpochDay() - sprintProperty().get().startDateProperty().get().toEpochDay();
+        for (int i = 0; i < days; i++) {
+            burndownData.add(new XYChart.Data<>(i, Math.max(sprintProperty().get().totalSprintEstimate()
+                    - sprintProperty().get().hoursLoggedAtDay(i), 0)));
+        }
+    }
+
+    private void drawTargetLine() {
+        targetLineData.clear();
+        targetLineData.add(new XYChart.Data<>(0, sprintProperty().get().totalSprintEstimate()));
+        targetLineData.add(new XYChart.Data<>(
+                sprintProperty().get().endDateProperty().get().toEpochDay()
+                        - sprintProperty().get().startDateProperty().get().toEpochDay()
+                , 0));
     }
 
     public ObjectProperty<ObservableList<XYChart.Data<Number, Number>>> targetLineDataProperty() {
@@ -32,11 +54,6 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
 
     public ObjectProperty<ObservableList<XYChart.Data<Number, Number>>> burndownDataProperty() {
         return burndownDataProperty;
-    }
-
-    //TODO remove this
-    public void buttonPress() {
-        targetLineData.add(new XYChart.Data(10, 20));
     }
 
     @Override

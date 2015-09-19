@@ -36,7 +36,7 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
-    private GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
+    protected GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();

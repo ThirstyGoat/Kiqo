@@ -35,9 +35,8 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
         burndownSeries.dataProperty().bind(viewModel.burndownDataProperty());
 
         burndownChart.getData().addAll(targetLineSeries, loggedHoursSeries, burndownSeries);
+        burndownChart.getXAxis().setAutoRanging(true);
 
-        //TODO remove this
-        button.setOnAction(event -> viewModel.buttonPress());
     }
 
     public SprintDetailsPaneBurndownViewModel getViewModel() {
