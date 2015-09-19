@@ -44,7 +44,9 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
             public void replaceText(int start, int end, String text) {
                 if (restrictToNumericInput) {
                     if (text.matches("[0-9.]") || text.equals("")) {
-                        super.replaceText(start, end, text);
+                        if (!(editField.textProperty().get().matches("") && text.equals("."))) {
+                            super.replaceText(start, end, text);
+                        }
                     }
                 } else {
                     super.replaceText(start, end, text);
@@ -56,7 +58,9 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
             public void replaceSelection(String text) {
                 if (restrictToNumericInput) {
                     if (text.matches("[0-9.]") || text.equals("")) {
-                        super.replaceSelection(text);
+                        if (!(editField.textProperty().get().matches("") && text.equals("."))) {
+                            super.replaceSelection(text);
+                        }
                     }
                 } else {
                     super.replaceSelection(text);
