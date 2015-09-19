@@ -27,6 +27,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private AnchorPane detailsView;
     @FXML
     private AnchorPane scrumBoardView;
+    @FXML
+    private AnchorPane burndownView;
 
     @FXML
     private GoatLabelTextField shortNameLabel;
@@ -38,6 +40,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private ToggleButton detailsToggleButton;
     @FXML
     private ToggleButton scrumboardToggleButton;
+    @FXML
+    private ToggleButton burndownToggleButton;
 
     @InjectViewModel
     private SprintDetailsPaneViewModel viewModel;
@@ -60,6 +64,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
                 show(detailsView);
             } else  if (newValue == scrumboardToggleButton) {
                 show(scrumBoardView);
+            } else  if (newValue == burndownToggleButton) {
+                show(burndownView);
             } else {
                 hideAllViews();
             }
@@ -91,5 +97,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
 
         scrumBoardView.setVisible(false);
         scrumBoardView.setManaged(false);
+
+        burndownView.setVisible(false);
+        burndownView.setManaged(false);
     }
 }

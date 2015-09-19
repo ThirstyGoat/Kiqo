@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -22,6 +21,7 @@
                   <buttons>
                       <ToggleButton fx:id="detailsToggleButton" text="Details" />
                       <ToggleButton fx:id="scrumboardToggleButton" text="Scrum Board"/>
+                      <ToggleButton fx:id="burndownToggleButton" text="Burndown"/>
                   </buttons>
               </SegmentedButton>
               </children>
@@ -30,6 +30,7 @@
         </HBox>
         <fx:include fx:id="detailsView" source="SprintDetailsPaneDetailsView.fxml" />
         <fx:include fx:id="scrumBoardView" source="ScrumboardView.fxml" />
+          <fx:include fx:id="burndownView" source="SprintDetailsPaneBurnDownView.fxml"/>
       </children>
     </VBox>
   </children>

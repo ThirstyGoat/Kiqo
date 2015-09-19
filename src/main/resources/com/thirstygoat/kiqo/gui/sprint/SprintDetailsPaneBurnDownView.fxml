@@ -1,57 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
-<?import javafx.geometry.Insets?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneDetailsView" xmlns="http://javafx.com/javafx/8" >
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" xmlns="http://javafx.com/javafx/8" >
     <children>
         <ScrollPane id="ScrollPane" fitToWidth="true" prefViewportHeight="0.0" prefViewportWidth="0.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<content>
-				<VBox mouseTransparent="false" spacing="10.0">
-					<children>
-						<GoatLabelTextArea fx:id="descriptionLabel" />
-						<Label text="Team" styleClass="field-label">
-							<VBox.margin><Insets bottom="-8" /></VBox.margin>
-						</Label>
-						<GoatLabelTextField fx:id="teamLabel" />
-						<Label text="Backlog" styleClass="field-label">
-							<VBox.margin><Insets bottom="-8" /></VBox.margin>
-						</Label>
-						<GoatLabelTextField fx:id="backlogLabel" />
-						<Label text="Start Date" styleClass="field-label">
-							<VBox.margin><Insets bottom="-8" /></VBox.margin>
-						</Label>
-						<GoatLabelDatePicker fx:id="startDateLabel" />
-						<Label text="End Date" styleClass="field-label">
-							<VBox.margin><Insets bottom="-8" /></VBox.margin>
-						</Label>
-						<GoatLabelDatePicker fx:id="endDateLabel" />
-						<Label text="Release" styleClass="field-label">
-							<VBox.margin><Insets bottom="-8" /></VBox.margin>
-						</Label>
-						<GoatLabelTextField fx:id="releaseLabel" />
-						<TableView fx:id="storyTableView" >
-							<columns>
-								<TableColumn fx:id="shortNameTableColumn" style="-fx-alignment: CENTER;" text="Story">
-									<cellValueFactory>
-										<PropertyValueFactory property="shortName" />
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn fx:id="priorityTableColumn" maxWidth="80" minWidth="80" style="-fx-alignment: CENTER;" text="Priority">
-									<cellValueFactory>
-										<PropertyValueFactory property="priority" />
-									</cellValueFactory>
-								</TableColumn>
-							</columns>
-						</TableView>
-					</children>
-                </VBox>
-            </content>
+				<Label text="BURN DOWN"></Label>
+			</content>
+
         </ScrollPane>
     </children>
 </AnchorPane>
