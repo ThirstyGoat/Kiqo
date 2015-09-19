@@ -1,7 +1,10 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.DragContainer;
 import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.model.Status;
@@ -10,21 +13,19 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
-import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
@@ -41,78 +42,69 @@ public class TaskListCell extends ListCell<Task> {
         if (!empty) {
             initialiseDragAndDrop(task);
             
-            final GridPane gridPane = new GridPane();
+            final HBox hBox = new HBox();
+
             Text name = new Text();
             name.textProperty().bind(task.shortNameProperty());
             name.setStyle("-fx-font: 13px \"System\";");
-            name.setWrappingWidth(listView.getWidth() * 0.65);
+//            name.setWrappingWidth(listView.getWidth() * 0.65);
 
             Text description = new Text();
             description.textProperty().bind(task.descriptionProperty());
             description.setStyle("-fx-font: 9px \"System\";");
-            description.setWrappingWidth(listView.getWidth() * 0.65);
+            description.wrappingWidthProperty().bind(listView.widthProperty().subtract(250));
+//            description.setWrappingWidth(listView.getWidth() * 0.65);
 
             final ComboBox<Status> statusComboBox = new ComboBox<>();
             statusComboBox.setStyle("-fx-font: 10px \"System\"; -fx-border-width: 0.5px; -fx-border-color: black;");
-            statusComboBox.setMaxWidth(90);
+            statusComboBox.setMaxWidth(100);
 
             statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
             statusComboBox.setValue(task.getStatus());
 
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != task.getStatus()) {
-                    List<Command> changes = new ArrayList<>();
-                    changes.add(new EditCommand<>(task, "status", newValue));
-                    if (newValue == Status.DONE)
-                        changes.add(new EditCommand<>(task, "blocked", false));
-                    UndoManager.getUndoManager().doCommand(new CompoundCommand("Edit Task", changes));
+                    Command command = new EditCommand<>(task, "status", newValue);
+                    UndoManager.getUndoManager().doCommand(command);
                 }
             });
 
             task.statusProperty().addListener((observable, oldValue, newValue) -> {
                 statusComboBox.valueProperty().set(newValue);
-                statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
+                statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color
+                                .toString().substring(2) + ";");
             });
-            statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString().substring(2) + ";");
+            statusComboBox.setStyle(
+                            statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString()
+                                            .substring(2) + ";");
 
             ToggleButton blockedButton = new ToggleButton();
-            blockedButton.selectedProperty().setValue(task.isBlocked());
-
-            blockedButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                Command changeBlockedProperty = new EditCommand<>(task, "blocked", newValue);
-                UndoManager.getUndoManager().doCommand(changeBlockedProperty);
-            });
             blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
             blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
             blockedButton.getStyleClass().add("blocked-button");
 
 
-            Text estimate = new Text();
-            estimate.textProperty().bind(task.estimateProperty().asString());
 
+            Text effortText = new Text();
+            Text estimateText = new Text();
+            TextFlow timeTextFlow = new TextFlow(effortText, new Text("/"), estimateText);
+            timeTextFlow.setTextAlignment(TextAlignment.RIGHT);
 
-            gridPane.add(name, 0, 0);
-            gridPane.add(description, 0, 1);
-            gridPane.add(statusComboBox, 1, 0);
-            gridPane.add(blockedButton, 2, 0);
-            gridPane.add(estimate, 3, 0);
-            GridPane.setRowSpan(statusComboBox, 2);
-            GridPane.setRowSpan(estimate, 1);
+            effortText.textProperty().bind(task.spentEffortProperty().asString());
+            estimateText.textProperty().bind(task.estimateProperty().asString());
 
-            ColumnConstraints column1 = new ColumnConstraints();
-            ColumnConstraints column2 = new ColumnConstraints();
-            ColumnConstraints column3 = new ColumnConstraints();
-            ColumnConstraints column4 = new ColumnConstraints();
-            column1.setPercentWidth(65);
-            column2.setPercentWidth(20);
-            column3.setPercentWidth(10);
-            column4.setPercentWidth(5);
-            column2.setHalignment(HPos.LEFT);
-            column3.setHalignment(HPos.LEFT);
-            column4.setHalignment(HPos.LEFT);
-            gridPane.getColumnConstraints().addAll(column1, column2, column3, column4);
+            Label estimate = new Label();
+            estimate.setPadding(new Insets(0, 10, 0, 0));
+            estimate.setMaxHeight(20);
+            estimate.setAlignment(Pos.TOP_RIGHT);
+            estimate.setGraphic(timeTextFlow);
+            VBox vBox = new VBox();
+            vBox.getChildren().addAll(name, description);
 
-            setGraphic(gridPane);
+            hBox.setHgrow(vBox, Priority.ALWAYS);
+            hBox.getChildren().addAll(vBox, estimate, statusComboBox, blockedButton);
+
+            setGraphic(hBox);
         } else {
             // clear
             setGraphic(null);

@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.nodes.StoryCompletenessVisualiser;
 import com.thirstygoat.kiqo.gui.nodes.TaskCard;
 import com.thirstygoat.kiqo.model.Status;
 import com.thirstygoat.kiqo.model.Task;
@@ -67,6 +68,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     private FlowPane verifyTasks;
     @FXML
     private FlowPane doneTasks;
+    @FXML
+    private StoryCompletenessVisualiser storyVisualiser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -129,8 +132,13 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             inProgressTasks.getChildren().setAll(viewModel.getInProgressTasks().stream().map(fn).collect(Collectors.toList()));
             verifyTasks.getChildren().setAll(viewModel.getVerifyTasks().stream().map(fn).collect(Collectors.toList()));
             doneTasks.getChildren().setAll(viewModel.getDoneTasks().stream().map(fn).collect(Collectors.toList()));
-        };
 
+            storyVisualiser.setDoneTasks(viewModel.getDoneTasks());
+            storyVisualiser.setInProgressTasks(viewModel.getInProgressTasks());
+            storyVisualiser.setVerifyTasks(viewModel.getVerifyTasks());
+            storyVisualiser.setTodoTasks(viewModel.getToDoTasks());
+
+        };
         viewModel.getToDoTasks().addListener(listener);
         viewModel.getInProgressTasks().addListener(listener);
         viewModel.getVerifyTasks().addListener(listener);
