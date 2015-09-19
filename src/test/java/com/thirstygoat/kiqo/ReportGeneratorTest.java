@@ -36,7 +36,7 @@ public class ReportGeneratorTest{
     private Story story3;
     private Backlog backlog;
     private Team team = new Team("team1", "description", Arrays.asList(person, person2, person3, person4));
-    private Sprint sprint = new Sprint("Goal", "longname", "Sprint description", null, release, team, LocalDate.now().minusDays(10), LocalDate.now().minusDays(1), new ArrayList<>());
+    private Sprint sprint = new Sprint("Goal", "longname", "Sprint description", null, release, team, LocalDate.now().minusDays(10), LocalDate.now().minusDays(1), new ArrayList<>() );
     private Allocation allocation;
     private AcceptanceCriteria acceptanceCriteria = new AcceptanceCriteria("ac text", story);
     private Task task = new Task("Shortname task", "description task", (float) 5, story);

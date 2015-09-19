@@ -9,8 +9,6 @@ import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
@@ -26,6 +24,7 @@ public class SprintViewModel implements ViewModel {
     private final ObjectProperty<Organisation> organisationProperty;
     private final ObjectProperty<Sprint> sprintProperty;
     private final ListProperty<Story> stories;
+    private final ListProperty<Task> tasks;
     private final ListProperty<Story> eligableStories;
     private final ObservableRuleBasedValidator goalValidator;
     private final FunctionBasedValidator<String> longNameValidator;
@@ -43,6 +42,7 @@ public class SprintViewModel implements ViewModel {
         organisationProperty = new SimpleObjectProperty<>();
         sprintProperty = new SimpleObjectProperty<>();
         stories = new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
+        tasks = new SimpleListProperty<>(FXCollections.observableArrayList(Task.getWatchStrategy()));
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
 
         goalValidator = new ObservableRuleBasedValidator();
@@ -379,6 +379,10 @@ public class SprintViewModel implements ViewModel {
 
     public ListProperty<Story> stories() {
         return stories;
+    }
+
+    public ListProperty<Task> tasks() {
+        return tasks;
     }
 
     public ListProperty<Story> eligableStories() {
