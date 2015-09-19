@@ -50,15 +50,14 @@ public class StoryViewModel implements ViewModel {
 
     public StoryViewModel() {
         shortNameValidator = new ObservableRuleBasedValidator();
-        BooleanBinding uniqueName = Bindings.createBooleanBinding(() ->
-            {
+        BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
                 List<Story> stories = new ArrayList();
                 if (projectProperty().get() != null) {
                     stories.addAll(projectProperty().get().getUnallocatedStories());
                     for (Backlog backlog : projectProperty().get().getBacklogs()) {
                         stories.addAll(backlog.getStories());
                     }
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), story, stories);
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), storyWrapper.get(), stories);
                 } else {
                     return true; // no project means this isn't for real yet.
                 }
