@@ -3,8 +3,10 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurndownView" >
     <children>
+
         <LineChart fx:id="burndownChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefHeight="10000">
             <xAxis>
                 <NumberAxis label="Days" lowerBound="0" tickUnit="1" />
@@ -13,5 +15,7 @@
                 <NumberAxis label="Hours" lowerBound="0" tickUnit="1" />
             </yAxis>
         </LineChart>
+        <!-- TODO remove this-->
+        <Button fx:id="button" text="press me"/>
     </children>
 </AnchorPane>

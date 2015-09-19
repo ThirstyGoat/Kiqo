@@ -24,6 +24,8 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private ScrumBoardView scrumBoardViewController; // Ignore naming convention here
     @FXML
+    private SprintDetailsPaneBurndownView burndownViewController; // Ignore naming convention here
+    @FXML
     private AnchorPane detailsView;
     @FXML
     private AnchorPane scrumBoardView;
@@ -62,9 +64,9 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
             } else if (newValue == detailsToggleButton) {
                 // Show Details View
                 show(detailsView);
-            } else  if (newValue == scrumboardToggleButton) {
+            } else if (newValue == scrumboardToggleButton) {
                 show(scrumBoardView);
-            } else  if (newValue == burndownToggleButton) {
+            } else if (newValue == burndownToggleButton) {
                 show(burndownView);
             } else {
                 hideAllViews();
@@ -75,6 +77,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
 
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
         viewModel.setScrumboardViewModel(scrumBoardViewController.getViewModel());
+        viewModel.setBurndownViewModel(burndownViewController.getViewModel());
     }
 
     /**

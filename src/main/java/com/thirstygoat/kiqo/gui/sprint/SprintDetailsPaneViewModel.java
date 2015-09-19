@@ -14,6 +14,7 @@ import de.saxsys.mvvmfx.ViewModel;
 public class SprintDetailsPaneViewModel extends SprintViewModel implements Editable {
 
     private SprintDetailsPaneDetailsViewModel sprintDetailsPaneDetailsViewModel;
+    private SprintDetailsPaneBurndownViewModel sprintDetailsPaneBurndownViewModel;
     private ScrumBoardViewModel scrumBoardViewModel;
 
     public void setDetailsViewModel(SprintDetailsPaneDetailsViewModel viewModel) {
@@ -24,11 +25,16 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Edita
         scrumBoardViewModel = viewModel;
     }
 
+    public void setBurndownViewModel(SprintDetailsPaneBurndownViewModel viewModel) {
+        sprintDetailsPaneBurndownViewModel = viewModel;
+    }
+
     @Override
     public void load(Sprint sprint, Organisation organisation) {
         super.load(sprint, organisation);
         sprintDetailsPaneDetailsViewModel.load(sprint, organisation);
         scrumBoardViewModel.load(sprint, organisation);
+        sprintDetailsPaneBurndownViewModel.load(sprint, organisation);
     }
 
     public ScrumBoardViewModel getScrumBoardViewModel() {
