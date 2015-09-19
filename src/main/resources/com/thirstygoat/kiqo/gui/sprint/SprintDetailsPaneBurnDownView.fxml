@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane style="-fx-background-color: red;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
     <children>
-				<LineChart fx:id="burndownChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
-					<yAxis>
-            <NumberAxis label="Date" lowerBound="0" tickUnit="1" />
-         </yAxis>
-					<xAxis>
-            <NumberAxis label="Hours" lowerBound="0" tickUnit="1" />
-         </xAxis>
-				</LineChart>
+        <LineChart fx:id="burndownChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefHeight="10000">
+            <xAxis>
+                <NumberAxis label="Date" lowerBound="0" tickUnit="1" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Hours" lowerBound="0" tickUnit="1" />
+            </yAxis>
+        </LineChart>
     </children>
 </AnchorPane>
