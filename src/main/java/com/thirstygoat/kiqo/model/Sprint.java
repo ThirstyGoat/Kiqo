@@ -2,10 +2,8 @@ package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -67,6 +65,21 @@ public class Sprint extends Item {
         bps.addPropertyChangeSupportFor(longName);
         bps.addPropertyChangeSupportFor(description);
     }
+
+
+    public FloatProperty totalEstimateProperty() {
+        FloatProperty totalEstimate = new SimpleFloatProperty(0.0f);
+        totalEstimate.bind(Bindings.createDoubleBinding(() -> {
+                            double runningTotal = 0;
+                            for (Story story : getStories()) {
+                                runningTotal += story.totalEstimateProperty().get();
+                            }
+                            return runningTotal;
+                        },
+                        getStories()));
+        return totalEstimate;
+    }
+
 
     /**
      * @return a string array of the searchable fields for a model object

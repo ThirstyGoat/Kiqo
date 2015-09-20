@@ -1,29 +1,16 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.search.SearchableField;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.Callback;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-
-import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
-import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.util.Callback;
 
 /**
  * Created by leroy on 15/05/15.
@@ -104,6 +91,15 @@ public class Story extends Item {
                 },
                 getTasks()));
         return spentEffort;
+    }
+
+    public FloatProperty totalEstimateProperty() {
+        FloatProperty totalEstimate = new SimpleFloatProperty();
+        totalEstimate.bind(Bindings.createDoubleBinding(
+                        () -> getTasks().stream()
+                                        .mapToDouble(Task::getEstimate).sum(),
+                        getTasks()));
+        return totalEstimate;
     }
 
     /**
