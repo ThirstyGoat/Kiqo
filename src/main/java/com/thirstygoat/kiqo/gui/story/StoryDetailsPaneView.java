@@ -19,10 +19,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -288,6 +285,14 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                 readyWhyPopOver.hide();
             }
         });
+
+        StringProperty readWhyMessage = new SimpleStringProperty("");
+        readyWhy.textProperty().bind(readWhyMessage);
+        readWhyMessage.bind(Bindings.createStringBinding(() ->
+        isReadyCheckBox.isSelected()
+                        ? "Why can't I unmark this story as ready?"
+                        : "Why can't I mark this story as ready?",
+        isReadyCheckBox.selectedProperty()));
     }
 
     private void deleteAC() {

@@ -60,7 +60,7 @@
                                     <HBox >
                                         <children>
                                             <CheckBox fx:id="isReadyCheckBox" />
-                                            <Hyperlink fx:id="readyWhy" text="Why can't I mark this Story as Ready?">
+                                            <Hyperlink fx:id="readyWhy">
                                                 <font>
                                                     <Font size="10.0" />
                                                 </font>
