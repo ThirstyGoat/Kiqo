@@ -71,7 +71,15 @@ public class StoryCompletenessVisualiser extends HBox  {
     }
 
     private float calculateSizePerEstimate() {
-        return (float) (getWidth() / (totalTodoEstimate.get() + totalInProgressTasksEstimate.get() + totalVerifyTasksEstimate.get() + totalDoneTasksEstimate.get()));
+        float totalEstimates = totalTodoEstimate.get()
+                + totalInProgressTasksEstimate.get()
+                + totalVerifyTasksEstimate.get()
+                + totalDoneTasksEstimate.get();
+
+        if (totalEstimates == 0) {
+            return 0;
+        }
+        return (float) (getWidth() / totalEstimates);
     }
 
     public void setTodoTasks(ObservableList<Task> tasks) {
