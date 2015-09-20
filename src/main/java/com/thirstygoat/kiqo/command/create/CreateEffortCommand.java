@@ -16,19 +16,23 @@ public class CreateEffortCommand extends CreateCommand {
         this.task = task;
     }
 
-    @Override protected void addToModel() {
+    @Override
+    protected void addToModel() {
         task.getLoggedEffort().add(effort);
     }
 
-    @Override protected void removeFromModel() {
+    @Override
+    protected void removeFromModel() {
         task.getLoggedEffort().remove(effort);
     }
 
-    @Override public String getType() {
+    @Override
+    public String getType() {
         return "<Create Effort: \"" + effort.getComment() + "\">";
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Create Effort";
     }
 }

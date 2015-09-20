@@ -7,7 +7,6 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
@@ -18,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 /**
@@ -86,8 +84,9 @@ public class TaskCardViewModel implements ViewModel, Editable {
         return command;
     }
 
-    public void load(Task task) {
+    public void load(Task task, Organisation organisation) {
         this.task.set(task);
+        this.organisationProperty().setValue(organisation);
         if (task != null) {
             modelWrapper.set(task);
         }
@@ -189,19 +188,19 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     public ListProperty<Person> eligableAssignedPeople() {
         ListProperty<Person> eligableAssignedPeople = new SimpleListProperty<>(FXCollections.observableArrayList());
-        Sprint sprint = null;
-        for (Release release : organisation.get().getReleases()) {
-            for (Sprint aSprint : release.getSprints()) {
-                for (Story story : aSprint.getStories()) {
-                    if (task.get() != null) {
-                        if (story == task.get().getStory()) {
-                            sprint = aSprint;
-                        }
-                    }
-                }
-            }
-        }
-        if (sprint != null) eligableAssignedPeople.setAll(sprint.getTeam().getTeamMembers());
+//        Sprint sprint = null;
+//        for (Release release : organisation.get().getReleases()) {
+//            for (Sprint aSprint : release.getSprints()) {
+//                for (Story story : aSprint.getStories()) {
+//                    if (task.get() != null) {
+//                        if (story == task.get().getStory()) {
+//                            sprint = aSprint;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (sprint != null) eligableAssignedPeople.setAll(sprint.getTeam().getTeamMembers());
         return eligableAssignedPeople;
     }
 }

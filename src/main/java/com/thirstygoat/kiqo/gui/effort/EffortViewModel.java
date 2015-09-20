@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -34,26 +33,32 @@ import java.util.logging.Level;
 public class EffortViewModel extends ModelViewModel<Effort> implements Editable {
     private FunctionBasedValidator<Person> personValidator;
     private CompositeValidator allValidator;
+    private ObjectProperty<Effort> effort;
 
     private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>(LocalDate.now());
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
 
+
     public EffortViewModel() {
         personValidator = new FunctionBasedValidator<>(personProperty(),
-                        person -> person != null
-                                        && organisationProperty().get().getPeople().contains(person),
-                        // TODO check that person is in team associated with this sprint, when assignment is working.
+                        person -> person != null && organisationProperty().get().getPeople().contains(person),
+//                        // TODO check that person is in team associated with this sprint, when assignment is working.
                         ValidationMessage.error("Person must exist"));
 
         allValidator = new CompositeValidator();
         allValidator.addValidators(personValidator);
+        effort = new SimpleObjectProperty<>();
+
+        organisationProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("huraaalksdfa l;");
+        });
     }
 
     public Supplier<List<Person>> eligablePeopleSupplier = () -> {
         if (organisationProperty().get() != null) {
             return organisationProperty().get().getPeople();
         } else {
-            return new ArrayList<Person>();
+            return new ArrayList<>();
         }
     };
 
@@ -67,8 +72,15 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         endDateTimeProperty().bind(Bindings.createObjectBinding(() -> {
             LocalDate endDate = endDateProperty.get();
             LocalTime endTime = endTimeProperty().get();
-            LocalDateTime dateTime = LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
-                            endTime.getHour(), endTime.getMinute());
+
+            LocalDateTime dateTime = LocalDateTime.of(
+                    endDate.getYear(),
+                    endDate.getMonth(),
+                    endDate.getDayOfMonth(),
+                    endTime.getHour(),
+                    endTime.getMinute()
+            );
+
             dateTime.plusHours(endTimeProperty.get().getHour());
             dateTime.plusMinutes(endTimeProperty.get().getMinute());
             return dateTime;
@@ -79,22 +91,27 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     public Command getCommand() {
         final Command command;
 
-        if (!allValidation().isValid()) {
-            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            return null;
-        } else if (!modelWrapper.isDirty()) {
-            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
-            return null;
-        }
-
-        if (modelWrapper.get().personProperty() == null) { // Must be a new effort
-            final Effort effort = new Effort(personProperty().get(), taskProperty().get(), endDateTimeProperty().get(),
-                            durationProperty().get(), commentProperty().get());
+        if (effort.get() == null) {
+            Effort effort = new Effort(personProperty().get(), taskProperty().get(), endDateTimeProperty().get(), durationProperty().get(), commentProperty().get());
             command = new CreateEffortCommand(effort, taskProperty().get());
         } else {
-            final ArrayList<Command> changes = new ArrayList<>();
-            super.addEditCommands.accept(changes);
-            command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Effort", changes);
+            if (!allValidation().isValid()) {
+                LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
+                return null;
+            } else if (!modelWrapper.isDirty()) {
+                LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
+                return null;
+            }
+
+            if (modelWrapper.get().personProperty() == null) { // Must be a new effort
+                final Effort effort = new Effort(personProperty().get(), taskProperty().get(), endDateTimeProperty().get(),
+                        durationProperty().get(), commentProperty().get());
+                command = new CreateEffortCommand(effort, taskProperty().get());
+            } else {
+                final ArrayList<Command> changes = new ArrayList<>();
+                super.addEditCommands.accept(changes);
+                command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Effort", changes);
+            }
         }
         return command;
     }

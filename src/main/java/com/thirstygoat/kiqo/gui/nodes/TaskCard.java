@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Task;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -35,9 +36,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private BooleanProperty impedanceProperty;
     final private BooleanProperty isBlockedProperty;
     final private Task task;
+    final private ObjectProperty<Organisation> organisationProperty;
 
-    public TaskCard(Task task) {
+    public TaskCard(Task task, Organisation organisation) {
         this.task = task;
+        organisationProperty = new SimpleObjectProperty<>();
+        organisationProperty.setValue(organisation);
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         spentEffortProperty = new SimpleFloatProperty();
@@ -142,7 +146,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             Window parentWindow = getParent().getScene().getWindow();
             stage.initOwner(parentWindow);
             ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
-            viewTuple.getViewModel().load(task);
+            viewTuple.getViewModel().load(task, organisationProperty.get());
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);

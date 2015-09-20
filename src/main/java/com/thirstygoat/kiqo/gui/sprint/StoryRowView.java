@@ -114,7 +114,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     private void drawTasks() {
         Function<Task, TaskCard> fn = task -> {
-            TaskCard tc = new TaskCard(task);
+            TaskCard tc = new TaskCard(task, viewModel.organisationProperty().get());
             tc.getStyleClass().add(task.getStatus().getCssClass());
 //            tc.setCursor(Cursor.OPEN_HAND);
             addDragHandler(tc);
