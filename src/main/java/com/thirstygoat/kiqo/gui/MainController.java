@@ -49,8 +49,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -170,6 +168,8 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Project")) {
             doCommand(command);
+            getDetailsPaneController().closeTab(project);
+
         }
     }
 
@@ -197,6 +197,7 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Story")) {
             doCommand(command);
+            getDetailsPaneController().closeTab(story);
         }
     }
 
@@ -222,6 +223,7 @@ public class MainController implements Initializable {
 
             if (result.equals("Delete Skill")) {
                 doCommand(new DeleteSkillCommand(skill, selectedOrganisationProperty.get()));
+                getDetailsPaneController().closeTab(skill);
             }
         }
     }
@@ -271,6 +273,8 @@ public class MainController implements Initializable {
                 command.setDeleteTeamMembers(true);
             }
             doCommand(command);
+            getDetailsPaneController().closeTab(team);
+
         }
     }
 
@@ -322,6 +326,8 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Person")) {
             doCommand(command);
+            getDetailsPaneController().closeTab(person);
+
         }
     }
 
@@ -344,6 +350,7 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Release")) {
             doCommand(new DeleteReleaseCommand((Release) focusedItemProperty.get()));
+            getDetailsPaneController().closeTab(release);
         }
     }
 
@@ -395,6 +402,8 @@ public class MainController implements Initializable {
                 }
             }
             doCommand(new CompoundCommand("Delete Backlog", changes));
+            getDetailsPaneController().closeTab(backlog);
+
         }
     }
 
@@ -412,6 +421,7 @@ public class MainController implements Initializable {
 
         if (result.equals("Delete Sprint")) {
             doCommand(command);
+            getDetailsPaneController().closeTab(sprint);
         }
     }
 
@@ -426,13 +436,13 @@ public class MainController implements Initializable {
         Platform.runLater(() -> {
             if (item instanceof Project) {
                 deleteProject((Project) item);
-            } else if (item instanceof Person) {
+            } else if (item.getClass() == Person.class) {
                 deletePerson((Person) item);
-            } else if (item instanceof Skill) {
+            } else if (item .getClass() == Skill.class) {
                 deleteSkill((Skill) item);
-            } else if (item instanceof Team) {
+            } else if (item.getClass() == Team.class) {
                 deleteTeam((Team) item);
-            } else if (item instanceof Release) {
+            } else if (item.getClass() == Release.class) {
                 deleteRelease((Release) item);
             } else if (item.getClass() == Story.class) {
                 deleteStory((Story) item);
@@ -443,7 +453,6 @@ public class MainController implements Initializable {
             } else {
                 return;
             }
-            getDetailsPaneController().closeTab(item);
         });
     }
 
