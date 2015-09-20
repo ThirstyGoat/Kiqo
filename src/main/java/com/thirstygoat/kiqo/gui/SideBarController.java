@@ -6,6 +6,8 @@ import com.thirstygoat.kiqo.gui.nodes.TreeNodeHeading;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.TreeMouseEventDispatcher;
 import com.thirstygoat.kiqo.util.Utilities;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -131,7 +132,6 @@ public class SideBarController implements Initializable {
                     @Override
                     protected void updateItem(Item item, boolean empty) {
                         if (item != null && !empty) {
-                            FontAwesome fontAwesome = new FontAwesome();
                             textProperty().bind(item.shortNameProperty());
                             if (item.getClass() != TreeNodeHeading.class) {
                                 EventDispatcher originalDispatcher = getEventDispatcher();
@@ -139,15 +139,15 @@ public class SideBarController implements Initializable {
                                 setContextMenu(generateContextMenu(item));
                                 setGraphic(null);
                             } else {
-                                Node node = null;
+                                FontAwesomeIconView icon = null;
                                 if (item.getShortName().equals("Releases")) {
-                                    node = fontAwesome.create(FontAwesome.Glyph.CALENDAR);
+                                    icon = new FontAwesomeIconView(FontAwesomeIcon.CALENDAR);
                                 } else if (item.getShortName().equals("Backlogs")) {
-                                    node = fontAwesome.create(FontAwesome.Glyph.LIST);
+                                    icon = new FontAwesomeIconView(FontAwesomeIcon.LIST);
                                 } else if (item.getShortName().equals("Unallocated Stories")) {
-                                    node = fontAwesome.create(FontAwesome.Glyph.BOOK);
+                                    icon = new FontAwesomeIconView(FontAwesomeIcon.BOOK);
                                 }
-                                setGraphic(node);
+                                setGraphic(icon);
                             }
                         } else {
                             textProperty().unbind();
