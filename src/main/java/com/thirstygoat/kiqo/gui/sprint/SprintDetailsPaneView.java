@@ -1,11 +1,13 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -18,6 +20,9 @@ import java.util.ResourceBundle;
 * Created by Bradley Kirwan on 14/08/2015.
 */
 public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewModel>, Initializable {
+
+    @InjectViewModel
+    private SprintDetailsPaneViewModel viewModel;
 
     @FXML
     private SprintDetailsPaneDetailsView detailsViewController; // Ignore naming convention here
@@ -37,10 +42,9 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private ToggleButton detailsToggleButton;
     @FXML
+    private TableColumn<Story, String> shortNameTableColumn;
+    @FXML
     private ToggleButton scrumboardToggleButton;
-
-    @InjectViewModel
-    private SprintDetailsPaneViewModel viewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,9 +70,9 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         });
 
         detailsToggleButton.setSelected(true);
-
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
         viewModel.setScrumboardViewModel(scrumBoardViewController.getViewModel());
+
     }
 
     /**
