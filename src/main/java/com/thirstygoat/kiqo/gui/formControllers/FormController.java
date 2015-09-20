@@ -52,49 +52,6 @@ public abstract class FormController<T> implements Initializable {
      */
     public abstract Command getCommand();
 
-    public <E extends Item> void setTextFieldSuggester(TextField textField, Collection<E> list) {
-        // use a callback to get an up-to-date list, instead of just whatever exists at initialisation.
-        // use a String converter so that the short name is used.
-        final AutoCompletionBinding<E> binding = TextFields.bindAutoCompletion(textField, new Callback<AutoCompletionBinding.ISuggestionRequest, Collection<E>>() {
-            @Override
-            public Collection<E> call(AutoCompletionBinding.ISuggestionRequest request) {
-                // filter based on input string
-                if (textField.isFocused()) {
-                    final Collection<E> suggestions = list.stream()
-                            .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
-                            .collect(Collectors.toList());
-                    return suggestions;
-                } else {
-                    return null;
-                }
-
-            }
-
-        }, new StringConverter<E>() {
-            @Override
-            public E fromString(String string) {
-                for (final E suggestion : list) {
-                    if (suggestion.getShortName().equals(string)) {
-                        return suggestion;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public String toString(E suggestion) {
-                return suggestion.getShortName();
-            }
-        });
-
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                // forces suggestion list to show
-                binding.setUserInput(textField.getText());
-            }
-        });
-    }
-
     /**
      * Returns a heading property. Transitional as we move to new design of form dialogs
      * @return

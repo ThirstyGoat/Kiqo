@@ -2,7 +2,7 @@ package com.thirstygoat.kiqo.gui;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.BoundProperties;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * A base class for ModelViewModels.
  */
-public abstract class ModelViewModel<T extends Item> implements ViewModel, Loadable<T> {
+public abstract class ModelViewModel<T extends BoundProperties> implements ViewModel, Loadable<T> {
     protected static final Logger LOGGER = Logger.getLogger(ModelViewModel.class.getName());
     protected final GoatModelWrapper<T> modelWrapper = new GoatModelWrapper<>();
     private final ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>(null);

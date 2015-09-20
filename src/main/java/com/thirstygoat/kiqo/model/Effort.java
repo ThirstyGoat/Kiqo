@@ -2,10 +2,12 @@ package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableField;
+import com.thirstygoat.kiqo.util.BoundPropertySupport;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.util.Callback;
 
+import java.beans.PropertyChangeListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,15 @@ import java.util.List;
 /**
  * Created by leroy on 17/09/15.
  */
-public class Effort implements Searchable {
+public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
     private final ObjectProperty<LocalDateTime> logTime;
     private final ObjectProperty<LocalDateTime> endTime;
     private final FloatProperty duration;
     private final StringProperty comment;
+
+    private final BoundPropertySupport bps = new BoundPropertySupport(this);
 
     public Effort() {
         this.person = new SimpleObjectProperty<>(null);
@@ -39,6 +43,23 @@ public class Effort implements Searchable {
         this.comment = new SimpleStringProperty(comment);
     }
 
+    public void initBoundPropertySupport() {
+        bps.addPropertyChangeSupportFor(person);
+        bps.addPropertyChangeSupportFor(task);
+        bps.addPropertyChangeSupportFor(logTime);
+        bps.addPropertyChangeSupportFor(endTime);
+        bps.addPropertyChangeSupportFor(duration);
+        bps.addPropertyChangeSupportFor(comment);
+    }
+
+    public final void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.bps.addChangeListener(listener);
+    }
+
+    public final void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.bps.removeChangeListener(listener);
+    }
+
     public ObjectProperty<Person> personProperty() {
         return person;
     }
@@ -55,8 +76,24 @@ public class Effort implements Searchable {
         return task.get();
     }
 
+    public ObjectProperty<Task> taskProperty() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task.set(task);
+    }
+
     public LocalDateTime getLogTime() {
         return logTime.get();
+    }
+
+    public ObjectProperty<LocalDateTime> logTime() {
+        return logTime;
+    }
+
+    public void setLogTime(LocalDateTime logTime) {
+        this.logTime.set(logTime);
     }
 
     public ObjectProperty<LocalDateTime> endTimeProperty() {

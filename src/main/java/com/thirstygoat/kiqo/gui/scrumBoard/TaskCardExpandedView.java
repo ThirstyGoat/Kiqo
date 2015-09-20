@@ -1,10 +1,17 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Impediment;
+import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -14,11 +21,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.converter.LocalTimeStringConverter;
+import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 
@@ -36,15 +46,23 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private Label teamLabel;
     @FXML
+    private GoatLabelFilteredListSelectionView<Person> assignedPeopleLabel;
+    @FXML
     private GoatLabelTextField estimatedHoursLabel;
     @FXML
-    private Label commentsLabel;
+    private TextField personTextField;
     @FXML
-    private TextField spentEffortTextField;
+    private DatePicker endDatePicker;
     @FXML
-    private GridPane detailsGridPane;
+    private TextField endTimeTextField;
     @FXML
-    private GridPane loggingGridPane;
+    private TextField durationTextField;
+    @FXML
+    private TextField commentTextField;
+    @FXML
+    private VBox detailsVBox;
+    @FXML
+    private VBox loggingVBox;
     @FXML
     private AnchorPane mainAnchorPane;
     @FXML
@@ -67,6 +85,16 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private TextField impedimentTextField;
     @FXML
     private ListView<Impediment> impedimentsListView;
+    @FXML
+    private TableView<Effort> loggedEffortTableView;
+    @FXML
+    private TableColumn<Allocation, Person> personTableColumn;
+    @FXML
+    private TableColumn<Allocation, String> commentTableColumn;
+    @FXML
+    private TableColumn<Allocation, Float> durationTableColumn;
+    @FXML
+    private TableColumn<Allocation, LocalDateTime> endTimeTableColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,9 +104,9 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 segmentedButton.getToggleGroup().selectToggle(oldValue);
             } else {
                 if (newValue == detailsToggleButton) {
-                    showNode(detailsGridPane);
+                    showNode(detailsVBox);
                 } else if (newValue == loggingToggleButton) {
-                    showNode(loggingGridPane);
+                    showNode(loggingVBox);
                 }
             }
 
@@ -108,18 +136,39 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         addImpedimentButton.setOnAction(e -> viewModel.addImpediment());
         addImpedimentButton.disableProperty().bind(Bindings.isEmpty(impedimentTextField.textProperty()));
-        removeImpedimentButton.setOnAction(
-                        e -> {
-                            int place = impedimentsListView.getSelectionModel().getSelectedIndex();
-                            viewModel.removeImpediment(impedimentsListView.getSelectionModel().getSelectedItem());
-                            impedimentsListView.getSelectionModel().select((place > 0) ? place - 1 : 0);
+        removeImpedimentButton.setOnAction(e -> {
+            int place = impedimentsListView.getSelectionModel().getSelectedIndex();
+            viewModel.removeImpediment(impedimentsListView.getSelectionModel().getSelectedItem());
+            impedimentsListView.getSelectionModel().select((place > 0) ? place - 1 : 0);
 
-                        });
+        });
         removeImpedimentButton.disableProperty().bind(
                         Bindings.isNull(impedimentsListView.getSelectionModel().selectedItemProperty()));
 
+        EffortViewModel effortViewModel = new EffortViewModel();
+//        effortViewModel.load(new Effort(), viewModel.organisationProperty().get());
+//        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
 
-        // TODO add logging functionality
+        loggingButton.setOnAction(e -> {
+            System.out.println(effortViewModel.allValidation().isValid());
+            System.out.println(effortViewModel.allValidation().getErrorMessages());
+            effortViewModel.commitEdit();
+        });
+
+        effortViewModel.taskProperty().set(viewModel.getTask().get());
+        personTextField.textProperty().bindBidirectional(effortViewModel.personProperty(),
+                        StringConverters.personStringConverter(effortViewModel.organisationProperty()));
+        FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
+        endDatePicker.valueProperty().bindBidirectional(effortViewModel.endDateProperty());
+        endTimeTextField.textProperty().bindBidirectional(effortViewModel.endTimeProperty(),
+                        new LocalTimeStringConverter());
+        durationTextField.textProperty().bindBidirectional(effortViewModel.durationProperty(),
+                        new NumberStringConverter());
+
+        loggedEffortTableView.itemsProperty().bind(viewModel.loggedEffort());
+
+        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignedPeolpe(),
+                        viewModel.eligableAssignedPeople());
     }
 
 

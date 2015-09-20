@@ -7,18 +7,18 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.model.Effort;
-import com.thirstygoat.kiqo.model.Impediment;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.gui.sprint.SprintViewModel;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 /**
@@ -31,6 +31,7 @@ public class TaskCardViewModel implements ViewModel, Editable {
     private Stage stage;
     private Runnable exitStrategy;
 
+    private ObservableRuleBasedValidator personValidator;
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private ObservableRuleBasedValidator teamValidator;
@@ -129,8 +130,12 @@ public class TaskCardViewModel implements ViewModel, Editable {
         return modelWrapper.field("impediments", Task::getImpediments, Task::setImpediments);
     }
 
-    public ObservableList<Effort> loggedEffort() {
+    public ListProperty<Effort> loggedEffort() {
         return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
+    }
+
+    public ListProperty<Person> assignedPeolpe() {
+        return modelWrapper.field("assignedPeople", Task::getAssignedPeople, Task::setAssignedPeople);
     }
 
     public ObjectProperty<Task> getTask() {
@@ -180,5 +185,23 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     public ValidationStatus teamValidation() {
         return teamValidator.getValidationStatus();
+    }
+
+    public ListProperty<Person> eligableAssignedPeople() {
+        ListProperty<Person> eligableAssignedPeople = new SimpleListProperty<>(FXCollections.observableArrayList());
+        Sprint sprint = null;
+        for (Release release : organisation.get().getReleases()) {
+            for (Sprint aSprint : release.getSprints()) {
+                for (Story story : aSprint.getStories()) {
+                    if (task.get() != null) {
+                        if (story == task.get().getStory()) {
+                            sprint = aSprint;
+                        }
+                    }
+                }
+            }
+        }
+        if (sprint != null) eligableAssignedPeople.setAll(sprint.getTeam().getTeamMembers());
+        return eligableAssignedPeople;
     }
 }
