@@ -264,15 +264,16 @@ public final class FxUtils {
                 Editable viewModel,
                 ListProperty<T> targetList,
                 ObservableList<T> sourceList,
-                Callback<ListView<T>, ListCell<T>> displayCellFactory, 
-                Callback<T, Node> editCellFactory, 
+                Callback<ListView<T>, ListCell<T>> displayCellFactory,
+                Callback<T, Node> editCellFactory,
                 Callback<T, StringProperty> stringPropertyCallback) {
         listBiControl.selectedItems().bindBidirectional(targetList);
         listBiControl.allItems().set(sourceList); // TODO check this works
-        listBiControl.setSkin(new FilteredListBiControlSkin<T>(listBiControl,
+        FilteredListBiControlSkin<T> skin = new FilteredListBiControlSkin<T>(listBiControl,
                 viewModel::commitEdit, viewModel::cancelEdit, 
                 displayCellFactory,
                 editCellFactory,
-                stringPropertyCallback));
+                stringPropertyCallback);
+        listBiControl.setSkin(skin);
     }
 }

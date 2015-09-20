@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,23 +60,23 @@ public class UtilitiesTest {
 
         String emptyListMessage = "Listing for an empty list should return the empty string.";
         List<Item> itemsEmpty = Arrays.asList();
-        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, 1).equals(""));
-        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, 0).equals(""));
-        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, -1).equals(""));
+        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, 1).equals("-"));
+        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, 0).equals("-"));
+        Assert.assertTrue(emptyListMessage, Utilities.concatenateItemsList(itemsEmpty, -1).equals("-"));
 
         String singleItemMessage = "Listing for a single item should return just that item, unless max is <= 0"
                 + " in which case it should return \" and 1 other\".";
         List<Item> itemsSingle = Arrays.asList(skill1);
         Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 1).equals("skill1"));
-        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 0).equals(", and 1 other"));
-        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, -1).equals(", and 1 other"));
+        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, 0).equals("-, and 1 other"));
+        Assert.assertTrue(singleItemMessage, Utilities.concatenateItemsList(itemsSingle, -1).equals("-, and 1 other"));
 
         List<Item> itemsMulti = Arrays.asList(skill1, skill2, skill3);
         Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 3).equals("skill1, skill2, skill3"));
         Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 2).equals("skill1, skill2, and 1 other"));
         Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 1).equals("skill1, and 2 others"));
-        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 0).equals(", and 3 others"));
-        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, -1).equals(", and 3 others"));
+        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, 0).equals("-, and 3 others"));
+        Assert.assertTrue(Utilities.concatenateItemsList(itemsMulti, -1).equals("-, and 3 others"));
     }
 
     @Test
@@ -117,7 +118,7 @@ public class UtilitiesTest {
 
         List emptyList = Arrays.asList();
         String emptyString = Utilities.commaSeparatedValues(emptyList);
-        Assert.assertTrue("Should return the empty string.", emptyString.equals(""));
+        Assert.assertTrue("Should return the empty string.", emptyString.equals("-"));
     }
 
     @Test

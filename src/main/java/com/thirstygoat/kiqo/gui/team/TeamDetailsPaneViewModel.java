@@ -28,15 +28,6 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
 
     @Override
     public void afterLoad() {
-        Runnable mapPeople = () -> teamMemberViewModels.setAll(teamMembersProperty().stream()
-                        .map(person -> {
-                            PersonListItemViewModel listItemViewModel = new PersonListItemViewModel();
-                            listItemViewModel.load(person, organisationProperty().get());
-                            return listItemViewModel;
-                        })
-                        .collect(Collectors.toList()));
-        modelWrapper.onModelChange(change -> Platform.runLater(mapPeople));
-        mapPeople.run();
     }
 
     @Override
@@ -52,17 +43,13 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
         reload();
     }
 
-    public ObservableList<PersonListItemViewModel> eligibleTeamMembers() {
-        final Callback<ObservableList<Person>, ObservableList<PersonListItemViewModel>> callback = allPeople -> allPeople.stream()
+    public ListProperty<Person> eligibleTeamMembers() {
+        final Callback<ObservableList<Person>, ObservableList<Person>> callback = allPeople -> allPeople.stream()
                 .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
-                .map(person -> {
-                    PersonListItemViewModel listItemViewModel = new PersonListItemViewModel();
-                    listItemViewModel.load(person, organisationProperty().get());
-                    return listItemViewModel;
-                }).collect(GoatCollectors.toObservableList());
+                .collect(GoatCollectors.toObservableList());
 
-        final ObservableList<PersonListItemViewModel> list = FXCollections.observableArrayList();
-        
+        final ListProperty<Person> list = new SimpleListProperty<>(FXCollections.observableArrayList());
+
         organisationProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 list.setAll(callback.call(newValue.getPeople()));
@@ -70,7 +57,7 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
                 list.clear();
             }
         });
-        
+
         return list;
     }
 }

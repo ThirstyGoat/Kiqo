@@ -48,36 +48,4 @@ public class TeamDetailsPaneViewModelTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void detailsPaneUpdatesWhenModelChangesTest() {
-        viewModel.load(team, organisation);
-        Assert.assertTrue("Short name should be the same as the model object",
-                        viewModel.shortNameProperty().get().equals("teamShortName"));
-        team.setShortName("testShortNameChanged");
-        Assert.assertTrue(
-                        "The models short name changed, so the ViewModel's shortNameProperty should have been updated",
-                        viewModel.shortNameProperty().get().equals("testShortNameChanged"));
-
-        Assert.assertEquals("Team has no members so there should be no ListItemViewModels",
-                        viewModel.teamMemberViewModels().size(), 0);
-        team.observableTeamMembers().add(person3);
-        Assert.assertEquals(
-                        "A person was added to the team, so the ViewModel's teamMemberViewModelsProperty should have"
-                                        + "been updated.", viewModel.teamMemberViewModels().size(), 1);
-    }
-
-    @Test
-    public void detailsPaneUpdatesWhenTeamMembersChangeTest() {
-        team.observableTeamMembers().add(person3);
-        viewModel.load(team, organisation);
-        Assert.assertEquals(viewModel.teamMemberViewModels().get(0).shortNameProperty().get(), "PERSON3");
-        Assert.assertEquals(viewModel.teamMemberViewModels().get(0).descriptionProperty().get(), "");
-
-        // edit person
-        person3.shortNameProperty().set("a different name");
-        person3.descriptionProperty().set("some description");
-        Assert.assertEquals(viewModel.teamMemberViewModels().get(0).shortNameProperty().get(), "a different name");
-        Assert.assertEquals(viewModel.teamMemberViewModels().get(0).descriptionProperty().get(), "some description");
-    }
 }
