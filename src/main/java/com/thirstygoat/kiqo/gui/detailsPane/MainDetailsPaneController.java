@@ -201,7 +201,7 @@ public class MainDetailsPaneController implements Initializable {
     public void showSearchPane() {
         // Advanced Search
         ViewTuple<AdvancedSearchView, AdvancedSearchViewModel> advancedSearchViewTuple = optimizedDetailsPane.getSearchViewTuple();
-
+        advancedSearchViewTuple.getViewModel().setMainController(mainController);
         // TODO, update heading to display what the search was for
         StringProperty advancedSearchHeading = new SimpleStringProperty("Advanced Search");
 

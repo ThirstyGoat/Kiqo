@@ -160,15 +160,19 @@ public final class Utilities {
     public static void setNameSuggester(StringProperty longName, StringProperty shortName) {
         BooleanProperty isSuggesterEnabled = new SimpleBooleanProperty(true);
         shortName.addListener((observable, oldValue, newValue) -> {
-            final String truncatedLongName = longName.get().substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH));
-            final String truncatedShortName = newValue.substring(0, Math.min(newValue.length(), Utilities.SHORT_NAME_MAX_LENGTH));
-            // if shortName is modified directly, disable suggester. 
-            // but if shortname is modified to match longName, enable it again.
-            isSuggesterEnabled.set(truncatedShortName.equals(truncatedLongName));
-            
-            // in any case, truncate the short name to the character limit
-            if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
-                shortName.set(truncatedShortName); // override newValue
+            if (longName.get() != null) {
+                final String truncatedLongName = longName.get()
+                                .substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH));
+                final String truncatedShortName =
+                                newValue.substring(0, Math.min(newValue.length(), Utilities.SHORT_NAME_MAX_LENGTH));
+                // if shortName is modified directly, disable suggester.
+                // but if shortname is modified to match longName, enable it again.
+                isSuggesterEnabled.set(truncatedShortName.equals(truncatedLongName));
+
+                // in any case, truncate the short name to the character limit
+                if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
+                    shortName.set(truncatedShortName); // override newValue
+                }
             }
         });
         
