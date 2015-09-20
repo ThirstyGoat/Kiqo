@@ -1,16 +1,24 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.customCells.SprintListCell;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.fxml.*;
-import javafx.scene.control.*;
-
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.*;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -63,6 +71,18 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         storyTableView.itemsProperty().bind(viewModel.stories());
 
         placeHolder.textProperty().set(SprintDetailsPaneDetailsViewModel.PLACEHOLDER);
+
+        shortNameTableColumn.setCellFactory((s) ->  {
+            SprintListCell sprintListCell = new SprintListCell(viewModel);
+            sprintListCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1) {
+                    MainController.focusedItemProperty.set((Story) sprintListCell.getTableRow().getItem());
+                }
+            });
+            return sprintListCell;
+        });
+
+
     }
 
     public SprintDetailsPaneDetailsViewModel getViewModel() {
