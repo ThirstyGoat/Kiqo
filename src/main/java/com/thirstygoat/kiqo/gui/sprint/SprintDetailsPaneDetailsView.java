@@ -1,7 +1,7 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.customCells.SprintListCell;
+import com.thirstygoat.kiqo.gui.customCells.StoryTableCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
@@ -73,13 +73,13 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         placeHolder.textProperty().set(SprintDetailsPaneDetailsViewModel.PLACEHOLDER);
 
         shortNameTableColumn.setCellFactory((s) ->  {
-            SprintListCell sprintListCell = new SprintListCell(viewModel);
-            sprintListCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            StoryTableCell storyTableCell = new StoryTableCell(viewModel);
+            storyTableCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() > 1) {
-                    MainController.focusedItemProperty.set((Story) sprintListCell.getTableRow().getItem());
+                    MainController.focusedItemProperty.set((Story) storyTableCell.getTableRow().getItem());
                 }
             });
-            return sprintListCell;
+            return storyTableCell;
         });
 
 

@@ -7,10 +7,10 @@ import javafx.scene.control.TableCell;
 /**
  * Created by Carina Blair on 19/09/2015.
  */
-public class SprintListCell extends TableCell<Story, String> {
+public class StoryTableCell extends TableCell<Story, String> {
     private final SprintDetailsPaneDetailsViewModel vm;
 
-    public SprintListCell(SprintDetailsPaneDetailsViewModel sprintDetailsPaneDetailsViewModel) {
+    public StoryTableCell(SprintDetailsPaneDetailsViewModel sprintDetailsPaneDetailsViewModel) {
         super();
         vm = sprintDetailsPaneDetailsViewModel;
     }
