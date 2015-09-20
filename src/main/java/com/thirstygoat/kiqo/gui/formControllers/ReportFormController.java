@@ -47,6 +47,8 @@ public class ReportFormController implements Initializable {
         return elementListSelectionView.getTargetItems();
     }
 
+
+
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
                 valid = true;
@@ -90,6 +92,8 @@ public class ReportFormController implements Initializable {
             }
         }
         elementListSelectionView.getSourceItems().setAll(sourceList);
+        elementListSelectionView.setStringPropertyCallback(item -> item.shortNameProperty());
+
     }
 
     private void populateComboBox() {

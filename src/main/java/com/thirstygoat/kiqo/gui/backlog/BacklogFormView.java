@@ -3,14 +3,14 @@ package com.thirstygoat.kiqo.gui.backlog;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -72,6 +72,8 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
         storySelectionView.sourceItemsProperty().bind(viewModel.eligableStories());
+        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
+
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
