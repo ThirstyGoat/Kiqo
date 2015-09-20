@@ -6720,7 +6720,9 @@
     "isReady": true,
     "tasks": [
       "0x266",
-      "0x267"
+      "0x267",
+      "0x268",
+      "0x269"
     ],
     "taskHours": 0.0,
     "inSprint": true
@@ -6736,7 +6738,7 @@
     "estimate": 12,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x268"
+      "0x26a"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6755,7 +6757,7 @@
     "estimate": 3,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x269"
+      "0x26b"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6774,7 +6776,7 @@
     "estimate": 7,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26a"
+      "0x26c"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6793,7 +6795,7 @@
     "estimate": 3,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26b"
+      "0x26d"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6812,19 +6814,19 @@
     "estimate": 6,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26c",
-      "0x26d",
       "0x26e",
       "0x26f",
       "0x270",
-      "0x271"
+      "0x271",
+      "0x272",
+      "0x273"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [
-      "0x272",
-      "0x273",
-      "0x274"
+      "0x274",
+      "0x275",
+      "0x276"
     ],
     "taskHours": 0.0,
     "inSprint": true
@@ -6840,7 +6842,7 @@
     "estimate": 5,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x275"
+      "0x277"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6859,7 +6861,7 @@
     "estimate": 4,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x276"
+      "0x278"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6880,106 +6882,142 @@
   "0x266": {
     "shortName": "Create the AC model",
     "description": "",
-    "estimate": 1.0,
+    "estimate": 2.0,
+    "blocked": false,
     "status": "NOT_STARTED",
     "story": "0x25c",
-    "impediments": []
+    "impediments": [
+      "0x279"
+    ],
+    "loggedEffort": []
   },
   "0x267": {
     "shortName": "Implement commands",
     "description": "Implement commands for AC model and unit test.",
     "estimate": 2.0,
-    "status": "NOT_STARTED",
+    "blocked": false,
+    "status": "DONE",
     "story": "0x25c",
     "impediments": [
-      "0x277"
-    ]
+      "0x27a"
+    ],
+    "loggedEffort": []
   },
   "0x268": {
+    "shortName": "qwe",
+    "description": "",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "IN_PROGRESS",
+    "story": "0x25c",
+    "impediments": [],
+    "loggedEffort": []
+  },
+  "0x269": {
+    "shortName": "123",
+    "description": "",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "VERIFY",
+    "story": "0x25c",
+    "impediments": [],
+    "loggedEffort": []
+  },
+  "0x26a": {
     "criteria": "Add estimation scales",
     "state": "NEITHER",
     "story": "0x25d"
   },
-  "0x269": {
+  "0x26b": {
     "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25e"
   },
-  "0x26a": {
+  "0x26c": {
     "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25f"
   },
-  "0x26b": {
+  "0x26d": {
     "criteria": "stuff is there",
     "state": "NEITHER",
     "story": "0x260"
   },
-  "0x26c": {
+  "0x26e": {
     "criteria": "A basic search function is available via an appropriate menu item or toolbar",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x26d": {
+  "0x26f": {
     "criteria": "A search string can be entered in an appropriate dialog or other component.",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x26e": {
+  "0x270": {
     "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x26f": {
+  "0x271": {
     "criteria": "When the search is complete the results are presented to the user",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x270": {
+  "0x272": {
     "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x271": {
+  "0x273": {
     "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
     "state": "ACCEPTED",
     "story": "0x261"
   },
-  "0x272": {
+  "0x274": {
     "shortName": "Search Interface",
     "description": "Create search interface",
     "estimate": 3.0,
+    "blocked": false,
     "status": "NOT_STARTED",
     "story": "0x261",
-    "impediments": []
+    "impediments": [],
+    "loggedEffort": []
   },
-  "0x273": {
+  "0x275": {
     "shortName": "Search shortcut",
     "description": "Implement a shortchut for search",
     "estimate": 1.0,
+    "blocked": false,
     "status": "NOT_STARTED",
     "story": "0x261",
-    "impediments": []
+    "impediments": [],
+    "loggedEffort": []
   },
-  "0x274": {
+  "0x276": {
     "shortName": "Design view",
     "description": "Implement this design in FXML",
     "estimate": 1.0,
+    "blocked": false,
     "status": "NOT_STARTED",
     "story": "0x261",
-    "impediments": []
+    "impediments": [],
+    "loggedEffort": []
   },
-  "0x275": {
+  "0x277": {
     "criteria": "ac",
     "state": "NEITHER",
     "story": "0x262"
   },
-  "0x276": {
+  "0x278": {
     "criteria": "ac3",
     "state": "NEITHER",
     "story": "0x263"
   },
-  "0x277": {
+  "0x279": {
+    "impediments": "asd",
+    "resolved": false
+  },
+  "0x27a": {
     "impediments": "ewq",
     "resolved": false
   },

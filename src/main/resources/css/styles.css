@@ -87,16 +87,8 @@
     -fx-background-color: darkgray;
 }
 
-.task-card-minimised-shortName {
-    -fx-font-size: 10px;
-    -fx-text-alignment: left;
-}
 
-.task-card-minimised-hours {
-    -fx-font-size: 10px;
-    -fx-text-alignment: right;
-    -fx-alignment: center-right;
-}
+
 
 .warning-color {
     -fx-background-color: #ffc0cb;
@@ -291,12 +283,32 @@
 
 /********** TASK CARDS **********/
 
-.task-card {
-    /*-fx-cursor: OPEN_HAND;*/
+
+.task-card-minimised-shortName {
+    -fx-font-size: 10px;
+    -fx-text-alignment: left;
+}
+
+/*.task-card-minimised-hours-over-estimate {*/
+    /*-fx-fill: #fff;*/
+    /*-fx-effect: dropshadow(gaussian, red, 25, 0.7, 0, 0);*/
+/*}*/
+
+/*.task-card-minimised-hours-under-estimate {*/
+    /*-fx-fill: #fff;*/
+/*}*/
+
+.task-card-label {
+    -fx-fill: #fff;
+}
+
+.task-card-minimised-hours {
+    -fx-font-size: 11px;
+    -fx-text-alignment: right;
 }
 
 .task-impedance-icon {
-    -fx-fill: #e5e5e5
+    -fx-fill: #fff
 }
 
 .task-card.not-started {
@@ -304,7 +316,7 @@
 }
 
 .task-card.in-progress {
-    -fx-background-color: #ff5722;
+    -fx-background-color: #0b8fb3;
 }
 
 .task-card.verify {

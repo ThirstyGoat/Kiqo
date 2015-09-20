@@ -139,7 +139,7 @@
                                             </HBox>
                                             <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                 <children>
-                                                    <Label contentDisplay="RIGHT"  prefHeight="30.0" text="Logged Effort: " />
+                                                    <Label contentDisplay="RIGHT"  prefHeight="30.0" text="Total Estimated Hours: " />
                                                     <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
                                                         <font>
                                                             <Font size="12.0" />

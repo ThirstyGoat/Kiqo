@@ -1,6 +1,5 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
 import com.thirstygoat.kiqo.model.Task;
@@ -8,12 +7,10 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,8 +60,14 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         Label shortNameLabel = new Label();
 
         Text effortText = new Text();
+        Text divider = new Text("/");
         Text estimateText = new Text();
-        TextFlow timeTextFlow = new TextFlow(effortText, new Text("/"), estimateText);
+        TextFlow timeTextFlow = new TextFlow(effortText, divider, estimateText);
+
+
+        effortText.getStyleClass().add("task-card-label");
+        divider.getStyleClass().add("task-card-label");
+        estimateText.getStyleClass().add("task-card-label");
 
         HBox iconBox = new HBox();
 
