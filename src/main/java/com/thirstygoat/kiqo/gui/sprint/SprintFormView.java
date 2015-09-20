@@ -5,7 +5,6 @@ import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
-
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
@@ -20,7 +19,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
@@ -89,6 +87,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         storySelectionView.setHeader(headingLabel);
         storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.eligableStories());
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
+        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
         

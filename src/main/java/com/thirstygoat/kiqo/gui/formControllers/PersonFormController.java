@@ -1,14 +1,14 @@
 package com.thirstygoat.kiqo.gui.formControllers;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.function.Predicate;
-
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,23 +17,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.util.Utilities;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * Created by james on 20/03/15.
@@ -128,6 +119,8 @@ public class PersonFormController extends FormController<Person> {
 
         skillsSelectionView.setSourceItems(sourceSkills);
         skillsSelectionView.setTargetItems(targetSkills);
+        skillsSelectionView.setStringPropertyCallback(skill -> skill.shortNameProperty());
+
     }
 
     /**

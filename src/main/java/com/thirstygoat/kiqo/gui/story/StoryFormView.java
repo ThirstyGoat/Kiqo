@@ -83,9 +83,11 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();
 
-        storySelectionView.setHeader(new Label("Stories in Project:"));
+        storySelectionView.setHeader(new Label("Depends on:"));
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.dependenciesProperty());
         storySelectionView.sourceItemsProperty().bind(viewModel.eligibleDependencies());
+
+        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
