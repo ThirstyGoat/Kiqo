@@ -80,6 +80,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
         detailsToggleButton.setSelected(true);
         viewModel.setDetailsViewModel(detailsViewController.getViewModel());
         viewModel.setScrumboardViewModel(scrumBoardViewController.getViewModel());
+        viewModel.setBurndownViewModel(burndownViewController.getViewModel());
     }
 
     /**
