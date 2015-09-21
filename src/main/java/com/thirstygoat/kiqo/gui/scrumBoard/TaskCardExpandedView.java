@@ -115,25 +115,24 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
     private void initEffortLogging() {
         EffortViewModel effortViewModel = new EffortViewModel();
-        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
-
-//        effortViewModel.load(null, viewModel.organisationProperty().get());
         effortViewModel.taskProperty().bind(viewModel.getTask());
 
+        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
         viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
             FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
         });
         FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
-        personTextField.textProperty().bindBidirectional(effortViewModel.personProperty(),
-                StringConverters.personStringConverter(effortViewModel.organisationProperty()));
 
+        personTextField.textProperty().bindBidirectional(
+                effortViewModel.personProperty(),
+                StringConverters.personStringConverter(effortViewModel.organisationProperty())
+        );
 
         endDatePicker.valueProperty().bindBidirectional(effortViewModel.endDateProperty());
-        endDatePicker.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            System.out.println("jjjjj");
-        }));
+
         endTimeTextField.textProperty().bindBidirectional(effortViewModel.endTimeProperty(), new LocalTimeStringConverter());
 
+        effortViewModel.durationProperty().set(Duration.ofHours(0));
         hourSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
             effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
         }));
@@ -142,25 +141,21 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
             effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
         }));
 
+        hourSpinner.setPrefWidth(60);
+        minuteSpinner.setPrefWidth(60);
+        minuteSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner.getEditor()));
+        hourSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner.getEditor()));
 
-//        durationTextField.textProperty().bindBidirectional(effortViewModel.durationProperty(), new NumberStringConverter());
         commentTextField.textProperty().bindBidirectional(effortViewModel.commentProperty());
+
         loggedEffortListView.setItems(viewModel.loggedEffort());
-
         loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
-
 
         loggingButton.setOnAction(e -> {
             if (effortViewModel.allValidation().isValid()) {
                 effortViewModel.commitEdit();
             }
         });
-
-        hourSpinner.setPrefWidth(60);
-        minuteSpinner.setPrefWidth(60);
-
-        minuteSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner.getEditor()));
-        hourSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner.getEditor()));
     }
 
 

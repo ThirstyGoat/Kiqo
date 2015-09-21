@@ -10,12 +10,15 @@ import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.time.Duration;
@@ -38,8 +41,11 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>(LocalDate.now());
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
 
+    private StringProperty endDateStringProperty;
+
 
     public EffortViewModel() {
+        super();
         personValidator = new FunctionBasedValidator<>(personProperty(),
                         person -> person != null && organisationProperty().get().getPeople().contains(person),
 //                        // TODO check that person is in team associated with this sprint, when assignment is working.
@@ -48,6 +54,11 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         allValidator = new CompositeValidator();
         allValidator.addValidators(personValidator);
         effort = new SimpleObjectProperty<>();
+
+        endDateStringProperty = new SimpleStringProperty("");
+        endDateStringProperty.bind(Bindings.createStringBinding(() ->
+                endDateProperty().get() != null ? endDateProperty().get().format(Utilities.DATE_FORMATTER)
+                        : "", endDateProperty()));
     }
 
     @Override
@@ -177,5 +188,9 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
+    }
+
+    public StringProperty endDateStringProperty() {
+        return endDateStringProperty;
     }
 }

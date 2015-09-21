@@ -2,11 +2,11 @@ package com.thirstygoat.kiqo.gui.customCells;
 
 
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.FxUtils;
-import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -38,17 +38,20 @@ public class EffortListCell extends ListCell<Effort> {
             infoCol.setSpacing(5);
             infoCol.setAlignment(Pos.TOP_RIGHT);
 
-            Label dateLabel = new Label();
-            System.out.println(effort.durationProperty().get());
-//            dateLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.getEndTime())));
+            GoatLabelDatePicker dateLabel = new GoatLabelDatePicker();
+            FxUtils.initGoatLabel(dateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(), null);
             infoCol.getChildren().add(dateLabel);
 
             Label timeLabel = new Label();
-            timeLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.endTimeProperty().getValue())));
+//            timeLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.endTimeProperty().getValue())));
             infoCol.getChildren().add(timeLabel);
 
             Label duration = new Label();
-            duration.setText(effort.durationProperty().getValue().toHours() + "h " + effort.durationProperty().getValue().toMinutes() + "m");
+            duration.textProperty().bind(Bindings.createStringBinding(() ->
+                    effort.durationProperty().getValue().toHours()
+                            + "h "
+                            + effort.durationProperty().getValue().toMinutes()
+                            + "m"));
             infoCol.getChildren().add(duration);
 
             VBox commentCol = new VBox();
