@@ -23,10 +23,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.LocalTimeStringConverter;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -55,7 +55,9 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private TextField endTimeTextField;
     @FXML
-    private TextField durationTextField;
+    private Spinner<Integer> minuteSpinner;
+    @FXML
+    private Spinner<Integer> hourSpinner;
     @FXML
     private TextField commentTextField;
     @FXML
@@ -95,6 +97,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private TableColumn<Effort, LocalDateTime> endTimeTableColumn;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initSegmentedButton();
@@ -103,7 +106,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(), viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         initBlockedCheckBox();
         initImpediments();
-
         initEffortLogging();
 
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
@@ -127,8 +129,21 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
 
         endDatePicker.valueProperty().bindBidirectional(effortViewModel.endDateProperty());
+        endDatePicker.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            System.out.println("jjjjj");
+        }));
         endTimeTextField.textProperty().bindBidirectional(effortViewModel.endTimeProperty(), new LocalTimeStringConverter());
-        durationTextField.textProperty().bindBidirectional(effortViewModel.durationProperty(), new NumberStringConverter());
+
+        hourSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
+        }));
+
+        minuteSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
+        }));
+
+
+//        durationTextField.textProperty().bindBidirectional(effortViewModel.durationProperty(), new NumberStringConverter());
         commentTextField.textProperty().bindBidirectional(effortViewModel.commentProperty());
         loggedEffortListView.setItems(viewModel.loggedEffort());
 
@@ -140,7 +155,14 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 effortViewModel.commitEdit();
             }
         });
+
+        hourSpinner.setPrefWidth(60);
+        minuteSpinner.setPrefWidth(60);
+
+        minuteSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner.getEditor()));
+        hourSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner.getEditor()));
     }
+
 
     private void initImpediments() {
         impedimentsListView.setCellFactory(param -> new ImpedimentListCell());

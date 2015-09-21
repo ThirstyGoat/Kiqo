@@ -96,7 +96,14 @@
                              <TextField fx:id="personTextField" HBox.hgrow="ALWAYS"/>
                              <DatePicker fx:id="endDatePicker" HBox.hgrow="ALWAYS"/>
                              <TextField fx:id="endTimeTextField" HBox.hgrow="ALWAYS"/>
-                             <TextField fx:id="durationTextField" HBox.hgrow="ALWAYS"/>
+                             <Spinner fx:id="hourSpinner" min="0" max="99" initialValue="0">
+                                 <editable>true</editable>
+                             </Spinner>
+                             <Label text="h"/>
+                             <Spinner fx:id="minuteSpinner" min="0" max="59" initialValue="0">
+                                 <editable>true</editable>
+                             </Spinner>
+                             <Label text="m"/>
                          </HBox>
                         <HBox spacing="5.0">
                            <children>
