@@ -7,18 +7,23 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.model.Effort;
-import com.thirstygoat.kiqo.model.Impediment;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 /**
@@ -133,8 +138,40 @@ public class TaskCardViewModel implements ViewModel, Editable {
         return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
     }
 
+    public ListProperty<Person> assignees() {
+        return modelWrapper.field("assignees", Task::getAssignees, Task::setAssignees);
+    }
+
+    /** Other fields **/
+
     public ObjectProperty<Task> getTask() {
         return task;
+    }
+
+    public ListProperty<Person> eligibleAssignees() {
+        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+        Function<Task, List<Person>> getEligibleAssignees = task -> {
+            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
+                            .flatMap(release -> release.getSprints().stream())
+                            .filter(sprint -> sprint.getStories().contains(task.getStory()))
+                            .findAny();
+
+            if (sprintTaskBelongsTo.isPresent()) {
+               return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+                                .filter(person -> !task.getAssignees().contains(person))
+                                .collect(Collectors.toList());
+            } else {
+                return new ArrayList<Person>();
+            }
+        };
+
+        task.addListener((observable, oldValue, newValue) -> {
+            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        });
+        eligableAssignees.setAll(task.get() != null ? getEligibleAssignees.apply(task.get()) : new ArrayList<Person>());
+
+        return eligableAssignees;
     }
 
     public ValidationStatus shortNameValidation() {

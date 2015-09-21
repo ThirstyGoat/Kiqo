@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.model.Item;
+import javafx.scene.control.Label;
 
 /**
  * Created by samschofield on 6/08/15.
@@ -20,5 +21,9 @@ public class GoatLabelFilteredListSelectionView<T extends Item> extends GoatLabe
     @Override
     public GoatFilteredListSelectionView<T> getEditField() {
         return editField;
+    }
+
+    public Label getDisplayLabel() {
+        return displayLabel;
     }
 }
