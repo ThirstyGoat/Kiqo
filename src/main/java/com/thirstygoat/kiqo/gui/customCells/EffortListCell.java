@@ -6,6 +6,8 @@ import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -37,15 +39,16 @@ public class EffortListCell extends ListCell<Effort> {
             infoCol.setAlignment(Pos.TOP_RIGHT);
 
             Label dateLabel = new Label();
-            dateLabel.setText("03/04/2015");
+            System.out.println(effort.durationProperty().get());
+//            dateLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.getEndTime())));
             infoCol.getChildren().add(dateLabel);
 
             Label timeLabel = new Label();
-            timeLabel.setText("3:45 Pm");
+            timeLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.endTimeProperty().getValue())));
             infoCol.getChildren().add(timeLabel);
 
             Label duration = new Label();
-            duration.setText("0h 20m");
+            duration.setText(effort.durationProperty().getValue().toHours() + "h " + effort.durationProperty().getValue().toMinutes() + "m");
             infoCol.getChildren().add(duration);
 
             VBox commentCol = new VBox();
