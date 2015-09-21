@@ -80,7 +80,9 @@ public class UndoManager {
     public void undoCommand() {
         final Command command = undoStack.pop();
         // check to see if the item is a object that will create a tab
-        closeTab(command);
+        if (mainController != null) {
+            closeTab(command);
+        }
         command.undo();
         redoStack.push(command);
         updateUndoRedoTypes();
@@ -128,7 +130,9 @@ public class UndoManager {
         redoStack.clear();
         while (diff < 0) {
             final Command command = undoStack.pop();
-            closeTab(command);
+            if (mainController != null) {
+                closeTab(command);
+            }
             command.undo();
             diff++;
         }
