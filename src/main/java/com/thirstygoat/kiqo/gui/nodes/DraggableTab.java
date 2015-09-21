@@ -137,8 +137,6 @@ public class DraggableTab extends Tab {
                     final TabPane pane = new TabPane();
                     tabPanes.add(pane);
 
-
-
                     newStage.setOnHiding(t1 -> tabPanes.remove(pane));
                     getTabPane().getTabs().remove(DraggableTab.this);
                     pane.getTabs().add(DraggableTab.this);

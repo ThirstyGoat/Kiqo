@@ -225,7 +225,7 @@
 }
 
 .scrumboard-stories-container {
-    -fx-spacing: 5
+    -fx-spacing: 10
 }
 
 .task-container {
@@ -242,7 +242,7 @@
 
 .story-card {
     -fx-padding: 5;
-    -fx-background-color: #03a9f4
+    -fx-background-color: #607d8b; /* #03a9f4 */
 }
 
 .story-card .name-label {
@@ -265,8 +265,15 @@
     -fx-text-fill: #fff;
 }
 
+.collapsed-story-name-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 2, 0, 0, 0);
+}
+
 .add-task-button {
-    -fx-background-color: #FF7043;
+    -fx-background-color: #ff7144;
     -fx-border-color: transparent;
     -fx-text-fill: #fff;
     -fx-background-radius: 0;
@@ -312,11 +319,11 @@
 }
 
 .task-card.not-started {
-    -fx-background-color: #607d8b;
+    -fx-background-color: #0b8fb3; /* #607d8b; */
 }
 
 .task-card.in-progress {
-    -fx-background-color: #0b8fb3;
+    -fx-background-color: #ff7144; /* #0b8fb3; */
 }
 
 .task-card.verify {

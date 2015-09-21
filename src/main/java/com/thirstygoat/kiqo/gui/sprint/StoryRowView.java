@@ -15,15 +15,14 @@ import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,11 +46,17 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     private ScrumBoardViewModel scrumBoardViewModel;
 
     @FXML
-    private GridPane gridPane;
+    private HBox gridPane;
+    @FXML
+    private VBox parentStoryContainer;
     @FXML
     private VBox storyCard;
     @FXML
+    private VBox expandedStoryCard;
+    @FXML
     private Label storyNameLabel;
+    @FXML
+    private Label collapsedStoryNameLabel;
     @FXML
     private Label descriptionLabel;
     @FXML
@@ -61,6 +66,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     @FXML
     private Button addTaskButton;
     @FXML
+    private GridPane statusGridPane;
+    @FXML
     private FlowPane toDoTasks;
     @FXML
     private FlowPane inProgressTasks;
@@ -69,11 +76,14 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     @FXML
     private FlowPane doneTasks;
     @FXML
+    private StackPane storyVisualiserContainer;
+    @FXML
     private StoryCompletenessVisualiser storyVisualiser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         storyNameLabel.textProperty().bind(viewModel.storyNameProperty());
+        collapsedStoryNameLabel.textProperty().bind(viewModel.storyNameProperty());
         descriptionLabel.textProperty().bind(viewModel.descriptionProperty());
         descriptionLabel.managedProperty().bind(Bindings.createBooleanBinding(() -> {
             return descriptionLabel.getText() == null || !descriptionLabel.getText().isEmpty();
@@ -85,6 +95,44 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         drawTasks();
         setAddTaskButton();
         initialiseDoubleClick();
+        initialiseCollapsing();
+    }
+
+    private void initialiseCollapsing() {
+        if (
+                viewModel.getToDoTasks().isEmpty() &&
+                viewModel.getInProgressTasks().isEmpty() &&
+                viewModel.getVerifyTasks().isEmpty() &&
+                !viewModel.getDoneTasks().isEmpty()) {
+            collapseOrExpand();
+        }
+
+        parentStoryContainer.setOnMouseReleased(event -> collapseOrExpand());
+    }
+
+    private void collapseOrExpand() {
+        boolean shown = statusGridPane.isVisible();
+        statusGridPane.setManaged(!shown);
+        statusGridPane.setVisible(!shown);
+
+        if (shown) {
+            HBox.setHgrow(parentStoryContainer, Priority.ALWAYS);
+        } else {
+            HBox.setHgrow(parentStoryContainer, Priority.NEVER);
+        }
+
+        storyCard.setVisible(!shown);
+        storyCard.setManaged(!shown);
+
+        addTaskButton.setVisible(!shown);
+        addTaskButton.setManaged(!shown);
+
+        collapsedStoryNameLabel.setManaged(shown);
+        collapsedStoryNameLabel.setVisible(shown);
+
+        storyVisualiserContainer.setMinHeight(shown ? 25 : 5);
+        storyVisualiserContainer.setPrefHeight(shown ? 25 : 5);
+        storyVisualiserContainer.setMaxHeight(shown ? 25 : 5);
     }
 
     private void setAddTaskButton() {
@@ -95,7 +143,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     }
 
     /**
-     * Listens to the taskscards blocked property and changes its colour accordingly
+     * Listens to the taskcards blocked property and changes its colour accordingly
      * @param taskCard
      */
     private void setBlockedListener(TaskCard taskCard) {
@@ -137,8 +185,8 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             storyVisualiser.setInProgressTasks(viewModel.getInProgressTasks());
             storyVisualiser.setVerifyTasks(viewModel.getVerifyTasks());
             storyVisualiser.setTodoTasks(viewModel.getToDoTasks());
-
         };
+
         viewModel.getToDoTasks().addListener(listener);
         viewModel.getInProgressTasks().addListener(listener);
         viewModel.getVerifyTasks().addListener(listener);
