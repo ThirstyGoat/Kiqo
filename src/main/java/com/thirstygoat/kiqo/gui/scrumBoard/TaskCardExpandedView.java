@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
+import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
@@ -83,8 +84,10 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private TextField impedimentTextField;
     @FXML
     private ListView<Impediment> impedimentsListView;
+//    @FXML
+//    private TableView<Effort> loggedEffortTableView;
     @FXML
-    private TableView<Effort> loggedEffortTableView;
+    private ListView<Effort> loggedEffortListView;
     @FXML
     private TableColumn<Effort, Person> personTableColumn;
     @FXML
@@ -129,39 +132,41 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         endTimeTextField.textProperty().bindBidirectional(effortViewModel.endTimeProperty(), new LocalTimeStringConverter());
         durationTextField.textProperty().bindBidirectional(effortViewModel.durationProperty(), new NumberStringConverter());
         commentTextField.textProperty().bindBidirectional(effortViewModel.commentProperty());
-        loggedEffortTableView.setItems(viewModel.loggedEffort());
+        loggedEffortListView.setItems(viewModel.loggedEffort());
 
-        personTableColumn.setCellFactory((e) -> {
-            TableCell<Effort, Person> tc = new TableCell<Effort, Person>() {
-                @Override
-                protected void updateItem(Person person, boolean empty) {
-                    super.updateItem(person, empty);
-                    if (!empty && getTableRow() != null) {
-                        Effort effort = (Effort) getTableRow().getItem();
-                        if (effort != null) {
-                            textProperty().bind(effort.personProperty().get().shortNameProperty());
-                        }
-                    }
-                }
-            };
-            return tc;
-        });
+        loggedEffortListView.setCellFactory((lv) -> new EffortListCell());
 
-        commentTableColumn.setCellFactory((e) -> {
-            TableCell<Effort, String> tc = new TableCell<Effort, String>() {
-                @Override
-                protected void updateItem(String name, boolean empty) {
-                    super.updateItem(name, empty);
-                    if (!empty) {
-                        Effort effort = (Effort) getTableRow().getItem();
-                        if (effort != null) {
-                            textProperty().bind(effort.commentProperty());
-                        }
-                    }
-                }
-            };
-            return tc;
-        });
+//        personTableColumn.setCellFactory((e) -> {
+//            TableCell<Effort, Person> tc = new TableCell<Effort, Person>() {
+//                @Override
+//                protected void updateItem(Person person, boolean empty) {
+//                    super.updateItem(person, empty);
+//                    if (!empty && getTableRow() != null) {
+//                        Effort effort = (Effort) getTableRow().getItem();
+//                        if (effort != null) {
+//                            textProperty().bind(effort.personProperty().get().shortNameProperty());
+//                        }
+//                    }
+//                }
+//            };
+//            return tc;
+//        });
+//
+//        commentTableColumn.setCellFactory((e) -> {
+//            TableCell<Effort, String> tc = new TableCell<Effort, String>() {
+//                @Override
+//                protected void updateItem(String name, boolean empty) {
+//                    super.updateItem(name, empty);
+//                    if (!empty) {
+//                        Effort effort = (Effort) getTableRow().getItem();
+//                        if (effort != null) {
+//                            textProperty().bind(effort.commentProperty());
+//                        }
+//                    }
+//                }
+//            };
+//            return tc;
+//        });
 //        loggedEffortTableView.itemsProperty().bind(viewModel.loggedEffort());
 //        loggedEffortTableView.itemsProperty().addListener((observable, oldValue, newValue) -> {
 //            System.out.println("AAAA");

@@ -104,16 +104,17 @@
                                <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
                            </children>
                         </HBox>
-                        <HBox>
-                            <TableView fx:id="loggedEffortTableView" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn text="Person" fx:id="personTableColumn"/>
-                                        <TableColumn text="Comment" fx:id="commentTableColumn"/>
-                                        <TableColumn text="Duration" fx:id="durationTableColumn"/>
-                                        <TableColumn text="EndTime" fx:id="endTimeTableColumn"/>
-                                    </columns>
-                            </TableView>
-                        </HBox>
+                        <VBox fillWidth="true">
+                            <ListView fx:id="loggedEffortListView"/>
+                            <!--<TableView fx:id="loggedEffortTableView" VBox.vgrow="ALWAYS">-->
+                                    <!--<columns>-->
+                                        <!--<TableColumn text="Person" fx:id="personTableColumn"/>-->
+                                        <!--<TableColumn text="Comment" fx:id="commentTableColumn"/>-->
+                                        <!--<TableColumn text="Duration" fx:id="durationTableColumn"/>-->
+                                        <!--<TableColumn text="EndTime" fx:id="endTimeTableColumn"/>-->
+                                    <!--</columns>-->
+                            <!--</TableView>-->
+                        </VBox>
                      </children>
                   </VBox>
                </children>
