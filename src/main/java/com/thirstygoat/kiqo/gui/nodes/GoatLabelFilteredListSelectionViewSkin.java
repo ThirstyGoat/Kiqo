@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.model.Item;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Control;
 
@@ -20,8 +22,14 @@ public class GoatLabelFilteredListSelectionViewSkin<T extends Item> extends Goat
 
     @Override
     protected void hideEditField() {
-        // preventing the edit mode from hiding when the user clicks on anything, focused property not working
-        // properly
+        editField._focusedProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> {
+                if (!editField._focusedProperty().get() && !newValue && !doneButton.isFocused()) {
+                    onCancel.get().handle(new ActionEvent());
+                    showDisplay();
+                }
+            });
+        });
     }
 
     @Override

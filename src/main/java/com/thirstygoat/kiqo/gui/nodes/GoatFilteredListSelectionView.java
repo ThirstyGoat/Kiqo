@@ -1,18 +1,22 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.util.regex.Pattern;
-
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.controlsfx.control.SegmentedButton;
 
-import org.controlsfx.control.*;
+import java.util.regex.Pattern;
 
 /**
  * NB: This doesn't actually act like a ListView, beware.
@@ -29,11 +33,12 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
     private TextField textField;
     private ListView<T> listView;
+    private SegmentedButton showingSegmentedButton;
     private ObjectProperty<Node> header = new SimpleObjectProperty<>();
     private ObjectProperty<Node> footer = new SimpleObjectProperty<>();
-
     private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
     private Callback<T, StringProperty> stringPropertyCallback;
+    private BooleanProperty focusedProperty = new SimpleBooleanProperty();
 
     public GoatFilteredListSelectionView() {
         super();
@@ -177,8 +182,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         ToggleButton allToggleButton = new ToggleButton(SHOWING.All.toString());
         ToggleButton selectedToggleButton = new ToggleButton(SHOWING.Selected.toString());
         ToggleButton unSelectedToggleButton = new ToggleButton(SHOWING.Unselected.toString());
-        SegmentedButton showingSegmentedButton =
-                new SegmentedButton(allToggleButton, selectedToggleButton, unSelectedToggleButton);
+        showingSegmentedButton = new SegmentedButton(allToggleButton, selectedToggleButton, unSelectedToggleButton);
 
         HBox headerContainer = new HBox();
 
@@ -203,7 +207,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         });
         allToggleButton.setSelected(true);
 
-        // Set up binding so that allItems contains only items depending on the showingSegmentedButton
+//         Set up binding so that allItems contains only items depending on the showingSegmentedButton
         showing.addListener((observable, oldValue, newValue) -> {
             allItems.clear();
             if (newValue == SHOWING.All) {
@@ -228,6 +232,16 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
 
         footerProperty().addListener((observable, oldValue, newValue) -> {
             footerContainer.setRight(newValue);
+        });
+
+        Platform.runLater(() -> {
+            focusedProperty.bind(
+                    textField.focusedProperty()
+                            .or(listView.focusedProperty())
+                            .or(allToggleButton.focusedProperty())
+                            .or(selectedToggleButton.focusedProperty())
+                            .or(unSelectedToggleButton.focusedProperty())
+                            .or(mainView.focusedProperty()));
         });
     }
 
@@ -291,6 +305,10 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
                 super.updateItem(item, empty);
             }
         });
+    }
+
+    public ReadOnlyBooleanProperty _focusedProperty() {
+        return focusedProperty;
     }
 
     private ObjectProperty<Node> getInnerCellGraphic(T item, BooleanProperty isTarget) {
