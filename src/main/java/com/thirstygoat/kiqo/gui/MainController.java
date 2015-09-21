@@ -988,15 +988,15 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             }  else if (type.equals(Story.class.getSimpleName())) {
-                    ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
-                    // viewModel
-                    final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
-                    viewModel.load((Story) t, selectedOrganisationProperty.get());
-                    // view
-                    viewModel.setExitStrategy(() -> stage.close());
-                    stage.setScene(new Scene(storyFormTuple.getView()));
-                    viewModel.load((Story) t, selectedOrganisationProperty.get());
-                    stage.showAndWait();
+                ViewTuple<StoryFormView, StoryFormViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(StoryFormView.class).load();
+                viewTuple.getViewModel().load((Story) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Story" : "Edit Story");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Story" : "Done");
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
