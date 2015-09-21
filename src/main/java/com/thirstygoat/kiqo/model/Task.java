@@ -81,7 +81,7 @@ public class Task extends Item {
         FloatProperty spentEffort = new SimpleFloatProperty();
         spentEffort.bind(Bindings.createDoubleBinding(
                 () -> getLoggedEffort().stream()
-                        .mapToDouble(Effort::getDuration)
+                        .mapToDouble(Effort::getDurationAsNumber)
                         .sum(),
                 getLoggedEffort()));
         return spentEffort;

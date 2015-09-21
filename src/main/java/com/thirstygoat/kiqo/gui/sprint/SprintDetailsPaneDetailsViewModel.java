@@ -21,14 +21,14 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
         startDateStringProperty = new SimpleStringProperty("");
         startDateStringProperty.bind(Bindings.createStringBinding(() -> {
             return startDateProperty().get() != null
-                    ? startDateProperty().get().format(Utilities.DATE_TIME_FORMATTER)
+                    ? startDateProperty().get().format(Utilities.DATE_FORMATTER)
                     : "";
         }, startDateProperty()));
 
         endDateStringProperty = new SimpleStringProperty("");
         endDateStringProperty.bind(Bindings.createStringBinding(() -> {
             return endDateProperty().get() != null
-                    ? endDateProperty().get().format(Utilities.DATE_TIME_FORMATTER)
+                    ? endDateProperty().get().format(Utilities.DATE_FORMATTER)
                     : "";
         }, endDateProperty()));
     }

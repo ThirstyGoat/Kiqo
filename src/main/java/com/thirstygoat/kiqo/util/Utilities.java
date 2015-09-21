@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  */
 public final class Utilities {
     public static final int SHORT_NAME_MAX_LENGTH = 20;
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");    
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final Comparator<Item> LEXICAL_COMPARATOR = (item1, item2) -> {
         return item1.getShortName().compareToIgnoreCase(item2.getShortName());
     };
