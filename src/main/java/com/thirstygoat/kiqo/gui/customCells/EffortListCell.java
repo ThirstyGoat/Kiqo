@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class EffortListCell extends ListCell<Effort> {
@@ -38,14 +39,18 @@ public class EffortListCell extends ListCell<Effort> {
             VBox commentCol = new VBox();
             commentCol.setSpacing(5);
             Label nameLabel = new Label();
+            HBox.setHgrow(commentCol, Priority.NEVER);
             nameLabel.textProperty().bind(effort.personProperty().get().shortNameProperty());
             commentCol.getChildren().add(nameLabel);
 
             GoatLabelTextArea comment = new GoatLabelTextArea();
             comment.displayTextProperty().bind(effort.commentProperty());
             commentCol.getChildren().add(comment);
+            comment.maxWidthProperty().bind(commentCol.widthProperty());
+            HBox.setHgrow(commentCol, Priority.ALWAYS);
 
             row.getChildren().addAll(infoCol, commentCol);
+            HBox.setHgrow(row, Priority.NEVER);
 
 
             setGraphic(row);
