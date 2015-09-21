@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="200.0" prefWidth="200.0" styleClass="form" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.story.StoryFormView">
     <center>
         <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" BorderPane.alignment="CENTER">
@@ -79,18 +77,7 @@
                         <Insets bottom="10.0" />
                     </VBox.margin>
                 </ComboBox>
-                <Label styleClass="form-field-label" text="Depends on">
-                    <VBox.margin>
-                        <Insets bottom="5.0" />
-                    </VBox.margin>
-                </Label>
-                <GoatFilteredListSelectionView prefHeight="200" fx:id="storySelectionView" />
             </children>
-            <Hyperlink fx:id="storyCycleHyperLink" text="Why can't I see all stories?" GridPane.columnIndex="0" GridPane.rowIndex="8">
-                <font>
-                    <Font size="10.0" />
-                </font>
-            </Hyperlink>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
