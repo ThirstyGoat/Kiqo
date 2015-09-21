@@ -20,11 +20,11 @@ public class SprintTest {
         story.getTasks().add(task);
         sprint.getStories().add(story);
 
-        System.out.println("Before adding: " + sprint.totalEstimateProperty().get());
+        System.out.println("Before adding: " + sprint.createTotalEstimateBinding().get());
 
         task.setEstimate(3f);
 
-        System.out.println("After adding: " + sprint.totalEstimateProperty().get());
+        System.out.println("After adding: " + sprint.createTotalEstimateBinding().get());
 
     }
 

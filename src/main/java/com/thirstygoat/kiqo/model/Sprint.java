@@ -4,7 +4,6 @@ import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -37,8 +36,8 @@ public class Sprint extends Item {
         goal = new SimpleStringProperty("");
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
-        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
     }
+
 
     public Sprint(String goal, String longName, String description, Backlog backlog, Release release,
                   Team team, LocalDate startDate, LocalDate endDate, Collection<Story> stories) {
@@ -67,7 +66,7 @@ public class Sprint extends Item {
     }
 
 
-    public FloatProperty totalEstimateProperty() {
+    public FloatProperty createTotalEstimateBinding() {
         FloatProperty totalEstimate = new SimpleFloatProperty(0.0f);
         totalEstimate.bind(Bindings.createDoubleBinding(() -> {
                             double runningTotal = 0;
@@ -75,8 +74,7 @@ public class Sprint extends Item {
                                 runningTotal += story.totalEstimateProperty().get();
                             }
                             return runningTotal;
-                        },
-                        getStories()));
+                        }, getStories()));
         return totalEstimate;
     }
 
@@ -87,9 +85,11 @@ public class Sprint extends Item {
     @Override
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
-                new SearchableField("Long Name", getLongName()),
-                new SearchableField("Start Date", getStartDate().format(Utilities.DATE_TIME_FORMATTER)), new SearchableField("End Date", getEndDate().format(Utilities.DATE_TIME_FORMATTER))));
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()),
+                        new SearchableField("Description", getDescription()),
+                        new SearchableField("Long Name", getLongName()),
+                        new SearchableField("Start Date", getStartDate().format(Utilities.DATE_TIME_FORMATTER)),
+                        new SearchableField("End Date", getEndDate().format(Utilities.DATE_TIME_FORMATTER))));
         return searchStrings;
     }
 
@@ -200,7 +200,7 @@ public class Sprint extends Item {
     public double totalSprintEstimate() {
         double total = 0;
         for (Story story : stories) {
-            total += story.getTaskHours();
+            total += story.totalEstimateProperty().get();
         }
         return total;
     }

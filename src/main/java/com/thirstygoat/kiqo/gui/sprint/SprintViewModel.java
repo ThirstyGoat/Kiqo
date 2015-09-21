@@ -36,6 +36,7 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
+    private final FloatProperty totalEstimatedHours;
     protected GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
 
     public SprintViewModel() {
@@ -44,6 +45,10 @@ public class SprintViewModel implements ViewModel {
         stories = new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
         tasks = new SimpleListProperty<>(FXCollections.observableArrayList(Task.getWatchStrategy()));
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
+        totalEstimatedHours = new SimpleFloatProperty(0);
+        totalEstimatedHours.addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+        });
 
         goalValidator = new ObservableRuleBasedValidator();
 
@@ -171,10 +176,14 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
+            totalEstimatedHours.unbind();
+            totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
             stories().clear();
             stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
+            totalEstimatedHours.unbind();
+            totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
             sprintWrapper.reset();
             sprintWrapper.commit();
             stories().clear();
@@ -427,5 +436,9 @@ public class SprintViewModel implements ViewModel {
     
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
+    }
+
+    public FloatProperty totalEstimatedHoursProperty() {
+        return totalEstimatedHours;
     }
 }

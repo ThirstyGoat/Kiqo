@@ -478,3 +478,23 @@
 
 .blocked-button * {
 }
+
+
+/************ CHART STUFF ************/
+
+.chart-content .chart-line-symbol {
+    -fx-background-color: transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -33,7 +33,6 @@ public class Story extends Item {
     private final ObservableList<Story> dependencies;
     private final BooleanProperty isReady;
     private final ObservableList<Task> tasks;
-    private final FloatProperty taskHours;
     private final BooleanProperty inSprint;
     /**
      * no-arg constructor for JavaBeans compliance
@@ -52,7 +51,6 @@ public class Story extends Item {
         this.dependencies = FXCollections.observableArrayList();
         this.scale = new SimpleObjectProperty<>(Scale.FIBONACCI);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
-        this.taskHours = new SimpleFloatProperty(0.0f);
         this.inSprint = new SimpleBooleanProperty(false);
     }
 
@@ -72,7 +70,6 @@ public class Story extends Item {
         this.dependencies = FXCollections.observableArrayList();
         this.dependencies.addAll(dependencies);
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
-        this.taskHours = new SimpleFloatProperty();
         this.inSprint = new SimpleBooleanProperty(inSprint);
     }
 
@@ -94,7 +91,6 @@ public class Story extends Item {
         bps.addPropertyChangeSupportFor(dependencies);
         bps.addPropertyChangeSupportFor(isReady);
         bps.addPropertyChangeSupportFor(tasks);
-        bps.addPropertyChangeSupportFor(taskHours);
         bps.addPropertyChangeSupportFor(inSprint);
     }
 
@@ -111,6 +107,7 @@ public class Story extends Item {
         return spentEffort;
     }
 
+    // this is working
     public FloatProperty totalEstimateProperty() {
         FloatProperty totalEstimate = new SimpleFloatProperty();
         totalEstimate.bind(Bindings.createDoubleBinding(
@@ -131,19 +128,6 @@ public class Story extends Item {
         return searchString;
     }
 
-    /**
-     * binds the taskHours property to the sum of estimates for each task for the story
-     */
-    private void setTasksListener() {
-        taskHours.bind(Bindings.createFloatBinding(() -> {
-            float totalVal = 0;
-            for (Task task : tasks) {
-                totalVal += task.getEstimate();
-            }
-            return totalVal;
-        }, tasks));
-    }
-
     public BooleanProperty inSprintProperty() {
         return inSprint;
     }
@@ -158,14 +142,6 @@ public class Story extends Item {
 
     public ObservableList<Task> observableTasks() {
         return tasks;
-    }
-
-    public FloatProperty taskHoursProperty() {
-        return taskHours;
-    }
-
-    public Float getTaskHours() {
-        return taskHours.get();
     }
 
     @Override

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.layout.*?>
-
+<?import com.thirstygoat.kiqo.gui.scrumBoard.DateAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
     <children>
 
         <LineChart fx:id="burndownChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefHeight="10000">
             <xAxis>
-                <NumberAxis label="Days"  tickUnit="1" />
+                <DateAxis label="Days"  />
             </xAxis>
             <yAxis>
                 <NumberAxis label="Hours" tickUnit="1" />
