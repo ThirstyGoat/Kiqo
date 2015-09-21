@@ -37,8 +37,10 @@ public class EffortListCell extends ListCell<Effort> {
             VBox infoCol = new VBox();
             infoCol.setSpacing(5);
             infoCol.setAlignment(Pos.TOP_RIGHT);
+            infoCol.setFillWidth(false);
 
             GoatLabelDatePicker dateLabel = new GoatLabelDatePicker();
+            dateLabel.setPrefWidth(-1);
             FxUtils.initGoatLabel(dateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(), null);
             infoCol.getChildren().add(dateLabel);
 
@@ -57,7 +59,7 @@ public class EffortListCell extends ListCell<Effort> {
             VBox commentCol = new VBox();
             commentCol.setSpacing(5);
             Label nameLabel = new Label();
-            HBox.setHgrow(commentCol, Priority.NEVER);
+            HBox.setHgrow(commentCol, Priority.ALWAYS);
             nameLabel.textProperty().bind(effort.personProperty().get().shortNameProperty());
             commentCol.getChildren().add(nameLabel);
 
