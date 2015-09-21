@@ -953,9 +953,10 @@ public class MainController implements Initializable {
             } else if (type.equals(Project.class.getSimpleName())) {
                 ViewTuple<ProjectFormView, ProjectFormViewModel> viewTuple =
                         FluentViewLoader.fxmlView(ProjectFormView.class).load();
-                final ProjectFormViewModel viewModel = viewTuple.getViewModel();
-                viewModel.load((Project) t, selectedOrganisationProperty.get());
-                viewModel.setExitStrategy(stage::close);
+                viewTuple.getViewModel().load((Project) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create Project" : "Edit Project");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {

@@ -1,44 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="600.0" fx:controller="com.thirstygoat.kiqo.gui.project.ProjectFormView">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="200.0" prefWidth="200.0" styleClass="form" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.project.ProjectFormView">
+    <center>
+    <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="420.0" BorderPane.alignment="CENTER">
+        <children>
+            <Label styleClass="form-field-label" text="Name">
+                <VBox.margin>
+                    <Insets bottom="5.0" />
+                </VBox.margin>
+            </Label>
+            <TextField fx:id="longNameTextField">
+                <VBox.margin>
+                    <Insets bottom="10.0" />
+                </VBox.margin>
+            </TextField>
+            <Label styleClass="form-field-label" text="Short Name">
+                <VBox.margin>
+                    <Insets bottom="5.0" />
+                </VBox.margin>
+            </Label>
+            <TextField fx:id="shortNameTextField">
+                <VBox.margin>
+                    <Insets bottom="10.0" />
+                </VBox.margin>
+            </TextField>
+            <Label styleClass="form-field-label" text="Description">
+                <VBox.margin>
+                    <Insets bottom="5.0" />
+                </VBox.margin>
+            </Label>
+            <TextField fx:id="descriptionTextField">
+                <VBox.margin>
+                    <Insets bottom="10.0" />
+                </VBox.margin>
+            </TextField>
+        </children>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        </padding>
+    </VBox>
+    </center>
     <bottom>
-        <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
-            <children>
-                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" onAction="#cancelAction" />
-                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Create Project" onAction="#okAction" />
-            </children>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
             <padding>
-                <Insets right="35.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" />
             </padding>
+            <children>
+                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" styleClass="form-button" text="Cancel" onAction="#cancelAction" />
+                <Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" styleClass="form-button" text="Create Project" onAction="#okAction" />
+            </children>
         </HBox>
     </bottom>
-    <center>
-<GridPane vgap="10.0">
-  <children>
-    <Label text="Name:" />
-    <Label text="Short Name:" GridPane.rowIndex="1" />
-    <Label text="Description:" GridPane.rowIndex="2" />
-    <TextField fx:id="longNameTextField" GridPane.columnIndex="1" />
-    <TextField fx:id="shortNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-  </children>
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="183.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="347.0" />
-  </columnConstraints>
-  <padding>
-    <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-  </padding>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-</GridPane>
-    </center>
+    <top>
+        <Label fx:id="heading" maxWidth="1.7976931348623157E308" styleClass="form-heading" text="Create Project" BorderPane.alignment="CENTER_LEFT">
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
 </BorderPane>
 
