@@ -14,11 +14,11 @@ import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -75,7 +75,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     @Override
     protected Supplier<Effort> modelSupplier() {
-        return  Effort::new;
+        return Effort::new;
     }
 
     @Override
@@ -151,8 +151,8 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         return modelWrapper.field("endTime", Effort::getEndTime, Effort::setEndTime, null);
     }
 
-    public FloatProperty durationProperty() {
-        return modelWrapper.field("duration", Effort::getDuration, Effort::setDuration, 0);
+    public ObjectProperty<Duration> durationProperty() {
+        return modelWrapper.field("duration", Effort::getDuration, Effort::setDuration, null);
     }
 
     public StringProperty commentProperty() {

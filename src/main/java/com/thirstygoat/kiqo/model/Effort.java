@@ -8,6 +8,7 @@ import javafx.beans.property.*;
 import javafx.util.Callback;
 
 import java.beans.PropertyChangeListener;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Task> task;
     private final ObjectProperty<LocalDateTime> logTime;
     private final ObjectProperty<LocalDateTime> endTime;
-    private final FloatProperty duration;
+    private final ObjectProperty<Duration> duration;
     private final StringProperty comment;
 
     private final BoundPropertySupport bps = new BoundPropertySupport(this);
@@ -30,16 +31,16 @@ public class Effort implements BoundProperties, Searchable {
         this.task = new SimpleObjectProperty<>(null);
         this.logTime = new SimpleObjectProperty<>(LocalDateTime.now());
         this.endTime = new SimpleObjectProperty<>(LocalDateTime.now());
-        this.duration = new SimpleFloatProperty(0);
+        this.duration = new SimpleObjectProperty<>(Duration.ofMinutes(0));
         this.comment = new SimpleStringProperty("");
     }
 
-    public Effort(Person person, Task task, LocalDateTime endTime, Float duration, String comment) {
+    public Effort(Person person, Task task, LocalDateTime endTime, Duration duration, String comment) {
         this.person = new SimpleObjectProperty<>(person);
         this.task = new SimpleObjectProperty<>(task);
         this.logTime = new SimpleObjectProperty<>(LocalDateTime.now());
         this.endTime = new SimpleObjectProperty<>(endTime);
-        this.duration = new SimpleFloatProperty(duration);
+        this.duration = new SimpleObjectProperty<>(duration);
         this.comment = new SimpleStringProperty(comment);
     }
 
@@ -108,15 +109,19 @@ public class Effort implements BoundProperties, Searchable {
         this.endTime.set(endTime);
     }
 
-    public FloatProperty durationProperty() {
+    public ObjectProperty<Duration> durationProperty() {
         return duration;
     }
 
-    public Float getDuration() {
+    public Duration getDuration() {
         return duration.get();
     }
 
-    public void setDuration(Float duration) {
+    public double getDurationAsNumber() {
+        return duration.get().toMinutes();
+    }
+
+    public void setDuration(Duration duration) {
         this.duration.set(duration);
     }
 

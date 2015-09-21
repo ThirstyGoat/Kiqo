@@ -1,10 +1,10 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
-import java.time.LocalDate;
-
-import javafx.scene.control.*;
-
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
+
+import java.time.LocalDate;
 
 public class DatePickerCell<S> extends TableCell<S, LocalDate> {
 
@@ -29,7 +29,7 @@ public class DatePickerCell<S> extends TableCell<S, LocalDate> {
                 if (item.equals(LocalDate.MAX)) {
                     setText("");
                 } else {
-                    setText(item.format(Utilities.DATE_TIME_FORMATTER));
+                    setText(item.format(Utilities.DATE_FORMATTER));
                 }
                 setGraphic(null);
             }

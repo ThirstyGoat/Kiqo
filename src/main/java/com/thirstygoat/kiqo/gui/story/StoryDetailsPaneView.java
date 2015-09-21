@@ -32,11 +32,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -225,7 +225,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         totalLoggedHours.textProperty().bind(story.spentEffortProperty().asString());
 
         totalHoursLabel.setOnMouseClicked(event -> {
-            story.getTasks().get(0).getLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), 3.0f, "blah"));
+            story.getTasks().get(0).getLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), Duration.ofMinutes(3), "blah"));
         });
     }
 
