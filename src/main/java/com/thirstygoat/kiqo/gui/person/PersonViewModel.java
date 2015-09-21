@@ -99,15 +99,8 @@ public class PersonViewModel extends ModelViewModel<Person> {
 
         if (!allValidation().isValid()) {
             LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            /** Because demo.json contains invalid data, we use this workaround. TODO remove this workaround when
-             * data in demo.json is valid.
-             * See issue #106: https://eng-git.canterbury.ac.nz/seng302-2015/project-4/issues/106
-             */
-            if (shortNameValidation().isValid()) {
-                return null;
-            }
-        }
-        if (!modelWrapper.isDifferent()) {
+            return null;
+        } else if (!modelWrapper.isDifferent()) {
             LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
             return null;
         }
