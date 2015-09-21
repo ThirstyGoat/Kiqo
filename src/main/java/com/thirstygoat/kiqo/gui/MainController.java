@@ -438,7 +438,7 @@ public class MainController implements Initializable {
                 deleteProject((Project) item);
             } else if (item.getClass() == Person.class) {
                 deletePerson((Person) item);
-            } else if (item .getClass() == Skill.class) {
+            } else if (item.getClass() == Skill.class) {
                 deleteSkill((Skill) item);
             } else if (item.getClass() == Team.class) {
                 deleteTeam((Team) item);
@@ -505,6 +505,8 @@ public class MainController implements Initializable {
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             undoManager.empty();
         });
+
+        undoManager.setMainController(this);
     }
 
     /**
@@ -602,7 +604,7 @@ public class MainController implements Initializable {
                     }
                 }
             GoatDialog.showAlertDialog(primaryStage, "Can't create sprint", "Can't create sprint",
-                    "No releases available, you must have at least one release in order to create a sprint.");
+                            "No releases available, you must have at least one release in order to create a sprint.");
             }
         }
 
