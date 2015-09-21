@@ -7,13 +7,13 @@ import com.thirstygoat.kiqo.command.create.CreateEffortCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.Effort;
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Task;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,10 +48,21 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         allValidator = new CompositeValidator();
         allValidator.addValidators(personValidator);
         effort = new SimpleObjectProperty<>();
+    }
 
-        organisationProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("huraaalksdfa l;");
-        });
+    @Override
+    public void load(Effort item, Organisation organisation) {
+        organisationProperty().set(organisation);
+
+        if (item != null) {
+            modelWrapper.set(item);
+        } else {
+            modelWrapper.set(modelSupplier().get());
+            modelWrapper.reset();
+            modelWrapper.commit();
+        }
+        effort.setValue(item);
+        reload();
     }
 
     public Supplier<List<Person>> eligablePeopleSupplier = () -> {
@@ -69,22 +80,22 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     @Override
     protected void afterLoad() {
-        endDateTimeProperty().bind(Bindings.createObjectBinding(() -> {
-            LocalDate endDate = endDateProperty.get();
-            LocalTime endTime = endTimeProperty().get();
-
-            LocalDateTime dateTime = LocalDateTime.of(
-                    endDate.getYear(),
-                    endDate.getMonth(),
-                    endDate.getDayOfMonth(),
-                    endTime.getHour(),
-                    endTime.getMinute()
-            );
-
-            dateTime.plusHours(endTimeProperty.get().getHour());
-            dateTime.plusMinutes(endTimeProperty.get().getMinute());
-            return dateTime;
-        }, endDateProperty, endTimeProperty));
+//        endDateTimeProperty().bind(Bindings.createObjectBinding(() -> {
+//            LocalDate endDate = endDateProperty.get();
+//            LocalTime endTime = endTimeProperty().get();
+//
+//            LocalDateTime dateTime = LocalDateTime.of(
+//                    endDate.getYear(),
+//                    endDate.getMonth(),
+//                    endDate.getDayOfMonth(),
+//                    endTime.getHour(),
+//                    endTime.getMinute()
+//            );
+//
+//            dateTime.plusHours(endTimeProperty.get().getHour());
+//            dateTime.plusMinutes(endTimeProperty.get().getMinute());
+//            return dateTime;
+//        }, endDateProperty, endTimeProperty));
     }
 
     @Override
@@ -103,15 +114,10 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
                 return null;
             }
 
-            if (modelWrapper.get().personProperty() == null) { // Must be a new effort
-                final Effort effort = new Effort(personProperty().get(), taskProperty().get(), endDateTimeProperty().get(),
-                        durationProperty().get(), commentProperty().get());
-                command = new CreateEffortCommand(effort, taskProperty().get());
-            } else {
-                final ArrayList<Command> changes = new ArrayList<>();
-                super.addEditCommands.accept(changes);
-                command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Effort", changes);
-            }
+            final ArrayList<Command> changes = new ArrayList<>();
+            super.addEditCommands.accept(changes);
+            command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Effort", changes);
+
         }
         return command;
     }

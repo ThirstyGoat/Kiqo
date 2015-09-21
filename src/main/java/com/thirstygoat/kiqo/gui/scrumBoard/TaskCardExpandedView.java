@@ -84,8 +84,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private TextField impedimentTextField;
     @FXML
     private ListView<Impediment> impedimentsListView;
-//    @FXML
-//    private TableView<Effort> loggedEffortTableView;
     @FXML
     private ListView<Effort> loggedEffortListView;
     @FXML
@@ -134,48 +132,10 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         commentTextField.textProperty().bindBidirectional(effortViewModel.commentProperty());
         loggedEffortListView.setItems(viewModel.loggedEffort());
 
-        loggedEffortListView.setCellFactory((lv) -> new EffortListCell());
+        loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
 
-//        personTableColumn.setCellFactory((e) -> {
-//            TableCell<Effort, Person> tc = new TableCell<Effort, Person>() {
-//                @Override
-//                protected void updateItem(Person person, boolean empty) {
-//                    super.updateItem(person, empty);
-//                    if (!empty && getTableRow() != null) {
-//                        Effort effort = (Effort) getTableRow().getItem();
-//                        if (effort != null) {
-//                            textProperty().bind(effort.personProperty().get().shortNameProperty());
-//                        }
-//                    }
-//                }
-//            };
-//            return tc;
-//        });
-//
-//        commentTableColumn.setCellFactory((e) -> {
-//            TableCell<Effort, String> tc = new TableCell<Effort, String>() {
-//                @Override
-//                protected void updateItem(String name, boolean empty) {
-//                    super.updateItem(name, empty);
-//                    if (!empty) {
-//                        Effort effort = (Effort) getTableRow().getItem();
-//                        if (effort != null) {
-//                            textProperty().bind(effort.commentProperty());
-//                        }
-//                    }
-//                }
-//            };
-//            return tc;
-//        });
-//        loggedEffortTableView.itemsProperty().bind(viewModel.loggedEffort());
-//        loggedEffortTableView.itemsProperty().addListener((observable, oldValue, newValue) -> {
-//            System.out.println("AAAA");
-//            System.out.println(loggedEffortTableView.itemsProperty().get());
-//        });
 
         loggingButton.setOnAction(e -> {
-            System.out.println(effortViewModel.allValidation().isValid());
-            System.out.println(effortViewModel.allValidation().getErrorMessages());
             if (effortViewModel.allValidation().isValid()) {
                 effortViewModel.commitEdit();
             }
