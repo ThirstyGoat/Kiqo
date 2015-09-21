@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class PersonViewModel extends ModelViewModel<Person> {
@@ -70,12 +71,13 @@ public class PersonViewModel extends ModelViewModel<Person> {
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
                 if (organisationProperty().get() != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(), organisationProperty().get().getSkills());
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(),
+                                    organisationProperty().get().getPeople());
                 } else {
                     return true; // no organisation means this isn't for real yet.
                 }
             }, 
-            shortNameProperty());
+            shortNameProperty(), organisationProperty());
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
@@ -93,25 +95,43 @@ public class PersonViewModel extends ModelViewModel<Person> {
 
     @Override
     public Command getCommand() {
-        final ArrayList<Skill> skills = new ArrayList<>();
-        skills.addAll(skills().get());
+        final Command command;
 
-        if (modelWrapper.get()  == null) {
+        if (!allValidation().isValid()) {
+            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
+            /** Because demo.json contains invalid data, we use this workaround. TODO remove this workaround when
+             * data in demo.json is valid.
+             * See issue #106: https://eng-git.canterbury.ac.nz/seng302-2015/project-4/issues/106
+             */
+            if (shortNameValidation().isValid()) {
+                return null;
+            }
+        }
+        if (!modelWrapper.isDifferent()) {
+            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
+            return null;
+        }
+
+        if (modelWrapper.get().getShortName().equals("")) { // Must be a new person
             final Person p = new Person(shortNameProperty().get(), longNameProperty().get(),
                     descriptionProperty().get(), userIdProperty().get(), emailProperty().get(),
-                    phoneNumberProperty().get(), departmentProperty().get(), skills);
-            return new CreatePersonCommand(p, organisationProperty().get());
+                    phoneNumberProperty().get(), departmentProperty().get(), skills().get());
+            command = new CreatePersonCommand(p, organisationProperty().get());
         } else {
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
 
-            if (!(skills.containsAll(modelWrapper.get().getSkills())
-                    && modelWrapper.get().getSkills().containsAll(skills))) {
+            if (!skills().get().equals(modelWrapper.get().getSkills())) {
+                /** For some reason we need to create a new ArrayList here rather than just passing through
+                 * skills().get() otherwise it doesn't work.
+                 */
+                final ArrayList<Skill> skills = new ArrayList<>();
+                skills.addAll(skills().get());
                 changes.add(new EditCommand<>(modelWrapper.get() , "skills", skills));
             }
-
-            return new CompoundCommand("Edit Person" , changes);
+            command = new CompoundCommand("Edit Person" , changes);
         }
+        return command;
     }
 
     public StringProperty shortNameProperty() {
