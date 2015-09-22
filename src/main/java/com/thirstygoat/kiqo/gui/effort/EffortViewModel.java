@@ -113,23 +113,6 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     }
 
     @Override
-    protected void afterLoad() {
-//        endDateTimeProperty().bind(Bindings.createObjectBinding(() -> {
-//            LocalDate endDate = endDateProperty.get();
-//            LocalTime endTime = endTimeProperty().get();
-//            LocalDateTime dateTime = LocalDateTime.of(
-//                    endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
-//                    endTime.getHour(), endTime.getMinute()
-//            );
-//            dateTime.plusHours(endTimeProperty.get().getHour());
-//            dateTime.plusMinutes(endTimeProperty.get().getMinute());
-//            return dateTime;
-//        }, endDateProperty, endTimeProperty));
-
-
-    }
-
-    @Override
     public Command getCommand() {
         final Command command;
 

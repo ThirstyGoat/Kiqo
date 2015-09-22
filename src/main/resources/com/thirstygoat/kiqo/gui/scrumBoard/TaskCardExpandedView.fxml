@@ -67,7 +67,7 @@
                                            <Insets bottom="2" top="10" />
                                        </padding>
                                    </Label>
-                                   <GoatLabelFilteredListSelectionView fx:id="assignedPeopleLabel"/>
+                                   <GoatLabelFilteredListSelectionView fx:id="assignedPeopleLabel" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                                    <Label styleClass="expanded-task-headings" text="Description">
                                        <padding>
                                            <Insets bottom="2" top="10" />

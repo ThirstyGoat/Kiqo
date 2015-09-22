@@ -2,6 +2,9 @@ package com.thirstygoat.kiqo.gui.scrumBoard;
 
 import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.gui.nodes.EffortLoggingPopover;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Effort;
@@ -42,11 +45,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private GoatLabelFilteredListSelectionView<Person> assignedPeopleLabel;
     @FXML
-    private GoatLabelFilteredListSelectionView<Person> assignedPeopleLabel;
-    @FXML
     private GoatLabelTextField estimatedHoursLabel;
-//    @FXML
-//    private TextField personTextField;
     @FXML
     private DatePicker endDatePicker;
     @FXML
@@ -122,7 +121,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
 
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
-        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignedPeolpe(), viewModel.eligableAssignedPeople());
+        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligableAssignedPeople());
 //        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());
     }
 
@@ -163,9 +162,9 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(),
                         viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
-        blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            viewModel.commitEdit();
-        });
+        blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> viewModel.commitEdit());
+    }
+
 
         
 

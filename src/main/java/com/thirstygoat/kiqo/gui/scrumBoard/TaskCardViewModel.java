@@ -9,7 +9,6 @@ import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
@@ -76,7 +75,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         final ArrayList<Command> changes = new ArrayList<>();
         super.addEditCommands.accept(changes);
 
-        if (!assignees().equals(modelWrapper.get().getAssignees())) {
+        if (!assignees().equals(modelWrapper.get().getAssigneesObservable())) {
             changes.add(new EditCommand<>(modelWrapper.get(), "assignees", new ArrayList<>(assignees().get())));
         }
 
@@ -139,7 +138,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
     }
 
     public ListProperty<Person> assignees() {
-        return modelWrapper.field("assignees", Task::getAssignees, Task::setAssignees);
+        return modelWrapper.field("assignees", Task::getAssigneesObservable, Task::setAssignees);
     }
 
     /** Other fields **/
@@ -159,7 +158,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
 
             if (sprintTaskBelongsTo.isPresent()) {
                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
-                                .filter(person -> !task.getAssignees().contains(person))
+                                .filter(person -> !task.getAssigneesObservable().contains(person))
                                 .collect(Collectors.toList());
             } else {
                 return new ArrayList<Person>();
