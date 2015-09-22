@@ -102,7 +102,6 @@ public class SkillViewModel extends ModelViewModel<Skill> {
 
 	@Override
 	protected Supplier<Skill> modelSupplier() {
-		// TODO Auto-generated method stub
-		return null;
+		return Skill::new;
 	}
 }
