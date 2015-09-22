@@ -1154,7 +1154,7 @@ public class MainController implements Initializable {
     public void search() {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.setTitle("Report Generator");
+            stage.setTitle("Simple Search");
             stage.initOwner(primaryStage);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);

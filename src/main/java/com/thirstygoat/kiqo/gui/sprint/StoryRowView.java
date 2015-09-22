@@ -95,22 +95,12 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         drawTasks();
         setAddTaskButton();
         initialiseDoubleClick();
-        initialiseCollapsing();
-    }
-
-    private void initialiseCollapsing() {
-        if (
-                viewModel.getToDoTasks().isEmpty() &&
-                viewModel.getInProgressTasks().isEmpty() &&
-                viewModel.getVerifyTasks().isEmpty() &&
-                !viewModel.getDoneTasks().isEmpty()) {
-            collapseOrExpand();
-        }
 
         parentStoryContainer.setOnMouseReleased(event -> collapseOrExpand());
+        viewModel.setView(this);
     }
 
-    private void collapseOrExpand() {
+    public void collapseOrExpand() {
         boolean shown = statusGridPane.isVisible();
         statusGridPane.setManaged(!shown);
         statusGridPane.setVisible(!shown);
