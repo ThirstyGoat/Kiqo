@@ -31,7 +31,7 @@ public class Search {
 
     /**
      * Executes the search
-     * @return ObservableList<SearchResult> containing the results of the search
+     * @return ObservableList&lt;SearchResult&gt; containing the results of the search
      */
     public ObservableList<SearchResult> execute() {
         ObservableList<SearchResult> results = FXCollections.observableArrayList();
