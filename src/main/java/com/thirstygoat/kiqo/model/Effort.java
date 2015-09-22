@@ -23,10 +23,10 @@ import java.util.List;
 public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
-    private final ObjectProperty<LocalDateTime> logTimeStamp;
     private final ObjectProperty<LocalDate> endDate;
     private final ObjectProperty<Duration> duration;
     private final StringProperty comment;
+    private final ObjectProperty<LocalDateTime> logTimeStamp;
     private final BoundPropertySupport bps = new BoundPropertySupport(this);
 
     public Effort() {
