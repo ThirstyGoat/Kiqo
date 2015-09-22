@@ -25,7 +25,7 @@ public class EffortListCell extends ListCell<Effort> {
 
     @Override
     protected void updateItem(final Effort effort, final boolean empty) {
-        if (!empty) {
+        if (!empty && effort != null) {
             viewModel.load(effort, organisation);
 
             HBox effortRow = new HBox();

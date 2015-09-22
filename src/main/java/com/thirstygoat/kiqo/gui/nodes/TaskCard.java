@@ -35,13 +35,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private FloatProperty spentEffortProperty;
     final private BooleanProperty impedanceProperty;
     final private BooleanProperty isBlockedProperty;
-    final private Task task;
     final private ObjectProperty<Organisation> organisationProperty;
+    final private ObjectProperty<Task> task;
 
     public TaskCard(Task task, Organisation organisation) {
-        this.task = task;
-        organisationProperty = new SimpleObjectProperty<>();
-        organisationProperty.setValue(organisation);
+        this.task = new SimpleObjectProperty<>(task);
+        organisationProperty = new SimpleObjectProperty<>(organisation);
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         spentEffortProperty = new SimpleFloatProperty();
@@ -99,14 +98,17 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
-        iconBox.setOnMouseClicked(event1 -> {
-            TaskCardExpandedView.createLogEffortPopOver().show(this);
-        });
+//        iconBox.setOnMouseClicked(event1 -> {
+//            EffortViewModel effortViewModel = new EffortViewModel();
+//            effortViewModel.taskProperty().bind(task);
+//            effortViewModel.organisationProperty().bind(organisationProperty);
+//            TaskCardExpandedView.createLogEffortPopOver(null, effortViewModel).show(this);
+//        });
 
         // open the expanded card
-//        setOnMouseClicked(event -> newExpandedCard());
+        setOnMouseClicked(event -> newExpandedCard());
 
-        impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.getImpediments()));
+        impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.get().getImpediments()));
 
         iconBox.getChildren().add(impedanceIcon);
 
@@ -150,7 +152,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             Window parentWindow = getParent().getScene().getWindow();
             stage.initOwner(parentWindow);
             ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
-            viewTuple.getViewModel().load(task, organisationProperty.get());
+            viewTuple.getViewModel().load(task.get(), organisationProperty.get());
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);
@@ -217,6 +219,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     }
 
     public Task getTask() {
-        return task;
+        return task.get();
     }
 }

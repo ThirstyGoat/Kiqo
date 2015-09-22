@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
+import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
@@ -8,6 +10,7 @@ import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -32,6 +35,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 
@@ -132,82 +136,21 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
 
     private void initEffortLogging() {
+        EffortViewModel effortViewModel = new EffortViewModel();
+        effortViewModel.taskProperty().bind(viewModel.getTask());
+        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
+
         newEffortButton.setOnAction(event -> {
-            PopOver p = createLogEffortPopOver();
+            EffortViewModel e = new EffortViewModel();
+            e.taskProperty().bind(viewModel.getTask());
+            e.organisationProperty().bind(viewModel.organisationProperty());
+            PopOver p = createLogEffortPopOver(null, e);
             Platform.runLater(() -> p.show(buttonsView));
-
         });
-    }
 
+        loggedEffortListView.setItems(viewModel.loggedEffort());
+        loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
 
-//
-//    private void initEffortLogging() {
-//        EffortViewModel effortViewModel = new EffortViewModel();
-//        effortViewModel.taskProperty().bind(viewModel.getTask());
-//        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
-////        viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
-////            FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
-////        });
-////        FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
-////
-////        personTextField.textProperty().bindBidirectional(
-////                effortViewModel.personProperty(),
-////                StringConverters.personStringConverter(effortViewModel.organisationProperty())
-////        );
-//        endDatePicker.setValue(LocalDate.now());
-//        effortViewModel.endDateProperty().bind(endDatePicker.valueProperty());
-//
-//        endTimeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-//            LocalTime time;
-//            try {
-//                time = LocalTime.parse(newValue, Utilities.TIME_FORMATTER);
-//                effortViewModel.endTimeProperty().setValue(time);
-//            } catch (DateTimeParseException e) {
-//            }
-//        });
-//        endTimeTextField.setText(LocalTime.now().format(Utilities.TIME_FORMATTER));
-//
-//        effortViewModel.durationProperty().set(Duration.ofHours(0));
-//        hourSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
-//            effortViewModel.durationProperty().set(calculateDuration());
-//        }));
-//
-//        minuteSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
-//            effortViewModel.durationProperty().set(calculateDuration());
-//        }));
-//
-//        hourSpinner.setPrefWidth(60);
-//        minuteSpinner.setPrefWidth(60);
-//        minuteSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner.getEditor()));
-//        hourSpinner.getEditor().textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner.getEditor()));
-//
-//        commentTextField.textProperty().bindBidirectional(effortViewModel.commentProperty());
-//
-//        loggedEffortListView.setItems(viewModel.loggedEffort());
-//        loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
-//
-//        loggingButton.setOnAction(e -> {
-//            if (effortViewModel.allValidation().isValid()) {
-//                effortViewModel.commitEdit();
-//            }
-//        });
-//
-//        editView.setVisible(false);
-//        editView.setManaged(false);
-//
-//        newEffortButton.setOnAction(event -> {
-//            editView.setVisible(true);
-//            editView.setManaged(true);
-//
-//            buttonsView.setVisible(false);
-//            buttonsView.setManaged(false);
-//        });
-//
-//    }
-
-    private Duration calculateDuration() {
-        int minutes = hourSpinner.getValue() * 60 + minuteSpinner.getValue();
-        return Duration.ofMinutes(minutes);
     }
 
 
@@ -264,7 +207,10 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         node.setVisible(true);
     }
 
-    public static PopOver createLogEffortPopOver() {
+    /**
+     * Creates a pop over populated with all the fields needed for logging effort
+     */
+    public static PopOver createLogEffortPopOver(Effort effort, EffortViewModel viewModel) {
         PopOver popOver = new PopOver();
         popOver.setAutoHide(true);
         popOver.setDetachable(false);
@@ -334,6 +280,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         /* Comment */
         TextArea commentTextArea = new TextArea();
         commentTextArea.setPromptText("Add a comment");
+        commentTextArea.setWrapText(true);
 
         HBox buttonHbox = new HBox();
         buttonHbox.setAlignment(Pos.BASELINE_RIGHT);
@@ -344,8 +291,72 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         content.getChildren().setAll(heading, personVbox, dateTimeHbox, commentTextArea, buttonHbox);
         popOver.setContentNode(content);
+
+
+
+        if (effort != null) {
+            personLabel.setText(effort.personProperty().getValue().getShortName());
+            endDatePicker.setValue(effort.endDateTimeProperty().getValue().toLocalDate());
+            timeTextField.setText(Utilities.TIME_FORMATTER.format(effort.endDateTimeProperty().getValue().toLocalTime()));
+            hourSpinner.setText(Long.toString(effort.durationProperty().get().toHours()));
+            minuteSpinner.setText(Long.toString(effort.durationProperty().get().toMinutes() % 60));
+            commentTextArea.setText(effort.commentProperty().getValue());
+        }
+
+        viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
+            FxUtils.setTextFieldSuggester(personSelector, viewModel.eligablePeopleSupplier.get());
+        });
+        FxUtils.setTextFieldSuggester(personSelector, viewModel.eligablePeopleSupplier.get());
+
+        personSelector.textProperty().bindBidirectional(
+                viewModel.personProperty(),
+                StringConverters.personStringConverter(viewModel.organisationProperty())
+        );
+        endDatePicker.setValue(LocalDate.now());
+        viewModel.endDateProperty().bind(endDatePicker.valueProperty());
+
+        timeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            LocalTime time;
+            try {
+                time = LocalTime.parse(newValue, Utilities.TIME_FORMATTER);
+                viewModel.endTimeProperty().setValue(time);
+            } catch (DateTimeParseException e) {
+            }
+        });
+        timeTextField.setText(LocalTime.now().format(Utilities.TIME_FORMATTER));
+
+        viewModel.durationProperty().set(Duration.ofHours(0));
+        hourSpinner.textProperty().addListener(((observable, oldValue, newValue) -> {
+            viewModel.durationProperty().set(Duration.ofMinutes(10));
+        }));
+
+        minuteSpinner.textProperty().addListener(((observable, oldValue, newValue) -> {
+            viewModel.durationProperty().set(Duration.ofMinutes(200));
+        }));
+
+        hourSpinner.setPrefWidth(60);
+        minuteSpinner.setPrefWidth(60);
+        minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
+        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
+
+        commentTextArea.textProperty().bindBidirectional(viewModel.commentProperty());
+
+        logButton.setOnAction(e -> {
+            if (viewModel.allValidation().isValid()) {
+                viewModel.commitEdit();
+                popOver.hide();
+            }
+        });
+
         return popOver;
     }
+
+    private Duration calculateDuration() {
+        int minutes = hourSpinner.getValue() * 60 + minuteSpinner.getValue();
+        return Duration.ofMinutes(minutes);
+    }
+
+
 
 //    <VBox fx:id="editView">
 //    <HBox spacing="5.0">
