@@ -4,10 +4,7 @@ import com.sun.javafx.charts.ChartLayoutAnimator;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ObjectPropertyBase;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.*;
 import javafx.scene.chart.Axis;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -24,13 +21,12 @@ import java.util.List;
 
 public final class DateAxis extends Axis<LocalDate> {
 
+    private final FloatProperty numItems = new SimpleFloatProperty(100);
     /**
      * These property are used for animation.
      */
     private final LongProperty currentLowerBound = new SimpleLongProperty(this, "currentLowerBound");
-
     private final LongProperty currentUpperBound = new SimpleLongProperty(this, "currentUpperBound");
-
     private final ObjectProperty<StringConverter<LocalDate>> tickLabelFormatter = new ObjectPropertyBase<StringConverter<LocalDate>>() {
         @Override
         protected void invalidated() {
@@ -50,13 +46,11 @@ public final class DateAxis extends Axis<LocalDate> {
             return "tickLabelFormatter";
         }
     };
-
     /**
      * Stores the min and max LocalDate of the list of dates which is used.
      * If {@link #autoRanging} is true, these values are used as lower and upper bounds.
      */
     private LocalDate minDate, maxDate;
-
     private ObjectProperty<LocalDate> lowerBound = new ObjectPropertyBase<LocalDate>() {
         @Override
         protected void invalidated() {
@@ -76,7 +70,6 @@ public final class DateAxis extends Axis<LocalDate> {
             return "lowerBound";
         }
     };
-
     private ObjectProperty<LocalDate> upperBound = new ObjectPropertyBase<LocalDate>() {
         @Override
         protected void invalidated() {
@@ -96,11 +89,8 @@ public final class DateAxis extends Axis<LocalDate> {
             return "upperBound";
         }
     };
-
     private ChartLayoutAnimator animator = new ChartLayoutAnimator(this);
-
     private Object currentAnimationID;
-
     private Interval actualInterval = Interval.DECADE;
 
     /**
@@ -132,6 +122,10 @@ public final class DateAxis extends Axis<LocalDate> {
     public DateAxis(String axisLabel, LocalDate lowerBound, LocalDate upperBound) {
         this(lowerBound, upperBound);
         setLabel(axisLabel);
+    }
+
+    public FloatProperty numItemsProperty() {
+        return numItems;
     }
 
     @Override
@@ -299,7 +293,8 @@ public final class DateAxis extends Axis<LocalDate> {
         Calendar calendar = Calendar.getInstance();
 
         // The preferred gap which should be between two tick marks.
-        double averageTickGap = 100;
+//        double averageTickGap = 100;
+        double averageTickGap = 45;
         double averageTicks = v / averageTickGap;
 
         List<LocalDate> previousDateList = new ArrayList<>();

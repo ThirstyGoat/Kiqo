@@ -4,13 +4,16 @@ import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 
 
 public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implements Editable {
+    private LongProperty days = new SimpleLongProperty(0);
     private ObservableList<XYChart.Data<LocalDate, Number>> targetLineData = FXCollections.observableArrayList();
     private ObservableList<XYChart.Data<LocalDate, Number>> loggedHoursData = FXCollections.observableArrayList();
     private ObservableList<XYChart.Data<LocalDate, Number>> burndownData = FXCollections.observableArrayList();
@@ -27,20 +31,30 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
 
     public SprintDetailsPaneBurndownViewModel() {
         super();
-        sprintWrapper.dirtyProperty().addListener((observable, oldValue, newValue) -> draw());
+        sprintWrapper.dirtyProperty().addListener((observable, oldValue, newValue) -> {
+            draw();
+        });
         totalEstimatedHoursProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("total est property in SDPBVM: " + newValue);
             draw();
         });
         spentHoursProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("total spent property in SDPBVM: " + newValue);
             draw();
         });
 
     }
 
+    public LongProperty daysProperty() {
+        return days;
+    }
+
+    private void updateDays() {
+        long dayCount = Math.abs(ChronoUnit.DAYS.between(sprintProperty().get().endDateProperty().get(),
+                        sprintProperty().get().startDateProperty().get()));
+        days.set(dayCount);
+    }
+
     public void draw() {
-        System.out.println("calling draw");
+        updateDays();
         drawTargetLine();
         drawLines();
     }

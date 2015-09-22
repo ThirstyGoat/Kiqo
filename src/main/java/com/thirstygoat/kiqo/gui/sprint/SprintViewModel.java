@@ -448,4 +448,8 @@ public class SprintViewModel implements ViewModel {
     public FloatProperty spentHoursProperty() {
         return spentHours;
     }
+
+    public void changesBinding() {
+        // TODO
+    }
 }
