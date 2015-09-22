@@ -438,7 +438,7 @@ public class MainController implements Initializable {
                 deleteProject((Project) item);
             } else if (item.getClass() == Person.class) {
                 deletePerson((Person) item);
-            } else if (item .getClass() == Skill.class) {
+            } else if (item.getClass() == Skill.class) {
                 deleteSkill((Skill) item);
             } else if (item.getClass() == Team.class) {
                 deleteTeam((Team) item);
@@ -505,6 +505,8 @@ public class MainController implements Initializable {
         selectedOrganisationProperty.addListener((observable, oldValue, newValue) -> {
             undoManager.empty();
         });
+
+        undoManager.setMainController(this);
     }
 
     /**
@@ -602,7 +604,7 @@ public class MainController implements Initializable {
                     }
                 }
             GoatDialog.showAlertDialog(primaryStage, "Can't create sprint", "Can't create sprint",
-                    "No releases available, you must have at least one release in order to create a sprint.");
+                            "No releases available, you must have at least one release in order to create a sprint.");
             }
         }
 
@@ -953,9 +955,10 @@ public class MainController implements Initializable {
             } else if (type.equals(Project.class.getSimpleName())) {
                 ViewTuple<ProjectFormView, ProjectFormViewModel> viewTuple =
                         FluentViewLoader.fxmlView(ProjectFormView.class).load();
-                final ProjectFormViewModel viewModel = viewTuple.getViewModel();
-                viewModel.load((Project) t, selectedOrganisationProperty.get());
-                viewModel.setExitStrategy(stage::close);
+                viewTuple.getViewModel().load((Project) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingTextProperty().set(t == null ? "Create Project" : "Edit Project");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {
@@ -988,15 +991,15 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             }  else if (type.equals(Story.class.getSimpleName())) {
-                    ViewTuple<StoryFormView, StoryFormViewModel> storyFormTuple = FluentViewLoader.fxmlView(StoryFormView.class).load();
-                    // viewModel
-                    final StoryFormViewModel viewModel = storyFormTuple.getViewModel();
-                    viewModel.load((Story) t, selectedOrganisationProperty.get());
-                    // view
-                    viewModel.setExitStrategy(() -> stage.close());
-                    stage.setScene(new Scene(storyFormTuple.getView()));
-                    viewModel.load((Story) t, selectedOrganisationProperty.get());
-                    stage.showAndWait();
+                ViewTuple<StoryFormView, StoryFormViewModel> viewTuple =
+                        FluentViewLoader.fxmlView(StoryFormView.class).load();
+                viewTuple.getViewModel().load((Story) t, selectedOrganisationProperty.get());
+                viewTuple.getCodeBehind().setExitStrategy(stage::close);
+                stage.initStyle(StageStyle.UNDECORATED);
+                viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Story" : "Edit Story");
+                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Story" : "Done");
+                stage.setScene(new Scene(viewTuple.getView()));
+                stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
@@ -1151,7 +1154,7 @@ public class MainController implements Initializable {
     public void search() {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.setTitle("Report Generator");
+            stage.setTitle("Simple Search");
             stage.initOwner(primaryStage);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);

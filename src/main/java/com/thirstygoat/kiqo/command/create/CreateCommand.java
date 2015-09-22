@@ -52,4 +52,8 @@ public abstract class CreateCommand extends Command {
      * Remove the object from the model (used in {@link #undo()}).
      */
     protected abstract void removeFromModel();
+
+    public Searchable getObj() {
+        return obj;
+    }
 }

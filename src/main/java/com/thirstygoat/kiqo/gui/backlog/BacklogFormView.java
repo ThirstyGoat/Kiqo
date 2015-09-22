@@ -71,7 +71,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
         scaleComboBox.getSelectionModel().selectFirst(); // Selects Fibonacci as default
 
         storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
-        storySelectionView.sourceItemsProperty().bind(viewModel.eligableStories());
+        storySelectionView.sourceItemsProperty().bind(viewModel.eligibleStories());
         storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
 

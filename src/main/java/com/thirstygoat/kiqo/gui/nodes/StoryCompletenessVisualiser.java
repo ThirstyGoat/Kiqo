@@ -47,7 +47,9 @@ public class StoryCompletenessVisualiser extends HBox  {
             calculateSizes();
         };
 
-        setMaxHeight(20);
+//        setMaxHeight(6);
+//        setPrefHeight(6);
+//        setMinHeight(6);
 
         todoTasks.addListener(listener);
         inProgressTasks.addListener(listener);
@@ -56,8 +58,9 @@ public class StoryCompletenessVisualiser extends HBox  {
     }
 
     private void setColours() {
+        setStyle("-fx-background-color: #bbb"); // Setting the default background
         notStarted.setStyle("-fx-background-color: #607d8b");
-        inProgress.setStyle("-fx-background-color: #ff5722");
+        inProgress.setStyle("-fx-background-color: #ff7144");
         verify.setStyle("-fx-background-color: #2196f3");
         done.setStyle("-fx-background-color: #4caf50");
     }

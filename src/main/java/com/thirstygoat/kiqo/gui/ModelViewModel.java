@@ -31,13 +31,6 @@ public abstract class ModelViewModel<T extends BoundProperties> implements ViewM
     protected abstract Supplier<T> modelSupplier();
 
     /**
-     * Actions to carry out after loading. Example actions include initialising lists and possibly setup listeners on
-     * property fields. For example, if you have a Backlog, you might want to add a listener to the projectProperty()
-     * which updates a list of valid stories that can be added to the Backlog.
-     */
-    protected abstract void afterLoad();
-
-    /**
      * Load an item into the ModelWrapper, and set the organisationProperty.
      * @param item The item to load into the viewModels wrapper. If item is null, then a new item will be created.
      * @param organisation The organisation within which the viewModel is being loaded.
@@ -60,7 +53,6 @@ public abstract class ModelViewModel<T extends BoundProperties> implements ViewM
     }
 
     public void reload() {
-        afterLoad();
         modelWrapper.reload();
     }
     
@@ -75,7 +67,7 @@ public abstract class ModelViewModel<T extends BoundProperties> implements ViewM
     public abstract Command getCommand();
 
     /**
-     * Adds edit commands for all changed fields to the accepted list.
+     * Adds edit commands for all changed fields to the accepted list. Doesn't work for ListProperties.
      */
     public Consumer<List<Command>> addEditCommands =
             commands -> {

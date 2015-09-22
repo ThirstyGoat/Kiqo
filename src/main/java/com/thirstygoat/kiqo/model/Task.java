@@ -24,7 +24,7 @@ public class Task extends Item {
     private final ObjectProperty<Story> story;
     private final ObservableList<Impediment> impediments;
     private final ObservableList<Effort> loggedEffort;
-    private final ObservableList<Person> assignedPeople;
+    private final ObservableList<Person> assignees;
 
     public Task() {
         shortName = new SimpleStringProperty("");
@@ -35,7 +35,7 @@ public class Task extends Item {
         blocked = new SimpleBooleanProperty(false);
         impediments = FXCollections.observableArrayList(Impediment.getWatchStrategy());
         loggedEffort = FXCollections.observableArrayList(Effort.getWatchStrategy());
-        assignedPeople = FXCollections.observableArrayList(Person.getWatchStrategy());
+        assignees = FXCollections.observableArrayList(Person.getWatchStrategy());
     }
 
     public Task(String shortName, String description, Float estimate, Story story) {
@@ -49,7 +49,7 @@ public class Task extends Item {
     
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty(),
-                        p.getLoggedEffort(), p.getAssignedPeople()};
+                        p.getLoggedEffort(), p.getAssignees()};
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Task extends Item {
         bps.addPropertyChangeSupportFor(impediments);
         bps.addPropertyChangeSupportFor(blocked);
         bps.addPropertyChangeSupportFor(loggedEffort);
-        bps.addPropertyChangeSupportFor(assignedPeople);
+        bps.addPropertyChangeSupportFor(assignees);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Task extends Item {
         FloatProperty spentEffort = new SimpleFloatProperty();
         spentEffort.bind(Bindings.createDoubleBinding(
                 () -> getLoggedEffort().stream()
-                        .mapToDouble(Effort::getDurationAsNumber)
+                        .mapToDouble(Effort::getDuration)
                         .sum(),
                 getLoggedEffort()));
         return spentEffort;
@@ -103,12 +103,12 @@ public class Task extends Item {
         this.loggedEffort.setAll(loggedEffort);
     }
 
-    public ObservableList<Person> getAssignedPeople() {
-        return assignedPeople;
+    public ObservableList<Person> getAssignees() {
+        return assignees;
     }
 
-    public void setAssignedPeople(List<Person> assignedPeople) {
-        this.assignedPeople.setAll(assignedPeople);
+    public void setAssignees(List<Person> assignees) {
+        this.assignees.setAll(assignees);
     }
 
     public Story getStory() {

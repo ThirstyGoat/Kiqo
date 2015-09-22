@@ -1,17 +1,18 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.thirstygoat.kiqo.command.create.CreateCommand;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Item;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 
 /**
  * Manages the undo/redo feature
@@ -32,6 +33,7 @@ public class UndoManager {
     private final BooleanProperty canRevertProperty = new SimpleBooleanProperty(false);
     protected int savePosition = 0;
     protected int branchPosition = 0;
+    private MainController mainController;
 
 
     private UndoManager() {}
@@ -77,6 +79,10 @@ public class UndoManager {
      */
     public void undoCommand() {
         final Command command = undoStack.pop();
+        // check to see if the item is a object that will create a tab
+        if (mainController != null) {
+            closeTab(command);
+        }
         command.undo();
         redoStack.push(command);
         updateUndoRedoTypes();
@@ -84,6 +90,16 @@ public class UndoManager {
         if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
             branchPosition = undoStack.size();
             revertStack.push(command);
+        }
+    }
+
+    private void closeTab(Command command) {
+        if (command.getClass().getSuperclass() == CreateCommand.class) {
+            CreateCommand createCommand = (CreateCommand) command;
+            if (createCommand.getObj().getClass().getSuperclass() == Item.class) {
+                Item item = (Item) createCommand.getObj();
+                mainController.getDetailsPaneController().closeTab(item);
+            }
         }
     }
 
@@ -114,6 +130,9 @@ public class UndoManager {
         redoStack.clear();
         while (diff < 0) {
             final Command command = undoStack.pop();
+            if (mainController != null) {
+                closeTab(command);
+            }
             command.undo();
             diff++;
         }
@@ -165,5 +184,13 @@ public class UndoManager {
         revertStack.clear();
         saveUndoStack.setAll(undoStack);
         changesSavedProperty.set(true);
+    }
+
+    public Command undoStackPeek() {
+        return undoStack.peek();
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

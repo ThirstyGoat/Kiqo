@@ -23,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -134,10 +135,10 @@ public class DraggableTab extends Tab {
                         return;
 
                     final Stage newStage = new Stage();
+                    newStage.initOwner(MainController.getPrimaryStage());
+                    newStage.initModality(Modality.NONE);
                     final TabPane pane = new TabPane();
                     tabPanes.add(pane);
-
-
 
                     newStage.setOnHiding(t1 -> tabPanes.remove(pane));
                     getTabPane().getTabs().remove(DraggableTab.this);

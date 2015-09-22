@@ -72,11 +72,6 @@ public class ProjectViewModel extends ModelViewModel<Project> {
     }
 
     @Override
-    protected void afterLoad() {
-
-    }
-
-    @Override
     public Command getCommand() {
         final Command command;
 

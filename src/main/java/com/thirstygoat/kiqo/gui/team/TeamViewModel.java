@@ -43,11 +43,6 @@ public class TeamViewModel extends ModelViewModel<Team> {
         return Team::new;
     }
 
-    @Override
-    protected void afterLoad() {
-        // Do nothing
-    }
-    
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 

@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
@@ -31,7 +32,7 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     @FXML
     private AnchorPane detailsView;
     @FXML
-    private AnchorPane scrumBoardView;
+    private VBox scrumBoardView;
 
     @FXML
     private GoatLabelTextField shortNameLabel;

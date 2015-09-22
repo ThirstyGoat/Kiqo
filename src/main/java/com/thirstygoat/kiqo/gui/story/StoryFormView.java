@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.story;
 
 import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
@@ -12,18 +13,15 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
-import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
@@ -34,6 +32,8 @@ import java.util.ResourceBundle;
  * Created by Carina Blair on 15/05/2015.
  */
 public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializable {
+
+    private FormButtonHandler formButtonHandler;
     private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
     private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
@@ -42,6 +42,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     private boolean valid = false;
     private Command command;
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -83,11 +85,11 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();
 
-        storySelectionView.setHeader(new Label("Depends on:"));
-        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.dependenciesProperty());
-        storySelectionView.sourceItemsProperty().bind(viewModel.eligibleDependencies());
+//        storySelectionView.setHeader(new Label("Depends on:"));
+//        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.dependenciesProperty());
+//        storySelectionView.sourceItemsProperty().bind(viewModel.eligibleDependencies());
 
-        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
+//        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
@@ -100,8 +102,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
             setValidationSupport();
             longNameTextField.requestFocus();
         });
-        setStoryCycleHyperLinkInfo();
-        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
+//        setStoryCycleHyperLinkInfo();
+//        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
     }
 
     private void setPrompts() {
@@ -123,31 +125,51 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         visualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
         visualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
-
-    private void setStoryCycleHyperLinkInfo() {
-        Label label = new Label();
-        label.setText("Only the stories that will not create a dependency loop are shown");
-        label.setPadding(new Insets(10, 10, 10, 10));
-        PopOver readyWhyPopOver = new PopOver(label);
-        readyWhyPopOver.setDetachable(false);
-
-        storyCycleHyperLink.setOnAction((e) -> {
-            readyWhyPopOver.show(storyCycleHyperLink);
-        });
-        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                readyWhyPopOver.hide(Duration.millis(0));
-            }
-        });
-    }
+//
+//    private void setStoryCycleHyperLinkInfo() {
+//        Label label = new Label();
+//        label.setText("Only the stories that will not create a dependency loop are shown");
+//        label.setPadding(new Insets(10, 10, 10, 10));
+//        PopOver readyWhyPopOver = new PopOver(label);
+//        readyWhyPopOver.setDetachable(false);
+//
+//        storyCycleHyperLink.setOnAction((e) -> {
+//            readyWhyPopOver.show(storyCycleHyperLink);
+//        });
+//        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!newValue) {
+//                readyWhyPopOver.hide(Duration.millis(0));
+//            }
+//        });
+//    }
 
     private void setupStoriesList() {
         storySelectionView.setHeader(new Label("Depends on:"));
     }
 
-    public void okAction() { viewModel.okAction(); }
+    public void setExitStrategy(Runnable exitStrategy) {
+        formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);
+    }
 
-    public void cancelAction() { viewModel.cancelAction();}
+    public void okAction() {
+        if (formButtonHandler != null) {
+            formButtonHandler.okAction();
+        }
+    }
+
+    public void cancelAction() {
+        if (formButtonHandler != null) {
+            formButtonHandler.cancelAction();
+        }
+    }
+
+    public StringProperty headingProperty() {
+        return heading.textProperty();
+    }
+
+    public void setOkButtonText(String string) {
+        okButton.setText(string);
+    }
 
 
     /**

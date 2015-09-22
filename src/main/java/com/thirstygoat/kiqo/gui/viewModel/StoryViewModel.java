@@ -5,11 +5,9 @@ import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -19,24 +17,17 @@ import javafx.collections.FXCollections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
  * Created by samschofield on 16/07/15.
  */
-public class StoryViewModel implements ViewModel {
-    private ModelWrapper<Story> storyWrapper = new GoatModelWrapper<>();
-
-    private Organisation organisation;
-    private Command command;
-    private Story story;
-    private boolean valid = false;
-
-    private ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
-    private ListProperty<Story> dependenciesProperty = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-    private ListProperty<Story> eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-
+public class StoryViewModel extends ModelViewModel<Story> {
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
 
     private ObservableRuleBasedValidator shortNameValidator;
@@ -57,7 +48,7 @@ public class StoryViewModel implements ViewModel {
                     for (Backlog backlog : projectProperty().get().getBacklogs()) {
                         stories.addAll(backlog.getStories());
                     }
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), storyWrapper.get(), stories);
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(), stories);
                 } else {
                     return true; // no project means this isn't for real yet.
                 }
@@ -119,60 +110,10 @@ public class StoryViewModel implements ViewModel {
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
-    
-    private void setStoryListProperties() {
-        dependenciesProperty.get().clear();
-        eligibleDependencies.get().clear();
-        if (storyWrapper.get() != null) {
-            if (projectProperty() != null) {
-                dependenciesProperty.get().addAll(storyWrapper.get().getDependencies());
-                if (storyWrapper.get().getBacklog() != null) {
-                    eligibleDependencies.get().addAll(storyWrapper.get().getBacklog().getStories());
-                } else {
-                    eligibleDependencies.get().addAll(projectProperty().get().getUnallocatedStories());
-                }
 
-                ArrayList<Story> toRemove = new ArrayList<>();
-                for (Story story : eligibleDependencies.get()) {
-                    if (checkCyclicDependency(story)) {
-                        toRemove.add(story);
-                    }
-                }
-                eligibleDependencies.get().removeAll(toRemove);
-            }
-            eligibleDependencies.get().removeAll(storyWrapper.get().getDependencies());
-            eligibleDependencies.get().remove(storyWrapper.get()); // cannot depend on itself
-        } else {
-            if (projectProperty() != null) {
-                eligibleDependencies.get().addAll(projectProperty().get().getUnallocatedStories());
-            }
-        }
-    }
-
-    private void setListeners() {
-        projectProperty().addListener(((observable, oldValue, newValue) -> {
-            setStoryListProperties();
-        }));
-    }
-
-    public void load(Story story, Organisation organisation) {
-        organisationProperty().set(organisation);
-        if(story != null) {
-            storyWrapper.set(story);
-            this.story = story;
-            dependenciesProperty.setAll(story.getDependencies());
-        } else {
-            storyWrapper.set(new Story());
-            storyWrapper.reset();
-            storyWrapper.commit();
-            dependenciesProperty.clear();
-        }
-        storyWrapper.reload();
-    }
-
-    public void reload() {
-        storyWrapper.reload();
-        dependenciesProperty.setAll(story.getDependencies());
+    @Override
+    protected Supplier<Story> modelSupplier() {
+        return Story::new;
     }
 
     public Supplier<List<Project>> projectSupplier() {
@@ -183,61 +124,76 @@ public class StoryViewModel implements ViewModel {
         return () -> organisationProperty().get().getPeople();
     }
 
+    /** Fields **/
+
     public StringProperty shortNameProperty() {
-        return storyWrapper.field("shortName", Story::getShortName, Story::setShortName, "");
+        return modelWrapper.field("shortName", Story::getShortName, Story::setShortName, "");
     }
 
     public StringProperty longNameProperty() {
-        return storyWrapper.field("longName", Story::getLongName, Story::setLongName, "");
+        return modelWrapper.field("longName", Story::getLongName, Story::setLongName, "");
     }
 
     public StringProperty descriptionProperty() {
-        return storyWrapper.field("description", Story::getDescription, Story::setDescription, "");
+        return modelWrapper.field("description", Story::getDescription, Story::setDescription, "");
     }
 
     public ObjectProperty<Person> creatorProperty() {
-        return storyWrapper.field("creator", Story::getCreator, Story::setCreator, null);
+        return modelWrapper.field("creator", Story::getCreator, Story::setCreator, null);
     }
 
     public ObjectProperty<Backlog> backlogProperty() {
-        return storyWrapper.field("backlog", Story::getBacklog, Story::setBacklog, null);
+        return modelWrapper.field("backlog", Story::getBacklog, Story::setBacklog, null);
     }
 
     public ObjectProperty<Project> projectProperty() {
-        return storyWrapper.field("project", Story::getProject, Story::setProject, null);
+        return modelWrapper.field("project", Story::getProject, Story::setProject, null);
     }
 
     public IntegerProperty priorityProperty() {
-        return storyWrapper.field("priority", Story::getPriority, Story::setPriority, 0);
+        return modelWrapper.field("priority", Story::getPriority, Story::setPriority, 0);
     }
 
     public ObjectProperty<Scale> scaleProperty() {
-        return storyWrapper.field("scale", Story::getScale, Story::setScale, Scale.FIBONACCI );
+        return modelWrapper.field("scale", Story::getScale, Story::setScale, Scale.FIBONACCI );
     }
 
     public IntegerProperty estimateProperty() {
-        return storyWrapper.field("estimate", Story::getEstimate, Story::setEstimate, 0);
-    }
-
-    public Story getStory() {
-        return story;
-    }
-
-    public ObjectProperty<Organisation> organisationProperty() {
-        return organisationProperty;
+        return modelWrapper.field("estimate", Story::getEstimate, Story::setEstimate, 0);
     }
 
     public ListProperty<Story> dependenciesProperty() {
-        return dependenciesProperty;
+        return modelWrapper.field("dependencies", Story::getDependencies, Story::setDependencies, new ArrayList<Story>());
     }
 
+    /** Other Fields **/
+
     public  ListProperty<Story> eligibleDependencies() {
+        ListProperty<Story> eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
+        Supplier<List<Story>> eligibleDependenciesSupplier = () -> {
+            if (backlogProperty().get() == null) {
+                return new ArrayList<Story>();
+            } else {
+                return backlogProperty().get().getStories().stream()
+                        .filter(story -> !dependenciesProperty().contains(story))
+                        .filter(story -> !createsCycle(story))
+                        .collect(Collectors.toList());
+            }
+        };
+
+        eligibleDependencies.setAll(eligibleDependenciesSupplier.get());
+        projectProperty().addListener(change -> {
+            eligibleDependencies.setAll(eligibleDependenciesSupplier.get());
+        });
+
         return eligibleDependencies;
     }
 
     public BooleanProperty getCreatorEditable () {
         return creatorEditable;
     }
+    
+    /** Validation **/
 
     public ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();
@@ -271,66 +227,54 @@ public class StoryViewModel implements ViewModel {
         return allValidator.getValidationStatus();
     }
 
+    @Override
     public Command getCommand() {
-        if (story == null) {
-            // new story command
+        final Command command;
+
+        if (!allValidation().isValid()) {
+            LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
+            return null;
+        } else if (!modelWrapper.isDirty()) {
+            LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
+            return null;
+        }
+
+        if (modelWrapper.get().getShortName() == "") { // Must be a new story
             Story story = new Story(shortNameProperty().getValue(), longNameProperty().getValue(), descriptionProperty().getValue(), creatorProperty().get(),
                     projectProperty().get(), null, priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false);
             command = new CreateStoryCommand(story);
         } else {
             // edit command
             final ArrayList<Command> changes = new ArrayList<>();
-            if (!longNameProperty().getValue().equals(story.getLongName())) {
-                changes.add(new EditCommand<>(story, "longName", longNameProperty().getValue()));
-            }
-            if (!shortNameProperty().getValue().equals(story.getShortName())) {
-                changes.add(new EditCommand<>(story, "shortName", shortNameProperty().getValue()));
-            }
-            if (!descriptionProperty().getValue().equals(story.getDescription())) {
-                changes.add(new EditCommand<>(story, "description", descriptionProperty().getValue()));
-            }
-            // creator can't be changed
-            
-            if (!projectProperty().get().equals(story.getProject())) {
-                if (story.getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(story, story.getBacklog().observableStories(), projectProperty().get().observableUnallocatedStories()));
+            addEditCommands.accept(changes);
+
+            if (!projectProperty().get().equals(modelWrapper.get().getProject())) {
+                if (modelWrapper.get().getBacklog() != null) {
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().observableStories(), projectProperty().get().observableUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(story, story.getProject().observableUnallocatedStories(), projectProperty().get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().observableUnallocatedStories(), projectProperty().get().observableUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
-                changes.add(new EditCommand<>(story, "backlog", null));
-                changes.add(new EditCommand<>(story, "project", projectProperty().get()));
+                changes.add(new EditCommand<>(modelWrapper.get(), "backlog", null));
+                changes.add(new EditCommand<>(modelWrapper.get(), "project", projectProperty().get()));
             }
 
-            if (priorityProperty().getValue() != story.getPriority()) {
-                changes.add(new EditCommand<>(story, "priority",priorityProperty().getValue()));
-            }
-
-            if (scaleProperty().getValue() != story.getScale()) {
-                changes.add(new EditCommand<>(story, "scale", scaleProperty().getValue()));
-            }
-
-            if (estimateProperty().getValue() != story.getEstimate()) {
-                changes.add(new EditCommand<>(story, "estimate", estimateProperty().getValue()));
-            }
-
-            if (!(dependenciesProperty.get().containsAll(story.getDependencies())
-                    && story.getDependencies().containsAll(dependenciesProperty.get()))) {
-                changes.add(new EditCommand<>(story, "dependencies", dependenciesProperty.get()));
+            if (!dependenciesProperty().equals(modelWrapper.get().getDependencies())) {
+                ArrayList<Story> dependencies = new ArrayList<>();
+                dependencies.addAll(dependenciesProperty().get());
+                changes.add(new EditCommand<>(modelWrapper.get(), "dependencies", dependencies));
             }
 
             // So that the table view gets update we need to remove a story from the observable lists
             // it is in and then re-add it. Checking if project and backlog are null to avoid null
             // pointer exception.
-            if (story.getProject() != null && story.getProject().getUnallocatedStories().contains(story)) {
-                story.getProject().getUnallocatedStories().remove(story);
-                story.getProject().getUnallocatedStories().add(story);
-            } else if (story.getBacklog() != null && story.getBacklog().getStories().contains(story)) {
-                story.getBacklog().getStories().remove(story);
-                story.getBacklog().getStories().add(story);
+            if (modelWrapper.get().getProject() != null && modelWrapper.get().getProject().getUnallocatedStories().contains(modelWrapper.get())) {
+                modelWrapper.get().getProject().getUnallocatedStories().remove(modelWrapper.get());
+                modelWrapper.get().getProject().getUnallocatedStories().add(modelWrapper.get());
+            } else if (modelWrapper.get().getBacklog() != null && modelWrapper.get().getBacklog().getStories().contains(modelWrapper.get())) {
+                modelWrapper.get().getBacklog().getStories().remove(modelWrapper.get());
+                modelWrapper.get().getBacklog().getStories().add(modelWrapper.get());
             }
-
-            valid = !changes.isEmpty();
             command = new CompoundCommand("Edit Story", changes);
         }
         return command;
@@ -340,8 +284,8 @@ public class StoryViewModel implements ViewModel {
      * @return if the story being created has any cyclic dependencies
      */
     public boolean hasCyclicDependency() {
-        for (Story dependency : dependenciesProperty.get()) {
-            if (checkCyclicDependency(dependency)) {
+        for (Story dependency : dependenciesProperty().get()) {
+            if (createsCycle(dependency)) {
                 return true;
             }
         }
@@ -354,13 +298,13 @@ public class StoryViewModel implements ViewModel {
      * @param dependency the dependency to check
      * @return boolean true if a cycle has been found
      */
-    private boolean checkCyclicDependency(Story dependency) {
+    private boolean createsCycle(Story dependency) {
         Stack<Node> stack = new Stack<>();
         stack.push(new Node(dependency));
 
         while (!stack.empty()) {
             Node n = stack.pop();
-            if (n.label.equals(story.getShortName())) {
+            if (n.label.equals(modelWrapper.get().getShortName())) {
                 return true;
             }
             if (!n.visited) {

@@ -1,14 +1,17 @@
 package com.thirstygoat.kiqo.gui.project;
 
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -19,9 +22,13 @@ import java.util.ResourceBundle;
  */
 public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initializable {
 
+    private FormButtonHandler formButtonHandler;
+
     @InjectViewModel
     ProjectFormViewModel viewModel;
     // Begin FXML Injections
+    @FXML
+    private Label heading;
     @FXML
     private TextField longNameTextField;
     @FXML
@@ -62,11 +69,23 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
         descriptionTextField.setPromptText("Describe this project.");
     }
 
+    public void setExitStrategy(Runnable exitStrategy) {
+        formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);
+    }
+
     public void okAction() {
-        viewModel.okAction();
+        if (formButtonHandler != null) {
+            formButtonHandler.okAction();
+        }
     }
 
     public void cancelAction() {
-        viewModel.cancelAction();
+        if (formButtonHandler != null) {
+            formButtonHandler.cancelAction();
+        }
+    }
+
+    public StringProperty headingTextProperty() {
+        return heading.textProperty();
     }
 }
