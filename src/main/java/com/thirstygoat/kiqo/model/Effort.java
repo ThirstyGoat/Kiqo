@@ -4,11 +4,15 @@ import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.BoundPropertySupport;
 import javafx.beans.Observable;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
 import java.beans.PropertyChangeListener;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,27 +23,26 @@ import java.util.List;
 public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
-    private final ObjectProperty<LocalDateTime> logTime;
-    private final ObjectProperty<LocalDateTime> endTime;
+    private final ObjectProperty<LocalDateTime> logTimeStamp;
+    private final ObjectProperty<LocalDate> endDate;
     private final ObjectProperty<Duration> duration;
     private final StringProperty comment;
-
     private final BoundPropertySupport bps = new BoundPropertySupport(this);
 
     public Effort() {
         this.person = new SimpleObjectProperty<>(null);
         this.task = new SimpleObjectProperty<>(null);
-        this.logTime = new SimpleObjectProperty<>(LocalDateTime.now());
-        this.endTime = new SimpleObjectProperty<>(LocalDateTime.now());
+        this.logTimeStamp = new SimpleObjectProperty<>(LocalDateTime.now());
+        this.endDate = new SimpleObjectProperty<>(LocalDate.now());
         this.duration = new SimpleObjectProperty<>(Duration.ofMinutes(0));
         this.comment = new SimpleStringProperty("");
     }
 
-    public Effort(Person person, Task task, LocalDateTime endTime, Duration duration, String comment) {
+    public Effort(Person person, Task task, LocalDate endDate, Duration duration, String comment) {
         this.person = new SimpleObjectProperty<>(person);
         this.task = new SimpleObjectProperty<>(task);
-        this.logTime = new SimpleObjectProperty<>(LocalDateTime.now());
-        this.endTime = new SimpleObjectProperty<>(endTime);
+        this.logTimeStamp = new SimpleObjectProperty<>(LocalDateTime.now());
+        this.endDate = new SimpleObjectProperty<>(endDate);
         this.duration = new SimpleObjectProperty<>(duration);
         this.comment = new SimpleStringProperty(comment);
     }
@@ -47,8 +50,8 @@ public class Effort implements BoundProperties, Searchable {
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(person);
         bps.addPropertyChangeSupportFor(task);
-        bps.addPropertyChangeSupportFor(logTime);
-        bps.addPropertyChangeSupportFor(endTime);
+        bps.addPropertyChangeSupportFor(logTimeStamp);
+        bps.addPropertyChangeSupportFor(endDate);
         bps.addPropertyChangeSupportFor(duration);
         bps.addPropertyChangeSupportFor(comment);
     }
@@ -85,28 +88,28 @@ public class Effort implements BoundProperties, Searchable {
         this.task.set(task);
     }
 
-    public LocalDateTime getLogTime() {
-        return logTime.get();
+    public LocalDateTime getLogTimeStamp() {
+        return logTimeStamp.get();
     }
 
     public ObjectProperty<LocalDateTime> logTime() {
-        return logTime;
+        return logTimeStamp;
     }
 
-    public void setLogTime(LocalDateTime logTime) {
-        this.logTime.set(logTime);
+    public void setLogTimeStamp(LocalDateTime logTimeStamp) {
+        this.logTimeStamp.set(logTimeStamp);
     }
 
-    public ObjectProperty<LocalDateTime> endTimeProperty() {
-        return endTime;
+    public ObjectProperty<LocalDate> endDateProperty() {
+        return endDate;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime.get();
+    public LocalDate getEndDate() {
+        return endDate.get();
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime.set(endTime);
+    public void setEndDate(LocalDate endDate) {
+        this.endDate.set(endDate);
     }
 
     public ObjectProperty<Duration> durationProperty() {
