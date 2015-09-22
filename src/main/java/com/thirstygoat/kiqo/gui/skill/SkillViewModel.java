@@ -105,9 +105,4 @@ public class SkillViewModel extends ModelViewModel<Skill> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	protected void afterLoad() {
-		// do nothing
-	}
 }
