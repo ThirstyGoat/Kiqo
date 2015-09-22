@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
  *
  */
 public class BacklogViewModel extends ModelViewModel<Backlog> {
-    private final ListProperty<Story> eligableStories;
-
     private final ObservableRuleBasedValidator shortNameValidator;
     private final FunctionBasedValidator<String> longNameValidator;
     private final FunctionBasedValidator<String> descriptionValidator;
@@ -39,9 +37,6 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     private final CompositeValidator allValidator;
 
     public BacklogViewModel() {
-
-        eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
-
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
         BooleanBinding rule2 = shortNameProperty().length().greaterThan(0);
@@ -89,14 +84,6 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     @Override
     protected Supplier<Backlog> modelSupplier() {
         return Backlog::new;
-    }
-
-    @Override
-    protected void afterLoad() {
-        eligableStories.setAll(storySupplier().get());
-        projectProperty().addListener(change -> {
-            eligableStories.setAll(storySupplier().get());
-        });
     }
 
     /**
@@ -224,8 +211,14 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
         return modelWrapper.field("stories", Backlog::getStories, Backlog::setStories, Collections.<Story>emptyList());
     }
 
-    public ListProperty<Story> eligableStories() {
-        return eligableStories;
+    public ListProperty<Story> eligibleStories() {
+        ListProperty<Story> eligibleStories =
+                        new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
+        projectProperty().addListener(change -> {
+            eligibleStories.setAll(storySupplier().get());
+        });
+        eligibleStories.setAll(storySupplier().get());
+        return eligibleStories;
     }
 
     public ValidationStatus shortNameValidation() {

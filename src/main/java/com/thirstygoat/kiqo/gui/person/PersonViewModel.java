@@ -28,8 +28,6 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class PersonViewModel extends ModelViewModel<Person> {
-    private ListProperty<Skill> availableSkills;
-
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator longNameValidator;
     private ObservableRuleBasedValidator userIdValidator;
@@ -40,18 +38,12 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private CompositeValidator allValidator;
 
     public PersonViewModel() {
-        availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
         createValidators();
     }
     
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
-    }
-
-    @Override
-    protected void afterLoad() {
-        availableSkills.setAll(availableSkillsSupplier.get());
     }
 
     /**
@@ -160,6 +152,12 @@ public class PersonViewModel extends ModelViewModel<Person> {
     }
 
     protected ListProperty<Skill> availableSkills() {
+        ListProperty<Skill> availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
+        organisationProperty().addListener(observable -> {
+            if (observable != null) {
+                availableSkills.setAll(availableSkillsSupplier.get());
+            }
+        });
         return availableSkills;
     }
     

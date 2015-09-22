@@ -27,10 +27,6 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
     }
 
     @Override
-    public void afterLoad() {
-    }
-
-    @Override
     public void commitEdit() {
         Command command = getCommand();
         if (command != null) {

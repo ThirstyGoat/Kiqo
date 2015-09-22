@@ -116,11 +116,6 @@ public class StoryViewModel extends ModelViewModel<Story> {
         return Story::new;
     }
 
-    @Override
-    public void afterLoad() {
-        // Don't need to do anything
-    }
-
     public Supplier<List<Project>> projectSupplier() {
         return () -> organisationProperty().get().getProjects();
     }
