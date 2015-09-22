@@ -54,6 +54,8 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     private CheckBox highlightCheckBox;
     @FXML
     private Hyperlink highlightHyperLink;
+    @FXML
+    private Hyperlink visualiseDependenciesHyperlink;
 
     private Label placeHolder = new Label();
 
@@ -128,5 +130,10 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
 
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
+    }
+
+    @FXML
+    private void visualiseDependencies() {
+        viewModel.visualiseDependencies();
     }
 }

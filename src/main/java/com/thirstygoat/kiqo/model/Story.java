@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatTree.HierarchicalData;
 import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by leroy on 15/05/15.
  */
-public class Story extends Item {
+public class Story extends Item implements HierarchicalData<Story> {
     public static final int DEFAULT_PRIORITY = 0;
     public static final int MAX_PRIORITY = 1000;
     public static final int MIN_PRIORITY = -1000;
@@ -302,5 +303,30 @@ public class Story extends Item {
 
     public BooleanProperty isReadyProperty() {
         return isReady;
+    }
+
+    @Override
+    public Story getItem() {
+        return this;
+    }
+
+    /**
+     * Loops over all of the stories in the backlog and check's each of their dependencies
+     * to see whether or not this story lies within, since we don't keep back references
+     * to what the story's dependents are.
+     * @return List of Stories that the story has as dependents
+     */
+    @Override
+    public List<HierarchicalData<Story>> getChildren() {
+        List<HierarchicalData<Story>> children = new ArrayList<>();
+        if (getBacklog() != null) {
+            for (Story story : getBacklog().getStories()) {
+                if (story.getDependencies().contains(this)) {
+                    children.add(story);
+                }
+            }
+        }
+
+        return children;
     }
 }

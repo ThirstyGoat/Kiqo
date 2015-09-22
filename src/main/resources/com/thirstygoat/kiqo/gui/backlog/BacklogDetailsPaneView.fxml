@@ -58,6 +58,7 @@
                         <Hyperlink fx:id="highlightHyperLink" text="What do these colours mean?" styleClass="helperlink" />
                      </children>
                     </HBox>
+                     <Hyperlink fx:id="visualiseDependenciesHyperlink" text="Visualise Story Dependencies" onAction="#visualiseDependencies" />
                     </children>
               </VBox>
           </content>
