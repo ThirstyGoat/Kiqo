@@ -39,21 +39,21 @@ public class CreateEffortCommandTest {
 
         command.execute();
 
-        Assert.assertTrue("Should have been added to the model", task.getLoggedEffort().contains(effort));
+        Assert.assertTrue("Should have been added to the model", task.getObservableLoggedEffort().contains(effort));
     }
 
     @Test
     public void testRemoveFromModel() throws Exception {
 
-        Assert.assertFalse("Shouldn't be in the model",task.getLoggedEffort().contains(effort));
+        Assert.assertFalse("Shouldn't be in the model",task.getObservableLoggedEffort().contains(effort));
 
         command.execute();
 
-        Assert.assertTrue("Should have been added to the model", task.getLoggedEffort().contains(effort));
+        Assert.assertTrue("Should have been added to the model", task.getObservableLoggedEffort().contains(effort));
 
         command.undo();
 
-        Assert.assertFalse("Shouldn't be in the model", task.getLoggedEffort().contains(effort));
+        Assert.assertFalse("Shouldn't be in the model", task.getObservableLoggedEffort().contains(effort));
 
     }
 }

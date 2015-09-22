@@ -1,9 +1,7 @@
 package com.thirstygoat.kiqo.gui.customCells;
 
 
-import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.model.Effort;
-import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -15,18 +13,9 @@ import javafx.scene.layout.VBox;
 
 public class EffortListCell extends ListCell<Effort> {
 
-    private EffortViewModel viewModel;
-    private Organisation organisation;
-
-    public EffortListCell(EffortViewModel viewModel) {
-        organisation = viewModel.organisationProperty().get();
-        this.viewModel = new EffortViewModel();
-    }
-
     @Override
     protected void updateItem(final Effort effort, final boolean empty) {
         if (!empty && effort != null) {
-            viewModel.load(effort, organisation);
 
             HBox effortRow = new HBox();
             effortRow.setFillHeight(true);

@@ -7,8 +7,8 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
@@ -133,7 +133,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
     }
 
     public ListProperty<Effort> loggedEffort() {
-        return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
+        return modelWrapper.field("loggedEffort", Task::getObservableLoggedEffort, Task::setLoggedEffort);
     }
 
     public ListProperty<Person> assignees() {

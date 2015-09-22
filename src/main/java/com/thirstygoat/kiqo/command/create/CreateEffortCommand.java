@@ -18,12 +18,12 @@ public class CreateEffortCommand extends CreateCommand {
 
     @Override
     protected void addToModel() {
-        task.getLoggedEffort().add(effort);
+        task.getObservableLoggedEffort().add(effort);
     }
 
     @Override
     protected void removeFromModel() {
-        task.getLoggedEffort().remove(effort);
+        task.getObservableLoggedEffort().remove(effort);
     }
 
     @Override

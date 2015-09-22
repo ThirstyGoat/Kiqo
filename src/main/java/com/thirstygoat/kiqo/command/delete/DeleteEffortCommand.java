@@ -17,11 +17,11 @@ public class DeleteEffortCommand extends DeleteCommand {
     }
 
     @Override protected void removeFromModel() {
-        task.getLoggedEffort().remove(effort);
+        task.getObservableLoggedEffort().remove(effort);
     }
 
     @Override protected void addToModel() {
-        task.getLoggedEffort().add(effort);
+        task.getObservableLoggedEffort().add(effort);
     }
 
     @Override public String getType() {

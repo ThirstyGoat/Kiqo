@@ -49,7 +49,7 @@ public class Task extends Item {
     
     public static Callback<Task, Observable[]> getWatchStrategy() {
         return p -> new Observable[] {p.shortNameProperty(), p.estimateProperty(), p.statusProperty(),
-                        p.getLoggedEffort(), p.getAssigneesObservable()};
+                        p.getObservableLoggedEffort(), p.getAssigneesObservable()};
     }
 
     @Override
@@ -80,10 +80,10 @@ public class Task extends Item {
     public FloatProperty spentEffortProperty() {
         FloatProperty spentEffort = new SimpleFloatProperty();
         spentEffort.bind(Bindings.createDoubleBinding(
-                () -> getLoggedEffort().stream()
+                () -> getObservableLoggedEffort().stream()
                         .mapToDouble(Effort::getDurationAsNumber)
                         .sum(),
-                getLoggedEffort()));
+                getObservableLoggedEffort()));
         return spentEffort;
     }
 
@@ -95,7 +95,11 @@ public class Task extends Item {
         this.impediments.setAll(impediments);
     }
 
-    public ObservableList<Effort> getLoggedEffort() {
+    public ObservableList<Effort> getObservableLoggedEffort() {
+        return loggedEffort;
+    }
+
+    public List<Effort> getLoggedEffort() {
         return loggedEffort;
     }
 

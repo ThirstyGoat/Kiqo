@@ -177,9 +177,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             story.isReadyProperty().addListener(modelIsReadyListener);
         } else {
             totalHoursLabel.setText("0.0");
-            System.out.println(isReadyCheckBox);
-            System.out.println(isReadyListener);
-            System.out.println(isReadyCheckBox.selectedProperty());
             storyEstimateSliderLabel.setText(null);
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
@@ -225,7 +222,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         totalLoggedHours.textProperty().bind(story.spentEffortProperty().asString());
 
         totalHoursLabel.setOnMouseClicked(event -> {
-            story.getTasks().get(0).getLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), Duration.ofMinutes(3), "blah"));
+            story.getTasks().get(0).getObservableLoggedEffort().add(new Effort(new Person(), story.getTasks().get(0), LocalDateTime.now(), Duration.ofMinutes(3), "blah"));
         });
     }
 

@@ -75,6 +75,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
             dateTime.plusMinutes(endTimeProperty.get().getMinute());
             endDateTimeProperty().setValue(dateTime);
         };
+        endDateTimeProperty().addListener((observable, oldValue, newValue) -> System.out.println(newValue));
 
         endDateProperty.addListener(listener);
         endTimeProperty.addListener(listener);
@@ -84,7 +85,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     @Override
     public void load(Effort item, Organisation organisation) {
         organisationProperty().set(organisation);
-        effort.setValue(item);
+        effortObjectProperty().setValue(item);
 
         if (item != null) {
             modelWrapper.set(item);
@@ -94,32 +95,6 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
             modelWrapper.commit();
         }
         reload();
-    }
-
-    public ListProperty<Person> eligibleAssignees() {
-        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-        Function<Task, List<Person>> getEligibleAssignees = task -> {
-            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
-                    .flatMap(release -> release.getSprints().stream())
-                    .filter(sprint -> sprint.getStories().contains(task.getStory()))
-                    .findAny();
-
-            if (sprintTaskBelongsTo.isPresent()) {
-                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
-                        .filter(person -> !task.getAssigneesObservable().contains(person))
-                        .collect(Collectors.toList());
-            } else {
-                return new ArrayList<Person>();
-            }
-        };
-
-        taskProperty().addListener((observable, oldValue, newValue) -> {
-            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
-        });
-        eligableAssignees.setAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<Person>());
-
-        return eligableAssignees;
     }
 
     @Override
@@ -146,7 +121,6 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
             command = changes.size() == 1 ? changes.get(0) : new CompoundCommand("Edit Effort", changes);
-
         }
         return command;
     }
@@ -173,7 +147,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     }
 
     public ObjectProperty<LocalDateTime> endDateTimeProperty() {
-        return modelWrapper.field("endDateTime", Effort::getEndDateTime, Effort::setEndDateTime, null);
+        return modelWrapper.field("endDateTime", Effort::getEndDateTime, Effort::setEndDateTime, LocalDateTime.now());
     }
 
     public ObjectProperty<Duration> durationProperty() {
@@ -210,5 +184,31 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     public ObjectProperty<Effort> effortObjectProperty() {
         return effort;
+    }
+
+    public ListProperty<Person> eligibleAssignees() {
+        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+        Function<Task, List<Person>> getEligibleAssignees = task -> {
+            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
+                    .flatMap(release -> release.getSprints().stream())
+                    .filter(sprint -> sprint.getStories().contains(task.getStory()))
+                    .findAny();
+
+            if (sprintTaskBelongsTo.isPresent()) {
+                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+                        .filter(person -> !task.getAssigneesObservable().contains(person))
+                        .collect(Collectors.toList());
+            } else {
+                return new ArrayList<>();
+            }
+        };
+
+        taskProperty().addListener((observable, oldValue, newValue) -> {
+            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        });
+        eligableAssignees.setAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
+
+        return eligableAssignees;
     }
 }

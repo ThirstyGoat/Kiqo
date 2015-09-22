@@ -1,7 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
-import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
@@ -22,7 +21,6 @@ import java.time.format.DateTimeParseException;
  * Created by samschofield on 22/09/15.
  */
 public class EffortLoggingPopover extends PopOver {
-    private Effort effort;
     private EffortViewModel viewModel;
 
     private TextField personSelector;
@@ -33,14 +31,14 @@ public class EffortLoggingPopover extends PopOver {
     private TextArea commentTextArea;
     private Button logButton;
 
-    public EffortLoggingPopover(Effort effort, EffortViewModel viewModel) {
+    public EffortLoggingPopover(EffortViewModel viewModel) {
         super();
-        this.effort = effort;
         this.viewModel = viewModel;
-        viewModel.effortObjectProperty().setValue(effort);
+//        viewModel.effortObjectProperty().setValue(effort);
+//        viewModel.load(effort, viewModel.organisationProperty().get());
         initContent();
-        populateFields();
         attachViewModel();
+        populateFields();
     }
 
     private void attachViewModel() {
@@ -72,12 +70,10 @@ public class EffortLoggingPopover extends PopOver {
             viewModel.durationProperty().set(calculateDuration());
         }));
 
-//        hourSpinner.setPrefWidth(60);
-//        minuteSpinner.setPrefWidth(60);
         minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
         hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
 
-        viewModel.commentProperty().bind(commentTextArea.textProperty());
+        viewModel.commentProperty().bindBidirectional(commentTextArea.textProperty());
 
         logButton.setOnAction(e -> {
             if (viewModel.allValidation().isValid()) {
@@ -88,13 +84,13 @@ public class EffortLoggingPopover extends PopOver {
     }
 
     private void populateFields() {
-        if (effort != null) {
-            personSelector.setText(effort.personProperty().getValue().getShortName());
-            endDatePicker.setValue(effort.endDateTimeProperty().getValue().toLocalDate());
-            timeTextField.setText(Utilities.TIME_FORMATTER.format(effort.endDateTimeProperty().getValue().toLocalTime()));
-            hourSpinner.setText(Long.toString(effort.durationProperty().get().toHours()));
-            minuteSpinner.setText(Long.toString(effort.durationProperty().get().toMinutes() % 60));
-            commentTextArea.setText(effort.commentProperty().getValue());
+        if (viewModel.effortObjectProperty().get() != null) {
+            personSelector.setText(viewModel.effortObjectProperty().get().personProperty().getValue().getShortName());
+            endDatePicker.setValue(viewModel.effortObjectProperty().get().endDateTimeProperty().getValue().toLocalDate());
+            timeTextField.setText(Utilities.TIME_FORMATTER.format(viewModel.effortObjectProperty().get().endDateTimeProperty().getValue().toLocalTime()));
+            hourSpinner.setText(Long.toString(viewModel.effortObjectProperty().get().durationProperty().get().toHours()));
+            minuteSpinner.setText(Long.toString(viewModel.effortObjectProperty().get().durationProperty().get().toMinutes() % 60));
+            commentTextArea.setText(viewModel.effortObjectProperty().get().commentProperty().getValue());
         }
     }
 
@@ -145,7 +141,6 @@ public class EffortLoggingPopover extends PopOver {
         timeVbox.getChildren().addAll(timeLabel, timeTextField);
 
         VBox durationVbox = new VBox();
-//        HBox.setHgrow(durationVbox, Priority.ALWAYS);
         HBox durationHbox = new HBox();
         durationHbox.setSpacing(5);
         Label durationLabel = new Label();
@@ -155,10 +150,8 @@ public class EffortLoggingPopover extends PopOver {
         hourSpinner = new TextField();
         hourSpinner.setPromptText("H");
         hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-//        HBox.setHgrow(hourSpinner, Priority.ALWAYS);
 
         minuteSpinner = new TextField();
-//        HBox.setHgrow(minuteSpinner, Priority.ALWAYS);
         minuteSpinner.setPromptText("M");
         minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
 

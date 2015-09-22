@@ -103,7 +103,7 @@ public class Story extends Item {
         spentEffort.bind(Bindings.createDoubleBinding(() -> {
                     double runningTotal = 0;
                     for (Task task : getTasks()) {
-                        runningTotal += task.getLoggedEffort().stream().mapToDouble(Effort::getDurationAsNumber).sum();
+                        runningTotal += task.getObservableLoggedEffort().stream().mapToDouble(Effort::getDurationAsNumber).sum();
                     }
                     return runningTotal;
                 },

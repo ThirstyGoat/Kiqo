@@ -1,5 +1,8 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.delete.DeleteEffortCommand;
 import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
@@ -127,35 +130,34 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
 
     private void initEffortLogging() {
-        EffortViewModel effortViewModel = new EffortViewModel();
-        effortViewModel.taskProperty().bind(viewModel.getTask());
-        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
+//        EffortViewModel effortViewModel = new EffortViewModel();
+//        effortViewModel.taskProperty().bind(viewModel.getTask());
+//        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
 
         newEffortButton.setOnAction(event -> {
             EffortViewModel e = new EffortViewModel();
-            e.taskProperty().bind(viewModel.getTask());
-            e.organisationProperty().bind(viewModel.organisationProperty());
-            PopOver p = new EffortLoggingPopover(null, e);
+            e.load(null, viewModel.organisationProperty().get());
+            e.taskProperty().setValue(viewModel.getTask().getValue());
+            PopOver p = new EffortLoggingPopover(e);
             Platform.runLater(() -> p.show(buttonsView));
         });
 
         editEffortButton.setOnAction(event -> {
             EffortViewModel e = new EffortViewModel();
-            e.taskProperty().bind(viewModel.getTask());
-            e.organisationProperty().bind(viewModel.organisationProperty());
-            PopOver p = new EffortLoggingPopover(loggedEffortListView.getSelectionModel().getSelectedItem(), e);
+            e.load(loggedEffortListView.getSelectionModel().getSelectedItem(), viewModel.organisationProperty().get());
+            e.taskProperty().setValue(viewModel.getTask().getValue());
+            PopOver p = new EffortLoggingPopover(e);
             Platform.runLater(() -> p.show(buttonsView));
         });
 
         deleteEffortIcon.setOnAction(event -> {
+            Command command = new DeleteEffortCommand(loggedEffortListView.getSelectionModel().getSelectedItem(), viewModel.getTask().get());
             viewModel.loggedEffort().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
-//            loggedEffortListView.getItems().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
-            viewModel.commitEdit();
-//            deleteEffort();
+            UndoManager.getUndoManager().doCommand(command);
         });
 
         loggedEffortListView.itemsProperty().bind(viewModel.loggedEffort());
-        loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
+        loggedEffortListView.setCellFactory((lv) -> new EffortListCell());
 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),

@@ -30,7 +30,6 @@ public class GoatLabelTextArea extends GoatLabel<TextArea> {
         skin.getEditField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 if (event.isShiftDown()) {
-                    System.out.println(getCustomMaxHeight());
                     //                    if (getEditField().getHeight() < getCustomMaxHeight()) {
                     int caretPos = getEditField().getCaretPosition();
                     getEditField().setText(
