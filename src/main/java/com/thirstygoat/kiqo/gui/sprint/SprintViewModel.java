@@ -46,10 +46,6 @@ public class SprintViewModel implements ViewModel {
         tasks = new SimpleListProperty<>(FXCollections.observableArrayList(Task.getWatchStrategy()));
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
         totalEstimatedHours = new SimpleFloatProperty(0);
-        totalEstimatedHours.addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
-        });
-
         goalValidator = new ObservableRuleBasedValidator();
 
         BooleanBinding uniqueShortName = Bindings.createBooleanBinding(

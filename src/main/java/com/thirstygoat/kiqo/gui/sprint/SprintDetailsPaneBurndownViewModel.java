@@ -34,14 +34,16 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
 
     public void draw() {
         drawTargetLine();
-        drawBurndownLine();
+//        drawBurndownLine();
         drawLoggedHoursLine();
     }
 
     private void drawLoggedHoursLine() {
         loggedHoursData.clear();
+        burndownData.clear();
 
         Queue<Effort> efforts = getTotalEffort();
+        Float totalEstimate = getTotalEstimate();
 
         if (efforts.isEmpty())
             return;
@@ -56,7 +58,9 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 accrued += effort.getDuration();
             } else {
                 XYChart.Data<LocalDate, Number> point = new XYChart.Data<>(currentDay, accrued);
+                XYChart.Data<LocalDate, Number> point2 = new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0));
                 loggedHoursData.add(point);
+                burndownData.add(point2);
 
                 currentEffort = effort;
                 currentDay = effort.getEndTime().toLocalDate();
@@ -64,7 +68,8 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
             }
         }
 
-        loggedHoursData.add(new XYChart.Data<>(sprintProperty().get().getEndDate(), accrued));
+        loggedHoursData.add(new XYChart.Data<>(currentDay, accrued));
+        burndownData.add(new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0)));
     }
 
     private void drawBurndownLine() {
@@ -110,6 +115,16 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         }
 
         return efforts;
+    }
+
+    private Float getTotalEstimate() {
+        Float totalEstimate = 0f;
+        for (Story story : sprintProperty().get().getStories()) {
+            for (Task task : story.getTasks()) {
+                totalEstimate += task.getEstimate();
+            }
+        }
+        return totalEstimate;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.scrumBoard.DateAxis;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Task;
@@ -8,6 +9,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 
@@ -28,6 +30,10 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
     private LineChart<LocalDate, Number> burndownChart;
     @FXML
     private Button button;
+    @FXML
+    private DateAxis xAxis;
+    @FXML
+    private NumberAxis yAxis;
 
     private XYChart.Series<LocalDate, Number> targetLineSeries = new XYChart.Series<>();
     private XYChart.Series<LocalDate, Number> loggedHoursSeries = new XYChart.Series<>();
@@ -39,14 +45,17 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
         loggedHoursSeries.dataProperty().bind(viewModel.loggedHoursDataProperty());
         burndownSeries.dataProperty().bind(viewModel.burndownDataProperty());
 
-
-
-        // style
-
-
         burndownChart.getData().addAll(targetLineSeries, loggedHoursSeries, burndownSeries);
         burndownChart.getXAxis().setAutoRanging(true);
-        
+
+        // style
+        burndownChart.setLegendVisible(false);
+        //        burndownChart.getXAxis().setTickLabelRotation(60); // need to have padding on the left because its uses the center
+
+
+        yAxis.setMinorTickVisible(false);
+
+
         button.setOnAction(event -> {
 //        	burndownChart.snapshot(snapshotResult -> {
 //        		WritableImage image = snapshotResult.getImage();
@@ -81,6 +90,7 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
             task.getLoggedEffort().add(new Effort(new Person(), task, LocalDateTime.of(2015, 8, 12, 0, 0), 1.0f, ""));
 
             viewModel.draw();
+
         });
 
     }
