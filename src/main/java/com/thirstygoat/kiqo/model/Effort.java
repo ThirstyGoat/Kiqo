@@ -47,44 +47,6 @@ public class Effort implements BoundProperties, Searchable {
         this.comment = new SimpleStringProperty(comment);
     }
 
-    public ObjectProperty<Person> personProperty() {
-        return person;
-    }
-
-    public ObjectProperty<Task> taskProperty() {
-        return task;
-    }
-
-    public ObjectProperty<LocalDateTime> logTime() {
-        return logTimeStamp;
-    }
-
-    public ObjectProperty<LocalDate> endDateProperty() {
-        return endDate;
-    }
-
-    public ObjectProperty<Duration> durationProperty() {
-        return duration;
-    }
-
-    public double getDurationAsNumber() {
-        return duration.get().toMinutes();
-    }
-
-    public StringProperty commentProperty() {
-        return comment;
-    }
-
-    @Override
-    public List<SearchableField> getSearchableStrings() {
-        List<SearchableField> searchStrings = new ArrayList<>();
-        return searchStrings;
-    }
-
-    public static Callback<Effort, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.duration};
-    }
-
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(person);
         bps.addPropertyChangeSupportFor(task);
@@ -100,5 +62,91 @@ public class Effort implements BoundProperties, Searchable {
 
     public final void removePropertyChangeListener(PropertyChangeListener listener) {
         this.bps.removeChangeListener(listener);
+    }
+
+    public ObjectProperty<Person> personProperty() {
+        return person;
+    }
+
+    public Person getPerson() {
+        return person.get();
+    }
+
+    public void setPerson(Person person) {
+        this.person.set(person);
+    }
+
+    public Task getTask() {
+        return task.get();
+    }
+
+    public ObjectProperty<Task> taskProperty() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task.set(task);
+    }
+
+    public LocalDateTime getLogTimeStamp() {
+        return logTimeStamp.get();
+    }
+
+    public ObjectProperty<LocalDateTime> logTime() {
+        return logTimeStamp;
+    }
+
+    public void setLogTimeStamp(LocalDateTime logTimeStamp) {
+        this.logTimeStamp.set(logTimeStamp);
+    }
+
+    public ObjectProperty<LocalDate> endDateProperty() {
+        return endDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate.get();
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate.set(endDate);
+    }
+
+    public ObjectProperty<Duration> durationProperty() {
+        return duration;
+    }
+
+    public Duration getDuration() {
+        return duration.get();
+    }
+
+    public double getDurationAsNumber() {
+        return duration.get().toMinutes();
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration.set(duration);
+    }
+
+    public StringProperty commentProperty() {
+        return comment;
+    }
+
+    public String getComment() {
+        return comment.get();
+    }
+
+    public void setComment(String comment) {
+        this.comment.set(comment);
+    }
+
+    @Override
+    public List<SearchableField> getSearchableStrings() {
+        List<SearchableField> searchStrings = new ArrayList<>();
+        return searchStrings;
+    }
+
+    public static Callback<Effort, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.duration};
     }
 }
