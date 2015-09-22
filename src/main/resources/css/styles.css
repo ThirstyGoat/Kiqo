@@ -336,6 +336,19 @@
     -fx-text-fill: #fff
 }
 
+/********** EFFORT LOGGING STYLING ************/
+
+.popover .label {
+    -fx-font: 11px "Roboto Italic";
+    -fx-text-fill: dimgray;
+}
+
+.popover .heading-label {
+    -fx-font: 15px "Roboto";
+    -fx-text-fill: #2e2e2f;
+}
+
+
 /********** FORM STYLING ************/
 .form-heading {
     -fx-font: 18px "Roboto";

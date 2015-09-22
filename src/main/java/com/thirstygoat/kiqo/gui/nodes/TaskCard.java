@@ -99,8 +99,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
+        iconBox.setOnMouseClicked(event1 -> {
+            TaskCardExpandedView.createLogEffortPopOver().show(this);
+        });
+
         // open the expanded card
-        setOnMouseClicked(event -> newExpandedCard());
+//        setOnMouseClicked(event -> newExpandedCard());
 
         impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.getImpediments()));
 
