@@ -8,7 +8,7 @@ import de.saxsys.mvvmfx.*;
 /**
  * Created by leroy on 15/09/15.
  */
-public class TeamMemberListItemView implements FxmlView<PersonListItemViewModel> {
+public class PersonListItemView implements FxmlView<PersonListItemViewModel> {
     @FXML
     private Label shortNameLabel;
     @FXML
