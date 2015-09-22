@@ -75,7 +75,6 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
             dateTime.plusMinutes(endTimeProperty.get().getMinute());
             endDateTimeProperty().setValue(dateTime);
         };
-        endDateTimeProperty().addListener((observable, oldValue, newValue) -> System.out.println(newValue));
 
         endDateProperty.addListener(listener);
         endTimeProperty.addListener(listener);
