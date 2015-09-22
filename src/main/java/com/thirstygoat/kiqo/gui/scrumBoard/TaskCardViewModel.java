@@ -76,6 +76,7 @@ public class TaskCardViewModel implements ViewModel, Editable {
             changes.add(new EditCommand<>(task.get(), "blocked", blockedProperty().get()));
         }
 
+
         if (changes.size() > 0) {
             command = new CompoundCommand("Edit Skill", changes);
         } else {

@@ -97,8 +97,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private TableColumn<Effort, LocalDateTime> endTimeTableColumn;
     @FXML
-    private VBox editView;
-    @FXML
     private VBox buttonsView;
     @FXML
     private Button newEffortButton;
@@ -140,11 +138,24 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
             Platform.runLater(() -> p.show(buttonsView));
         });
 
-        loggedEffortListView.setItems(viewModel.loggedEffort());
+        editEffortButton.setOnAction(event -> {
+            EffortViewModel e = new EffortViewModel();
+            e.taskProperty().bind(viewModel.getTask());
+            e.organisationProperty().bind(viewModel.organisationProperty());
+            PopOver p = new EffortLoggingPopover(loggedEffortListView.getSelectionModel().getSelectedItem(), e);
+            Platform.runLater(() -> p.show(buttonsView));
+        });
+
+        deleteEffortIcon.setOnAction(event -> {
+            viewModel.loggedEffort().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
+//            loggedEffortListView.getItems().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
+            viewModel.commitEdit();
+        });
+
+        loggedEffortListView.itemsProperty().bind(viewModel.loggedEffort());
         loggedEffortListView.setCellFactory((lv) -> new EffortListCell(effortViewModel));
 
     }
-
 
     private void initImpediments() {
         impedimentsListView.setCellFactory(param -> new ImpedimentListCell());

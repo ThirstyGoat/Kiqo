@@ -209,4 +209,8 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     public StringProperty endDateStringProperty() {
         return endDateStringProperty;
     }
+
+    public ObjectProperty<Effort> effortObjectProperty() {
+        return effort;
+    }
 }

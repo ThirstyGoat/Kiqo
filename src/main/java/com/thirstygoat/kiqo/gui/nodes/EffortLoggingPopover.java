@@ -37,6 +37,7 @@ public class EffortLoggingPopover extends PopOver {
         super();
         this.effort = effort;
         this.viewModel = viewModel;
+        viewModel.effortObjectProperty().setValue(effort);
         initContent();
         populateFields();
         attachViewModel();
@@ -76,7 +77,7 @@ public class EffortLoggingPopover extends PopOver {
         minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
         hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
 
-        commentTextArea.textProperty().bindBidirectional(viewModel.commentProperty());
+        viewModel.commentProperty().bind(commentTextArea.textProperty());
 
         logButton.setOnAction(e -> {
             if (viewModel.allValidation().isValid()) {
