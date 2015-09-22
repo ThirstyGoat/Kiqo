@@ -78,8 +78,8 @@ public class FilteredListBiControlSkin<S>
     }
     
     @Override
-    protected void showEditView() {
-        super.showEditView();
+    protected void enterEditMode() {
+        super.enterEditMode();
         editView.resetFilter();
     }
 }
