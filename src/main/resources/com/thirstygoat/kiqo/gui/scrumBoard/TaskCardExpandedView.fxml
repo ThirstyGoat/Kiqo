@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
    <children>
       <VBox maxHeight="400.0" maxWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -54,7 +55,7 @@
                                  <Insets bottom="2" top="10" />
                              </padding>
                          </Label>
-                         <Label fx:id="teamLabel" alignment="TOP_LEFT" text="Person 1, Person 2, Person 3, Person 4, Person 5... and 649 more" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                         <GoatLabelFilteredListSelectionView fx:id="assignedPeopleLabel" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                          <Label styleClass="expanded-task-headings" text="Description" GridPane.columnSpan="2" GridPane.rowIndex="4">
                              <padding>
                                  <Insets bottom="2" top="10" />
