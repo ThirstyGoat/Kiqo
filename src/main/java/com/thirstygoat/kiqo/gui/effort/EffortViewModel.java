@@ -8,10 +8,7 @@ import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -33,25 +30,23 @@ import java.util.stream.Collectors;
  * Created by leroy on 19/09/15.
  */
 public class EffortViewModel extends ModelViewModel<Effort> implements Editable {
-    private FunctionBasedValidator<Person> personValidator;
     private CompositeValidator allValidator;
-    private ObjectProperty<Effort> effort;
+    private FunctionBasedValidator<Person> personValidator;
+    private ObservableRuleBasedValidator endDateValidator;
+    private FunctionBasedValidator<LocalTime> endTimeValidator;
+    private FunctionBasedValidator<Duration> durationValidator;
+    private FunctionBasedValidator<String> commentValidator;
 
+    private ObjectProperty<Effort> effort;
     private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>(LocalDate.now());
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
-
     private StringProperty endDateStringProperty;
 
 
     public EffortViewModel() {
         super();
         // TODO check that person is in team associated with this sprint, when assignment is working.
-        personValidator = new FunctionBasedValidator<>(personProperty(),
-                person -> person != null && organisationProperty().get().getPeople().contains(person),
-                ValidationMessage.error("Person must exist"));
 
-        allValidator = new CompositeValidator();
-        allValidator.addValidators(personValidator);
         effort = new SimpleObjectProperty<>();
 
         endDateStringProperty = new SimpleStringProperty("");
@@ -79,6 +74,49 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         endDateProperty.addListener(listener);
         endTimeProperty.addListener(listener);
         endDateTimeProperty().setValue(LocalDateTime.now());
+
+        initValidation();
+    }
+
+    private void initValidation() {
+        allValidator = new CompositeValidator();
+
+        personValidator = new FunctionBasedValidator<>(personProperty(),
+                person -> person != null && organisationProperty().get().getPeople().contains(person),
+                ValidationMessage.error("Person must exist"));
+
+        endDateValidator = new ObservableRuleBasedValidator();
+        endDateValidator.addRule(
+                Bindings.createBooleanBinding(
+                        () -> {
+                            if (endDateProperty().get() == null) {
+                                return false;
+                            }
+                            return true;
+                        },
+                        endDateProperty),
+                ValidationMessage.error("Start date must precede end date"));
+
+        endTimeValidator = new FunctionBasedValidator<>(
+                endTimeProperty(),
+                Utilities.emptinessPredicate(),
+                ValidationMessage.error("Must specify time")
+        );
+
+
+        commentValidator = new FunctionBasedValidator<>(
+                commentProperty(),
+                Utilities.emptinessPredicate(),
+                ValidationMessage.error("Comment must be set")
+        );
+
+        durationValidator = new FunctionBasedValidator<>(
+                durationProperty(),
+                Utilities.emptinessPredicate(),
+                ValidationMessage.error("Duration must be set")
+        );
+
+        allValidator.addValidators(personValidator, endDateValidator, endTimeValidator, durationValidator, commentValidator);
     }
 
     @Override
@@ -167,22 +205,34 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         return endDateProperty;
     }
 
+    public ObjectProperty<Effort> effortObjectProperty() {
+        return effort;
+    }
+
     /** Validation **/
 
     public ValidationStatus personValidation() {
         return personValidator.getValidationStatus();
     }
 
+    public ValidationStatus endTimeValidation() {
+        return endTimeValidator.getValidationStatus();
+    }
+
+    public ValidationStatus endDateValidation() {
+        return endDateValidator.getValidationStatus();
+    }
+
+    public ValidationStatus commentValidation() {
+        return commentValidator.getValidationStatus();
+    }
+
+    public ValidationStatus durationValidation() {
+        return durationValidator.getValidationStatus();
+    }
+
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
-    }
-
-    public StringProperty endDateStringProperty() {
-        return endDateStringProperty;
-    }
-
-    public ObjectProperty<Effort> effortObjectProperty() {
-        return effort;
     }
 
     public ListProperty<Person> eligibleAssignees() {

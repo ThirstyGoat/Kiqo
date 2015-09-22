@@ -4,6 +4,8 @@ import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -34,11 +36,10 @@ public class EffortLoggingPopover extends PopOver {
     public EffortLoggingPopover(EffortViewModel viewModel) {
         super();
         this.viewModel = viewModel;
-//        viewModel.effortObjectProperty().setValue(effort);
-//        viewModel.load(effort, viewModel.organisationProperty().get());
         initContent();
         attachViewModel();
         populateFields();
+        attachValidators();
     }
 
     private void attachViewModel() {
@@ -49,7 +50,7 @@ public class EffortLoggingPopover extends PopOver {
         );
 
         endDatePicker.setValue(LocalDate.now());
-        viewModel.endDateProperty().bind(endDatePicker.valueProperty());
+        viewModel.endDateProperty().bindBidirectional(endDatePicker.valueProperty());
 
         timeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             LocalTime time;
@@ -75,6 +76,8 @@ public class EffortLoggingPopover extends PopOver {
 
         viewModel.commentProperty().bindBidirectional(commentTextArea.textProperty());
 
+        logButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
+
         logButton.setOnAction(e -> {
             if (viewModel.allValidation().isValid()) {
                 viewModel.commitEdit();
@@ -92,6 +95,15 @@ public class EffortLoggingPopover extends PopOver {
             minuteSpinner.setText(Long.toString(viewModel.effortObjectProperty().get().durationProperty().get().toMinutes() % 60));
             commentTextArea.setText(viewModel.effortObjectProperty().get().commentProperty().getValue());
         }
+    }
+
+    private void attachValidators() {
+        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        validationVisualizer.initVisualization(viewModel.personValidation(), personSelector, true);
+        validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);
+        validationVisualizer.initVisualization(viewModel.endTimeValidation(), timeTextField, true);
+        validationVisualizer.initVisualization(viewModel.commentValidation(), commentTextArea, true);
+        validationVisualizer.initVisualization(viewModel.durationValidation(), hourSpinner, true);
     }
 
 
