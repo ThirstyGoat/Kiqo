@@ -20,6 +20,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -46,24 +47,46 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     public EffortViewModel() {
         super();
+        // TODO check that person is in team associated with this sprint, when assignment is working.
         personValidator = new FunctionBasedValidator<>(personProperty(),
-                        person -> person != null && organisationProperty().get().getPeople().contains(person),
-//                        // TODO check that person is in team associated with this sprint, when assignment is working.
-                        ValidationMessage.error("Person must exist"));
+                person -> person != null && organisationProperty().get().getPeople().contains(person),
+                ValidationMessage.error("Person must exist"));
 
         allValidator = new CompositeValidator();
         allValidator.addValidators(personValidator);
         effort = new SimpleObjectProperty<>();
 
         endDateStringProperty = new SimpleStringProperty("");
-        endDateStringProperty.bind(Bindings.createStringBinding(() ->
-                endDateProperty().get() != null ? endDateProperty().get().format(Utilities.DATE_FORMATTER)
-                        : "", endDateProperty()));
+        endDateStringProperty.bind(
+                Bindings.createStringBinding(() -> endDateProperty().get() != null ?
+                        endDateProperty().get().format(Utilities.DATE_FORMATTER)
+                        : "", endDateProperty())
+        );
+
+        ChangeListener listener = (observable, oldValue, newValue) -> {
+            LocalDate endDate = endDateProperty.get();
+            LocalTime endTime = endTimeProperty().get();
+            if (endTime == null) {
+                endTime = LocalTime.now();
+            }
+            LocalDateTime dateTime = LocalDateTime.of(
+                    endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
+                    endTime.getHour(), endTime.getMinute()
+            );
+            dateTime.plusHours(endTimeProperty.get().getHour());
+            dateTime.plusMinutes(endTimeProperty.get().getMinute());
+            endDateTimeProperty().setValue(dateTime);
+        };
+
+        endDateProperty.addListener(listener);
+        endTimeProperty.addListener(listener);
+        endDateTimeProperty().setValue(LocalDateTime.now());
     }
 
     @Override
     public void load(Effort item, Organisation organisation) {
         organisationProperty().set(organisation);
+        effort.setValue(item);
 
         if (item != null) {
             modelWrapper.set(item);
@@ -72,10 +95,10 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
             modelWrapper.reset();
             modelWrapper.commit();
         }
-        effort.setValue(item);
         reload();
     }
 
+    //TODO use Leroys method for getting all eligable people
     public Supplier<List<Person>> eligablePeopleSupplier = () -> {
         if (organisationProperty().get() != null) {
             return organisationProperty().get().getPeople();
@@ -94,19 +117,16 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 //        endDateTimeProperty().bind(Bindings.createObjectBinding(() -> {
 //            LocalDate endDate = endDateProperty.get();
 //            LocalTime endTime = endTimeProperty().get();
-//
 //            LocalDateTime dateTime = LocalDateTime.of(
-//                    endDate.getYear(),
-//                    endDate.getMonth(),
-//                    endDate.getDayOfMonth(),
-//                    endTime.getHour(),
-//                    endTime.getMinute()
+//                    endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
+//                    endTime.getHour(), endTime.getMinute()
 //            );
-//
 //            dateTime.plusHours(endTimeProperty.get().getHour());
 //            dateTime.plusMinutes(endTimeProperty.get().getMinute());
 //            return dateTime;
 //        }, endDateProperty, endTimeProperty));
+
+
     }
 
     @Override
@@ -154,12 +174,8 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         return modelWrapper.field("task", Effort::getTask, Effort::setTask, null);
     }
 
-    public ObjectProperty<LocalDateTime> logTimePRoperty() {
-        return modelWrapper.field("logTime", Effort::getLogTime, Effort::setLogTime, LocalDateTime.now());
-    }
-
     public ObjectProperty<LocalDateTime> endDateTimeProperty() {
-        return modelWrapper.field("endTime", Effort::getEndTime, Effort::setEndTime, null);
+        return modelWrapper.field("endDateTime", Effort::getEndDateTime, Effort::setEndDateTime, null);
     }
 
     public ObjectProperty<Duration> durationProperty() {
@@ -172,12 +188,12 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     /** Extra Fields **/
 
-    public ObjectProperty<LocalDate> endDateProperty() {
-        return endDateProperty;
-    }
-
     public ObjectProperty<LocalTime> endTimeProperty() {
         return endTimeProperty;
+    }
+
+    public ObjectProperty<LocalDate> endDateProperty() {
+        return endDateProperty;
     }
 
     /** Validation **/

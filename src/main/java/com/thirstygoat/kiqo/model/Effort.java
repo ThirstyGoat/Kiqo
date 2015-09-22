@@ -12,7 +12,6 @@ import javafx.util.Callback;
 
 import java.beans.PropertyChangeListener;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
 public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
-    private final ObjectProperty<LocalDate> endDate;
+    private final ObjectProperty<LocalDateTime> endDateTime;
     private final ObjectProperty<Duration> duration;
     private final StringProperty comment;
     private final ObjectProperty<LocalDateTime> logTimeStamp;
@@ -33,16 +32,16 @@ public class Effort implements BoundProperties, Searchable {
         this.person = new SimpleObjectProperty<>(null);
         this.task = new SimpleObjectProperty<>(null);
         this.logTimeStamp = new SimpleObjectProperty<>(LocalDateTime.now());
-        this.endDate = new SimpleObjectProperty<>(LocalDate.now());
+        this.endDateTime = new SimpleObjectProperty<>(LocalDateTime.now());
         this.duration = new SimpleObjectProperty<>(Duration.ofMinutes(0));
         this.comment = new SimpleStringProperty("");
     }
 
-    public Effort(Person person, Task task, LocalDate endDate, Duration duration, String comment) {
+    public Effort(Person person, Task task, LocalDateTime endDateTime, Duration duration, String comment) {
         this.person = new SimpleObjectProperty<>(person);
         this.task = new SimpleObjectProperty<>(task);
         this.logTimeStamp = new SimpleObjectProperty<>(LocalDateTime.now());
-        this.endDate = new SimpleObjectProperty<>(endDate);
+        this.endDateTime = new SimpleObjectProperty<>(endDateTime);
         this.duration = new SimpleObjectProperty<>(duration);
         this.comment = new SimpleStringProperty(comment);
     }
@@ -51,7 +50,7 @@ public class Effort implements BoundProperties, Searchable {
         bps.addPropertyChangeSupportFor(person);
         bps.addPropertyChangeSupportFor(task);
         bps.addPropertyChangeSupportFor(logTimeStamp);
-        bps.addPropertyChangeSupportFor(endDate);
+        bps.addPropertyChangeSupportFor(endDateTime);
         bps.addPropertyChangeSupportFor(duration);
         bps.addPropertyChangeSupportFor(comment);
     }
@@ -100,16 +99,16 @@ public class Effort implements BoundProperties, Searchable {
         this.logTimeStamp.set(logTimeStamp);
     }
 
-    public ObjectProperty<LocalDate> endDateProperty() {
-        return endDate;
+    public ObjectProperty<LocalDateTime> endDateTimeProperty() {
+        return endDateTime;
     }
 
-    public LocalDate getEndDate() {
-        return endDate.get();
+    public LocalDateTime getEndDateTime() {
+        return endDateTime.get();
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate.set(endDate);
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime.set(endDateTime);
     }
 
     public ObjectProperty<Duration> durationProperty() {

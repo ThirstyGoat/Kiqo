@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
-<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
    <children>
       <VBox maxHeight="500.0" maxWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -91,27 +92,49 @@
 
                   <VBox fx:id="loggingVBox" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5">
                      <children>
-                         <HBox spacing="5.0">
-                             <TextField fx:id="personTextField" HBox.hgrow="ALWAYS" promptText="Select a person"/>
-                         </HBox>
-                         <HBox spacing="5" alignment="BASELINE_CENTER">
-                             <DatePicker fx:id="endDatePicker" />
-                             <TextField fx:id="endTimeTextField" prefWidth="130" />
-                             <Label text="H"/>
-                             <Spinner fx:id="hourSpinner" min="0" max="99" initialValue="0" HBox.hgrow="ALWAYS">
-                                 <editable>true</editable>
-                             </Spinner>
-                             <Label text="M"/>
-                             <Spinner fx:id="minuteSpinner" min="0" max="59" initialValue="0" HBox.hgrow="ALWAYS">
-                                 <editable>true</editable>
-                             </Spinner>
-                         </HBox>
-                         <HBox spacing="5.0">
+                         <StackPane>
                              <children>
-                                 <TextField fx:id="commentTextField" HBox.hgrow="ALWAYS" promptText="Write a comment..."/>
-                                 <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
+                             <VBox fx:id="editView">
+                                 <HBox spacing="5.0">
+                                     <TextField fx:id="personTextField" HBox.hgrow="ALWAYS" promptText="Select a person"/>
+                                 </HBox>
+                                 <HBox spacing="5" alignment="BASELINE_CENTER">
+                                     <DatePicker fx:id="endDatePicker" />
+                                     <TextField fx:id="endTimeTextField" prefWidth="130" />
+                                     <Label text="H"/>
+                                     <Spinner fx:id="hourSpinner" min="0" max="99" initialValue="0" HBox.hgrow="ALWAYS">
+                                         <editable>true</editable>
+                                     </Spinner>
+                                     <Label text="M"/>
+                                     <Spinner fx:id="minuteSpinner" min="0" max="59" initialValue="0" HBox.hgrow="ALWAYS">
+                                         <editable>true</editable>
+                                     </Spinner>
+                                 </HBox>
+                                 <HBox spacing="5.0">
+                                     <children>
+                                         <TextField fx:id="commentTextField" HBox.hgrow="ALWAYS" promptText="Write a comment..."/>
+                                         <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
+                                     </children>
+                                 </HBox>
+                             </VBox>
+                             <VBox fx:id="buttonsView">
+                                 <HBox alignment="BASELINE_RIGHT">
+                                     <Button fx:id="newEffortButton">
+                                         <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                                     </Button>
+                                     <Button fx:id="deleteEffortIcon">
+                                         <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                                     </Button>
+                                     <Button fx:id="editEffortButton">
+                                         <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                                     </Button>
+                                 </HBox>
+                             </VBox>
                              </children>
-                         </HBox>
+                         </StackPane>
+
+
+
                          <VBox fillWidth="true">
                              <ListView fx:id="loggedEffortListView"/>
                          </VBox>

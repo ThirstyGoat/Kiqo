@@ -11,6 +11,7 @@ import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -22,12 +23,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.LocalTimeStringConverter;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 
@@ -96,6 +99,17 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private TableColumn<Effort, Float> durationTableColumn;
     @FXML
     private TableColumn<Effort, LocalDateTime> endTimeTableColumn;
+    @FXML
+    private VBox editView;
+    @FXML
+    private VBox buttonsView;
+    @FXML
+    private Button newEffortButton;
+    @FXML
+    private Button deleteEffortIcon;
+    @FXML
+    private Button editEffortButton;
+
 
 
     @Override
@@ -116,7 +130,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     private void initEffortLogging() {
         EffortViewModel effortViewModel = new EffortViewModel();
         effortViewModel.taskProperty().bind(viewModel.getTask());
-
         effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
         viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
             FxUtils.setTextFieldSuggester(personTextField, effortViewModel.eligablePeopleSupplier.get());
@@ -127,18 +140,26 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 effortViewModel.personProperty(),
                 StringConverters.personStringConverter(effortViewModel.organisationProperty())
         );
+        endDatePicker.setValue(LocalDate.now());
+        effortViewModel.endDateProperty().bind(endDatePicker.valueProperty());
 
-        endDatePicker.valueProperty().bindBidirectional(effortViewModel.endDateProperty());
-
-        endTimeTextField.textProperty().bindBidirectional(effortViewModel.endTimeProperty(), new LocalTimeStringConverter());
+        endTimeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            LocalTime time;
+            try {
+                time = LocalTime.parse(newValue, Utilities.TIME_FORMATTER);
+                effortViewModel.endTimeProperty().setValue(time);
+            } catch (DateTimeParseException e) {
+            }
+        });
+        endTimeTextField.setText(LocalTime.now().format(Utilities.TIME_FORMATTER));
 
         effortViewModel.durationProperty().set(Duration.ofHours(0));
         hourSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
+            effortViewModel.durationProperty().set(calculateDuration());
         }));
 
         minuteSpinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            effortViewModel.durationProperty().set(Duration.ofHours(hourSpinner.getValue()).ofMinutes(minuteSpinner.getValue()));
+            effortViewModel.durationProperty().set(calculateDuration());
         }));
 
         hourSpinner.setPrefWidth(60);
@@ -156,6 +177,23 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 effortViewModel.commitEdit();
             }
         });
+
+        editView.setVisible(false);
+        editView.setManaged(false);
+
+        newEffortButton.setOnAction(event -> {
+            editView.setVisible(true);
+            editView.setManaged(true);
+
+            buttonsView.setVisible(false);
+            buttonsView.setManaged(false);
+        });
+
+    }
+
+    private Duration calculateDuration() {
+        int minutes = hourSpinner.getValue() * 60 + minuteSpinner.getValue();
+        return Duration.ofMinutes(minutes);
     }
 
 

@@ -2,11 +2,9 @@ package com.thirstygoat.kiqo.gui.customCells;
 
 
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -30,29 +28,28 @@ public class EffortListCell extends ListCell<Effort> {
         if (!empty) {
             viewModel.load(effort, organisation);
 
-            HBox row = new HBox();
-            row.setFillHeight(true);
-            row.setSpacing(10);
+            HBox effortRow = new HBox();
+            effortRow.setFillHeight(true);
+            effortRow.setSpacing(10);
 
             VBox infoCol = new VBox();
             infoCol.setSpacing(5);
             infoCol.setAlignment(Pos.TOP_RIGHT);
             infoCol.setFillWidth(false);
 
-            GoatLabelDatePicker dateLabel = new GoatLabelDatePicker();
-            dateLabel.setPrefWidth(-1);
-            FxUtils.initGoatLabel(dateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(), null);
+            Label dateLabel = new Label();
+            dateLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.endDateTimeProperty().get().toLocalDate())));
             infoCol.getChildren().add(dateLabel);
 
             Label timeLabel = new Label();
-//            timeLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.DATE_FORMATTER.format(effort.endTimeProperty().getValue())));
+            timeLabel.textProperty().bind(Bindings.createStringBinding(() -> Utilities.TIME_FORMATTER.format(effort.endDateTimeProperty().get().toLocalTime())));
             infoCol.getChildren().add(timeLabel);
 
             Label duration = new Label();
             duration.textProperty().bind(Bindings.createStringBinding(() ->
                     effort.durationProperty().getValue().toHours()
                             + "h "
-                            + effort.durationProperty().getValue().toMinutes()
+                            + (effort.durationProperty().getValue().toMinutes() % 60)
                             + "m"));
             infoCol.getChildren().add(duration);
 
@@ -63,17 +60,18 @@ public class EffortListCell extends ListCell<Effort> {
             nameLabel.textProperty().bind(effort.personProperty().get().shortNameProperty());
             commentCol.getChildren().add(nameLabel);
 
-            GoatLabelTextArea commentLabel = new GoatLabelTextArea();
-            FxUtils.initGoatLabel(commentLabel, viewModel, viewModel.commentProperty(), null, "");
+            Label commentLabel = new Label();
+            commentLabel.setWrapText(true);
+            commentLabel.textProperty().bind(effort.commentProperty());
             commentCol.getChildren().add(commentLabel);
             commentLabel.maxWidthProperty().bind(commentCol.widthProperty());
             HBox.setHgrow(commentCol, Priority.ALWAYS);
 
-            row.getChildren().addAll(infoCol, commentCol);
-            HBox.setHgrow(row, Priority.NEVER);
+            effortRow.getChildren().addAll(infoCol, commentCol);
+            HBox.setHgrow(effortRow, Priority.NEVER);
 
 
-            setGraphic(row);
+            setGraphic(effortRow);
         } else {
             // clear
             setGraphic(null);
