@@ -29,7 +29,11 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         super();
         sprintWrapper.dirtyProperty().addListener((observable, oldValue, newValue) -> draw());
         totalEstimatedHoursProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
+            System.out.println("total est property in SDPBVM: " + newValue);
+            draw();
+        });
+        spentHoursProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("total spent property in SDPBVM: " + newValue);
             draw();
         });
 

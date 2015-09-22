@@ -69,13 +69,25 @@ public class Sprint extends Item {
     public FloatProperty createTotalEstimateBinding() {
         FloatProperty totalEstimate = new SimpleFloatProperty(0.0f);
         totalEstimate.bind(Bindings.createDoubleBinding(() -> {
-                            double runningTotal = 0;
-                            for (Story story : getStories()) {
-                                runningTotal += story.totalEstimateProperty().get();
-                            }
-                            return runningTotal;
-                        }, getStories()));
+            double runningTotal = 0;
+            for (Story story : getStories()) {
+                runningTotal += story.totalEstimateProperty().get();
+            }
+            return runningTotal;
+        }, getStories()));
         return totalEstimate;
+    }
+
+    public FloatProperty createSpentEffortBinding() {
+        FloatProperty totalSpentEffort = new SimpleFloatProperty(0.0f);
+        totalSpentEffort.bind(Bindings.createDoubleBinding(() -> {
+            double runningTotal = 0;
+            for (Story story : getStories()) {
+                runningTotal += story.spentEffortProperty().get();
+            }
+            return runningTotal;
+        }, getStories()));
+        return totalSpentEffort;
     }
 
 

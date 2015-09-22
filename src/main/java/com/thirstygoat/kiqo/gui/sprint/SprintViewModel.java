@@ -37,6 +37,7 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     private final FloatProperty totalEstimatedHours;
+    private final FloatProperty spentHours;
     protected GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
 
     public SprintViewModel() {
@@ -46,6 +47,7 @@ public class SprintViewModel implements ViewModel {
         tasks = new SimpleListProperty<>(FXCollections.observableArrayList(Task.getWatchStrategy()));
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
         totalEstimatedHours = new SimpleFloatProperty(0);
+        spentHours = new SimpleFloatProperty(0);
         goalValidator = new ObservableRuleBasedValidator();
 
         BooleanBinding uniqueShortName = Bindings.createBooleanBinding(
@@ -172,14 +174,19 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
+            // TODO tidy this up and use a single property with a or property
             totalEstimatedHours.unbind();
             totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
+            spentHours.unbind();
+            spentHours.bind(sprint.createSpentEffortBinding());
             stories().clear();
             stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
             totalEstimatedHours.unbind();
             totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
+            spentHours.unbind();
+            spentHours.bind(sprint.createSpentEffortBinding());
             sprintWrapper.reset();
             sprintWrapper.commit();
             stories().clear();
@@ -436,5 +443,9 @@ public class SprintViewModel implements ViewModel {
 
     public FloatProperty totalEstimatedHoursProperty() {
         return totalEstimatedHours;
+    }
+
+    public FloatProperty spentHoursProperty() {
+        return spentHours;
     }
 }
