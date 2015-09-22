@@ -1,10 +1,13 @@
 package com.thirstygoat.kiqo.gui.view;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.MainController;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -45,6 +48,14 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
                 event.consume();
                 viewModel.closeSearch();
             } else if (event.getCode() == KeyCode.ENTER) {
+                if (viewModel.queryProperty().get().equals("times new roman")) {
+                    ObservableList<String> classes = MainController.getPrimaryStage().getScene().getRoot().getStyleClass();
+                    if (classes.contains("gag")) {
+                        classes.remove("gag");
+                    } else {
+                        classes.add("gag");
+                    }
+                }
                 event.consume();
                 viewModel.buttonAction(searchResultsListView.getSelectionModel().getSelectedItem());
             }

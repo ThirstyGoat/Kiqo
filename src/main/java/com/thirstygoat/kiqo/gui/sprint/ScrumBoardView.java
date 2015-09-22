@@ -41,30 +41,6 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
                     viewModel.currentlyDraggingStoryInitialIndex = scrumBoardVBox.getChildren().indexOf(viewModel.currentlyDraggingStoryRow);
                 }
 
-                // Below is WIP adding auto scroll support when dragging in the top/bottom 10%
-                // Check if the user is dragging in the bottom/top 10 percent
-                // If it is, then we need to scroll down accordingly
-//                double scrumBoardTopPos = 0;
-//                double scrumBoardBottomPos = scrollPane.getBoundsInParent().getMaxY() - scrollPane.getBoundsInParent().getMinY();
-//                double scrumBoardHeight = scrumBoardBottomPos - scrumBoardTopPos;
-//
-//                System.out.println(scrumBoardTopPos + " " + scrumBoardBottomPos + ", " + scrumBoardHeight);
-//
-//                double cursorPos = event.getY();
-//                System.out.println("Cursor pos: " + cursorPos);
-//
-//                boolean inTop = cursorPos >= scrumBoardTopPos && cursorPos <= (scrumBoardTopPos + 0.1*scrumBoardHeight);
-//                boolean inBottom = cursorPos <= scrumBoardBottomPos && cursorPos >= (scrumBoardBottomPos - 0.1*scrumBoardHeight);
-//                System.out.println("In top? " + inTop);
-//                System.out.println("In bottom? " + inBottom);
-//
-//                double scrollPos = scrollPane.getVvalue();
-//                if (inBottom) {
-//                    scrollPane.setVvalue(Math.max(1, scrollPos*1.1));
-//                } else if (inTop) {
-//                    scrollPane.setVvalue(scrollPos*0.9);
-//                }
-
                 int index = scrumBoardVBox.getChildren().indexOf(viewModel.currentlyDraggingStoryRow);
                 for (Node storyRow : scrumBoardVBox.getChildren()) {
                     double top = storyRow.getBoundsInParent().getMinY();
@@ -109,6 +85,7 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
 
     private void moveStoryRow(Node node, int index) {
         int initialIndex = scrumBoardVBox.getChildren().indexOf(node);
+
         // Check to make sure the node doesn't already appear at the index before removing/adding it
         if (initialIndex != index) {
             scrumBoardVBox.getChildren().remove(node);

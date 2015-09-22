@@ -7,6 +7,10 @@
     src: url("Roboto-Italic.ttf");
 }
 
+.gag * {
+    -fx-font-family: 'Times New Roman';
+}
+
 .title {
 	-fx-font-weight: bold;
 	-fx-font-size: 24px;
