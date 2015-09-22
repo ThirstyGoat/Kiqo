@@ -79,7 +79,6 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
             changes.add(new EditCommand<>(modelWrapper.get(), "assignees", new ArrayList<>(assignees().get())));
         }
 
-
         if (changes.size() > 0) {
             command = new CompoundCommand("Edit Skill", changes);
         } else {
@@ -195,7 +194,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
 
     @Override
     public void cancelEdit() {
-
+        modelWrapper.reload();
     }
 
     public void addImpediment() {

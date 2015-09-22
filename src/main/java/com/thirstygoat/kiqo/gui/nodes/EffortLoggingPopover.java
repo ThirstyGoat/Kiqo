@@ -44,7 +44,7 @@ public class EffortLoggingPopover extends PopOver {
     }
 
     private void attachViewModel() {
-        FxUtils.setTextFieldSuggester(personSelector, viewModel.eligablePeopleSupplier.get());
+        FxUtils.setTextFieldSuggester(personSelector, viewModel.eligibleAssignees());
         personSelector.textProperty().bindBidirectional(
                 viewModel.personProperty(),
                 StringConverters.personStringConverter(viewModel.organisationProperty())

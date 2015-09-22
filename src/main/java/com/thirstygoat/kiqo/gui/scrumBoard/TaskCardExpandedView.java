@@ -151,6 +151,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
             viewModel.loggedEffort().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
 //            loggedEffortListView.getItems().remove(loggedEffortListView.getSelectionModel().getSelectedItem());
             viewModel.commitEdit();
+//            deleteEffort();
         });
 
         loggedEffortListView.itemsProperty().bind(viewModel.loggedEffort());
@@ -158,15 +159,12 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                        viewModel.descriptionValidation());
+                viewModel.descriptionValidation());
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(),
-                        viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
+                viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
         blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> viewModel.commitEdit());
     }
-
-
-        
 
     private void initImpediments() {
         impedimentsListView.setCellFactory(param -> new ImpedimentListCell());

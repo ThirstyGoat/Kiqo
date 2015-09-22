@@ -6,21 +6,16 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateEffortCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Effort;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -28,8 +23,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Created by leroy on 19/09/15.
@@ -98,14 +96,31 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         reload();
     }
 
-    //TODO use Leroys method for getting all eligable people
-    public Supplier<List<Person>> eligablePeopleSupplier = () -> {
-        if (organisationProperty().get() != null) {
-            return organisationProperty().get().getPeople();
-        } else {
-            return new ArrayList<>();
-        }
-    };
+    public ListProperty<Person> eligibleAssignees() {
+        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+        Function<Task, List<Person>> getEligibleAssignees = task -> {
+            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
+                    .flatMap(release -> release.getSprints().stream())
+                    .filter(sprint -> sprint.getStories().contains(task.getStory()))
+                    .findAny();
+
+            if (sprintTaskBelongsTo.isPresent()) {
+                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+                        .filter(person -> !task.getAssigneesObservable().contains(person))
+                        .collect(Collectors.toList());
+            } else {
+                return new ArrayList<Person>();
+            }
+        };
+
+        taskProperty().addListener((observable, oldValue, newValue) -> {
+            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        });
+        eligableAssignees.setAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<Person>());
+
+        return eligableAssignees;
+    }
 
     @Override
     protected Supplier<Effort> modelSupplier() {
