@@ -2,10 +2,8 @@ package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -16,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 /**
  * Created by leroy on 16/09/15.
@@ -83,7 +80,7 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         isInEditMode.set(false); // fire change listener to enter display mode to begin
 	}
 
-	private void attachListeners() {
+	protected void attachListeners() {
         // prevent focusTraversal when hidden
         editButton.focusTraversableProperty().bind(editButton.visibleProperty());
         doneButton.focusTraversableProperty().bind(doneButton.visibleProperty());
@@ -147,9 +144,13 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         HBox.setHgrow(viewsPane, Priority.ALWAYS);
 
         // show/hide pencil
-        editButton.visibleProperty().bind(isInEditMode.not().and(parent.hoverProperty())); //TODO
+        editButton.visibleProperty().bind(isInEditMode.not().and(parent.hoverProperty()));
         
         return parent;
+    }
+    
+    protected boolean doneButtonIsFocused() {
+    	return doneButton.isFocused();
     }
 
     protected void onEditAction(ActionEvent event) {

@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -29,7 +31,7 @@ public class FilteredListBiControlSkin<S>
             Callback<ListView<S>, ListCell<S>> displayCellFactory, 
             Callback<S, Node> editCellFactory, 
             Callback<S, StringProperty> stringPropertyCallback) {
-        super(listBiControl, onCommit, onCancel, true);
+        super(listBiControl, onCommit, onCancel, false);
         
         displayView.setItems(listBiControl.selectedItems());
         displayView.setCellFactory(displayCellFactory != null 
@@ -37,7 +39,7 @@ public class FilteredListBiControlSkin<S>
                 : createDefaultCellFactory(stringPropertyCallback));
         
         editView.setTargetItems(listBiControl.selectedItems());
-        editView.setSourceItems(listBiControl.allItems());
+        editView.setSourceItems(listBiControl.unselectedItems());
         editView.setStringPropertyCallback(stringPropertyCallback);
         if (editCellFactory != null) {
             editView.setTargetCellGraphicFactory(editCellFactory);
@@ -81,5 +83,17 @@ public class FilteredListBiControlSkin<S>
     protected void enterEditMode() {
         super.enterEditMode();
         editView.resetFilter();
+    }
+    
+    @Override
+    protected void attachListeners() {
+    	super.attachListeners();
+    	editView._focusedProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> { // hacky stuff (fixes issue with focus being lost when clicking on segmented button
+                if (!editView._focusedProperty().get() && !newValue && !doneButtonIsFocused()) {
+                    onCancelAction(new ActionEvent());
+                }
+            });
+        });
     }
 }
