@@ -1,16 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -23,7 +22,6 @@ public class Project extends Item {
     private final ObservableList<Story> unallocatedStories;
     private final ObservableList<Allocation> allocations;
     private final ObservableList<Backlog> backlogs;
-//    private final ObservableList<Sprint> sprints;
     private final StringProperty description;
 
     /**
@@ -34,7 +32,6 @@ public class Project extends Item {
         unallocatedStories = FXCollections.observableArrayList(Item.getWatchStrategy());
         backlogs = FXCollections.observableArrayList();
         allocations = FXCollections.observableArrayList();
-//        sprints = FXCollections.observableArrayList();
         shortName = new SimpleStringProperty("");
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");

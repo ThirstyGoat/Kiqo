@@ -51,7 +51,6 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
             return story.getScale().getEstimates()[story.getEstimate() - 1];
         }, story.estimateProperty(), story.scaleProperty()));
 
-
         setTasks(story.getTasks());
         story.getTasks().addListener((ListChangeListener<Task>) c -> setTasks(story.getTasks()));
 
