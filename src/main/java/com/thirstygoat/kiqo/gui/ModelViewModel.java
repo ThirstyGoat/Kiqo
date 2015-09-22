@@ -9,6 +9,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -69,11 +70,14 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
     /**
      * Adds edit commands for all changed fields to the accepted list. Doesn't work for ListProperties.
      */
-    public Consumer<List<Command>> addEditCommands =
-            commands -> {
-                modelWrapper.getChangedFields().stream()
-                        .filter(field -> !field.getProperty().getClass().equals(SimpleListProperty.class))
-                        .forEach(field -> commands.add(new EditCommand<>(modelWrapper.get(), field.getFieldName(),
-                                field.getProperty().getValue())));
-            };
+    public Consumer<List<Command>> addEditCommands = commands -> {
+        modelWrapper.getChangedFields().stream()
+                .filter(field -> !field.getProperty().getClass().equals(SimpleListProperty.class))
+                .forEach(field -> commands.add(new EditCommand<>(modelWrapper.get(), field.getFieldName(),
+                        field.getProperty().getValue())));
+    };
+    
+    public ObservableValue<Boolean> dirtyProperty() {
+		return modelWrapper.dirtyProperty();
+	}
 }

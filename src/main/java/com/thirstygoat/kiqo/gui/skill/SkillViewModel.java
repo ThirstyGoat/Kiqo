@@ -3,21 +3,22 @@ package com.thirstygoat.kiqo.gui.skill;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.util.Utilities;
+
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
-import com.thirstygoat.kiqo.gui.Loadable;
-import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
 
 public class SkillViewModel extends ModelViewModel<Skill> {
 
@@ -54,7 +55,7 @@ public class SkillViewModel extends ModelViewModel<Skill> {
     @Override
 	public Command getCommand() {
         final Command command;
-        if (modelWrapper.get().getShortName().equals("")) { // edit
+        if (!modelWrapper.get().getShortName().equals("")) { // edit
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
             if (changes.size() > 0) {
@@ -88,21 +89,9 @@ public class SkillViewModel extends ModelViewModel<Skill> {
     protected ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }
-    
-    public void onFirstChanged(Runnable runnable) {
-    	ChangeListener<? super Boolean> listener = new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				runnable.run();
-	    		observable.removeListener(this); // this listener will only be fired once
-			}
-    	};
-		modelWrapper.dirtyProperty().addListener(listener);
-	}
 
 	@Override
 	protected Supplier<Skill> modelSupplier() {
-		// TODO Auto-generated method stub
-		return null;
+		return Skill::new;
 	}
 }

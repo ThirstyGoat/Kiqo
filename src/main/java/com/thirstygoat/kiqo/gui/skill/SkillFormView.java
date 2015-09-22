@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import de.saxsys.mvvmfx.*;
-import de.saxsys.mvvmfx.utils.validation.visualization.*;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 
 /**
  * Connects the GUI form to the viewModel. NB: Requires that {@link #setExitStrategy(Runnable)} is called.
@@ -52,11 +52,11 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     }
 
     private void attachValidators() {
-        viewModel.onFirstChanged(() -> {
-        	ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
-            validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
-            validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
-        });
+    	ControlsFxVisualizer validationVisualizer = new ControlsFxVisualizer();
+        validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
+        validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
+
+    	validationVisualizer.errorDecorationEnabledProperty().bind(viewModel.dirtyProperty());
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
