@@ -27,6 +27,7 @@ public class Sprint extends Item {
     private StringProperty longName;
     private StringProperty description;
     private ObservableList<Story> stories;
+    private ObjectProperty<Story> tasksWithoutStory;
 
     public Sprint() {
         backlog = new SimpleObjectProperty<>(null);
@@ -38,6 +39,7 @@ public class Sprint extends Item {
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
         stories = FXCollections.observableArrayList(Story.getWatchStrategy());
+        tasksWithoutStory = new SimpleObjectProperty<>(null);
     }
 
     public Sprint(String goal, String longName, String description, Backlog backlog, Release release,
@@ -51,6 +53,7 @@ public class Sprint extends Item {
         setTeam(team);
         setStartDate(startDate);
         setEndDate(endDate);
+        initialiseTasksWithoutStory();
         getStories().addAll(stories);
     }
 
@@ -64,6 +67,7 @@ public class Sprint extends Item {
         bps.addPropertyChangeSupportFor(goal);
         bps.addPropertyChangeSupportFor(longName);
         bps.addPropertyChangeSupportFor(description);
+        bps.addPropertyChangeSupportFor(tasksWithoutStory);
     }
 
 
@@ -143,6 +147,11 @@ public class Sprint extends Item {
 
     public ObjectProperty<LocalDate> endDateProperty() {
         return endDate;
+    }
+
+    public void initialiseTasksWithoutStory() {
+        this.tasksWithoutStory.set(new Story("Tasks without a Story","Tasks without a Story","", null, null, null, Integer.MIN_VALUE, Scale.FIBONACCI, 1, true, true));
+        stories.add(tasksWithoutStory.get());
     }
 
     public Team getTeam() {
