@@ -10,7 +10,7 @@ public class SkillDetailsPaneViewModel extends SkillViewModel implements Editabl
 
     @Override
     public void commitEdit() {
-        Command command = createCommand();
+        Command command = getCommand();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }

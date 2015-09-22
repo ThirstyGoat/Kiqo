@@ -1,13 +1,17 @@
 package com.thirstygoat.kiqo.gui.skill;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.gui.Loadable;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.*;
 
@@ -15,19 +19,14 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import de.saxsys.mvvmfx.utils.validation.*;
 
-public class SkillViewModel implements Loadable<Skill>, ViewModel {
-    private ModelWrapper<Skill> modelWrapper;    
-    private ObjectProperty<Skill> skill;
-    private ObjectProperty<Organisation> organisation;
+public class SkillViewModel extends ModelViewModel<Skill> {
 
     private ObservableRuleBasedValidator nameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
     
     public SkillViewModel() {
-        modelWrapper = new GoatModelWrapper<>();
-        skill = new SimpleObjectProperty<>(null);
-        organisation = new SimpleObjectProperty<>(null);
+    	super();
         createValidators();
     }
     
@@ -36,7 +35,7 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
             { 
                 if (organisationProperty().get() != null) {
-                    return Utilities.shortnameIsUnique(nameProperty().get(), skillProperty().get(), organisationProperty().get().getSkills());
+                    return Utilities.shortnameIsUnique(nameProperty().get(), modelWrapper.get(), organisationProperty().get().getSkills());
                 } else {
                     return true; // no organisation means this isn't for real yet.
                 }
@@ -52,38 +51,12 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
         allValidator = new CompositeValidator(nameValidator, descriptionValidator);
     }
 
-    /**
-     * @param skill model object to be displayed
-     * @param organisation (ignored)
-     */
     @Override
-    public void load(Skill skill, Organisation organisation) {
-        skillProperty().set(skill);
-        organisationProperty().set(organisation);
-        if (skill != null) {
-            modelWrapper.set(skill);
-        } else {
-            modelWrapper.set(new Skill());
-        }
-        modelWrapper.reload();
-    }
-
-    protected void reload() {
-        modelWrapper.reload();
-    }
-
-    protected Command createCommand() {
+	public Command getCommand() {
         final Command command;
-        if (skill.get() != null) { // edit
+        if (modelWrapper.get().getShortName().equals("")) { // edit
             final ArrayList<Command> changes = new ArrayList<>();
-    
-            if (nameProperty().get() != null && !nameProperty().get().equals(skill.get().getShortName())) {
-                changes.add(new EditCommand<>(skill.get(), "shortName", nameProperty().get()));
-            }
-            if (descriptionProperty().get() != null && !descriptionProperty().get().equals(skill.get().getDescription())) {
-                changes.add(new EditCommand<>(skill.get(), "description", descriptionProperty().get()));
-            }
-            
+            super.addEditCommands.accept(changes);
             if (changes.size() > 0) {
                 command = new CompoundCommand("Edit Skill", changes);
             } else {
@@ -103,14 +76,6 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     protected StringProperty descriptionProperty() {
         return modelWrapper.field("description", Skill::getDescription, Skill::setDescription, "");
     }
-
-    protected ObjectProperty<Skill> skillProperty() {
-        return skill;
-    }
-    
-    protected ObjectProperty<Organisation> organisationProperty() {
-        return organisation;
-    }
     
     protected ValidationStatus nameValidation() {
         return nameValidator.getValidationStatus();
@@ -123,4 +88,26 @@ public class SkillViewModel implements Loadable<Skill>, ViewModel {
     protected ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }
+    
+    public void onFirstChanged(Runnable runnable) {
+    	ChangeListener<? super Boolean> listener = new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				runnable.run();
+	    		observable.removeListener(this); // this listener will only be fired once
+			}
+    	};
+		modelWrapper.dirtyProperty().addListener(listener);
+	}
+
+	@Override
+	protected Supplier<Skill> modelSupplier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void afterLoad() {
+		// do nothing
+	}
 }

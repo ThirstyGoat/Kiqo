@@ -67,7 +67,7 @@ public abstract class ModelViewModel<T extends Item> implements ViewModel, Loada
     public abstract Command getCommand();
 
     /**
-     * Adds edit commands for all changed fields to the accepted list.
+     * Adds edit commands for all changed fields to the accepted list. Doesn't work for ListProperties.
      */
     public Consumer<List<Command>> addEditCommands =
             commands -> {
