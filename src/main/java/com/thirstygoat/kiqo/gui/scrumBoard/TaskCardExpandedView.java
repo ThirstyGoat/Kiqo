@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.scrumBoard;
 import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.gui.nodes.EffortLoggingPopover;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
@@ -10,32 +11,23 @@ import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.FxUtils;
-import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 
@@ -144,7 +136,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
             EffortViewModel e = new EffortViewModel();
             e.taskProperty().bind(viewModel.getTask());
             e.organisationProperty().bind(viewModel.organisationProperty());
-            PopOver p = createLogEffortPopOver(null, e);
+            PopOver p = new EffortLoggingPopover(null, e);
             Platform.runLater(() -> p.show(buttonsView));
         });
 
@@ -207,180 +199,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         node.setVisible(true);
     }
 
-    /**
-     * Creates a pop over populated with all the fields needed for logging effort
-     */
-    public static PopOver createLogEffortPopOver(Effort effort, EffortViewModel viewModel) {
-        PopOver popOver = new PopOver();
-        popOver.setAutoHide(true);
-        popOver.setDetachable(false);
-
-        /* Main content */
-        VBox content = new VBox();
-        content.setFillWidth(true);
-        content.setMaxWidth(300);
-        content.setMaxHeight(300);
-        content.setPadding(new Insets(5, 5, 5, 5));
-        content.setSpacing(5);
-
-        /* Heading */
-        Label heading = new Label();
-        heading.setText("Log effort");
-        heading.getStyleClass().add("heading-label");
-
-        /* Person */
-        VBox personVbox = new VBox();
-        Label personLabel = new Label();
-        personLabel.setText("Person");
-        TextField personSelector = new TextField();
-        personSelector.setPromptText("Select a person");
-        personVbox.getChildren().addAll(personLabel, personSelector);
-
-        /* Date + Time */
-        HBox dateTimeHbox = new HBox();
-        dateTimeHbox.setSpacing(5);
-
-        VBox dateVbox = new VBox();
-        Label dateLabel = new Label();
-        dateLabel.setText("Date");
-        DatePicker endDatePicker = new DatePicker();
-        endDatePicker.setValue(LocalDate.now());
-        dateVbox.getChildren().addAll(dateLabel, endDatePicker);
-
-        VBox timeVbox = new VBox();
-        Label timeLabel = new Label();
-        timeLabel.setText("Time");
-        TextField timeTextField = new TextField();
-        timeTextField.setText(Utilities.TIME_FORMATTER.format(LocalTime.now()));
-        timeVbox.getChildren().addAll(timeLabel, timeTextField);
-
-        VBox durationVbox = new VBox();
-        HBox durationHbox = new HBox();
-        durationHbox.setSpacing(5);
-        Label durationLabel = new Label();
-        durationLabel.setText("Duration");
-
-        TextField hourSpinner = new TextField();
-        hourSpinner.setPromptText("H");
-        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-        HBox.setHgrow(hourSpinner, Priority.ALWAYS);
-        hourSpinner.setPrefWidth(80);
-
-        TextField minuteSpinner = new TextField();
-        HBox.setHgrow(minuteSpinner, Priority.ALWAYS);
-        minuteSpinner.setPromptText("M");
-        minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
-        minuteSpinner.setPrefWidth(80);
-
-        durationHbox.getChildren().addAll(hourSpinner, minuteSpinner);
-        durationVbox.getChildren().addAll(durationLabel, durationHbox);
-
-        dateTimeHbox.getChildren().addAll(dateVbox, timeVbox, durationVbox);
-
-        /* Comment */
-        TextArea commentTextArea = new TextArea();
-        commentTextArea.setPromptText("Add a comment");
-        commentTextArea.setWrapText(true);
-
-        HBox buttonHbox = new HBox();
-        buttonHbox.setAlignment(Pos.BASELINE_RIGHT);
-        Button logButton = new Button();
-        logButton.getStyleClass().add(".form .form-button");
-        logButton.setText("Log");
-        buttonHbox.getChildren().add(logButton);
-
-        content.getChildren().setAll(heading, personVbox, dateTimeHbox, commentTextArea, buttonHbox);
-        popOver.setContentNode(content);
-
-
-
-        if (effort != null) {
-            personLabel.setText(effort.personProperty().getValue().getShortName());
-            endDatePicker.setValue(effort.endDateTimeProperty().getValue().toLocalDate());
-            timeTextField.setText(Utilities.TIME_FORMATTER.format(effort.endDateTimeProperty().getValue().toLocalTime()));
-            hourSpinner.setText(Long.toString(effort.durationProperty().get().toHours()));
-            minuteSpinner.setText(Long.toString(effort.durationProperty().get().toMinutes() % 60));
-            commentTextArea.setText(effort.commentProperty().getValue());
-        }
-
-        viewModel.organisationProperty().addListener((observable, oldValue, newValue) -> {
-            FxUtils.setTextFieldSuggester(personSelector, viewModel.eligablePeopleSupplier.get());
-        });
-        FxUtils.setTextFieldSuggester(personSelector, viewModel.eligablePeopleSupplier.get());
-
-        personSelector.textProperty().bindBidirectional(
-                viewModel.personProperty(),
-                StringConverters.personStringConverter(viewModel.organisationProperty())
-        );
-        endDatePicker.setValue(LocalDate.now());
-        viewModel.endDateProperty().bind(endDatePicker.valueProperty());
-
-        timeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            LocalTime time;
-            try {
-                time = LocalTime.parse(newValue, Utilities.TIME_FORMATTER);
-                viewModel.endTimeProperty().setValue(time);
-            } catch (DateTimeParseException e) {
-            }
-        });
-        timeTextField.setText(LocalTime.now().format(Utilities.TIME_FORMATTER));
-
-        viewModel.durationProperty().set(Duration.ofHours(0));
-        hourSpinner.textProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.durationProperty().set(Duration.ofMinutes(10));
-        }));
-
-        minuteSpinner.textProperty().addListener(((observable, oldValue, newValue) -> {
-            viewModel.durationProperty().set(Duration.ofMinutes(200));
-        }));
-
-        hourSpinner.setPrefWidth(60);
-        minuteSpinner.setPrefWidth(60);
-        minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
-        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-
-        commentTextArea.textProperty().bindBidirectional(viewModel.commentProperty());
-
-        logButton.setOnAction(e -> {
-            if (viewModel.allValidation().isValid()) {
-                viewModel.commitEdit();
-                popOver.hide();
-            }
-        });
-
-        return popOver;
-    }
-
-    private Duration calculateDuration() {
-        int minutes = hourSpinner.getValue() * 60 + minuteSpinner.getValue();
-        return Duration.ofMinutes(minutes);
-    }
-
-
-
-//    <VBox fx:id="editView">
-//    <HBox spacing="5.0">
-//    <TextField fx:id="personTextField" HBox.hgrow="ALWAYS" promptText="Select a person"/>
-//    </HBox>
-//    <HBox spacing="5" alignment="BASELINE_CENTER">
-//    <DatePicker fx:id="endDatePicker" />
-//    <TextField fx:id="endTimeTextField" prefWidth="130" />
-//    <Label text="H"/>
-//    <Spinner fx:id="hourSpinner" min="0" max="99" initialValue="0" HBox.hgrow="ALWAYS">
-//    <editable>true</editable>
-//    </Spinner>
-//    <Label text="M"/>
-//    <Spinner fx:id="minuteSpinner" min="0" max="59" initialValue="0" HBox.hgrow="ALWAYS">
-//    <editable>true</editable>
-//    </Spinner>
-//    </HBox>
-//    <HBox spacing="5.0">
-//    <children>
-//    <TextField fx:id="commentTextField" HBox.hgrow="ALWAYS" promptText="Write a comment..."/>
-//    <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
-//    </children>
-//    </HBox>
-//    </VBox>
 
 
 }
