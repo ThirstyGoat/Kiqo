@@ -192,7 +192,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
 
     @Override
     public void cancelEdit() {
-
+    	reload();
     }
 
     public void addImpediment() {
