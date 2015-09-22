@@ -1,16 +1,9 @@
 package com.thirstygoat.kiqo;
 
-import java.io.File;
-import java.util.Date;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
-
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
@@ -18,8 +11,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import java.io.File;
+import java.util.Date;
+import java.util.logging.*;
 
 /**
  * Main entry point for application
@@ -126,7 +120,7 @@ public class Main extends Application {
             if (db.hasFiles()) {
                 if (db.getFiles().size() > 1) {
                     GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
-                            "Drag and drop only supports individual files.");
+                                    "Drag and drop only supports individual files.");
                 } else {
                     final File file = db.getFiles().get(0);
                     mainController.openOrganisation(file);
@@ -142,6 +136,15 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
+            Platform.runLater(() -> {
+                MainController.focusedItemProperty
+                                .set(mainController.selectedOrganisationProperty().get().getProjects().get(0)
+                                                .getReleases().get(0).getSprints().get(0));
+                mainController.getDetailsPaneController().showDetailsPane(
+                                mainController.selectedOrganisationProperty().get().getProjects().get(0).getReleases()
+                                                .get(0).getSprints().get(0));
+            });
+
         }
     }
 }

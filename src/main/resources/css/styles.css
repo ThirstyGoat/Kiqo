@@ -509,14 +509,12 @@
 .default-color1.chart-series-line {
     -fx-stroke: #22bad9;
     -fx-stroke-width: 2.5;
-
 }
 
 
 .default-color2.chart-series-line {
     -fx-stroke: #a9e200;
     -fx-stroke-width: 2.5;
-
 }
 
 

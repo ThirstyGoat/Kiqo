@@ -28,17 +28,20 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
     public SprintDetailsPaneBurndownViewModel() {
         super();
         sprintWrapper.dirtyProperty().addListener((observable, oldValue, newValue) -> draw());
-        totalEstimatedHoursProperty().addListener((observable, oldValue, newValue) -> draw());
+        totalEstimatedHoursProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+            draw();
+        });
 
     }
 
     public void draw() {
+        System.out.println("calling draw");
         drawTargetLine();
-//        drawBurndownLine();
-        drawLoggedHoursLine();
+        drawLines();
     }
 
-    private void drawLoggedHoursLine() {
+    private void drawLines() {
         loggedHoursData.clear();
         burndownData.clear();
 
@@ -72,9 +75,6 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         burndownData.add(new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0)));
     }
 
-    private void drawBurndownLine() {
-        burndownData.clear();
-    }
 
     private void drawTargetLine() {
         targetLineData.clear();
@@ -113,7 +113,7 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 efforts.addAll(task.getLoggedEffort().stream().collect(Collectors.toList()));
             }
         }
-
+//        System.out.println("efforts: " + efforts);
         return efforts;
     }
 
@@ -124,6 +124,7 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 totalEstimate += task.getEstimate();
             }
         }
+//        System.out.println("total est: " + totalEstimate);
         return totalEstimate;
     }
 

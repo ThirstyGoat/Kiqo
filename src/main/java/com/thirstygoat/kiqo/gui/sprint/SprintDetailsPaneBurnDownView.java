@@ -88,8 +88,9 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
             task.getLoggedEffort().add(new Effort(new Person(), task, LocalDateTime.of(2015, 8, 7, 0, 0), 5.0f, ""));
             task.getLoggedEffort().add(new Effort(new Person(), task, LocalDateTime.of(2015, 8, 8, 0, 0), 1.0f, ""));
             task.getLoggedEffort().add(new Effort(new Person(), task, LocalDateTime.of(2015, 8, 12, 0, 0), 1.0f, ""));
+            System.out.println(task.getLoggedEffort());
 
-            viewModel.draw();
+//            viewModel.draw();
 
         });
 
