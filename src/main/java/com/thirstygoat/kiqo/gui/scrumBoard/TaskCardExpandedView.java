@@ -24,6 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
@@ -50,7 +51,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private GoatLabelTextField estimatedHoursLabel;
     @FXML
-    private VBox detailsVBox;
+    private GridPane detailsGridPane;
     @FXML
     private VBox loggingVBox;
     @FXML
@@ -193,7 +194,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 segmentedButton.getToggleGroup().selectToggle(oldValue);
             } else {
                 if (newValue == detailsToggleButton) {
-                    showNode(detailsVBox);
+                    showNode(detailsGridPane);
                 } else if (newValue == loggingToggleButton) {
                     showNode(loggingVBox);
                 }
@@ -210,7 +211,4 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         node.setManaged(true);
         node.setVisible(true);
     }
-
-
-
 }

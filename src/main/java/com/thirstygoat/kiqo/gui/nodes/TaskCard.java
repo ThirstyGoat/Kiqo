@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
 import com.thirstygoat.kiqo.model.Organisation;
@@ -24,6 +25,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import org.controlsfx.control.PopOver;
 
 
 /**
@@ -98,15 +100,20 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
-//        iconBox.setOnMouseClicked(event1 -> {
-//            EffortViewModel effortViewModel = new EffortViewModel();
-//            effortViewModel.taskProperty().bind(task);
-//            effortViewModel.organisationProperty().bind(organisationProperty);
-//            TaskCardExpandedView.createLogEffortPopOver(null, effortViewModel).show(this);
-//        });
+        timeTextFlow.setOnMouseClicked(event1 -> {
+            EffortViewModel e = new EffortViewModel();
+            e.load(null, organisationProperty.get());
+            e.taskProperty().setValue(task.getValue());
+            PopOver p = new EffortLoggingPopover(e);
+            Platform.runLater(() -> p.show(this));
+        });
 
         // open the expanded card
-        setOnMouseClicked(event -> newExpandedCard());
+        setOnMouseClicked(event -> {
+            if (!timeTextFlow.isHover()) {
+                newExpandedCard();
+            }
+        });
 
         impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.get().getImpediments()));
 

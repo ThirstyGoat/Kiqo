@@ -8,9 +8,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView">
    <children>
-      <VBox maxHeight="500.0" maxWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox maxHeight="400.0" maxWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
                <children>
@@ -31,85 +32,114 @@
                   <Insets bottom="10.0" />
                </padding>
             </HBox>
-            <AnchorPane fx:id="mainAnchorPane" prefHeight="500.0" prefWidth="500.0">
+            <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
-                   <VBox fx:id="detailsVBox">
-                       <children>
-                           <VBox>
-                               <children>
-                                   <HBox>
-                                       <children>
-                                           <VBox>
-                                               <children>
-                                                   <Label styleClass="expanded-task-headings" text="Estimated Hours">
-                                                       <padding>
-                                                           <Insets bottom="2" />
-                                                       </padding>
-                                                   </Label>
-                                                   <GoatLabelTextField fx:id="estimatedHoursLabel"/>
-                                               </children>
-                                           </VBox>
-                                           <Region HBox.hgrow="ALWAYS"/>
-                                           <VBox>
-                                               <children>
-                                                   <Label styleClass="expanded-task-headings" text="Blocked">
-                                                       <padding>
-                                                           <Insets bottom="2" right="5"/>
-                                                       </padding>
-                                                   </Label>
-                                                   <CheckBox fx:id="blockedCheckBox" mnemonicParsing="false"/>
-                                               </children>
-                                           </VBox>
-                                       </children>
-                                   </HBox>
-                                   <Label styleClass="expanded-task-headings" text="Assigned People">
-                                       <padding>
-                                           <Insets bottom="2" top="10" />
-                                       </padding>
-                                   </Label>
-                                   <GoatLabelFilteredListSelectionView fx:id="assignedPeopleLabel" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-                                   <Label styleClass="expanded-task-headings" text="Description">
-                                       <padding>
-                                           <Insets bottom="2" top="10" />
-                                       </padding>
-                                   </Label>
-                                   <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Description"/>
-                                   <ListView fx:id="impedimentsListView"/>
-                                   <HBox alignment="TOP_RIGHT">
-                                       <children>
-                                           <TextField fx:id="impedimentTextField" promptText="Impediment description..."/>
-                                           <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
-                                           <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
-                                       </children>
-                                   <VBox.margin>
-                                       <Insets top="10.0" />
-                                   </VBox.margin>
-                                   </HBox>
-                               </children>
-                           </VBox>
-                       </children>
-                   </VBox>
+                  <GridPane fx:id="detailsGridPane" maxHeight="170" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+                     <children>
+                         <!-- Estimated hours-->
+                         <Label styleClass="expanded-task-headings" text="Estimated Hours" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                             <padding>
+                                 <Insets bottom="2" />
+                             </padding>
+                         </Label>
+                         <!--<Label fx:id="estimatedHoursLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />-->
+                         <GoatLabelTextField fx:id="estimatedHoursLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                         <!-- Blocked status-->
+                         <Label styleClass="expanded-task-headings" text="Blocked" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                             <padding>
+                                 <Insets bottom="2" right="5"/>
+                             </padding>
+                         </Label>
+                         <CheckBox fx:id="blockedCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                         <!-- Rest of the fields-->
+                         <Label styleClass="expanded-task-headings" text="Assigned People" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                             <padding>
+                                 <Insets bottom="2" top="10" />
+                             </padding>
+                         </Label>
+                         <GoatLabelFilteredListSelectionView fx:id="assignedPeopleLabel" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                         <Label styleClass="expanded-task-headings" text="Description" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                             <padding>
+                                 <Insets bottom="2" top="10" />
+                             </padding>
+                         </Label>
+                         <GoatLabelTextArea fx:id="descriptionLabel" GridPane.rowIndex="5"  defaultText="Description" GridPane.columnSpan="2"/>
+                         <VBox VBox.vgrow="NEVER" GridPane.rowIndex="5" GridPane.columnSpan="2">
+                             <children>
+                                 <ListView fx:id="impedimentsListView" maxHeight="250.0" prefHeight="250.0" prefWidth="200.0" VBox.vgrow="NEVER" />
+                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                     <children>
+                                         <TextField fx:id="impedimentTextField" promptText="Impediment description..." HBox.hgrow="ALWAYS" />
+                                         <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
+                                         <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
+                                     </children>
+                                     <VBox.margin>
+                                         <Insets top="10.0" />
+                                     </VBox.margin>
+                                 </HBox>
+                             </children>
+                         </VBox>
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" percentWidth="50" />
+                        <ColumnConstraints hgrow="NEVER" percentWidth="50" halignment="RIGHT"/>
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="ALWAYS" />
+                     </rowConstraints>
+                  </GridPane>
 
-                  <VBox fx:id="loggingVBox" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5">
-                     <VBox fx:id="buttonsView">
-                         <HBox alignment="BASELINE_RIGHT">
-                             <Button fx:id="newEffortButton">
-                                 <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
-                             </Button>
-                             <Button fx:id="deleteEffortIcon">
-                                 <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
-                             </Button>
-                             <Button fx:id="editEffortButton">
-                                 <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
-                             </Button>
-                         </HBox>
-                     </VBox>
-                     <VBox fillWidth="true">
-                         <ListView fx:id="loggedEffortListView"/>
-                     </VBox>
-                  </VBox>
+                  <!--<GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
+                     <!--<children>-->
+                        <!--<HBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">-->
+                           <!--<children>-->
+
+                           <!--</children>-->
+                           <!--<padding>-->
+                              <!--<Insets top="3.0" />-->
+                           <!--</padding>-->
+                        <!--</HBox>-->
+                        <!--<HBox spacing="5.0" GridPane.columnIndex="1">-->
+                           <!--<children>-->
+                              <!--<TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />-->
+                              <!--<Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />-->
+                           <!--</children>-->
+                        <!--</HBox>-->
+                     <!--</children>-->
+                     <!--<columnConstraints>-->
+                        <!--<ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />-->
+                        <!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />-->
+                     <!--</columnConstraints>-->
+                     <!--<rowConstraints>-->
+                        <!--<RowConstraints minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />-->
+                     <!--</rowConstraints>-->
+                  <!--</GridPane>-->
+                   <VBox fx:id="loggingVBox" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5">
+                       <VBox fx:id="buttonsView">
+                           <HBox alignment="BASELINE_RIGHT">
+                               <Button fx:id="newEffortButton">
+                                   <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                               <Button fx:id="deleteEffortIcon">
+                                   <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                               <Button fx:id="editEffortButton">
+                                   <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                           </HBox>
+                       </VBox>
+                       <VBox fillWidth="true">
+                           <ListView fx:id="loggedEffortListView"/>
+                       </VBox>
+                   </VBox>
                </children>
             </AnchorPane>
+
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
