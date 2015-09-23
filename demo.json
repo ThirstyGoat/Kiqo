@@ -6667,7 +6667,7 @@
     "endDate": {
       "year": 2015,
       "month": 7,
-      "day": 31
+      "day": 14
     },
     "team": "0x253",
     "release": "0x255",
@@ -6724,6 +6724,7 @@
       "0x268",
       "0x269"
     ],
+    "taskHours": 0.0,
     "inSprint": true
   },
   "0x25d": {
@@ -6742,6 +6743,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": true
   },
   "0x25e": {
@@ -6760,6 +6762,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": false
   },
   "0x25f": {
@@ -6778,6 +6781,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": false
   },
   "0x260": {
@@ -6796,6 +6800,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": false
   },
   "0x261": {
@@ -6823,6 +6828,7 @@
       "0x275",
       "0x276"
     ],
+    "taskHours": 0.0,
     "inSprint": true
   },
   "0x262": {
@@ -6841,6 +6847,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": true
   },
   "0x263": {
@@ -6859,6 +6866,7 @@
     "dependencies": [],
     "isReady": true,
     "tasks": [],
+    "taskHours": 0.0,
     "inSprint": true
   },
   "0x264": {

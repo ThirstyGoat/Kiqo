@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -75,8 +76,8 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         while (efforts.peek() != null) {
             Effort effort = efforts.poll();
 
-            if (!effort.getEndTime().toLocalDate().isAfter(currentDay)) {
-                accrued += effort.getDuration();
+            if (!effort.getEndDateTime().toLocalDate().isAfter(currentDay)) {
+                accrued += (Utilities.durationToFloat(effort.getDuration()));
             } else {
                 XYChart.Data<LocalDate, Number> point = new XYChart.Data<>(currentDay, accrued);
                 XYChart.Data<LocalDate, Number> point2 = new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0));
@@ -84,8 +85,8 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 burndownData.add(point2);
 
                 currentEffort = effort;
-                currentDay = effort.getEndTime().toLocalDate();
-                accrued += currentEffort.getDuration();
+                currentDay = effort.getEndDateTime().toLocalDate();
+                accrued += Utilities.durationToFloat(currentEffort.getDuration());
             }
         }
 
@@ -123,7 +124,7 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
     }
 
     private Queue<Effort> getTotalEffort() {
-        Comparator<Effort> comparator = (o1, o2) -> o1.getEndTime().compareTo(o2.getEndTime());
+        Comparator<Effort> comparator = (o1, o2) -> o1.getEndDateTime().compareTo(o2.getEndDateTime());
         Queue<Effort> efforts = new PriorityQueue<>(comparator);
 
         for (Story story : sprintProperty().get().getStories()) {
@@ -131,9 +132,9 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 efforts.addAll(task.getLoggedEffort().stream().collect(Collectors.toList()));
             }
         }
-//        System.out.println("efforts: " + efforts);
         return efforts;
     }
+
 
     private Float getTotalEstimate() {
         Float totalEstimate = 0f;
@@ -142,7 +143,6 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 totalEstimate += task.getEstimate();
             }
         }
-//        System.out.println("total est: " + totalEstimate);
         return totalEstimate;
     }
 

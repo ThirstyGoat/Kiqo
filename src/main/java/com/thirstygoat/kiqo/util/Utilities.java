@@ -10,6 +10,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -217,5 +219,16 @@ public final class Utilities {
      */
     public static <T extends Object> Predicate<T> emptinessPredicate() {
         return (T o) -> o != null && !(o.toString().isEmpty());
+    }
+
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
+
+    public static float durationToFloat(Duration duration) {
+        Float hours = Float.valueOf(duration.toMinutes()) / 60;
+        return round(hours, 2);
     }
 }

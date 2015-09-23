@@ -1,21 +1,20 @@
 package com.thirstygoat.kiqo.util;
 
-import java.util.ArrayList;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
-
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
 
 
 /**
@@ -167,8 +166,10 @@ public class UtilitiesTest {
         longName.set("name");
         Assert.assertEquals("basic name suggestion is propagated", longName.get(), shortName.get());
         
-        longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH + " characters..................");
-        Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH, shortName.get().length());
+        longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH
+                        + " characters..................");
+        Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH,
+                        shortName.get().length());
         
         longName.set("shorter name again");
         Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
@@ -220,5 +221,15 @@ public class UtilitiesTest {
         Assert.assertTrue("Valid predicate, this shouldn't fail", predicate.test("has value"));
         Assert.assertFalse("Should be null.", predicate.test(null));
 
+    }
+
+    @Test
+    public void testDurationToFloat() {
+
+        Assert.assertTrue(Utilities.durationToFloat(Duration.ofHours(1).plusMinutes(62)) == 2.03f);
+        Assert.assertTrue(Utilities.durationToFloat(Duration.ofHours(1).plusMinutes(45)) == 1.75f);
+        Assert.assertTrue(Utilities.durationToFloat(Duration.ofHours(1).plusMinutes(30)) == 1.5f);
+        Assert.assertTrue(Utilities.durationToFloat(Duration.ofHours(1).plusMinutes(15)) == 1.25f);
+        Assert.assertTrue(Utilities.durationToFloat(Duration.ofHours(1).plusMinutes(0)) == 1.0f);
     }
 }

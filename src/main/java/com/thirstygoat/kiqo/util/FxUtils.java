@@ -27,6 +27,7 @@ import org.controlsfx.control.textfield.TextFields;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 

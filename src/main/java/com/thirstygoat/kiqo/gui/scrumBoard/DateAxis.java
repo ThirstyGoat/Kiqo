@@ -385,10 +385,8 @@ public final class DateAxis extends Axis<LocalDate> {
         calendar.setTimeInMillis(date.toEpochDay());
 
         if (actualInterval.interval == Calendar.YEAR && calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DATE) == 1) {
-            System.out.println("here");
             dateFormat = new SimpleDateFormat("yyyy");
         } else if (actualInterval.interval == Calendar.MONTH && calendar.get(Calendar.DATE) == 1) {
-            System.out.println("there");
             dateFormat = new SimpleDateFormat("MMM yy");
         } else {
             switch (actualInterval.interval) {
@@ -409,7 +407,7 @@ public final class DateAxis extends Axis<LocalDate> {
                     break;
             }
         }
-        return Utilities.DATE_TIME_FORMATTER.format(date);
+        return Utilities.DATE_FORMATTER.format(date);
     }
 
     /**
