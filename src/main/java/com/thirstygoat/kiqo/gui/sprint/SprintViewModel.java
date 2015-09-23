@@ -37,6 +37,7 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     private GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
+    private ObjectProperty<Story> tasksWithoutStory = new SimpleObjectProperty<>();
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
@@ -381,9 +382,8 @@ public class SprintViewModel implements ViewModel {
         return stories;
     }
 
-    public ListProperty<Task> tasks() {
-        return tasks;
-    }
+    public ObjectProperty<Story> tasksWithoutStoryProperty() {
+        return sprintWrapper.field("tasksWithoutStory", Sprint::getTasksWithoutStory, null); }
 
     public ListProperty<Story> eligableStories() {
         return eligableStories;

@@ -6598,7 +6598,8 @@
     },
     "sprints": [
       "0x25a",
-      "0x25b"
+      "0x25b",
+      "0x25c"
     ]
   },
   "0x256": {
@@ -6631,11 +6632,11 @@
   },
   "0x258": {
     "stories": [
-      "0x25c",
       "0x25d",
       "0x25e",
       "0x25f",
-      "0x260"
+      "0x260",
+      "0x261"
     ],
     "shortName": "Shared",
     "longName": "Shared Backlog",
@@ -6646,9 +6647,9 @@
   },
   "0x259": {
     "stories": [
-      "0x261",
       "0x262",
-      "0x263"
+      "0x263",
+      "0x264"
     ],
     "shortName": "Kiqo",
     "longName": "Kiqo",
@@ -6675,8 +6676,8 @@
     "longName": "Sprint 5",
     "description": "",
     "stories": [
-      "0x25c",
-      "0x25d"
+      "0x25d",
+      "0x25e"
     ]
   },
   "0x25b": {
@@ -6697,12 +6698,35 @@
     "longName": "6: NPE",
     "description": "",
     "stories": [
-      "0x262",
       "0x263",
-      "0x261"
+      "0x264",
+      "0x262"
     ]
   },
   "0x25c": {
+    "backlog": "0x259",
+    "startDate": {
+      "year": 2015,
+      "month": 9,
+      "day": 24
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 9,
+      "day": 25
+    },
+    "team": "0x254",
+    "release": "0x255",
+    "goal": "hola",
+    "longName": "hola",
+    "description": "",
+    "stories": [
+      "0x265",
+      "0x262"
+    ],
+    "tasksWithoutStory": "0x265"
+  },
+  "0x25d": {
     "shortName": "AC Maintenance",
     "longName": "AC Maintenance",
     "description": "",
@@ -6713,21 +6737,21 @@
     "estimate": 6,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x264",
-      "0x265"
+      "0x266",
+      "0x267"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [
-      "0x266",
-      "0x267",
       "0x268",
-      "0x269"
+      "0x269",
+      "0x26a",
+      "0x26b"
     ],
     "taskHours": 0.0,
     "inSprint": true
   },
-  "0x25d": {
+  "0x25e": {
     "shortName": "Story Estimation",
     "longName": "Story Estimation",
     "description": "",
@@ -6738,7 +6762,7 @@
     "estimate": 12,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26a"
+      "0x26c"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6746,7 +6770,7 @@
     "taskHours": 0.0,
     "inSprint": true
   },
-  "0x25e": {
+  "0x25f": {
     "shortName": "Dependencies",
     "longName": "Dependencies",
     "description": "",
@@ -6754,44 +6778,6 @@
     "project": "0x2",
     "backlog": "0x258",
     "priority": -100,
-    "estimate": 3,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26b"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x25f": {
-    "shortName": "Highlighting Storie",
-    "longName": "Highlighting story state",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 0,
-    "estimate": 7,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26c"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x260": {
-    "shortName": "UX 2",
-    "longName": "UX 2",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 6,
     "estimate": 3,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
@@ -6803,7 +6789,45 @@
     "taskHours": 0.0,
     "inSprint": false
   },
+  "0x260": {
+    "shortName": "Highlighting Storie",
+    "longName": "Highlighting story state",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 0,
+    "estimate": 7,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x26e"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
   "0x261": {
+    "shortName": "UX 2",
+    "longName": "UX 2",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 6,
+    "estimate": 3,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x26f"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
+  "0x262": {
     "shortName": "Basic Basic Search",
     "longName": "Basic Basic Search",
     "description": "",
@@ -6814,24 +6838,24 @@
     "estimate": 6,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26e",
-      "0x26f",
       "0x270",
       "0x271",
       "0x272",
-      "0x273"
+      "0x273",
+      "0x274",
+      "0x275"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [
-      "0x274",
-      "0x275",
-      "0x276"
+      "0x276",
+      "0x277",
+      "0x278"
     ],
     "taskHours": 0.0,
     "inSprint": true
   },
-  "0x262": {
+  "0x263": {
     "shortName": "UX 0.5",
     "longName": "UX 0.5",
     "description": "",
@@ -6842,7 +6866,7 @@
     "estimate": 5,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x277"
+      "0x279"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6850,7 +6874,7 @@
     "taskHours": 0.0,
     "inSprint": true
   },
-  "0x263": {
+  "0x264": {
     "shortName": "UX 1.5",
     "longName": "UX 1.5",
     "description": "",
@@ -6861,7 +6885,7 @@
     "estimate": 4,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x278"
+      "0x27a"
     ],
     "dependencies": [],
     "isReady": true,
@@ -6869,155 +6893,189 @@
     "taskHours": 0.0,
     "inSprint": true
   },
-  "0x264": {
-    "criteria": "When a story is selected, the editing options include updating acceptance criteria.",
-    "state": "ACCEPTED",
-    "story": "0x25c"
-  },
   "0x265": {
-    "criteria": "AC are edited/added inside the stories details pane and can be rejected/accepted/neither by a state change",
-    "state": "ACCEPTED",
-    "story": "0x25c"
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
+    "description": "",
+    "priority": -2147483648,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [
+      "0x27b"
+    ],
+    "taskHours": 0.0,
+    "inSprint": true
   },
   "0x266": {
+    "criteria": "When a story is selected, the editing options include updating acceptance criteria.",
+    "state": "ACCEPTED",
+    "story": "0x25d"
+  },
+  "0x267": {
+    "criteria": "AC are edited/added inside the stories details pane and can be rejected/accepted/neither by a state change",
+    "state": "ACCEPTED",
+    "story": "0x25d"
+  },
+  "0x268": {
     "shortName": "Create the AC model",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x25c",
+    "story": "0x25d",
     "impediments": [
-      "0x279"
+      "0x27c"
     ],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x267": {
+  "0x269": {
     "shortName": "Implement commands",
     "description": "Implement commands for AC model and unit test.",
     "estimate": 2.0,
     "blocked": false,
     "status": "DONE",
-    "story": "0x25c",
+    "story": "0x25d",
     "impediments": [
-      "0x27a"
+      "0x27d"
     ],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x268": {
+  "0x26a": {
     "shortName": "qwe",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "IN_PROGRESS",
-    "story": "0x25c",
+    "story": "0x25d",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x269": {
+  "0x26b": {
     "shortName": "123",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "VERIFY",
-    "story": "0x25c",
+    "story": "0x25d",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x26a": {
+  "0x26c": {
     "criteria": "Add estimation scales",
-    "state": "NEITHER",
-    "story": "0x25d"
-  },
-  "0x26b": {
-    "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25e"
   },
-  "0x26c": {
+  "0x26d": {
     "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25f"
   },
-  "0x26d": {
-    "criteria": "stuff is there",
+  "0x26e": {
+    "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x260"
   },
-  "0x26e": {
-    "criteria": "A basic search function is available via an appropriate menu item or toolbar",
-    "state": "ACCEPTED",
-    "story": "0x261"
-  },
   "0x26f": {
-    "criteria": "A search string can be entered in an appropriate dialog or other component.",
-    "state": "ACCEPTED",
+    "criteria": "stuff is there",
+    "state": "NEITHER",
     "story": "0x261"
   },
   "0x270": {
-    "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
+    "criteria": "A basic search function is available via an appropriate menu item or toolbar",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x262"
   },
   "0x271": {
-    "criteria": "When the search is complete the results are presented to the user",
+    "criteria": "A search string can be entered in an appropriate dialog or other component.",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x262"
   },
   "0x272": {
-    "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
+    "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x262"
   },
   "0x273": {
-    "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
+    "criteria": "When the search is complete the results are presented to the user",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x262"
   },
   "0x274": {
+    "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
+    "state": "ACCEPTED",
+    "story": "0x262"
+  },
+  "0x275": {
+    "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
+    "state": "ACCEPTED",
+    "story": "0x262"
+  },
+  "0x276": {
     "shortName": "Search Interface",
     "description": "Create search interface",
     "estimate": 3.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x261",
+    "story": "0x262",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x275": {
+  "0x277": {
     "shortName": "Search shortcut",
     "description": "Implement a shortchut for search",
     "estimate": 1.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x261",
+    "story": "0x262",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x276": {
+  "0x278": {
     "shortName": "Design view",
     "description": "Implement this design in FXML",
     "estimate": 1.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x261",
+    "story": "0x262",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
-  "0x277": {
+  "0x279": {
     "criteria": "ac",
-    "state": "NEITHER",
-    "story": "0x262"
-  },
-  "0x278": {
-    "criteria": "ac3",
     "state": "NEITHER",
     "story": "0x263"
   },
-  "0x279": {
+  "0x27a": {
+    "criteria": "ac3",
+    "state": "NEITHER",
+    "story": "0x264"
+  },
+  "0x27b": {
+    "shortName": "hi",
+    "description": "",
+    "estimate": 67.0,
+    "blocked": false,
+    "status": "IN_PROGRESS",
+    "story": "0x265",
+    "impediments": [],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x27c": {
     "impediments": "asd",
     "resolved": false
   },
-  "0x27a": {
+  "0x27d": {
     "impediments": "ewq",
     "resolved": false
   },

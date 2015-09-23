@@ -15,7 +15,6 @@ import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -33,7 +32,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
@@ -179,9 +177,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             story.isReadyProperty().addListener(modelIsReadyListener);
         } else {
             totalHoursLabel.setText("0.0");
-            System.out.println(isReadyCheckBox);
-            System.out.println(isReadyListener);
-            System.out.println(isReadyCheckBox.selectedProperty());
             storyEstimateSliderLabel.setText(null);
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
