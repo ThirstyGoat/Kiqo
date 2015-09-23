@@ -1,28 +1,21 @@
 package com.thirstygoat.kiqo.model;
 
-import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by samschofield on 23/07/15.
  */
 public enum Status {
-    NOT_STARTED("Not Started", Color.LIGHTGRAY, "not-started"),
-    IN_PROGRESS("In Progress", Color.LIGHTGOLDENRODYELLOW, "in-progress"),
-    PENDING("Pending", Color.LIGHTBLUE, "pending"),
-    VERIFY("Verify", Color.LIGHTGREEN, "verify"),
-    DONE("Done", Color.GREENYELLOW, "done"),
-    DEFERRED("Deferred", Color.LIGHTCORAL, "deferred");
+    NOT_STARTED("Not Started", "not-started"),
+    IN_PROGRESS("In Progress", "in-progress"),
+    VERIFY("Verify", "verify"),
+    DONE("Done", "done");
 
-    public Color color;
-    private String cssClass;
-    private String label;
-
-    private Status(String label, Color color, String cssClass) {
+    private final String cssClass;
+    private final String label;
+    
+    private Status(String label, String cssClass) {
         this.label = label;
-        this.color = color;
         this.cssClass = cssClass;
     }
 
@@ -30,7 +23,6 @@ public enum Status {
      * Return the status with the given label
      * @param label label of a Status
      * @return status with the given label
-     * @throws RuntimeException if label does not belong to any Status
      * @throws RuntimeException if label does not belong to any Status
      */
     public static Status getEnum(String label) {
