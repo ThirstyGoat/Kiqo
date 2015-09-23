@@ -130,7 +130,10 @@ public class Sprint extends Item {
         stories.add(tasksWithoutStory.get());
     }
 
-    public Story getTasksWithoutStory() { return tasksWithoutStory.get();}
+    public Story getTasksWithoutStory() {
+        return tasksWithoutStory.get();}
+
+    public void setTasksWithoutStory(Story tasksWithoutStory) { this.tasksWithoutStory.set(tasksWithoutStory); }
 
 
     public Team getTeam() {

@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
+import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
@@ -11,6 +12,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +39,6 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
     private GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
-    private ObjectProperty<Story> tasksWithoutStory = new SimpleObjectProperty<>();
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
@@ -164,6 +165,24 @@ public class SprintViewModel implements ViewModel {
 
         allValidator = new CompositeValidator(goalValidator, longNameValidator, backlogValidator, startDateValidator,
                 endDateValidator, teamValidator, releaseValidator, storiesValidator);
+    }
+
+    protected void deleteTasks(ObservableList<Task> tasks) {
+        Command command;
+        if (tasks.size() > 1) {
+            // Then we have to deal with a multi AC deletion
+            List<Command> commands = new ArrayList<>();
+            for (Task task : tasks) {
+
+                commands.add(new DeleteTaskCommand(task, tasksWithoutStoryProperty().get()));
+            }
+            command = new CompoundCommand("Delete Task", commands);
+        } else {
+            final Task task = tasks.get(0);
+            command = new DeleteTaskCommand(task, tasksWithoutStoryProperty().get());
+        }
+
+        UndoManager.getUndoManager().doCommand(command);
     }
 
     public void load(Sprint sprint, Organisation organisation) {
@@ -382,8 +401,10 @@ public class SprintViewModel implements ViewModel {
         return stories;
     }
 
+    public ListProperty<Task> tasks() {return tasks; }
+
     public ObjectProperty<Story> tasksWithoutStoryProperty() {
-        return sprintWrapper.field("tasksWithoutStory", Sprint::getTasksWithoutStory, null); }
+        return sprintWrapper.field("tasksWithoutStory", Sprint::getTasksWithoutStory, Sprint::setTasksWithoutStory); }
 
     public ListProperty<Story> eligableStories() {
         return eligableStories;
