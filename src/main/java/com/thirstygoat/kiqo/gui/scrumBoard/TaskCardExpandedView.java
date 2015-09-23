@@ -50,16 +50,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     @FXML
     private GoatLabelTextField estimatedHoursLabel;
     @FXML
-    private DatePicker endDatePicker;
-    @FXML
-    private TextField endTimeTextField;
-    @FXML
-    private Spinner<Integer> minuteSpinner;
-    @FXML
-    private Spinner<Integer> hourSpinner;
-    @FXML
-    private TextField commentTextField;
-    @FXML
     private VBox detailsVBox;
     @FXML
     private VBox loggingVBox;
