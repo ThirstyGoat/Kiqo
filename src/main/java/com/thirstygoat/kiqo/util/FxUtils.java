@@ -338,9 +338,13 @@ public final class FxUtils {
         scene.setOnKeyPressed(event -> {
             // Check if Shortcut + Z was pressed
             if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.Z) {
-                MainController.menuBarView.undo();
+                try {
+                    MainController.menuBarView.undo();
+                } catch (NoSuchElementException ignored) {}
             } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.Z) {
-                MainController.menuBarView.redo();
+                try {
+                    MainController.menuBarView.redo();
+                } catch (NoSuchElementException ignored) {}
             } else if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.S) {
                 MainController.menuBarView.save();
             } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.S) {
