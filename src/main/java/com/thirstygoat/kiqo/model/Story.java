@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.model;
 
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.DirectedData;
 import com.thirstygoat.kiqo.search.SearchableField;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by leroy on 15/05/15.
  */
-public class Story extends Item {
+public class Story extends Item implements DirectedData<Story> {
     public static final int DEFAULT_PRIORITY = 0;
     public static final int MAX_PRIORITY = 1000;
     public static final int MIN_PRIORITY = -1000;
@@ -326,5 +327,24 @@ public class Story extends Item {
 
     public BooleanProperty isReadyProperty() {
         return isReady;
+    }
+
+    @Override
+    public Story get() {
+        return this;
+    }
+
+    @Override
+    public List<DirectedData<Story>> getDirectedChildren() {
+        List<DirectedData<Story>> children = new ArrayList<>();
+        if (getBacklog() != null) {
+            for (Story story : getBacklog().getStories()) {
+                if (story.getDependencies().contains(this)) {
+                    children.add(story);
+                }
+            }
+        }
+
+        return children;
     }
 }

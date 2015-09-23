@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import org.python.core.PyFunction;
@@ -13,19 +14,19 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 23/09/15.
  */
-public class GraphVisualiser<T> extends Pane {
-
-    private ObservableList<Vertex<T>> vertices = FXCollections.observableArrayList();
-    private ObservableList<Edge<T>> edges = FXCollections.observableArrayList();
+public class GraphVisualiser<T> extends FlowPane {
     private Callback<T, Node> nodeCallback = t -> new Label("X");
 
     private Map<String, Vertex<T>> vertexMap = new HashMap<>();
+
+    private ObservableList<Vertex<T>> vertices = FXCollections.observableArrayList();
+    private ObservableList<Edge<T>> edges = FXCollections.observableArrayList();
 
     public GraphVisualiser() {
     }
@@ -43,7 +44,20 @@ public class GraphVisualiser<T> extends Pane {
         getChildren().add(a);
     }
 
-    public void computePositions() {
+    public void go() {
+
+    }
+
+    private Set<Vertex<T>> getConnected(Vertex<T> vertex) {
+        return null;
+    }
+
+    private void addEdgeToSet(Edge<T> edge, Set<Vertex<T>> vertices) {
+        vertices.add(edge.getStart());
+        vertices.add(edge.getEnd());
+    }
+
+    private void computePositions(ObservableList<Vertex<T>> vertices, ObservableList<Edge<T>> edges) {
         String resourcePath = getClass().getClassLoader().getResource("grandalf/").getFile();
 
         PythonInterpreter py = new PythonInterpreter();
@@ -55,27 +69,27 @@ public class GraphVisualiser<T> extends Pane {
         PyFunction createVertexFunction = (PyFunction)py.get("createVertex");
         PyFunction createEdgeFunction = (PyFunction)py.get("createEdge");
 
-        PyList vertices = new PyList();
-        PyList edges = new PyList();
+        PyList verticesPy = new PyList();
+        PyList edgesPy = new PyList();
 
         Map<String, PyObject> pyObjectMap = new HashMap<>();
 
         // Iterate over all vertices and create PyObject representing vertex
-        for (Vertex<T> vertex : getVertices()) {
+        for (Vertex<T> vertex : vertices) {
             String hash = String.valueOf(vertex.hashCode());
             vertexMap.put(hash, vertex);
             PyObject v = createVertexFunction.__call__(new PyString(hash));
             pyObjectMap.put(hash, v);
-            vertices.add(v);
+            verticesPy.add(v);
         }
 
-        for (Edge<T> edge : getEdges()) {
+        for (Edge<T> edge : edges) {
             PyObject start = pyObjectMap.get(String.valueOf(edge.getStart().hashCode()));
             PyObject end = pyObjectMap.get(String.valueOf(edge.getEnd().hashCode()));
-            edges.add(createEdgeFunction.__call__(start, end));
+            edgesPy.add(createEdgeFunction.__call__(start, end));
         }
 
-        PyList positions = (PyList)getVertexPositions.__call__(vertices, edges);
+        PyList positions = (PyList)getVertexPositions.__call__(verticesPy, edgesPy);
 
         for (Object list : positions) {
             PyList l = (PyList)list;
@@ -86,15 +100,16 @@ public class GraphVisualiser<T> extends Pane {
             vertex.xPosProperty().set(xPos);
             vertex.yPosProperty().set(yPos);
         }
-        drawGraph();
+
+        getChildren().add(drawGraph(vertices, edges));
     }
 
-    private double getMinXPos() {
-        return getVertices().stream().mapToDouble(vertex -> vertex.xPosProperty().get()).min().getAsDouble();
+    private double getMinXPos(List<Vertex<T>> vertices) {
+        return vertices.stream().mapToDouble(vertex -> vertex.xPosProperty().get()).min().getAsDouble();
     }
 
-    private double getMinYPos() {
-        return getVertices().stream().mapToDouble(vertex -> vertex.yPosProperty().get()).min().getAsDouble();
+    private double getMinYPos(List<Vertex<T>> vertices) {
+        return vertices.stream().mapToDouble(vertex -> vertex.yPosProperty().get()).min().getAsDouble();
     }
 
     private double getMidX(Node node) {
@@ -120,53 +135,61 @@ public class GraphVisualiser<T> extends Pane {
      * @param source
      * @param destination
      */
-    private void drawBranch(Node source, Node destination) {
+    private void drawBranch(Node source, Node destination, Pane section) {
         // Strange things happen when this line is removed.
         boundsInParentProperty().addListener((obs, oldV, newV) -> {
         });
 
         Arrow line = new Arrow();
 
-
         line.layoutXProperty().bind(Bindings.createDoubleBinding(() -> getMidX(source), boundsInParentProperty()));
         line.layoutYProperty().bind(Bindings.createDoubleBinding(() -> getMidY(source), boundsInParentProperty()));
         line.endYProperty().bind(Bindings.createDoubleBinding(() -> getHeightBetween(source, destination), boundsInParentProperty()));
         line.endXProperty().bind(Bindings.createDoubleBinding(() -> getWidthBetween(source, destination), boundsInParentProperty()));
 
-        getChildren().add(line);
+        section.getChildren().add(line);
         line.toBack();
-
-
-
-//        source.localToScene(source.getBoundsInParent());
     }
 
-    private void drawGraph() {
-        double xOffset = Math.min(0, getMinXPos());
-        double yOffset = Math.min(0, getMinYPos());
+    private double getAngleBetweenNodes(Node source, Node destination) {
+        double x1 = (source.getLayoutBounds().getMinX() + source.getLayoutBounds().getMaxX()) / 2;
+        double y1 = (source.getLayoutBounds().getMinY() + source.getLayoutBounds().getMaxY()) / 2;
+
+        double x2 = (destination.getLayoutBounds().getMinX() + destination.getLayoutBounds().getMaxX()) / 2;
+        double y2 = (destination.getLayoutBounds().getMinY() + destination.getLayoutBounds().getMaxY()) / 2;
+
+        return 0; // TODO In Progress
+    }
+
+    private Pane drawGraph(ObservableList<Vertex<T>> vertices, ObservableList<Edge<T>> edges) {
+        Pane pane = new Pane();
+        double xOffset = Math.min(0, getMinXPos(vertices));
+        double yOffset = Math.min(0, getMinYPos(vertices));
 
         Map<Vertex<T>, Node> vertexNodeMap = new HashMap<>();
 
-        for (Vertex<T> vertex : getVertices()) {
+        for (Vertex<T> vertex : vertices) {
             Node node = nodeCallback.call(vertex.getObject());
             vertexNodeMap.put(vertex, node);
 
             node.layoutXProperty().bind(Bindings.add(-xOffset, vertex.xPosProperty()));
             node.layoutYProperty().bind(Bindings.add(-yOffset, vertex.yPosProperty()));
 
-            getChildren().add(node);
+            pane.getChildren().add(node);
         }
 
-        for (Edge<T> edge : getEdges()) {
-            drawBranch(vertexNodeMap.get(edge.getStart()), vertexNodeMap.get(edge.getEnd()));
+        for (Edge<T> edge : edges) {
+            drawBranch(vertexNodeMap.get(edge.getStart()), vertexNodeMap.get(edge.getEnd()), pane);
         }
-    }
 
-    public ObservableList<Vertex<T>> getVertices() {
-        return vertices;
+        return pane;
     }
 
     public ObservableList<Edge<T>> getEdges() {
         return edges;
+    }
+
+    public ObservableList<Vertex<T>> getVertices() {
+        return vertices;
     }
 }

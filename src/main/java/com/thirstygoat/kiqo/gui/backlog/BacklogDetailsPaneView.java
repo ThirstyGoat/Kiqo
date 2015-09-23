@@ -4,27 +4,34 @@ import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.DirectedData;
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.Edge;
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.GraphVisualiser;
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.Vertex;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -128,5 +135,38 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> popOver.hide(Duration.millis(0)));
 
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
+    }
+
+    @FXML
+    private void visualiseDependencies(ActionEvent actionEvent) {
+        GraphVisualiser<Story> gv = new GraphVisualiser<>();
+        gv.setNodeCallback(story -> {
+            Label label = new Label();
+            label.textProperty().bind(story.shortNameProperty());
+            return label;
+        });
+
+        Map<Story, Vertex<Story>> storyVertexMap= new HashMap<>();
+        for (Story story : viewModel.stories()) {
+            storyVertexMap.put(story, new Vertex<>(story));
+        }
+
+        List<Edge<Story>> edges = new ArrayList<>();
+        for (Story story : viewModel.stories()) {
+            for (DirectedData<Story> dependent : story.getDirectedChildren()) {
+                edges.add(new Edge<>(storyVertexMap.get(story), storyVertexMap.get(dependent.get())));
+            }
+        }
+
+        gv.getVertices().setAll(storyVertexMap.values());
+        gv.getEdges().setAll(edges);
+
+        gv.go();
+
+        Stage stage = new Stage();
+        stage.setWidth(800);
+        stage.setHeight(600);
+        stage.setScene(new Scene(gv));
+        stage.show();
     }
 }
