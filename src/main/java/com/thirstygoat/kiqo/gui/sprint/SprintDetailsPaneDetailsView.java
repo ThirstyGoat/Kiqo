@@ -2,19 +2,20 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryTableCell;
+import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
@@ -46,6 +47,14 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     private TableView<Story> storyTableView;
     @FXML
     private TableColumn<Story, String> shortNameTableColumn;
+    @FXML
+    private ListView<Task> taskListView;
+    @FXML
+    private Button addTaskButton;
+    @FXML
+    private Button removeTaskButton;
+    @FXML
+    private Button editTaskButton;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -82,6 +91,18 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
             return storyTableCell;
         });
 
+        taskListView.setCellFactory(TaskListCell::new);
+        removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
+        editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
+
+
+        addTaskButton.setOnAction(event -> viewModel.createTask());
+        removeTaskButton.setOnAction(event -> viewModel.deleteTasks(taskListView.getSelectionModel().getSelectedItems()));
+        editTaskButton.setOnAction(event -> viewModel.editTask(taskListView.getSelectionModel().getSelectedItem()));
+
+        viewModel.tasksWithoutStoryProperty().addListener((observable, oldValue, newValue) ->{
+            taskListView.setItems(newValue.observableTasks());
+        });
 
     }
 

@@ -15,7 +15,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -116,12 +115,12 @@ public class ProjectViewModel extends ModelViewModel<Project> {
 
     public ListProperty<Story> unallocatedStories() {
         return modelWrapper.field("unallocatedStories", Project::getUnallocatedStories, Project::setUnallocatedStories,
-                new ArrayList<Story>());
+                new ArrayList<>());
     }
 
     public ListProperty<Allocation> allocations() {
         return modelWrapper.field("allocations", Project::getAllocations, Project::setAllocations,
-                new ArrayList<Allocation>());
+                new ArrayList<>());
     }
 
     public ListProperty<Backlog> backlogs() {
