@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -36,8 +37,8 @@ public class Sprint extends Item {
         goal = new SimpleStringProperty("");
         longName = new SimpleStringProperty("");
         description = new SimpleStringProperty("");
+        stories = FXCollections.observableArrayList(Story.getWatchStrategy());
     }
-
 
     public Sprint(String goal, String longName, String description, Backlog backlog, Release release,
                   Team team, LocalDate startDate, LocalDate endDate, Collection<Story> stories) {

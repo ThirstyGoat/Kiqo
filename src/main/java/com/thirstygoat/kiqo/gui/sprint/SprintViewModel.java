@@ -81,13 +81,13 @@ public class SprintViewModel implements ViewModel {
 
         longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
                 string -> {
-                    if (string == null || string.length() == 0 || string.length() > 20) {
+                    if (string == null || string.length() == 0) {
                         return false;
                     } else {
                         return true;
                     }
                 },
-                ValidationMessage.error("Sprint name must be unique and not empty"));
+                ValidationMessage.error("Sprint name must not be empty"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
 
@@ -174,24 +174,23 @@ public class SprintViewModel implements ViewModel {
 
         if (sprint != null) {
             sprintWrapper.set(sprint);
-            // TODO tidy this up and use a single property with a or property
-            totalEstimatedHours.unbind();
-            totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
-            spentHours.unbind();
-            spentHours.bind(sprint.createSpentEffortBinding());
             stories().clear();
             stories().setAll(sprintWrapper.get().getStories());
         } else {
             sprintWrapper.set(new Sprint());
-            totalEstimatedHours.unbind();
-            totalEstimatedHours.bind(sprint.createTotalEstimateBinding());
-            spentHours.unbind();
-            spentHours.bind(sprint.createSpentEffortBinding());
             sprintWrapper.reset();
             sprintWrapper.commit();
             stories().clear();
         }
         sprintWrapper.reload();
+        totalEstimatedHours.unbind();
+        spentHours.unbind();
+
+        if (sprintProperty.get() != null) {
+            totalEstimatedHours.bind(sprintProperty().get().createTotalEstimateBinding());
+            spentHours.bind(sprintProperty().get().createSpentEffortBinding());
+        }
+
 
         // Listen for changes on model objects ObservableLists. This could be removed if ModelWrapper supported ListProperty
         sprintWrapper.get().getStories().addListener(new ListChangeListener<Story>() {

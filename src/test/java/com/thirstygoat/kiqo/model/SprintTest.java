@@ -18,6 +18,7 @@ public class SprintTest {
         story = new Story();
         task = new Task();
         story.getTasks().add(task);
+        System.out.println(sprint.getStories());
         sprint.getStories().add(story);
 
         System.out.println("Before adding: " + sprint.createTotalEstimateBinding().get());
