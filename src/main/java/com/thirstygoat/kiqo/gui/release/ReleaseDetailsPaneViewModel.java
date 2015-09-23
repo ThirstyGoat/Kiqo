@@ -1,11 +1,12 @@
 package com.thirstygoat.kiqo.gui.release;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
-
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Editable {
 
@@ -23,7 +24,7 @@ public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Edi
 
     @Override
     public void commitEdit() {
-        Command command = createCommand();
+        Command command = getCommand();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }

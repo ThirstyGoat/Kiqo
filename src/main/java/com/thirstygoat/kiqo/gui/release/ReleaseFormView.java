@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.release;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.*;
 
@@ -57,7 +58,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
 
     private void attachValidators() {
         Platform.runLater(() -> { // wait for textfields to exist
-            ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+            DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
             validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
             validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
             validationVisualizer.initVisualization(viewModel.dateValidation(), releaseDatePicker, true);
@@ -66,7 +67,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
+        formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);
     }
 
     public void okAction() {

@@ -1,37 +1,43 @@
 package com.thirstygoat.kiqo.gui.release;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.CompoundCommand;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.MoveItemCommand;
+import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Release;
+import com.thirstygoat.kiqo.model.Sprint;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
-import javafx.beans.binding.*;
-import javafx.beans.property.*;
-
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.command.create.CreateReleaseCommand;
-import com.thirstygoat.kiqo.gui.Loadable;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.ViewModel;
-import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
-import de.saxsys.mvvmfx.utils.validation.*;
-
-public class ReleaseViewModel implements Loadable<Release>, ViewModel {
-    private ModelWrapper<Release> modelWrapper;
-    private ObjectProperty<Release> release;
-    private ObjectProperty<Organisation> organisation;
-    
+public class ReleaseViewModel extends ModelViewModel<Release> {
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
     private ObservableRuleBasedValidator projectValidator;
     private ObservableRuleBasedValidator dateValidator;
+
     public ReleaseViewModel() {
-        release = new SimpleObjectProperty<>(null);
-        organisation = new SimpleObjectProperty<>(null);
-        modelWrapper = new GoatModelWrapper<>();
         createValidators();
+    }
+
+    public Supplier<Release> modelSupplier() {
+        return Release::new;
     }
     
     private void createValidators() {
@@ -40,7 +46,7 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
             { 
                 Project project = projectProperty().get();
                 if (project != null) {
-                    return Utilities.shortnameIsUnique(shortNameProperty().get(), release.get(), project.getReleases());
+                    return Utilities.shortnameIsUnique(shortNameProperty().get(), modelWrapper.get(), project.getReleases());
                 } else {
                     return true; // no project means this isn't for real yet.
                 }
@@ -58,10 +64,10 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         
         dateValidator = new ObservableRuleBasedValidator();
         BooleanBinding isAfterAllSprintsAreFinished = Bindings.createBooleanBinding(() -> {
-            if (release.get() != null) { // new releases don't have sprints
+            if (modelWrapper.get() != null) { // new releases don't have sprints
                 LocalDate releaseDate = dateProperty().get();
                 if (releaseDate != null) {
-                    return release.get().getSprints().stream().allMatch(sprint -> {
+                    return modelWrapper.get().getSprints().stream().allMatch(sprint -> {
                         return releaseDate.isAfter(sprint.getEndDate()) || releaseDate.isEqual(sprint.getEndDate());
                     });
                 }
@@ -73,34 +79,18 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         
         allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, projectValidator, dateValidator);
     }
-    
-    @Override
-    public void load(Release release, Organisation organisation) {
-        this.release.set(release);
-        this.organisation.set(organisation);
-        modelWrapper.set(release != null ? release : new Release());
-        modelWrapper.reload();
-    }
 
-    protected Command createCommand() {
+    @Override
+    public Command getCommand() {
         final Command command;
-        if (release.get() != null) { // edit
+        if (modelWrapper.get().getShortName() != "") { // edit
             final ArrayList<Command> changes = new ArrayList<>();
-    
-            if (shortNameProperty().get() != null && !shortNameProperty().get().equals(release.get().getShortName())) {
-                changes.add(new EditCommand<>(release.get(), "shortName", shortNameProperty().get()));
+            super.addEditCommands.accept(changes);
+
+            if (projectProperty().get() != null && modelWrapper.get().getProject() != null && !projectProperty().get().equals(modelWrapper.get().getProject())) {
+                changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().observableReleases(), projectProperty().get().observableReleases()));
             }
-            if (descriptionProperty().get() != null && !descriptionProperty().get().equals(release.get().getDescription())) {
-                changes.add(new EditCommand<>(release.get(), "description", descriptionProperty().get()));
-            }
-            if (projectProperty().get() != null && !projectProperty().get().equals(release.get().getProject())) {
-                changes.add(new MoveItemCommand<>(release.get(), release.get().getProject().observableReleases(), projectProperty().get().observableReleases()));
-                changes.add(new EditCommand<>(release.get(), "project", projectProperty().get()));
-            }
-            if (dateProperty().get() != null && !dateProperty().get().equals(release.get().getDate())) {
-                changes.add(new EditCommand<>(release.get(), "date", dateProperty().get()));
-            }
-            
+
             if (changes.size() > 0) {
                 command = new CompoundCommand("Edit Release", changes);
             } else {
@@ -113,15 +103,11 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
         return command;
     }
 
-    protected void reload() {
-        modelWrapper.reload();
-    }
-    
     protected Supplier<List<Project>> projectsSupplier() {
         return () -> {
             List<Project> list = new ArrayList<>();
-            if (organisation.get() != null) {
-                list.addAll(organisation.get().getProjects());
+            if (organisationProperty().get() != null) {
+                list.addAll(organisationProperty().get().getProjects());
             }
             return list;
         };
@@ -142,10 +128,12 @@ public class ReleaseViewModel implements Loadable<Release>, ViewModel {
     protected ObjectProperty<LocalDate> dateProperty() {
         return modelWrapper.field("date", Release::getDate, Release::setDate, null);
     }
-    
-    protected ObjectProperty<Organisation> organisationProperty() {
-        return organisation;
-    } 
+
+    protected ListProperty<Sprint> sprints() {
+        return modelWrapper.field("sprint", Release::getSprints, Release::setSprints, new ArrayList<>());
+    }
+
+    /** Validation statuses **/
     
     protected ValidationStatus shortNameValidation() {
         return shortNameValidator.getValidationStatus();
