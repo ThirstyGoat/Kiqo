@@ -4,28 +4,28 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.SprintDetailsPaneBurnDownView" >
     <children>
-        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <LineChart fx:id="burndownChart">
+                <LineChart fx:id="burndownChart" >
                     <padding>
-                        <Insets right="10" />
+                        <Insets right="20" />
                     </padding>
                     <xAxis>
-                        <DateAxis fx:id="xAxis" label="Days"  />
+                        <DateAxis fx:id="xAxis" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis fx:id="yAxis" label="Hours" tickUnit="1" />
+                        <NumberAxis fx:id="yAxis" label="Effort (Hours)" tickUnit="1" />
                     </yAxis>
                 </LineChart>
-                <HBox alignment="CENTER" >
+                <VBox alignment="CENTER" >
                     <children>
-                        <HBox HBox.hgrow="NEVER" spacing="10" >
+                        <HBox alignment="CENTER" HBox.hgrow="NEVER" spacing="10" >
                             <children>
                                 <HBox alignment="CENTER" spacing="5">
                                     <children>
@@ -48,11 +48,12 @@
                             </children>
                         </HBox>
                     </children>
-                </HBox>
-
-
-                <!-- TODO remove this-->
-                <Button fx:id="button" text="press me"/>
+                </VBox>
+                <Hyperlink fx:id="exportHyperlink" text="Export Image" styleClass="export-hyperlink">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                </Hyperlink>
             </children>
         </VBox>
 

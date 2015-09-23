@@ -6666,8 +6666,8 @@
     },
     "endDate": {
       "year": 2015,
-      "month": 8,
-      "day": 10
+      "month": 7,
+      "day": 31
     },
     "team": "0x253",
     "release": "0x255",
@@ -6881,7 +6881,8 @@
     "impediments": [
       "0x279"
     ],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x267": {
     "shortName": "Implement commands",
@@ -6893,7 +6894,8 @@
     "impediments": [
       "0x27a"
     ],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x268": {
     "shortName": "qwe",
@@ -6903,7 +6905,8 @@
     "status": "IN_PROGRESS",
     "story": "0x25c",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x269": {
     "shortName": "123",
@@ -6913,7 +6916,8 @@
     "status": "VERIFY",
     "story": "0x25c",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x26a": {
     "criteria": "Add estimation scales",
@@ -6973,7 +6977,8 @@
     "status": "NOT_STARTED",
     "story": "0x261",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x275": {
     "shortName": "Search shortcut",
@@ -6983,7 +6988,8 @@
     "status": "NOT_STARTED",
     "story": "0x261",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x276": {
     "shortName": "Design view",
@@ -6993,7 +6999,8 @@
     "status": "NOT_STARTED",
     "story": "0x261",
     "impediments": [],
-    "loggedEffort": []
+    "loggedEffort": [],
+    "assignees": []
   },
   "0x277": {
     "criteria": "ac",

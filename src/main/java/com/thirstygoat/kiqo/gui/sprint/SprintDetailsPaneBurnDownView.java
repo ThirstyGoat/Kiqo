@@ -11,7 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 
@@ -32,7 +32,7 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
     @FXML
     private LineChart<LocalDate, Number> burndownChart;
     @FXML
-    private Button button;
+    private Hyperlink exportHyperlink;
     @FXML
     private DateAxis xAxis;
     @FXML
@@ -61,7 +61,7 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
 
         yAxis.setMinorTickVisible(false);
 
-        button.setOnAction(event -> {
+        exportHyperlink.setOnAction(event -> {
             burndownChart.snapshot(snapshotResult -> {
                 WritableImage image = snapshotResult.getImage();
                 // https://community.oracle.com/thread/2450090?tstart=0
@@ -73,7 +73,9 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
                                 organisationFilename.substring(0, organisationFilename.lastIndexOf('.')) + ".png");
                 File file = fileChooser.showSaveDialog(burndownChart.getScene().getWindow());
                 try {
-                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                    if (file != null) {
+                        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                    }
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

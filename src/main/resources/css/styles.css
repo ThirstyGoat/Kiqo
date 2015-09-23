@@ -528,3 +528,7 @@
     -fx-stroke-width: 2.5;
 }
 
+.export-hyperlink {
+    -fx-font-size: 11px;
+    -fx-underline: true;
+}
