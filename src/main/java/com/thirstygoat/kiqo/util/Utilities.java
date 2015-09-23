@@ -171,8 +171,11 @@ public final class Utilities {
         BooleanProperty isSuggesterEnabled = new SimpleBooleanProperty(true);
         shortName.addListener((observable, oldValue, newValue) -> {
             // disconnect suggester on direct edit; reconnect on edit-to-match
-        	String truncated = longName.get().substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH-1));
-    		isSuggesterEnabled.set(newValue.equals(truncated));
+        	final String longNameValue = longName.get();
+        	if (longNameValue != null) {
+				String truncated = longNameValue.substring(0, Math.min(longNameValue.length(), Utilities.SHORT_NAME_MAX_LENGTH-1));
+	    		isSuggesterEnabled.set(newValue.equals(truncated));
+        	}
     		
     		// prohibit edits that would push the short name length beyond the character limit
             if (newValue.length() >= Utilities.SHORT_NAME_MAX_LENGTH) {
