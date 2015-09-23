@@ -318,6 +318,11 @@
     -fx-text-alignment: right;
 }
 
+.task-card-minimised-hours:hover {
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
 .task-impedance-icon {
     -fx-fill: #fff
 }

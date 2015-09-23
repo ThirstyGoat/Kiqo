@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.model;
 import com.thirstygoat.kiqo.search.Searchable;
 import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.BoundPropertySupport;
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -46,6 +47,10 @@ public class Effort implements BoundProperties, Searchable {
         this.comment = new SimpleStringProperty(comment);
     }
 
+    public static Callback<Effort, Observable[]> getWatchStrategy() {
+        return p -> new Observable[] {p.duration, p.comment, p.personProperty(), p.endDateTimeProperty()};
+    }
+
     public void initBoundPropertySupport() {
         bps.addPropertyChangeSupportFor(person);
         bps.addPropertyChangeSupportFor(task);
@@ -79,24 +84,24 @@ public class Effort implements BoundProperties, Searchable {
         return task.get();
     }
 
-    public ObjectProperty<Task> taskProperty() {
-        return task;
-    }
-
     public void setTask(Task task) {
         this.task.set(task);
+    }
+
+    public ObjectProperty<Task> taskProperty() {
+        return task;
     }
 
     public LocalDateTime getLogTimeStamp() {
         return logTimeStamp.get();
     }
 
-    public ObjectProperty<LocalDateTime> logTime() {
-        return logTimeStamp;
-    }
-
     public void setLogTimeStamp(LocalDateTime logTimeStamp) {
         this.logTimeStamp.set(logTimeStamp);
+    }
+
+    public ObjectProperty<LocalDateTime> logTime() {
+        return logTimeStamp;
     }
 
     public ObjectProperty<LocalDateTime> endDateTimeProperty() {
@@ -119,12 +124,12 @@ public class Effort implements BoundProperties, Searchable {
         return duration.get();
     }
 
-    public double getDurationAsNumber() {
-        return duration.get().toMinutes();
-    }
-
     public void setDuration(Duration duration) {
         this.duration.set(duration);
+    }
+
+    public float getDurationAsNumber() {
+        return Utilities.durationToFloat(duration.get());
     }
 
     public StringProperty commentProperty() {
@@ -143,9 +148,5 @@ public class Effort implements BoundProperties, Searchable {
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
         return searchStrings;
-    }
-
-    public static Callback<Effort, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.duration, p.comment, p.personProperty(), p.endDateTimeProperty()};
     }
 }

@@ -17,6 +17,7 @@ import javafx.beans.property.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -81,6 +82,11 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
 
         timeTextFlow.getStyleClass().add("task-card-minimised-hours");
 
+        HBox timeBox = new HBox();
+        timeBox.getChildren().add(timeTextFlow);
+        timeBox.setHgrow(timeBox, Priority.NEVER);
+        timeBox.setAlignment(Pos.CENTER_RIGHT);
+
         shortNameLabel.getStylesheets().add("css/styles.css");
         shortNameLabel.getStyleClass().add("task-card-minimised-shortName");
         shortNameLabel.setWrapText(true);
@@ -98,8 +104,17 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         timeTextFlow.setPadding(hourInset);
 
         FontAwesomeIconView impedanceIcon = new FontAwesomeIconView(FontAwesomeIcon.EXCLAMATION_TRIANGLE);
-        impedanceIcon.setSize("15px");
+        impedanceIcon.setSize("14px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
+        impedanceIcon.hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                impedanceIcon.setSize("16px");
+                setCursor(Cursor.HAND);
+            } else {
+                impedanceIcon.setSize("14px");
+                setCursor(Cursor.DEFAULT);
+            }
+        });
 
         timeTextFlow.setOnMouseClicked(event1 -> {
             EffortViewModel e = new EffortViewModel();
@@ -119,6 +134,8 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.get().getImpediments()));
 
         iconBox.getChildren().add(impedanceIcon);
+        iconBox.setMinHeight(16);
+
 
         ColumnConstraints columnConstraints = new ColumnConstraints(10, 100, 100);
         ColumnConstraints columnConstraints2 = new ColumnConstraints(10, 25, 100);
@@ -130,14 +147,14 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         RowConstraints rowConstraints = new RowConstraints(10);
         rowConstraints.setVgrow(Priority.SOMETIMES);
 
-        gridPane.add(timeTextFlow, 0, 0, 2, 1);
+        gridPane.add(timeBox, 0, 0, 2, 1);
         gridPane.add(shortNameLabel, 0, 1, 2, 1);
         gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints2);
         gridPane.getRowConstraints().add(rowConstraints);
 
         setPrefHeight(USE_COMPUTED_SIZE);
         setMaxHeight(150);
-        setPrefWidth(USE_COMPUTED_SIZE);
+        setPrefWidth(145);
         setMaxWidth(150);
 
         borderPane.setPadding(mainInset);
