@@ -18,6 +18,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -112,19 +113,10 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         assignedPeopleLabel.getEditField().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
         assignedPeopleLabel.getDisplayLabel().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
 
-
-
-        //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
-//        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligableAssignedPeople());
-//        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());
     }
 
 
     private void initEffortLogging() {
-//        EffortViewModel effortViewModel = new EffortViewModel();
-//        effortViewModel.taskProperty().bind(viewModel.getTask());
-//        effortViewModel.organisationProperty().bind(viewModel.organisationProperty());
-
         newEffortButton.setOnAction(event -> {
             EffortViewModel e = new EffortViewModel();
             e.load(null, viewModel.organisationProperty().get());
@@ -157,6 +149,13 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
                 viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
         blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> viewModel.commitEdit());
+
+        BooleanBinding itemSelectedBinding = Bindings.createBooleanBinding(() ->
+                loggedEffortListView.getSelectionModel().getSelectedItems().size() == 0,
+                loggedEffortListView.getSelectionModel().selectedItemProperty());
+
+        deleteEffortIcon.disableProperty().bind(itemSelectedBinding);
+        editEffortButton.disableProperty().bind(itemSelectedBinding);
     }
 
     private void initImpediments() {
