@@ -7,24 +7,27 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateImpedimentCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.model.Effort;
-import com.thirstygoat.kiqo.model.Impediment;
-import com.thirstygoat.kiqo.model.Organisation;
-import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
-import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 
 /**
  * Created by james on 19/08/15.
  */
-public class TaskCardViewModel implements ViewModel, Editable {
+public class TaskCardViewModel extends ModelViewModel<Task> implements Editable {
     private GoatModelWrapper<Task> modelWrapper = new GoatModelWrapper<>();
     private ObjectProperty<Task> task;
     private ObjectProperty<Organisation> organisation;
@@ -44,6 +47,11 @@ public class TaskCardViewModel implements ViewModel, Editable {
         createValidators();
     }
 
+    @Override
+    public Supplier<Task> modelSupplier() {
+        return Task::new;
+    }
+
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
@@ -60,21 +68,14 @@ public class TaskCardViewModel implements ViewModel, Editable {
         allValidator = new CompositeValidator(shortNameValidator, descriptionValidator, teamValidator);
     }
 
-    public Command createCommand() {
+    @Override
+    public Command getCommand() {
         final Command command;
         final ArrayList<Command> changes = new ArrayList<>();
+        super.addEditCommands.accept(changes);
 
-        if (shortNameProperty().get() != null && !shortNameProperty().get().equals(task.get().getShortName())) {
-            changes.add(new EditCommand<>(task.get(), "shortName", shortNameProperty().get()));
-        }
-        if (descriptionProperty().get() != null && !descriptionProperty().get().equals(task.get().getDescription())) {
-            changes.add(new EditCommand<>(task.get(), "description", descriptionProperty().get()));
-        }
-        if (estimateProperty().get() != task.get().estimateProperty().get()) {
-            changes.add(new EditCommand<>(task.get(), "estimate", estimateProperty().get()));
-        }
-        if (blockedProperty().get() != task.get().blockedProperty().get()) {
-            changes.add(new EditCommand<>(task.get(), "blocked", blockedProperty().get()));
+        if (!assignees().equals(modelWrapper.get().getAssignees())) {
+            changes.add(new EditCommand<>(modelWrapper.get(), "assignees", new ArrayList<>(assignees().get())));
         }
 
         if (changes.size() > 0) {
@@ -133,8 +134,40 @@ public class TaskCardViewModel implements ViewModel, Editable {
         return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
     }
 
+    public ListProperty<Person> assignees() {
+        return modelWrapper.field("assignees", Task::getAssignees, Task::setAssignees);
+    }
+
+    /** Other fields **/
+
     public ObjectProperty<Task> getTask() {
         return task;
+    }
+
+    public ListProperty<Person> eligibleAssignees() {
+        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+        Function<Task, List<Person>> getEligibleAssignees = task -> {
+            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
+                            .flatMap(release -> release.getSprints().stream())
+                            .filter(sprint -> sprint.getStories().contains(task.getStory()))
+                            .findAny();
+
+            if (sprintTaskBelongsTo.isPresent()) {
+               return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+                                .filter(person -> !task.getAssignees().contains(person))
+                                .collect(Collectors.toList());
+            } else {
+                return new ArrayList<Person>();
+            }
+        };
+
+        task.addListener((observable, oldValue, newValue) -> {
+            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        });
+        eligableAssignees.setAll(task.get() != null ? getEligibleAssignees.apply(task.get()) : new ArrayList<Person>());
+
+        return eligableAssignees;
     }
 
     public ValidationStatus shortNameValidation() {
@@ -151,7 +184,7 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     @Override
     public void commitEdit() {
-        Command command = createCommand();
+        Command command = getCommand();
         if (command != null) {
             UndoManager.getUndoManager().doCommand(command);
         }
@@ -159,7 +192,7 @@ public class TaskCardViewModel implements ViewModel, Editable {
 
     @Override
     public void cancelEdit() {
-
+    	reload();
     }
 
     public void addImpediment() {

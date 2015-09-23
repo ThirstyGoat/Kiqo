@@ -52,15 +52,15 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     }
 
     private void attachValidators() {
-        Platform.runLater(() -> { // wait for textfields to exist
-            ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        viewModel.onFirstChanged(() -> {
+        	ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
             validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
             validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
         });
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
-        formButtonHandler = new FormButtonHandler(viewModel::createCommand, exitStrategy);
+        formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);
     }
 
     public void okAction() {

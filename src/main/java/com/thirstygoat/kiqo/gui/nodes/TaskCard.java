@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.nodes;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
 import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.util.FxUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -146,6 +147,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);
+            FxUtils.attachKeyShortcuts(scene);
             stage.setScene(scene);
 
             double parentWidth = parentWindow.getWidth();

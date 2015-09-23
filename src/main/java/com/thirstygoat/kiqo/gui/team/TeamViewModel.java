@@ -1,5 +1,10 @@
 package com.thirstygoat.kiqo.gui.team;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
@@ -8,21 +13,21 @@ import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
+
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class TeamViewModel extends ModelViewModel<Team> {
 
@@ -33,9 +38,21 @@ public class TeamViewModel extends ModelViewModel<Team> {
     private ObservableRuleBasedValidator teamMembersValidator;
     private ObservableRuleBasedValidator devTeamValidator;
     private CompositeValidator allValidator;
+	private final ObjectBinding<ObservableList<Person>> eligibleTeamMembers;
 
     public TeamViewModel() {
         createValidators();
+        
+        eligibleTeamMembers = Bindings.createObjectBinding(() -> {
+	    		if (organisationProperty().get() != null) {
+			    	return organisationProperty().get().getPeople().stream()
+			            .filter(person -> person.getTeam() == null)// || !teamMembersProperty().get().contains(person))
+			            .collect(GoatCollectors.toObservableList());
+	    		} else {
+	    			return FXCollections.observableArrayList();
+	    		}
+			}, 
+			organisationProperty());
     }
 
     @Override
@@ -43,11 +60,6 @@ public class TeamViewModel extends ModelViewModel<Team> {
         return Team::new;
     }
 
-    @Override
-    protected void afterLoad() {
-        // Do nothing
-    }
-    
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> 
@@ -77,7 +89,6 @@ public class TeamViewModel extends ModelViewModel<Team> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Command getCommand() {
         // edit command
         final ArrayList<Command> changes = new ArrayList<>();
@@ -196,4 +207,14 @@ public class TeamViewModel extends ModelViewModel<Team> {
     protected ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
     }
+
+    protected ObjectBinding<ObservableList<Person>> eligibleTeamMembers() {
+	    return eligibleTeamMembers;
+	}
+	
+	@Override
+	public void reload() {
+		super.reload();
+		eligibleTeamMembers.invalidate();
+	}
 }

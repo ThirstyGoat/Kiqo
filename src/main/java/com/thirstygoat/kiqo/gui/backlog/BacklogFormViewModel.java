@@ -10,8 +10,6 @@ import javafx.beans.property.SimpleListProperty;
 * Created by Carina Blair on 19/07/2015.
 */
 public class BacklogFormViewModel extends BacklogViewModel {
-    private ListProperty<Story> sourceStoriesProperty = new SimpleListProperty<>();
-
     private Runnable exitStrategy;
 
     public void setExitStrategy(Runnable exitStrategy) {

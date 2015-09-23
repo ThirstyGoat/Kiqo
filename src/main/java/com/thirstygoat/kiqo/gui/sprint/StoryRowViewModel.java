@@ -27,6 +27,7 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
     private GoatModelWrapper<Story> storyWrapper = new GoatModelWrapper<>();
     private Organisation organisation;
     private MainController mainController;
+    private StoryRowView view;
 
     private StringProperty storyName = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
@@ -53,6 +54,11 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
         setTasks(story.getTasks());
         story.getTasks().addListener((ListChangeListener<Task>) c -> setTasks(story.getTasks()));
+
+        // If a story only has tasks that are done, collapse it by default.
+        if (toDoTasks.isEmpty() && inProgressTasks.isEmpty() && verifyTasks.isEmpty() && !doneTasks.isEmpty()) {
+            view.collapseOrExpand();
+        }
     }
 
     private void setTasks(ObservableList<Task> tasks) {
@@ -139,5 +145,9 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     public void showStoryInDetailsPane() {
         MainController.focusedItemProperty.setValue(storyWrapper.get());
+    }
+
+    public void setView(StoryRowView view) {
+        this.view = view;
     }
 }

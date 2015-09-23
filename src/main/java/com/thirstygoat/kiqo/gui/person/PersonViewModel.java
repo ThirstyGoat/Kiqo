@@ -8,6 +8,7 @@ import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
@@ -15,10 +16,12 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +31,6 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class PersonViewModel extends ModelViewModel<Person> {
-    private ListProperty<Skill> availableSkills;
-
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator longNameValidator;
     private ObservableRuleBasedValidator userIdValidator;
@@ -38,33 +39,27 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
+	private final ObjectBinding<ObservableList<Skill>> availableSkills;
 
     public PersonViewModel() {
-        availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList(Item.getWatchStrategy()));
         createValidators();
+        
+        availableSkills = Bindings.createObjectBinding(() -> { 
+	    		if (organisationProperty().get() != null) {
+					final ListProperty<Skill> skills = skills();
+	                return organisationProperty().get().getSkills().stream()
+	                        .filter(skill -> !skills.contains(skill))
+	                        .collect(GoatCollectors.toObservableList());
+	            } else {
+	                return FXCollections.observableArrayList();
+	            }
+	        }, organisationProperty());
     }
     
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
     }
-
-    @Override
-    protected void afterLoad() {
-        availableSkills.setAll(availableSkillsSupplier.get());
-    }
-
-    /**
-     * Supplies skills which can be added to a persons list of skills.
-     */
-    public Supplier<List<Skill>> availableSkillsSupplier =
-            () -> { if (organisationProperty().get() != null) {
-                return organisationProperty().get().getSkills().stream()
-                        .filter(skill -> !skills().contains(skill))
-                        .collect(Collectors.toList());
-            }
-                return Collections.emptyList();
-            };
 
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
@@ -99,15 +94,8 @@ public class PersonViewModel extends ModelViewModel<Person> {
 
         if (!allValidation().isValid()) {
             LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            /** Because demo.json contains invalid data, we use this workaround. TODO remove this workaround when
-             * data in demo.json is valid.
-             * See issue #106: https://eng-git.canterbury.ac.nz/seng302-2015/project-4/issues/106
-             */
-            if (shortNameValidation().isValid()) {
-                return null;
-            }
-        }
-        if (!modelWrapper.isDifferent()) {
+            return null;
+        } else if (!modelWrapper.isDifferent()) {
             LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
             return null;
         }
@@ -166,8 +154,14 @@ public class PersonViewModel extends ModelViewModel<Person> {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");
     }
 
-    protected ListProperty<Skill> availableSkills() {
+    protected ObjectBinding<ObservableList<Skill>> availableSkills() {
         return availableSkills;
+    }
+    
+    @Override
+	public void reload() {
+    	super.reload();
+    	availableSkills.invalidate();
     }
     
     public ValidationStatus shortNameValidation() {

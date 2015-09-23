@@ -131,7 +131,6 @@ public class BacklogFormViewModelTest {
         backlog.observableStories().add(unreadyStory);
         backlog.observableStories().add(readyStory);
         viewModel.load(backlog, organisation);
-        System.out.println(viewModel.stories());
         Assert.assertTrue("ViewModel stories property should contain two items",
                 viewModel.stories().size() == 2);
     }

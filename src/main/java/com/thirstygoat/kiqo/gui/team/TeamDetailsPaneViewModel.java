@@ -1,16 +1,15 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.stream.Collectors;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.gui.MainController;
 
-import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.collections.*;
-import javafx.util.Callback;
-
-import com.thirstygoat.kiqo.command.*;
-import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.util.GoatCollectors;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 
 public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable {
 
@@ -27,10 +26,6 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
     }
 
     @Override
-    public void afterLoad() {
-    }
-
-    @Override
     public void commitEdit() {
         Command command = getCommand();
         if (command != null) {
@@ -41,23 +36,5 @@ public class TeamDetailsPaneViewModel extends TeamViewModel implements Editable 
     @Override
     public void cancelEdit() {
         reload();
-    }
-
-    public ListProperty<Person> eligibleTeamMembers() {
-        final Callback<ObservableList<Person>, ObservableList<Person>> callback = allPeople -> allPeople.stream()
-                .filter(person -> person.getTeam() == null || person.getTeam().equals(this.modelWrapper.get()))
-                .collect(GoatCollectors.toObservableList());
-
-        final ListProperty<Person> list = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-        organisationProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                list.setAll(callback.call(newValue.getPeople()));
-            } else {
-                list.clear();
-            }
-        });
-
-        return list;
     }
 }

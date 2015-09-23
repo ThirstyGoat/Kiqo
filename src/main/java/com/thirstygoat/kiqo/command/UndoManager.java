@@ -66,11 +66,13 @@ public class UndoManager {
      * Redoes the most recently undone command and adds it to the undo stack.
      */
     public void redoCommand() {
-        final Command command = redoStack.pop();
-        command.redo();
-        undoStack.push(command);
-        updateUndoRedoTypes();
-        checkChangesSaved();
+        if (!redoStack.isEmpty()) {
+            final Command command = redoStack.pop();
+            command.redo();
+            undoStack.push(command);
+            updateUndoRedoTypes();
+            checkChangesSaved();
+        }
     }
 
     /**
@@ -78,18 +80,20 @@ public class UndoManager {
      * redo stack.
      */
     public void undoCommand() {
-        final Command command = undoStack.pop();
-        // check to see if the item is a object that will create a tab
-        if (mainController != null) {
-            closeTab(command);
-        }
-        command.undo();
-        redoStack.push(command);
-        updateUndoRedoTypes();
-        checkChangesSaved();
-        if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
-            branchPosition = undoStack.size();
-            revertStack.push(command);
+        if (!undoStack.isEmpty()) {
+            final Command command = undoStack.pop();
+            // check to see if the item is a object that will create a tab
+            if (mainController != null) {
+                closeTab(command);
+            }
+            command.undo();
+            redoStack.push(command);
+            updateUndoRedoTypes();
+            checkChangesSaved();
+            if (undoStack.size() < savePosition && undoStack.size() < branchPosition) {
+                branchPosition = undoStack.size();
+                revertStack.push(command);
+            }
         }
     }
 

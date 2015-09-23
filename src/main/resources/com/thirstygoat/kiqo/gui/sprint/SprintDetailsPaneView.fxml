@@ -28,8 +28,8 @@
             </VBox>
           </children>
         </HBox>
-        <fx:include fx:id="detailsView" source="SprintDetailsPaneDetailsView.fxml" />
-        <fx:include fx:id="scrumBoardView" source="ScrumboardView.fxml" />
+        <fx:include VBox.vgrow="ALWAYS" fx:id="detailsView" source="SprintDetailsPaneDetailsView.fxml" />
+        <fx:include VBox.vgrow="ALWAYS" fx:id="scrumBoardView" source="ScrumboardView.fxml" />
           <fx:include fx:id="burndownView" source="SprintDetailsPaneBurnDownView.fxml"/>
       </children>
     </VBox>

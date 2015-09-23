@@ -201,7 +201,7 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        // Set eligableStories list, and listen for changes to backlog so that the list is updated
+        // Set eligibleStories list, and listen for changes to backlog so that the list is updated
         eligableStories.setAll(storiesSupplier().get());
         backlogProperty().addListener(observable -> {
             eligableStories.setAll(storiesSupplier().get());

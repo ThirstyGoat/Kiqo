@@ -20,7 +20,7 @@ public class SkillViewModelTest {
     public final void testCreateCommand_new() {
         Command command;
         
-        command = viewModel.createCommand();
+        command = viewModel.getCommand();
         Assert.assertFalse(viewModel.nameValidation().isValid()); // just to be sure
         Assert.assertNotNull("command must be generated (even when validation is not passing)", command);
         Assert.assertEquals("command must be a CreateSkillCommand", CreateSkillCommand.class, command.getClass());
@@ -37,24 +37,24 @@ public class SkillViewModelTest {
         Command command;
         
         // no changes
-        command = viewModel.createCommand();
+        command = viewModel.getCommand();
         Assert.assertNull("command must be null if no changes made", command);
 
         // blue skies
         viewModel.nameProperty().set("Valid name");
-        command = viewModel.createCommand();
+        command = viewModel.getCommand();
         Assert.assertEquals("command must include all changes (1)", "1 change", command.toString());
         
         // failing validation
         viewModel.nameProperty().set("Invalid name because it is too long");
-        command = viewModel.createCommand();
+        command = viewModel.getCommand();
         Assert.assertFalse(viewModel.nameValidation().isValid()); // just to be sure
         Assert.assertEquals("command must include all changes (1) even when validation is not passing", "1 change", command.toString());
         
         // multiple changes
         viewModel.nameProperty().set("New name");
         viewModel.descriptionProperty().set("New description");
-        command = viewModel.createCommand();
+        command = viewModel.getCommand();
         Assert.assertEquals("command must include all changes (2)", "2 changes", command.toString());
     }
 

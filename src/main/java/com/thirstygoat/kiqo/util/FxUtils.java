@@ -5,14 +5,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javafx.beans.property.*;
-import javafx.collections.*;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.util.*;
-import javafx.util.converter.NumberStringConverter;
-
+import com.thirstygoat.kiqo.gui.MainController;
+import javafx.scene.Scene;
 import org.controlsfx.control.textfield.*;
 
 import com.thirstygoat.kiqo.gui.Editable;
@@ -21,6 +15,14 @@ import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
 import com.thirstygoat.kiqo.model.Item;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.*;
+import javafx.collections.*;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.util.*;
+import javafx.util.converter.NumberStringConverter;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
@@ -255,25 +257,45 @@ public final class FxUtils {
 
     public static <T extends Item> void initGoatLabel(FilteredListBiControl<T> listBiControl,
                                                       Editable viewModel,
-                                                      ListProperty<T> targetList,
-                                                      ListProperty<T> sourceList) {
-        initGoatLabel(listBiControl, viewModel, targetList, sourceList, null, null, Item::shortNameProperty);
+                                                      ListProperty<T> selectedItems,
+                                                      ObjectBinding<ObservableList<T>> unselectedItems) {
+        initGoatLabel(listBiControl, viewModel, selectedItems, unselectedItems, null, null, Item::shortNameProperty);
     }
     
     public static <T> void initGoatLabel(FilteredListBiControl<T> listBiControl,
                 Editable viewModel,
-                ListProperty<T> targetList,
-                ObservableList<T> sourceList,
+                ListProperty<T> selectedItems,
+                ObjectBinding<ObservableList<T>> unselectedItems,
                 Callback<ListView<T>, ListCell<T>> displayCellFactory,
                 Callback<T, Node> editCellFactory,
                 Callback<T, StringProperty> stringPropertyCallback) {
-        listBiControl.selectedItems().bindBidirectional(targetList);
-        listBiControl.allItems().set(sourceList); // TODO check this works
+        listBiControl.selectedItems().bindBidirectional(selectedItems);
+        listBiControl.unselectedItems().bind(unselectedItems);
         FilteredListBiControlSkin<T> skin = new FilteredListBiControlSkin<T>(listBiControl,
                 viewModel::commitEdit, viewModel::cancelEdit, 
                 displayCellFactory,
                 editCellFactory,
                 stringPropertyCallback);
         listBiControl.setSkin(skin);
+    }
+
+    /**
+     * Attaches the basic key shortcuts to a scene
+     * Undo/Redo, and Save
+     * @param scene Scene to attach key shortcuts to
+     */
+    public static void attachKeyShortcuts(Scene scene) {
+        scene.setOnKeyPressed(event -> {
+           // Check if Shortcut + Z was pressed
+            if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.Z) {
+                MainController.menuBarView.undo();
+            } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.Z) {
+                MainController.menuBarView.redo();
+            } else if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.S) {
+                MainController.menuBarView.save();
+            } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.S) {
+                MainController.menuBarView.saveAs();
+            }
+        });
     }
 }
