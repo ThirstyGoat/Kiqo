@@ -19,6 +19,8 @@ import java.util.Arrays;
  */
 
 public class BacklogDetailsPaneViewModelTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private BacklogDetailsPaneViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -44,12 +46,9 @@ public class BacklogDetailsPaneViewModelTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void detailsPaneUpdatesWhenModelChangesTest() {

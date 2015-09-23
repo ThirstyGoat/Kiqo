@@ -44,8 +44,8 @@ public class StoryFormViewModelTest {
         organisation.getPeople().add(po);
         organisation.getPeople().add(creator);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         project.observableUnallocatedStories().add(unreadyStory);
         project.observableUnallocatedStories().add(readyStory);
     }

@@ -4,8 +4,8 @@ import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.GoatModelWrapper;
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
@@ -354,11 +354,16 @@ public class SprintViewModel implements ViewModel {
                 changes.add(new UpdateListCommand<>("Move Stories to/from Sprint", stories, sprintProperty.get().getStories()));
             }
 
-            sprintProperty.get().getStories().stream().filter(s -> !stories.contains(s)).forEach(s1 -> changes.add(new EditCommand<>(s1, "inSprint", false)));
+            sprintProperty.get().getStories().stream().filter(s -> !stories.contains(s)).forEach(s1 -> {
+                changes.add(new EditCommand<>(s1, "inSprint", false));
+                changes.add(new EditCommand<>(s1, "sprint", null));
+            });
 
             stories.forEach(s -> {
-                if (!s.getInSprint())
+                if (!s.getInSprint()) {
                     changes.add(new EditCommand<>(s, "inSprint", true));
+                    changes.add(new EditCommand<>(s, "sprint", sprintProperty.get()));
+                }
             });
 
             if (!changes.isEmpty()) {

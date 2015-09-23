@@ -1,49 +1,35 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
-
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.function.Supplier;
+import java.util.logging.Level;
 
 
 /**
  * Created by samschofield on 16/07/15.
  */
 public class StoryViewModel extends ModelViewModel<Story> {
+	private final ObjectBinding<ObservableList<Story>> eligibleDependencies;
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
-
     private ObservableRuleBasedValidator shortNameValidator;
     private FunctionBasedValidator longNameValidator;
     private FunctionBasedValidator descriptionValidator;
@@ -52,7 +38,6 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator allValidator;
-	private final ObjectBinding<ObservableList<Story>> eligibleDependencies;
 
     public StoryViewModel() {
     	eligibleDependencies = Bindings.createObjectBinding(() -> { 
@@ -255,7 +240,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
         if (modelWrapper.get().getShortName() == "") { // Must be a new story
             Story story = new Story(shortNameProperty().getValue(), longNameProperty().getValue(), descriptionProperty().getValue(), creatorProperty().get(),
-                    projectProperty().get(), null, priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false);
+                    projectProperty().get(), null, priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false, null);
             command = new CreateStoryCommand(story);
         } else {
             // edit command

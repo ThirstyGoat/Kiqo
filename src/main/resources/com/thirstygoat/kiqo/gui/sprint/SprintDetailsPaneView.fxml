@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.*?>
@@ -29,7 +28,7 @@
         </HBox>
         <fx:include VBox.vgrow="ALWAYS" fx:id="detailsView" source="SprintDetailsPaneDetailsView.fxml" />
         <fx:include VBox.vgrow="ALWAYS" fx:id="scrumBoardView" source="ScrumboardView.fxml" />
-          <fx:include fx:id="burndownView" source="SprintDetailsPaneBurnDownView.fxml"/>
+        <fx:include fx:id="burndownView" source="SprintDetailsPaneBurnDownView.fxml"/>
       </children>
     </VBox>
   </children>

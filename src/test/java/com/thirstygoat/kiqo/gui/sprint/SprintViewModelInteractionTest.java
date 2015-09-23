@@ -18,6 +18,8 @@ import java.util.Arrays;
  * Created by leroy on 9/08/15.
  */
 public class SprintViewModelInteractionTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private SprintViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -28,9 +30,6 @@ public class SprintViewModelInteractionTest {
     private Sprint sprint;
     private Person po;
     private Team team;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -46,8 +45,8 @@ public class SprintViewModelInteractionTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         backlog.observableStories().add(readyStory);
         backlog.observableStories().add(unreadyStory);
         sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
@@ -72,8 +71,7 @@ public class SprintViewModelInteractionTest {
     @Test
     public void newSprint_doNothing_CommandTest() {
         viewModel.load(null, organisation);
-        Assert.assertTrue("Command should be null if nothing was done",
-                viewModel.createCommand() == null);
+        Assert.assertTrue("Command should be null if nothing was done", viewModel.createCommand() == null);
     }
 
     @Test
@@ -87,7 +85,7 @@ public class SprintViewModelInteractionTest {
         Assert.assertTrue("Command should not be null if all fields are valid",
                 command != null);
         Assert.assertTrue("Command should be of type CreatSprintCommand",
-                command.getClass().equals(CreateSprintCommand.class));
+                        command.getClass().equals(CreateSprintCommand.class));
         command.execute();
     }
 
@@ -96,19 +94,17 @@ public class SprintViewModelInteractionTest {
         viewModel.load(sprint, organisation);
         Assert.assertTrue("Command should be null if nothing was done",
                 (viewModel.createCommand() == null));
-        Assert.assertTrue("All fields should be valid",
-                viewModel.allValidation().isValid());
+        Assert.assertTrue("All fields should be valid", viewModel.allValidation().isValid());
     }
 
     @Test
     public void existingSprint_changePropertyButThenUndoChange_CommandTest() {
         viewModel.load(sprint, organisation);
         String originalGoal = viewModel.goalProperty().get();
-        Assert.assertTrue("Original property should not be null",
-                originalGoal != null); viewModel.goalProperty().set("A different goal");
+        Assert.assertTrue("Original property should not be null", originalGoal != null); viewModel.goalProperty().set(
+                        "A different goal");
         viewModel.goalProperty().set(originalGoal);
-        Assert.assertTrue("Command should be null if something was done, but then undone",
-                viewModel.createCommand() == null);
+        Assert.assertTrue("Command should be null if something was done, but then undone", viewModel.createCommand() == null);
     }
 
     @Test

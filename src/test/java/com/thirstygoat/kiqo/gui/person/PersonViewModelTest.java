@@ -1,12 +1,8 @@
 package com.thirstygoat.kiqo.gui.person;
 
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.UndoManager;
-import com.thirstygoat.kiqo.command.create.CreateBacklogCommand;
 import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
-import com.thirstygoat.kiqo.gui.backlog.BacklogFormViewModel;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,6 +18,8 @@ import java.util.Arrays;
  * Created by leroy on 21/09/15.
  */
 public class PersonViewModelTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private PersonViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -33,9 +31,6 @@ public class PersonViewModelTest {
     private Story readyStory;
     private Skill skill1;
     private Skill skill2;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -51,8 +46,8 @@ public class PersonViewModelTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(person);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         project.observableUnallocatedStories().add(unreadyStory);
         project.observableUnallocatedStories().add(readyStory);
         skill1 = new Skill("skill1", "");

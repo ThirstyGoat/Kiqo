@@ -66,15 +66,15 @@ public class ReportGeneratorTest{
         CreateAllocationCommand createAllocationCommand = new CreateAllocationCommand(allocation);
         createAllocationCommand.execute();
 
-        story = new Story("shortname", "longname", "description", person, organisation.getProjects().get(0), null, 1, Scale.FIBONACCI, 1, true, false);
+        story = new Story("shortname", "longname", "description", person, organisation.getProjects().get(0), null, 1, Scale.FIBONACCI, 1, true, false, null);
         CreateStoryCommand createStoryCommand = new CreateStoryCommand(story);
         createStoryCommand.execute();
 
-        story2 = new Story("shortname2", "longname2", "description2", person, organisation.getProjects().get(0), null, 2, Scale.FIBONACCI, 2, true, false);
+        story2 = new Story("shortname2", "longname2", "description2", person, organisation.getProjects().get(0), null, 2, Scale.FIBONACCI, 2, true, false, null);
         CreateStoryCommand createStoryCommand2 = new CreateStoryCommand(story2);
         createStoryCommand2.execute();
 
-        story3 = new Story("shortname3", "longname3", "description3", person, organisation.getProjects().get(0), null, 3, Scale.FIBONACCI, 3, true, false);
+        story3 = new Story("shortname3", "longname3", "description3", person, organisation.getProjects().get(0), null, 3, Scale.FIBONACCI, 3, true, false, null);
         CreateStoryCommand createStoryCommand3 = new CreateStoryCommand(story3);
         createStoryCommand3.execute();
 

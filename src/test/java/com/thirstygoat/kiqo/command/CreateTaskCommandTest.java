@@ -1,18 +1,12 @@
 package com.thirstygoat.kiqo.command;
 
-import java.util.ArrayList;
-
+import com.thirstygoat.kiqo.command.create.CreateTaskCommand;
+import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thirstygoat.kiqo.command.create.CreateTaskCommand;
-import com.thirstygoat.kiqo.model.Backlog;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Project;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.model.Task;
+import java.util.ArrayList;
 
 /**
  * Created by Carina Blair on 24/07/2015.
@@ -29,7 +23,7 @@ public class CreateTaskCommandTest {
     public void setup() {
         project = new Project("proj1", "Project");
         person = new Person("pers1", "Person","descr", "id", "email", "phone", "dept", new ArrayList<>());
-        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false);
+        story = new Story("story1", "Story", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false, null);
         task = new Task("task1", "descr", 0f, story);
         command = new CreateTaskCommand(task, story);
     }

@@ -3,13 +3,8 @@ package com.thirstygoat.kiqo.gui.story;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.viewModel.StoryViewModel;
 import com.thirstygoat.kiqo.model.*;
-
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,8 +46,8 @@ public class StoryViewModelTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(person);
         project.observableReleases().add(release);
-        story1 = new Story("story1", "longName", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        story2 = new Story("story2", "longName", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        story1 = new Story("story1", "longName", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        story2 = new Story("story2", "longName", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         project.observableUnallocatedStories().add(story1);
         project.observableUnallocatedStories().add(story2);
         skill1 = new Skill("skill1", "");
@@ -86,7 +81,7 @@ public class StoryViewModelTest {
 
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<Skill>());
         Project project = new Project(projectName, "longName");
-        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false);
+        Story story = new Story(storyName, "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false, null);
         project.setUnallocatedStories(new ArrayList<>(Arrays.asList(story)));
 
         Organisation organisation = new Organisation();
@@ -192,7 +187,7 @@ public class StoryViewModelTest {
         Person creator = new Person("person shortName", "longName", "description", "userId", "email", "phone", "dept", new ArrayList<>());
         organisation.getPeople().add(creator);
         Project project = new Project("shortName", "longName");
-        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false);
+        Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false, null);
 
         Assert.assertTrue("Creator field should be editable by default.", storyViewModel.getCreatorEditable().get());
 
@@ -206,13 +201,13 @@ public class StoryViewModelTest {
         // Add some stories to the backlog that story1 is in
         Story a, b, c, d;
         story1.getBacklog().observableStories().addAll(Arrays.asList(
-                        a = new Story("A", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false),
-                        b = new Story("B", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false)));
+                        a = new Story("A", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null),
+                        b = new Story("B", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null)));
 
         Backlog backlog2 = new Backlog();
         backlog2.observableStories().addAll(Arrays.asList(
-                        c = new Story("C", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false),
-                        d = new Story("D", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false)));
+                        c = new Story("C", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null),
+                        d = new Story("D", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null)));
 
         viewModel.load(story1, organisation);
 

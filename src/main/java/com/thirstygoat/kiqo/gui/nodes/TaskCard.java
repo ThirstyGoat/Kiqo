@@ -120,7 +120,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             EffortViewModel e = new EffortViewModel();
             e.load(null, organisationProperty.get());
             e.taskProperty().setValue(task.getValue());
-            PopOver p = new EffortLoggingPopover(e);
+            PopOver p = new EffortLoggingPopover(e, task.get());
             Platform.runLater(() -> p.show(this));
         });
 

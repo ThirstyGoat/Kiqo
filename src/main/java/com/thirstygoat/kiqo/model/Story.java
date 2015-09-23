@@ -35,6 +35,7 @@ public class Story extends Item {
     private final ObservableList<Task> tasks;
     private final FloatProperty taskHours;
     private final BooleanProperty inSprint;
+    private final ObjectProperty<Sprint> sprint;
     /**
      * no-arg constructor for JavaBeans compliance
      */
@@ -54,10 +55,11 @@ public class Story extends Item {
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty(0.0f);
         this.inSprint = new SimpleBooleanProperty(false);
+        this.sprint = new SimpleObjectProperty<>(null);
     }
 
     public Story(String shortName, String longName, String description, Person creator, Project project,
-                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady, boolean inSprint) {
+                 Backlog backlog, Integer priority, Scale scale, Integer estimate, boolean isReady, boolean inSprint, Sprint sprint) {
         this.shortName = new SimpleStringProperty(shortName);
         this.longName = new SimpleStringProperty(longName);
         this.description = new SimpleStringProperty(description);
@@ -74,6 +76,7 @@ public class Story extends Item {
         this.tasks = FXCollections.observableArrayList(Task.getWatchStrategy());
         this.taskHours = new SimpleFloatProperty();
         this.inSprint = new SimpleBooleanProperty(inSprint);
+        this.sprint = new SimpleObjectProperty<>(sprint);
     }
 
     public static Callback<Story, Observable[]> getWatchStrategy() {
@@ -299,10 +302,22 @@ public class Story extends Item {
         list.addAll(this.dependencies);
         return list;
     }
-    
+
     public void setDependencies(List<Story> dependencies) {
         this.dependencies.clear();
         this.dependencies.addAll(dependencies);
+    }
+
+    public Sprint getSprint() {
+        return sprint.get();
+    }
+
+    public void setSprint(Sprint sprint) {
+        this.sprint.set(sprint);
+    }
+
+    public ObjectProperty<Sprint> sprintProperty() {
+        return sprint;
     }
     
     public ObservableList<Story> observableDependencies() {

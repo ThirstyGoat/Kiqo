@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
@@ -32,24 +33,37 @@ public class EffortLoggingPopover extends PopOver {
     private TextField minuteSpinner;
     private TextArea commentTextArea;
     private Button logButton;
+    private Task task;
 
-    public EffortLoggingPopover(EffortViewModel viewModel) {
+    public EffortLoggingPopover(EffortViewModel viewModel, Task task) {
         super();
         this.viewModel = viewModel;
         initContent();
         attachViewModel();
         populateFields();
         attachValidators();
+        this.task = task;
     }
 
     private void attachViewModel() {
         FxUtils.setTextFieldSuggester(personSelector, viewModel.eligibleAssignees());
-        personSelector.textProperty().bindBidirectional(
-                viewModel.personProperty(),
-                StringConverters.personStringConverter(viewModel.organisationProperty())
-        );
+        personSelector.textProperty().bindBidirectional(viewModel.personProperty(),
+                        StringConverters.personStringConverter(viewModel.organisationProperty()));
 
         endDatePicker.setValue(LocalDate.now());
+        endDatePicker.setDayCellFactory(param -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (task.getStory().getSprint() != null) {
+                    if (item.isAfter(task.getStory().getSprint().getEndDate()) || item.isBefore(task.getStory().getSprint().getStartDate())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    }
+                }
+
+            }
+        });
+
         viewModel.endDateProperty().bindBidirectional(endDatePicker.valueProperty());
 
         timeTextField.textProperty().addListener((observable, oldValue, newValue) -> {

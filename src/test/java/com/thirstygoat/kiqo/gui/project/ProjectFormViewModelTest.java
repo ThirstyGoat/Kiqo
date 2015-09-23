@@ -17,6 +17,8 @@ import java.util.Arrays;
 * Created by Carina Blair on 21/07/2015.
 */
 public class ProjectFormViewModelTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private ProjectFormViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -26,9 +28,6 @@ public class ProjectFormViewModelTest {
     private Team team;
     private Story unreadyStory;
     private Story readyStory;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -44,8 +43,8 @@ public class ProjectFormViewModelTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         project.observableUnallocatedStories().add(unreadyStory);
         project.observableUnallocatedStories().add(readyStory);
 

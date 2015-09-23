@@ -18,6 +18,8 @@ import java.util.Arrays;
  * Created by leroy on 23/09/15.
  */
 public class ScrumBoardTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private SprintViewModel viewModel;
     private Organisation organisation;
     private Project project;
@@ -29,9 +31,6 @@ public class ScrumBoardTest {
     private Person po;
     private Team team;
     private Task task1;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -46,8 +45,8 @@ public class ScrumBoardTest {
         organisation.getTeams().add(team);
         organisation.getPeople().add(po);
         project.observableReleases().add(release);
-        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false);
-        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false);
+        unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
+        readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
         backlog.observableStories().add(readyStory);
         backlog.observableStories().add(unreadyStory);
         sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,

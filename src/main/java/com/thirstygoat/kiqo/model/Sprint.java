@@ -102,9 +102,11 @@ public class Sprint extends Item {
     @Override
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
-        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
-                new SearchableField("Long Name", getLongName()),
-                new SearchableField("Start Date", getStartDate().format(Utilities.DATE_FORMATTER)), new SearchableField("End Date", getEndDate().format(Utilities.DATE_FORMATTER))));
+        searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()),
+                        new SearchableField("Description", getDescription()),
+                        new SearchableField("Long Name", getLongName()),
+                        new SearchableField("Start Date", getStartDate().format(Utilities.DATE_FORMATTER)),
+                        new SearchableField("End Date", getEndDate().format(Utilities.DATE_FORMATTER))));
         return searchStrings;
     }
 
@@ -150,7 +152,7 @@ public class Sprint extends Item {
     }
 
     public void initialiseTasksWithoutStory() {
-        this.tasksWithoutStory.set(new Story("Tasks without a Story","Tasks without a Story","", null, null, null, Integer.MIN_VALUE, Scale.FIBONACCI, 1, true, true));
+        this.tasksWithoutStory.set(new Story("Tasks without a Story","Tasks without a Story","", null, null, null, Integer.MIN_VALUE, Scale.FIBONACCI, 1, true, true, this));
         stories.add(tasksWithoutStory.get());
     }
 
