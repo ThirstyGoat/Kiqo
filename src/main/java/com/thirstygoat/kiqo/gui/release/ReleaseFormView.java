@@ -41,6 +41,7 @@ public class ReleaseFormView implements FxmlView<ReleaseViewModel>, Initializabl
     public void initialize(URL arg0, ResourceBundle arg1) {        
         bindToViewModel();
         attachValidators();
+        Utilities.initShortNameLengthLimiter(shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectsSupplier());
         Platform.runLater(shortNameTextField::requestFocus);
         FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);

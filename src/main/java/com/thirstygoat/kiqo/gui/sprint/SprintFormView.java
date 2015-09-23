@@ -3,8 +3,8 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.FxUtils;
-import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.*;
+
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
@@ -91,6 +91,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
         
+        Utilities.initShortNameLengthLimiter(goalTextField.textProperty());
         FxUtils.setTextFieldSuggester(backlogTextField, viewModel.backlogsSupplier());
         FxUtils.setTextFieldSuggester(teamTextField, viewModel.teamsSupplier());
         FxUtils.setTextFieldSuggester(releaseTextField, viewModel.releasesSupplier());
