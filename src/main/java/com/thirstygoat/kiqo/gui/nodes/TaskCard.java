@@ -117,7 +117,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         });
 
         timeTextFlow.setOnMouseClicked(event1 -> {
-            EffortViewModel e = new EffortViewModel();
+            EffortViewModel e = new EffortViewModel(getTask());
             e.load(null, organisationProperty.get());
             e.taskProperty().setValue(task.getValue());
             PopOver p = new EffortLoggingPopover(e, task.get());

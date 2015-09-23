@@ -41,12 +41,13 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>(LocalDate.now());
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
     private StringProperty endDateStringProperty;
+    private ObjectProperty<Task> task = new SimpleObjectProperty();
 
 
-    public EffortViewModel() {
+    public EffortViewModel(Task task) {
         super();
         // TODO check that person is in team associated with this sprint, when assignment is working.
-
+        this.task.set(task);
         effort = new SimpleObjectProperty<>();
 
         endDateStringProperty = new SimpleStringProperty("");
@@ -91,11 +92,14 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
                         () -> {
                             if (endDateProperty().get() == null) {
                                 return false;
+                            } else if (endDateProperty().get().isBefore(task.get().getStory().getSprint().getStartDate()) ||
+                                            endDateProperty().get().isAfter(task.get().getStory().getSprint().getEndDate())) {
+                                return false;
                             }
                             return true;
                         },
                         endDateProperty),
-                ValidationMessage.error("Start date must precede end date"));
+                ValidationMessage.error("Logged date must fall within the sprint "));
 
         endTimeValidator = new FunctionBasedValidator<>(
                 endTimeProperty(),

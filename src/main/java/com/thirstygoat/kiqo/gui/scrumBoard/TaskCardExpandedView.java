@@ -116,7 +116,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
     private void initEffortLogging() {
         newEffortButton.setOnAction(event -> {
-            EffortViewModel e = new EffortViewModel();
+            EffortViewModel e = new EffortViewModel(viewModel.getTask().get());
             e.load(null, viewModel.organisationProperty().get());
             e.taskProperty().setValue(viewModel.getTask().getValue());
             PopOver p = new EffortLoggingPopover(e, viewModel.getTask().get());
@@ -124,7 +124,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         });
 
         editEffortButton.setOnAction(event -> {
-            EffortViewModel e = new EffortViewModel();
+            EffortViewModel e = new EffortViewModel(viewModel.getTask().get());
             e.load(loggedEffortListView.getSelectionModel().getSelectedItem(), viewModel.organisationProperty().get());
             e.taskProperty().setValue(viewModel.getTask().getValue());
             PopOver p = new EffortLoggingPopover(e, viewModel.getTask().get());
