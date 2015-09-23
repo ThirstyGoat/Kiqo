@@ -48,10 +48,6 @@ public class StoryCompletenessVisualiser extends HBox  {
             calculateSizes();
         };
 
-//        setMaxHeight(6);
-//        setPrefHeight(6);
-//        setMinHeight(6);
-
         todoTasks.addListener(listener);
         inProgressTasks.addListener(listener);
         verifyTasks.addListener(listener);
@@ -86,18 +82,34 @@ public class StoryCompletenessVisualiser extends HBox  {
         return (float) (getWidth() / totalEstimates);
     }
 
+    /**
+     * Provides observable list of tasks used for calculating the size of the 'to-do' section of the visualiser
+     * @param tasks
+     */
     public void setTodoTasks(ObservableList<Task> tasks) {
         todoTasks.setAll(tasks);
     }
 
+    /**
+     * Provides observable list of tasks used for calculating the size of the 'in progress' section of the visualiser
+     * @param tasks
+     */
     public void setInProgressTasks(ObservableList<Task> tasks) {
         inProgressTasks.setAll(tasks);
     }
 
+    /**
+     * Provides observable list of tasks used for calculating the size of the 'verify' section of the visualiser
+     * @param tasks
+     */
     public void setVerifyTasks(ObservableList<Task> tasks) {
         verifyTasks.setAll(tasks);
     }
 
+    /**
+     * Provides observable list of tasks used for calculating the size of the 'done' section of the visualiser
+     * @param tasks
+     */
     public void setDoneTasks(ObservableList<Task> tasks) {
         doneTasks.setAll(tasks);
     }
