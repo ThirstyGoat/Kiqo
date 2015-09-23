@@ -195,8 +195,10 @@ public class MainDetailsPaneController implements Initializable {
         ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getSprintViewTuple();
         viewTuple.getViewModel().load(sprint, mainController.selectedOrganisationProperty.get());
         viewTuple.getViewModel().getScrumBoardViewModel().setMainController(mainController);
+        viewTuple.getViewModel().getDetailsViewModel().setMainController(mainController);
         return viewTuple.getView();
     }
+
 
     public void showSearchPane() {
         // Advanced Search

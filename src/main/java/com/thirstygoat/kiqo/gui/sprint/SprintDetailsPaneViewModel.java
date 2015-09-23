@@ -39,6 +39,8 @@ public class SprintDetailsPaneViewModel extends SprintViewModel implements Edita
         return scrumBoardViewModel;
     }
 
+    public SprintDetailsPaneDetailsViewModel getDetailsViewModel () { return sprintDetailsPaneDetailsViewModel;}
+
     @Override
     public void commitEdit() {
         Command command = createCommand();
