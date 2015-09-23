@@ -94,32 +94,6 @@
                         <RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="ALWAYS" />
                      </rowConstraints>
                   </GridPane>
-
-                  <!--<GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-                     <!--<children>-->
-                        <!--<HBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">-->
-                           <!--<children>-->
-
-                           <!--</children>-->
-                           <!--<padding>-->
-                              <!--<Insets top="3.0" />-->
-                           <!--</padding>-->
-                        <!--</HBox>-->
-                        <!--<HBox spacing="5.0" GridPane.columnIndex="1">-->
-                           <!--<children>-->
-                              <!--<TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />-->
-                              <!--<Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />-->
-                           <!--</children>-->
-                        <!--</HBox>-->
-                     <!--</children>-->
-                     <!--<columnConstraints>-->
-                        <!--<ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />-->
-                        <!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />-->
-                     <!--</columnConstraints>-->
-                     <!--<rowConstraints>-->
-                        <!--<RowConstraints minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />-->
-                     <!--</rowConstraints>-->
-                  <!--</GridPane>-->
                    <VBox fx:id="loggingVBox" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5">
                        <VBox fx:id="buttonsView">
                            <HBox alignment="BASELINE_RIGHT">
