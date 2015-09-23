@@ -47,6 +47,10 @@ public class Release extends Item implements Serializable {
         return sprints;
     }
 
+    public void setSprints(List<Sprint> sprints) {
+        this.sprints.setAll(sprints);
+    }
+
     /**
      * @return a string array of the searchable fields for a model object
      */
