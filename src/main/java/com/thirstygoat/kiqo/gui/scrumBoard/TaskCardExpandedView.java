@@ -114,7 +114,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
 
 
         //TODO add the assigned people to form after creating a new GoatLabel for filtered selection thingy
-        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligableAssignedPeople());
+//        FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligableAssignedPeople());
 //        FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.getTask().get().getAssignedPeople(), viewModel.teamValidation());
     }
 

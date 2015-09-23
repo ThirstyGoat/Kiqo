@@ -1,26 +1,32 @@
 package com.thirstygoat.kiqo.util;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javafx.beans.property.*;
-import javafx.collections.*;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.util.*;
-import javafx.util.converter.NumberStringConverter;
-
-import org.controlsfx.control.textfield.*;
-
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControlSkin;
 import com.thirstygoat.kiqo.model.Item;
-
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
