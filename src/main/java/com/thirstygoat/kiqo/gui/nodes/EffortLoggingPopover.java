@@ -112,12 +112,14 @@ public class EffortLoggingPopover extends PopOver {
         validationVisualizer.initVisualization(viewModel.durationValidation(), hourSpinner, true);
     }
 
-
+    /**
+     * Inits all the gui elements for the popover, sets their sizes and populates the popover with the content
+     */
     private void initContent() {
         setAutoHide(true);
         setDetachable(false);
 
-                /* Main content */
+        /* Main content */
         VBox content = new VBox();
         content.setFillWidth(true);
         content.setMaxWidth(320);
@@ -193,6 +195,9 @@ public class EffortLoggingPopover extends PopOver {
         setContentNode(content);
     }
 
+    /**
+     * Calculates the total number of minutes from a combination of the hours and minutes text fields
+     */
     private Duration calculateDuration() {
         int hours;
         try {
