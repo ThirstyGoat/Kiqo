@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.thirstygoat.kiqo.gui.MainController;
+import javafx.scene.Scene;
 import org.controlsfx.control.textfield.*;
 
 import com.thirstygoat.kiqo.gui.Editable;
@@ -275,5 +277,25 @@ public final class FxUtils {
                 editCellFactory,
                 stringPropertyCallback);
         listBiControl.setSkin(skin);
+    }
+
+    /**
+     * Attaches the basic key shortcuts to a scene
+     * Undo/Redo, and Save
+     * @param scene Scene to attach key shortcuts to
+     */
+    public static void attachKeyShortcuts(Scene scene) {
+        scene.setOnKeyPressed(event -> {
+           // Check if Shortcut + Z was pressed
+            if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.Z) {
+                MainController.menuBarView.undo();
+            } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.Z) {
+                MainController.menuBarView.redo();
+            } else if (event.isShortcutDown() && !event.isShiftDown() && event.getCode() == KeyCode.S) {
+                MainController.menuBarView.save();
+            } else if (event.isShortcutDown() && event.isShiftDown() && event.getCode() == KeyCode.S) {
+                MainController.menuBarView.saveAs();
+            }
+        });
     }
 }

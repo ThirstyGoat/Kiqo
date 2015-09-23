@@ -78,6 +78,7 @@ public class MainController implements Initializable {
     private static final String ALL_CHANGES_SAVED_TEXT = "All changes saved.";
     private static final String UNSAVED_CHANGES_TEXT = "You have unsaved changes.";
     private static final String PRODUCT_NAME = ApplicationInfo.getProperty("name");
+    public static MenuBarView menuBarView;
     private static Stage primaryStage;
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
@@ -496,6 +497,7 @@ public class MainController implements Initializable {
         menuBarViewTuple = FluentViewLoader.fxmlView(MenuBarView.class).load();
         menuBarViewTuple.getViewModel().setListenersOnUndoManager(undoManager);
         menuBar = (VBox) menuBarViewTuple.getView();
+        menuBarView = menuBarViewTuple.getCodeBehind();
         mainBorderPane.setTop(menuBar);
         focusedItemProperty.addListener((observable, oldValue, newValue) -> {
             MainController.LOGGER.log(Level.FINE, "Focus changed to %s", newValue);
