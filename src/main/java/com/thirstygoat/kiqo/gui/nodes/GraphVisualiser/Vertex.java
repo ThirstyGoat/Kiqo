@@ -11,6 +11,8 @@ public class Vertex<T> {
     private DoubleProperty xPos = new SimpleDoubleProperty(0);
     private DoubleProperty yPos = new SimpleDoubleProperty(0);
 
+    private boolean visited = false;
+
     public Vertex(T object) {
         this.object = object;
     }
@@ -24,6 +26,14 @@ public class Vertex<T> {
     }
     public DoubleProperty xPosProperty() {
         return xPos;
+    }
+
+    public void setVisited() {
+        visited = true;
+    }
+
+    public boolean isVisited() {
+        return visited;
     }
 
     @Override

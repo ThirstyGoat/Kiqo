@@ -70,6 +70,7 @@ public class GraphTest extends Application {
         Point c = new Point("C");
         Point d = new Point("D");
         Point e = new Point("E");
+
         Point f = new Point("F");
         Point g = new Point("G");
 
@@ -108,8 +109,7 @@ public class GraphTest extends Application {
 
         gv.getEdges().addAll(edges);
 
-        gv.computePositions();
-//        gv.test();
+        gv.go();
 
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);

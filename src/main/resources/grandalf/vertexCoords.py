@@ -20,14 +20,14 @@ def getVertexPositions(vertices, edges):
 
     # Set the size for each vertex
     class defaultview(object):
-        w, h = 80, 50
+        w, h = 180, 150
 
     for v in V: v.view = defaultview()
 
     g = Graph(V, E)
     dco = DigcoLayout(g.C[0])
     dco.init_all()
-    dco.draw(10)
+    dco.draw(30)
 
     toReturn = []
     for v in g.C[0].sV:
