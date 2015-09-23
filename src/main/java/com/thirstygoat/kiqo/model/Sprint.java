@@ -154,6 +154,9 @@ public class Sprint extends Item {
         stories.add(tasksWithoutStory.get());
     }
 
+    public Story getTasksWithoutStory() { return tasksWithoutStory.get();}
+
+
     public Team getTeam() {
         return team.get();
     }
