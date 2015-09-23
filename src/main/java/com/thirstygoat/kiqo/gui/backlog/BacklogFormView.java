@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.backlog;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
 import com.thirstygoat.kiqo.model.Story;
@@ -8,8 +9,6 @@ import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -120,7 +119,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
     }
 
     private void attachValidators() {
-        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
         validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
         validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);

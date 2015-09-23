@@ -1,11 +1,10 @@
 package com.thirstygoat.kiqo.gui.project;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -57,7 +56,7 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
     }
 
     private void attachValidators() {
-        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
         validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
         validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextField);

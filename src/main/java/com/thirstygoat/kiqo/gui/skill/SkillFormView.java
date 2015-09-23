@@ -1,19 +1,22 @@
 package com.thirstygoat.kiqo.gui.skill;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.util.Utilities;
-
 import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.*;
-import javafx.scene.control.*;
-import de.saxsys.mvvmfx.*;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Connects the GUI form to the viewModel. NB: Requires that {@link #setExitStrategy(Runnable)} is called.
@@ -54,11 +57,9 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
     }
 
     private void attachValidators() {
-    	ControlsFxVisualizer validationVisualizer = new ControlsFxVisualizer();
+    	DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.nameValidation(), nameTextField, true);
         validationVisualizer.initVisualization(viewModel.descriptionValidation(), descriptionTextArea, false);
-
-    	validationVisualizer.errorDecorationEnabledProperty().bind(viewModel.dirtyProperty());
     }
     
     public void setExitStrategy(Runnable exitStrategy) {
