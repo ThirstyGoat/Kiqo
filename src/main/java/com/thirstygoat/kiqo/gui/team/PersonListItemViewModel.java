@@ -35,7 +35,8 @@ public class PersonListItemViewModel extends PersonViewModel {
     private ObjectProperty<Role> role;
     private ObjectBinding<Color> roleColor;
     
-    public PersonListItemViewModel() {
+    public PersonListItemViewModel(Person person) {
+    	this.load(person, null);
         role = new SimpleObjectProperty<>(Role.OTHER);
         roleColor = Bindings.createObjectBinding(
                 () -> { return roleProperty().get().getColor(); }, 
