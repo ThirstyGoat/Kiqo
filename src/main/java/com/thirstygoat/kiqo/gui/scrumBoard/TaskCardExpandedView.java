@@ -1,16 +1,24 @@
 package com.thirstygoat.kiqo.gui.scrumBoard;
 
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.UndoManager;
+import com.thirstygoat.kiqo.command.delete.DeleteEffortCommand;
 import com.thirstygoat.kiqo.gui.customCells.EffortListCell;
 import com.thirstygoat.kiqo.gui.customCells.ImpedimentListCell;
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
+import com.thirstygoat.kiqo.gui.nodes.EffortLoggingPopover;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Impediment;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -19,9 +27,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 

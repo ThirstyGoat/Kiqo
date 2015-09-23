@@ -13,8 +13,6 @@ import org.junit.rules.ExpectedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Created by leroy on 23/09/15.
@@ -61,7 +59,7 @@ public class ScrumBoardTest {
     public void scrumBoard_taskBlockedPropertyTest() {
         // Test that a TaskCards blocked property changes when edited in the ExpandedTaskCard.
         TaskCardViewModel taskCardViewModel = new TaskCardViewModel();
-        taskCardViewModel.load(task1);
+        taskCardViewModel.load(task1, organisation);
 
         Assert.assertEquals(false, taskCardViewModel.blockedProperty().get());
         Assert.assertEquals(false, task1.isBlocked());
