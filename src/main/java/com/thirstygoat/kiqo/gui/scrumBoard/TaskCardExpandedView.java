@@ -93,9 +93,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(),
                         viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
-        blockedCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            viewModel.commitEdit();
-        });
+        blockedCheckBox.setOnAction(event -> viewModel.commitEdit());
 
         FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligibleAssignees());
         assignedPeopleLabel.getEditField().setStringPropertyCallback(Person::shortNameProperty);

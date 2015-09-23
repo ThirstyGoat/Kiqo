@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  * Created by james on 19/08/15.
  */
 public class TaskCardViewModel extends ModelViewModel<Task> implements Editable {
-    private GoatModelWrapper<Task> modelWrapper = new GoatModelWrapper<>();
     private ObjectProperty<Task> task;
     private ObjectProperty<Organisation> organisation;
     private Stage stage;
@@ -123,7 +122,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
     }
 
     public BooleanProperty blockedProperty() {
-        return modelWrapper.field("isBlocked", Task::isBlocked, Task::setBlocked);
+        return modelWrapper.field("blocked", Task::isBlocked, Task::setBlocked);
     }
 
     public ObservableList<Impediment> impedimentsObservableList() {

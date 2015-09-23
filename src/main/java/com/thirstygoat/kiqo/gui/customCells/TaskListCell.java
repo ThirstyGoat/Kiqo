@@ -23,6 +23,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
@@ -38,7 +39,6 @@ public class TaskListCell extends ListCell<Task> {
 
     @Override
     protected void updateItem(final Task task, final boolean empty) {
-        // calling super here is very important
         if (!empty) {
             initialiseDragAndDrop(task);
             
@@ -56,28 +56,45 @@ public class TaskListCell extends ListCell<Task> {
 //            description.setWrappingWidth(listView.getWidth() * 0.65);
 
             final ComboBox<Status> statusComboBox = new ComboBox<>();
-            statusComboBox.setStyle("-fx-font: 10px \"System\"; -fx-border-width: 0.5px; -fx-border-color: black;");
-            statusComboBox.setMaxWidth(100);
-
             statusComboBox.setItems(FXCollections.observableArrayList(Status.values()));
             statusComboBox.setValue(task.getStatus());
+            
+            statusComboBox.setButtonCell(new ListCell<Status>() {
+            	@Override
+            	public void updateItem(Status item, boolean empty) {
+            		{
+            			setTextFill(Color.WHITE);
+            		}
+            		String cssClass = null;
+            		super.updateItem(item, empty);
+            		if (!empty) {
+            			getStyleClass().remove(cssClass);
+            			cssClass = item.getCssClass();
+            			getStyleClass().add(cssClass);
+            			setText(item.toString());
+            		}
+            	}
+            });
+            statusComboBox.setStyle("-fx-font: 10px \"System\"; -fx-border-width: 0.5px; -fx-border-color: black;");
+            
+            statusComboBox.setMaxWidth(100);
+
 
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != task.getStatus()) {
                     Command command = new EditCommand<>(task, "status", newValue);
                     UndoManager.getUndoManager().doCommand(command);
                 }
-            });
 
+                statusComboBox.getButtonCell().getStyleClass().remove(oldValue.getCssClass());
+                statusComboBox.getButtonCell().getStyleClass().add(newValue.getCssClass());
+            });
             task.statusProperty().addListener((observable, oldValue, newValue) -> {
-                statusComboBox.valueProperty().set(newValue);
-                statusComboBox.setStyle(statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color
-                                .toString().substring(2) + ";");
+            	if (newValue != statusComboBox.getValue()) {
+            		statusComboBox.valueProperty().set(newValue);
+            	}
             });
-            statusComboBox.setStyle(
-                            statusComboBox.getStyle() + "-fx-background-color: #" + task.getStatus().color.toString()
-                                            .substring(2) + ";");
-
+            
             ToggleButton blockedButton = new ToggleButton();
             blockedButton.selectedProperty().bindBidirectional(task.blockedProperty());
             blockedButton.setGraphic(new FontAwesomeIconView(FontAwesomeIcon.BAN));
@@ -101,7 +118,7 @@ public class TaskListCell extends ListCell<Task> {
             VBox vBox = new VBox();
             vBox.getChildren().addAll(name, description);
 
-            hBox.setHgrow(vBox, Priority.ALWAYS);
+            HBox.setHgrow(vBox, Priority.ALWAYS);
             hBox.getChildren().addAll(vBox, estimate, statusComboBox, blockedButton);
 
             setGraphic(hBox);
