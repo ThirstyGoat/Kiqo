@@ -3,7 +3,8 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.command.*;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.GoatModelWrapper;
+import com.thirstygoat.kiqo.util.*;
+
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
@@ -68,7 +69,7 @@ public class SprintViewModel implements ViewModel {
 
         goalValidator.addRule(goalProperty().isNotNull(), ValidationMessage.error("Sprint goal must not be empty"));
         goalValidator.addRule(goalProperty().length().greaterThan(0), ValidationMessage.error("Sprint goal must not be empty"));
-        goalValidator.addRule(goalProperty().length().lessThan(20), ValidationMessage.error("Sprint goal must be less than 20 characters"));
+        goalValidator.addRule(goalProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH), ValidationMessage.error("Sprint goal must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
         goalValidator.addRule(uniqueShortName, ValidationMessage.error("Sprint goal must be unique within backlog"));
 
         backlogValidator = new FunctionBasedValidator<>(backlogProperty(), backlog -> {

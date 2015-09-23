@@ -55,7 +55,6 @@ public class TaskFormViewModel extends FormController<Task> {
 
     private void initValidators() {
         nameValidator = new FunctionBasedValidator<>(nameProperty,
-                // Check that length of the shortName isn't 0 or greater than 20 and that it is unique.
                 s -> {
                     if (s.length() == 0) {
                         return false;

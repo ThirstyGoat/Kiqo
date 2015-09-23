@@ -40,7 +40,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
         BooleanBinding rule2 = shortNameProperty().length().greaterThan(0);
-        BooleanBinding rule3 = shortNameProperty().length().lessThan(20);
+        BooleanBinding rule3 = shortNameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH);
         BooleanBinding rule4 = Bindings.createBooleanBinding(
                 () -> {
                     if (projectProperty().get() == null) {

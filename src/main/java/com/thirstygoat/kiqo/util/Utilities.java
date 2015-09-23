@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.control.*;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -18,6 +19,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.controlsfx.control.PopOver;
 
 /**
  * Created by bradley on 9/04/15.
@@ -155,36 +158,49 @@ public final class Utilities {
     }
 
     /**
-     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
-     * up to a certain number of characters.
+     * Attaches listeners so that the shortName mirrors the longName, in real time, up to a certain number of characters. 
+     * 
+     * Editing the shortName directly to differ from the longName disconnects the suggester; 
+     * 	editing the shortName directly to match the longName reconnects the suggester.
+     * 
+     * Do *not* use this method with {@link #initShortNameSuggester(StringProperty, StringProperty)}; the length-limiting behaviour is already included here.
      * @param longName source
      * @param shortName target
      */
-    public static void setNameSuggester(StringProperty longName, StringProperty shortName) {
+    public static void initShortNameSuggester(StringProperty longName, StringProperty shortName) {
         BooleanProperty isSuggesterEnabled = new SimpleBooleanProperty(true);
         shortName.addListener((observable, oldValue, newValue) -> {
-            if (longName.get() != null) {
-                final String truncatedLongName = longName.get()
-                                .substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH));
-                final String truncatedShortName =
-                                newValue.substring(0, Math.min(newValue.length(), Utilities.SHORT_NAME_MAX_LENGTH));
-                // if shortName is modified directly, disable suggester.
-                // but if shortname is modified to match longName, enable it again.
-                isSuggesterEnabled.set(truncatedShortName.equals(truncatedLongName));
-
-                // in any case, truncate the short name to the character limit
-                if (newValue.length() > Utilities.SHORT_NAME_MAX_LENGTH) {
-                    shortName.set(truncatedShortName); // override newValue
-                }
+            // disconnect suggester on direct edit; reconnect on edit-to-match
+        	String truncated = longName.get().substring(0, Math.min(longName.get().length(), Utilities.SHORT_NAME_MAX_LENGTH-1));
+    		isSuggesterEnabled.set(newValue.equals(truncated));
+    		
+    		// prohibit edits that would push the short name length beyond the character limit
+            if (newValue.length() >= Utilities.SHORT_NAME_MAX_LENGTH) {
+            	shortName.set(oldValue); // override newValue
             }
         });
         
         longName.addListener((observable, oldValue, newValue) -> {
-            // Propagate edit to shortName, which will deal with truncation.
+            // Propagate truncated edition to shortName
             if (isSuggesterEnabled.get()) {
-                shortName.set(newValue);
+            	shortName.set(newValue.substring(0, Math.min(newValue.length(), Utilities.SHORT_NAME_MAX_LENGTH-1)));
             }
         });
+    }
+    
+    /**
+     * Sets up a listener on the name field of team to restrict it to the predefined maximum length.
+     * 
+     * Do *not* use this with {@link #initShortNameSuggester(StringProperty, StringProperty)}; the length-limiting behaviour is already included there.
+     * @param shortName
+     */
+    public static void initShortNameLengthLimiter(StringProperty shortName) {
+    	shortName.addListener((observable, oldValue, newValue) -> {
+            // prohibit edits that would push the short name length beyond the character limit
+            if (newValue.length() >= Utilities.SHORT_NAME_MAX_LENGTH) {
+            	shortName.set(oldValue); // override newValue
+            }
+    	});
     }
 
     /**

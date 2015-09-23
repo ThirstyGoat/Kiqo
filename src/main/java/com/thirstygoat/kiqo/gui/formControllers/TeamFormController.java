@@ -85,7 +85,7 @@ public class TeamFormController extends FormController<Team> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setButtonHandlers();
-        setShortNameLengthRestrictor();
+        Utilities.initShortNameLengthLimiter(shortNameTextField.textProperty());
         setPrompts();
 
         Platform.runLater(() -> {
@@ -114,20 +114,8 @@ public class TeamFormController extends FormController<Team> {
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique.");
         descriptionTextField.setPromptText("Describe this team.");
-    }
-
-    /**
-     * Sets up a listener on the name field of team to restrict it to the predefined maximum length
-     */
-    private void setShortNameLengthRestrictor() {
-        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
-            }
-        });
     }
 
     private void setButtonHandlers() {

@@ -43,7 +43,7 @@ public class SkillViewModel extends ModelViewModel<Skill> {
             nameProperty());
         nameValidator.addRule(nameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         nameValidator.addRule(nameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
-        nameValidator.addRule(nameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
+        nameValidator.addRule(nameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH), ValidationMessage.error("Name must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
         nameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true

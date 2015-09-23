@@ -74,7 +74,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             shortNameProperty(), organisationProperty());
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
-        shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
+        shortNameValidator.addRule(shortNameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH), ValidationMessage.error("Name must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
         shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true

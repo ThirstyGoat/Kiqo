@@ -22,6 +22,7 @@ import com.thirstygoat.kiqo.gui.viewModel.TaskFormViewModel;
 import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.util.Utilities;
 
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
@@ -55,6 +56,7 @@ public class TaskFormController extends FormController<Task> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bindFields();
+        Utilities.initShortNameLengthLimiter(name.textProperty());
         Platform.runLater(name::requestFocus);
     }
 

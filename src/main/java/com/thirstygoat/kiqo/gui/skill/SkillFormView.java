@@ -40,6 +40,8 @@ public class SkillFormView implements FxmlView<SkillViewModel>, Initializable {
         bindToViewModel();
         
         attachValidators();
+        Utilities.initShortNameLengthLimiter(nameTextField.textProperty());
+        
         Platform.runLater(nameTextField::requestFocus);
 
         FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
