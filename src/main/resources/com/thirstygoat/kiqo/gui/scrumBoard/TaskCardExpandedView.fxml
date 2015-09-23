@@ -64,7 +64,7 @@
                              </padding>
                          </Label>
                          <GoatLabelTextArea fx:id="descriptionLabel" GridPane.rowIndex="5"  defaultText="Description" GridPane.columnSpan="2"/>
-                         <VBox VBox.vgrow="NEVER" GridPane.rowIndex="5" GridPane.columnSpan="2">
+                         <VBox VBox.vgrow="NEVER" GridPane.rowIndex="6" GridPane.columnSpan="2">
                              <children>
                                  <ListView fx:id="impedimentsListView" maxHeight="250.0" prefHeight="250.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
@@ -85,6 +85,7 @@
                         <ColumnConstraints hgrow="NEVER" percentWidth="50" halignment="RIGHT"/>
                      </columnConstraints>
                      <rowConstraints>
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
