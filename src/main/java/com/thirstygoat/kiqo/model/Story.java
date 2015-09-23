@@ -77,7 +77,7 @@ public class Story extends Item {
     }
 
     public static Callback<Story, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty()};
+        return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty(), p.getTasks()};
     }
 
     public void initBoundPropertySupport() {
@@ -101,14 +101,23 @@ public class Story extends Item {
     public FloatProperty spentEffortProperty() {
         FloatProperty spentEffort = new SimpleFloatProperty(0.0f);
         spentEffort.bind(Bindings.createDoubleBinding(() -> {
-                    double runningTotal = 0;
-                    for (Task task : getTasks()) {
-                        runningTotal += task.getObservableLoggedEffort().stream().mapToDouble(Effort::getDurationAsNumber).sum();
-                    }
-                    return runningTotal;
-                },
-                getTasks()));
+                            double runningTotal = 0;
+                            for (Task task : getTasks()) {
+                                runningTotal += task.getLoggedEffort().stream().mapToDouble(Effort::getDurationAsNumber).sum();
+                            }
+                            return runningTotal;
+                        }, getTasks()));
         return spentEffort;
+    }
+
+    // this is working
+    public FloatProperty totalEstimateProperty() {
+        FloatProperty totalEstimate = new SimpleFloatProperty();
+        totalEstimate.bind(Bindings.createDoubleBinding(
+                        () -> getTasks().stream()
+                                        .mapToDouble(Task::getEstimate).sum(),
+                        getTasks()));
+        return totalEstimate;
     }
 
     /**

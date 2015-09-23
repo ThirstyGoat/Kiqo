@@ -36,7 +36,9 @@ public class SprintViewModel implements ViewModel {
     private final FunctionBasedValidator<Team> teamValidator;
     private final FunctionBasedValidator<Release> releaseValidator;
     private final CompositeValidator allValidator;
-    private GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
+    private final FloatProperty totalEstimatedHours;
+    private final FloatProperty spentHours;
+    protected GoatModelWrapper<Sprint> sprintWrapper = new GoatModelWrapper<>();
 
     public SprintViewModel() {
         organisationProperty = new SimpleObjectProperty<>();
@@ -44,7 +46,8 @@ public class SprintViewModel implements ViewModel {
         stories = new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
         tasks = new SimpleListProperty<>(FXCollections.observableArrayList(Task.getWatchStrategy()));
         eligableStories = new SimpleListProperty<>(FXCollections.observableArrayList());
-
+        totalEstimatedHours = new SimpleFloatProperty(0);
+        spentHours = new SimpleFloatProperty(0);
         goalValidator = new ObservableRuleBasedValidator();
 
         BooleanBinding uniqueShortName = Bindings.createBooleanBinding(
@@ -78,13 +81,13 @@ public class SprintViewModel implements ViewModel {
 
         longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
                 string -> {
-                    if (string == null || string.length() == 0 || string.length() > 20) {
+                    if (string == null || string.length() == 0) {
                         return false;
                     } else {
                         return true;
                     }
                 },
-                ValidationMessage.error("Sprint name must be unique and not empty"));
+                ValidationMessage.error("Sprint name must not be empty"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
 
@@ -180,6 +183,14 @@ public class SprintViewModel implements ViewModel {
             stories().clear();
         }
         sprintWrapper.reload();
+        totalEstimatedHours.unbind();
+        spentHours.unbind();
+
+        if (sprintProperty.get() != null) {
+            totalEstimatedHours.bind(sprintProperty().get().createTotalEstimateBinding());
+            spentHours.bind(sprintProperty().get().createSpentEffortBinding());
+        }
+
 
         // Listen for changes on model objects ObservableLists. This could be removed if ModelWrapper supported ListProperty
         sprintWrapper.get().getStories().addListener(new ListChangeListener<Story>() {
@@ -427,5 +438,17 @@ public class SprintViewModel implements ViewModel {
     
     public ValidationStatus allValidation() {
         return allValidator.getValidationStatus();
+    }
+
+    public FloatProperty totalEstimatedHoursProperty() {
+        return totalEstimatedHours;
+    }
+
+    public FloatProperty spentHoursProperty() {
+        return spentHours;
+    }
+
+    public void changesBinding() {
+        // TODO
     }
 }

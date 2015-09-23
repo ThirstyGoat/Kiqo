@@ -75,7 +75,7 @@
                                     </Label>
                                     <FilteredListBiControl fx:id="dependenciesLabel" />
 
-                                    <Label styleClass="pane-type-indicator" text="Total hours" >
+                                    <Label styleClass="pane-type-indicator" text="Total Spent Hours" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
                                     </Label>
                                     <Label fx:id="totalLoggedHours" />

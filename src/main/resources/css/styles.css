@@ -502,3 +502,46 @@
 
 .blocked-button * {
 }
+
+
+/************ CHART STUFF ************/
+
+.chart-content .chart-line-symbol {
+    -fx-background-color: transparent;
+}
+
+.chart-symbol-reference {
+    -fx-fill: #f90014;
+}
+
+.chart-symbol-effort-remaining {
+    -fx-fill:  #a9e200;
+}
+
+.chart-symbol-spent-effort {
+    -fx-fill: #22bad9;
+}
+
+/* reference line */
+.default-color0.chart-series-line {
+    -fx-stroke: #f90014;
+    -fx-stroke-width: 1;
+    -fx-stroke-dash-array: 5, 10;
+}
+
+
+.default-color1.chart-series-line {
+    -fx-stroke: #22bad9;
+    -fx-stroke-width: 2.5;
+}
+
+
+.default-color2.chart-series-line {
+    -fx-stroke: #a9e200;
+    -fx-stroke-width: 2.5;
+}
+
+.export-hyperlink {
+    -fx-font-size: 11px;
+    -fx-underline: true;
+}
