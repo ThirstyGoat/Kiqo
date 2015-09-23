@@ -3,6 +3,8 @@ package com.thirstygoat.kiqo.gui.sprint;
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Editable;
+import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,6 +17,8 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
 
     private StringProperty startDateStringProperty;
     private StringProperty endDateStringProperty;
+
+    private MainController mainController;
 
     public SprintDetailsPaneDetailsViewModel() {
         super();
@@ -33,6 +37,14 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
         }, endDateProperty()));
     }
 
+    public void createTask() {
+        mainController.createTask(tasksWithoutStoryProperty().get());
+    }
+
+    public void editTask(Task task) {
+        mainController.editTask(task, tasksWithoutStoryProperty().get());
+    }
+
     public void commitEdit() {
         Command command = createCommand();
         if (command != null ) {
@@ -43,6 +55,11 @@ public class SprintDetailsPaneDetailsViewModel extends SprintViewModel implement
     public void cancelEdit() {
         reload();
     }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
 
     public static final String PLACEHOLDER = "No stories in sprint";
 
