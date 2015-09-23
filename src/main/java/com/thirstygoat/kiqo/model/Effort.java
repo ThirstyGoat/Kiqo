@@ -26,7 +26,7 @@ public class Effort implements BoundProperties, Searchable {
     private final ObjectProperty<Duration> duration;
     private final StringProperty comment;
     private final ObjectProperty<LocalDateTime> logTimeStamp;
-    private final BoundPropertySupport bps = new BoundPropertySupport(this);
+    private final transient BoundPropertySupport bps = new BoundPropertySupport(this);
 
     public Effort() {
         this.person = new SimpleObjectProperty<>(null);

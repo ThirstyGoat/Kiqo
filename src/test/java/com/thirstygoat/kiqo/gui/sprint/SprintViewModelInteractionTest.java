@@ -2,7 +2,6 @@ package com.thirstygoat.kiqo.gui.sprint;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateSprintCommand;
 import com.thirstygoat.kiqo.model.*;
 import org.junit.Assert;

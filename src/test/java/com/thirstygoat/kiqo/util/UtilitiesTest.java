@@ -1,14 +1,20 @@
 package com.thirstygoat.kiqo.util;
 
-import java.util.*;
+import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Skill;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
-
-import org.junit.*;
-
-import com.thirstygoat.kiqo.model.*;
-
-import javafx.beans.property.*;
-import javafx.collections.*;
 
 
 /**

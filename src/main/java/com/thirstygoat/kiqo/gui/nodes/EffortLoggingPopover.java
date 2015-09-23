@@ -124,7 +124,7 @@ public class EffortLoggingPopover extends PopOver {
         content.setFillWidth(true);
         content.setMaxWidth(320);
         content.setMaxHeight(320);
-        content.setPadding(new Insets(5, 5, 5, 5));
+        content.setPadding(new Insets(5, 10, 10, 10));
         content.setSpacing(5);
 
         /* Heading */
