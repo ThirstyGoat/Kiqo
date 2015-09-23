@@ -61,7 +61,7 @@ public class GraphTest extends Application {
         GraphVisualiser<Point> gv = new GraphVisualiser<>();
         gv.setNodeCallback(point -> {
             Label label = new Label(point.getLabel());
-            label.setStyle("-fx-background-color: white");
+//            label.setStyle("-fx-background-color: white");
             return label;
         });
 
@@ -103,6 +103,7 @@ public class GraphTest extends Application {
         gv.getEdges().addAll(edges);
 
         gv.computePositions();
+//        gv.test();
 
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);
