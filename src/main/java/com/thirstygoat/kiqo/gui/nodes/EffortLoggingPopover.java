@@ -81,8 +81,15 @@ public class EffortLoggingPopover extends PopOver {
             if (viewModel.allValidation().isValid()) {
                 viewModel.commitEdit();
                 hide();
+                hide(javafx.util.Duration.millis(0));
             }
         });
+
+        focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if(!newValue) {
+                hide(javafx.util.Duration.millis(0));
+            }
+        }));
     }
 
     private void populateFields() {
