@@ -6,9 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.util.Callback;
-import org.python.core.*;
+import org.python.core.PyFunction;
+import org.python.core.PyList;
+import org.python.core.PyObject;
+import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 import java.util.HashMap;
@@ -30,6 +32,15 @@ public class GraphVisualiser<T> extends Pane {
 
     public void setNodeCallback(Callback<T, Node> nodeCallback) {
         this.nodeCallback = nodeCallback;
+    }
+
+    public void test() {
+        Arrow a = new Arrow();
+        a.layoutXProperty().set(100);
+        a.layoutYProperty().set(100);
+        a.endXProperty().set(100);
+        a.endYProperty().set(-50);
+        getChildren().add(a);
     }
 
     public void computePositions() {
@@ -111,13 +122,11 @@ public class GraphVisualiser<T> extends Pane {
      */
     private void drawBranch(Node source, Node destination) {
         // Strange things happen when this line is removed.
-        boundsInParentProperty().addListener((obs, oldV, newV) -> {});
+        boundsInParentProperty().addListener((obs, oldV, newV) -> {
+        });
 
-        Line line = new Line();
+        Arrow line = new Arrow();
 
-        line.setStartX(0);
-        line.setStartY(0);
-        line.setEndX(0);
 
         line.layoutXProperty().bind(Bindings.createDoubleBinding(() -> getMidX(source), boundsInParentProperty()));
         line.layoutYProperty().bind(Bindings.createDoubleBinding(() -> getMidY(source), boundsInParentProperty()));
