@@ -10,6 +10,7 @@ import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.model.AcceptanceCriteria.State;
 import com.thirstygoat.kiqo.util.FxUtils;
@@ -59,7 +60,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @FXML
     private GoatLabelTextField creatorLabel;
     @FXML
-    private Label dependenciesLabel;
+    private FilteredListBiControl<Story> dependenciesLabel;
     @FXML
     private GoatLabelTextField priorityLabel;
     @FXML
@@ -142,7 +143,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     });
                 });
             });
-            dependenciesLabel.textProperty().bind(Utilities.commaSeparatedValuesProperty(story.observableDependencies()));
+            FxUtils.initGoatLabel(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
+                            viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());

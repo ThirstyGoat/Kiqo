@@ -13,16 +13,16 @@ import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 public class FilteredListBiControl<S> extends BiControl<ListView<S>, GoatFilteredListSelectionView<S>, ListProperty<S>> {
 
     private final ListProperty<S> selectedItems;
-    private final ListProperty<S> allItems;
+    private final ListProperty<S> unselectedItems;
     
     public FilteredListBiControl() {
         super();
         selectedItems = new SimpleListProperty<>(FXCollections.observableArrayList());
-        allItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+        unselectedItems = new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
-    public ListProperty<S> allItems() {
-        return allItems;
+    public ListProperty<S> unselectedItems() {
+        return unselectedItems;
     }
     
     public ListProperty<S> selectedItems() {

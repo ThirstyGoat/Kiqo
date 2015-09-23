@@ -216,22 +216,4 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
     public ValidationStatus teamValidation() {
         return teamValidator.getValidationStatus();
     }
-
-    public ListProperty<Person> eligableAssignedPeople() {
-        ListProperty<Person> eligableAssignedPeople = new SimpleListProperty<>(FXCollections.observableArrayList());
-//        Sprint sprint = null;
-//        for (Release release : organisation.get().getReleases()) {
-//            for (Sprint aSprint : release.getSprints()) {
-//                for (Story story : aSprint.getStories()) {
-//                    if (task.get() != null) {
-//                        if (story == task.get().getStory()) {
-//                            sprint = aSprint;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        if (sprint != null) eligableAssignedPeople.setAll(sprint.getTeam().getTeamMembers());
-        return eligableAssignedPeople;
-    }
 }

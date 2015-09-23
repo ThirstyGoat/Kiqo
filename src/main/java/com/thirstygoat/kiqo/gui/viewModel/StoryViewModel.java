@@ -1,27 +1,41 @@
 package com.thirstygoat.kiqo.gui.viewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.command.MoveItemCommand;
 import com.thirstygoat.kiqo.command.create.CreateStoryCommand;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Backlog;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Project;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.*;
+
+import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
+import de.saxsys.mvvmfx.utils.validation.FunctionBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
+import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.*;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import javafx.collections.ObservableList;
 
 
 /**
@@ -38,8 +52,19 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator allValidator;
+	private final ObjectBinding<ObservableList<Story>> eligibleDependencies;
 
     public StoryViewModel() {
+    	eligibleDependencies = Bindings.createObjectBinding(() -> { 
+	    		if (backlogProperty().get() == null) {
+		            return FXCollections.observableArrayList();
+		        } else {
+		            return backlogProperty().get().getStories().stream()
+		                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
+		                    .collect(GoatCollectors.toObservableList());
+		        }
+	    	}, projectProperty(), backlogProperty());
+    	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
                 List<Story> stories = new ArrayList();
@@ -110,6 +135,12 @@ public class StoryViewModel extends ModelViewModel<Story> {
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
+    
+    @Override
+	public void reload() {
+    	super.reload();
+    	eligibleDependencies.invalidate();
+    }
 
     @Override
     protected Supplier<Story> modelSupplier() {
@@ -168,24 +199,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
     /** Other Fields **/
 
-    public  ListProperty<Story> eligibleDependencies() {
-        ListProperty<Story> eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
-        Supplier<List<Story>> eligibleDependenciesSupplier = () -> {
-            if (backlogProperty().get() == null) {
-                return new ArrayList<Story>();
-            } else {
-                return backlogProperty().get().getStories().stream()
-                        .filter(story -> !dependenciesProperty().contains(story))
-                        .filter(story -> !createsCycle(story))
-                        .collect(Collectors.toList());
-            }
-        };
-
-        eligibleDependencies.setAll(eligibleDependenciesSupplier.get());
-        projectProperty().addListener(change -> {
-            eligibleDependencies.setAll(eligibleDependenciesSupplier.get());
-        });
-
+    public ObjectBinding<ObservableList<Story>> eligibleDependencies() {
         return eligibleDependencies;
     }
 

@@ -24,7 +24,7 @@ public class AdvancedSearch extends Search {
 
     /**
      * Executes the search
-     * @return ObservableList&lt;SearchResult&rt; containing the results of the search
+     * @return ObservableList&lt;SearchResult&gt; containing the results of the search
      */
     public ObservableList<SearchResult> execute() {
         ObservableList<SearchResult> results = FXCollections.observableArrayList();

@@ -21,7 +21,7 @@ public class GoatLabelFilteredListSelectionViewSkin<T extends Item> extends Goat
     }
 
     @Override
-    protected void hideEditField() {
+    protected void initEditField() {
         editField._focusedProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(() -> { // hacky stuff (fixes issue with focus being lost when clicking on segmented button
                 if (!editField._focusedProperty().get() && !newValue && !doneButton.isFocused()) {

@@ -54,7 +54,7 @@ public class SkillViewModel extends ModelViewModel<Skill> {
     @Override
 	public Command getCommand() {
         final Command command;
-        if (modelWrapper.get().getShortName().equals("")) { // edit
+        if (!modelWrapper.get().getShortName().equals("")) { // edit
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
             if (changes.size() > 0) {
@@ -102,7 +102,6 @@ public class SkillViewModel extends ModelViewModel<Skill> {
 
 	@Override
 	protected Supplier<Skill> modelSupplier() {
-		// TODO Auto-generated method stub
-		return null;
+		return Skill::new;
 	}
 }

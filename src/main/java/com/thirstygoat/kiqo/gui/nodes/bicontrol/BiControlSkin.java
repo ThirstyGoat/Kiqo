@@ -1,15 +1,19 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
-import de.jensd.fx.glyphs.fontawesome.*;
-
-import javafx.animation.FadeTransition;
-import javafx.beans.value.ChangeListener;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.scene.Parent;
-import javafx.util.Duration;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.SkinBase;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  * Created by leroy on 16/09/15.
@@ -25,9 +29,10 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
     protected final D displayView;
     private Runnable onCommit;
     private Runnable onCancel;
+    private BooleanProperty isInEditMode;
 
     protected BiControlSkin(BiControl<D, E, T> control, Runnable onCommit, Runnable onCancel, boolean addCancelButton) {
-        super(control);
+        super(control);        
         this.onCommit = onCommit;
         this.onCancel = onCancel;
         
@@ -36,22 +41,46 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         editView = makeEditView();
         displayView = makeDisplayView();
 
-        showDisplayView();
-
         if (addCancelButton) {
             cancelButton = makeCancelButton();
             cancelButton.setVisible(false);
         } else {
             cancelButton = null;
         }
-        
+
         attachListeners();
 
+        // initIsInEditMode() must be called *after* attachListeners()
+    	isInEditMode = new SimpleBooleanProperty(true);
+        initIsInEditMode();
+        
         Parent parent = makeParent();
         getChildren().add(parent);
     }
 
-    private void attachListeners() {
+    private void initIsInEditMode() {    	
+    	isInEditMode.addListener((observable, oldValue, newValue) -> {
+    		if (newValue) {
+	            displayView.setVisible(false);
+	            editView.setVisible(true);
+	            doneButton.setVisible(true);
+	            if (cancelButton != null) {
+	                cancelButton.setVisible(true);
+	            }
+    		} else {
+    	        displayView.setVisible(true);
+    	        editView.setVisible(false);
+    	        doneButton.setVisible(false);
+    	        if (cancelButton != null) {
+    	            cancelButton.setVisible(false);
+    	        }
+    		}
+    	});
+
+        isInEditMode.set(false); // fire change listener to enter display mode to begin
+	}
+
+	protected void attachListeners() {
         // prevent focusTraversal when hidden
         editButton.focusTraversableProperty().bind(editButton.visibleProperty());
         doneButton.focusTraversableProperty().bind(doneButton.visibleProperty());
@@ -64,26 +93,6 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         if (cancelButton != null) {
             cancelButton.focusTraversableProperty().bind(cancelButton.visibleProperty());
             cancelButton.setOnAction(this::onCancelAction);
-        }
-    }
-
-    protected void showEditView() {
-        editButton.setVisible(false);
-        displayView.setVisible(false);
-        editView.setVisible(true);
-        doneButton.setVisible(true);
-        if (cancelButton != null) {
-            cancelButton.setVisible(true);
-        }
-    }
-    
-    protected void showDisplayView() {
-        editButton.setVisible(true);
-        displayView.setVisible(true);
-        editView.setVisible(false);
-        doneButton.setVisible(false);
-        if (cancelButton != null) {
-            cancelButton.setVisible(false);
         }
     }
 
@@ -135,60 +144,30 @@ public abstract class BiControlSkin<D extends Control, E extends Control, T> ext
         HBox.setHgrow(viewsPane, Priority.ALWAYS);
 
         // show/hide pencil
-//        parent.hoverProperty().addListener(editButton.getFadeAction()); TODO
-        
+        editButton.visibleProperty().bind(isInEditMode.not().and(parent.hoverProperty()));
         
         return parent;
     }
-
-    protected void onEditAction(@SuppressWarnings("unused") ActionEvent event) {
-        showEditView();
+    
+    protected boolean doneButtonIsFocused() {
+    	return doneButton.isFocused();
     }
 
-    protected void onCancelAction(@SuppressWarnings("unused") ActionEvent event) {
-        showDisplayView();
+    protected void onEditAction(ActionEvent event) {
+    	enterEditMode();
+    }
+
+    protected void onCancelAction(ActionEvent event) {
+        isInEditMode.set(false);
         onCancel.run();
     }
 
-    protected void onDoneAction(@SuppressWarnings("unused") ActionEvent event) {
-        showDisplayView();
+    protected void onDoneAction(ActionEvent event) {
+        isInEditMode.set(false);
         onCommit.run();
     }
-
-
-    @Deprecated
-    class EditButton extends Button {
-        final FadeTransition fade;
-        
-        public EditButton() {
-            super();
-            FontAwesomeIconView pencilIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
     
-            pencilIcon.setStyle("-fx-fill: grey");
-            setGraphic(pencilIcon);
-            setStyle("-fx-background-color: transparent;" 
-                    + "-fx-padding: 0px;" 
-                    + "-fx-animated: true;");
-            // Make the edit button fade on hover
-            fade = new FadeTransition(Duration.millis(400), this);
-            fade.setAutoReverse(true);
-            fade.setFromValue(0);
-            fade.setToValue(1);
-        }
-    
-        protected ChangeListener<Boolean> getFadeAction() {
-            return (observable, oldValue, newValue) -> {
-                if (displayView.isVisible()) { // in display mode
-                    if (newValue) {
-                        fade.setCycleCount(1);
-                        fade.playFromStart();
-                    } else {
-                        fade.setCycleCount(2);
-                        fade.playFrom(Duration.millis(400));
-                    }
-                }
-                setVisible(newValue);
-            };
-        }
+    protected void enterEditMode() {
+        isInEditMode.set(true);
     }
 }

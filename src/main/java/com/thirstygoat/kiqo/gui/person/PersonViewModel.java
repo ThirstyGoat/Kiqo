@@ -8,6 +8,7 @@ import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Skill;
+import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
@@ -15,10 +16,12 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,27 +39,27 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
+	private final ObjectBinding<ObservableList<Skill>> availableSkills;
 
     public PersonViewModel() {
         createValidators();
+        
+        availableSkills = Bindings.createObjectBinding(() -> { 
+	    		if (organisationProperty().get() != null) {
+					final ListProperty<Skill> skills = skills();
+	                return organisationProperty().get().getSkills().stream()
+	                        .filter(skill -> !skills.contains(skill))
+	                        .collect(GoatCollectors.toObservableList());
+	            } else {
+	                return FXCollections.observableArrayList();
+	            }
+	        }, organisationProperty());
     }
     
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
     }
-
-    /**
-     * Supplies skills which can be added to a persons list of skills.
-     */
-    public Supplier<List<Skill>> availableSkillsSupplier =
-            () -> { if (organisationProperty().get() != null) {
-                return organisationProperty().get().getSkills().stream()
-                        .filter(skill -> !skills().contains(skill))
-                        .collect(Collectors.toList());
-            }
-                return Collections.emptyList();
-            };
 
     private void createValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
@@ -151,14 +154,14 @@ public class PersonViewModel extends ModelViewModel<Person> {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");
     }
 
-    protected ListProperty<Skill> availableSkills() {
-        ListProperty<Skill> availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
-        organisationProperty().addListener(observable -> {
-            if (observable != null) {
-                availableSkills.setAll(availableSkillsSupplier.get());
-            }
-        });
+    protected ObjectBinding<ObservableList<Skill>> availableSkills() {
         return availableSkills;
+    }
+    
+    @Override
+	public void reload() {
+    	super.reload();
+    	availableSkills.invalidate();
     }
     
     public ValidationStatus shortNameValidation() {

@@ -3,6 +3,13 @@ package com.thirstygoat.kiqo.gui.story;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.viewModel.StoryViewModel;
 import com.thirstygoat.kiqo.model.*;
+
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -209,18 +216,21 @@ public class StoryViewModelTest {
 
         viewModel.load(story1, organisation);
 
+        ListProperty<Story> eligibleDependencies = new SimpleListProperty<>();
+        
         // Check that only stories in the same backlog are available as dependencies
-        Assert.assertEquals(true, viewModel.eligibleDependencies().containsAll(Arrays.asList(a, b)));
-        Assert.assertEquals(false, viewModel.eligibleDependencies().containsAll(Arrays.asList(c, d)));
+        eligibleDependencies.bind(viewModel.eligibleDependencies());
+		Assert.assertEquals(true, eligibleDependencies.get().containsAll(Arrays.asList(a, b)));
+        Assert.assertEquals(false, eligibleDependencies.get().containsAll(Arrays.asList(c, d)));
 
         // Check that eligible stories change when backlog is not set
         viewModel.backlogProperty().set(null);
-        Assert.assertEquals(Collections.emptyList(), viewModel.eligibleDependencies());
+        Assert.assertEquals(Collections.emptyList(), eligibleDependencies.get());
 
         // Check that eligible stories change when a different backlog is set
         viewModel.backlogProperty().set(backlog2);
-        Assert.assertEquals(true, viewModel.eligibleDependencies().containsAll(Arrays.asList(c, d)));
-        Assert.assertEquals(false, viewModel.eligibleDependencies().containsAll(Arrays.asList(a, b)));
+        Assert.assertEquals(true, eligibleDependencies.get().containsAll(Arrays.asList(c, d)));
+        Assert.assertEquals(false, eligibleDependencies.get().containsAll(Arrays.asList(a, b)));
     }
 
     @Test
