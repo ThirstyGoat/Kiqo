@@ -70,6 +70,8 @@ public class GraphTest extends Application {
         Point c = new Point("C");
         Point d = new Point("D");
         Point e = new Point("E");
+        Point f = new Point("F");
+        Point g = new Point("G");
 
         a.getDependents().add(b);
         a.getDependents().add(c);
@@ -80,12 +82,16 @@ public class GraphTest extends Application {
         c.getDependents().add(d);
         e.getDependents().add(d);
 
+        f.getDependents().add(g);
+
         Map<Point, Vertex<Point>> map = new HashMap<>();
         map.put(a, new Vertex<>(a));
         map.put(b, new Vertex<>(b));
         map.put(c, new Vertex<>(c));
         map.put(d, new Vertex<>(d));
         map.put(e, new Vertex<>(e));
+        map.put(f, new Vertex<>(f));
+        map.put(g, new Vertex<>(g));
 
 
         for (Vertex<Point> vertex : map.values()) {
