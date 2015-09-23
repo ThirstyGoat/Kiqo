@@ -322,19 +322,19 @@
     -fx-fill: #fff
 }
 
-.task-card.not-started {
+.not-started {
     -fx-background-color: #0b8fb3; /* #607d8b; */
 }
 
-.task-card.in-progress {
+.in-progress {
     -fx-background-color: #ff7144; /* #0b8fb3; */
 }
 
-.task-card.verify {
+.verify {
     -fx-background-color: #2196f3;
 }
 
-.task-card.done {
+.done {
     -fx-background-color: #4caf50;
 }
 

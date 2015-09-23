@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import com.thirstygoat.kiqo.model.Task;
+import com.thirstygoat.kiqo.model.*;
+
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.collections.FXCollections;
@@ -58,11 +59,11 @@ public class StoryCompletenessVisualiser extends HBox  {
     }
 
     private void setColours() {
-        setStyle("-fx-background-color: #bbb"); // Setting the default background
-        notStarted.setStyle("-fx-background-color: #607d8b");
-        inProgress.setStyle("-fx-background-color: #ff7144");
-        verify.setStyle("-fx-background-color: #2196f3");
-        done.setStyle("-fx-background-color: #4caf50");
+        setStyle("-fx-background-color: #bbb; -fx-text-fill: #fff"); // Setting the default background
+        notStarted.getStyleClass().add(Status.NOT_STARTED.getCssClass());
+        inProgress.getStyleClass().add(Status.IN_PROGRESS.getCssClass());
+        verify.getStyleClass().add(Status.VERIFY.getCssClass());
+        done.getStyleClass().add(Status.DONE.getCssClass());
     }
 
     private void calculateSizes() {
