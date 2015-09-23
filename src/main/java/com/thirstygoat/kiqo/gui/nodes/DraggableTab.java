@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.util.FxUtils;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -135,8 +136,6 @@ public class DraggableTab extends Tab {
                         return;
 
                     final Stage newStage = new Stage();
-                    newStage.initOwner(MainController.getPrimaryStage());
-                    newStage.initModality(Modality.NONE);
                     final TabPane pane = new TabPane();
                     tabPanes.add(pane);
 
@@ -158,6 +157,9 @@ public class DraggableTab extends Tab {
                     BorderPane borderPane = new BorderPane();
                     borderPane.setCenter(pane);
                     Scene scene = new Scene(borderPane);
+
+                    FxUtils.attachKeyShortcuts(scene);
+
                     scene.getStylesheets().add(this.getClass().getResource("/css/styles.css").toExternalForm());
                     newStage.setScene(scene);
                     newStage.initStyle(StageStyle.DECORATED);
