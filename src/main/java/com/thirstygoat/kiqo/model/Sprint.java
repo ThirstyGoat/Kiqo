@@ -152,7 +152,9 @@ public class Sprint extends Item {
     }
 
     public void initialiseTasksWithoutStory() {
-        this.tasksWithoutStory.set(new Story("Tasks without a Story","Tasks without a Story","", null, null, null, Integer.MIN_VALUE, Scale.FIBONACCI, 1, true, true, this));
+        Story story = new Story("Tasks without a Story","Tasks without a Story","", null, null, null, Integer.MIN_VALUE, Scale.FIBONACCI, 1, true, true, this);
+        story.backlogProperty().bind(backlogProperty());
+        this.tasksWithoutStory.set(story);
         stories.add(tasksWithoutStory.get());
     }
 

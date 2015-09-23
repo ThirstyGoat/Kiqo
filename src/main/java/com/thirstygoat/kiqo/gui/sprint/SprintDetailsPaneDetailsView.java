@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
 /**
 * Created by Carina Blair on 3/08/2015.
@@ -47,6 +48,8 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     private TableView<Story> storyTableView;
     @FXML
     private TableColumn<Story, String> shortNameTableColumn;
+    @FXML
+    private Label totalTaskHoursLabel;
     @FXML
     private ListView<Task> taskListView;
     @FXML
@@ -90,6 +93,24 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
             });
             return storyTableCell;
         });
+
+        Callable<String> taskHoursCallable = () -> {
+            float totalHours = 0;
+            for (Task task : viewModel.tasksWithoutStoryProperty().get().observableTasks()) {
+                totalHours += task.getEstimate();
+            }
+
+            return Float.toString(totalHours);
+        };
+
+        viewModel.tasksWithoutStoryProperty().addListener((observable, oldValue, newValue) -> {
+            totalTaskHoursLabel.textProperty().unbind();
+            totalTaskHoursLabel.textProperty().bind(Bindings.createStringBinding(
+                    taskHoursCallable, viewModel.tasksWithoutStoryProperty().get().observableTasks()
+            ));
+
+        });
+
 
         taskListView.setCellFactory(TaskListCell::new);
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));

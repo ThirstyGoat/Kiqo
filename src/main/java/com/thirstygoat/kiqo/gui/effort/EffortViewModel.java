@@ -247,6 +247,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
                     .flatMap(release -> release.getSprints().stream())
                     .filter(sprint -> sprint.getStories().contains(task.getStory()))
                     .findAny();
+            System.out.println(sprintTaskBelongsTo);
 
             if (sprintTaskBelongsTo.isPresent()) {
                 return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()

@@ -2,9 +2,6 @@
 
 <?import com.thirstygoat.kiqo.gui.nodes.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import com.thirstygoat.kiqo.gui.nodes.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.*?>
@@ -63,7 +60,7 @@
                                 </Label>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label contentDisplay="RIGHT"  prefHeight="30.0" text="Total Estimated Hours: " />
-                                <Label fx:id="totalHoursLabel" contentDisplay="RIGHT">
+                                <Label fx:id="totalTaskHoursLabel" contentDisplay="RIGHT">
                                     <font>
                                         <Font size="12.0" />
                                     </font>
