@@ -77,7 +77,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
+        Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
         FxUtils.setTextFieldSuggester(productOwnerTextField, viewModel.productOwnerSupplier());
         FxUtils.enableShiftEnter(descriptionTextArea, okButton::fire);
@@ -130,7 +130,7 @@ public class BacklogFormView implements FxmlView<BacklogFormViewModel>, Initiali
 
     private void setPrompts() {
         longNameTextField.setPromptText("Paddock");
-        shortNameTextField.setPromptText("Must be under 20 characters and unique");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique");
         descriptionTextArea.setPromptText("Describe this backlog");
     }
 

@@ -34,8 +34,6 @@ import java.util.ResourceBundle;
 public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializable {
 
     private FormButtonHandler formButtonHandler;
-    private final int SHORT_NAME_SUGGESTED_LENGTH = 20;
-    private final int SHORT_NAME_MAX_LENGTH = 20;
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
@@ -92,13 +90,13 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 //        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
-
+        
+        Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(creatorTextField, viewModel.creatorSupplier());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
 
         Platform.runLater(() -> {
             setPrompts();
-            setShortNameHandler();
             setValidationSupport();
             longNameTextField.requestFocus();
         });
@@ -107,7 +105,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this story.");
 
@@ -169,25 +167,5 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 
     public void setOkButtonText(String string) {
         okButton.setText(string);
-    }
-
-
-    /**
-     * Sets the listener on the nameTextField so that the shortNameTextField is populated in real time
-     * up to a certain number of characters
-     */
-    private void setShortNameHandler() {
-        shortNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Auto populate short name text field
-            if (!Objects.equals(newValue, longNameTextField.getText().substring(0,
-                    Math.min(longNameTextField.getText().length(), Utilities.SHORT_NAME_MAX_LENGTH)))) {
-                shortNameModified.set(true);
-            }
-
-            // Restrict length of short name text field
-            if (shortNameTextField.getText().length() > Utilities.SHORT_NAME_MAX_LENGTH) {
-                shortNameTextField.setText(shortNameTextField.getText().substring(0, Utilities.SHORT_NAME_MAX_LENGTH));
-            }
-        });
     }
 }

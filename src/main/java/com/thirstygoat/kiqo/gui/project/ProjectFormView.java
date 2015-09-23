@@ -47,7 +47,7 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
+        Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         
         Platform.runLater(() -> {
             setPrompts();
@@ -64,7 +64,7 @@ public class ProjectFormView implements FxmlView<ProjectFormViewModel>, Initiali
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this project.");
     }

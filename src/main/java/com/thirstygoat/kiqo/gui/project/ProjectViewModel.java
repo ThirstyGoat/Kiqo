@@ -41,7 +41,7 @@ public class ProjectViewModel extends ModelViewModel<Project> {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
         BooleanBinding rule2 = shortNameProperty().length().greaterThan(0);
-        BooleanBinding rule3 = shortNameProperty().length().lessThan(20);
+        BooleanBinding rule3 = shortNameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH);
         BooleanBinding rule4 = Bindings.createBooleanBinding(
                 () -> {
                     if (organisationProperty().get() == null) {
@@ -51,10 +51,10 @@ public class ProjectViewModel extends ModelViewModel<Project> {
                             organisationProperty().get().getProjects());
                 },
                 shortNameProperty());
-        shortNameValidator.addRule(rule1, ValidationMessage.error("Short name must be unique and not empty"));
-        shortNameValidator.addRule(rule2, ValidationMessage.error("Short name must be unique and not empty"));
-        shortNameValidator.addRule(rule3, ValidationMessage.error("Short name must be unique and not empty"));
-        shortNameValidator.addRule(rule4, ValidationMessage.error("Short name must be unique and not empty"));
+        shortNameValidator.addRule(rule1, ValidationMessage.error("Short name must not be empty"));
+        shortNameValidator.addRule(rule2, ValidationMessage.error("Short name must not be empty"));
+        shortNameValidator.addRule(rule3, ValidationMessage.error("Short name must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
+        shortNameValidator.addRule(rule4, ValidationMessage.error("Short name must be unique within organisation"));
 
         longNameValidator = new FunctionBasedValidator<String>(longNameProperty(),
                 Utilities.emptinessPredicate(),

@@ -9,7 +9,8 @@ import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.GoatModelWrapper;
+import com.thirstygoat.kiqo.util.*;
+
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -56,7 +57,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         shortNameValidator = new ObservableRuleBasedValidator();
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
-        shortNameValidator.addRule(shortNameProperty().length().lessThan(20), ValidationMessage.error("Name must be less than 20 characters"));
+        shortNameValidator.addRule(shortNameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH), ValidationMessage.error("Name must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
 
         teamValidator = new ObservableRuleBasedValidator(); // TODO add team validation - people must be from the sprints assigned team

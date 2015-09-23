@@ -1,21 +1,14 @@
 package com.thirstygoat.kiqo.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
+import org.junit.*;
+
+import com.thirstygoat.kiqo.model.*;
+
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
+import javafx.collections.*;
 
 
 /**
@@ -107,16 +100,16 @@ public class UtilitiesTest {
 
     @Test
     public void testCommaSeparatedValues() throws Exception {
-        List threeWiseMonkeys = Arrays.asList(new Skill("see no evil", ""), new Skill("hear no evil", ""), new Skill("speak no evil", ""));
+        List<Skill> threeWiseMonkeys = Arrays.asList(new Skill("see no evil", ""), new Skill("hear no evil", ""), new Skill("speak no evil", ""));
         String proverb = Utilities.commaSeparatedValues(threeWiseMonkeys);
         Assert.assertTrue(proverb.equals("see no evil, hear no evil, speak no evil"));
 
-        List oneValue = Arrays.asList(new Skill("Banana", ""));
+        List<Skill> oneValue = Arrays.asList(new Skill("Banana", ""));
         String string = Utilities.commaSeparatedValues(oneValue);
         Assert.assertTrue("Should return a single value with no commas because there are no other values seperate.",
                 string.equals("Banana"));
 
-        List emptyList = Arrays.asList();
+        List<Skill> emptyList = Arrays.asList();
         String emptyString = Utilities.commaSeparatedValues(emptyList);
         Assert.assertTrue("Should return the empty string.", emptyString.equals("-"));
     }
@@ -159,7 +152,7 @@ public class UtilitiesTest {
         StringProperty longName = new SimpleStringProperty("");
         StringProperty shortName = new SimpleStringProperty("");
                 
-        Utilities.setNameSuggester(longName, shortName);
+        Utilities.initShortNameSuggester(longName, shortName);
 
         Assert.assertEquals("config does not affect longName value", "", longName.get());
         Assert.assertEquals("config does not affect shortName value", "", shortName.get());
@@ -168,7 +161,7 @@ public class UtilitiesTest {
         Assert.assertEquals("basic name suggestion is propagated", longName.get(), shortName.get());
         
         longName.set("this is a very long name beyond " + Utilities.SHORT_NAME_MAX_LENGTH + " characters..................");
-        Assert.assertEquals("long name suggestion is truncated properly", Utilities.SHORT_NAME_MAX_LENGTH, shortName.get().length());
+        Assert.assertEquals("long name suggestion is truncated to " + (Utilities.SHORT_NAME_MAX_LENGTH-1) + " characters", Utilities.SHORT_NAME_MAX_LENGTH-1, shortName.get().length());
         
         longName.set("shorter name again");
         Assert.assertEquals("truncation does not disconnect propagation", longName.get(), shortName.get());
@@ -179,17 +172,17 @@ public class UtilitiesTest {
         StringProperty longName = new SimpleStringProperty("");
         StringProperty shortName = new SimpleStringProperty("");
                 
-        Utilities.setNameSuggester(longName, shortName);
+        Utilities.initShortNameSuggester(longName, shortName);
 
         // direct short name edit which does not match long name will disable suggester
-        shortName.set("direct shortName edit");
+        shortName.set("shortName edit");
         Assert.assertNotEquals("shortName is not propagated to longName", longName.get(), shortName.get());
         longName.set("longName edit");
         Assert.assertNotEquals("direct non-matching edit disconnects propagation", longName.get(), shortName.get());
         
         // direct short name edit which matches long name will re-enable suggester
         shortName.set("longName edit"); // re-match longName
-        longName.set("new name should copy");
+        longName.set("new name copied");
         Assert.assertEquals("direct matching edit reconnects propagation", longName.get(), shortName.get());
     }
 

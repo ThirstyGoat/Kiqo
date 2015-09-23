@@ -1,17 +1,15 @@
 package com.thirstygoat.kiqo.model;
 
-import com.thirstygoat.kiqo.search.Searchable;
-import com.thirstygoat.kiqo.search.SearchableField;
+import java.beans.PropertyChangeListener;
+import java.io.Serializable;
+import java.util.*;
+
+import com.thirstygoat.kiqo.search.*;
 import com.thirstygoat.kiqo.util.BoundPropertySupport;
+
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
-
-import java.beans.PropertyChangeListener;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Represents an object in the model.

@@ -69,7 +69,7 @@ public class PersonFormController extends FormController<Person> {
     public void initialize(URL location, ResourceBundle resources) {
         setPrompts();
         setButtonHandlers();
-        Utilities.setNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
+        Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         Platform.runLater(() -> {
             // wait for textfields to exist
             setValidationSupport();
@@ -99,7 +99,7 @@ public class PersonFormController extends FormController<Person> {
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under 20 characters and unique.");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique.");
         longNameTextField.setPromptText("Billy Goat");
         descriptionTextField.setPromptText("Describe this person");
         userIdTextField.setPromptText("Identify this person!");

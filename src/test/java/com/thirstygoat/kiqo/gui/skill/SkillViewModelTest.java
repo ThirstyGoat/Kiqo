@@ -75,8 +75,8 @@ public class SkillViewModelTest {
         Assert.assertFalse("Must not be null.",
                 viewModel.nameValidation().validProperty().get());
 
-        viewModel.nameProperty().set("This name is longer than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters.");
-        Assert.assertFalse("Must not be longer than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters.",
+        viewModel.nameProperty().set("This name is at least " + Utilities.SHORT_NAME_MAX_LENGTH + " characters.");
+        Assert.assertFalse("Must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters.",
                 viewModel.nameValidation().validProperty().get());
 
         // validating uniqueness within project requires model data
