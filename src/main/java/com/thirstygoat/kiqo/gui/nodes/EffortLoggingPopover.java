@@ -77,7 +77,6 @@ public class EffortLoggingPopover extends PopOver {
         viewModel.commentProperty().bindBidirectional(commentTextArea.textProperty());
 
         logButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
-
         logButton.setOnAction(e -> {
             if (viewModel.allValidation().isValid()) {
                 viewModel.commitEdit();

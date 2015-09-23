@@ -146,6 +146,6 @@ public class Effort implements BoundProperties, Searchable {
     }
 
     public static Callback<Effort, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.duration};
+        return p -> new Observable[] {p.duration, p.comment, p.personProperty(), p.endDateTimeProperty()};
     }
 }
