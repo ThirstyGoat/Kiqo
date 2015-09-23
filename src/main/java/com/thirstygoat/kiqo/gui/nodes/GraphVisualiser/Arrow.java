@@ -5,5 +5,6 @@ import javafx.scene.shape.Line;
 /**
  * Created by samschofield on 23/09/15.
  */
-public class ArrowLine extends Line {
+public class Arrow extends Line {
+
 }
