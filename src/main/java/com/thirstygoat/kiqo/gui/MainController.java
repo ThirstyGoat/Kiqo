@@ -650,6 +650,13 @@ public class MainController implements Initializable {
         }
     }
 
+    public void editTask(Task task, Story story) {
+       if (selectedOrganisationProperty.get() != null) {
+            taskDialog(task, story);
+        }
+    }
+
+
     public void openOrganisation(File draggedFilePath) {
         File filePath;
 

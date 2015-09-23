@@ -1,8 +1,5 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryTableCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
@@ -22,8 +19,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -35,8 +30,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
     
     @InjectViewModel
     private SprintDetailsPaneDetailsViewModel viewModel;
-
-    private MainController mainController;
     
     @FXML
     private GoatLabelTextField teamLabel;
@@ -101,32 +94,16 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         taskListView.setCellFactory(TaskListCell::new);
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
-        addTaskButton.setOnAction(event -> mainController.createTask());
-        removeTaskButton.setOnAction(event -> deleteTask());
-        editTaskButton.setOnAction(event -> mainController.editTask(taskListView.getSelectionModel().getSelectedItem()));
+
+
+        addTaskButton.setOnAction(event -> viewModel.createTask());
+        removeTaskButton.setOnAction(event -> viewModel.deleteTasks(taskListView.getSelectionModel().getSelectedItems()));
+        editTaskButton.setOnAction(event -> viewModel.editTask(taskListView.getSelectionModel().getSelectedItem()));
 
         viewModel.tasksWithoutStoryProperty().addListener((observable, oldValue, newValue) ->{
             taskListView.setItems(newValue.observableTasks());
         });
 
-    }
-
-    private void deleteTask() {
-        Command command;
-        if (taskListView.getSelectionModel().getSelectedItems().size() > 1) {
-            // Then we have to deal with a multi AC deletion
-            List<Command> commands = new ArrayList<>();
-            for (Task task : taskListView.getSelectionModel().getSelectedItems()) {
-
-                commands.add(new DeleteTaskCommand(task, viewModel.tasksWithoutStoryProperty().get()));
-            }
-            command = new CompoundCommand("Delete Task", commands);
-        } else {
-            final Task task = taskListView.getSelectionModel().getSelectedItem();
-            command = new DeleteTaskCommand(task, viewModel.tasksWithoutStoryProperty().get());
-        }
-
-        mainController.doCommand(command);
     }
 
     public SprintDetailsPaneDetailsViewModel getViewModel() {
