@@ -1,10 +1,9 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
-import java.time.LocalDate;
-
+import com.thirstygoat.kiqo.util.Utilities;
 import javafx.scene.control.DatePicker;
 
-import com.thirstygoat.kiqo.util.Utilities;
+import java.time.LocalDate;
 
 /**
 * Created by Carina Blair on 8/08/2015.
@@ -25,6 +24,6 @@ public class GoatLabelDatePicker extends GoatLabel<DatePicker> {
 
     @Override
     protected void populateEditField() {
-        editField.setValue(LocalDate.parse(displayLabel.getText(), Utilities.DATE_TIME_FORMATTER));
+        editField.setValue(LocalDate.parse(displayLabel.getText(), Utilities.DATE_FORMATTER));
     }
 }

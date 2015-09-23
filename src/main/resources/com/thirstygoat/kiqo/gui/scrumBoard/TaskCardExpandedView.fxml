@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelFilteredListSelectionView?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -32,7 +34,7 @@
             </HBox>
             <AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="400.0">
                <children>
-                  <GridPane fx:id="detailsGridPane" maxHeight="170" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <GridPane fx:id="detailsGridPane" maxHeight="170" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
                      <children>
                          <!-- Estimated hours-->
                          <Label styleClass="expanded-task-headings" text="Estimated Hours" GridPane.columnIndex="0" GridPane.rowIndex="0">
@@ -62,7 +64,21 @@
                              </padding>
                          </Label>
                          <GoatLabelTextArea fx:id="descriptionLabel" GridPane.rowIndex="5"  defaultText="Description" GridPane.columnSpan="2"/>
-
+                         <VBox VBox.vgrow="NEVER" GridPane.rowIndex="6" GridPane.columnSpan="2">
+                             <children>
+                                 <ListView fx:id="impedimentsListView" maxHeight="250.0" prefHeight="250.0" prefWidth="200.0" VBox.vgrow="NEVER" />
+                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                     <children>
+                                         <TextField fx:id="impedimentTextField" promptText="Impediment description..." HBox.hgrow="ALWAYS" />
+                                         <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
+                                         <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
+                                     </children>
+                                     <VBox.margin>
+                                         <Insets top="10.0" />
+                                     </VBox.margin>
+                                 </HBox>
+                             </children>
+                         </VBox>
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="NEVER" percentWidth="50" />
@@ -74,52 +90,31 @@
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="100" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-1.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="-1.0" prefHeight="-1.0" vgrow="ALWAYS" />
                      </rowConstraints>
                   </GridPane>
-
-                  <GridPane fx:id="loggingGridPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP">
-                           <children>
-
-                           </children>
-                           <padding>
-                              <Insets top="3.0" />
-                           </padding>
-                        </HBox>
-                        <HBox spacing="5.0" GridPane.columnIndex="1">
-                           <children>
-                              <TextField fx:id="spentEffortTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="loggingButton" mnemonicParsing="false" text="Log" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="20.0" prefWidth="30.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="-1" prefHeight="-1" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                  </GridPane>
+                   <VBox fx:id="loggingVBox" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5">
+                       <VBox fx:id="buttonsView">
+                           <HBox alignment="BASELINE_RIGHT">
+                               <Button fx:id="newEffortButton">
+                                   <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                               <Button fx:id="deleteEffortIcon">
+                                   <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                               <Button fx:id="editEffortButton">
+                                   <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                               </Button>
+                           </HBox>
+                       </VBox>
+                       <VBox fillWidth="true">
+                           <ListView fx:id="loggedEffortListView"/>
+                       </VBox>
+                   </VBox>
                </children>
             </AnchorPane>
-            <VBox VBox.vgrow="NEVER">
-               <children>
-                  <ListView fx:id="impedimentsListView" maxHeight="250.0" prefHeight="250.0" prefWidth="200.0" VBox.vgrow="NEVER" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
-                     <children>
-                        <TextField fx:id="impedimentTextField" promptText="Impediment description..." HBox.hgrow="ALWAYS" />
-                        <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
-                        <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
-                     </children>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </HBox>
-               </children>
-            </VBox>
+
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

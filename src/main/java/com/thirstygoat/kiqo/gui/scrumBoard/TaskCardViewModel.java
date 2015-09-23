@@ -33,6 +33,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
     private Stage stage;
     private Runnable exitStrategy;
 
+    private ObservableRuleBasedValidator personValidator;
     private ObservableRuleBasedValidator shortNameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private ObservableRuleBasedValidator teamValidator;
@@ -73,7 +74,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         final ArrayList<Command> changes = new ArrayList<>();
         super.addEditCommands.accept(changes);
 
-        if (!assignees().equals(modelWrapper.get().getAssignees())) {
+        if (!assignees().equals(modelWrapper.get().getAssigneesObservable())) {
             changes.add(new EditCommand<>(modelWrapper.get(), "assignees", new ArrayList<>(assignees().get())));
         }
 
@@ -85,8 +86,9 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         return command;
     }
 
-    public void load(Task task) {
+    public void load(Task task, Organisation organisation) {
         this.task.set(task);
+        this.organisationProperty().setValue(organisation);
         if (task != null) {
             modelWrapper.set(task);
         }
@@ -129,12 +131,12 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         return modelWrapper.field("impediments", Task::getImpediments, Task::setImpediments);
     }
 
-    public ObservableList<Effort> loggedEffort() {
-        return modelWrapper.field("loggedEffort", Task::getLoggedEffort, Task::setLoggedEffort);
+    public ListProperty<Effort> loggedEffort() {
+        return modelWrapper.field("loggedEffort", Task::getObservableLoggedEffort, Task::setLoggedEffort);
     }
 
     public ListProperty<Person> assignees() {
-        return modelWrapper.field("assignees", Task::getAssignees, Task::setAssignees);
+        return modelWrapper.field("assignees", Task::getAssigneesObservable, Task::setAssignees);
     }
 
     /** Other fields **/
@@ -154,7 +156,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
 
             if (sprintTaskBelongsTo.isPresent()) {
                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
-                                .filter(person -> !task.getAssignees().contains(person))
+                                .filter(person -> !task.getAssigneesObservable().contains(person))
                                 .collect(Collectors.toList());
             } else {
                 return new ArrayList<Person>();
@@ -191,7 +193,7 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
 
     @Override
     public void cancelEdit() {
-    	reload();
+        modelWrapper.reload();
     }
 
     public void addImpediment() {

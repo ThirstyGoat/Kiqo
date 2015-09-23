@@ -70,7 +70,7 @@
 //        viewModel.descriptionProperty().set("goalDescription");
 //        viewModel.releaseProperty().set(release);
 //        viewModel.startDateProperty().set(LocalDate.now().minusDays(11));
-//        viewModel.endDateProperty().set(LocalDate.now().minusDays(5));
+//        viewModel.endDateTimeProperty().set(LocalDate.now().minusDays(5));
 //        viewModel.teamProperty().set(team);
 //    }
 //

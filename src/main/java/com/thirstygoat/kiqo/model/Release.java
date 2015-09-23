@@ -1,14 +1,19 @@
 package com.thirstygoat.kiqo.model;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.*;
-
-import javafx.beans.property.*;
-import javafx.collections.*;
-
 import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -49,7 +54,7 @@ public class Release extends Item implements Serializable {
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
         searchStrings.addAll(Arrays.asList(new SearchableField("Short Name", getShortName()), new SearchableField("Description", getDescription()),
-                new SearchableField("Release Date", getDate().format(Utilities.DATE_TIME_FORMATTER))));
+                new SearchableField("Release Date", getDate().format(Utilities.DATE_FORMATTER))));
         return searchStrings;
     }
 

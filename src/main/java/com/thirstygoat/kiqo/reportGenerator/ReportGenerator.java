@@ -167,7 +167,7 @@ public final class ReportGenerator {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
         lines.add(ReportUtils.valueLine("Description", release.getDescription()));
-        lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_FORMATTER)));
 
         return lines;
     }
@@ -177,8 +177,8 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
         lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
         lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
-        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_FORMATTER)));
         lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
 
         lines.add(ReportUtils.collectionLine("Stories", sprint.getStories().isEmpty()));
@@ -204,8 +204,8 @@ public final class ReportGenerator {
     private static List<String> generateAllocationReport(Allocation allocation) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Project", allocation.getProject().getShortName()));
-        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(Utilities.DATE_TIME_FORMATTER)));
-        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(Utilities.DATE_TIME_FORMATTER)));
+        lines.add(ReportUtils.valueLine("Start Date", allocation.getStartDate().format(Utilities.DATE_FORMATTER)));
+        lines.add(ReportUtils.valueLine("End Date", allocation.getEndDate().format(Utilities.DATE_FORMATTER)));
         return lines;
     }
 

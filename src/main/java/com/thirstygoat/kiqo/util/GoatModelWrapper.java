@@ -1,6 +1,6 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.model.Item;
+import com.thirstygoat.kiqo.model.BoundProperties;
 import de.saxsys.mvvmfx.utils.mapping.ModelWrapper;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,7 +14,7 @@ import java.beans.PropertyChangeListener;
 /**
  * Created by leroy on 18/08/15.
  */
-public class GoatModelWrapper<M extends Item> extends ModelWrapper<M> {
+public class GoatModelWrapper<M extends BoundProperties> extends ModelWrapper<M> {
     private ObjectProperty<EventHandler<ActionEvent>> modelChangeAction =
                     new SimpleObjectProperty<>(event -> {});
 

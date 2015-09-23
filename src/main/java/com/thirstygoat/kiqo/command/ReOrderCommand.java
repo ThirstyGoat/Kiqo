@@ -26,11 +26,8 @@ public class ReOrderCommand<T> extends Command {
 
     @Override
     public void execute() {
-        System.out.println(list);
 
         oldIndex = list.indexOf(item);
-        System.out.println("old index: " + oldIndex);
-        System.out.println("new index: " + newIndex);
         list.remove(item);
 
         // Since we are removing the item first, the new index position needs to be adjusted

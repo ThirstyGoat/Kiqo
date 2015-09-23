@@ -66,7 +66,6 @@ public class GoatLabelTextAreaSkin extends GoatLabelSkin<TextArea> {
     }
 
     public void setCustomMaxHeight() {
-        System.out.println("set");
         editField.setPrefHeight(50);
         editField.setMaxHeight(50);  // this does nothing
         displayLabel.setMaxHeight(50);

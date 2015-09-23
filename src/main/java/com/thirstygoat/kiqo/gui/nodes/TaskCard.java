@@ -1,7 +1,9 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardExpandedView;
 import com.thirstygoat.kiqo.gui.scrumBoard.TaskCardViewModel;
+import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -24,6 +26,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import org.controlsfx.control.PopOver;
 
 
 /**
@@ -35,10 +38,12 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     final private FloatProperty spentEffortProperty;
     final private BooleanProperty impedanceProperty;
     final private BooleanProperty isBlockedProperty;
-    final private Task task;
+    final private ObjectProperty<Organisation> organisationProperty;
+    final private ObjectProperty<Task> task;
 
-    public TaskCard(Task task) {
-        this.task = task;
+    public TaskCard(Task task, Organisation organisation) {
+        this.task = new SimpleObjectProperty<>(task);
+        organisationProperty = new SimpleObjectProperty<>(organisation);
         shortNameProperty = new SimpleStringProperty("");
         hoursProperty = new SimpleFloatProperty();
         spentEffortProperty = new SimpleFloatProperty();
@@ -96,10 +101,22 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
         impedanceIcon.setSize("15px");
         impedanceIcon.getStyleClass().add("task-impedance-icon");
 
-        // open the expanded card
-        setOnMouseClicked(event -> newExpandedCard());
+        timeTextFlow.setOnMouseClicked(event1 -> {
+            EffortViewModel e = new EffortViewModel();
+            e.load(null, organisationProperty.get());
+            e.taskProperty().setValue(task.getValue());
+            PopOver p = new EffortLoggingPopover(e);
+            Platform.runLater(() -> p.show(this));
+        });
 
-        impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.getImpediments()));
+        // open the expanded card
+        setOnMouseClicked(event -> {
+            if (!timeTextFlow.isHover()) {
+                newExpandedCard();
+            }
+        });
+
+        impedanceIcon.visibleProperty().bind(Bindings.isNotEmpty(task.get().getImpediments()));
 
         iconBox.getChildren().add(impedanceIcon);
 
@@ -143,7 +160,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
             Window parentWindow = getParent().getScene().getWindow();
             stage.initOwner(parentWindow);
             ViewTuple<TaskCardExpandedView, TaskCardViewModel> viewTuple = FluentViewLoader.fxmlView(TaskCardExpandedView.class).load();
-            viewTuple.getViewModel().load(task);
+            viewTuple.getViewModel().load(task.get(), organisationProperty.get());
             viewTuple.getViewModel().setStage(stage);
             Parent view = viewTuple.getView();
             Scene scene = new Scene(view);
@@ -211,6 +228,6 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
     }
 
     public Task getTask() {
-        return task;
+        return task.get();
     }
 }

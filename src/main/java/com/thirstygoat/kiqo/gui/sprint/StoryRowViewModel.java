@@ -9,10 +9,7 @@ import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.GoatModelWrapper;
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -40,9 +37,12 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
     private ObservableList<Task> verifyTasks = FXCollections.observableArrayList();
     private ObservableList<Task> doneTasks = FXCollections.observableArrayList();
 
+    private ObjectProperty<Organisation> organisationProperty = new SimpleObjectProperty<>();
+
     @Override
     public void load(Story story, Organisation organisation) {
         storyWrapper.set(story);
+        organisationProperty.setValue(organisation);
         this.organisation = organisation;
         storyNameProperty().bind(story.shortNameProperty());
         descriptionProperty().bind(story.descriptionProperty());
@@ -149,5 +149,9 @@ public class StoryRowViewModel implements Loadable<Story>, ViewModel {
 
     public void setView(StoryRowView view) {
         this.view = view;
+    }
+
+    public ObjectProperty<Organisation> organisationProperty() {
+        return organisationProperty;
     }
 }

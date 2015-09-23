@@ -16,7 +16,7 @@ public class ReleaseDetailsPaneViewModel extends ReleaseViewModel implements Edi
         dateStringProperty = new SimpleStringProperty("");
         dateStringProperty.bind(Bindings.createStringBinding(() -> {
             return dateProperty().get() != null 
-                    ? dateProperty().get().format(Utilities.DATE_TIME_FORMATTER)
+                    ? dateProperty().get().format(Utilities.DATE_FORMATTER)
                     : "";
         }, dateProperty()));
     }
