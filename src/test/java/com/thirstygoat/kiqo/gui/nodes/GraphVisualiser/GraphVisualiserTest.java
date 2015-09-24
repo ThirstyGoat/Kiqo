@@ -112,7 +112,6 @@ public class GraphVisualiserTest {
 
         assertThat((set1.containsAll(resultSetA) && set2.containsAll(resultSetB)) ||
                 (set1.containsAll(resultSetB) && set2.containsAll(resultSetA)));
-
     }
 
 
