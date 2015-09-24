@@ -2,7 +2,7 @@ package com.thirstygoat.kiqo.gui.nodes.GraphVisualiser;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -14,7 +14,11 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 23/09/15.
@@ -24,8 +28,8 @@ public class GraphVisualiser<T> extends FlowPane {
 
     private Map<String, Vertex<T>> vertexMap = new HashMap<>();
 
-    private ObservableList<Vertex<T>> vertices = FXCollections.observableArrayList();
-    private ObservableList<Edge<T>> edges = FXCollections.observableArrayList();
+    private ObservableSet<Vertex<T>> vertices = FXCollections.observableSet();
+    private ObservableSet<Edge<T>> edges = FXCollections.observableSet();
 
     public GraphVisualiser() {
     }
@@ -44,10 +48,15 @@ public class GraphVisualiser<T> extends FlowPane {
     }
 
     public void go() {
+        for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
+            Set<Edge<T>> edgeSet = getEdges().stream().filter(
+                    e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
+            computePositions(s, edgeSet);
 
+        }
     }
 
-    private void computePositions(ObservableList<Vertex<T>> vertices, ObservableList<Edge<T>> edges) {
+    private void computePositions(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
         String resourcePath = getClass().getClassLoader().getResource("grandalf/").getFile();
 
         PythonInterpreter py = new PythonInterpreter();
@@ -94,22 +103,20 @@ public class GraphVisualiser<T> extends FlowPane {
         getChildren().add(drawGraph(vertices, edges));
     }
 
-    private double getMinXPos(List<Vertex<T>> vertices) {
+    private double getMinXPos(Set<Vertex<T>> vertices) {
         return vertices.stream().mapToDouble(vertex -> vertex.xPosProperty().get()).min().getAsDouble();
     }
 
-    private double getMinYPos(List<Vertex<T>> vertices) {
+    private double getMinYPos(Set<Vertex<T>> vertices) {
         return vertices.stream().mapToDouble(vertex -> vertex.yPosProperty().get()).min().getAsDouble();
     }
 
     private double getMidX(Node node) {
-        return (node.localToScene(node.getLayoutBounds()).getMinX() +
-                node.localToScene(node.getLayoutBounds()).getMaxX()) / 2;
+        return (node.getBoundsInParent().getMinX() + node.getBoundsInParent().getMaxX()) / 2;
     }
 
     private double getMidY(Node node) {
-        return (node.localToScene(node.getLayoutBounds()).getMinY() +
-                node.localToScene(node.getLayoutBounds()).getMaxY()) / 2;
+        return (node.getBoundsInParent().getMinY() + node.getBoundsInParent().getMaxY()) / 2;
     }
 
     private double getHeightBetween(Node node1, Node node2) {
@@ -151,7 +158,7 @@ public class GraphVisualiser<T> extends FlowPane {
         return 0; // TODO In Progress
     }
 
-    private Pane drawGraph(ObservableList<Vertex<T>> vertices, ObservableList<Edge<T>> edges) {
+    private Pane drawGraph(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
         Pane pane = new Pane();
         double xOffset = Math.min(0, getMinXPos(vertices));
         double yOffset = Math.min(0, getMinYPos(vertices));
@@ -181,12 +188,12 @@ public class GraphVisualiser<T> extends FlowPane {
      * @param edges edges of the graph
      * @return a set containing the sets of vertices for each connected sub-graph
      */
-    public static Set<Set<Vertex>> getConnectedSubGraphs(List<Vertex> vertices, Set<Edge> edges) {
-        Set<Set<Vertex>> totalSet = new HashSet<>();
+    public static <T> Set<Set<Vertex<T>>> getConnectedSubGraphs(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
+        Set<Set<Vertex<T>>> totalSet = new HashSet<>();
 
         while (!vertices.isEmpty()) {
-            Set<Vertex> island = new HashSet<>();
-            floodFill(vertices.get(0), island, edges);
+            Set<Vertex<T>> island = new HashSet<>();
+            floodFill(vertices.iterator().next(), island, edges);
             vertices.removeAll(island);
             totalSet.add(island);
         }
@@ -196,7 +203,7 @@ public class GraphVisualiser<T> extends FlowPane {
     /**
      * Recursively perform the flood fill algorithm
      */
-    private static void floodFill(Vertex vertex, Set<Vertex> island, Set<Edge> edges) {
+    private static <T> void floodFill(Vertex<T> vertex, Set<Vertex<T>> island, Set<Edge<T>> edges) {
         if (!island.contains(vertex)) {
             island.add(vertex);
         } else {
@@ -211,8 +218,8 @@ public class GraphVisualiser<T> extends FlowPane {
      * @param edges all the edges in the graph
      * @return
      */
-    private static Set<Vertex> getConnectedVertices(Vertex vertex, Set<Edge> edges) {
-        Set<Vertex> connectedVertices = new HashSet<>();
+    private static <T> Set<Vertex<T>> getConnectedVertices(Vertex<T> vertex, Set<Edge<T>> edges) {
+        Set<Vertex<T>> connectedVertices = new HashSet<>();
 
         edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
                 .forEach(edge1 -> {
@@ -222,11 +229,11 @@ public class GraphVisualiser<T> extends FlowPane {
         return connectedVertices;
     }
 
-    public ObservableList<Edge<T>> getEdges() {
+    public ObservableSet<Edge<T>> getEdges() {
         return edges;
     }
 
-    public ObservableList<Vertex<T>> getVertices() {
+    public ObservableSet<Vertex<T>> getVertices() {
         return vertices;
     }
 }

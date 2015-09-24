@@ -12,60 +12,60 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GraphVisualiserTest {
     @Test
     public void base_case() {
-        Vertex a = new Vertex<>("A");
+        Vertex<String> a = new Vertex<>("A");
 
-        List<Vertex> vertices = new ArrayList<>();
+        Set<Vertex<String>> vertices = new HashSet<>();
         vertices.add(a);
 
-        Set<Edge> edges = new HashSet<>();
+        Set<Edge<String>> edges = new HashSet<>();
 
-        Set<Set<Vertex>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
+        Set<Set<Vertex<String>>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
         assertThat(newVertexSet).filteredOn(set -> set.contains(a)).hasSize(1);
     }
 
     @Test
     public void twoConnectedVertices() {
-        Vertex a = new Vertex<>("A");
-        Vertex b = new Vertex<>("B");
+        Vertex<String> a = new Vertex<>("A");
+        Vertex<String> b = new Vertex<>("B");
 
-        List<Vertex> vertices = new ArrayList<>();
+        Set<Vertex<String>> vertices = new HashSet<>();
         vertices.add(a);
         vertices.add(b);
 
-        Edge ab = new Edge<>(a, b);
-        Set<Edge> edges = new HashSet<>();
+        Edge<String> ab = new Edge<>(a, b);
+        Set<Edge<String>> edges = new HashSet<>();
         edges.add(ab);
 
-        Set<Set<Vertex>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
+        Set<Set<Vertex<String>>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
         assertThat(newVertexSet).filteredOn(set -> set.containsAll(vertices)).hasSize(1);
     }
 
     @Test
     public void twoUnConnectedVertices() {
-        Vertex a = new Vertex<>("A");
-        Vertex b = new Vertex<>("B");
+        Vertex<String> a = new Vertex<>("A");
+        Vertex<String> b = new Vertex<>("B");
 
-        List<Vertex> vertices = new ArrayList<>();
+        Set<Vertex<String>> vertices = new HashSet<>();
         vertices.add(a);
         vertices.add(b);
 
-        Set<Edge> edges = new HashSet<>();
+        Set<Edge<String>> edges = new HashSet<>();
 
-        Set<Set<Vertex>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
+        Set<Set<Vertex<String>>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
         assertThat(newVertexSet).filteredOn(set -> set.contains(a) || set.contains(b)).hasSize(2);
     }
 
     @Test
     public void fullGraphTest() {
-        Vertex a = new Vertex<>("A");
-        Vertex b = new Vertex<>("B");
-        Vertex c = new Vertex<>("C");
-        Vertex d = new Vertex<>("D");
-        Vertex e = new Vertex<>("E");
-        Vertex f = new Vertex<>("F");
-        Vertex g = new Vertex<>("G");
+        Vertex<String> a = new Vertex<>("A");
+        Vertex<String> b = new Vertex<>("B");
+        Vertex<String> c = new Vertex<>("C");
+        Vertex<String> d = new Vertex<>("D");
+        Vertex<String> e = new Vertex<>("E");
+        Vertex<String> f = new Vertex<>("F");
+        Vertex<String> g = new Vertex<>("G");
 
-        List<Vertex> vertices = new ArrayList<>();
+        Set<Vertex<String>> vertices = new HashSet<>();
         vertices.add(a);
         vertices.add(b);
         vertices.add(c);
@@ -74,16 +74,16 @@ public class GraphVisualiserTest {
         vertices.add(f);
         vertices.add(g);
 
-        Edge ab = new Edge<>(a, b);
-        Edge ac = new Edge<>(a, c);
-        Edge ad = new Edge<>(a, d);
-        Edge ae = new Edge<>(a, e);
-        Edge bd = new Edge<>(b, d);
-        Edge ed = new Edge<>(e, d);
-        Edge cd = new Edge<>(c, d);
-        Edge fg = new Edge<>(f, g);
+        Edge<String> ab = new Edge<>(a, b);
+        Edge<String> ac = new Edge<>(a, c);
+        Edge<String> ad = new Edge<>(a, d);
+        Edge<String> ae = new Edge<>(a, e);
+        Edge<String> bd = new Edge<>(b, d);
+        Edge<String> ed = new Edge<>(e, d);
+        Edge<String> cd = new Edge<>(c, d);
+        Edge<String> fg = new Edge<>(f, g);
 
-        Set<Edge> edges = new HashSet<>();
+        Set<Edge<String>> edges = new HashSet<>();
         edges.add(ab);
         edges.add(ac);
         edges.add(ad);
@@ -93,22 +93,22 @@ public class GraphVisualiserTest {
         edges.add(cd);
         edges.add(fg);
 
-        Set<Vertex> resultSetA = new HashSet<>();
+        Set<Vertex<String>> resultSetA = new HashSet<>();
         resultSetA.add(a);
         resultSetA.add(b);
         resultSetA.add(c);
         resultSetA.add(d);
         resultSetA.add(e);
 
-        Set<Vertex> resultSetB = new HashSet<>();
+        Set<Vertex<String>> resultSetB = new HashSet<>();
         resultSetB.add(f);
         resultSetB.add(g);
 
-        Set<Set<Vertex>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
+        Set<Set<Vertex<String>>> newVertexSet = GraphVisualiser.getConnectedSubGraphs(vertices, edges);
 
-        Iterator<Set<Vertex>> i = newVertexSet.iterator();
-        Set<Vertex> set1 = i.next();
-        Set<Vertex> set2 = i.next();
+        Iterator<Set<Vertex<String>>> i = newVertexSet.iterator();
+        Set<Vertex<String>> set1 = i.next();
+        Set<Vertex<String>> set2 = i.next();
 
         assertThat((set1.containsAll(resultSetA) && set2.containsAll(resultSetB)) ||
                 (set1.containsAll(resultSetB) && set2.containsAll(resultSetA)));
