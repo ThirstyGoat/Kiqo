@@ -151,15 +151,15 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
             storyVertexMap.put(story, new Vertex<>(story));
         }
 
-        List<Edge<Story>> edges = new ArrayList<>();
+        Set<Edge<Story>> edges = new HashSet<>();
         for (Story story : viewModel.stories()) {
             for (DirectedData<Story> dependent : story.getDirectedChildren()) {
                 edges.add(new Edge<>(storyVertexMap.get(story), storyVertexMap.get(dependent.get())));
             }
         }
 
-        gv.getVertices().setAll(storyVertexMap.values());
-        gv.getEdges().setAll(edges);
+        gv.getVertices().addAll(storyVertexMap.values());
+        gv.getEdges().addAll(edges);
 
         gv.go();
 
