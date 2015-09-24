@@ -228,4 +228,8 @@ public class MainDetailsPaneController implements Initializable {
                 tab.getTabPane().getTabs().remove(tab);
         }
     }
+
+    public void closeAllTabs() {
+        tabMap.keySet().forEach(this::closeTab);
+    }
 }
