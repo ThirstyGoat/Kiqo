@@ -12,10 +12,10 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -212,6 +212,10 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
             });
     }
 
+    public void disableDragAndDrop() {
+        gridPane.setOnDragDetected(Event::consume);
+    }
+
     private void initialiseDragAndDrop() {
         gridPane.setOnDragDetected(event -> {
             scrumBoardViewModel.currentlyDraggingStoryRow = gridPane;
@@ -293,5 +297,14 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
 
     public void setScrumBoardViewModel(ScrumBoardViewModel scrumBoardViewModel) {
         this.scrumBoardViewModel = scrumBoardViewModel;
+    }
+
+    public void setAsTaskWithoutStoryRow() {
+        storyCard.setVisible(false);
+        storyCard.setManaged(false);
+
+        disableDragAndDrop();
+
+        parentStoryContainer.setOnMouseReleased(Event::consume);
     }
 }
