@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -45,6 +46,7 @@ public class GraphVisualiser<T> extends FlowPane {
         // Set the default nodeCallback to create the display node
         // for a given object of type T
         // Default is simply a label with X
+        setAlignment(Pos.CENTER);
         nodeCallback = t -> new Label("X");
     }
 
@@ -264,7 +266,6 @@ public class GraphVisualiser<T> extends FlowPane {
 
         for (Vertex<T> vertex : vertices) {
             Node node = nodeCallback.call(vertex.getObject());
-            node.setStyle("-fx-background-color: #03a9f4");
             vertexNodeMap.put(vertex, node);
 
             node.layoutXProperty().bind(Bindings.add(-xOffset, vertex.xPosProperty()));

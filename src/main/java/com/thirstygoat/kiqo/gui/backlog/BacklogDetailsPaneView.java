@@ -14,6 +14,7 @@ import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -21,10 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -67,7 +65,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @FXML
     private VBox detailsVbox;
     @FXML
-    private VBox visualisationVbox;
+    private AnchorPane visualisationVbox;
     @FXML
     private SegmentedButton segmentedButton;
     @FXML
@@ -75,7 +73,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @FXML
     private ToggleButton visualisationToggleButton;
     @FXML
-    private VBox visualisationPane;
+    private FlowPane visualisationPane;
 
     private Label placeHolder = new Label();
 
@@ -184,10 +182,30 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         visualisationPane.getChildren().clear();
         GraphVisualiser<Story> gv = new GraphVisualiser<>();
         gv.setNodeCallback(story -> {
+            VBox node = new VBox();
+            node.setPadding(new Insets(5, 10, 5, 10));
+            node.setAlignment(Pos.CENTER);
+
             Label label = new Label();
             label.textProperty().bind(story.shortNameProperty());
             label.setPadding(new Insets(5, 5, 5, 5));
-            return label;
+            node.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    MainController.focusedItemProperty.setValue(story);
+                }
+            });
+
+            Label priority = new Label();
+            priority.textProperty().bind(Bindings.createStringBinding(() -> Float.toString(story.priorityProperty().get()), story.priorityProperty()));
+
+            node.getChildren().addAll(label, priority);
+            long count = story.getDependencies().stream().filter(dependency -> dependency.priorityProperty().get() > story.priorityProperty().get()).count();
+            if (count > 0) {
+                node.getStyleClass().add("in-progress");
+            } else {
+                node.getStyleClass().add("done");
+            }
+            return node;
         });
 
         Map<Story, Vertex<Story>> storyVertexMap = new HashMap<>();
@@ -207,11 +225,11 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         gv.go();
 
         visualisationPane.setAlignment(Pos.CENTER);
-        visualisationPane.setFillWidth(false);
-        Pane p = new Pane();
-        p.getChildren().add(gv);
+//        visualisationPane.setStyle("-fx-background-color: greenyellow");
+        visualisationPane.getChildren().add(gv);
 
-        visualisationPane.getChildren().add(p);
+//        visualisationVbox.setStyle("-fx-background-color: red");
+
     }
 
     /**

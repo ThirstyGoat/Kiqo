@@ -6,39 +6,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.SegmentedButton?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="713.0" prefWidth="728.0"
+<VBox xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="713.0" prefWidth="728.0"
             xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneView">
     <children>
+        <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
+            <children>
+                <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
+                    <children>
+                        <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
+                        <GoatLabelTextField fx:id="longNameLabel" styleClass="pane-long-name" />
+                        <!--<Region maxWidth="-1" HBox.hgrow="ALWAYS" />-->
+                        <!--<Label styleClass="pane-type-indicator" text="Backlog" />-->
+                    </children>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <VBox alignment="TOP_RIGHT">
+                    <children>
+                        <SegmentedButton fx:id="segmentedButton">
+                            <buttons>
+                                <ToggleButton fx:id="detailsToggleButton" text="Details" selected="true"/>
+                                <ToggleButton fx:id="visualisationToggleButton" text="Visualisation"/>
+                            </buttons>
+                        </SegmentedButton>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" />
+            </padding>
+        </HBox>
         <ScrollPane id="ScrollPane" fitToWidth="true" prefViewportHeight="0.0" prefViewportWidth="0.0" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
                 <VBox mouseTransparent="false" spacing="10.0">
                     <children>
-                        <HBox fx:id="buttonsHBox" alignment="CENTER_RIGHT">
-                            <children>
-                                <HBox fillHeight="false" alignment="CENTER_LEFT" spacing="5" >
-                                    <children>
-                                        <GoatLabelTextField fx:id="shortNameLabel" styleClass="pane-short-name" />
-                                        <GoatLabelTextField fx:id="longNameLabel" styleClass="pane-long-name" />
-                                        <!--<Region maxWidth="-1" HBox.hgrow="ALWAYS" />-->
-                                        <!--<Label styleClass="pane-type-indicator" text="Backlog" />-->
-                                    </children>
-                                </HBox>
-                                <Region HBox.hgrow="ALWAYS" />
-                                <VBox alignment="TOP_RIGHT">
-                                    <children>
-                                        <SegmentedButton fx:id="segmentedButton">
-                                            <buttons>
-                                                <ToggleButton fx:id="detailsToggleButton" text="Details" selected="true"/>
-                                                <ToggleButton fx:id="visualisationToggleButton" text="Visualisation"/>
-                                            </buttons>
-                                        </SegmentedButton>
-                                    </children>
-                                </VBox>
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" />
-                            </padding>
-                        </HBox>
+
 
                         <AnchorPane fx:id="mainAnchorPane">
                             <VBox fx:id="detailsVbox" mouseTransparent="false" spacing="10.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
@@ -92,9 +93,9 @@
                                 </HBox>
                                 <!--<Hyperlink onAction="#visualiseDependencies" text="Visualise Dependencies"/>-->
                             </VBox>
-                            <VBox AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0" fillWidth="true" fx:id="visualisationVbox" mouseTransparent="false" spacing="10.0" visible="false" managed="false">
-                                <VBox fx:id="visualisationPane"/>
-                            </VBox>
+                            <AnchorPane fx:id="visualisationVbox" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0"  visible="false" managed="false">
+                                <FlowPane fx:id="visualisationPane"/>
+                            </AnchorPane>
                         </AnchorPane>
                         <!-- -->
                     </children>
@@ -102,4 +103,4 @@
             </content>
         </ScrollPane>
     </children>
-</AnchorPane>
+</VBox>
