@@ -14,7 +14,7 @@ import javafx.scene.transform.Rotate;
  */
 public class Arrow extends Group {
     private static final double ARROW_WIDTH = 20;
-    private static final double ARROW_HEIGHT = 5;
+    private static final double ARROW_HEIGHT = 10;
 
     private Line line;
     private Polygon arrowHead;
@@ -27,7 +27,7 @@ public class Arrow extends Group {
         line.setStartX(0);
         line.setStartY(0);
 
-        arrowHead = new Polygon(0, 0, ARROW_HEIGHT, 0, 0, ARROW_HEIGHT);
+        arrowHead = new Polygon(0, 0, ARROW_HEIGHT, ARROW_HEIGHT / 2, ARROW_HEIGHT / 2, ARROW_HEIGHT);
         arrowHead.layoutXProperty().bind(line.endXProperty());
         arrowHead.layoutYProperty().bind(line.endYProperty());
 

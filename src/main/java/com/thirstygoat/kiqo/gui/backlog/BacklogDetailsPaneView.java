@@ -143,6 +143,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         gv.setNodeCallback(story -> {
             Label label = new Label();
             label.textProperty().bind(story.shortNameProperty());
+            label.setPadding(new Insets(5, 5, 5, 5));
             return label;
         });
 
