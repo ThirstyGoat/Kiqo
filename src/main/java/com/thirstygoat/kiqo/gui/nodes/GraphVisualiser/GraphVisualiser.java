@@ -30,38 +30,6 @@ public class GraphVisualiser<T> extends FlowPane {
     public GraphVisualiser() {
     }
 
-    public static Set<Set<Vertex>> getConnectedSubGraphs(List<Vertex> vertices, Set<Edge> edges) {
-        Set<Set<Vertex>> totalSet = new HashSet<>();
-
-        while (!vertices.isEmpty()) {
-            Set<Vertex> island = new HashSet<>();
-            floodFill(vertices.get(0), island, edges);
-            vertices.removeAll(island);
-            totalSet.add(island);
-        }
-        return totalSet;
-    }
-
-    private static void floodFill(Vertex vertex, Set<Vertex> island, Set<Edge> edges) {
-        if (!island.contains(vertex)) {
-            island.add(vertex);
-        } else {
-            return;
-        }
-        getConnectedVertices(vertex, edges).forEach(v -> floodFill(v, island, edges));
-    }
-
-    private static Set<Vertex> getConnectedVertices(Vertex vertex, Set<Edge> edges) {
-        Set<Vertex> connectedVertices = new HashSet<>();
-
-        edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
-                .forEach(edge1 -> {
-                    connectedVertices.add(edge1.getStart());
-                    connectedVertices.add(edge1.getEnd());
-                });
-        return connectedVertices;
-    }
-
     public void setNodeCallback(Callback<T, Node> nodeCallback) {
         this.nodeCallback = nodeCallback;
     }
@@ -77,11 +45,6 @@ public class GraphVisualiser<T> extends FlowPane {
 
     public void go() {
 
-    }
-
-    private void addEdgeToSet(Edge<T> edge, Set<Vertex<T>> vertices) {
-        vertices.add(edge.getStart());
-        vertices.add(edge.getEnd());
     }
 
     private void computePositions(ObservableList<Vertex<T>> vertices, ObservableList<Edge<T>> edges) {
@@ -210,6 +173,53 @@ public class GraphVisualiser<T> extends FlowPane {
         }
 
         return pane;
+    }
+
+    /**
+     * Splits the given graph (made up of vertices and edges) into its connected sub-graphs
+     * @param vertices vertices of the graph
+     * @param edges edges of the graph
+     * @return a set containing the sets of vertices for each connected sub-graph
+     */
+    public static Set<Set<Vertex>> getConnectedSubGraphs(List<Vertex> vertices, Set<Edge> edges) {
+        Set<Set<Vertex>> totalSet = new HashSet<>();
+
+        while (!vertices.isEmpty()) {
+            Set<Vertex> island = new HashSet<>();
+            floodFill(vertices.get(0), island, edges);
+            vertices.removeAll(island);
+            totalSet.add(island);
+        }
+        return totalSet;
+    }
+
+    /**
+     * Recursively perform the flood fill algorithm
+     */
+    private static void floodFill(Vertex vertex, Set<Vertex> island, Set<Edge> edges) {
+        if (!island.contains(vertex)) {
+            island.add(vertex);
+        } else {
+            return;
+        }
+        getConnectedVertices(vertex, edges).forEach(v -> floodFill(v, island, edges));
+    }
+
+    /**
+     * Gets all the vertices connected directly to the given vertex
+     * @param vertex the start vertex
+     * @param edges all the edges in the graph
+     * @return
+     */
+    private static Set<Vertex> getConnectedVertices(Vertex vertex, Set<Edge> edges) {
+        Set<Vertex> connectedVertices = new HashSet<>();
+
+        edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
+                .forEach(edge1 -> {
+                    connectedVertices.add(edge1.getStart());
+                    connectedVertices.add(edge1.getEnd());
+                });
+        return connectedVertices;
     }
 
     public ObservableList<Edge<T>> getEdges() {
