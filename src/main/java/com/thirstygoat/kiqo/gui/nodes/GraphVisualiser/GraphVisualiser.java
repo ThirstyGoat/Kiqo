@@ -15,17 +15,14 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 23/09/15.
  */
 public class GraphVisualiser<T> extends FlowPane {
-    private Callback<T, Node> nodeCallback = t -> new Label("X");
+    private Callback<T, Node> nodeCallback;
 
     private Map<String, Vertex<T>> vertexMap = new HashMap<>();
 
@@ -33,28 +30,91 @@ public class GraphVisualiser<T> extends FlowPane {
     private ObservableSet<Edge<T>> edges = FXCollections.observableSet();
 
     public GraphVisualiser() {
+        // Set the default nodeCallback to create the display node
+        // for a given object of type T
+        // Default is simply a label with X
+        nodeCallback = t -> new Label("X");
+    }
+
+    /**
+     * Splits the given graph (made up of vertices and edges) into its connected sub-graphs
+     * @param vertices vertices of the graph
+     * @param edges edges of the graph
+     * @return a set containing the sets of vertices for each connected sub-graph
+     */
+    public static <T> Set<Set<Vertex<T>>> getConnectedSubGraphs(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
+        Set<Set<Vertex<T>>> totalSet = new HashSet<>();
+
+        while (!vertices.isEmpty()) {
+            Set<Vertex<T>> island = new HashSet<>();
+            floodFill(vertices.iterator().next(), island, edges);
+            vertices.removeAll(island);
+            totalSet.add(island);
+        }
+        return totalSet;
+    }
+
+    /**
+     * Recursively perform the flood fill algorithm
+     */
+    private static <T> void floodFill(Vertex<T> vertex, Set<Vertex<T>> island, Set<Edge<T>> edges) {
+        if (!island.contains(vertex)) {
+            island.add(vertex);
+        } else {
+            return;
+        }
+        getConnectedVertices(vertex, edges).forEach(v -> floodFill(v, island, edges));
+    }
+
+    /**
+     * Gets all the vertices connected directly to the given vertex
+     * @param vertex the start vertex
+     * @param edges all the edges in the graph
+     * @return
+     */
+    private static <T> Set<Vertex<T>> getConnectedVertices(Vertex<T> vertex, Set<Edge<T>> edges) {
+        Set<Vertex<T>> connectedVertices = new HashSet<>();
+
+        edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
+                .forEach(edge1 -> {
+                    connectedVertices.add(edge1.getStart());
+                    connectedVertices.add(edge1.getEnd());
+                });
+        return connectedVertices;
     }
 
     public void setNodeCallback(Callback<T, Node> nodeCallback) {
         this.nodeCallback = nodeCallback;
     }
 
-    public void test() {
-        Arrow a = new Arrow();
-        a.layoutXProperty().set(100);
-        a.layoutYProperty().set(100);
-        a.endXProperty().set(100);
-        a.endYProperty().set(-50);
-        getChildren().add(a);
-    }
-
     public void go() {
         for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
             Set<Edge<T>> edgeSet = getEdges().stream().filter(
                     e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
-            computePositions(s, edgeSet);
 
+            // Graphs with fewer than 3 vertices and 2 edges can not be spaced
+            // by the algorithm implementation. We set their spacing manually.
+            if (s.size() > 2) {
+                computePositions(s, edgeSet);
+            } else {
+                computePositionsMicro(s, edgeSet);
+            }
         }
+
+        // Add a listener on vertices and edges observable set
+        // when that fires, call go() again.
+    }
+
+    private void computePositionsMicro(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
+        double verticalSeparation = 150;
+        double yPos = 0;
+        for (Vertex<T> vertex : vertices) {
+            vertex.xPosProperty().set(0);
+            vertex.yPosProperty().set(yPos);
+            yPos += verticalSeparation;
+        }
+
+        getChildren().add(drawGraph(vertices, edges));
     }
 
     private void computePositions(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
@@ -201,53 +261,6 @@ public class GraphVisualiser<T> extends FlowPane {
         }
 
         return pane;
-    }
-
-    /**
-     * Splits the given graph (made up of vertices and edges) into its connected sub-graphs
-     * @param vertices vertices of the graph
-     * @param edges edges of the graph
-     * @return a set containing the sets of vertices for each connected sub-graph
-     */
-    public static <T> Set<Set<Vertex<T>>> getConnectedSubGraphs(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
-        Set<Set<Vertex<T>>> totalSet = new HashSet<>();
-
-        while (!vertices.isEmpty()) {
-            Set<Vertex<T>> island = new HashSet<>();
-            floodFill(vertices.iterator().next(), island, edges);
-            vertices.removeAll(island);
-            totalSet.add(island);
-        }
-        return totalSet;
-    }
-
-    /**
-     * Recursively perform the flood fill algorithm
-     */
-    private static <T> void floodFill(Vertex<T> vertex, Set<Vertex<T>> island, Set<Edge<T>> edges) {
-        if (!island.contains(vertex)) {
-            island.add(vertex);
-        } else {
-            return;
-        }
-        getConnectedVertices(vertex, edges).forEach(v -> floodFill(v, island, edges));
-    }
-
-    /**
-     * Gets all the vertices connected directly to the given vertex
-     * @param vertex the start vertex
-     * @param edges all the edges in the graph
-     * @return
-     */
-    private static <T> Set<Vertex<T>> getConnectedVertices(Vertex<T> vertex, Set<Edge<T>> edges) {
-        Set<Vertex<T>> connectedVertices = new HashSet<>();
-
-        edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
-                .forEach(edge1 -> {
-                    connectedVertices.add(edge1.getStart());
-                    connectedVertices.add(edge1.getEnd());
-                });
-        return connectedVertices;
     }
 
     public ObservableSet<Edge<T>> getEdges() {
