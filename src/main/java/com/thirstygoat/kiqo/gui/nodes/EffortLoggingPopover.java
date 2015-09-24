@@ -50,7 +50,6 @@ public class EffortLoggingPopover extends PopOver {
         personSelector.textProperty().bindBidirectional(viewModel.personProperty(),
                         StringConverters.personStringConverter(viewModel.organisationProperty()));
 
-        endDatePicker.setValue(LocalDate.now());
         endDatePicker.setDayCellFactory(param -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
@@ -153,7 +152,7 @@ public class EffortLoggingPopover extends PopOver {
         VBox dateVbox = new VBox();
         Label dateLabel = new Label("Date");
         endDatePicker = new DatePicker();
-        endDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue((LocalDate.now().isBefore(task.getStory().getSprint().getEndDate().plusDays(1))) ? LocalDate.now() : null);
         dateVbox.getChildren().addAll(dateLabel, endDatePicker);
 
         VBox timeVbox = new VBox();
