@@ -23,12 +23,19 @@ public class ScrumBoardView implements FxmlView<ScrumBoardViewModel>, Initializa
     @FXML
     private VBox scrumBoardVBox;
     @FXML
+    private VBox tasksWithoutStoryVBox;
+    @FXML
     private ScrollPane scrollPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initialiseDragAndDrop();
         Bindings.bindContentBidirectional(scrumBoardVBox.getChildren(), getViewModel().storyRowsProperty());
+        viewModel.setView(this);
+    }
+
+    public void addTasksWithoutStoryRow(Node node) {
+        tasksWithoutStoryVBox.getChildren().add(node);
     }
 
     private void initialiseDragAndDrop() {
