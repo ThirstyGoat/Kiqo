@@ -94,9 +94,9 @@ public class MainDetailsPaneController implements Initializable {
 
             if (tabPane.getTabs().contains(chosenTab)) {
                 tabPane.getSelectionModel().select(chosenTab);
-            } else if (chosenTab.getTabPane() != null) {
+            } else if (chosenTab.getTabPane() != null && chosenTab.getTabPane().getScene().getWindow().isShowing()) {
                 // Then this tab lies within another tab pane, which we need to grab and show
-                chosenTab.getTabPane().getParent().getScene().getWindow().requestFocus();
+                chosenTab.getTabPane().getScene().getWindow().requestFocus();
             } else {
                 // Then this tab has previously been created, but is not displayed anywhere, display it
                 tabPane.getTabs().add(chosenTab);
