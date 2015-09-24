@@ -31,10 +31,12 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
     private final Map<State, Image> images;
     private ListView<AcceptanceCriteria> listView;
     private UndoManager undoManager = UndoManager.getUndoManager();
+    private StoryDetailsPaneView view;
 
-    public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images) {
+    public AcceptanceCriteriaListCell(ListView<AcceptanceCriteria> listView, Map<State, Image> images, StoryDetailsPaneView view) {
         this.listView = listView;
         this.images = images;
+        this.view = view;
     }
     
     @Override
@@ -82,10 +84,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-            if (StoryDetailsPaneView.draggingAC != null) {
+            if (view.draggingAC != null) {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
-                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneView.draggingAC;
+                AcceptanceCriteria acceptanceCriteria = view.draggingAC;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), acceptanceCriteria);
@@ -98,10 +100,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-            if (StoryDetailsPaneView.draggingAC != null) {
+            if (view.draggingAC != null) {
                 ((AcceptanceCriteriaListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneView.draggingAC;
+                AcceptanceCriteria acceptanceCriteria = view.draggingAC;
                 listView.getItems().remove(acceptanceCriteria);
             }
             event.consume();
@@ -109,10 +111,10 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-            if (StoryDetailsPaneView.draggingAC != null) {
+            if (view.draggingAC != null) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneView.draggingAC;
+                AcceptanceCriteria acceptanceCriteria = view.draggingAC;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
@@ -132,8 +134,8 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            if (StoryDetailsPaneView.draggingAC != null) {
-                AcceptanceCriteria acceptanceCriteria = StoryDetailsPaneView.draggingAC;
+            if (view.draggingAC != null) {
+                AcceptanceCriteria acceptanceCriteria = view.draggingAC;
 
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
@@ -141,7 +143,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
                 if (listSize > listView.getItems().size()) {
                     listView.getItems().add(prevIndex, acceptanceCriteria);
                 }
-                StoryDetailsPaneView.draggingAC = null;
+                view.draggingAC = null;
             }
             event.consume();
         };
@@ -166,7 +168,7 @@ public class AcceptanceCriteriaListCell extends ListCell<AcceptanceCriteria> {
             container.addData("listSize", listView.getItems().size());
             content.put(DragContainer.DATA_FORMAT, container);
 
-            StoryDetailsPaneView.draggingAC = ac;
+            view.draggingAC = ac;
 
             if (getIndex() == listView.getSelectionModel().getSelectedIndex()) {
                 container.addData("index", listView.getSelectionModel().getSelectedIndex());

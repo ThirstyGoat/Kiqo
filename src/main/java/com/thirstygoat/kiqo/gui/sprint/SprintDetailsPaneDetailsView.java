@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
@@ -111,11 +112,13 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
 
         });
 
-
-        taskListView.setCellFactory(TaskListCell::new);
+        // A StoryDetailsPaneView is constructed here, since the TaskListCell requires one.
+        // The use of it is for storage of the fields relating to the currently
+        // dragging task
+        StoryDetailsPaneView taskCellView = new StoryDetailsPaneView();
+        taskListView.setCellFactory(param -> new TaskListCell(taskListView, taskCellView));
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
-
 
         addTaskButton.setOnAction(event -> viewModel.createTask());
         removeTaskButton.setOnAction(event -> viewModel.deleteTasks(taskListView.getSelectionModel().getSelectedItems()));
@@ -124,7 +127,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         viewModel.tasksWithoutStoryProperty().addListener((observable, oldValue, newValue) ->{
             taskListView.setItems(newValue.observableTasks());
         });
-
     }
 
     public SprintDetailsPaneDetailsViewModel getViewModel() {

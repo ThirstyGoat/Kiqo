@@ -30,10 +30,12 @@ import javafx.scene.text.TextFlow;
 
 public class TaskListCell extends ListCell<Task> {
     private ListView<Task> listView;
+    private StoryDetailsPaneView view;
     private UndoManager undoManager = UndoManager.getUndoManager();
 
-    public TaskListCell(ListView<Task> listView) {
+    public TaskListCell(ListView<Task> listView, StoryDetailsPaneView view) {
         this.listView = listView;
+        this.view = view;
     }
 
 
@@ -146,10 +148,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item enters another cell
         EventHandler<DragEvent> mContextDragEntered = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (view.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle("-fx-background-color: greenyellow");
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = view.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 if (getIndex() < listSize) {
                     listView.getItems().add(getIndex(), t);
@@ -162,10 +164,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the dragged item leaves another cell
         EventHandler<DragEvent> mContextDragExit = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (view.draggingTask != null) {
                 ((TaskListCell) event.getSource()).setStyle(null);
                 event.acceptTransferModes(TransferMode.ANY);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = view.draggingTask;
                 listView.getItems().remove(t);
             }
             event.consume();
@@ -173,10 +175,10 @@ public class TaskListCell extends ListCell<Task> {
 
         // Called when the item is dropped
         EventHandler<DragEvent> mContextDragDropped = event -> {
-            if (StoryDetailsPaneView.draggingTask != null) {
+            if (view.draggingTask != null) {
                 getParent().setOnDragOver(null);
                 getParent().setOnDragDropped(null);
-                Task t = StoryDetailsPaneView.draggingTask;
+                Task t = view.draggingTask;
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 if (getIndex() < listSize) {
@@ -197,15 +199,15 @@ public class TaskListCell extends ListCell<Task> {
         // Called when the drag and drop is complete
         EventHandler<DragEvent> mContextDragDone = event -> {
             // When the drag and drop is done, check if it is in the list, if it isn't put it back at its old position
-            if (StoryDetailsPaneView.draggingTask != null) {
-                Task t = StoryDetailsPaneView.draggingTask;
+            if (view.draggingTask != null) {
+                Task t = view.draggingTask;
                 int prevIndex = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("index");
                 int listSize = ((DragContainer) event.getDragboard().getContent(DragContainer.DATA_FORMAT)).getValue("listSize");
 
                 if (!listView.getItems().contains(t)) {
                     listView.getItems().add(prevIndex, t);
                 }
-                StoryDetailsPaneView.draggingTask = null;
+                view.draggingTask = null;
             }
             event.consume();
         };
@@ -221,7 +223,7 @@ public class TaskListCell extends ListCell<Task> {
             setCursor(Cursor.CLOSED_HAND);
             getParent().setOnDragDone(mContextDragDone);
 
-            StoryDetailsPaneView.draggingTask = task;
+            view.draggingTask = task;
 
             // begin drag ops
             ClipboardContent content = new ClipboardContent();
@@ -243,6 +245,4 @@ public class TaskListCell extends ListCell<Task> {
             event.consume();
         });
     }
-
-
 }

@@ -42,8 +42,8 @@ import java.util.*;
 
 public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>, Initializable {
 
-    public static AcceptanceCriteria draggingAC;
-    public static Task draggingTask;
+    public AcceptanceCriteria draggingAC;
+    public Task draggingTask;
     private MainController mainController;
     private ObjectProperty<Story> story = new SimpleObjectProperty<>();
     private Map<State, Image> images;
@@ -182,8 +182,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
-        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images));
-        taskListView.setCellFactory(TaskListCell::new);
+        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images, this));
+        taskListView.setCellFactory(param -> new TaskListCell(taskListView, this));
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
