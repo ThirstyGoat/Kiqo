@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -38,11 +38,11 @@ public class EffortLoggingPopover extends PopOver {
     public EffortLoggingPopover(EffortViewModel viewModel, Task task) {
         super();
         this.viewModel = viewModel;
+        this.task = task;
         initContent();
         attachViewModel();
         populateFields();
-        attachValidators();
-        this.task = task;
+        Platform.runLater(() -> attachValidators());
     }
 
     private void attachViewModel() {
@@ -118,7 +118,7 @@ public class EffortLoggingPopover extends PopOver {
     }
 
     private void attachValidators() {
-        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.personValidation(), personSelector, true);
         validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);
         validationVisualizer.initVisualization(viewModel.endTimeValidation(), timeTextField, true);
