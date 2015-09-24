@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import java.util.Comparator;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.controlsfx.control.SegmentedButton;
 
@@ -193,18 +195,16 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         allToggleButton.setSelected(true);
 
 //         Set up binding so that allItems contains only items depending on the showingSegmentedButton
+        Comparator<T> comparator = (i1, i2) -> stringPropertyCallback.call(i1).get().compareTo(stringPropertyCallback.call(i2).get());
         showing.addListener((observable, oldValue, newValue) -> {
             availableItems.clear();
             if (newValue == DisplayMode.ALL) {
-                availableItems.addAll(allItems);
+				availableItems.setAll(allItems.stream().sorted(comparator).collect(Collectors.toList()));
             } else if (newValue == DisplayMode.SELECTED) {
-                availableItems.addAll(selectedItems);
+                availableItems.setAll(selectedItems.stream().sorted(comparator).collect(Collectors.toList()));
             } else if (newValue == DisplayMode.UNSELECTED) {
-                availableItems.addAll(allItems);
-                availableItems.removeAll(selectedItems);
+                availableItems.setAll(allItems.stream().filter(item -> !selectedItems.contains(item)).sorted(comparator).collect(Collectors.toList()));
             }
-            availableItems.sort((i1, i2) -> stringPropertyCallback.call(i1).get().compareTo(stringPropertyCallback.call(i2).get()));
-            refilter();
         });
 
         headerProperty().addListener((observable, oldValue, newValue) -> {
