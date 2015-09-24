@@ -98,6 +98,8 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         toolBarToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             toolBarController.setVisible(newValue);
         });
+        // Make tool bar visible by default
+        toolBarToggleCheckMenuItem.selectedProperty().set(true);
         viewModel.selectedTab().addListener((observable, oldValue, newValue) -> {
             if (newValue == SideBarController.TabOption.PROJECTS) {
                 selectedTab.selectToggle(listShowProjectsMenuItem);

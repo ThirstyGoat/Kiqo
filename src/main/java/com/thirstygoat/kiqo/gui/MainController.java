@@ -82,7 +82,6 @@ public class MainController implements Initializable {
     private static Stage primaryStage;
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
-    private final BooleanProperty mainToolbarVisible = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -100,7 +99,6 @@ public class MainController implements Initializable {
     @FXML
     private VBox menuBar;
     @FXML
-    private ToolBarController toolBarController;
     private ViewTuple<MenuBarView, MenuBarViewModel> menuBarViewTuple;
     private double dividerPosition;
 
@@ -117,10 +115,6 @@ public class MainController implements Initializable {
 
         setStageTitleProperty();
         setSearchShortcut();
-    }
-
-    public BooleanProperty mainToolbarVisibleProperty() {
-        return mainToolbarVisible;
     }
 
     public ReadOnlyBooleanProperty changesSavedProperty() {
