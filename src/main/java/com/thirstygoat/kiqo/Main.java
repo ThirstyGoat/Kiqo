@@ -50,6 +50,8 @@ public class Main extends Application {
      */
     private static void setupLogging(Level level) {
         // set up logging for this package
+
+
         final Logger logger = Logger.getLogger(Main.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         final Formatter formatter = new SimpleFormatter() {
