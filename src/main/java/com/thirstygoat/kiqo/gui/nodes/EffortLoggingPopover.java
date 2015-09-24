@@ -1,12 +1,12 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.effort.EffortViewModel;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -38,11 +38,11 @@ public class EffortLoggingPopover extends PopOver {
     public EffortLoggingPopover(EffortViewModel viewModel, Task task) {
         super();
         this.viewModel = viewModel;
+        this.task = task;
         initContent();
         attachViewModel();
         populateFields();
-        attachValidators();
-        this.task = task;
+        Platform.runLater(() -> attachValidators());
     }
 
     private void attachViewModel() {
@@ -50,7 +50,6 @@ public class EffortLoggingPopover extends PopOver {
         personSelector.textProperty().bindBidirectional(viewModel.personProperty(),
                         StringConverters.personStringConverter(viewModel.organisationProperty()));
 
-        endDatePicker.setValue(LocalDate.now());
         endDatePicker.setDayCellFactory(param -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
@@ -118,7 +117,7 @@ public class EffortLoggingPopover extends PopOver {
     }
 
     private void attachValidators() {
-        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.personValidation(), personSelector, true);
         validationVisualizer.initVisualization(viewModel.endDateValidation(), endDatePicker, true);
         validationVisualizer.initVisualization(viewModel.endTimeValidation(), timeTextField, true);
@@ -134,79 +133,75 @@ public class EffortLoggingPopover extends PopOver {
         setDetachable(false);
 
         /* Main content */
-        VBox content = new VBox();
-        content.setFillWidth(true);
-        content.setMaxWidth(320);
-        content.setMaxHeight(320);
-        content.setPadding(new Insets(5, 10, 10, 10));
-        content.setSpacing(5);
+        VBox main = new VBox();
+        main.setPadding(new Insets(10, 10, 10, 10));
 
         /* Heading */
-        Label heading = new Label();
-        heading.setText("Log effort");
+        Label heading = new Label("Log effort");
         heading.getStyleClass().add("heading-label");
 
         /* Person */
-        VBox personVbox = new VBox();
-        Label personLabel = new Label();
-        personLabel.setText("Person");
+        Label personLabel = new Label("Person");
         personSelector = new TextField();
         personSelector.setPromptText("Select a person");
+        VBox personVbox = new VBox();
         personVbox.getChildren().addAll(personLabel, personSelector);
 
-        /* Date + Time */
         HBox dateTimeHbox = new HBox();
-        dateTimeHbox.setSpacing(5);
 
         VBox dateVbox = new VBox();
-        HBox.setHgrow(dateVbox, Priority.SOMETIMES);
-        Label dateLabel = new Label();
-        dateLabel.setText("Date");
+        Label dateLabel = new Label("Date");
         endDatePicker = new DatePicker();
-        endDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue((LocalDate.now().isBefore(task.getStory().getSprint().getEndDate().plusDays(1))) ? LocalDate.now() : null);
         dateVbox.getChildren().addAll(dateLabel, endDatePicker);
 
         VBox timeVbox = new VBox();
-        HBox.setHgrow(timeVbox, Priority.SOMETIMES);
-        Label timeLabel = new Label();
-        timeLabel.setText("Time");
+        Label timeLabel = new Label("Time");
         timeTextField = new TextField();
         timeTextField.setText(Utilities.TIME_FORMATTER.format(LocalTime.now()));
         timeVbox.getChildren().addAll(timeLabel, timeTextField);
 
         VBox durationVbox = new VBox();
+
         HBox durationHbox = new HBox();
         durationHbox.setSpacing(5);
-        Label durationLabel = new Label();
-        durationLabel.setText("Duration");
-        durationHbox.setPrefWidth(150);
-
+        Label durationLabel = new Label("Duration");
         hourSpinner = new TextField();
         hourSpinner.setPromptText("H");
-        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-
         minuteSpinner = new TextField();
         minuteSpinner.setPromptText("M");
+        durationHbox.setPrefWidth(150);
+
+        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
         minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
 
         durationHbox.getChildren().addAll(hourSpinner, minuteSpinner);
         durationVbox.getChildren().addAll(durationLabel, durationHbox);
         dateTimeHbox.getChildren().addAll(dateVbox, timeVbox, durationVbox);
 
+        HBox.setHgrow(timeVbox, Priority.SOMETIMES);
+        HBox.setHgrow(dateVbox, Priority.SOMETIMES);
+
         /* Comment */
         commentTextArea = new TextArea();
-        commentTextArea.setPromptText("Add a comment");
+        commentTextArea.setPromptText("Add a comment...");
         commentTextArea.setWrapText(true);
+        commentTextArea.setPrefHeight(80);
 
         HBox buttonHbox = new HBox();
         buttonHbox.setAlignment(Pos.BASELINE_RIGHT);
-        logButton = new Button();
+        logButton = new Button("Log");
         logButton.getStyleClass().add(".form .form-button");
-        logButton.setText("Log");
         buttonHbox.getChildren().add(logButton);
 
-        content.getChildren().setAll(heading, personVbox, dateTimeHbox, commentTextArea, buttonHbox);
-        setContentNode(content);
+        main.getChildren().setAll(heading, personVbox, dateTimeHbox, commentTextArea, buttonHbox);
+        setContentNode(main);
+
+        dateTimeHbox.setSpacing(3);
+        main.setSpacing(10);
+        main.setPrefWidth(320);
+        main.setStyle("-fx-border-color: greenyellow");
+
     }
 
     /**

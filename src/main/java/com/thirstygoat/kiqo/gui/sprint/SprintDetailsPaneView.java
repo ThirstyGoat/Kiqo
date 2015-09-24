@@ -37,7 +37,6 @@ public class SprintDetailsPaneView implements FxmlView<SprintDetailsPaneViewMode
     private VBox scrumBoardView;
     @FXML
     private AnchorPane burndownView;
-
     @FXML
     private GoatLabelTextField shortNameLabel;
     @FXML

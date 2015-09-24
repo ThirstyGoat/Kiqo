@@ -71,7 +71,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
         longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
             Utilities.emptinessPredicate(),
-            ValidationMessage.error("Name must not be empty."));
+            ValidationMessage.error("Name must not be empty"));
 
         descriptionValidator = new FunctionBasedValidator<>(descriptionProperty(),
             // Always valid as description isn't required and has no constraints
@@ -91,12 +91,12 @@ public class StoryViewModel extends ModelViewModel<Story> {
                 }
                 return false;
             },
-            ValidationMessage.error("Person must already exist"));
+            ValidationMessage.error("Person must exist"));
 
         projectValidator = new FunctionBasedValidator<>(projectProperty(),
             // Checks that the project exists and is set
             Utilities.emptinessPredicate(),
-            ValidationMessage.error("Project must already exist"));
+            ValidationMessage.error("Project must exist"));
 
         priorityValidator = new FunctionBasedValidator<>(priorityProperty(),
             i -> {
@@ -114,7 +114,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
         scaleValidator = new FunctionBasedValidator<>(scaleProperty(),
             Utilities.emptinessPredicate(),
-            ValidationMessage.error("Estimation Scale must not be empty"));
+            ValidationMessage.error("Estimation scale must not be empty"));
 
         allValidator = new CompositeValidator();
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,

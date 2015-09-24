@@ -1,6 +1,8 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
-import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Loadable;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.Organisation;
@@ -16,7 +18,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +39,7 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
     private ObservableList<Story> sortedStories;
     private ListChangeListener<Story> listener;
+    private ScrumBoardView view;
 
     @Override
     public void load(Sprint sprint, Organisation organisation) {
@@ -45,7 +49,13 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
 
             this.sprint = sprint;
             this.organisation = organisation;
+
+            view.addTasksWithoutStoryRow(getStoryRow(sprint.getTasksWithoutStory()));
         }
+    }
+
+    public void setView(ScrumBoardView view) {
+        this.view = view;
     }
 
     private void mapStoryRow(Story story, Node node) {
@@ -58,6 +68,11 @@ public class ScrumBoardViewModel implements Loadable<Sprint>, ViewModel {
             ViewTuple<StoryRowView, StoryRowViewModel> viewTuple = FluentViewLoader.fxmlView(StoryRowView.class).load();
             viewTuple.getViewModel().load(story, organisation);
             viewTuple.getViewModel().setMainController(mainController);
+
+            if (sprint.getTasksWithoutStory() == story) {
+                viewTuple.getCodeBehind().setAsTaskWithoutStoryRow();
+            }
+
             viewTuple.getCodeBehind().setScrumBoardViewModel(this);
             mapStoryRow(story, viewTuple.getView());
             return viewTuple.getView();

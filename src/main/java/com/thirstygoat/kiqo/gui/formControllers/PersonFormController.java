@@ -83,7 +83,7 @@ public class PersonFormController extends FormController<Person> {
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), person, organisation.getPeople());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
-                "Short name must be unique and not empty."));
+                "Short name must be unique and not empty"));
 
         validationSupport.registerValidator(longNameTextField,
                 Validator.createEmptyValidator("Name must not be empty", Severity.ERROR));

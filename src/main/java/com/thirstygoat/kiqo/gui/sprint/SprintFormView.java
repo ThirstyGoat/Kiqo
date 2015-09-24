@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Story;
@@ -10,6 +11,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -190,7 +192,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
     }
 
     private void attachValidators() {
-        ValidationVisualizer validationVisualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(new SimpleBooleanProperty(true));
         validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField, true);
         validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField, true);
         validationVisualizer.initVisualization(viewModel.startDateValidation(), startDatePicker, true);

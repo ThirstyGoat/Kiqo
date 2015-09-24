@@ -38,7 +38,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     private FunctionBasedValidator<String> commentValidator;
 
     private ObjectProperty<Effort> effort;
-    private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>(LocalDate.now());
+    private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>();
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
     private StringProperty endDateStringProperty;
     private ObjectProperty<Task> task = new SimpleObjectProperty();
@@ -60,9 +60,6 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         ChangeListener listener = (observable, oldValue, newValue) -> {
             LocalDate endDate = endDateProperty.get();
             LocalTime endTime = endTimeProperty().get();
-            if (endTime == null) {
-                endTime = LocalTime.now();
-            }
             LocalDateTime dateTime = LocalDateTime.of(
                     endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
                     endTime.getHour(), endTime.getMinute()
@@ -247,6 +244,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
                     .flatMap(release -> release.getSprints().stream())
                     .filter(sprint -> sprint.getStories().contains(task.getStory()))
                     .findAny();
+            System.out.println(sprintTaskBelongsTo);
 
             if (sprintTaskBelongsTo.isPresent()) {
                 return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()

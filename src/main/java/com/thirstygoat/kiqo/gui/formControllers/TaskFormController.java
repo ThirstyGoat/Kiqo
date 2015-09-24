@@ -3,7 +3,10 @@ package com.thirstygoat.kiqo.gui.formControllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -132,7 +135,7 @@ public class TaskFormController extends FormController<Task> {
         }
     }
     private void setValidationSupport() {
-        ValidationVisualizer visualizer = new ControlsFxVisualizer();
+        DelayedValidationVisualizer visualizer = new DelayedValidationVisualizer(new SimpleBooleanProperty(true));
         visualizer.initVisualization(viewModel.nameValidation(), name, true);
         visualizer.initVisualization(viewModel.estimationValidation(), estimate, true);
         visualizer.initVisualization(viewModel.descriptionValidation(), description, true);

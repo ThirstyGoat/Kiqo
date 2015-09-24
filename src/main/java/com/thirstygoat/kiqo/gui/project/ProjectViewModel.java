@@ -57,7 +57,7 @@ public class ProjectViewModel extends ModelViewModel<Project> {
 
         longNameValidator = new FunctionBasedValidator<String>(longNameProperty(),
                 Utilities.emptinessPredicate(),
-                ValidationMessage.error("Long name must not be empty."));
+                ValidationMessage.error("Long name must not be empty"));
 
         descriptionValidator = new ObservableRuleBasedValidator();
 

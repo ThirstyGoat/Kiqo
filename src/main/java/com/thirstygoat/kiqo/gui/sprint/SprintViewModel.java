@@ -197,7 +197,7 @@ public class SprintViewModel implements ViewModel {
         if (sprint != null) {
             sprintWrapper.set(sprint);
             stories().clear();
-            stories().setAll(sprintWrapper.get().getStories());
+            stories().setAll(sprintWrapper.get().getStories().filtered(s -> !s.getShortName().equals("Tasks without a Story")));
         } else {
             sprintWrapper.set(new Sprint());
             sprintWrapper.reset();

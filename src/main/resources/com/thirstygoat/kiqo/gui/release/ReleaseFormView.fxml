@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="200.0" prefWidth="200.0" styleClass="form" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.release.ReleaseFormView">
    <center>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="420.0" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="form-field-label" text="Short Name">
+            <Label styleClass="form-field-label" text="Name">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin>

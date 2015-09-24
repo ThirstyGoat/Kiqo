@@ -242,6 +242,15 @@
     -fx-font-size: 1.5em;
 }
 
+.tasksWithoutStoryHeading {
+    -fx-font: 18px "Roboto";
+    -fx-text-fill: grey;
+}
+
+.scrumboard-tasks-without-story-container {
+
+}
+
 /********* STORY CARDS **********/
 
 .story-card {

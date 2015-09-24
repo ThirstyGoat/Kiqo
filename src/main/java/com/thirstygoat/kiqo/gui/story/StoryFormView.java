@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.story;
 
 import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Scale;
@@ -105,9 +106,10 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     }
 
     private void setPrompts() {
-        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique.");
+        shortNameTextField.setPromptText("Must be under " + Utilities.SHORT_NAME_MAX_LENGTH + " characters and unique");
         longNameTextField.setPromptText("Billy Goat");
-        descriptionTextField.setPromptText("Describe this story.");
+        descriptionTextField.setPromptText("Describe this story");
+        priorityTextField.setPromptText("Set a priority between " + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY);
 
         // Populate Estimation Scale ComboBox
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
@@ -115,13 +117,13 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     }
 
     private void setValidationSupport() {
-        ValidationVisualizer visualizer = new ControlsFxVisualizer();
-        visualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
-        visualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
-        visualizer.initVisualization(viewModel.creatorValidation(), creatorTextField, true);
-        visualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
-        visualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
-        visualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
+        validationVisualizer.initVisualization(viewModel.shortNameValidation(), shortNameTextField, true);
+        validationVisualizer.initVisualization(viewModel.longNameValidation(), longNameTextField, true);
+        validationVisualizer.initVisualization(viewModel.creatorValidation(), creatorTextField, true);
+        validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
+        validationVisualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
+        validationVisualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
 //
 //    private void setStoryCycleHyperLinkInfo() {
