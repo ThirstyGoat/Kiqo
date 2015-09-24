@@ -129,6 +129,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         vb.setPadding(new Insets(10));
 
+
         popOver.setContentNode(vb);
 
         highlightHyperLink.setOnAction(e -> popOver.show(highlightHyperLink));
