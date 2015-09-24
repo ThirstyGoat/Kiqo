@@ -55,12 +55,12 @@ public class ReleaseViewModel extends ModelViewModel<Release> {
         shortNameValidator.addRule(shortNameProperty().isNotNull(), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().greaterThan(0), ValidationMessage.error("Name must not be empty"));
         shortNameValidator.addRule(shortNameProperty().length().lessThan(Utilities.SHORT_NAME_MAX_LENGTH), ValidationMessage.error("Name must be less than " + Utilities.SHORT_NAME_MAX_LENGTH + " characters"));
-        shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within organisation"));
+        shortNameValidator.addRule(uniqueName, ValidationMessage.error("Name must be unique within project"));
 
         descriptionValidator = new ObservableRuleBasedValidator(); // always true
         
         projectValidator = new ObservableRuleBasedValidator();
-        projectValidator.addRule(projectProperty().isNotNull(), ValidationMessage.error("Project must not be empty"));
+        projectValidator.addRule(projectProperty().isNotNull(), ValidationMessage.error("Project must exist"));
         
         dateValidator = new ObservableRuleBasedValidator();
         BooleanBinding isAfterAllSprintsAreFinished = Bindings.createBooleanBinding(() -> {

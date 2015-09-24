@@ -57,7 +57,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
 
         longNameValidator = new FunctionBasedValidator<>(longNameProperty(),
                 Utilities.emptinessPredicate(),
-                ValidationMessage.error("Name must not be empty."));
+                ValidationMessage.error("Name must not be empty"));
 
         descriptionValidator = new FunctionBasedValidator<>(descriptionProperty(),
                 string -> {
@@ -69,13 +69,13 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
                 person -> {
                     return person != null && person.getSkills().contains(organisationProperty().get().getPoSkill());
                 },
-                ValidationMessage.error("Product Owner must exist and possess the PO Skill."));
+                ValidationMessage.error("Product owner must exist and possess the PO skill"));
 
         projectValidator = new FunctionBasedValidator<>(projectProperty(),
                 project -> {
                     return project != null;
                 },
-                ValidationMessage.error("Project must exist."));
+                ValidationMessage.error("Project must exist"));
 
         allValidator = new CompositeValidator(shortNameValidator, longNameValidator, descriptionValidator,
                 productOwnerValidator, projectValidator);

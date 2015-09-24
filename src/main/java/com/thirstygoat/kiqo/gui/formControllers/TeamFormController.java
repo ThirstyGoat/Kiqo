@@ -101,7 +101,7 @@ public class TeamFormController extends FormController<Team> {
                 Utilities.shortnameIsUnique(shortNameTextField.getText(), team, organisation.getTeams());
 
         validationSupport.registerValidator(shortNameTextField, Validator.createPredicateValidator(shortNameValidation,
-                "Short name must be unique and not empty."));
+                "Name must be unique and not empty"));
 
         validationSupport.invalidProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

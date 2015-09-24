@@ -9,7 +9,7 @@
    <center>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="477.0" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="form-field-label" text="Short Name">
+            <Label styleClass="form-field-label" text="Name">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin>

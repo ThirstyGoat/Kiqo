@@ -94,7 +94,7 @@ public class AllocationFormController extends FormController<Allocation> {
                 return false;
             };
             validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
-                    "Project must already exist"));
+                    "Project must exist"));
         }
 
         final Predicate<LocalDate> endDateOverlapValidatorPredicate = localDate -> {
@@ -151,7 +151,7 @@ public class AllocationFormController extends FormController<Allocation> {
         };
 
         final Validator endDateBeforeValidator = Validator.createPredicateValidator(endDateBeforeValidatorPredicate,
-                "End date must not come before the start date");
+                "End date must not be before start date");
 
         final Validator endDateValidator = Validator.combine(endDateBeforeValidator, endDateOverlapValidator);
 
