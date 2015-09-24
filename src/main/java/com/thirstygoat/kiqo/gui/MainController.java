@@ -37,6 +37,7 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -1083,8 +1084,6 @@ public class MainController implements Initializable {
     private void acceptanceCriteriaDialog(AcceptanceCriteria acceptanceCriteria) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
@@ -1118,7 +1117,6 @@ public class MainController implements Initializable {
         final Story finalStory = story;
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);

@@ -123,8 +123,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     showNode(acAndTaskVbox);
                 }
             }
-
-
         });
 
         if (story != null) {
@@ -143,7 +141,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                 });
             });
             FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
-                            viewModel.eligibleDependencies());
+                    viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());

@@ -109,12 +109,10 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
             totalTaskHoursLabel.textProperty().bind(Bindings.createStringBinding(
                     taskHoursCallable, viewModel.tasksWithoutStoryProperty().get().observableTasks()
             ));
-
         });
 
         // A StoryDetailsPaneView is constructed here, since the TaskListCell requires one.
         // The use of it is for storage of the fields relating to the currently
-        // dragging task
         StoryDetailsPaneView taskCellView = new StoryDetailsPaneView();
         taskListView.setCellFactory(param -> new TaskListCell(taskListView, taskCellView));
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
