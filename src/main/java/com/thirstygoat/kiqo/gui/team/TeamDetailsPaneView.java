@@ -7,6 +7,7 @@ import com.thirstygoat.kiqo.util.*;
 
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +32,13 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     private FilteredListBiControl<ListView<Person>, Person> teamMemberList;
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
+    
+    @FXML
+    private Label devTeamLabel_debug1; // TODO remove
+    @FXML
+    private Label devTeamLabel_debug2; // TODO remove
+    @FXML
+    private Label devTeamLabel_debug3; // TODO remove
 
     @InjectViewModel
     private TeamDetailsPaneViewModel viewModel;
@@ -43,7 +51,12 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
                         viewModel.descriptionValidation());
         FxUtils.initGoatLabel(productOwnerLabel, viewModel, viewModel.productOwnerProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()), viewModel.productOwnerValidation());
+        FxUtils.setTextFieldSuggester(productOwnerLabel.getEditField(), viewModel.productOwnerSupplier());
         
+        devTeamLabel_debug1.textProperty().bind(Utilities.commaSeparatedValuesBinding(viewModel.devTeamProperty()));
+        devTeamLabel_debug2.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.eligibleDevs()));
+        devTeamLabel_debug3.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.teamMembersProperty()));
+
         FxUtils.initLabelFilteredListBiControl(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.eligibleDevs());
         FxUtils.initListViewFilteredListBiControl(teamMemberList, viewModel, viewModel.teamMembersProperty(),
                         viewModel.eligibleTeamMembers());

@@ -251,7 +251,7 @@ public final class FxUtils {
 	    		FilteredListBiControl<Label, T> listBiControl,
 	            Editable viewModel, 
 	            ListProperty<T> selectedItems,
-	            ObjectBinding<ObservableList<T>> unselectedItems) {
+	            ListProperty<T> unselectedItems) {
     	listBiControl.selectedItems().bindBidirectional(selectedItems);
 	    listBiControl.unselectedItems().bind(unselectedItems);
 	    LabelFilteredListBiControlSkin<T> skin = new LabelFilteredListBiControlSkin<T>(
@@ -264,7 +264,7 @@ public final class FxUtils {
 	public static <T extends Item> void initListViewFilteredListBiControl(FilteredListBiControl<ListView<T>, T> listBiControl,
                                                       Editable viewModel,
                                                       ListProperty<T> selectedItems,
-                                                      ObjectBinding<ObservableList<T>> unselectedItems) {
+                                                      ListProperty<T> unselectedItems) {
         listBiControl.selectedItems().bindBidirectional(selectedItems);
         listBiControl.unselectedItems().bind(unselectedItems);
         ListViewFilteredListBiControlSkin<T> skin = new ListViewFilteredListBiControlSkin<T>(

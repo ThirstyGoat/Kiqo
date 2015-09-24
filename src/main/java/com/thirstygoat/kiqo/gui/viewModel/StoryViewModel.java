@@ -27,7 +27,7 @@ import java.util.logging.Level;
  * Created by samschofield on 16/07/15.
  */
 public class StoryViewModel extends ModelViewModel<Story> {
-	private final ObjectBinding<ObservableList<Story>> eligibleDependencies;
+	private final ListProperty<Story> eligibleDependencies;
     private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
     private ObservableRuleBasedValidator shortNameValidator;
     private FunctionBasedValidator longNameValidator;
@@ -39,24 +39,25 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private CompositeValidator allValidator;
 
     public StoryViewModel() {
-    	eligibleDependencies = Bindings.createObjectBinding(() -> { 
-	    		if (backlogProperty().get() == null) {
-		            return FXCollections.observableArrayList();
-		        } else {
-		            return backlogProperty().get().getStories().stream()
-		                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
-		                    .collect(GoatCollectors.toObservableList());
-		        }
-	    	}, projectProperty(), backlogProperty());
-    	backlogProperty().addListener((observable, oldValue, newValue) -> {
-        	newValue.observableStories().addListener((ListChangeListener.Change<? extends Story> change) -> {
-        		eligibleDependencies.invalidate();
-        	});
-        });
+    	ListProperty<Story> storiesInBacklog = new SimpleListProperty<>();
+    	storiesInBacklog.bind(Bindings.createObjectBinding(() -> {
+    		if (backlogProperty().get() != null) {
+    			return backlogProperty().get().observableStories();
+	        } else {
+	        	return FXCollections.observableArrayList();
+	        }
+    	}, backlogProperty()));
+    
+    	eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
+    	eligibleDependencies.bind(Bindings.createObjectBinding(() -> { 
+	    		return storiesInBacklog.stream()
+	                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
+	                    .collect(GoatCollectors.toObservableList());
+	    	}, dependenciesProperty(), storiesInBacklog));
     	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
-                List<Story> stories = new ArrayList();
+                List<Story> stories = new ArrayList<>();
                 if (projectProperty().get() != null) {
                     stories.addAll(projectProperty().get().getUnallocatedStories());
                     for (Backlog backlog : projectProperty().get().getBacklogs()) {
@@ -124,12 +125,6 @@ public class StoryViewModel extends ModelViewModel<Story> {
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
-    
-    @Override
-	public void reload() {
-    	super.reload();
-    	eligibleDependencies.invalidate();
-    }
 
     @Override
     protected Supplier<Story> modelSupplier() {
@@ -188,7 +183,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
     /** Other Fields **/
 
-    public ObjectBinding<ObservableList<Story>> eligibleDependencies() {
+    public ListProperty<Story> eligibleDependencies() {
         return eligibleDependencies;
     }
 

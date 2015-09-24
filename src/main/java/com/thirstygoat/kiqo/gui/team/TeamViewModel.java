@@ -31,45 +31,36 @@ public class TeamViewModel extends ModelViewModel<Team> {
     private ObservableRuleBasedValidator teamMembersValidator;
     private ObservableRuleBasedValidator devTeamValidator;
     private CompositeValidator allValidator;
-	private final ObjectBinding<ObservableList<Person>> eligibleTeamMembers;
-	private ObjectBinding<ObservableList<Person>> eligibleDevs;
+	private final ListProperty<Person> eligibleTeamMembers;
+	private final ListProperty<Person> eligibleDevs;
 
     public TeamViewModel() {
         createValidators();
         
-        eligibleTeamMembers = Bindings.createObjectBinding(() -> {
-	    		if (organisationProperty().get() != null) {
-			    	return organisationProperty().get().getPeople().stream()
-			            .filter(person -> person.getTeam() == null)// || !teamMembersProperty().get().contains(person))
-			            .collect(GoatCollectors.toObservableList());
-	    		} else {
-	    			return FXCollections.observableArrayList();
-	    		}
-			}, 
-			organisationProperty()); // TODO also teamMembersProperty?
+        ListProperty<Person> peopleInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList(Person.getWatchStrategy()));
+        peopleInOrganisation.bind(Bindings.createObjectBinding(() -> {
+        	if (organisationProperty().get() != null) {
+        		return organisationProperty().get().getPeople();
+        	} else {
+        		return FXCollections.observableArrayList();
+        	}
+        }, organisationProperty()));
         
-        eligibleDevs = Bindings.createObjectBinding(() -> {
-    		if (organisationProperty().get() != null) {
-		    	return teamMembersProperty().get().stream() // is in team
+        eligibleTeamMembers = new SimpleListProperty<>(FXCollections.observableArrayList());
+        eligibleTeamMembers.bind(Bindings.createObjectBinding(() -> {
+    		return peopleInOrganisation.stream()
+		            .filter(person -> person.getTeam() == null)
+		            .collect(GoatCollectors.toObservableList());
+		}, peopleInOrganisation));
+
+        eligibleDevs = new SimpleListProperty<>(FXCollections.observableArrayList());
+        eligibleDevs.bind(Bindings.createObjectBinding(() -> {
+			return teamMembersProperty().get().stream() // is in team
 		            .filter(person -> 
-		            	// has PO skill
-		            	person.getSkills().contains(organisationProperty().get().getPoSkill())
-		            	// and is not in PO role
-		            	&& !person.equals(productOwnerProperty().get()) 
-		            	// and is not in SM role
-		            	&& !person.equals(scrumMasterProperty().get())
-	            	).collect(GoatCollectors.toObservableList());
-    		} else {
-    			return FXCollections.observableArrayList();
-    		}
-		}, organisationProperty(), productOwnerProperty(), scrumMasterProperty());
-        
-        organisationProperty().addListener((observable, oldValue, newValue) -> {
-        	newValue.getPeople().addListener((ListChangeListener.Change<? extends Person> change) -> {
-        		eligibleTeamMembers.invalidate();
-        		eligibleDevs.invalidate();
-        	});
-        });
+		            	!person.equals(productOwnerProperty().get())
+		            	&& !person.equals(scrumMasterProperty().get()))
+		            .collect(GoatCollectors.toObservableList());
+		}, peopleInOrganisation, productOwnerProperty(), scrumMasterProperty()));
     }
 
     @Override
@@ -225,17 +216,11 @@ public class TeamViewModel extends ModelViewModel<Team> {
         return allValidator.getValidationStatus();
     }
 
-    protected ObjectBinding<ObservableList<Person>> eligibleTeamMembers() {
+    protected ListProperty<Person> eligibleTeamMembers() {
 	    return eligibleTeamMembers;
 	}
     
-    protected ObjectBinding<ObservableList<Person>> eligibleDevs() {
+    protected ListProperty<Person> eligibleDevs() {
         return eligibleDevs;
     }
-    
-	@Override
-	public void reload() {
-		super.reload();
-		eligibleTeamMembers.invalidate();
-	}
 }

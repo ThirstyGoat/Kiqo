@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.junit.*;
 import org.junit.rules.ExpectedException;
+import static org.assertj.core.api.Assertions.*;
 
 import com.thirstygoat.kiqo.model.*;
 
@@ -48,6 +49,18 @@ public class TeamDetailsPaneViewModelTest {
     
     @Test
     public void testDevSelection() {
-    	viewModel.eligibleDevs(); //TODO
+    	viewModel.teamMembersProperty().addAll(po, sm, dev1, dev2, person3);
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	viewModel.productOwnerProperty().set(po);
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(sm, dev1, dev2, person3);
+    	viewModel.productOwnerProperty().set(null); // ex-PO should be allowed back into dev
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	viewModel.productOwnerProperty().set(po); // setup for later tests
+    	
+    	viewModel.scrumMasterProperty().set(sm);
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(dev1, dev2, person3);
+    	
+    	viewModel.devTeamProperty().addAll(dev1, dev2);
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(dev1, dev2, person3);
     }
 }

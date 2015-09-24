@@ -24,26 +24,31 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
-	private ObjectBinding<ObservableList<Skill>> availableSkills;
+	private ListProperty<Skill> availableSkills;
 
     public PersonViewModel() {
         createValidators();
         
-        availableSkills = Bindings.createObjectBinding(() -> { 
+        ListProperty<Skill> skillsInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList(Person.getWatchStrategy()));
+        skillsInOrganisation.bind(Bindings.createObjectBinding(() -> {
+        	if (organisationProperty().get() != null) {
+        		return organisationProperty().get().getSkills();
+        	} else {
+        		return FXCollections.observableArrayList();
+        	}
+        }, organisationProperty()));
+        
+        availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
+        availableSkills.bind(Bindings.createObjectBinding(() -> { 
 	    		if (organisationProperty().get() != null) {
 					final ListProperty<Skill> skills = skills();
-	                return organisationProperty().get().getSkills().stream()
+	                return skillsInOrganisation.stream()
 	                        .filter(skill -> !skills.contains(skill))
 	                        .collect(GoatCollectors.toObservableList());
 	            } else {
 	                return FXCollections.observableArrayList();
 	            }
-	        }, organisationProperty(), skills());
-        organisationProperty().addListener((observable, oldValue, newValue) -> {
-        	newValue.getSkills().addListener((ListChangeListener.Change<? extends Skill> change) -> {
-        		availableSkills.invalidate();
-        	});
-        });
+	        }, skillsInOrganisation));
     }
     
     @Override
@@ -144,7 +149,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");
     }
 
-    protected ObjectBinding<ObservableList<Skill>> availableSkills() {
+    protected ListProperty<Skill> availableSkills() {
         return availableSkills;
     }
     
