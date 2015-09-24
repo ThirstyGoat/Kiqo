@@ -47,7 +47,7 @@ public class ProjectDetailsPaneView implements FxmlView<ProjectDetailsPaneViewMo
         // a listener is setup to set the items only when allocations is not null.
         viewModel.allocations().addListener((ListChangeListener) change -> {
             if (viewModel.allocations().get() != null) {
-                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM);
+                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM, viewModel.getWrappedObject());
                 allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
                 allocationsTableViewController.setItems(viewModel.allocations());
             }
