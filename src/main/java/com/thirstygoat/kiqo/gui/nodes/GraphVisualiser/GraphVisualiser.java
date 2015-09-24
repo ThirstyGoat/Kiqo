@@ -31,6 +31,27 @@ public class GraphVisualiser<T> extends FlowPane {
     public GraphVisualiser() {
     }
 
+    public static Set<Set<Vertex>> getConnectedSubGraphs(Set<Vertex> vertices, Set<Edge> edges) {
+        Set<Set<Vertex>> totalSet = new HashSet<>();
+
+        Iterator<Vertex> iterator = vertices.iterator();
+        while (iterator.hasNext()) {
+            Vertex v = iterator.next();
+
+
+        }
+
+        return totalSet;
+    }
+
+    private static Set<Vertex> getConnectedVertices(Vertex vertex, Set<Edge> edges) {
+        Set<Vertex> connectedVertices = new HashSet<>();
+
+
+
+        return connectedVertices;
+    }
+
     public void setNodeCallback(Callback<T, Node> nodeCallback) {
         this.nodeCallback = nodeCallback;
     }
@@ -46,10 +67,6 @@ public class GraphVisualiser<T> extends FlowPane {
 
     public void go() {
 
-    }
-
-    private Set<Vertex<T>> getConnected(Vertex<T> vertex) {
-        return null;
     }
 
     private void addEdgeToSet(Edge<T> edge, Set<Vertex<T>> vertices) {
