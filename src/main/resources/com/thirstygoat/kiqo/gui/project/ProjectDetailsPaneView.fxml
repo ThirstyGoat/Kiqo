@@ -18,7 +18,7 @@
                 <Label styleClass="pane-type-indicator" text="Project" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..." />
             <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

@@ -70,7 +70,7 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
                 StringConverters.releaseStringConverter(viewModel.organisationProperty()), viewModel.releaseValidation());
         FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(), "Add a description...");
+                viewModel.descriptionValidation());
         FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(),
                 StringConverters.teamStringConverter(viewModel.organisationProperty()), viewModel.teamValidation());
         FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());

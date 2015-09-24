@@ -10,11 +10,6 @@ public class GoatLabelComboBox<T> extends GoatLabel<ComboBox<T>> {
     }
 
     @Override
-    public ComboBox<T> getEditField() {
-        return editField;
-    }
-
-    @Override
     protected void populateEditField() {
         editField.setValue(editField.getConverter().fromString(displayLabel.getText()));
     }

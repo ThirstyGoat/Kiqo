@@ -88,7 +88,7 @@ public class Organisation implements Serializable {
     public List<Person> getEligiblePOs() {
         List<Person> eligiblePOs = new ArrayList<>();
         for (Person person : people) {
-            if (person.getSkills().contains(poSkill)) {
+            if (person.observableSkills().contains(poSkill)) {
                 eligiblePOs.add(person);
             }
         }

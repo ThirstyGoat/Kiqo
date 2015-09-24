@@ -78,8 +78,9 @@ public class Sprint extends Item {
             for (Story story : getStories()) {
                 runningTotal += story.totalEstimateProperty().get();
             }
+            runningTotal += getTasksWithoutStory().totalEstimateProperty().get();
             return runningTotal;
-        }, getStories()));
+        }, getStories(), getTasksWithoutStory().getTasks()));
         return totalEstimate;
     }
 
@@ -90,8 +91,9 @@ public class Sprint extends Item {
             for (Story story : getStories()) {
                 runningTotal += story.spentEffortProperty().get();
             }
+            runningTotal += getTasksWithoutStory().spentEffortProperty().get();
             return runningTotal;
-        }, getStories()));
+        }, getStories(), getTasksWithoutStory().getTasks()));
         return totalSpentEffort;
     }
 

@@ -19,11 +19,38 @@
                 <Label styleClass="pane-type-indicator" text="Team" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..." />
+            <HBox spacing="10" >
+	        	<children>
+	        		<VBox spacing="10" >
+	        			<children>
+				            <Label text="Product Owner" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="productOwnerLabel" />
+				        </children>
+			        </VBox>
+			        <VBox spacing="10" >
+	        			<children>
+					        <Label text="Scrum Master" styleClass="field-label" >
+					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+					        </Label>
+					        <GoatLabelTextField fx:id="scrumMasterLabel" />
+					    </children>
+			        </VBox>
+		        </children>
+	        </HBox>
+	        <Label text="Developers" styleClass="field-label" >
+	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
+	        </Label>
+	        <Label fx:id="devTeamLabel_debug1" />
+	        <Label fx:id="devTeamLabel_debug2" />
+	        <Label fx:id="devTeamLabel_debug3" />
+	        <LabelFilteredListBiControl fx:id="devTeamLabel" />
             <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <FilteredListBiControl fx:id="teamMemberList" />
+	        <ListViewFilteredListBiControl fx:id="teamMemberList" />
 	        <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

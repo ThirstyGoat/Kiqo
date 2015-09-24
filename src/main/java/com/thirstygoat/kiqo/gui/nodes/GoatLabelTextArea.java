@@ -21,11 +21,6 @@ public class GoatLabelTextArea extends GoatLabel<TextArea> {
     }
 
     @Override
-    public TextArea getEditField() {
-        return editField;
-    }
-
-    @Override
     protected void setEnterAction() {
         skin.getEditField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {

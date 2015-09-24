@@ -87,8 +87,8 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
         Label headingLabel = new Label("Stories in Sprint");
         headingLabel.getStyleClass().add("form-field-label");
         storySelectionView.setHeader(headingLabel);
-        storySelectionView.sourceItemsProperty().bindBidirectional(viewModel.eligableStories());
-        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.stories());
+        storySelectionView.bindAllItems(viewModel.eligibleStories());
+        storySelectionView.bindSelectedItems(viewModel.stories());
         storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
