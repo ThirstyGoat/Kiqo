@@ -137,12 +137,11 @@ public class Main extends Application {
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
             Platform.runLater(() -> {
-                MainController.focusedItemProperty
-                        .set(mainController.selectedOrganisationProperty().get().getProjects().get(0)
-                                .getReleases().get(0).getSprints().get(0));
+                MainController.focusedItemProperty.set(
+                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
+
                 mainController.getDetailsPaneController().showDetailsPane(
-                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getReleases()
-                                .get(0).getSprints().get(0));
+                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
             });
         }
     }
