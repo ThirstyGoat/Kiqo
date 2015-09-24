@@ -1,18 +1,14 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
 
@@ -23,11 +19,8 @@ import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 public class TeamViewModel extends ModelViewModel<Team> {
 
@@ -39,6 +32,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
     private ObservableRuleBasedValidator devTeamValidator;
     private CompositeValidator allValidator;
 	private final ObjectBinding<ObservableList<Person>> eligibleTeamMembers;
+	private ObjectBinding<ObservableList<Person>> eligibleDevs;
 
     public TeamViewModel() {
         createValidators();
@@ -52,7 +46,30 @@ public class TeamViewModel extends ModelViewModel<Team> {
 	    			return FXCollections.observableArrayList();
 	    		}
 			}, 
-			organisationProperty());
+			organisationProperty()); // TODO also teamMembersProperty?
+        
+        eligibleDevs = Bindings.createObjectBinding(() -> {
+    		if (organisationProperty().get() != null) {
+		    	return teamMembersProperty().get().stream() // is in team
+		            .filter(person -> 
+		            	// has PO skill
+		            	person.getSkills().contains(organisationProperty().get().getPoSkill())
+		            	// and is not in PO role
+		            	&& !person.equals(productOwnerProperty().get()) 
+		            	// and is not in SM role
+		            	&& !person.equals(scrumMasterProperty().get())
+	            	).collect(GoatCollectors.toObservableList());
+    		} else {
+    			return FXCollections.observableArrayList();
+    		}
+		}, organisationProperty(), productOwnerProperty(), scrumMasterProperty());
+        
+        organisationProperty().addListener((observable, oldValue, newValue) -> {
+        	newValue.getPeople().addListener((ListChangeListener.Change<? extends Person> change) -> {
+        		eligibleTeamMembers.invalidate();
+        		eligibleDevs.invalidate();
+        	});
+        });
     }
 
     @Override
@@ -211,7 +228,11 @@ public class TeamViewModel extends ModelViewModel<Team> {
     protected ObjectBinding<ObservableList<Person>> eligibleTeamMembers() {
 	    return eligibleTeamMembers;
 	}
-	
+    
+    protected ObjectBinding<ObservableList<Person>> eligibleDevs() {
+        return eligibleDevs;
+    }
+    
 	@Override
 	public void reload() {
 		super.reload();

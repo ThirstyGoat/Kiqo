@@ -1,34 +1,19 @@
 package com.thirstygoat.kiqo.gui.person;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.util.GoatCollectors;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
+
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.utils.validation.*;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator shortNameValidator;
@@ -39,7 +24,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
-	private final ObjectBinding<ObservableList<Skill>> availableSkills;
+	private ObjectBinding<ObservableList<Skill>> availableSkills;
 
     public PersonViewModel() {
         createValidators();
@@ -53,7 +38,12 @@ public class PersonViewModel extends ModelViewModel<Person> {
 	            } else {
 	                return FXCollections.observableArrayList();
 	            }
-	        }, organisationProperty());
+	        }, organisationProperty(), skills());
+        organisationProperty().addListener((observable, oldValue, newValue) -> {
+        	newValue.getSkills().addListener((ListChangeListener.Change<? extends Skill> change) -> {
+        		availableSkills.invalidate();
+        	});
+        });
     }
     
     @Override
@@ -156,12 +146,6 @@ public class PersonViewModel extends ModelViewModel<Person> {
 
     protected ObjectBinding<ObservableList<Skill>> availableSkills() {
         return availableSkills;
-    }
-    
-    @Override
-	public void reload() {
-    	super.reload();
-    	availableSkills.invalidate();
     }
     
     public ValidationStatus shortNameValidation() {

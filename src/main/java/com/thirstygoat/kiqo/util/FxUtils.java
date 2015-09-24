@@ -1,35 +1,27 @@
 package com.thirstygoat.kiqo.util;
 
-import com.thirstygoat.kiqo.gui.Editable;
-import com.thirstygoat.kiqo.gui.MainController;
-import com.thirstygoat.kiqo.gui.nodes.*;
-import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
-import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControlSkin;
-import com.thirstygoat.kiqo.model.Item;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import javafx.util.converter.NumberStringConverter;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.controlsfx.control.textfield.*;
+
+import com.thirstygoat.kiqo.gui.*;
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.*;
+import com.thirstygoat.kiqo.model.Item;
+
+import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.*;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.util.*;
+import javafx.util.converter.NumberStringConverter;
 
 public final class FxUtils {
     public static <E extends Item> void setTextFieldSuggester(TextField textField, Supplier<List<E>> listSupplier) {
@@ -140,61 +132,51 @@ public final class FxUtils {
     /**
      * Binds a GoatLabel to a StringProperty.
      * @param goatLabel control
-     * @param stringProperty property to be displayed/edited
+     * @param property property to be displayed/edited
      */
-    private static void bindStringProperty(GoatLabel<? extends TextInputControl> goatLabel, StringProperty stringProperty) {
-        goatLabel.displayTextProperty().bind(stringProperty);
-        goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
+    private static void bindProperty(GoatLabel<? extends TextInputControl> goatLabel, StringProperty property) {
+        goatLabel.displayTextProperty().bind(property);
+        goatLabel.getEditField().textProperty().bindBidirectional(property);
     }
 
     /**
-     * Binds a GoatLabel to an ObjectProperty using a StringConverter.
+     * Binds a GoatLabel to a Property using a StringConverter.
      * 
      * @param goatLabel control
-     * @param objectProperty property to be displayed/edited
+     * @param property property to be displayed/edited
      * @param stringConverter
      */
-    private static <T> void bindObjectProperty(GoatLabel<? extends TextInputControl> goatLabel, ObjectProperty<T> objectProperty,
+    private static <T> void bindProperty(GoatLabel<? extends TextInputControl> goatLabel, Property<T> property,
             StringConverter<T> stringConverter) {
-        goatLabel.displayTextProperty().bindBidirectional(objectProperty, stringConverter);
-        goatLabel.getEditField().textProperty().bindBidirectional(objectProperty, stringConverter);
+        goatLabel.displayTextProperty().bindBidirectional(property, stringConverter);
+        goatLabel.getEditField().textProperty().bindBidirectional(property, stringConverter);
     }
 
     /**
      * Configures a GoatLabel for a StringProperty.
      * @param goatLabel control
      * @param editable viewModel
-     * @param stringProperty property to be displayed/edited
+     * @param property property to be displayed/edited
      * @param validationStatus status of the Validator for this field
      */
-    public static void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable, StringProperty stringProperty,
+    public static void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable, StringProperty property,
                                      ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
-        bindStringProperty(goatLabel, stringProperty);
+        bindProperty(goatLabel, property);
         goatLabel.validationStatus().set(validationStatus);
     }
 
-    public static void initGoatLabel(GoatLabelTextArea goatLabel, Editable viewModel,
-                                     StringProperty stringProperty, ValidationStatus validationStatus) {
-        initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.displayTextProperty().bind(stringProperty);
-        goatLabel.getEditField().textProperty().bindBidirectional(stringProperty);
-        goatLabel.validationStatus().set(validationStatus);
-    }
-
+    /**
+     * Configures a GoatLabel for a Property&lt;Number&gt;.
+     * @param goatLabel control
+     * @param editable viewModel
+     * @param property property to be displayed/edited
+     * @param validationStatus status of the Validator for this field
+     */
     public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel,
-                                     FloatProperty floatProperty, ValidationStatus validationStatus) {
+            Property<Number> property, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.displayTextProperty().bind(floatProperty.asString());
-        goatLabel.getEditField().textProperty().bindBidirectional(floatProperty, new NumberStringConverter());
-        goatLabel.restrictToNumericInput(true);
-        goatLabel.validationStatus().set(validationStatus);
-    }
-    public static void initGoatLabel(GoatLabelTextField goatLabel, Editable viewModel,
-            IntegerProperty intProperty, ValidationStatus validationStatus) {
-            initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.displayTextProperty().bind(intProperty.asString());
-        goatLabel.getEditField().textProperty().bindBidirectional(intProperty, new NumberStringConverter());
+        bindProperty(goatLabel, property, new NumberStringConverter());
         goatLabel.restrictToNumericInput(true);
         goatLabel.validationStatus().set(validationStatus);
     }
@@ -210,41 +192,12 @@ public final class FxUtils {
     public static <T> void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable, ObjectProperty<T> objectProperty,
                                      StringConverter<T> stringConverter, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
-        bindObjectProperty(goatLabel, objectProperty, stringConverter);
+        bindProperty(goatLabel, objectProperty, stringConverter);
         goatLabel.validationStatus().set(validationStatus);
-    }
-
-    /**
-     * Configures a GoatLabel for a StringProperty, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param stringProperty property to be displayed/edited
-     * @param validationStatus status of the Validator for this field
-     * @param defaultText placeholder text to display when property is null or empty
-     */
-    public static void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable,
-                                     StringProperty stringProperty, ValidationStatus validationStatus, String defaultText) {
-        initGoatLabel(goatLabel, editable, stringProperty, validationStatus);
-        goatLabel.setDefaultText(defaultText);
-    }
-
-    /**
-     * Configures a GoatLabel for an ObjectProperty using a StringConverter, with default text.
-     * @param goatLabel control
-     * @param editable viewModel
-     * @param objectProperty property to be displayed/edited
-     * @param stringConverter converter to translate the value of objectProperty between an Object and a String
-     * @param validationStatus status of the Validator for this field
-     * @param defaultText placeholder text to display when property is null or empty
-     */
-    public static <T> void initGoatLabel(GoatLabel<? extends TextInputControl> goatLabel, Editable editable,
-            ObjectProperty<T> objectProperty, StringConverter<T> stringConverter, ValidationStatus validationStatus, String defaultText) {
-        initGoatLabel(goatLabel, editable, objectProperty, stringConverter, validationStatus);
-        goatLabel.setDefaultText(defaultText);
     }
     
     /**
-     * Configures a GoatLabelComboBox for an ObjectProperty using a StringConverter, with default text.
+     * Configures a GoatLabelComboBox for an ObjectProperty using a StringConverter.
      * @param goatLabel control
      * @param editable viewModel
      * @param items list of options in ComboBox
@@ -261,7 +214,7 @@ public final class FxUtils {
     }
     
     /**
-     * Configures a GoatLabelDatePicker for an ObjectProperty&lt;LocalDate&gt;, with default text.
+     * Configures a GoatLabelDatePicker for an ObjectProperty&lt;LocalDate&gt;.
      * @param goatLabel control
      * @param editable viewModel
      * @param objectProperty property to be displayed (assumes this is bound to stringProperty)
@@ -276,61 +229,73 @@ public final class FxUtils {
         goatLabel.validationStatus().set(validationStatus);
     }
 
-    public static void enableShiftEnter(TextArea textArea, Runnable runnable) {
-        // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
-        // Shift+Enter should create new line in the text area
-
-        textArea.setOnKeyPressed(event -> {
-            final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
-            final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
-            if (shiftEnter.match(event)) {
-                // force new line
-                textArea.appendText("\n");
-                event.consume();
-            } else if (enter.match(event)) {
-                event.consume();
-                try {
-                    runnable.run();
-                } catch (Exception ignored) {
-                }
-            }
-        });
-    }
-
-    public static <T extends Item> void initGoatLabel(GoatLabelFilteredListSelectionView<T> goatLabel,
-                                                      Editable viewModel, ListProperty<T> targetList,
-                                                      ListProperty<T> sourceList) {
+    /**
+     * Configures a GoatLabelFilteredListSelectionView for a ListProperty.
+     * @param goatLabel control
+     * @param editable viewModel
+     * @param targetList list of selected elements
+     * @param sourceList list of eligible (unselected) elements
+     * @param validationStatus status of the Validator for this field
+     */
+    public static <T extends Item> void initGoatLabel(
+    			GoatLabelFilteredListSelectionView<T> goatLabel,
+    			Editable viewModel, ListProperty<T> targetList,
+    			ListProperty<T> sourceList) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
         goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
         goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
     }
+    
+    public static <T extends Item> void initLabelFilteredListBiControl(
+	    		FilteredListBiControl<Label, T> listBiControl,
+	            Editable viewModel, 
+	            ListProperty<T> selectedItems,
+	            ObjectBinding<ObservableList<T>> unselectedItems) {
+    	listBiControl.selectedItems().bindBidirectional(selectedItems);
+	    listBiControl.unselectedItems().bind(unselectedItems);
+	    LabelFilteredListBiControlSkin<T> skin = new LabelFilteredListBiControlSkin<T>(
+	    		listBiControl,
+	            viewModel::commitEdit, viewModel::cancelEdit,
+	            Item::shortNameProperty);
+	    listBiControl.setSkin(skin);
+	}
 
-    public static <T extends Item> void initGoatLabel(FilteredListBiControl<T> listBiControl,
+	public static <T extends Item> void initListViewFilteredListBiControl(FilteredListBiControl<ListView<T>, T> listBiControl,
                                                       Editable viewModel,
                                                       ListProperty<T> selectedItems,
                                                       ObjectBinding<ObservableList<T>> unselectedItems) {
-        initGoatLabel(listBiControl, viewModel, selectedItems, unselectedItems, null, null, Item::shortNameProperty);
-    }
-    
-    public static <T> void initGoatLabel(FilteredListBiControl<T> listBiControl,
-                Editable viewModel,
-                ListProperty<T> selectedItems,
-                ObjectBinding<ObservableList<T>> unselectedItems,
-                Callback<ListView<T>, ListCell<T>> displayCellFactory,
-                Callback<T, Node> editCellFactory,
-                Callback<T, StringProperty> stringPropertyCallback) {
         listBiControl.selectedItems().bindBidirectional(selectedItems);
         listBiControl.unselectedItems().bind(unselectedItems);
-        FilteredListBiControlSkin<T> skin = new FilteredListBiControlSkin<T>(listBiControl,
-                viewModel::commitEdit, viewModel::cancelEdit, 
-                displayCellFactory,
-                editCellFactory,
-                stringPropertyCallback);
+        ListViewFilteredListBiControlSkin<T> skin = new ListViewFilteredListBiControlSkin<T>(
+        		listBiControl,
+                viewModel::commitEdit, viewModel::cancelEdit,
+                Item::shortNameProperty);
         listBiControl.setSkin(skin);
     }
+    
+    public static void enableShiftEnter(TextArea textArea, Runnable runnable) {
+	    // Need to catch ENTER key presses to remove focus from textarea so that form can be submitted
+	    // Shift+Enter should create new line in the text area
+	
+	    textArea.setOnKeyPressed(event -> {
+	        final KeyCombination shiftEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
+	        final KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER);
+	        if (shiftEnter.match(event)) {
+	            // force new line
+	            textArea.appendText("\n");
+	            event.consume();
+	        } else if (enter.match(event)) {
+	            event.consume();
+	            try {
+	                runnable.run();
+	            } catch (Exception ignored) {
+	            }
+	        }
+	    });
+	}
 
-    /**
+	/**
      * Attaches the basic key shortcuts to a scene
      * Undo/Redo, and Save
      * @param scene Scene to attach key shortcuts to

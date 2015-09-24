@@ -19,7 +19,7 @@
             	<Label text="Skill" styleClass="pane-type-indicator" />
               </children>
             </HBox>
-            <GoatLabelTextArea fx:id="descriptionLabel" />
+            <GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..." />
           </children>
         </VBox>
       </content>

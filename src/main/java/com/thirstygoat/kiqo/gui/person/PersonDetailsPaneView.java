@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.*;
+import javafx.scene.control.ListView;
 
 import com.thirstygoat.kiqo.gui.nodes.*;
 import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
@@ -29,7 +30,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
     @FXML
     private GoatLabelTextField departmentLabel;
     @FXML
-    private FilteredListBiControl<Skill> skillsLabel;
+    private FilteredListBiControl<ListView<Skill>, Skill> skillsLabel;
     @FXML
     private GoatLabelTextArea descriptionLabel;
 
@@ -44,7 +45,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
         FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), viewModel.emailValidation());
         FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), viewModel.phoneNumberValidation());
         FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), viewModel.departmentValidation());
-        FxUtils.initGoatLabel(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
+        FxUtils.initListViewFilteredListBiControl(skillsLabel, viewModel, viewModel.skills(), viewModel.availableSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 }

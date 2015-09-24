@@ -19,7 +19,7 @@
 					    <Label styleClass="pane-type-indicator" text="Backlog" />
 					  </children>
 					</HBox>
-					<GoatLabelTextField fx:id="descriptionLabel" />
+					<GoatLabelTextField fx:id="descriptionLabel" defaultText="Add a description..." />
                     <Label text="Product Owner" styleClass="field-label" >
 			            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 			        </Label>

@@ -1,16 +1,11 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import com.thirstygoat.kiqo.gui.backlog.BacklogDetailsPaneViewModel;
-import com.thirstygoat.kiqo.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import java.util.*;
+
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.thirstygoat.kiqo.model.*;
 
 /**
  * Created by leroy on 15/9/15.
@@ -44,8 +39,15 @@ public class TeamDetailsPaneViewModelTest {
         organisation.getPeople().add(dev1);
         organisation.getPeople().add(dev2);
         organisation.getPeople().add(person3);
+        
+    	viewModel.load(team, organisation);
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    
+    @Test
+    public void testDevSelection() {
+    	viewModel.eligibleDevs(); //TODO
+    }
 }

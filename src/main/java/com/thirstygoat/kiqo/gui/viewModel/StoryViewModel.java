@@ -14,8 +14,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,11 @@ public class StoryViewModel extends ModelViewModel<Story> {
 		                    .collect(GoatCollectors.toObservableList());
 		        }
 	    	}, projectProperty(), backlogProperty());
+    	backlogProperty().addListener((observable, oldValue, newValue) -> {
+        	newValue.observableStories().addListener((ListChangeListener.Change<? extends Story> change) -> {
+        		eligibleDependencies.invalidate();
+        	});
+        });
     	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
