@@ -186,6 +186,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     }
 
     private void initSegmentedButton() {
+        detailsToggleButton.setSelected(true);
         segmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 segmentedButton.getToggleGroup().selectToggle(oldValue);
