@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.model.Organisation;
 import com.thirstygoat.kiqo.model.Project;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by Carina and James on 27/05/15.
@@ -25,29 +27,31 @@ public class ReportFormController implements Initializable {
     private Organisation organisation;
     private boolean valid = false;
     private Level level = Level.ORGANISATION;
+    private ListProperty<Item> allItems;
+    private ListProperty<Item> selectedItems;
 
     // Begin FXML Injections
     @FXML
     private ComboBox<String> levelComboBox;
-//    @FXML
-//    private GoatFilteredListSelectionView<Item> elementListSelectionView;
+    @FXML
+    private GoatFilteredListSelectionView<Item> elementListSelectionView;
     @FXML
     private Button okButton;
     @FXML
     private Button cancelButton;
 
     public void initialize(URL location, ResourceBundle resources) {
+        allItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+    	selectedItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+    	elementListSelectionView.bindAllItems(allItems);
+        elementListSelectionView.bindSelectedItems(selectedItems);
+        elementListSelectionView.setStringPropertyCallback(Item::shortNameProperty);
+        
         setButtonHandlers();
         populateComboBox();
         setListeners();
         Platform.runLater(levelComboBox::requestFocus);
     }
-
-//    public ObservableList<Item> getTargetList() {
-//        return elementListSelectionView.getTargetItems();
-//    } TODO
-
-
 
     private void setButtonHandlers() {
         okButton.setOnAction(event -> {
@@ -58,42 +62,33 @@ public class ReportFormController implements Initializable {
     }
 
     private void setListeners() {
-//        levelComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
-//            elementListSelectionView.targetItemsProperty().clear();
-//            setListSelectionViewData(newValue);
-//            if (newValue.equals("Organisation")) {
-//                elementListSelectionView.setDisable(true);
-//            } else {
-//                elementListSelectionView.setDisable(false);
-//            }
-//        })); 
-//
-//        okButton.disableProperty().bind(Bindings.isEmpty(elementListSelectionView.getTargetItems())
-//                .and(Bindings.notEqual(levelComboBox.valueProperty(), "Organisation"))); TODO
+        levelComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
+        	selectedItems.clear();
+            setListSelectionViewData(newValue);
+        })); 
+
+        okButton.disableProperty().bind(Bindings.isEmpty(selectedItems)
+                .and(Bindings.notEqual(levelComboBox.valueProperty(), "Organisation")));
+        elementListSelectionView.disableProperty().bind(Bindings.equal(levelComboBox.valueProperty(), "Organisation"));
     }
 
     private void setListSelectionViewData(String newValue) {
-        final ObservableList<Item> sourceList = FXCollections.observableArrayList();
         if (newValue.equals("Organisation")) {
             level = Level.ORGANISATION;
+            allItems.clear();
         } else if (newValue.equals("Projects")) {
             level = Level.PROJECTS;
-            sourceList.addAll(organisation.getProjects());
+            allItems.setAll(organisation.getProjects());
         } else if (newValue.equals("Teams")) {
             level = Level.TEAMS;
-            sourceList.addAll(organisation.getTeams());
+            allItems.setAll(organisation.getTeams());
         } else if (newValue.equals("People")) {
             level = Level.PEOPLE;
-            sourceList.addAll(organisation.getPeople());
+            allItems.setAll(organisation.getPeople());
         } else if (newValue.equals("Backlogs")) {
             level = Level.BACKLOGS;
-            for (Project project : organisation.getProjects()) {
-                sourceList.addAll(project.getBacklogs());
-            }
+            allItems.setAll(organisation.getProjects().stream().flatMap(project -> project.getBacklogs().stream()).collect(Collectors.toList()));
         }
-//        elementListSelectionView.getSourceItems().setAll(sourceList); TODO
-//        elementListSelectionView.setStringPropertyCallback(item -> item.shortNameProperty()); TODO
-
     }
 
     private void populateComboBox() {
