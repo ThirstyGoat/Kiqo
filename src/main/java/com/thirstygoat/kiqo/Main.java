@@ -50,6 +50,8 @@ public class Main extends Application {
      */
     private static void setupLogging(Level level) {
         // set up logging for this package
+
+
         final Logger logger = Logger.getLogger(Main.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         final Formatter formatter = new SimpleFormatter() {
@@ -136,6 +138,14 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
+            Platform.runLater(() -> {
+                MainController.focusedItemProperty
+                                .set(mainController.selectedOrganisationProperty().get().getProjects().get(0)
+                                                .getReleases().get(0).getSprints().get(0));
+                mainController.getDetailsPaneController().showDetailsPane(
+                                mainController.selectedOrganisationProperty().get().getProjects().get(0).getReleases()
+                                                .get(0).getSprints().get(0));
+            });
         }
     }
 }

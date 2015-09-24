@@ -682,7 +682,10 @@ public class MainController implements Initializable {
         Organisation organisation;
         try {
             SearchableItems.getInstance().clear();
-            detailsPaneController.closeAllTabs();
+            // for unit tests that use the demo.json detailsPaneController wouldn't be initialized at this point
+            if (detailsPaneController != null) {
+                detailsPaneController.closeAllTabs();
+            }
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)

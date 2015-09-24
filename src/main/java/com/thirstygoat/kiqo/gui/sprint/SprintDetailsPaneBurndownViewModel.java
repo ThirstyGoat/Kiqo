@@ -70,28 +70,36 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
         if (efforts.isEmpty())
             return;
 
-        Effort currentEffort;
+        // for each day calculate the spent effort
+        // if the day has none logged use the previous days effort
+
+        // calculate the range of days to iterate over between the start of the sprint and either the end date or localdate.now() depending on which is earlier
+        LocalDate endDay = (sprintProperty().get().getEndDate().isAfter(LocalDate.now())) ? LocalDate.now() : sprintProperty().get().getEndDate();
+
         LocalDate currentDay = sprintProperty().get().getStartDate();
-        float accrued = 0;
-        while (efforts.peek() != null) {
-            Effort effort = efforts.poll();
+        Effort currentEffort;
+        float totalSpentEffort = 0;
 
-            if (!effort.getEndDateTime().toLocalDate().isAfter(currentDay)) {
-                accrued += (Utilities.durationToFloat(effort.getDuration()));
-            } else {
-                XYChart.Data<LocalDate, Number> point = new XYChart.Data<>(currentDay, accrued);
-                XYChart.Data<LocalDate, Number> point2 = new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0));
-                loggedHoursData.add(point);
-                burndownData.add(point2);
-
-                currentEffort = effort;
-                currentDay = effort.getEndDateTime().toLocalDate();
-                accrued += Utilities.durationToFloat(currentEffort.getDuration());
+        while(currentDay.isBefore(endDay.plusDays(1))) {
+            // if there is effort left get it
+            while (efforts.peek() != null) {
+                // if the next effort is today we need to get it and add its time to the total and then increment the effort list
+                if (efforts.peek().getEndDateTime().toLocalDate().isEqual(currentDay)) {
+                    currentEffort = efforts.poll();
+                    totalSpentEffort += Utilities.durationToFloat(currentEffort.getDuration());
+                } else {
+                    // the day is tomorrow and therefore we need to break the while to increment the day
+                    break;
+                }
             }
+            // at this point all the effort for a day has been totalled and we now need to add it to the burndown
+            XYChart.Data<LocalDate, Number> point = new XYChart.Data<>(currentDay, totalSpentEffort);
+            XYChart.Data<LocalDate, Number> point2 = new XYChart.Data<>(currentDay, Math.max(totalEstimate - totalSpentEffort, 0));
+            loggedHoursData.add(point);
+            burndownData.add(point2);
+            // and then move to the next day
+            currentDay = currentDay.plusDays(1);
         }
-
-        loggedHoursData.add(new XYChart.Data<>(currentDay, accrued));
-        burndownData.add(new XYChart.Data<>(currentDay, Math.max(totalEstimate - accrued, 0)));
     }
 
 
