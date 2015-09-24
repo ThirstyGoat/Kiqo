@@ -193,8 +193,8 @@ public class MainDetailsPaneController implements Initializable {
 
     private Node getSprintDetailsPane(Sprint sprint) {
         ViewTuple<SprintDetailsPaneView, SprintDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getSprintViewTuple();
-        viewTuple.getViewModel().load(sprint, mainController.selectedOrganisationProperty.get());
         viewTuple.getViewModel().getScrumBoardViewModel().setMainController(mainController);
+        viewTuple.getViewModel().load(sprint, mainController.selectedOrganisationProperty.get());
         viewTuple.getViewModel().getDetailsViewModel().setMainController(mainController);
         return viewTuple.getView();
     }
