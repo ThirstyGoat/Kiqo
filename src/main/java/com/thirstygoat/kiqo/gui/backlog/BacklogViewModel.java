@@ -29,14 +29,28 @@ import java.util.stream.Collectors;
  *
  */
 public class BacklogViewModel extends ModelViewModel<Backlog> {
-    private final ObservableRuleBasedValidator shortNameValidator;
-    private final FunctionBasedValidator<String> longNameValidator;
-    private final FunctionBasedValidator<String> descriptionValidator;
-    private final FunctionBasedValidator<Person> productOwnerValidator;
-    private final FunctionBasedValidator<Project> projectValidator;
-    private final CompositeValidator allValidator;
+    private ObservableRuleBasedValidator shortNameValidator;
+    private FunctionBasedValidator<String> longNameValidator;
+    private FunctionBasedValidator<String> descriptionValidator;
+    private FunctionBasedValidator<Person> productOwnerValidator;
+    private FunctionBasedValidator<Project> projectValidator;
+    private CompositeValidator allValidator;
+	private ListProperty<Story> eligibleStories;
 
     public BacklogViewModel() {
+    	eligibleStories = new SimpleListProperty<>();
+    	eligibleStories.bind(Bindings.createObjectBinding(() -> {
+        	if (organisationProperty().get() != null) {
+        		return projectProperty().get().observableUnallocatedStories();
+        	} else {
+        		return FXCollections.observableArrayList();
+        	}
+        }, projectProperty()));
+        
+        attachValidators();
+    }
+    
+    private void attachValidators() {
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding rule1 = shortNameProperty().isNotNull();
         BooleanBinding rule2 = shortNameProperty().length().greaterThan(0);
@@ -67,7 +81,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
 
         productOwnerValidator = new FunctionBasedValidator<>(productOwnerProperty(),
                 person -> {
-                    return person != null && person.getSkills().contains(organisationProperty().get().getPoSkill());
+                    return person != null && person.observableSkills().contains(organisationProperty().get().getPoSkill());
                 },
                 ValidationMessage.error("Product owner must exist and possess the PO skill"));
 
@@ -98,7 +112,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
      */
     protected Supplier<List<Person>> productOwnerSupplier() {
         return () -> organisationProperty().get().getPeople().stream()
-                .filter(p -> p.getSkills().contains((organisationProperty().get().getPoSkill())))
+                .filter(p -> p.observableSkills().contains((organisationProperty().get().getPoSkill())))
                 .collect(Collectors.toList());
     }
 
@@ -212,12 +226,6 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     }
 
     public ListProperty<Story> eligibleStories() {
-        ListProperty<Story> eligibleStories =
-                        new SimpleListProperty<>(FXCollections.observableArrayList(Story.getWatchStrategy()));
-        projectProperty().addListener(change -> {
-            eligibleStories.setAll(storySupplier().get());
-        });
-        eligibleStories.setAll(storySupplier().get());
         return eligibleStories;
     }
 

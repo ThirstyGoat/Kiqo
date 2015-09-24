@@ -17,13 +17,4 @@ public class GoatLabelFilteredListSelectionView<T extends Item> extends GoatLabe
     protected GoatLabelSkin<GoatFilteredListSelectionView<T>> initSkin() {
         return new GoatLabelFilteredListSelectionViewSkin<>(this);
     }
-
-    @Override
-    public GoatFilteredListSelectionView<T> getEditField() {
-        return editField;
-    }
-
-    public Label getDisplayLabel() {
-        return displayLabel;
-    }
 }

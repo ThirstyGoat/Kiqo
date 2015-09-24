@@ -46,11 +46,11 @@
 	        <Label fx:id="devTeamLabel_debug1" />
 	        <Label fx:id="devTeamLabel_debug2" />
 	        <Label fx:id="devTeamLabel_debug3" />
-	        <FilteredListBiControl fx:id="devTeamLabel" />
+	        <LabelFilteredListBiControl fx:id="devTeamLabel" />
             <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <FilteredListBiControl fx:id="teamMemberList" />
+	        <ListViewFilteredListBiControl fx:id="teamMemberList" />
 	        <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

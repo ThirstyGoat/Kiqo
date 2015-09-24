@@ -138,7 +138,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             // person has po skill and does not currently have any other role in the team
             List<Person> eligiblePeople = organisationProperty().get().getPeople().stream()
                     .filter(person -> {
-                        return person.getSkills().contains(poSkill) 
+                        return person.observableSkills().contains(poSkill) 
                                 && (currentScrumMaster == null || !person.equals(currentScrumMaster))
                                 && !currentDevTeam.contains(person);
                     }).collect(Collectors.toList());
@@ -153,7 +153,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has sm skill and does not currently have any other role in the team
             return organisationProperty().get().getPeople().stream()
-                    .filter(person -> person.getSkills().contains(smSkill) 
+                    .filter(person -> person.observableSkills().contains(smSkill) 
                             && !person.equals(currentProductOwner)
                             && !currentDevTeam.contains(person))
                     .collect(Collectors.toList());

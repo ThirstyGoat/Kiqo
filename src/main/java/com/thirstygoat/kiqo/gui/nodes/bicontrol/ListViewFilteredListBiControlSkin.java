@@ -1,10 +1,12 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
+import com.thirstygoat.kiqo.model.Item;
+
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
-public class ListViewFilteredListBiControlSkin<S> extends FilteredListBiControlSkin<ListView<S>, S> {
+public class ListViewFilteredListBiControlSkin<S extends Item> extends FilteredListBiControlSkin<ListView<S>, S> {
 
 	public ListViewFilteredListBiControlSkin(FilteredListBiControl<ListView<S>, S> listBiControl, 
 			Runnable onCommit, Runnable onCancel,
@@ -26,11 +28,13 @@ public class ListViewFilteredListBiControlSkin<S> extends FilteredListBiControlS
             return new ListCell<S>() {
                 @Override
                 protected void updateItem(S item, boolean empty) {
-                    super.updateItem(item, empty);
-                    textProperty().unbind();
                     if (!empty) {
                         textProperty().bind(stringPropertyCallback.call(item));
+                    } else {
+                        textProperty().unbind();
+                        setText("");
                     }
+                    super.updateItem(item, empty);
                 }
             };
         };
@@ -39,7 +43,7 @@ public class ListViewFilteredListBiControlSkin<S> extends FilteredListBiControlS
     @Override
     protected ListView<S> makeDisplayView() {
         ListView<S> view = new ListView<S>();
-        view.setMinHeight(VIEW_HEIGHT);
+        view.setPrefHeight(VIEW_HEIGHT);
         return view;
     }
 

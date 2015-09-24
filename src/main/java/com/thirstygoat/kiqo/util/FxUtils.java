@@ -239,21 +239,21 @@ public final class FxUtils {
      */
     public static <T extends Item> void initGoatLabel(
     			GoatLabelFilteredListSelectionView<T> goatLabel,
-    			Editable viewModel, ListProperty<T> targetList,
-    			ListProperty<T> sourceList) {
+    			Editable viewModel, ListProperty<T> selectedItems,
+    			ListProperty<T> allItems) {
         initGoatLabelActions(goatLabel, viewModel);
-        goatLabel.getEditField().targetItemsProperty().bindBidirectional(targetList);
-        goatLabel.getEditField().sourceItemsProperty().bind(sourceList);
-        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(targetList));
+        goatLabel.getEditField().bindSelectedItems(selectedItems);
+        goatLabel.getEditField().bindAllItems(allItems);
+        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(selectedItems));
     }
     
     public static <T extends Item> void initLabelFilteredListBiControl(
 	    		FilteredListBiControl<Label, T> listBiControl,
 	            Editable viewModel, 
 	            ListProperty<T> selectedItems,
-	            ListProperty<T> unselectedItems) {
+	            ListProperty<T> allItems) {
     	listBiControl.selectedItems().bindBidirectional(selectedItems);
-	    listBiControl.unselectedItems().bind(unselectedItems);
+	    listBiControl.allItems().bind(allItems);
 	    LabelFilteredListBiControlSkin<T> skin = new LabelFilteredListBiControlSkin<T>(
 	    		listBiControl,
 	            viewModel::commitEdit, viewModel::cancelEdit,
@@ -264,9 +264,9 @@ public final class FxUtils {
 	public static <T extends Item> void initListViewFilteredListBiControl(FilteredListBiControl<ListView<T>, T> listBiControl,
                                                       Editable viewModel,
                                                       ListProperty<T> selectedItems,
-                                                      ListProperty<T> unselectedItems) {
+                                                      ListProperty<T> allItems) {
         listBiControl.selectedItems().bindBidirectional(selectedItems);
-        listBiControl.unselectedItems().bind(unselectedItems);
+        listBiControl.allItems().bind(allItems);
         ListViewFilteredListBiControlSkin<T> skin = new ListViewFilteredListBiControlSkin<T>(
         		listBiControl,
                 viewModel::commitEdit, viewModel::cancelEdit,

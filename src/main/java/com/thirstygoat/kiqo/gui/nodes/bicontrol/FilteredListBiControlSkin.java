@@ -1,19 +1,19 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
+import com.thirstygoat.kiqo.model.Item;
+
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
 import javafx.util.Callback;
-
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 
 /**
  * Created by leroy on 16/09/15.
  * @param <S> type of list elements
  */
-public abstract class FilteredListBiControlSkin<C extends Control, S> 
+public abstract class FilteredListBiControlSkin<C extends Control, S extends Item> 
         extends BiControlSkin<C, GoatFilteredListSelectionView<S>, ListProperty<S>> {
     protected static final double VIEW_HEIGHT = 200;
     
@@ -30,8 +30,8 @@ public abstract class FilteredListBiControlSkin<C extends Control, S>
             Callback<S, StringProperty> stringPropertyCallback) {
         super(listBiControl, onCommit, onCancel, false);
         
-        editView.setTargetItems(listBiControl.selectedItems());
-        editView.setSourceItems(listBiControl.unselectedItems());
+        editView.bindSelectedItems(listBiControl.selectedItems());
+     	editView.bindAllItems(listBiControl.allItems());
         editView.setStringPropertyCallback(stringPropertyCallback);
     }
     
@@ -41,7 +41,7 @@ public abstract class FilteredListBiControlSkin<C extends Control, S>
     protected GoatFilteredListSelectionView<S> makeEditView() {
         GoatFilteredListSelectionView<S> view = new GoatFilteredListSelectionView<S>();
         view.setStyle("-fx-background-color: transparent");
-        view.setMinHeight(VIEW_HEIGHT);
+        view.setPrefHeight(VIEW_HEIGHT);
         return view;
     }
     

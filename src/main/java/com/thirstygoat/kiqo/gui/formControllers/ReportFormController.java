@@ -29,8 +29,8 @@ public class ReportFormController implements Initializable {
     // Begin FXML Injections
     @FXML
     private ComboBox<String> levelComboBox;
-    @FXML
-    private GoatFilteredListSelectionView<Item> elementListSelectionView;
+//    @FXML
+//    private GoatFilteredListSelectionView<Item> elementListSelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -43,9 +43,9 @@ public class ReportFormController implements Initializable {
         Platform.runLater(levelComboBox::requestFocus);
     }
 
-    public ObservableList<Item> getTargetList() {
-        return elementListSelectionView.getTargetItems();
-    }
+//    public ObservableList<Item> getTargetList() {
+//        return elementListSelectionView.getTargetItems();
+//    } TODO
 
 
 
@@ -58,18 +58,18 @@ public class ReportFormController implements Initializable {
     }
 
     private void setListeners() {
-        levelComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            elementListSelectionView.targetItemsProperty().clear();
-            setListSelectionViewData(newValue);
-            if (newValue.equals("Organisation")) {
-                elementListSelectionView.setDisable(true);
-            } else {
-                elementListSelectionView.setDisable(false);
-            }
-        }));
-
-        okButton.disableProperty().bind(Bindings.isEmpty(elementListSelectionView.getTargetItems())
-                .and(Bindings.notEqual(levelComboBox.valueProperty(), "Organisation")));
+//        levelComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
+//            elementListSelectionView.targetItemsProperty().clear();
+//            setListSelectionViewData(newValue);
+//            if (newValue.equals("Organisation")) {
+//                elementListSelectionView.setDisable(true);
+//            } else {
+//                elementListSelectionView.setDisable(false);
+//            }
+//        })); 
+//
+//        okButton.disableProperty().bind(Bindings.isEmpty(elementListSelectionView.getTargetItems())
+//                .and(Bindings.notEqual(levelComboBox.valueProperty(), "Organisation"))); TODO
     }
 
     private void setListSelectionViewData(String newValue) {
@@ -91,8 +91,8 @@ public class ReportFormController implements Initializable {
                 sourceList.addAll(project.getBacklogs());
             }
         }
-        elementListSelectionView.getSourceItems().setAll(sourceList);
-        elementListSelectionView.setStringPropertyCallback(item -> item.shortNameProperty());
+//        elementListSelectionView.getSourceItems().setAll(sourceList); TODO
+//        elementListSelectionView.setStringPropertyCallback(item -> item.shortNameProperty()); TODO
 
     }
 

@@ -24,36 +24,28 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
-	private ListProperty<Skill> availableSkills;
+	private ListProperty<Skill> eligibleSkills;
 
     public PersonViewModel() {
         createValidators();
         
-        ListProperty<Skill> skillsInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList(Person.getWatchStrategy()));
-        skillsInOrganisation.bind(Bindings.createObjectBinding(() -> {
+        eligibleSkills = new SimpleListProperty<>();
+        eligibleSkills.bind(Bindings.createObjectBinding(() -> {
         	if (organisationProperty().get() != null) {
         		return organisationProperty().get().getSkills();
         	} else {
         		return FXCollections.observableArrayList();
         	}
         }, organisationProperty()));
-        
-        availableSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
-        availableSkills.bind(Bindings.createObjectBinding(() -> { 
-	    		if (organisationProperty().get() != null) {
-					final ListProperty<Skill> skills = skills();
-	                return skillsInOrganisation.stream()
-	                        .filter(skill -> !skills.contains(skill))
-	                        .collect(GoatCollectors.toObservableList());
-	            } else {
-	                return FXCollections.observableArrayList();
-	            }
-	        }, skillsInOrganisation));
     }
     
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
+    }
+    
+    protected ListProperty<Skill> eligibleSkills() {
+        return eligibleSkills;
     }
 
     private void createValidators() {
@@ -104,7 +96,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
 
-            if (!skills().get().equals(modelWrapper.get().getSkills())) {
+            if (!skills().get().equals(modelWrapper.get().observableSkills())) {
                 /** For some reason we need to create a new ArrayList here rather than just passing through
                  * skills().get() otherwise it doesn't work.
                  */
@@ -142,15 +134,11 @@ public class PersonViewModel extends ModelViewModel<Person> {
     }
 
     public ListProperty<Skill> skills() {
-        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, new ArrayList<Skill>());
+        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, null);
     }
 
     public StringProperty descriptionProperty() {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");
-    }
-
-    protected ListProperty<Skill> availableSkills() {
-        return availableSkills;
     }
     
     public ValidationStatus shortNameValidation() {

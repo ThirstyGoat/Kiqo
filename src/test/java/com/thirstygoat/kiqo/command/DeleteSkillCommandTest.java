@@ -111,7 +111,7 @@ public class DeleteSkillCommandTest {
      */
     private void assertSkillIsNotUsed() {
         for (final Person person : organisation.getPeople()) {
-            Assert.assertThat(person.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+            Assert.assertThat(person.observableSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
         }
     }
 
@@ -121,9 +121,9 @@ public class DeleteSkillCommandTest {
     private void assertSkillIsUsed() {
         for (final Person person : organisation.getPeople()) {
             if (person == person1) {
-                Assert.assertThat(person.getSkills(), CoreMatchers.hasItem(skill1));
+                Assert.assertThat(person.observableSkills(), CoreMatchers.hasItem(skill1));
             } else {
-                Assert.assertThat(person.getSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
+                Assert.assertThat(person.observableSkills(), CoreMatchers.not(CoreMatchers.hasItem(skill1)));
             }
         }
     }
