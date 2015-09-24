@@ -16,6 +16,7 @@ import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.gui.project.ProjectFormView;
 import com.thirstygoat.kiqo.gui.project.ProjectFormViewModel;
@@ -604,15 +605,15 @@ public class MainController implements Initializable {
             }
         }
 
-    public void allocateTeams() {
+    public void allocateTeams(AllocationsTableViewController.FirstColumnType type, Item item) {
         if (selectedOrganisationProperty.get() != null) {
-            allocationDialog(null);
+            allocationDialog(null, type, item);
         }
     }
 
-    public void editAllocation(Allocation allocation) {
+    public void editAllocation(Allocation allocation, AllocationsTableViewController.FirstColumnType type, Item item) {
         if (selectedOrganisationProperty.get() != null) {
-            allocationDialog(allocation);
+            allocationDialog(allocation, type, item);
         }
     }
 
@@ -1035,7 +1036,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void allocationDialog(Allocation allocation) {
+    private void allocationDialog(Allocation allocation, AllocationsTableViewController.FirstColumnType type, Item item) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
@@ -1057,11 +1058,11 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisationProperty.get());
 
-            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (type.equals(AllocationsTableViewController.FirstColumnType.PROJECT)) {
                 allocationFormController.setProject(null);
-                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
-            } else if (focusedItemProperty.getValue().getClass().equals(Project.class)) {
-                allocationFormController.setProject((Project) focusedItemProperty.getValue());
+                allocationFormController.setTeam((Team) item);
+            } else if (type.equals(AllocationsTableViewController.FirstColumnType.TEAM)) {
+                allocationFormController.setProject((Project) item);
                 allocationFormController.setTeam(null);
             }
 
