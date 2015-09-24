@@ -15,7 +15,6 @@ import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by bradley on 23/09/15.
@@ -31,26 +30,81 @@ public class GraphVisualiser<T> extends FlowPane {
     public GraphVisualiser() {
     }
 
-    public static Set<Set<Vertex>> getConnectedSubGraphs(Set<Vertex> vertices, Set<Edge> edges) {
+    public static Set<Set<Vertex>> getConnectedSubGraphs(List<Vertex> vertices, Set<Edge> edges) {
         Set<Set<Vertex>> totalSet = new HashSet<>();
 
-        Iterator<Vertex> iterator = vertices.iterator();
-        while (iterator.hasNext()) {
-            Vertex v = iterator.next();
-
-
+        while (!vertices.isEmpty()) {
+            Set<Vertex> island = new HashSet<>();
+            floodFill(vertices.get(0), island, edges);
+            vertices.removeAll(island);
+            totalSet.add(island);
         }
-
         return totalSet;
+    }
+
+    private static void floodFill(Vertex vertex, Set<Vertex> island, Set<Edge> edges) {
+        if (!island.contains(vertex)) {
+            island.add(vertex);
+        } else {
+            return;
+        }
+        getConnectedVertices(vertex, edges).forEach(v -> floodFill(v, island, edges));
     }
 
     private static Set<Vertex> getConnectedVertices(Vertex vertex, Set<Edge> edges) {
         Set<Vertex> connectedVertices = new HashSet<>();
 
-
-
+        edges.stream().filter(edge -> edge.getStart().equals(vertex) || edge.getEnd().equals(vertex))
+                .forEach(edge1 -> {
+                    connectedVertices.add(edge1.getStart());
+                    connectedVertices.add(edge1.getEnd());
+                });
         return connectedVertices;
     }
+
+//    public class FloodFillAlgorithm {
+//        public ArrayList<List<Node>> islands;
+//        public ArrayList<Node> nodes;
+//
+//        public static class Node {
+//            public ArrayList<Node> neighbors = new ArrayList<>();
+//            public String label;
+//
+//            public Node(String label) {
+//                this.label = label;
+//            }
+//
+//            @Override
+//            public String toString() {
+//                return label;
+//            }
+//        }
+//
+//        public FloodFillAlgorithm(List<Node> nodes) {
+//            this.nodes = new ArrayList<>();
+//            this.nodes.addAll(nodes);
+//        }
+//
+//        public void floodFill(Node node, List<Node> island) {
+//            if (!island.contains(node)) {
+//                island.add(node);
+//            } else {
+//                return;
+//            }
+//            node.neighbors.forEach(neighbor -> floodFill(neighbor, island));
+//        }
+//
+//        public List<List<Node>> execute() {
+//            islands = new ArrayList<>();
+//            while (nodes.size() > 0) {
+//                ArrayList<Node> island = new ArrayList<>();
+//                floodFill(nodes.get(0), island);
+//                nodes.removeAll(island);
+//                islands.add(island);
+//            }
+//            return islands;
+//        }
+//    }
 
     public void setNodeCallback(Callback<T, Node> nodeCallback) {
         this.nodeCallback = nodeCallback;
