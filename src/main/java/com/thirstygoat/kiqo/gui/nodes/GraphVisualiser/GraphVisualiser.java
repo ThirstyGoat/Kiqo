@@ -55,7 +55,6 @@ public class GraphVisualiser<T> extends FlowPane {
      * @return a set containing the sets of vertices for each connected sub-graph
      */
     public static <T> Set<Set<Vertex<T>>> getConnectedSubGraphs(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
-        LocalTime start = LocalTime.now();
         Set<Set<Vertex<T>>> totalSet = new HashSet<>();
 
         while (!vertices.isEmpty()) {
@@ -64,8 +63,6 @@ public class GraphVisualiser<T> extends FlowPane {
             vertices.removeAll(island);
             totalSet.add(island);
         }
-        long secondsBetween = ChronoUnit.MILLIS.between(start, LocalTime.now());
-        System.out.println(secondsBetween);
         return totalSet;
     }
 
@@ -281,6 +278,7 @@ public class GraphVisualiser<T> extends FlowPane {
         }
         long s = ChronoUnit.MILLIS.between(start,LocalTime.now());
         System.out.println(s);
+
         return pane;
     }
 
