@@ -30,7 +30,7 @@ import java.util.function.Predicate;
  * Created by james on 20/03/15.
  */
 public class PersonFormController extends FormController<Person> {
-    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
+//    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList(); TODO
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
@@ -58,8 +58,8 @@ public class PersonFormController extends FormController<Person> {
     private TextField phoneTextField;
     @FXML
     private TextField departmentTextField;
-    @FXML
-    private GoatFilteredListSelectionView<Skill> skillsSelectionView;
+//    @FXML TODO
+//    private GoatFilteredListSelectionView<Skill> skillsSelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -107,21 +107,21 @@ public class PersonFormController extends FormController<Person> {
         phoneTextField.setPromptText("A phone number would be good too.");
         departmentTextField.setPromptText("What department do they work for?");
     }
-
-    private void setSkillsListSelectionViewData() {
-        final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
-
-        sourceSkills.addAll(organisation.getSkills());
-        if (person != null) {
-            sourceSkills.removeAll(person.getSkills());
-            targetSkills.addAll(person.getSkills());
-        }
-
-        skillsSelectionView.setSourceItems(sourceSkills);
-        skillsSelectionView.setTargetItems(targetSkills);
-        skillsSelectionView.setStringPropertyCallback(skill -> skill.shortNameProperty());
-
-    }
+// TODO
+//    private void setSkillsListSelectionViewData() {
+//        final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
+//
+//        sourceSkills.addAll(organisation.getSkills());
+//        if (person != null) {
+//            sourceSkills.removeAll(person.getSkills());
+//            targetSkills.addAll(person.getSkills());
+//        }
+//
+//        skillsSelectionView.bindAllItems(sourceSkills);
+//        skillsSelectionView.setTargetItems(targetSkills);
+//        skillsSelectionView.setStringPropertyCallback(skill -> skill.shortNameProperty());
+//
+//    }
 
     /**
      * Sets the TextFields displayed in the dialog to the Person that will be edited.
@@ -131,7 +131,7 @@ public class PersonFormController extends FormController<Person> {
     public void populateFields(final Person person) {
         this.person = person;
 
-        setSkillsListSelectionViewData();
+//        setSkillsListSelectionViewData(); TODO
 
         if (person != null) {
             // We are editing an existing Person
@@ -183,7 +183,7 @@ public class PersonFormController extends FormController<Person> {
 
     private void setCommand() {
         final ArrayList<Skill> skills = new ArrayList<>();
-        skills.addAll(targetSkills);
+//        TODO skills.addAll(targetSkills);
 
         if (person == null) {
             final Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
@@ -216,10 +216,10 @@ public class PersonFormController extends FormController<Person> {
             }
 
 
-            if (!(skills.containsAll(person.getSkills())
-                    && person.getSkills().containsAll(skills))) {
-                changes.add(new EditCommand<>(person, "skills", skills));
-            }
+//            if (!(skills.containsAll(person.getSkills()) TODO
+//                    && person.getSkills().containsAll(skills))) {
+//                changes.add(new EditCommand<>(person, "skills", skills));
+//            }
 
             valid = !changes.isEmpty();
 
@@ -240,37 +240,37 @@ public class PersonFormController extends FormController<Person> {
 
             // Check if the user has removed either PO/SM skills and they are using that skill
 
-            ArrayList<Skill> removedSkills = new ArrayList<>();
-            removedSkills.addAll(person.getSkills());
-            removedSkills.removeAll(skillsSelectionView.getTargetItems());
-
-            if (removedSkills.contains(poSkill)) {
-                // Then they are trying to remove the PO skill
-                if (poOfTeam || usingPoSkillInBacklog) {
-                    // Then they are a product owner, and owner of 1 or more backlogs
-                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
-                    final String backlogsLine = (usingPoSkillInBacklog) ?
-                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
-                                    Utilities.concatenateItemsList(backlogsOwned, 5) : "";
-                    GoatDialog.showAlertDialog(
-                            stage,
-                            "Can't remove skill",
-                            "PO Skill can't be removed",
-                            person.getShortName() + " is currently the PO of:\n" +
-                                    teamLine + backlogsLine
-                    );
-                    return false;
-                }
-            }
-            if (removedSkills.contains(smSkill) && smOfTeam) {
-                GoatDialog.showAlertDialog(
-                        stage,
-                        "Can't remove skill",
-                        "SM Skill can't be removed",
-                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
-                );
-                return false;
-            }
+//            ArrayList<Skill> removedSkills = new ArrayList<>();
+//            removedSkills.addAll(person.getSkills());
+//            removedSkills.removeAll(skillsSelectionView.getTargetItems());
+//
+//            if (removedSkills.contains(poSkill)) {
+//                // Then they are trying to remove the PO skill
+//                if (poOfTeam || usingPoSkillInBacklog) {
+//                    // Then they are a product owner, and owner of 1 or more backlogs
+//                    final String teamLine = (poOfTeam) ? "Team: " + person.getTeam().getShortName() + "\n" : "";
+//                    final String backlogsLine = (usingPoSkillInBacklog) ?
+//                            Utilities.pluralise(backlogsOwned.size(), "Backlog", "Backlogs") + ": " +
+//                                    Utilities.concatenateItemsList(backlogsOwned, 5) : "";
+//                    GoatDialog.showAlertDialog(
+//                            stage,
+//                            "Can't remove skill",
+//                            "PO Skill can't be removed",
+//                            person.getShortName() + " is currently the PO of:\n" +
+//                                    teamLine + backlogsLine
+//                    );
+//                    return false;
+//                }
+//            }
+//            if (removedSkills.contains(smSkill) && smOfTeam) {
+//                GoatDialog.showAlertDialog(
+//                        stage,
+//                        "Can't remove skill",
+//                        "SM Skill can't be removed",
+//                        person.getShortName() + " is currently the SM of Team: " + person.getTeam().getShortName()
+//                );
+//                return false;
+//            } TODO
 
             valid = true;
         } else {

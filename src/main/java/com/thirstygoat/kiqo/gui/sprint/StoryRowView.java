@@ -205,11 +205,11 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
     }
 
     private void initialiseDoubleClick() {
-            storyCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                if (event.getClickCount() > 1) {
-                    viewModel.showStoryInDetailsPane();
-                }
-            });
+        storyCard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getClickCount() > 1) {
+                viewModel.showStoryInDetailsPane();
+            }
+        });
     }
 
     public void disableDragAndDrop() {
@@ -306,5 +306,7 @@ public class StoryRowView implements FxmlView<StoryRowViewModel>, Initializable 
         disableDragAndDrop();
 
         parentStoryContainer.setOnMouseReleased(Event::consume);
+        storyVisualiser.setVisible(false);
+        storyVisualiser.setManaged(false);
     }
 }

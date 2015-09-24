@@ -18,11 +18,6 @@ public class GoatLabelDatePicker extends GoatLabel<DatePicker> {
     }
 
     @Override
-    public DatePicker getEditField() {
-        return editField;
-    }
-
-    @Override
     protected void populateEditField() {
         editField.setValue(LocalDate.parse(displayLabel.getText(), Utilities.DATE_FORMATTER));
     }

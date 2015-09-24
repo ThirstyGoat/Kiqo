@@ -39,7 +39,7 @@ public class DeleteSkillCommand extends DeleteCommand {
      */
     private void setPeopleWithSkill() {
         for (Person person : organisation.getPeople()) {
-            if (person.getSkills().contains(skill)) {
+            if (person.observableSkills().contains(skill)) {
                 peopleWithSkill.put(person.observableSkills().indexOf(skill), person);
             }
         }

@@ -1,34 +1,19 @@
 package com.thirstygoat.kiqo.gui.person;
 
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.command.CompoundCommand;
-import com.thirstygoat.kiqo.command.EditCommand;
-import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
-import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Item;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.util.GoatCollectors;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
-import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
-import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
+
+import com.thirstygoat.kiqo.command.*;
+import com.thirstygoat.kiqo.command.create.CreatePersonCommand;
+import com.thirstygoat.kiqo.gui.ModelViewModel;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.utils.validation.*;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator shortNameValidator;
@@ -39,26 +24,28 @@ public class PersonViewModel extends ModelViewModel<Person> {
     private ObservableRuleBasedValidator departmentValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
-	private final ObjectBinding<ObservableList<Skill>> availableSkills;
+	private ListProperty<Skill> eligibleSkills;
 
     public PersonViewModel() {
         createValidators();
         
-        availableSkills = Bindings.createObjectBinding(() -> { 
-	    		if (organisationProperty().get() != null) {
-					final ListProperty<Skill> skills = skills();
-	                return organisationProperty().get().getSkills().stream()
-	                        .filter(skill -> !skills.contains(skill))
-	                        .collect(GoatCollectors.toObservableList());
-	            } else {
-	                return FXCollections.observableArrayList();
-	            }
-	        }, organisationProperty());
+        eligibleSkills = new SimpleListProperty<>();
+        eligibleSkills.bind(Bindings.createObjectBinding(() -> {
+        	if (organisationProperty().get() != null) {
+        		return organisationProperty().get().getSkills();
+        	} else {
+        		return FXCollections.observableArrayList();
+        	}
+        }, organisationProperty()));
     }
     
     @Override
     protected Supplier<Person> modelSupplier() {
         return Person::new;
+    }
+    
+    protected ListProperty<Skill> eligibleSkills() {
+        return eligibleSkills;
     }
 
     private void createValidators() {
@@ -109,7 +96,7 @@ public class PersonViewModel extends ModelViewModel<Person> {
             final ArrayList<Command> changes = new ArrayList<>();
             super.addEditCommands.accept(changes);
 
-            if (!skills().get().equals(modelWrapper.get().getSkills())) {
+            if (!skills().get().equals(modelWrapper.get().observableSkills())) {
                 /** For some reason we need to create a new ArrayList here rather than just passing through
                  * skills().get() otherwise it doesn't work.
                  */
@@ -147,21 +134,11 @@ public class PersonViewModel extends ModelViewModel<Person> {
     }
 
     public ListProperty<Skill> skills() {
-        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, new ArrayList<Skill>());
+        return modelWrapper.field("skills", Person::getSkills, Person::setSkills, null);
     }
 
     public StringProperty descriptionProperty() {
         return modelWrapper.field("description", Person::getDescription, Person::setDescription, "");
-    }
-
-    protected ObjectBinding<ObservableList<Skill>> availableSkills() {
-        return availableSkills;
-    }
-    
-    @Override
-	public void reload() {
-    	super.reload();
-    	availableSkills.invalidate();
     }
     
     public ValidationStatus shortNameValidation() {

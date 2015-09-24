@@ -426,8 +426,8 @@ public final class ReportGenerator {
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
         lines.add(ReportUtils.valueLine("Phone Number", person.getPhoneNumber()));
         lines.add(ReportUtils.valueLine("Department", person.getDepartment()));
-        lines.add(ReportUtils.collectionLine("Skills", person.getSkills().isEmpty()));
-        for (final Skill skill : person.getSkills()) {
+        lines.add(ReportUtils.collectionLine("Skills", person.observableSkills().isEmpty()));
+        for (final Skill skill : person.observableSkills()) {
             lines.add(" -" + ReportUtils.indent(ReportGenerator.INDENT_SIZE) + skill.getShortName());
         }
         return lines;

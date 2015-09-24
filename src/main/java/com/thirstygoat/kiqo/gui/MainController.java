@@ -792,7 +792,7 @@ public class MainController implements Initializable {
             stage.showAndWait();
             if (reportFormController.isValid()) {
                 if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
-                    saveStatusReport(reportFormController.getTargetList());
+//                 TODO   saveStatusReport(reportFormController.getTargetList());
                 } else {
                     saveStatusReport(null);
                 }

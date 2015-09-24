@@ -59,7 +59,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @FXML
     private GoatLabelTextField creatorLabel;
     @FXML
-    private FilteredListBiControl<Story> dependenciesLabel;
+    private FilteredListBiControl<ListView<Story>, Story> dependenciesLabel;
     @FXML
     private GoatLabelTextField priorityLabel;
     @FXML
@@ -142,7 +142,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     });
                 });
             });
-            FxUtils.initGoatLabel(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
+            FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
                             viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();

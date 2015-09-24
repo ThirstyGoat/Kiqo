@@ -61,8 +61,8 @@ public class TeamFormController extends FormController<Team> {
     private TextField shortNameTextField;
     @FXML
     private TextField descriptionTextField;
-    @FXML
-    private GoatFilteredListSelectionView<Person> peopleListSelectionView;
+//    @FXML TODO
+//    private GoatFilteredListSelectionView<Person> peopleListSelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -223,13 +223,13 @@ public class TeamFormController extends FormController<Team> {
         final TextFlow legend = new TextFlow(poText, smText, devText, otherText);
 
         footer.setRight(legend);
-        peopleListSelectionView.setFooter(footer);
+//        peopleListSelectionView.setFooter(footer); TODO
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
 
 //        TeamFormController.setCellFactory(peopleListSelectionView.getSourceListView());
-        peopleListSelectionView.setTargetCellGraphicFactory(getTargetCell());
+//        peopleListSelectionView.setTargetCellGraphicFactory(getTargetCell()); TODO
 
         // Set change listener on target list view
         targetPeople.addListener((ListChangeListener<Person>) c -> {
@@ -273,10 +273,10 @@ public class TeamFormController extends FormController<Team> {
 
             // Disable PO/SM Radio Buttons if the person doesn't have
             // the skill
-            if (!person.getSkills().contains(organisation.getPoSkill())) {
+            if (!person.observableSkills().contains(organisation.getPoSkill())) {
                 radioPo.setDisable(true);
             }
-            if (!person.getSkills().contains(organisation.getSmSkill())) {
+            if (!person.observableSkills().contains(organisation.getSmSkill())) {
                 radioSm.setDisable(true);
             }
 
@@ -379,9 +379,9 @@ public class TeamFormController extends FormController<Team> {
             }
         });
 
-        peopleListSelectionView.setSourceItems(sourcePeople);
-        peopleListSelectionView.setTargetItems(targetPeople);
-        peopleListSelectionView.setStringPropertyCallback(person -> person.shortNameProperty());
+//        peopleListSelectionView.setSourceItems(sourcePeople); TODO
+//        peopleListSelectionView.setTargetItems(targetPeople);
+//        peopleListSelectionView.setStringPropertyCallback(person -> person.shortNameProperty());
     }
 
 
