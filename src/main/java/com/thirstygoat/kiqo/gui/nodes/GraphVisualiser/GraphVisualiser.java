@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.nodes.GraphVisualiser;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
@@ -15,7 +16,10 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,11 +27,17 @@ import java.util.stream.Collectors;
  */
 public class GraphVisualiser<T> extends FlowPane {
     private Callback<T, Node> nodeCallback;
-
     private Map<String, Vertex<T>> vertexMap = new HashMap<>();
-
     private ObservableSet<Vertex<T>> vertices = FXCollections.observableSet();
     private ObservableSet<Edge<T>> edges = FXCollections.observableSet();
+    private static PythonInterpreter py;
+
+    public static PythonInterpreter startPython() {
+        if (py == null) {
+            py = new PythonInterpreter();
+        }
+        return py;
+    }
 
     public GraphVisualiser() {
         // Set the default nodeCallback to create the display node
@@ -88,18 +98,25 @@ public class GraphVisualiser<T> extends FlowPane {
     }
 
     public void go() {
-        for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
-            Set<Edge<T>> edgeSet = getEdges().stream().filter(
-                    e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
+        Thread t1 = new Thread(new Runnable() {
+            public void run() {
+                // code goes here.
+                for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
+                    Set<Edge<T>> edgeSet = getEdges().stream().filter(
+                            e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
 
-            // Graphs with fewer than 3 vertices and 2 edges can not be spaced
-            // by the algorithm implementation. We set their spacing manually.
-            if (s.size() > 2) {
-                computePositions(s, edgeSet);
-            } else {
-                computePositionsMicro(s, edgeSet);
+                    // Graphs with fewer than 3 vertices and 2 edges can not be spaced
+                    // by the algorithm implementation. We set their spacing manually.
+                    if (s.size() > 2) {
+                        computePositions(s, edgeSet);
+                    } else {
+                        computePositionsMicro(s, edgeSet);
+                    }
+                }
             }
-        }
+        });
+        t1.start();
+
 
         // Add a listener on vertices and edges observable set
         // when that fires, call go() again.
@@ -113,14 +130,13 @@ public class GraphVisualiser<T> extends FlowPane {
             vertex.yPosProperty().set(yPos);
             yPos += verticalSeparation;
         }
-
-        getChildren().add(drawGraph(vertices, edges));
+        Platform.runLater(() -> getChildren().add(drawGraph(vertices, edges)));
     }
 
     private void computePositions(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
         String resourcePath = getClass().getClassLoader().getResource("grandalf/").getFile();
 
-        PythonInterpreter py = new PythonInterpreter();
+        py = new PythonInterpreter();
         py.exec("import sys");
         py.exec("sys.path.append('" + resourcePath + "')");
         py.exec("from vertexCoords import *");
@@ -161,7 +177,7 @@ public class GraphVisualiser<T> extends FlowPane {
             vertex.yPosProperty().set(yPos);
         }
 
-        getChildren().add(drawGraph(vertices, edges));
+        Platform.runLater(() -> getChildren().add(drawGraph(vertices, edges)));
     }
 
     private double getMinXPos(Set<Vertex<T>> vertices) {
@@ -270,4 +286,5 @@ public class GraphVisualiser<T> extends FlowPane {
     public ObservableSet<Vertex<T>> getVertices() {
         return vertices;
     }
+
 }

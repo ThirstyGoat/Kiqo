@@ -2,8 +2,8 @@ package com.thirstygoat.kiqo;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.GraphVisualiser;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
@@ -96,6 +96,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        Thread t1 = new Thread(() -> {
+            GraphVisualiser.startPython();
+        });
+        t1.start();
+
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
         this.primaryStage.setMinWidth(1100);
@@ -136,13 +142,13 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
-            Platform.runLater(() -> {
-                MainController.focusedItemProperty.set(
-                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
-
-                mainController.getDetailsPaneController().showDetailsPane(
-                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
-            });
+//            Platform.runLater(() -> {
+//                MainController.focusedItemProperty.set(
+//                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
+//
+//                mainController.getDetailsPaneController().showDetailsPane(
+//                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
+//            });
         }
     }
 }

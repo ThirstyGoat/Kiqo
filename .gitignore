@@ -8,5 +8,5 @@ deliverable
 deliverable.zip
 /dependency-reduced-pom.xml
 *py.class
-.gitignore
+#.gitignore
 main.java

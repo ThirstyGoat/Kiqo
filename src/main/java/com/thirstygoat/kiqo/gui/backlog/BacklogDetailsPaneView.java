@@ -14,21 +14,22 @@ import com.thirstygoat.kiqo.util.FxUtils;
 import com.thirstygoat.kiqo.util.StringConverters;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.SegmentedButton;
 
 import java.net.URL;
 import java.util.*;
@@ -61,6 +62,20 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     private CheckBox highlightCheckBox;
     @FXML
     private Hyperlink highlightHyperLink;
+    @FXML
+    private AnchorPane mainAnchorPane;
+    @FXML
+    private VBox detailsVbox;
+    @FXML
+    private VBox visualisationVbox;
+    @FXML
+    private SegmentedButton segmentedButton;
+    @FXML
+    private ToggleButton detailsToggleButton;
+    @FXML
+    private ToggleButton visualisationToggleButton;
+    @FXML
+    private Pane visualisationPane;
 
     private Label placeHolder = new Label();
 
@@ -93,6 +108,34 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         placeHolder.textProperty().set(viewModel.PLACEHOLDER);
 
         highlightCheckBox.selectedProperty().bindBidirectional(viewModel.highlightStoryStateProperty());
+
+        segmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                segmentedButton.getToggleGroup().selectToggle(oldValue);
+            } else {
+                if (newValue == detailsToggleButton) {
+                    showNode(detailsVbox);
+                } else if (newValue == visualisationToggleButton) {
+                    showNode(visualisationVbox);
+                }
+            }
+        });
+
+        visualiseDependencies();
+        viewModel.stories().addListener((observable, oldValue, newValue) -> {
+            visualiseDependencies();
+        });
+    }
+
+    /**
+     * Hides all views and then shows the given view
+     * @param pane View to be shown
+     */
+    private void show(Pane pane) {
+        hideAllViews();
+
+        pane.setManaged(true);
+        pane.setVisible(true);
     }
 
 
@@ -138,8 +181,8 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
     }
 
-    @FXML
-    private void visualiseDependencies(ActionEvent actionEvent) {
+    private void visualiseDependencies() {
+        visualisationPane.getChildren().clear();
         GraphVisualiser<Story> gv = new GraphVisualiser<>();
         gv.setNodeCallback(story -> {
             Label label = new Label();
@@ -148,7 +191,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
             return label;
         });
 
-        Map<Story, Vertex<Story>> storyVertexMap= new HashMap<>();
+        Map<Story, Vertex<Story>> storyVertexMap = new HashMap<>();
         for (Story story : viewModel.stories()) {
             storyVertexMap.put(story, new Vertex<>(story));
         }
@@ -162,13 +205,28 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
 
         gv.getVertices().addAll(storyVertexMap.values());
         gv.getEdges().addAll(edges);
-
         gv.go();
 
-        Stage stage = new Stage();
-        stage.setWidth(800);
-        stage.setHeight(600);
-        stage.setScene(new Scene(gv));
-        stage.show();
+        visualisationPane.getChildren().add(gv);
+    }
+
+    /**
+     * Hides all views
+     */
+    private void hideAllViews() {
+        visualisationVbox.setVisible(false);
+        visualisationVbox.setManaged(false);
+
+//        scrumBoardView.setVisible(false);
+//        scrumBoardView.setManaged(false);
+    }
+
+    private void showNode(Node node) {
+        for (Node node1 : mainAnchorPane.getChildren()) {
+            node1.setManaged(false);
+            node1.setVisible(false);
+        }
+        node.setManaged(true);
+        node.setVisible(true);
     }
 }
