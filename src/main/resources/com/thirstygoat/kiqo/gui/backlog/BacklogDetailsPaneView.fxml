@@ -93,7 +93,7 @@
                                 <!--<Hyperlink onAction="#visualiseDependencies" text="Visualise Dependencies"/>-->
                             </VBox>
                             <VBox AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0" fillWidth="true" fx:id="visualisationVbox" mouseTransparent="false" spacing="10.0" visible="false" managed="false">
-                                <Pane fx:id="visualisationPane"/>
+                                <VBox fx:id="visualisationPane"/>
                             </VBox>
                         </AnchorPane>
                         <!-- -->

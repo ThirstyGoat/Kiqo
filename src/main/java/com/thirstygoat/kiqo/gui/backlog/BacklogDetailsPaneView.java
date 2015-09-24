@@ -75,7 +75,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     @FXML
     private ToggleButton visualisationToggleButton;
     @FXML
-    private Pane visualisationPane;
+    private VBox visualisationPane;
 
     private Label placeHolder = new Label();
 
@@ -207,7 +207,12 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         gv.getEdges().addAll(edges);
         gv.go();
 
-        visualisationPane.getChildren().add(gv);
+        visualisationPane.setAlignment(Pos.CENTER);
+        visualisationPane.setFillWidth(false);
+        Pane p = new Pane();
+        p.getChildren().add(gv);
+
+        visualisationPane.getChildren().add(p);
     }
 
     /**
