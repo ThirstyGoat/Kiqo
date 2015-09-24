@@ -322,8 +322,8 @@ public class MainController implements Initializable {
 
         final String[] buttons = {"Delete Person", "Cancel"};
 
-        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Person",
-                "Are you sure? ", node, buttons);
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Person", "Are you sure? ", node,
+                        buttons);
 
         if (result.equals("Delete Person")) {
             doCommand(command);
@@ -346,8 +346,8 @@ public class MainController implements Initializable {
         node.getChildren().add(new Label(deleteMessage));
 
         final String[] buttons = {"Delete Release", "Cancel"};
-        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Release",
-                "Are you sure? ", node, buttons);
+        final String result = GoatDialog.createCustomNodeDialog(primaryStage, "Delete Release", "Are you sure? ", node,
+                        buttons);
 
         if (result.equals("Delete Release")) {
             doCommand(new DeleteReleaseCommand((Release) focusedItemProperty.get()));
@@ -682,6 +682,7 @@ public class MainController implements Initializable {
         Organisation organisation;
         try {
             SearchableItems.getInstance().clear();
+            detailsPaneController.closeAllTabs();
             organisation = PersistenceManager.loadOrganisation(filePath);
             selectedOrganisationProperty.set(organisation);
             // Empty the undo/redo stack(s)
@@ -953,7 +954,7 @@ public class MainController implements Initializable {
 
             if (type.equals(Backlog.class.getSimpleName())) {
                 ViewTuple<BacklogFormView, BacklogFormViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(BacklogFormView.class).load();
+                                FluentViewLoader.fxmlView(BacklogFormView.class).load();
                 final BacklogFormViewModel viewModel = viewTuple.getViewModel();
                 viewModel.load((Backlog) t, selectedOrganisationProperty.get());
                 viewModel.setExitStrategy(stage::close);
@@ -963,7 +964,7 @@ public class MainController implements Initializable {
                 stage.showAndWait();
             } else if (type.equals(Project.class.getSimpleName())) {
                 ViewTuple<ProjectFormView, ProjectFormViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(ProjectFormView.class).load();
+                                FluentViewLoader.fxmlView(ProjectFormView.class).load();
                 viewTuple.getViewModel().load((Project) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -972,7 +973,7 @@ public class MainController implements Initializable {
                 stage.showAndWait();
             } else if (type.equals(Sprint.class.getSimpleName())) {
                 ViewTuple<SprintFormView, SprintViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(SprintFormView.class).load();
+                                FluentViewLoader.fxmlView(SprintFormView.class).load();
                 viewTuple.getViewModel().load((Sprint) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -981,7 +982,7 @@ public class MainController implements Initializable {
                 stage.showAndWait();
             } else if (type.equals(Skill.class.getSimpleName())) {
                 ViewTuple<SkillFormView, SkillViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(SkillFormView.class).load();
+                                FluentViewLoader.fxmlView(SkillFormView.class).load();
                 viewTuple.getViewModel().load((Skill) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -991,7 +992,7 @@ public class MainController implements Initializable {
                 stage.showAndWait();
             } else if (type.equals(Release.class.getSimpleName())) {
                 ViewTuple<ReleaseFormView, ReleaseViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(ReleaseFormView.class).load();
+                                FluentViewLoader.fxmlView(ReleaseFormView.class).load();
                 viewTuple.getViewModel().load((Release) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -999,9 +1000,9 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Release" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
-            }  else if (type.equals(Story.class.getSimpleName())) {
+            } else if (type.equals(Story.class.getSimpleName())) {
                 ViewTuple<StoryFormView, StoryFormViewModel> viewTuple =
-                        FluentViewLoader.fxmlView(StoryFormView.class).load();
+                                FluentViewLoader.fxmlView(StoryFormView.class).load();
                 viewTuple.getViewModel().load((Story) t, selectedOrganisationProperty.get());
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -1011,7 +1012,8 @@ public class MainController implements Initializable {
                 stage.showAndWait();
             } else {
                 final FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(MainController.class.getClassLoader().getResource("forms/" + type.toLowerCase() + ".fxml"));
+                loader.setLocation(MainController.class.getClassLoader()
+                                .getResource("forms/" + type.toLowerCase() + ".fxml"));
                 Pane root;
                 try {
                     root = loader.load();
@@ -1097,7 +1099,7 @@ public class MainController implements Initializable {
             acceptanceCriteriaFormController.setStage(stage);
             acceptanceCriteriaFormController.setOrganisation(selectedOrganisationProperty.get());
             acceptanceCriteriaFormController.headingProperty().set(
-                    acceptanceCriteria == null ? "Create Acceptance Criteria" : "Edit Acceptance Criteria");
+                            acceptanceCriteria == null ? "Create Acceptance Criteria" : "Edit Acceptance Criteria");
 
             acceptanceCriteriaFormController.setStory((Story) focusedItemProperty.getValue());
             acceptanceCriteriaFormController.populateFields(acceptanceCriteria);
@@ -1153,6 +1155,7 @@ public class MainController implements Initializable {
             }
         }
         SearchableItems.getInstance().clear();
+        detailsPaneController.closeAllTabs();
         selectedOrganisationProperty.set(new Organisation(true));
     }
 
