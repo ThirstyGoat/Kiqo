@@ -79,6 +79,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
 
         allValidator = new CompositeValidator(shortNameValidator, longNameValidator, descriptionValidator,
                 productOwnerValidator, projectValidator);
+
     }
 
     @Override

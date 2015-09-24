@@ -81,7 +81,7 @@ public class Story extends Item implements DirectedData<Story> {
     }
 
     public static Callback<Story, Observable[]> getWatchStrategy() {
-        return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty(), p.getTasks()};
+        return p -> new Observable[] {p.shortNameProperty(), p.priorityProperty(), p.getTasks(), p.dependencies};
     }
 
     public void initBoundPropertySupport() {
