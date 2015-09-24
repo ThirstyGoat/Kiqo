@@ -12,9 +12,8 @@ import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.logging.Level;
  */
 public class StoryViewModel extends ModelViewModel<Story> {
 	private final ListProperty<Story> eligibleDependencies;
-    private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
     private ObservableRuleBasedValidator shortNameValidator;
     private FunctionBasedValidator longNameValidator;
     private FunctionBasedValidator descriptionValidator;
@@ -188,6 +186,14 @@ public class StoryViewModel extends ModelViewModel<Story> {
     }
 
     public BooleanProperty getCreatorEditable () {
+        BooleanProperty creatorEditable = new SimpleBooleanProperty();
+        creatorEditable.bind(Bindings.createBooleanBinding(() -> {
+            if (shortNameProperty().get() != "") {
+                return true;
+            } else {
+                return false;
+            }
+        }, shortNameProperty()));
         return creatorEditable;
     }
     

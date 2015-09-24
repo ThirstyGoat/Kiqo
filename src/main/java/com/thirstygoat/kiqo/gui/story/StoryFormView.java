@@ -11,8 +11,6 @@ import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +24,6 @@ import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -76,6 +73,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorProperty(),
                 StringConverters.personStringConverter(viewModel.organisationProperty()));
+        creatorTextField.disableProperty().bind(viewModel.getCreatorEditable());
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(),
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty(),
