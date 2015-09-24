@@ -136,6 +136,14 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
+            Platform.runLater(() -> {
+                MainController.focusedItemProperty
+                                .set(mainController.selectedOrganisationProperty().get().getProjects().get(0)
+                                                .getReleases().get(0).getSprints().get(0));
+                mainController.getDetailsPaneController().showDetailsPane(
+                                mainController.selectedOrganisationProperty().get().getProjects().get(0).getReleases()
+                                                .get(0).getSprints().get(0));
+            });
         }
     }
 }
