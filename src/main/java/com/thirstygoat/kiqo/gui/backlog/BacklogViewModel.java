@@ -40,7 +40,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
     public BacklogViewModel() {
     	eligibleStories = new SimpleListProperty<>();
     	eligibleStories.bind(Bindings.createObjectBinding(() -> {
-        	if (organisationProperty().get() != null) {
+        	if (projectProperty().get() != null) {
         		return projectProperty().get().observableUnallocatedStories();
         	} else {
         		return FXCollections.observableArrayList();

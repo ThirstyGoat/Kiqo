@@ -783,14 +783,13 @@ public class MainController implements Initializable {
 
             reportFormController.setStage(stage);
             reportFormController.setOrganisation(selectedOrganisationProperty.get());
-//            reportFormController.loadProject(project);
 
             stage.showAndWait();
             if (reportFormController.isValid()) {
-                if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
-//                 TODO   saveStatusReport(reportFormController.getTargetList());
-                } else {
+                if (reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
                     saveStatusReport(null);
+                } else {
+                    saveStatusReport(reportFormController.selectedItems());
                 }
             }
         });

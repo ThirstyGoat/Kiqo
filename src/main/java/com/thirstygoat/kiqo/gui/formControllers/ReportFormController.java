@@ -16,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -118,5 +119,9 @@ public class ReportFormController implements Initializable {
         TEAMS,
         PEOPLE,
         BACKLOGS
+    }
+
+    public List<Item> selectedItems() {
+        return selectedItems;
     }
 }
