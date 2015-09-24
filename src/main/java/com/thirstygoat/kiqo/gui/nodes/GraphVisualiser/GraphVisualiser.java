@@ -16,6 +16,8 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,6 +55,7 @@ public class GraphVisualiser<T> extends FlowPane {
      * @return a set containing the sets of vertices for each connected sub-graph
      */
     public static <T> Set<Set<Vertex<T>>> getConnectedSubGraphs(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
+        LocalTime start = LocalTime.now();
         Set<Set<Vertex<T>>> totalSet = new HashSet<>();
 
         while (!vertices.isEmpty()) {
@@ -61,6 +64,8 @@ public class GraphVisualiser<T> extends FlowPane {
             vertices.removeAll(island);
             totalSet.add(island);
         }
+        long secondsBetween = ChronoUnit.MILLIS.between(start, LocalTime.now());
+        System.out.println(secondsBetween);
         return totalSet;
     }
 
@@ -98,20 +103,18 @@ public class GraphVisualiser<T> extends FlowPane {
     }
 
     public void go() {
-        Thread t1 = new Thread(new Runnable() {
-            public void run() {
-                // code goes here.
-                for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
-                    Set<Edge<T>> edgeSet = getEdges().stream().filter(
-                            e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
+        Thread t1 = new Thread(() -> {
+            // code goes here.
+            for (Set<Vertex<T>> s : getConnectedSubGraphs(getVertices(), getEdges())) {
+                Set<Edge<T>> edgeSet = getEdges().stream().filter(
+                        e -> s.contains(e.getStart()) || s.contains(e.getEnd())).collect(Collectors.toSet());
 
-                    // Graphs with fewer than 3 vertices and 2 edges can not be spaced
-                    // by the algorithm implementation. We set their spacing manually.
-                    if (s.size() > 2) {
-                        computePositions(s, edgeSet);
-                    } else {
-                        computePositionsMicro(s, edgeSet);
-                    }
+                // Graphs with fewer than 3 vertices and 2 edges can not be spaced
+                // by the algorithm implementation. We set their spacing manually.
+                if (s.size() > 2) {
+                    computePositions(s, edgeSet);
+                } else {
+                    computePositionsMicro(s, edgeSet);
                 }
             }
         });
@@ -254,6 +257,7 @@ public class GraphVisualiser<T> extends FlowPane {
     }
 
     private Pane drawGraph(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
+        LocalTime start = LocalTime.now();
         Pane pane = new Pane();
         pane.setPadding(new Insets(10, 10, 10, 10));
         double xOffset = Math.min(0, getMinXPos(vertices));
@@ -275,7 +279,8 @@ public class GraphVisualiser<T> extends FlowPane {
         for (Edge<T> edge : edges) {
             drawBranch(vertexNodeMap.get(edge.getStart()), vertexNodeMap.get(edge.getEnd()), pane);
         }
-
+        long s = ChronoUnit.MILLIS.between(start,LocalTime.now());
+        System.out.println(s);
         return pane;
     }
 

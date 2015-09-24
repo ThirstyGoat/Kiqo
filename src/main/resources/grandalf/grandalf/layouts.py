@@ -913,9 +913,9 @@ class  DigcoLayout(object):
             y,yerr = self._cg_Lw(Lw[1:,1:],Z[1:,1],b[1:,1])
             Z[1:,0] = x
             Z[1:,1] = y
-            if self.debug:
-                print " cg -> "
-                print Z,xerr,yerr
+            #if self.debug:
+                #print " cg -> "
+                #print Z,xerr,yerr
             # compute new stress:
             FZ = K-float(x.transpose()*b[1:,0] + y.transpose()*b[1:,1])
             # precompute new b:
@@ -923,7 +923,7 @@ class  DigcoLayout(object):
             # update new stress:
             FZ += 2*float(x.transpose()*b[1:,0] + y.transpose()*b[1:,1])
             # test convergence:
-            print 'stress=%.10f'%FZ
+            #print 'stress=%.10f'%FZ
             if stress==0.0 : break
             elif abs((stress-FZ)/stress)<self._eps:
                 if deep==2:

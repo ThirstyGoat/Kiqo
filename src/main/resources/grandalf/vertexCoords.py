@@ -10,8 +10,8 @@ def createEdge(vertexA, vertexB):
 
 
 def getVertexPositions(vertices, edges):
-    print vertices
-    print edges
+    #print vertices
+    #print edges
 
     # Create the vertices
     # Create the edges
