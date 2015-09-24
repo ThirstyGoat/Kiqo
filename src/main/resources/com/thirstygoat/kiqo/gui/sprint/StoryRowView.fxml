@@ -7,8 +7,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import com.thirstygoat.kiqo.gui.nodes.StoryCompletenessVisualiser?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
-    <HBox fx:id="gridPane" VBox.vgrow="ALWAYS" styleClass="scrumboard-story-row">
+    <HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="gridPane" styleClass="scrumboard-story-row" stylesheets="@../../../../../css/styles.css" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.StoryRowView">
         <children>
             <VBox fx:id="parentStoryContainer" spacing="4" prefWidth="160" minWidth="160">
                 <children>
@@ -67,4 +66,3 @@
                 </GridPane>
         </children>
     </HBox>
-</VBox>
