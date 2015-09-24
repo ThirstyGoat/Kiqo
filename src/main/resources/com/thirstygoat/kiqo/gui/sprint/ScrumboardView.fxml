@@ -3,67 +3,75 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumBoardView">
-   <children>
-      <GridPane styleClass="scrumboard-column-headings">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints prefHeight="40.0" minHeight="40.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-             <Label text="Story" textFill="#545454" GridPane.columnIndex="0">
-                 <font>
-                     <Font name="Roboto Bold" size="13.0" />
-                 </font>
-                 <GridPane.margin>
-                     <Insets left="5.0" right="5.0" />
-                 </GridPane.margin></Label>
-            <Label text="To Do" textFill="#545454" GridPane.columnIndex="1">
-             <font>
-                <Font name="Roboto Bold" size="13.0" />
-             </font>
-             <GridPane.margin>
-                <Insets left="5.0" right="5.0" />
-             </GridPane.margin></Label>
-            <Label text="In Progress" textFill="#575757" GridPane.columnIndex="2">
-                <font>
-                    <Font name="Roboto Bold" size="13.0" />
-                </font>
-             <GridPane.margin>
-                <Insets left="5.0" right="5.0" />
-             </GridPane.margin></Label>
-            <Label text="Verify" textFill="#575757" GridPane.columnIndex="3">
-             <font>
-                <Font name="Roboto Bold" size="13.0" />
-             </font>
-             <GridPane.margin>
-                <Insets left="5.0" right="5.0" />
-             </GridPane.margin></Label>
-            <Label text="Done" textFill="#575757" GridPane.columnIndex="4">
-             <font>
-                <Font name="Roboto Bold" size="13.0" />
-             </font>
-             <GridPane.margin>
-                <Insets left="5.0" right="5.0" />
-             </GridPane.margin></Label>
-         </children>
-      </GridPane>
-       <ScrollPane VBox.vgrow="ALWAYS" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" styleClass="scrumboard-scrollpane">
-          <content>
-              <VBox>
-           <VBox fx:id="scrumBoardVBox" styleClass="scrumboard-stories-container" />
-              <VBox fx:id="tasksWithoutStoryVBox" styleClass="scrumboard-stories-container, scrumboard-tasks-without-story-container">
-                  <Label styleClass="tasksWithoutStoryHeading">Tasks without a story</Label>
-              </VBox>
-              </VBox>
-          </content>
-       </ScrollPane>
-   </children>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.sprint.ScrumBoardView">
+  <children>
+    <GridPane styleClass="scrumboard-column-headings">
+      <children>
+        <Label text="Story" GridPane.columnIndex="0">
+          <font>
+            <Font size="13.0" fx:id="x1" />
+          </font>
+          <textFill>
+            <Color blue="0.329" green="0.329" red="0.329" fx:id="x2" />
+          </textFill>
+          <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+          </GridPane.margin>
+        </Label>
+        <Label font="$x1" text="To Do" textFill="$x2" GridPane.columnIndex="1">
+          <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+          </GridPane.margin>
+        </Label>
+        <Label font="$x1" text="In Progress" GridPane.columnIndex="2">
+          <textFill>
+            <Color blue="0.341" green="0.341" red="0.341" fx:id="x3" />
+          </textFill>
+          <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+          </GridPane.margin>
+        </Label>
+        <Label font="$x1" text="Verify" textFill="$x3" GridPane.columnIndex="3">
+          <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+          </GridPane.margin>
+        </Label>
+        <Label font="$x1" text="Done" textFill="$x3" GridPane.columnIndex="4">
+          <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+          </GridPane.margin>
+        </Label>
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+    <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" styleClass="scrumboard-scrollpane" VBox.vgrow="ALWAYS">
+      <content>
+        <VBox>
+          <VBox fx:id="scrumBoardVBox" styleClass="scrumboard-stories-container" VBox.vgrow="ALWAYS" />
+          <VBox fx:id="tasksWithoutStoryVBox" styleClass="scrumboard-stories-container, scrumboard-tasks-without-story-container" VBox.vgrow="SOMETIMES">
+            <Label styleClass="tasksWithoutStoryHeading"  VBox.vgrow="ALWAYS">
+              <VBox.margin>
+                <Insets bottom="5.0" top="20.0" />
+              </VBox.margin>
+            Tasks without a story</Label>
+          </VBox>
+          <stylesheets>
+            <URL value="@../../../../../css/styles.css" />
+          </stylesheets>
+        </VBox>
+      </content>
+    </ScrollPane>
+  </children>
 </VBox>

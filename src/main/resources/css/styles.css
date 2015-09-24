@@ -245,7 +245,6 @@
 .tasksWithoutStoryHeading {
     -fx-font: 18px "Roboto";
     -fx-text-fill: grey;
-    -fx-padding: 10 0;
 }
 
 .scrumboard-tasks-without-story-container {
