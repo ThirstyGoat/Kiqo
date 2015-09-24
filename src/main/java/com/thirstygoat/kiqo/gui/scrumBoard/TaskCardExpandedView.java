@@ -107,7 +107,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         initEffortLogging();
 
         FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligibleAssignees());
-        assignedPeopleLabel.getEditField().setStringPropertyCallback(Person::shortNameProperty);
         assignedPeopleLabel.getEditField().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
         assignedPeopleLabel.getDisplayLabel().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
 

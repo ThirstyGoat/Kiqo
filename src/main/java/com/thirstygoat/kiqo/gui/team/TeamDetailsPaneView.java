@@ -27,18 +27,11 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     @FXML
     private GoatLabelTextField scrumMasterLabel;
     @FXML
-    private FilteredListBiControl<Label, Person> devTeamLabel;
+    private GoatLabelFilteredListSelectionView<Person> devTeamLabel;
     @FXML
     private FilteredListBiControl<ListView<Person>, Person> teamMemberList;
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
-    
-    @FXML
-    private Label devTeamLabel_debug1; // TODO remove
-    @FXML
-    private Label devTeamLabel_debug2; // TODO remove
-    @FXML
-    private Label devTeamLabel_debug3; // TODO remove
 
     @InjectViewModel
     private TeamDetailsPaneViewModel viewModel;
@@ -46,18 +39,16 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     @Override
     @SuppressWarnings("unchecked")
     public void initialize(URL location, ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(),
-                        viewModel.shortNameValidation());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                        viewModel.descriptionValidation());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
+        
         FxUtils.initGoatLabel(productOwnerLabel, viewModel, viewModel.productOwnerProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()), viewModel.productOwnerValidation());
         FxUtils.setTextFieldSuggester(productOwnerLabel.getEditField(), viewModel.productOwnerSupplier());
         
-        devTeamLabel_debug1.textProperty().bind(Utilities.commaSeparatedValuesBinding(viewModel.devTeamProperty()));
-        devTeamLabel_debug2.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.eligibleDevs()));
-        devTeamLabel_debug3.textProperty().bind(Utilities.commaSeparatedValuesProperty(viewModel.teamMembersProperty()));
-
-        FxUtils.initLabelFilteredListBiControl(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.eligibleDevs());
+        FxUtils.initGoatLabel(scrumMasterLabel, viewModel, viewModel.scrumMasterProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()), viewModel.scrumMasterValidation());
+        FxUtils.setTextFieldSuggester(scrumMasterLabel.getEditField(), viewModel.scrumMasterSupplier());
+        
+        FxUtils.initGoatLabel(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.eligibleDevs());
         FxUtils.initListViewFilteredListBiControl(teamMemberList, viewModel, viewModel.teamMembersProperty(),
                         viewModel.eligibleTeamMembers());
 

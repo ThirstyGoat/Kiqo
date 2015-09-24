@@ -244,7 +244,8 @@ public final class FxUtils {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.getEditField().bindSelectedItems(selectedItems);
         goatLabel.getEditField().bindAllItems(allItems);
-        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesProperty(selectedItems));
+        goatLabel.getEditField().setStringPropertyCallback(Item::shortNameProperty);
+        goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesBinding(selectedItems));
     }
     
     public static <T extends Item> void initLabelFilteredListBiControl(

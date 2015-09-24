@@ -43,10 +43,7 @@
 	        <Label text="Developers" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <Label fx:id="devTeamLabel_debug1" />
-	        <Label fx:id="devTeamLabel_debug2" />
-	        <Label fx:id="devTeamLabel_debug3" />
-	        <LabelFilteredListBiControl fx:id="devTeamLabel" />
+	        <GoatLabelFilteredListSelectionView fx:id="devTeamLabel" />
             <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>

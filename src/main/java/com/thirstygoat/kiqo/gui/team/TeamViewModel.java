@@ -37,7 +37,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
     public TeamViewModel() {
         createValidators();
         
-        ListProperty<Person> peopleInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList(Person.getWatchStrategy()));
+        ListProperty<Person> peopleInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList());
         peopleInOrganisation.bind(Bindings.createObjectBinding(() -> {
         	if (organisationProperty().get() != null) {
         		return organisationProperty().get().getPeople();
@@ -46,21 +46,35 @@ public class TeamViewModel extends ModelViewModel<Team> {
         	}
         }, organisationProperty()));
         
-        eligibleTeamMembers = new SimpleListProperty<>(FXCollections.observableArrayList());
+        eligibleTeamMembers = new SimpleListProperty<>();
         eligibleTeamMembers.bind(Bindings.createObjectBinding(() -> {
     		return peopleInOrganisation.stream()
-		            .filter(person -> person.getTeam() == null)
+		            .filter(person -> person.getTeam() == null // no team in model (not ticked)
+		            		|| person.getTeam() == modelWrapper.get() // this team in model (unticked)
+		            		|| teamMembersProperty().contains(person)) // this team in viewModel (ticked)
 		            .collect(GoatCollectors.toObservableList());
-		}, peopleInOrganisation));
+		}, peopleInOrganisation, teamMembersProperty()));
 
-        eligibleDevs = new SimpleListProperty<>(FXCollections.observableArrayList());
+        eligibleDevs = new SimpleListProperty<>();
         eligibleDevs.bind(Bindings.createObjectBinding(() -> {
 			return teamMembersProperty().get().stream() // is in team
 		            .filter(person -> 
 		            	!person.equals(productOwnerProperty().get())
 		            	&& !person.equals(scrumMasterProperty().get()))
 		            .collect(GoatCollectors.toObservableList());
-		}, peopleInOrganisation, productOwnerProperty(), scrumMasterProperty()));
+		}, teamMembersProperty(), productOwnerProperty(), scrumMasterProperty()));
+        
+        teamMembersProperty().addListener((ListChangeListener.Change<? extends Person> change) -> {
+        	change.next();
+        	List<? extends Person> removed = change.getRemoved();
+        	devTeamProperty().removeAll();
+        	if (removed.contains(productOwnerProperty().get())) {
+        		productOwnerProperty().set(null);
+        	}
+        	if (removed.contains(scrumMasterProperty().get())) {
+        		scrumMasterProperty().set(null);
+        	}
+        });
     }
 
     @Override
@@ -102,13 +116,11 @@ public class TeamViewModel extends ModelViewModel<Team> {
         final ArrayList<Command> changes = new ArrayList<>();
         super.addEditCommands.accept(changes);
 
-        if (!(teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())
-                        && modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
+        if (!teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())) {
             changes.add(new EditCommand<>(modelWrapper.get(), "teamMembers", teamMembersProperty().get()));
         }
 
-        if (!(devTeamProperty().get().containsAll(modelWrapper.get().getDevTeam())
-                        && modelWrapper.get().getDevTeam().containsAll(devTeamProperty().get()))) {
+        if (!devTeamProperty().get().equals(modelWrapper.get().getDevTeam())) {
             changes.add(new EditCommand<>(modelWrapper.get(), "devTeam", devTeamProperty().get()));
         }
 

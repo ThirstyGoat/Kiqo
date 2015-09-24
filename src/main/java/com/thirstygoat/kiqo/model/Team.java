@@ -71,14 +71,6 @@ public class Team extends Item {
         return scrumMaster;
     }
 
-    public ObservableList<Person> observableTeamMembers() {
-        return teamMembers;
-    }
-
-    public ObservableList<Person> observableDevTeam() {
-        return devTeam;
-    }
-
     @Override
     public String getShortName() {
         return shortName.get();
@@ -89,15 +81,11 @@ public class Team extends Item {
     }
 
     public List<Person> getTeamMembers() {
-        final ArrayList<Person> teamMembers1 = new ArrayList<>();
-        teamMembers1.addAll(teamMembers);
-        return teamMembers1;
-//        return Collections.unmodifiableList(teamMembers);
+    	return teamMembers;
     }
 
     public void setTeamMembers(List<Person> teamMembers) {
-        this.teamMembers.clear();
-        this.teamMembers.addAll(teamMembers);
+        this.teamMembers.setAll(teamMembers);
     }
 
     public String getDescription() {
@@ -125,15 +113,11 @@ public class Team extends Item {
     }
 
     public List<Person> getDevTeam() {
-        final ArrayList<Person> devteam1 = new ArrayList<>();
-        devteam1.addAll(devTeam);
-        return devteam1;
-//        return Collections.unmodifiableList(devTeam);
+    	return devTeam;
     }
 
     public void setDevTeam(List<Person> devTeam) {
-        this.devTeam.clear();
-        this.devTeam.addAll(devTeam);
+        this.devTeam.setAll(devTeam);
     }
 
     public List<Allocation> getAllocations() {
