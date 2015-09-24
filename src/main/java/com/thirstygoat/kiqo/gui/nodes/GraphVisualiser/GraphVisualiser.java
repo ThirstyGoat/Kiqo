@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.nodes.GraphVisualiser;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -119,12 +120,40 @@ public class GraphVisualiser<T> extends FlowPane {
         return (node.getBoundsInParent().getMinY() + node.getBoundsInParent().getMaxY()) / 2;
     }
 
-    private double getHeightBetween(Node node1, Node node2) {
-        return getMidY(node2) - getMidY(node1);
+    private double getHeightBetween(Node source, Node destination) {
+        double w = destination.getLayoutBounds().getWidth() / 2;
+        double theta = getAngleBetweenNodesRads(source, destination);
+        double offset = Math.min(w * Math.tan(theta), destination.getLayoutBounds().getHeight() / 2);
+
+        if (getMidY(destination) > getMidY(source)) {
+            return getMidY(destination) - getMidY(source) - offset;
+        }
+        return getMidY(destination) - getMidY(source) + offset;
+
     }
 
-    private  double getWidthBetween(Node node1, Node node2) {
-        return getMidX(node2) - getMidX(node1);
+    private  double getWidthBetween(Node source, Node destination) {
+        double h = destination.getLayoutBounds().getHeight() / 2;
+        double theta = Math.toRadians(90) - getAngleBetweenNodesRads(source, destination);
+        double offset = Math.min(h * theta, destination.getLayoutBounds().getWidth() / 2);
+
+        if (getMidX(destination) > getMidX(source)) {
+            return getMidX(destination) - getMidX(source) - offset;
+        }
+        return getMidX(destination) - getMidX(source) + offset;
+    }
+
+    private double getAngleBetweenNodesRads(Node source, Node destination) {
+        double x1 = source.getBoundsInParent().getMinX();
+        double y1 = source.getBoundsInParent().getMinY();
+
+        double x2 = destination.getBoundsInParent().getMinX();
+        double y2 = destination.getBoundsInParent().getMinY();
+
+        double xDiff = Math.max(0.000001, Math.abs(x1 - x2));
+        double yDiff = Math.abs(y1 - y2);
+
+        return Math.atan(yDiff / xDiff);
     }
 
     /**
@@ -148,18 +177,9 @@ public class GraphVisualiser<T> extends FlowPane {
         line.toBack();
     }
 
-    private double getAngleBetweenNodes(Node source, Node destination) {
-        double x1 = (source.getLayoutBounds().getMinX() + source.getLayoutBounds().getMaxX()) / 2;
-        double y1 = (source.getLayoutBounds().getMinY() + source.getLayoutBounds().getMaxY()) / 2;
-
-        double x2 = (destination.getLayoutBounds().getMinX() + destination.getLayoutBounds().getMaxX()) / 2;
-        double y2 = (destination.getLayoutBounds().getMinY() + destination.getLayoutBounds().getMaxY()) / 2;
-
-        return 0; // TODO In Progress
-    }
-
     private Pane drawGraph(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
         Pane pane = new Pane();
+        pane.setPadding(new Insets(10, 10, 10, 10));
         double xOffset = Math.min(0, getMinXPos(vertices));
         double yOffset = Math.min(0, getMinYPos(vertices));
 
@@ -167,6 +187,7 @@ public class GraphVisualiser<T> extends FlowPane {
 
         for (Vertex<T> vertex : vertices) {
             Node node = nodeCallback.call(vertex.getObject());
+            node.setStyle("-fx-background-color: #03a9f4");
             vertexNodeMap.put(vertex, node);
 
             node.layoutXProperty().bind(Bindings.add(-xOffset, vertex.xPosProperty()));
