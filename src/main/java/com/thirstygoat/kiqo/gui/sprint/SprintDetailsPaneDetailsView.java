@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryTableCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
@@ -65,20 +66,26 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         FxUtils.initGoatLabel(startDateLabel, viewModel, viewModel.startDateProperty(),
                 viewModel.startDateStringProperty(), viewModel.startDateValidation());
         FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),
-                viewModel.endDateValidation());
+                        viewModel.endDateValidation());
         FxUtils.initGoatLabel(releaseLabel, viewModel, viewModel.releaseProperty(),
-                StringConverters.releaseStringConverter(viewModel.organisationProperty()), viewModel.releaseValidation());
+                        StringConverters.releaseStringConverter(viewModel.organisationProperty()),
+                        viewModel.releaseValidation());
         FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation());
+                        viewModel.descriptionValidation());
         FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(),
-                StringConverters.teamStringConverter(viewModel.organisationProperty()), viewModel.teamValidation());
+                        StringConverters.teamStringConverter(viewModel.organisationProperty()),
+                        viewModel.teamValidation());
         FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());
         FxUtils.initGoatLabel(backlogLabel, viewModel, viewModel.backlogProperty(),
-                StringConverters.backlogStringConverter(viewModel.organisationProperty()), viewModel.backlogValidation());
+                        StringConverters.backlogStringConverter(viewModel.organisationProperty()),
+                        viewModel.backlogValidation());
         FxUtils.setTextFieldSuggester(backlogLabel.getEditField(), viewModel.backlogsSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation());
+                        viewModel.descriptionValidation());
+
+        releaseLabel.getEditButton().setOnAction(
+                        e -> UndoManager.getUndoManager().getMainController().dialog(viewModel.sprintProperty().get()));
 
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.itemsProperty().bind(viewModel.stories());

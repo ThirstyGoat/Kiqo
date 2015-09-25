@@ -170,4 +170,8 @@ public abstract class GoatLabel<C extends Control> extends Control {
     public double getCustomMaxHeight() {
         return customMaxHeight;
     }
+
+    public Button getEditButton() {
+        return editButton;
+    }
 }

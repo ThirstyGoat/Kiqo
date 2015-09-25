@@ -38,7 +38,6 @@ import com.thirstygoat.kiqo.util.ApplicationInfo;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -934,7 +933,7 @@ public class MainController implements Initializable {
      *
      * @param t must not be null
      */
-    private <T> void dialog(T t) {
+    public <T> void dialog(T t) {
         dialog(t, t.getClass().getSimpleName());
     }
 
