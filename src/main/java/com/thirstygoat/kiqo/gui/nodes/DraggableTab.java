@@ -19,6 +19,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -132,6 +133,12 @@ public class DraggableTab extends Tab {
                     BorderPane borderPane = new BorderPane();
                     borderPane.setCenter(pane);
                     Scene scene = new Scene(borderPane);
+                    getTabPane().setOnKeyPressed(event -> {
+                        if (event.isShortcutDown() && event.getCode() == KeyCode.W) {
+                            // Close currently selected tab
+                            getTabPane().getTabs().remove(getTabPane().getSelectionModel().getSelectedItem());
+                        }
+                    });
 
                     FxUtils.attachKeyShortcuts(scene);
 
