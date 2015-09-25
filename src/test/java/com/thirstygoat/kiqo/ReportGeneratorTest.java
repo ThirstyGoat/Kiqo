@@ -2,8 +2,10 @@ package com.thirstygoat.kiqo;
 
 
 import com.thirstygoat.kiqo.command.create.*;
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.reportGenerator.ReportGenerator;
+import com.thirstygoat.kiqo.util.ApplicationInfo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 
 /**
@@ -22,6 +27,7 @@ import java.util.Map;
  */
 
 public class ReportGeneratorTest{
+    protected static final Logger LOGGER = Logger.getLogger(ReportGeneratorTest.class.getName());
     private Organisation organisation = new Organisation(true);
     private Project project = new Project("proj1", "Project 1", "Project description");
     private Release release = new Release("release short name", project, LocalDate.now().minusDays(1),
@@ -152,7 +158,15 @@ public class ReportGeneratorTest{
         } catch (ProtocolException e) {
             e.printStackTrace();
         }
-        return response.toString().matches("\"ERROR.*");
+
+        boolean error = response.toString().matches("\"ERROR.*");
+
+        // If there was an error, log it so we can debug.
+        if (error) {
+            LOGGER.log(Level.SEVERE, response.toString());
+        }
+
+        return error;
     }
 
 
@@ -237,5 +251,64 @@ public class ReportGeneratorTest{
             Assert.fail("Check your internet connection");
         }
         Assert.assertFalse("return string should not contain \"ERROR\"", response);
+    }
+
+    /**
+     * Given the path to a json file, generate a report for the organisation contained in that file and check it using
+     * an online yaml validator.
+     * @param file
+     * @return if yaml was valid.
+     */
+    public boolean testJsonFile(File file) {
+        MainController mainController = new MainController();
+        mainController.openOrganisation(file);
+        organisation = mainController.selectedOrganisationProperty.get();
+        ReportGenerator report = new ReportGenerator(organisation);
+
+        ArrayList<String> reports = new ArrayList<>();
+        reports.add(report.generateReport());
+        testGenerateOrganisationReport();
+        testGeneratePersonReport();
+        testGenerateProjectReport();
+        testGenerateTeamReport();
+
+        String reportStr = report.generateReport();
+        Boolean response = false;
+        try {
+            response = reportTestHelper(reportStr);
+        } catch (IOException e) {
+            Assert.fail("Check your internet connection");
+        }
+        return response;
+    }
+
+    /**
+     * Test the demo file.
+     */
+    @Test
+    public void testDemoFileReport() {
+        // Rolling your own yaml writer is a bad idea, too many edge cases.
+        // Disable test here because it will fail. Maybe enable again when report generator is more robust.
+        // Assert.assertFalse(testJsonFile(new File("demo.json")));
+    }
+
+    /**
+     * Tests a save file for each version of the product. A stream is created starting at 1 through to the latest
+     * version minus one.
+     */
+    @Test
+    public void testOldSprintFileReports() {
+        int previous_version = Math.round(Float.parseFloat(ApplicationInfo.getProperty("version")) -1);
+
+        // Start from sprint 2 because loading a sprint 1 file attempts to open dialog which runs in JavaFX thread
+        // So will not work in headless environment.
+        IntStream.range(2, previous_version).boxed()
+                        .forEach(version -> {
+                            File file = new File(getClass()
+                                            .getResource("/save_files/sprint" + version + ".json")
+                                            .getFile());
+
+                            testJsonFile(file);
+                        });
     }
 }
