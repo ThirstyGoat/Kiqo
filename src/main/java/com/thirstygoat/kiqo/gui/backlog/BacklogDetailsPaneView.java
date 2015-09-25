@@ -178,6 +178,9 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         highlightHyperLink.visibleProperty().bind(highlightCheckBox.selectedProperty());
     }
 
+    /**
+     * Draws
+     */
     private void visualiseDependencies() {
         visualisationPane.getChildren().clear();
         GraphVisualiser<Story> gv = new GraphVisualiser<>();
@@ -225,11 +228,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
         gv.go();
 
         visualisationPane.setAlignment(Pos.CENTER);
-//        visualisationPane.setStyle("-fx-background-color: greenyellow");
         visualisationPane.getChildren().add(gv);
-
-//        visualisationVbox.setStyle("-fx-background-color: red");
-
     }
 
     /**

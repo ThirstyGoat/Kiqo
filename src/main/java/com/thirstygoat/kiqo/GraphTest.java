@@ -51,9 +51,6 @@ public class GraphTest extends Application {
         PyList edges = new PyList();
         edges.add(edgeAB);
         edges.add(edgeBC);
-
-        PyList positions = (PyList)getVertexPositions.__call__(vertices, edges);
-        System.out.println(positions);
     }
 
     @Override

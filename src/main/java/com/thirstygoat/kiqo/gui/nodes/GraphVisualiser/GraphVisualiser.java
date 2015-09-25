@@ -17,8 +17,6 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,13 +32,6 @@ public class GraphVisualiser<T> extends FlowPane {
     private ObservableSet<Vertex<T>> vertices = FXCollections.observableSet();
     private ObservableSet<Edge<T>> edges = FXCollections.observableSet();
     private static PythonInterpreter py;
-
-    public static PythonInterpreter startPython() {
-        if (py == null) {
-            py = new PythonInterpreter();
-        }
-        return py;
-    }
 
     public GraphVisualiser() {
         // Set the default nodeCallback to create the display node
@@ -101,6 +92,9 @@ public class GraphVisualiser<T> extends FlowPane {
         this.nodeCallback = nodeCallback;
     }
 
+    /**
+     * Draws the graph. finds all connected subgraphs, positions all nodes and adds them to the flow pane
+     */
     public void go() {
         Thread t1 = new Thread(() -> {
             // code goes here.
@@ -118,10 +112,6 @@ public class GraphVisualiser<T> extends FlowPane {
             }
         });
         t1.start();
-
-
-        // Add a listener on vertices and edges observable set
-        // when that fires, call go() again.
     }
 
     private void computePositionsMicro(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
@@ -135,13 +125,18 @@ public class GraphVisualiser<T> extends FlowPane {
         Platform.runLater(() -> getChildren().add(drawGraph(vertices, edges)));
     }
 
+    /**
+     * Uses the python library grandalf to generate the x, y coordinates for a set of connected vertices
+     * @param vertices
+     * @param edges
+     */
     private void computePositions(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
         String resourcePath = getClass().getClassLoader().getResource("grandalf/").getFile();
 
         py = new PythonInterpreter();
         py.exec("import sys");
         py.exec("sys.path.append('" + resourcePath + "')");
-        py.exec("from vertexCoords import *");
+        py.exec("from grandalf.vertexCoords import *");
 
         PyFunction getVertexPositions = (PyFunction)py.get("getVertexPositions");
         PyFunction createVertexFunction = (PyFunction)py.get("createVertex");
@@ -198,6 +193,13 @@ public class GraphVisualiser<T> extends FlowPane {
         return (node.getBoundsInParent().getMinY() + node.getBoundsInParent().getMaxY()) / 2;
     }
 
+    /**
+     * calculates the y value for the point where a line from the source to the destination will intersect with the
+     * border of the destination node
+     * @param source
+     * @param destination
+     * @return
+     */
     private double getHeightBetween(Node source, Node destination) {
         double w = destination.getLayoutBounds().getWidth() / 2;
         double theta = getAngleBetweenNodesRads(source, destination);
@@ -210,6 +212,13 @@ public class GraphVisualiser<T> extends FlowPane {
 
     }
 
+    /**
+     * calculates the x value for the point where a line from the source to the destination will intersect with the
+     * border of the destination node
+     * @param source
+     * @param destination
+     * @return
+     */
     private  double getWidthBetween(Node source, Node destination) {
         double h = destination.getLayoutBounds().getHeight() / 2;
         double theta = Math.toRadians(90) - getAngleBetweenNodesRads(source, destination);
@@ -221,6 +230,13 @@ public class GraphVisualiser<T> extends FlowPane {
         return getMidX(destination) - getMidX(source) + offset;
     }
 
+    /**
+     * Gets the the angle at the source end of the line between two nodes assuming that the line connecting them is
+     * the hypotenuse of a right angled triangle
+     * @param source
+     * @param destination
+     * @return
+     */
     private double getAngleBetweenNodesRads(Node source, Node destination) {
         double x1 = source.getBoundsInParent().getMinX();
         double y1 = source.getBoundsInParent().getMinY();
@@ -241,11 +257,9 @@ public class GraphVisualiser<T> extends FlowPane {
      */
     private void drawBranch(Node source, Node destination, Pane section) {
         // Strange things happen when this line is removed.
-        boundsInParentProperty().addListener((obs, oldV, newV) -> {
-        });
+        boundsInParentProperty().addListener((obs, oldV, newV) -> {});
 
         Arrow line = new Arrow();
-
         line.layoutXProperty().bind(Bindings.createDoubleBinding(() -> getMidX(source), boundsInParentProperty()));
         line.layoutYProperty().bind(Bindings.createDoubleBinding(() -> getMidY(source), boundsInParentProperty()));
         line.endYProperty().bind(Bindings.createDoubleBinding(() -> getHeightBetween(source, destination), boundsInParentProperty()));
@@ -255,8 +269,13 @@ public class GraphVisualiser<T> extends FlowPane {
         line.toBack();
     }
 
+    /**
+     * Draws a graph from a set of vertices and edges to a pane containing nodes supplied by the vertices
+     * @param vertices
+     * @param edges
+     * @return pane containing the nodes (vertices) connected by edges
+     */
     private Pane drawGraph(Set<Vertex<T>> vertices, Set<Edge<T>> edges) {
-        LocalTime start = LocalTime.now();
         Pane pane = new Pane();
         pane.setPadding(new Insets(10, 10, 10, 10));
         double xOffset = Math.min(0, getMinXPos(vertices));
@@ -277,8 +296,6 @@ public class GraphVisualiser<T> extends FlowPane {
         for (Edge<T> edge : edges) {
             drawBranch(vertexNodeMap.get(edge.getStart()), vertexNodeMap.get(edge.getEnd()), pane);
         }
-        long s = ChronoUnit.MILLIS.between(start,LocalTime.now());
-        System.out.println(s);
 
         return pane;
     }
@@ -289,6 +306,13 @@ public class GraphVisualiser<T> extends FlowPane {
 
     public ObservableSet<Vertex<T>> getVertices() {
         return vertices;
+    }
+
+    public static PythonInterpreter startPython() {
+        if (py == null) {
+            py = new PythonInterpreter();
+        }
+        return py;
     }
 
 }

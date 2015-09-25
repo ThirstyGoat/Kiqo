@@ -10,10 +10,9 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
 /**
- * Created by samschofield on 23/09/15.
+ * Custom arrow node which has the same functionality as line but looks like an arrow
  */
 public class Arrow extends Group {
-    private static final double ARROW_WIDTH = 20;
     private static final double ARROW_HEIGHT = 10;
 
     private Line line;
@@ -39,16 +38,7 @@ public class Arrow extends Group {
             }
         }, endXProperty(), endYProperty()));
 
-        // TODO maybe uncomment this
-//        rotation.addListener(((observable, oldValue, newValue) -> {
-//            arrowHead.getTransforms().add(new Rotate(-oldValue.doubleValue(), 0, 0));
-////            arrowHead.getTransforms().add(new Rotate(newValue.doubleValue(), 0, 0));
-//            System.out.println(newValue.doubleValue());
-//        }));
-//
         Platform.runLater(() -> arrowHead.getTransforms().add(new Rotate(rotation.get(), 0, 0)));
-
-
         getChildren().addAll(line, arrowHead);
     }
 
