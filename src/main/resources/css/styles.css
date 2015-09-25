@@ -375,6 +375,12 @@
 
 
 /********** FORM STYLING ************/
+
+.form {
+    -fx-border-color: #c5c5c5;
+    -fx-border-width: 1.5;
+}
+
 .form-heading {
     -fx-font: 18px "Roboto";
     -fx-text-fill: dimgray;
