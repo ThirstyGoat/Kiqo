@@ -202,11 +202,14 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
             priority.textProperty().bind(Bindings.createStringBinding(() -> Float.toString(story.priorityProperty().get()), story.priorityProperty()));
 
             node.getChildren().addAll(label, priority);
-            long count = story.getDependencies().stream().filter(dependency -> dependency.priorityProperty().get() > story.priorityProperty().get()).count();
-            if (count > 0) {
-                node.getStyleClass().add("in-progress");
-            } else {
-                node.getStyleClass().add("done");
+            node.setStyle("-fx-background-color: #4caf50");
+            for (Story s : story.getDependencies()) {
+                if (s.getPriority() < story.getPriority()) {
+                    node.setStyle("-fx-background-color: #ff7144");
+                    label.setTooltip(
+                            new Tooltip("This story has a higher priority than one or more of the stories it depends on"));
+                    break;
+                }
             }
             return node;
         });

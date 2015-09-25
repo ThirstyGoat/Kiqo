@@ -48,7 +48,7 @@ public class StoryListCell extends TableCell<Story, String> {
         return paintColor;
     }
 
-    private static Color getColor(Story story) {
+    public static Color getColor(Story story) {
         for (Story s : story.getDependencies()) {
             if (s.getPriority() < story.getPriority()) {
                 return Color.RED;
