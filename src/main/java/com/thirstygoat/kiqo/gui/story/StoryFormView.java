@@ -71,6 +71,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty(),
                 new NumberStringConverter());
+        FxUtils.restrictToNumericInput(Story.MIN_PRIORITY, Story.MAX_PRIORITY, priorityTextField.textProperty());
 
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();

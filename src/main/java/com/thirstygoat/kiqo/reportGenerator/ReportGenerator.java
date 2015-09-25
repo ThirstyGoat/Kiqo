@@ -138,7 +138,7 @@ public final class ReportGenerator {
     private static List<String> generateTaskReport(Task tasks) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", tasks.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", tasks.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", tasks.getDescription()));
         lines.add(ReportUtils.valueLine("Estimate", tasks.getEstimate()));
         lines.add(ReportUtils.valueLine("Status", tasks.getStatus()));
         lines.add(ReportUtils.collectionLine("Impediments", tasks.getImpediments().isEmpty()));
@@ -166,7 +166,7 @@ public final class ReportGenerator {
     private static List<String> generateReleaseReport(Release release) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", release.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", release.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", release.getDescription()));
         lines.add(ReportUtils.valueLine("Date", release.getDate().format(Utilities.DATE_FORMATTER)));
 
         return lines;
@@ -176,7 +176,7 @@ public final class ReportGenerator {
         final List<String> lines = new ArrayList<>();
         lines.add(ReportUtils.valueLine("Sprint Goal", sprint.getShortName()));
         lines.add(ReportUtils.valueLine("Long Name", sprint.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", sprint.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", sprint.getDescription()));
         lines.add(ReportUtils.valueLine("Start Date", sprint.getStartDate().format(Utilities.DATE_FORMATTER)));
         lines.add(ReportUtils.valueLine("End Date", sprint.getEndDate().format(Utilities.DATE_FORMATTER)));
         lines.add(ReportUtils.valueLine("Team", sprint.getTeam().getShortName()));
@@ -194,7 +194,7 @@ public final class ReportGenerator {
     private static List<String> generateSkillReport(Skill skill) {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", skill.getShortName()));
-        lines.add(ReportUtils.valueLine("Description", skill.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", skill.getDescription()));
         return lines;
     }
 
@@ -317,7 +317,7 @@ public final class ReportGenerator {
 
         lines.add(ReportUtils.valueLine("Short Name", project.getShortName()));
         lines.add(ReportUtils.valueLine("Name", project.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", project.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", project.getDescription()));
 
         // Add backlogs to the report
         lines.add(ReportUtils.collectionLine("Backlogs", project.getBacklogs().isEmpty()));
@@ -421,7 +421,7 @@ public final class ReportGenerator {
         final List<String> lines = new ArrayList<String>();
         lines.add(ReportUtils.valueLine("Short Name", person.getShortName()));
         lines.add(ReportUtils.valueLine("Name", person.getLongName()));
-        lines.add(ReportUtils.valueLine("Description", person.getDescription()));
+        lines.addAll(ReportUtils.valueLiteral("Description", person.getDescription()));
         lines.add(ReportUtils.valueLine("User ID", person.getUserId()));
         lines.add(ReportUtils.valueLine("Email Address", person.getEmailAddress()));
         lines.add(ReportUtils.valueLine("Phone Number", person.getPhoneNumber()));

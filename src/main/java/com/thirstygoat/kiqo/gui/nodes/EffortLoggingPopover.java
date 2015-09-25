@@ -84,9 +84,6 @@ public class EffortLoggingPopover extends PopOver {
             viewModel.durationProperty().set(calculateDuration());
         }));
 
-        minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
-        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-
         viewModel.commentProperty().bindBidirectional(commentTextArea.textProperty());
 
         logButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
@@ -172,8 +169,8 @@ public class EffortLoggingPopover extends PopOver {
         minuteSpinner.setPromptText("M");
         durationHbox.setPrefWidth(150);
 
-        hourSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 99, hourSpinner));
-        minuteSpinner.textProperty().addListener(FxUtils.numbericInputRestrictor(0, 59, minuteSpinner));
+        FxUtils.restrictToNumericInput(0, 59, minuteSpinner.textProperty());
+        FxUtils.restrictToNumericInput(0, 99, hourSpinner.textProperty());
 
         durationHbox.getChildren().addAll(hourSpinner, minuteSpinner);
         durationVbox.getChildren().addAll(durationLabel, durationHbox);

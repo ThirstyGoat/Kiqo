@@ -392,7 +392,7 @@ public class MainController implements Initializable {
                 changes.add(new DeleteBacklogCommand(backlog));
                 // move all stories in backlog to stoies for project
                 for (final Story story : backlog.getStories()) {
-                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
+                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.getStories(),
                             backlog.getProject().getUnallocatedStories());
                     changes.add(command);
                 }

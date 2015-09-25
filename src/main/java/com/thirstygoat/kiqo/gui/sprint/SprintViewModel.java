@@ -52,6 +52,16 @@ public class SprintViewModel implements ViewModel {
         eligibleStories = new SimpleListProperty<>(FXCollections.observableArrayList());
         totalEstimatedHours = new SimpleFloatProperty(0);
         spentHours = new SimpleFloatProperty(0);
+        
+        // Set eligibleStories list, and listen for changes to backlog so that the list is updated
+        eligibleStories.bind(Bindings.createObjectBinding(() -> {
+        	if (backlogProperty().get() != null) {
+                return backlogProperty().get().getStories();
+            } else {
+            	return FXCollections.observableArrayList();
+            }
+        }, backlogProperty()));
+        
         goalValidator = new ObservableRuleBasedValidator();
 
         BooleanBinding uniqueShortName = Bindings.createBooleanBinding(
@@ -222,12 +232,6 @@ public class SprintViewModel implements ViewModel {
             }
         });
 
-        // Set eligibleStories list, and listen for changes to backlog so that the list is updated
-        eligibleStories.setAll(storiesSupplier().get());
-        backlogProperty().addListener(observable -> {
-            eligibleStories.setAll(storiesSupplier().get());
-        });
-
         // Upon backlog change, target stories should be reset
         backlogProperty().addListener((observable, oldValue, newValue) -> stories().clear());
 
@@ -242,20 +246,6 @@ public class SprintViewModel implements ViewModel {
         sprintWrapper.reload();
         stories().clear();
         stories().addAll(sprintProperty().get().getStories());
-    }
-
-    /**
-     * Supplies a list of eligable stories for this sprint
-     */
-    protected Supplier<List<Story>> storiesSupplier() {
-        return () -> {
-            List<Story> list = new ArrayList<>();
-            if (backlogProperty().get() != null) {
-                list.addAll(backlogProperty().get().getStories());
-                list.removeAll(stories);
-            }
-            return list;
-        };
     }
 
     /**

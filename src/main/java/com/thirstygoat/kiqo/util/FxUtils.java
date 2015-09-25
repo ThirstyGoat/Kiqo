@@ -328,21 +328,19 @@ public final class FxUtils {
      *
      * @param min
      * @param max
-     * @param textField
+     * @param property
      * @return
      */
-    public static ChangeListener<String> numbericInputRestrictor(int min, int max, TextField textField) {
-        return (observable, oldValue, newValue) -> {
+    public static void restrictToNumericInput(int min, int max, StringProperty property) {
+        property.addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                textField.setText(oldValue);
-            } else {
-                if (!newValue.equals("")) {
-                    int num = Integer.parseInt(newValue);
-                    if (num < min || num > max) {
-                        textField.setText(oldValue);
-                    }
+            	property.set(oldValue);
+            } else if (!newValue.equals("")) {
+                int num = Integer.parseInt(newValue);
+                if (num < min || num > max) {
+                	property.set(oldValue);
                 }
             }
-        };
+        });
     }
 }

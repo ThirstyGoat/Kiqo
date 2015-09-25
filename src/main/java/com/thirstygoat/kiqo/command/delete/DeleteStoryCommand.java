@@ -27,7 +27,7 @@ public class DeleteStoryCommand extends DeleteCommand {
 
         // Add stories that depend on this story to the list
         if (story.getBacklog() != null) {
-            for (Story story1 : story.getBacklog().observableStories()) {
+            for (Story story1 : story.getBacklog().getStories()) {
                 if (story1.getDependencies().contains(story)) {
                     dependencyIndices.put(story1, story1.observableDependencies().indexOf(story));
                 }
@@ -60,7 +60,7 @@ public class DeleteStoryCommand extends DeleteCommand {
 
         if (story.getBacklog() != null) {
             index = story.getBacklog().getStories().indexOf(story);
-            story.getBacklog().observableStories().remove(story);
+            story.getBacklog().getStories().remove(story);
         } else {
             index = story.getProject().getUnallocatedStories().indexOf(story);
             story.getProject().getUnallocatedStories().remove(story);
@@ -79,7 +79,7 @@ public class DeleteStoryCommand extends DeleteCommand {
 
         // Add the story back to wherever it was
         if (story.getBacklog() != null) {
-            story.getBacklog().observableStories().add(index, story);
+            story.getBacklog().getStories().add(index, story);
         } else {
             story.getProject().getUnallocatedStories().add(index, story);
         }

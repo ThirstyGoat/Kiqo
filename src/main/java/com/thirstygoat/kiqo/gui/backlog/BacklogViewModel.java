@@ -43,7 +43,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
         	if (projectProperty().get() != null) {
         		List<Story> list = new ArrayList<>();
         		list.addAll(projectProperty().get().getUnallocatedStories()); // not in any backlog in model
-        		list.addAll(modelWrapper.get().observableStories()); // in THIS backlog in model
+        		list.addAll(modelWrapper.get().getStories()); // in THIS backlog in model
         		list.addAll(stories()); // in THIS backlog in viewModel
         		return list.stream().distinct().collect(GoatCollectors.toObservableList());
         	} else {
@@ -155,7 +155,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
                     changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
                 }
                 changes.add(new MoveItemCommand<>(story, projectProperty().get().getUnallocatedStories(),
-                        modelWrapper.get().observableStories()));
+                        modelWrapper.get().getStories()));
                 changes.add(new EditCommand<>(story, "backlog", modelWrapper.get()));
             }
             // get the remaining stories and change their scales - might be a better way to do this rather than 2 loops
@@ -172,7 +172,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
                 changes.add(new EditCommand<>(modelWrapper.get(), "project", projectProperty().get()));
                 // If backlog moved to a different project we need to update the back references of the stories
                 // in that backlog.
-                for (Story story : modelWrapper.get().observableStories()) {
+                for (Story story : modelWrapper.get().getStories()) {
                     changes.add(new EditCommand<>(story, "project", projectProperty().get()));
                     changes.add(new EditCommand<>(story, "backlog", modelWrapper.get()));
                 }
