@@ -1,57 +1,23 @@
 package com.thirstygoat.kiqo.gui.story;
 
-<<<<<<< Upstream, based on origin/master
-import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
-import com.thirstygoat.kiqo.gui.FormButtonHandler;
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import com.thirstygoat.kiqo.model.Scale;
-import com.thirstygoat.kiqo.model.Story;
-import com.thirstygoat.kiqo.util.FxUtils;
-import com.thirstygoat.kiqo.util.StringConverters;
-import com.thirstygoat.kiqo.util.Utilities;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
-=======
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import org.controlsfx.control.PopOver;
->>>>>>> b199b0a GoatFilteredListView in BacklogForm is done.
 import org.controlsfx.validation.ValidationSupport;
 
-<<<<<<< Upstream, based on origin/master
-import java.net.URL;
-import java.util.ResourceBundle;
-=======
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.*;
 
 import de.saxsys.mvvmfx.*;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.*;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
->>>>>>> b199b0a GoatFilteredListView in BacklogForm is done.
 
 /**
  * Created by Carina Blair on 15/05/2015.
