@@ -59,12 +59,13 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
                 editField.setMaxHeight(5);
                 editView.setMinHeight(5);
                 editView.setMaxHeight(5);
+                editField.setManaged(false);
             } else {
                 showEditField();
+                // in edit mode
+                editField.setManaged(true);
             }
         });
-
-//        editButton
     }
 
     protected void initEditField() {
