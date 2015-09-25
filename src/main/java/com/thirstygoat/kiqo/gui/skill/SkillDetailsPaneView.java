@@ -28,5 +28,8 @@ public class SkillDetailsPaneView implements FxmlView<SkillDetailsPaneViewModel>
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.nameProperty(), viewModel.nameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
                 viewModel.descriptionValidation());
+
+        shortNameLabel.editableProperty().bind(viewModel.disableSkillEditing());
     }
+
 }
