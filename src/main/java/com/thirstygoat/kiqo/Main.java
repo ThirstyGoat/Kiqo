@@ -100,8 +100,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
-        this.primaryStage.setMinWidth(1100);
-        this.primaryStage.setMinHeight(650);
+
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
@@ -122,7 +121,7 @@ public class Main extends Application {
             if (db.hasFiles()) {
                 if (db.getFiles().size() > 1) {
                     GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
-                            "Drag and drop only supports individual files.");
+                                    "Drag and drop only supports individual files.");
                 } else {
                     final File file = db.getFiles().get(0);
                     mainController.openOrganisation(file);
@@ -136,6 +135,8 @@ public class Main extends Application {
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(650);
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
             Platform.runLater(() -> {
