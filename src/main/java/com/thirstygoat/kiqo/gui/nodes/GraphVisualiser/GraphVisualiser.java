@@ -136,7 +136,12 @@ public class GraphVisualiser<T> extends FlowPane {
         py = new PythonInterpreter();
         py.exec("import sys");
         py.exec("sys.path.append('" + resourcePath + "')");
-        py.exec("from grandalf.vertexCoords import *");
+        try {
+            // one works from the jar and the other works when running from IDE
+            py.exec("from grandalf.vertexCoords import *");
+        } catch (Exception e) {
+            py.exec("from vertexCoords import *");
+        }
 
         PyFunction getVertexPositions = (PyFunction)py.get("getVertexPositions");
         PyFunction createVertexFunction = (PyFunction)py.get("createVertex");
