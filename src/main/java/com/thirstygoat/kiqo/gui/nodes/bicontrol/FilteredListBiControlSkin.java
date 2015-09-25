@@ -40,7 +40,6 @@ public abstract class FilteredListBiControlSkin<C extends Control, S extends Ite
     @Override
     protected GoatFilteredListSelectionView<S> makeEditView() {
         GoatFilteredListSelectionView<S> view = new GoatFilteredListSelectionView<S>();
-        view.setStyle("-fx-background-color: transparent");
         view.setPrefHeight(VIEW_HEIGHT);
         return view;
     }

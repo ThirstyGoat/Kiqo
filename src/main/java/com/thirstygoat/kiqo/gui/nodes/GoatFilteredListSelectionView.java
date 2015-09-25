@@ -67,6 +67,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
 
         createSkin();
         setDefaultCellFactory();
+        this.setStyle("-fx-background-color: transparent");
         bindShownItems();
 
         availableItems.addListener((ListChangeListener<T>) c -> {
