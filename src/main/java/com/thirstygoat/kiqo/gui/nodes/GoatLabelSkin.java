@@ -3,7 +3,10 @@ package com.thirstygoat.kiqo.gui.nodes;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,6 +36,7 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
     protected ObjectProperty<EventHandler<ActionEvent>> onCancel = new SimpleObjectProperty<>();
     protected boolean restrictToNumericInput = false;
     private StackPane labelStackPane;
+    private BooleanProperty isEditable = new SimpleBooleanProperty(true);
 
     /**
      * Constructor for all SkinBase instances.
@@ -183,7 +187,8 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
         fade.setAutoReverse(true);
         fade.setFromValue(0);
         fade.setToValue(1);
-        button.visibleProperty().bind(displayView.hoverProperty());
+        button.visibleProperty().bind(Bindings.createBooleanBinding(() -> displayView.hoverProperty().get() && isEditable.get(),
+                        isEditable, displayView.hoverProperty()));
         displayView.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 fade.setCycleCount(1);
@@ -203,6 +208,10 @@ public abstract class GoatLabelSkin<C extends Region> extends SkinBase<Control> 
         editField.setStyle("-fx-border-color: blue;");
         editView.setStyle("-fx-border-color: pink;");
         stackPane.setStyle("-fx-border-color: purple;");
+    }
+
+    public BooleanProperty isEditable() {
+        return isEditable;
     }
 
 }
