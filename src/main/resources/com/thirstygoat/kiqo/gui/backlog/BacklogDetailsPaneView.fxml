@@ -43,7 +43,7 @@
 
                         <AnchorPane fx:id="mainAnchorPane">
                             <VBox fx:id="detailsVbox" mouseTransparent="false" spacing="10.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                                <GoatLabelTextField fx:id="descriptionLabel"/>
+                                <GoatLabelTextField fx:id="descriptionLabel" defaultText="Add a description..."/>
                                 <Label text="Product Owner" styleClass="field-label">
                                     <VBox.margin>
                                         <Insets bottom="-8"/>
