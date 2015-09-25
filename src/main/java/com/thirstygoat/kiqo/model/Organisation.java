@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -36,7 +37,7 @@ public class Organisation implements Serializable {
         people = FXCollections.observableArrayList(Item.getWatchStrategy());
         skills = FXCollections.observableArrayList(Item.getWatchStrategy());
         releases = FXCollections.observableArrayList(Item.getWatchStrategy());
-        teams = FXCollections.observableArrayList(Item.getWatchStrategy());
+        teams = FXCollections.observableArrayList(team -> new Observable[] {team.observableTeamMembers()});
         organisationName = new SimpleStringProperty("Untitled");
         poSkill = null;
         smSkill = null;

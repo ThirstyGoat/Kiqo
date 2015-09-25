@@ -2,13 +2,15 @@ package com.thirstygoat.kiqo;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
-import com.thirstygoat.kiqo.gui.nodes.GraphVisualiser.GraphVisualiser;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -98,16 +100,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        Thread t1 = new Thread(() -> {
-            GraphVisualiser.startPython();
-        });
-        t1.start();
-
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kiqo");
-        this.primaryStage.setMinWidth(1100);
-        this.primaryStage.setMinHeight(650);
+
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getClassLoader().getResource("main.fxml"));
         root = loader.load();
@@ -128,7 +123,7 @@ public class Main extends Application {
             if (db.hasFiles()) {
                 if (db.getFiles().size() > 1) {
                     GoatDialog.showAlertDialog(primaryStage, "Prohibited Operation", "Not allowed.",
-                            "Drag and drop only supports individual files.");
+                                    "Drag and drop only supports individual files.");
                 } else {
                     final File file = db.getFiles().get(0);
                     mainController.openOrganisation(file);
@@ -138,19 +133,24 @@ public class Main extends Application {
             event.consume();
         });
 
+        primaryStage.setOpacity(0);
         primaryStage.setScene(scene);
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(650);
+         // center the window
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        primaryStage.setX((bounds.getWidth() - primaryStage.getWidth()) / 2);
+        primaryStage.setY((bounds.getHeight() - primaryStage.getHeight()) / 2);
+        Platform.runLater(() -> {
+            primaryStage.setOpacity(1);
+        });
+
+
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
-//            Platform.runLater(() -> {
-//                MainController.focusedItemProperty.set(
-//                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
-//
-//                mainController.getDetailsPaneController().showDetailsPane(
-//                        mainController.selectedOrganisationProperty().get().getProjects().get(0).getBacklogs().get(2));
-//            });
         }
     }
 }

@@ -53,9 +53,9 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         textField = skin.getTextField();
         listView = skin.getListView();
 
-        allItems = new SimpleListProperty<>(FXCollections.observableArrayList());
-        selectedItems = new SimpleListProperty<>(FXCollections.observableArrayList());
-        availableItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+        allItems = new SimpleListProperty<>();
+        selectedItems = new SimpleListProperty<>();
+        availableItems = new SimpleListProperty<>();
 
     	ObservableList<T> items = FXCollections.observableArrayList();
         availableItems.bind(Bindings.createObjectBinding(() -> {
@@ -200,11 +200,11 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         showing.addListener((observable, oldValue, newValue) -> {
             availableItems.clear();
             if (newValue == DisplayMode.ALL) {
-				availableItems.setAll(allItems.stream().sorted(comparator).collect(Collectors.toList()));
+				availableItems.addAll(allItems.stream().sorted(comparator).collect(Collectors.toList()));
             } else if (newValue == DisplayMode.SELECTED) {
-                availableItems.setAll(selectedItems.stream().sorted(comparator).collect(Collectors.toList()));
+                availableItems.addAll(selectedItems.stream().sorted(comparator).collect(Collectors.toList()));
             } else if (newValue == DisplayMode.UNSELECTED) {
-                availableItems.setAll(allItems.stream().filter(item -> !selectedItems.contains(item)).sorted(comparator).collect(Collectors.toList()));
+                availableItems.addAll(allItems.stream().filter(item -> !selectedItems.contains(item)).sorted(comparator).collect(Collectors.toList()));
             }
         });
 
@@ -253,7 +253,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setSelected(isInTargetList(item));
+                    checkBox.setSelected(selectedItems.contains(item));
                     checkBox.setFocusTraversable(false);
 
                     checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -312,10 +312,6 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         }, isTarget));
 
         return innerCellGraphic;
-    }
-
-    private boolean isInTargetList(T item) {
-        return getTargetItems().contains(item);
     }
 
     public Callback<T, Node> getSourceCellGraphicFactory() {

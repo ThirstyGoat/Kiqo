@@ -33,7 +33,8 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator creatorValidator;
     private FunctionBasedValidator projectValidator;
     private FunctionBasedValidator priorityValidator;
-    private FunctionBasedValidator scaleValidator;
+    private ObservableRuleBasedValidator backlogValidator;
+    private ObservableRuleBasedValidator scaleValidator;
     private CompositeValidator allValidator;
     private BooleanProperty creatorEditable = new SimpleBooleanProperty();
 
@@ -50,9 +51,9 @@ public class StoryViewModel extends ModelViewModel<Story> {
     	eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
     	eligibleDependencies.bind(Bindings.createObjectBinding(() -> { 
 	    		return storiesInBacklog.stream()
-	                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
+	                    .filter(story -> !createsCycle(story))
 	                    .collect(GoatCollectors.toObservableList());
-	    	}, dependenciesProperty(), storiesInBacklog));
+	    	}, storiesInBacklog));
     	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
@@ -102,6 +103,16 @@ public class StoryViewModel extends ModelViewModel<Story> {
             Utilities.emptinessPredicate(),
             ValidationMessage.error("Project must exist"));
 
+        backlogValidator = new ObservableRuleBasedValidator();
+        backlogValidator.addRule(Bindings.createBooleanBinding(() -> {
+            if (backlogProperty().get() == null) {
+                return true; // Allowed no backlog
+            } else if (projectProperty().get() != null && backlogProperty().get().getProject() == projectProperty().get()) {
+                return true;
+            }
+            return false;
+        }, projectProperty(), backlogProperty()), ValidationMessage.error("Must be a backlog of the selected Project"));
+
         priorityValidator = new FunctionBasedValidator<>(priorityProperty(),
             i -> {
                 try {
@@ -116,13 +127,18 @@ public class StoryViewModel extends ModelViewModel<Story> {
             ValidationMessage.error("Priority must be an integer between "
                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-        scaleValidator = new FunctionBasedValidator<>(scaleProperty(),
-            Utilities.emptinessPredicate(),
-            ValidationMessage.error("Estimation scale must not be empty"));
+        scaleValidator = new ObservableRuleBasedValidator();
+        scaleValidator.addRule(Bindings.createBooleanBinding(() -> {
+            if (backlogProperty().get() == null) {
+                return true;
+            } else {
+                return backlogProperty().get().scaleProperty().get().equals(scaleProperty().get());
+            }
+        }, backlogProperty(), scaleProperty()), ValidationMessage.error("Story and backlog must have the same scale"));
 
         allValidator = new CompositeValidator();
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
-                projectValidator, priorityValidator, scaleValidator);
+                projectValidator, priorityValidator, scaleValidator, backlogValidator);
     }
 
     @Override
@@ -146,6 +162,13 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
     public Supplier<List<Person>> creatorSupplier() {
         return () -> organisationProperty().get().getPeople();
+    }
+
+    public Supplier<List<Backlog>> backlogSupplier() {
+        if (projectProperty().get() != null) {
+            return () -> new ArrayList<>();
+        }
+        return () -> projectProperty().get().getBacklogs();
     }
 
     /** Fields **/
@@ -222,6 +245,10 @@ public class StoryViewModel extends ModelViewModel<Story> {
         return projectValidator.getValidationStatus();
     }
 
+    public ValidationStatus backlogValidation() {
+        return backlogValidator.getValidationStatus();
+    }
+
     public ValidationStatus priorityValidation() {
         return priorityValidator.getValidationStatus();
     }
@@ -248,7 +275,8 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
         if (modelWrapper.get().getShortName() == "") { // Must be a new story
             Story story = new Story(shortNameProperty().getValue(), longNameProperty().getValue(), descriptionProperty().getValue(), creatorProperty().get(),
-                    projectProperty().get(), null, priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false, null);
+                    projectProperty().get(), backlogProperty().get(), priorityProperty().getValue(), scaleProperty().getValue(), estimateProperty().getValue(), false, false, null);
+            story.setDependencies(dependenciesProperty());
             command = new CreateStoryCommand(story);
         } else {
             // edit command

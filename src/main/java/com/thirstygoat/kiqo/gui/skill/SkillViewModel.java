@@ -1,30 +1,30 @@
 package com.thirstygoat.kiqo.gui.skill;
 
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.create.CreateSkillCommand;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.Skill;
 import com.thirstygoat.kiqo.util.Utilities;
-
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class SkillViewModel extends ModelViewModel<Skill> {
 
     private ObservableRuleBasedValidator nameValidator;
     private ObservableRuleBasedValidator descriptionValidator;
     private CompositeValidator allValidator;
+    private BooleanProperty disableSkillEditing = new SimpleBooleanProperty(false);
     
     public SkillViewModel() {
     	super();
@@ -69,6 +69,17 @@ public class SkillViewModel extends ModelViewModel<Skill> {
         }
         return command;
     }
+
+    public BooleanProperty disableSkillEditing() {
+        disableSkillEditing.bind(Bindings.createBooleanBinding(() -> {
+            if((nameProperty().get() != null) && (nameProperty().get().equals("PO") || nameProperty().get().equals("SM"))) {
+                return false;
+            } else {
+                return true;
+            }
+        }, nameProperty()));
+        return disableSkillEditing;
+}
 
     protected StringProperty nameProperty() {
         return modelWrapper.field("shortName", Skill::getShortName, Skill::setShortName, "");

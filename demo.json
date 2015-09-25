@@ -621,8 +621,7 @@
     ],
     "backlogs": [
       "0x258",
-      "0x259",
-      "0x25a"
+      "0x259"
     ],
     "description": "Project management for the real world"
   },
@@ -6593,13 +6592,13 @@
     "description": "Project Management for the real world",
     "project": "0x2",
     "date": {
-      "year": 2015,
+      "year": 2016,
       "month": 9,
-      "day": 25
+      "day": 29
     },
     "sprints": [
-      "0x25b",
-      "0x25c"
+      "0x25a",
+      "0x25b"
     ]
   },
   "0x256": {
@@ -6632,11 +6631,11 @@
   },
   "0x258": {
     "stories": [
+      "0x25c",
       "0x25d",
       "0x25e",
       "0x25f",
-      "0x260",
-      "0x261"
+      "0x260"
     ],
     "shortName": "Shared",
     "longName": "Shared Backlog",
@@ -6647,9 +6646,9 @@
   },
   "0x259": {
     "stories": [
+      "0x261",
       "0x262",
-      "0x263",
-      "0x264"
+      "0x263"
     ],
     "shortName": "Kiqo",
     "longName": "Kiqo",
@@ -6659,35 +6658,16 @@
     "scale": "FIBONACCI"
   },
   "0x25a": {
-    "stories": [
-      "0x265",
-      "0x266",
-      "0x267",
-      "0x268",
-      "0x269",
-      "0x26a",
-      "0x26b",
-      "0x26c",
-      "0x26d"
-    ],
-    "shortName": "Complicated Backlog",
-    "longName": "Complicated Backlog",
-    "description": "",
-    "productOwner": "0x3",
-    "project": "0x2",
-    "scale": "FIBONACCI"
-  },
-  "0x25b": {
     "backlog": "0x258",
     "startDate": {
       "year": 2015,
-      "month": 7,
-      "day": 30
+      "month": 6,
+      "day": 1
     },
     "endDate": {
       "year": 2015,
-      "month": 8,
-      "day": 13
+      "month": 9,
+      "day": 30
     },
     "team": "0x253",
     "release": "0x255",
@@ -6695,21 +6675,25 @@
     "longName": "Sprint 5",
     "description": "",
     "stories": [
+      "0x260",
       "0x25d",
-      "0x25e"
-    ]
+      "0x25f",
+      "0x25e",
+      "0x25c"
+    ],
+    "tasksWithoutStory": "0x264"
   },
-  "0x25c": {
+  "0x25b": {
     "backlog": "0x259",
     "startDate": {
       "year": 2015,
-      "month": 8,
-      "day": 9
+      "month": 9,
+      "day": 1
     },
     "endDate": {
       "year": 2015,
       "month": 9,
-      "day": 24
+      "day": 30
     },
     "team": "0x253",
     "release": "0x255",
@@ -6717,12 +6701,13 @@
     "longName": "6: NPE",
     "description": "",
     "stories": [
+      "0x262",
       "0x263",
-      "0x264",
-      "0x262"
-    ]
+      "0x261"
+    ],
+    "tasksWithoutStory": "0x265"
   },
-  "0x25d": {
+  "0x25c": {
     "shortName": "AC Maintenance",
     "longName": "AC Maintenance",
     "description": "",
@@ -6733,21 +6718,22 @@
     "estimate": 6,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x26e",
-      "0x26f"
+      "0x266",
+      "0x267"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [
-      "0x270",
-      "0x271",
-      "0x272",
-      "0x273"
+      "0x268",
+      "0x269",
+      "0x26a",
+      "0x26b"
     ],
     "taskHours": 0.0,
-    "inSprint": true
+    "inSprint": true,
+    "sprint": "0x25a"
   },
-  "0x25e": {
+  "0x25d": {
     "shortName": "Story Estimation",
     "longName": "Story Estimation",
     "description": "",
@@ -6758,15 +6744,16 @@
     "estimate": 12,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x274"
+      "0x26c"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": true
+    "inSprint": true,
+    "sprint": "0x25a"
   },
-  "0x25f": {
+  "0x25e": {
     "shortName": "Dependencies",
     "longName": "Dependencies",
     "description": "",
@@ -6777,15 +6764,16 @@
     "estimate": 3,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x275"
+      "0x26d"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": false
+    "inSprint": true,
+    "sprint": "0x25a"
   },
-  "0x260": {
+  "0x25f": {
     "shortName": "Highlighting Storie",
     "longName": "Highlighting story state",
     "description": "",
@@ -6796,15 +6784,16 @@
     "estimate": 7,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x276"
+      "0x26e"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": false
+    "inSprint": true,
+    "sprint": "0x25a"
   },
-  "0x261": {
+  "0x260": {
     "shortName": "UX 2",
     "longName": "UX 2",
     "description": "",
@@ -6815,15 +6804,16 @@
     "estimate": 3,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x277"
+      "0x26f"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": false
+    "inSprint": true,
+    "sprint": "0x25a"
   },
-  "0x262": {
+  "0x261": {
     "shortName": "Basic Basic Search",
     "longName": "Basic Basic Search",
     "description": "",
@@ -6834,26 +6824,25 @@
     "estimate": 6,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x278",
-      "0x279",
-      "0x27a",
-      "0x27b",
-      "0x27c",
-      "0x27d"
+      "0x270",
+      "0x271",
+      "0x272",
+      "0x273",
+      "0x274",
+      "0x275"
     ],
-    "dependencies": [
-      "0x263"
-    ],
+    "dependencies": [],
     "isReady": true,
     "tasks": [
-      "0x27e",
-      "0x27f",
-      "0x280"
+      "0x276",
+      "0x277",
+      "0x278"
     ],
     "taskHours": 0.0,
-    "inSprint": true
+    "inSprint": true,
+    "sprint": "0x25b"
   },
-  "0x263": {
+  "0x262": {
     "shortName": "UX 0.5",
     "longName": "UX 0.5",
     "description": "",
@@ -6864,17 +6853,16 @@
     "estimate": 5,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x281"
+      "0x279"
     ],
-    "dependencies": [
-      "0x264"
-    ],
+    "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": true
+    "inSprint": true,
+    "sprint": "0x25b"
   },
-  "0x264": {
+  "0x263": {
     "shortName": "UX 1.5",
     "longName": "UX 1.5",
     "description": "",
@@ -6885,349 +6873,349 @@
     "estimate": 4,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [
-      "0x282"
+      "0x27a"
     ],
     "dependencies": [],
     "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": true
+    "inSprint": true,
+    "sprint": "0x25b"
+  },
+  "0x264": {
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
+    "description": "",
+    "priority": -2147483648,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
   },
   "0x265": {
-    "shortName": "A",
-    "longName": "A",
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
     "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
+    "priority": -2147483648,
+    "estimate": 1,
     "scale": "FIBONACCI",
     "acceptanceCriteria": [],
     "dependencies": [],
-    "isReady": false,
+    "isReady": true,
     "tasks": [],
     "taskHours": 0.0,
-    "inSprint": false
+    "inSprint": true,
+    "sprint": "0x25b"
   },
   "0x266": {
-    "shortName": "B",
-    "longName": "B",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x265"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x267": {
-    "shortName": "C",
-    "longName": "C",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x266",
-      "0x265"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x268": {
-    "shortName": "D",
-    "longName": "D",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x265",
-      "0x266",
-      "0x267"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x269": {
-    "shortName": "E",
-    "longName": "E",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x265",
-      "0x266",
-      "0x267",
-      "0x268"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x26a": {
-    "shortName": "F",
-    "longName": "F",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x265",
-      "0x266",
-      "0x267",
-      "0x268",
-      "0x269"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x26b": {
-    "shortName": "2",
-    "longName": "2",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x26c"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x26c": {
-    "shortName": "3",
-    "longName": "3",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x26d": {
-    "shortName": "1",
-    "longName": "1",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x25a",
-    "priority": 0,
-    "estimate": 0,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [
-      "0x26b"
-    ],
-    "isReady": false,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": false
-  },
-  "0x26e": {
     "criteria": "When a story is selected, the editing options include updating acceptance criteria.",
     "state": "ACCEPTED",
-    "story": "0x25d"
+    "story": "0x25c"
   },
-  "0x26f": {
+  "0x267": {
     "criteria": "AC are edited/added inside the stories details pane and can be rejected/accepted/neither by a state change",
     "state": "ACCEPTED",
-    "story": "0x25d"
+    "story": "0x25c"
   },
-  "0x270": {
+  "0x268": {
     "shortName": "Create the AC model",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x25d",
+    "story": "0x25c",
     "impediments": [
-      "0x283"
+      "0x27b"
     ],
-    "loggedEffort": [],
+    "loggedEffort": [
+      "0x27c",
+      "0x27d",
+      "0x27e"
+    ],
     "assignees": []
   },
-  "0x271": {
+  "0x269": {
     "shortName": "Implement commands",
     "description": "Implement commands for AC model and unit test.",
     "estimate": 2.0,
     "blocked": false,
     "status": "DONE",
-    "story": "0x25d",
+    "story": "0x25c",
     "impediments": [
-      "0x284"
+      "0x27f"
     ],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x272": {
+  "0x26a": {
     "shortName": "qwe",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "IN_PROGRESS",
-    "story": "0x25d",
+    "story": "0x25c",
     "impediments": [],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x273": {
+  "0x26b": {
     "shortName": "123",
     "description": "",
     "estimate": 2.0,
     "blocked": false,
     "status": "VERIFY",
-    "story": "0x25d",
+    "story": "0x25c",
     "impediments": [],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x274": {
+  "0x26c": {
     "criteria": "Add estimation scales",
+    "state": "NEITHER",
+    "story": "0x25d"
+  },
+  "0x26d": {
+    "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25e"
   },
-  "0x275": {
+  "0x26e": {
     "criteria": "ac1",
     "state": "NEITHER",
     "story": "0x25f"
   },
-  "0x276": {
-    "criteria": "ac1",
+  "0x26f": {
+    "criteria": "stuff is there",
     "state": "NEITHER",
     "story": "0x260"
   },
-  "0x277": {
-    "criteria": "stuff is there",
-    "state": "NEITHER",
-    "story": "0x261"
-  },
-  "0x278": {
+  "0x270": {
     "criteria": "A basic search function is available via an appropriate menu item or toolbar",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x279": {
+  "0x271": {
     "criteria": "A search string can be entered in an appropriate dialog or other component.",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x27a": {
+  "0x272": {
     "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x27b": {
+  "0x273": {
     "criteria": "When the search is complete the results are presented to the user",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x27c": {
+  "0x274": {
     "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x27d": {
+  "0x275": {
     "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
     "state": "ACCEPTED",
-    "story": "0x262"
+    "story": "0x261"
   },
-  "0x27e": {
+  "0x276": {
     "shortName": "Search Interface",
     "description": "Create search interface",
     "estimate": 3.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x262",
+    "story": "0x261",
     "impediments": [],
-    "loggedEffort": [],
+    "loggedEffort": [
+      "0x280"
+    ],
     "assignees": []
   },
-  "0x27f": {
+  "0x277": {
     "shortName": "Search shortcut",
     "description": "Implement a shortchut for search",
     "estimate": 1.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x262",
+    "story": "0x261",
     "impediments": [],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x280": {
+  "0x278": {
     "shortName": "Design view",
     "description": "Implement this design in FXML",
     "estimate": 1.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x262",
+    "story": "0x261",
     "impediments": [],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x281": {
+  "0x279": {
     "criteria": "ac",
+    "state": "NEITHER",
+    "story": "0x262"
+  },
+  "0x27a": {
+    "criteria": "ac3",
     "state": "NEITHER",
     "story": "0x263"
   },
-  "0x282": {
-    "criteria": "ac3",
-    "state": "NEITHER",
-    "story": "0x264"
-  },
-  "0x283": {
+  "0x27b": {
     "impediments": "asd",
     "resolved": false
   },
-  "0x284": {
+  "0x27c": {
+    "person": "0x5f",
+    "task": "0x268",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 15
+      },
+      "time": {
+        "hour": 17,
+        "minute": 59,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 3600,
+      "nanos": 0
+    },
+    "comment": "123",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 24
+      },
+      "time": {
+        "hour": 17,
+        "minute": 59,
+        "second": 39,
+        "nano": 782000000
+      }
+    }
+  },
+  "0x27d": {
+    "person": "0x5f",
+    "task": "0x268",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 17
+      },
+      "time": {
+        "hour": 18,
+        "minute": 0,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 10800,
+      "nanos": 0
+    },
+    "comment": "qwe",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 24
+      },
+      "time": {
+        "hour": 18,
+        "minute": 0,
+        "second": 14,
+        "nano": 370000000
+      }
+    }
+  },
+  "0x27e": {
+    "person": "0x3",
+    "task": "0x268",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 16
+      },
+      "time": {
+        "hour": 18,
+        "minute": 23,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 36000,
+      "nanos": 0
+    },
+    "comment": "qwe",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 24
+      },
+      "time": {
+        "hour": 18,
+        "minute": 24,
+        "second": 9,
+        "nano": 671000000
+      }
+    }
+  },
+  "0x27f": {
     "impediments": "ewq",
     "resolved": false
+  },
+  "0x280": {
+    "person": "0x1f",
+    "task": "0x276",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 2
+      },
+      "time": {
+        "hour": 18,
+        "minute": 35,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 3600,
+      "nanos": 0
+    },
+    "comment": "s",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 24
+      },
+      "time": {
+        "hour": 18,
+        "minute": 35,
+        "second": 49,
+        "nano": 944000000
+      }
+    }
   },
   "VERSION": "5.0"
 }

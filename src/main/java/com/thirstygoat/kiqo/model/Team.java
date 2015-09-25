@@ -1,18 +1,13 @@
 package com.thirstygoat.kiqo.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.*;
 
 import com.thirstygoat.kiqo.search.SearchableField;
 import com.thirstygoat.kiqo.util.Utilities;
+
+import javafx.beans.Observable;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 /**
  * Created by bradley on 27/03/15.
@@ -23,8 +18,8 @@ public class Team extends Item {
     private final StringProperty description;
     private final ObjectProperty<Person> productOwner = new SimpleObjectProperty<>();
     private final ObjectProperty<Person> scrumMaster = new SimpleObjectProperty<>();
-    private final ObservableList<Person> teamMembers = FXCollections.observableArrayList(Item.getWatchStrategy());
-    private final ObservableList<Person> devTeam = FXCollections.observableArrayList(Item.getWatchStrategy());
+    private final ObservableList<Person> teamMembers = FXCollections.observableArrayList(person -> new Observable[] {person.shortNameProperty(), person.teamProperty()});
+    private final ObservableList<Person> devTeam = FXCollections.observableArrayList(person -> new Observable[] {person.shortNameProperty(), person.teamProperty()});
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -80,12 +75,19 @@ public class Team extends Item {
         this.shortName.set(shortName);
     }
 
-    public List<Person> getTeamMembers() {
+    public ObservableList<Person> observableTeamMembers() {
     	return teamMembers;
+    }
+    
+    public List<Person> getTeamMembers() {
+    	List<Person> list = new ArrayList<>();
+    	list.addAll(teamMembers);
+    	return list;
     }
 
     public void setTeamMembers(List<Person> teamMembers) {
-        this.teamMembers.setAll(teamMembers);
+    	this.teamMembers.clear();
+        this.teamMembers.addAll(teamMembers);
     }
 
     public String getDescription() {
@@ -112,12 +114,19 @@ public class Team extends Item {
         this.scrumMaster.set(scrumMaster);
     }
 
-    public List<Person> getDevTeam() {
+    public ObservableList<Person> observableDevTeam() {
     	return devTeam;
+    }
+    
+    public List<Person> getDevTeam() {
+    	List<Person> list = new ArrayList<>();
+    	list.addAll(devTeam);
+    	return list;
     }
 
     public void setDevTeam(List<Person> devTeam) {
-        this.devTeam.setAll(devTeam);
+    	this.devTeam.clear();
+        this.devTeam.addAll(devTeam);
     }
 
     public List<Allocation> getAllocations() {
@@ -148,8 +157,8 @@ public class Team extends Item {
         if (getScrumMaster() != null) {
             sb.append(getScrumMaster().getShortName());
         }
-        sb.append(", teamMembers=" + Utilities.commaSeparatedValues(getTeamMembers()));
-        sb.append(", devTeam=" + Utilities.commaSeparatedValues(getDevTeam()));
+        sb.append(", teamMembers=" + Utilities.commaSeparatedValues(observableTeamMembers()));
+        sb.append(", devTeam=" + Utilities.commaSeparatedValues(observableDevTeam()));
         sb.append('}');
         return sb.toString();
     }

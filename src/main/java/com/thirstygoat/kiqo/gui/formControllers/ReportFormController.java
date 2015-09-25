@@ -74,21 +74,22 @@ public class ReportFormController implements Initializable {
     }
 
     private void setListSelectionViewData(String newValue) {
+        allItems.clear();
         if (newValue.equals("Organisation")) {
             level = Level.ORGANISATION;
-            allItems.clear();
+            // leave allItems empty
         } else if (newValue.equals("Projects")) {
             level = Level.PROJECTS;
-            allItems.setAll(organisation.getProjects());
+            allItems.addAll(organisation.getProjects());
         } else if (newValue.equals("Teams")) {
             level = Level.TEAMS;
-            allItems.setAll(organisation.getTeams());
+            allItems.addAll(organisation.getTeams());
         } else if (newValue.equals("People")) {
             level = Level.PEOPLE;
-            allItems.setAll(organisation.getPeople());
+            allItems.addAll(organisation.getPeople());
         } else if (newValue.equals("Backlogs")) {
             level = Level.BACKLOGS;
-            allItems.setAll(organisation.getProjects().stream().flatMap(project -> project.getBacklogs().stream()).collect(Collectors.toList()));
+            allItems.addAll(organisation.getProjects().stream().flatMap(project -> project.getBacklogs().stream()).collect(Collectors.toList()));
         }
     }
 

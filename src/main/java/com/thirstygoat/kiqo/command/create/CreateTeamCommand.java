@@ -27,7 +27,7 @@ public class CreateTeamCommand extends CreateCommand {
     @Override
     public void addToModel() {
         // Assign this team to all the people in the team
-        for (final Person person : team.getTeamMembers()) {
+        for (final Person person : team.observableTeamMembers()) {
             person.setTeam(team);
         }
 
@@ -41,7 +41,7 @@ public class CreateTeamCommand extends CreateCommand {
         organisation.getTeams().remove(team);
 
         // Remove this team from all the people within it
-        for (final Person person : team.getTeamMembers()) {
+        for (final Person person : team.observableTeamMembers()) {
             person.setTeam(null);
         }
     }

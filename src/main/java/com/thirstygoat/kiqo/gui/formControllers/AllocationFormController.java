@@ -39,13 +39,13 @@ public class AllocationFormController extends FormController<Allocation> {
     private Team team = null;
     // Begin FXML Injections
     @FXML
-    private TextField teamTextField;
+    private TextField teamProjectTextField;
     @FXML
     private DatePicker startDatePicker;
     @FXML
     private DatePicker endDatePicker;
     @FXML
-    private Label teamLabel;
+    private Label teamProjectLabel;
     @FXML
     private Button okButton;
     @FXML
@@ -62,7 +62,7 @@ public class AllocationFormController extends FormController<Allocation> {
         if(team == null) {
             projectValidation = s -> {
                 for (final Team t : organisation.getTeams()) {
-                    if (t.getShortName().equals(teamTextField.getText())) {
+                    if (t.getShortName().equals(teamProjectTextField.getText())) {
                         team = t;
                         final LocalDate sd = startDatePicker.getValue();
                         final LocalDate ed = endDatePicker.getValue();
@@ -75,12 +75,12 @@ public class AllocationFormController extends FormController<Allocation> {
                 }
                 return false;
             };
-            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+            validationSupport.registerValidator(teamProjectTextField, Validator.createPredicateValidator(projectValidation,
                     "Team must already exist"));
         } else {
             projectValidation = s -> {
                 for (final Project t : organisation.getProjects()) {
-                    if (t.getShortName().equals(teamTextField.getText())) {
+                    if (t.getShortName().equals(teamProjectTextField.getText())) {
                         project = t;
                         final LocalDate sd = startDatePicker.getValue();
                         final LocalDate ed = endDatePicker.getValue();
@@ -93,7 +93,7 @@ public class AllocationFormController extends FormController<Allocation> {
                 }
                 return false;
             };
-            validationSupport.registerValidator(teamTextField, Validator.createPredicateValidator(projectValidation,
+            validationSupport.registerValidator(teamProjectTextField, Validator.createPredicateValidator(projectValidation,
                     "Project must exist"));
         }
 
@@ -169,9 +169,9 @@ public class AllocationFormController extends FormController<Allocation> {
 
     private void setPrompts() {
         if (team == null) {
-            teamTextField.setPromptText("Team this allocation is associated with");
+            teamProjectTextField.setPromptText("Team this allocation is associated with");
         } else {
-            teamTextField.setPromptText("Project this allocation is associated with");
+            teamProjectTextField.setPromptText("Project this allocation is associated with");
         }
         startDatePicker.setPromptText("dd/mm/yyyy");
         endDatePicker.setPromptText("dd/mm/yyyy");
@@ -180,7 +180,7 @@ public class AllocationFormController extends FormController<Allocation> {
     private AutoCompletionBinding<Team> setTextFieldAutoCompletionBindingTeam() {
         // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
         // uses a String converter so that the Team's short name is used.
-        final AutoCompletionBinding<Team> binding = TextFields.bindAutoCompletion(teamTextField,
+        final AutoCompletionBinding<Team> binding = TextFields.bindAutoCompletion(teamProjectTextField,
                 request -> {
                     return organisation.getTeams().stream()
                             .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
@@ -202,7 +202,7 @@ public class AllocationFormController extends FormController<Allocation> {
             }
         });
 
-        teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        teamProjectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // forces suggestion list to show
                 binding.setUserInput("");
@@ -215,7 +215,7 @@ public class AllocationFormController extends FormController<Allocation> {
     private AutoCompletionBinding<Project> setTextFieldAutoCompletionBindingProject() {
             // uses a callback to get an up-to-date project list, instead of just whatever exists at initialisation.
             // uses a String converter so that the Team's short name is used.
-            final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(teamTextField,
+            final AutoCompletionBinding<Project> binding = TextFields.bindAutoCompletion(teamProjectTextField,
                     request -> {
                         return organisation.getProjects().stream()
                                 .filter(t -> t.getShortName().toLowerCase().contains(request.getUserText().toLowerCase()))
@@ -237,7 +237,7 @@ public class AllocationFormController extends FormController<Allocation> {
                         }
                     });
 
-            teamTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            teamProjectTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     // forces suggestion list to show
                     binding.setUserInput("");
@@ -322,16 +322,16 @@ public class AllocationFormController extends FormController<Allocation> {
             // We are creating a new allocation (for an existing project)
             stage.setTitle("Create Allocation");
             okButton.setText("Create Allocation");
-            Platform.runLater(teamTextField::requestFocus);
+            Platform.runLater(teamProjectTextField::requestFocus);
         } else {
             // edit an existing allocation
             stage.setTitle("Edit Allocation");
             okButton.setText("Save");
 
             if (project != null) {
-                teamTextField.setText(allocation.getTeam().getShortName());
+                teamProjectTextField.setText(allocation.getTeam().getShortName());
             } else if (team != null) {
-                teamTextField.setText(allocation.getProject().getShortName());
+                teamProjectTextField.setText(allocation.getProject().getShortName());
             }
 
             startDatePicker.setValue(allocation.getStartDate());
@@ -343,10 +343,10 @@ public class AllocationFormController extends FormController<Allocation> {
         }
 
         if (project == null) {
-            teamLabel.setText("Project:");
+            teamProjectLabel.setText("Project");
             setTextFieldAutoCompletionBindingProject();
         } else if (team == null) {
-            teamLabel.setText("Team:");
+            teamProjectLabel.setText("Team");
             setTextFieldAutoCompletionBindingTeam();
         }
 

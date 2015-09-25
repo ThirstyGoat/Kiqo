@@ -385,17 +385,17 @@ public final class ReportGenerator {
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(scrumMaster)));
         }
 
-        lines.add(ReportUtils.collectionLine("Development Team", team.getDevTeam().isEmpty()));
-        for (final Person person : team.getDevTeam()) {
+        lines.add(ReportUtils.collectionLine("Development Team", team.observableDevTeam().isEmpty()));
+        for (final Person person : team.observableDevTeam()) {
             lines.add(ReportGenerator.PERSON_COMMENT);
             lines.addAll(ReportUtils.indentArray(ReportGenerator.INDENT_SIZE, generatePersonReport(person)));
         }
 
         // find all team members who are not po, sm or in the dev team
-        final List<Person> otherTeamMembers = team.getTeamMembers();
+        final List<Person> otherTeamMembers = team.observableTeamMembers();
         otherTeamMembers.removeIf(p -> p.equals(productOwner));
         otherTeamMembers.removeIf(p -> p.equals(scrumMaster));
-        otherTeamMembers.removeAll(team.getDevTeam());
+        otherTeamMembers.removeAll(team.observableDevTeam());
         lines.add(ReportUtils.collectionLine("Other Team Members", otherTeamMembers.isEmpty()));
         for (final Person person : otherTeamMembers) {
             lines.add(ReportGenerator.PERSON_COMMENT);

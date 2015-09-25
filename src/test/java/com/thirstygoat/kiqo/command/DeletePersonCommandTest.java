@@ -65,7 +65,7 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
 
         // Create command
@@ -78,7 +78,7 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
     }
 
     /**
@@ -90,7 +90,7 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
         team.setProductOwner(person);
 
@@ -104,7 +104,7 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
         Assert.assertNotEquals(team.getProductOwner(), person);
     }
 
@@ -117,9 +117,9 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
-        team.getDevTeam().add(person);
+        team.observableDevTeam().add(person);
 
         // Create command
         final DeletePersonCommand command;
@@ -131,8 +131,8 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getDevTeam(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableDevTeam(), CoreMatchers.not(CoreMatchers.hasItem(person)));
     }
 
     /**
@@ -169,7 +169,7 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
 
         // Create command
@@ -182,12 +182,12 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
 
         command.undo();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.hasItem(person));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.hasItem(person));
     }
 
     /**
@@ -199,7 +199,7 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
         team.setProductOwner(person);
 
@@ -213,13 +213,13 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
         Assert.assertNotEquals(team.getProductOwner(), person);
 
         command.undo();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.hasItem(person));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.hasItem(person));
         Assert.assertEquals(team.getProductOwner(), person);
     }
 
@@ -232,9 +232,9 @@ public class DeletePersonCommandTest {
         final Person person = new Person("", "", "", "", "", "", "", new ArrayList<>());
         organisation.getPeople().add(person);
 
-        team.getTeamMembers().add(person);
+        team.observableTeamMembers().add(person);
         person.setTeam(team);
-        team.getDevTeam().add(person);
+        team.observableDevTeam().add(person);
 
         // Create command
         final DeletePersonCommand command;
@@ -246,14 +246,14 @@ public class DeletePersonCommandTest {
         command.execute();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
-        Assert.assertThat(team.getDevTeam(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.not(CoreMatchers.hasItem(person)));
+        Assert.assertThat(team.observableDevTeam(), CoreMatchers.not(CoreMatchers.hasItem(person)));
 
         command.undo();
 
         Assert.assertThat(organisation.getPeople(), CoreMatchers.hasItem(person));
-        Assert.assertThat(team.getTeamMembers(), CoreMatchers.hasItem(person));
-        Assert.assertThat(team.getDevTeam(), CoreMatchers.hasItem(person));
+        Assert.assertThat(team.observableTeamMembers(), CoreMatchers.hasItem(person));
+        Assert.assertThat(team.observableDevTeam(), CoreMatchers.hasItem(person));
     }
 
     @Test

@@ -237,9 +237,9 @@ public class MainController implements Initializable {
 
         CheckBox checkbox = new CheckBox("Also delete the person belonging to this team");
 
-        if (team.getTeamMembers().size() > 0) {
+        if (team.observableTeamMembers().size() > 0) {
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
-                    "?\nMembers: " + Utilities.concatenateItemsList(team.getTeamMembers(), 5);
+                    "?\nMembers: " + Utilities.concatenateItemsList(team.observableTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             if (command.canDeleteTeamMembers()) {
                 node.getChildren().add(checkbox);
@@ -944,7 +944,7 @@ public class MainController implements Initializable {
     private <T> void dialog(T t, String type) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+//            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);
@@ -1004,7 +1004,6 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
                 viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Story" : "Edit Story");
-                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Story" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {
@@ -1040,7 +1039,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/allocation.fxml"));

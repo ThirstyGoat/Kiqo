@@ -8,7 +8,6 @@ import com.thirstygoat.kiqo.model.Story;
 public class CreateStoryCommand extends CreateCommand {
     private final Story story;
 
-
     public CreateStoryCommand(final Story story) {
         super(story);
         this.story = story;
@@ -16,12 +15,21 @@ public class CreateStoryCommand extends CreateCommand {
 
     @Override
     public void addToModel() {
-        story.getProject().getUnallocatedStories().add(story);
+        // Check to see if story is supposed to be in backlog
+        if (story.getBacklog() == null) {
+            story.getProject().getUnallocatedStories().add(story);
+        } else {
+            story.getBacklog().getStories().add(story);
+        }
     }
 
     @Override
     public void removeFromModel() {
-        story.getProject().getUnallocatedStories().remove(story);
+        if (story.getBacklog() == null) {
+            story.getProject().getUnallocatedStories().remove(story);
+        } else {
+            story.getBacklog().getStories().remove(story);
+        }
     }
 
     @Override

@@ -75,6 +75,7 @@ public class GoatLabelTextFieldSkin extends GoatLabelSkin<TextField> {
         editField.setMaxHeight(Control.USE_COMPUTED_SIZE);
         editView.setMinHeight(Control.USE_COMPUTED_SIZE);
         editView.setMaxHeight(Control.USE_COMPUTED_SIZE);
+        editField.setMinWidth(200);
     }
 
 }

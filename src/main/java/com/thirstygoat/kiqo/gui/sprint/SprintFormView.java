@@ -192,7 +192,7 @@ public class SprintFormView implements FxmlView<SprintViewModel>, Initializable 
     }
 
     private void attachValidators() {
-        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(new SimpleBooleanProperty(true));
+        DelayedValidationVisualizer validationVisualizer = new DelayedValidationVisualizer(viewModel.dirtyProperty());
         validationVisualizer.initVisualization(viewModel.goalValidation(), goalTextField, true);
         validationVisualizer.initVisualization(viewModel.releaseValidation(), releaseTextField, true);
         validationVisualizer.initVisualization(viewModel.startDateValidation(), startDatePicker, true);
