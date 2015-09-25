@@ -944,7 +944,7 @@ public class MainController implements Initializable {
     private <T> void dialog(T t, String type) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+//            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);
             stage.setTitle(t == null ? "Create " + type : "Edit " + type);

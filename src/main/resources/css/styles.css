@@ -377,8 +377,8 @@
 /********** FORM STYLING ************/
 
 .form {
-    -fx-border-color: #c5c5c5;
-    -fx-border-width: 1.5;
+    -fx-border-color: rgb(36, 36, 36);
+    -fx-border-width: 0.5;
 }
 
 .form-heading {
