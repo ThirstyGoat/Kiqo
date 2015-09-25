@@ -188,6 +188,28 @@ public class StringConverters {
         };
     }
 
+    public static StringConverter<Backlog> backlogStringConverterProject(ObjectProperty<Project> projectProperty) {
+        return new StringConverter<Backlog>() {
+            @Override
+            public String toString(Backlog backlog) {
+                return backlog != null ? backlog.getShortName() : "";
+            }
+
+            @Override
+            public Backlog fromString(String shortName) {
+                if (projectProperty.get() == null) {
+                    return null;
+                }
+                for (Backlog backlog : projectProperty.get().getBacklogs()) {
+                    if (backlog.getShortName().equals(shortName)) {
+                        return backlog;
+                    }
+                }
+                return null;
+            }
+        };
+    }
+
     public static StringConverter<Backlog> backlogStringConverter(ObjectProperty<Organisation> organisationProperty) {
         return new StringConverter<Backlog>() {
             @Override

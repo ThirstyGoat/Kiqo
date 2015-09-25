@@ -1004,7 +1004,6 @@ public class MainController implements Initializable {
                 viewTuple.getCodeBehind().setExitStrategy(stage::close);
                 stage.initStyle(StageStyle.UNDECORATED);
                 viewTuple.getCodeBehind().headingProperty().set(t == null ? "Create Story" : "Edit Story");
-                viewTuple.getCodeBehind().setOkButtonText(t == null ? "Create Story" : "Done");
                 stage.setScene(new Scene(viewTuple.getView()));
                 stage.showAndWait();
             } else {

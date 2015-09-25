@@ -13,19 +13,32 @@ import com.thirstygoat.kiqo.util.*;
 import de.saxsys.mvvmfx.*;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.validation.ValidationSupport;
 
 /**
  * Created by Carina Blair on 15/05/2015.
  */
 public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializable {
 
-    private FormButtonHandler formButtonHandler;
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private FormButtonHandler formButtonHandler;
     private Stage stage;
     private BooleanProperty shortNameModified = new SimpleBooleanProperty(false);
     private boolean valid = false;
@@ -44,6 +57,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     @FXML
     private TextField projectTextField;
     @FXML
+    private TextField backlogTextField;
+    @FXML
     private TextField priorityTextField;
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
@@ -51,7 +66,15 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 //    @FXML 
 //    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
+    private GoatFilteredListSelectionView<Story> storySelectionView;
+    @FXML
+    private VBox detailsVBox;
+    @FXML
+    private VBox dependenciesVBox;
+    @FXML
     private Button okButton;
+    @FXML
+    private Button prevButton;
     @FXML
     private Button cancelButton;
     @FXML
@@ -69,6 +92,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
                 StringConverters.personStringConverter(viewModel.organisationProperty()));
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(),
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
+        backlogTextField.textProperty().bindBidirectional(viewModel.backlogProperty(),
+                StringConverters.backlogStringConverterProject(viewModel.projectProperty()));
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty(),
                 new NumberStringConverter());
         FxUtils.restrictToNumericInput(Story.MIN_PRIORITY, Story.MAX_PRIORITY, priorityTextField.textProperty());
@@ -76,10 +101,10 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();
 
-//        storySelectionView.setHeader(new Label("Depends on:")); TODO
-//        storySelectionView.bindSelectedItems(viewModel.dependenciesProperty());
-//        storySelectionView.bindAllItems(viewModel.eligibleDependencies());
-//        storySelectionView.setStringPropertyCallback(Story::shortNameProperty);
+        storySelectionView.bindAllItems(viewModel.eligibleDependencies());
+        storySelectionView.bindSelectedItems(viewModel.dependenciesProperty());
+
+        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
@@ -93,6 +118,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(creatorTextField, viewModel.creatorSupplier());
         FxUtils.setTextFieldSuggester(projectTextField, viewModel.projectSupplier());
+        FxUtils.setTextFieldSuggester(backlogTextField, viewModel.backlogSupplier());
 
         Platform.runLater(() -> {
             setPrompts();
@@ -100,8 +126,38 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
             longNameTextField.requestFocus();
             creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         });
-//        setStoryCycleHyperLinkInfo(); TODO
-//        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty())); TODO
+        setStoryCycleHyperLinkInfo();
+        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
+
+        setNextButton();
+    }
+
+    private void setNextButton() {
+        EventHandler<ActionEvent> nextEventHandler = event -> {
+            detailsVBox.setVisible(false);
+            detailsVBox.setManaged(false);
+            dependenciesVBox.setVisible(true);
+
+            okButton.setText("Done");
+
+            prevButton.setDisable(false);
+
+            okButton.setOnAction(event1 -> okAction());
+        };
+
+        prevButton.setOnAction(event -> {
+            detailsVBox.setVisible(true);
+            detailsVBox.setManaged(true);
+            dependenciesVBox.setVisible(false);
+            dependenciesVBox.setManaged(false);
+
+            prevButton.setDisable(true);
+
+            okButton.setText("Add Dependencies");
+            okButton.setOnAction(nextEventHandler);
+        });
+
+        okButton.setOnAction(nextEventHandler);
     }
 
     private void setPrompts() {
@@ -122,25 +178,30 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         validationVisualizer.initVisualization(viewModel.creatorValidation(), creatorTextField, true);
         validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
         validationVisualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
+        validationVisualizer.initVisualization(viewModel.backlogValidation(), backlogTextField, true);
         validationVisualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
 
-//    private void setStoryCycleHyperLinkInfo() { TODO
-//        Label label = new Label();
-//        label.setText("Only the stories that will not create a dependency loop are shown");
-//        label.setPadding(new Insets(10, 10, 10, 10));
-//        PopOver readyWhyPopOver = new PopOver(label);
-//        readyWhyPopOver.setDetachable(false);
-//
-//        storyCycleHyperLink.setOnAction((e) -> {
-//            readyWhyPopOver.show(storyCycleHyperLink);
-//        });
-//        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (!newValue) {
-//                readyWhyPopOver.hide(Duration.millis(0));
-//            }
-//        });
-//    }
+    private void setStoryCycleHyperLinkInfo() {
+        Label label = new Label();
+        label.setText("Only the stories that will not create a dependency loop are shown");
+        label.setPadding(new Insets(10, 10, 10, 10));
+        PopOver readyWhyPopOver = new PopOver(label);
+        readyWhyPopOver.setDetachable(false);
+
+        storyCycleHyperLink.setOnAction((e) -> {
+            readyWhyPopOver.show(storyCycleHyperLink);
+        });
+        storyCycleHyperLink.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                readyWhyPopOver.hide(Duration.millis(0));
+            }
+        });
+    }
+
+    private void setupStoriesList() {
+        storySelectionView.setHeader(new Label("Depends on:"));
+    }
 
     public void setExitStrategy(Runnable exitStrategy) {
         formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);
