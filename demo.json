@@ -6588,17 +6588,16 @@
     ]
   },
   "0x255": {
-    "shortName": "Kiqo",
+    "shortName": "Kiqo 1.0",
     "description": "Project Management for the real world",
     "project": "0x2",
     "date": {
       "year": 2016,
       "month": 9,
-      "day": 29
+      "day": 30
     },
     "sprints": [
-      "0x25a",
-      "0x25b"
+      "0x25a"
     ]
   },
   "0x256": {
@@ -6631,11 +6630,10 @@
   },
   "0x258": {
     "stories": [
+      "0x25b",
       "0x25c",
       "0x25d",
-      "0x25e",
-      "0x25f",
-      "0x260"
+      "0x25e"
     ],
     "shortName": "Shared",
     "longName": "Shared Backlog",
@@ -6646,18 +6644,521 @@
   },
   "0x259": {
     "stories": [
+      "0x25f",
+      "0x260",
       "0x261",
       "0x262",
-      "0x263"
+      "0x263",
+      "0x264",
+      "0x265",
+      "0x266",
+      "0x267",
+      "0x268",
+      "0x269",
+      "0x26a",
+      "0x26b"
     ],
-    "shortName": "Kiqo",
-    "longName": "Kiqo",
-    "description": "",
+    "shortName": "SENG302",
+    "longName": "SENG302",
+    "description": "Make a agile management application",
     "productOwner": "0x3",
     "project": "0x2",
     "scale": "FIBONACCI"
   },
   "0x25a": {
+    "backlog": "0x259",
+    "startDate": {
+      "year": 2015,
+      "month": 9,
+      "day": 9
+    },
+    "endDate": {
+      "year": 2015,
+      "month": 9,
+      "day": 30
+    },
+    "team": "0x253",
+    "release": "0x255",
+    "goal": "Sprint 6",
+    "longName": "NPE",
+    "description": "Exception in thread \"Main\" java.lang.NullPointerException",
+    "stories": [
+      "0x263",
+      "0x264",
+      "0x265",
+      "0x269",
+      "0x267",
+      "0x268",
+      "0x26a",
+      "0x26b",
+      "0x266"
+    ],
+    "tasksWithoutStory": "0x26c"
+  },
+  "0x25b": {
+    "shortName": "AC Maintenance",
+    "longName": "AC Maintenance",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 2,
+    "estimate": 6,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x26d",
+      "0x26e"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [
+      "0x26f",
+      "0x270",
+      "0x271",
+      "0x272"
+    ],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x25c": {
+    "shortName": "Story Estimation",
+    "longName": "Story Estimation",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 0,
+    "estimate": 12,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x274"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x25d": {
+    "shortName": "Dependencies",
+    "longName": "Dependencies",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": -100,
+    "estimate": 3,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x275"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x25e": {
+    "shortName": "Highlighting Storie",
+    "longName": "Highlighting story state",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 0,
+    "estimate": 7,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x276"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x25f": {
+    "shortName": "Basic Basic Search",
+    "longName": "Basic Basic Search",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 0,
+    "estimate": 6,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x277",
+      "0x278",
+      "0x279",
+      "0x27a",
+      "0x27b",
+      "0x27c"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [
+      "0x27d",
+      "0x27e",
+      "0x27f"
+    ],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x280"
+  },
+  "0x260": {
+    "shortName": "UX 0.5",
+    "longName": "UX 0.5",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 3,
+    "estimate": 5,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x281"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x280"
+  },
+  "0x261": {
+    "shortName": "UX 1.5",
+    "longName": "UX 1.5",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 5,
+    "estimate": 4,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x282"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x280"
+  },
+  "0x262": {
+    "shortName": "UX1.75",
+    "longName": "UX1.75",
+    "description": "Refactor everything",
+    "creator": "0x132",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 50,
+    "estimate": 0,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [
+      "0x261",
+      "0x260"
+    ],
+    "isReady": false,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": false
+  },
+  "0x263": {
+    "shortName": "Backlog dependency ",
+    "longName": "Backlog dependency visualisation",
+    "description": "",
+    "creator": "0x132",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 654,
+    "estimate": 4,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x283"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x264": {
+    "shortName": "Burndown Chart",
+    "longName": "Burndown Chart",
+    "description": "Add a burndown chart to the sprint details pane",
+    "creator": "0x5f",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 869,
+    "estimate": 5,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x284"
+    ],
+    "dependencies": [
+      "0x261",
+      "0x260"
+    ],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x265": {
+    "shortName": "Impediments",
+    "longName": "Impediments",
+    "description": "Add impediment logging to the scrumboard",
+    "creator": "0x10c",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 756,
+    "estimate": 4,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x285"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x266": {
+    "shortName": "UX2",
+    "longName": "UX2",
+    "description": "Add tabs ",
+    "creator": "0xdf",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 55,
+    "estimate": 7,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x286",
+      "0x287"
+    ],
+    "dependencies": [
+      "0x261",
+      "0x260",
+      "0x262"
+    ],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x267": {
+    "shortName": "Logging effort",
+    "longName": "Logging effort",
+    "description": "Need to be able to log time",
+    "creator": "0xbc",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 654,
+    "estimate": 5,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x288",
+      "0x289"
+    ],
+    "dependencies": [
+      "0x261",
+      "0x260"
+    ],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x268": {
+    "shortName": "Quick start-up",
+    "longName": "Quick start-up",
+    "description": "Make Kiqo easy to launch",
+    "creator": "0x145",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 543,
+    "estimate": 3,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x28a"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x269": {
+    "shortName": "Less Basic Search",
+    "longName": "Less Basic Search",
+    "description": "Make basic search better",
+    "creator": "0xdf",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 432,
+    "estimate": 3,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x28b"
+    ],
+    "dependencies": [
+      "0x25f"
+    ],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x26a": {
+    "shortName": "Scrumboard",
+    "longName": "Scrumboard",
+    "description": "Implement the scrumboard",
+    "creator": "0x145",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 1000,
+    "estimate": 8,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x28c"
+    ],
+    "dependencies": [
+      "0x265",
+      "0x267"
+    ],
+    "isReady": true,
+    "tasks": [
+      "0x28d",
+      "0x28e",
+      "0x28f",
+      "0x290",
+      "0x291"
+    ],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x26b": {
+    "shortName": "Story completeness ",
+    "longName": "Story completeness visualisation",
+    "description": "Add story visualisation to the scrumboard",
+    "creator": "0x10c",
+    "project": "0x2",
+    "backlog": "0x259",
+    "priority": 999,
+    "estimate": 5,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x292"
+    ],
+    "dependencies": [
+      "0x269",
+      "0x25f",
+      "0x261",
+      "0x260",
+      "0x26a",
+      "0x264"
+    ],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x26c": {
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
+    "description": "",
+    "backlog": "0x259",
+    "priority": -2147483648,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x25a"
+  },
+  "0x26d": {
+    "criteria": "When a story is selected, the editing options include updating acceptance criteria.",
+    "state": "ACCEPTED",
+    "story": "0x25b"
+  },
+  "0x26e": {
+    "criteria": "AC are edited/added inside the stories details pane and can be rejected/accepted/neither by a state change",
+    "state": "ACCEPTED",
+    "story": "0x25b"
+  },
+  "0x26f": {
+    "shortName": "Create the AC model",
+    "description": "",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "NOT_STARTED",
+    "story": "0x25b",
+    "impediments": [
+      "0x293"
+    ],
+    "loggedEffort": [
+      "0x294",
+      "0x295",
+      "0x296"
+    ],
+    "assignees": []
+  },
+  "0x270": {
+    "shortName": "Implement commands",
+    "description": "Implement commands for AC model and unit test.",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "DONE",
+    "story": "0x25b",
+    "impediments": [
+      "0x297"
+    ],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x271": {
+    "shortName": "qwe",
+    "description": "",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "IN_PROGRESS",
+    "story": "0x25b",
+    "impediments": [],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x272": {
+    "shortName": "123",
+    "description": "",
+    "estimate": 2.0,
+    "blocked": false,
+    "status": "VERIFY",
+    "story": "0x25b",
+    "impediments": [],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x273": {
     "backlog": "0x258",
     "startDate": {
       "year": 2015,
@@ -6675,15 +7176,95 @@
     "longName": "Sprint 5",
     "description": "",
     "stories": [
-      "0x260",
-      "0x25d",
-      "0x25f",
+      "0x298",
+      "0x25c",
       "0x25e",
-      "0x25c"
+      "0x25d",
+      "0x25b"
     ],
-    "tasksWithoutStory": "0x264"
+    "tasksWithoutStory": "0x299"
   },
-  "0x25b": {
+  "0x274": {
+    "criteria": "Add estimation scales",
+    "state": "NEITHER",
+    "story": "0x25c"
+  },
+  "0x275": {
+    "criteria": "ac1",
+    "state": "NEITHER",
+    "story": "0x25d"
+  },
+  "0x276": {
+    "criteria": "ac1",
+    "state": "NEITHER",
+    "story": "0x25e"
+  },
+  "0x277": {
+    "criteria": "A basic search function is available via an appropriate menu item or toolbar",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x278": {
+    "criteria": "A search string can be entered in an appropriate dialog or other component.",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x279": {
+    "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x27a": {
+    "criteria": "When the search is complete the results are presented to the user",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x27b": {
+    "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x27c": {
+    "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
+    "state": "ACCEPTED",
+    "story": "0x25f"
+  },
+  "0x27d": {
+    "shortName": "Search Interface",
+    "description": "Create search interface",
+    "estimate": 3.0,
+    "blocked": false,
+    "status": "NOT_STARTED",
+    "story": "0x25f",
+    "impediments": [],
+    "loggedEffort": [
+      "0x29a"
+    ],
+    "assignees": []
+  },
+  "0x27e": {
+    "shortName": "Search shortcut",
+    "description": "Implement a shortchut for search",
+    "estimate": 1.0,
+    "blocked": false,
+    "status": "NOT_STARTED",
+    "story": "0x25f",
+    "impediments": [],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x27f": {
+    "shortName": "Design view",
+    "description": "Implement this design in FXML",
+    "estimate": 1.0,
+    "blocked": false,
+    "status": "NOT_STARTED",
+    "story": "0x25f",
+    "impediments": [],
+    "loggedEffort": [],
+    "assignees": []
+  },
+  "0x280": {
     "backlog": "0x259",
     "startDate": {
       "year": 2015,
@@ -6701,381 +7282,149 @@
     "longName": "6: NPE",
     "description": "",
     "stories": [
-      "0x262",
-      "0x263",
-      "0x261"
+      "0x260",
+      "0x261",
+      "0x25f"
     ],
-    "tasksWithoutStory": "0x265"
+    "tasksWithoutStory": "0x29b"
   },
-  "0x25c": {
-    "shortName": "AC Maintenance",
-    "longName": "AC Maintenance",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 2,
-    "estimate": 6,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x266",
-      "0x267"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [
-      "0x268",
-      "0x269",
-      "0x26a",
-      "0x26b"
-    ],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x25d": {
-    "shortName": "Story Estimation",
-    "longName": "Story Estimation",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 0,
-    "estimate": 12,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26c"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x25e": {
-    "shortName": "Dependencies",
-    "longName": "Dependencies",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": -100,
-    "estimate": 3,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26d"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x25f": {
-    "shortName": "Highlighting Storie",
-    "longName": "Highlighting story state",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 0,
-    "estimate": 7,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26e"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x260": {
-    "shortName": "UX 2",
-    "longName": "UX 2",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x258",
-    "priority": 6,
-    "estimate": 3,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x26f"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x261": {
-    "shortName": "Basic Basic Search",
-    "longName": "Basic Basic Search",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x259",
-    "priority": 0,
-    "estimate": 6,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x270",
-      "0x271",
-      "0x272",
-      "0x273",
-      "0x274",
-      "0x275"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [
-      "0x276",
-      "0x277",
-      "0x278"
-    ],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25b"
-  },
-  "0x262": {
-    "shortName": "UX 0.5",
-    "longName": "UX 0.5",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x259",
-    "priority": 3,
-    "estimate": 5,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x279"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25b"
-  },
-  "0x263": {
-    "shortName": "UX 1.5",
-    "longName": "UX 1.5",
-    "description": "",
-    "creator": "0x3",
-    "project": "0x2",
-    "backlog": "0x259",
-    "priority": 5,
-    "estimate": 4,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [
-      "0x27a"
-    ],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25b"
-  },
-  "0x264": {
-    "shortName": "Tasks without a Story",
-    "longName": "Tasks without a Story",
-    "description": "",
-    "priority": -2147483648,
-    "estimate": 1,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25a"
-  },
-  "0x265": {
-    "shortName": "Tasks without a Story",
-    "longName": "Tasks without a Story",
-    "description": "",
-    "priority": -2147483648,
-    "estimate": 1,
-    "scale": "FIBONACCI",
-    "acceptanceCriteria": [],
-    "dependencies": [],
-    "isReady": true,
-    "tasks": [],
-    "taskHours": 0.0,
-    "inSprint": true,
-    "sprint": "0x25b"
-  },
-  "0x266": {
-    "criteria": "When a story is selected, the editing options include updating acceptance criteria.",
-    "state": "ACCEPTED",
-    "story": "0x25c"
-  },
-  "0x267": {
-    "criteria": "AC are edited/added inside the stories details pane and can be rejected/accepted/neither by a state change",
-    "state": "ACCEPTED",
-    "story": "0x25c"
-  },
-  "0x268": {
-    "shortName": "Create the AC model",
-    "description": "",
-    "estimate": 2.0,
-    "blocked": false,
-    "status": "NOT_STARTED",
-    "story": "0x25c",
-    "impediments": [
-      "0x27b"
-    ],
-    "loggedEffort": [
-      "0x27c",
-      "0x27d",
-      "0x27e"
-    ],
-    "assignees": []
-  },
-  "0x269": {
-    "shortName": "Implement commands",
-    "description": "Implement commands for AC model and unit test.",
-    "estimate": 2.0,
-    "blocked": false,
-    "status": "DONE",
-    "story": "0x25c",
-    "impediments": [
-      "0x27f"
-    ],
-    "loggedEffort": [],
-    "assignees": []
-  },
-  "0x26a": {
-    "shortName": "qwe",
-    "description": "",
-    "estimate": 2.0,
-    "blocked": false,
-    "status": "IN_PROGRESS",
-    "story": "0x25c",
-    "impediments": [],
-    "loggedEffort": [],
-    "assignees": []
-  },
-  "0x26b": {
-    "shortName": "123",
-    "description": "",
-    "estimate": 2.0,
-    "blocked": false,
-    "status": "VERIFY",
-    "story": "0x25c",
-    "impediments": [],
-    "loggedEffort": [],
-    "assignees": []
-  },
-  "0x26c": {
-    "criteria": "Add estimation scales",
-    "state": "NEITHER",
-    "story": "0x25d"
-  },
-  "0x26d": {
-    "criteria": "ac1",
-    "state": "NEITHER",
-    "story": "0x25e"
-  },
-  "0x26e": {
-    "criteria": "ac1",
-    "state": "NEITHER",
-    "story": "0x25f"
-  },
-  "0x26f": {
-    "criteria": "stuff is there",
+  "0x281": {
+    "criteria": "ac",
     "state": "NEITHER",
     "story": "0x260"
   },
-  "0x270": {
-    "criteria": "A basic search function is available via an appropriate menu item or toolbar",
-    "state": "ACCEPTED",
+  "0x282": {
+    "criteria": "ac3",
+    "state": "NEITHER",
     "story": "0x261"
   },
-  "0x271": {
-    "criteria": "A search string can be entered in an appropriate dialog or other component.",
+  "0x283": {
+    "criteria": "So that I can identify and resolve potential problems, as a PO, I want to be able to see which backlog items are involved in dependency conflicts.",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x263"
   },
-  "0x272": {
-    "criteria": "Only fixed search strings are required at this stage (later we may want regular expressions or richer dialogs)",
+  "0x284": {
+    "criteria": "So that I can tell if the team is on track to complete a sprint successfully, as a scrum team member, I need to be able to see target and actual work remaining throughout the sprint period.",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x264"
   },
-  "0x273": {
-    "criteria": "When the search is complete the results are presented to the user",
+  "0x285": {
+    "criteria": "Ability to add impediments to each task via the scrum board.",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x265"
   },
-  "0x274": {
-    "criteria": "If the search is over the entire project/system then the user may select a result and this switches the current display list  (if necessary) and displays the match in the detailspane",
+  "0x286": {
+    "criteria": "So that I can conveniently access, study and compare different perspectives, as a user, I need to be able to switch between a number of views of the underlying system data.",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x266"
   },
-  "0x275": {
-    "criteria": "Will search shortname in the entire organisation\n    no highlighting in this story",
+  "0x287": {
+    "criteria": "The main application area is now a set of tabbed panes",
     "state": "ACCEPTED",
-    "story": "0x261"
+    "story": "0x266"
   },
-  "0x276": {
-    "shortName": "Search Interface",
-    "description": "Create search interface",
-    "estimate": 3.0,
+  "0x288": {
+    "criteria": "So that I can help the team track progress, as a team member, I need to be able to record the effort I spend on tasks.",
+    "state": "ACCEPTED",
+    "story": "0x267"
+  },
+  "0x289": {
+    "criteria": "A clear policy for other activity must be developed. For example, activities such as  grooming could be handled by not including them in the available hours for a sprint.  However, it might be felt that there is sufficient value in recording them that this will be supported.",
+    "state": "ACCEPTED",
+    "story": "0x267"
+  },
+  "0x28a": {
+    "criteria": "So that I can conveniently identify and start the application, as a user, I need to be able to double­click on the application’s icon to begin execution.",
+    "state": "ACCEPTED",
+    "story": "0x268"
+  },
+  "0x28b": {
+    "criteria": "So that I can navigate effectively around my data, as a user, I need to be able to search for information and see the results in context. At this stage a full query/reporting facility is not required but this may be the subject of a subsequent story.",
+    "state": "ACCEPTED",
+    "story": "0x269"
+  },
+  "0x28c": {
+    "criteria": "So that I can update daily the state of our current sprint, as a scrum team member, I need to be able to review and update the relevant tasks and stories.",
+    "state": "NEITHER",
+    "story": "0x26a"
+  },
+  "0x28d": {
+    "shortName": "Click me",
+    "description": "",
+    "estimate": 6.0,
     "blocked": false,
-    "status": "NOT_STARTED",
-    "story": "0x261",
+    "status": "IN_PROGRESS",
+    "story": "0x26a",
     "impediments": [],
     "loggedEffort": [
-      "0x280"
+      "0x29c"
     ],
     "assignees": []
   },
-  "0x277": {
-    "shortName": "Search shortcut",
-    "description": "Implement a shortchut for search",
-    "estimate": 1.0,
+  "0x28e": {
+    "shortName": "Update details pane",
+    "description": "",
+    "estimate": 8.0,
+    "blocked": false,
+    "status": "DONE",
+    "story": "0x26a",
+    "impediments": [],
+    "loggedEffort": [
+      "0x29d"
+    ],
+    "assignees": []
+  },
+  "0x28f": {
+    "shortName": "Another task",
+    "description": "Logged effort for json",
+    "estimate": 15.0,
+    "blocked": false,
+    "status": "IN_PROGRESS",
+    "story": "0x26a",
+    "impediments": [],
+    "loggedEffort": [
+      "0x29e",
+      "0x29f",
+      "0x2a0"
+    ],
+    "assignees": []
+  },
+  "0x290": {
+    "shortName": "Should start this!",
+    "description": "Logged effort for json",
+    "estimate": 8.0,
     "blocked": false,
     "status": "NOT_STARTED",
-    "story": "0x261",
+    "story": "0x26a",
     "impediments": [],
     "loggedEffort": [],
     "assignees": []
   },
-  "0x278": {
-    "shortName": "Design view",
-    "description": "Implement this design in FXML",
-    "estimate": 1.0,
+  "0x291": {
+    "shortName": "Try dragging me!",
+    "description": "",
+    "estimate": 7.0,
     "blocked": false,
-    "status": "NOT_STARTED",
-    "story": "0x261",
+    "status": "VERIFY",
+    "story": "0x26a",
     "impediments": [],
-    "loggedEffort": [],
+    "loggedEffort": [
+      "0x2a1"
+    ],
     "assignees": []
   },
-  "0x279": {
-    "criteria": "ac",
-    "state": "NEITHER",
-    "story": "0x262"
+  "0x292": {
+    "criteria": "So that I can readily comprehend the status of the current sprint, as a scrum team member, I need to be able to see the extent to which each story has been completed.",
+    "state": "ACCEPTED",
+    "story": "0x26b"
   },
-  "0x27a": {
-    "criteria": "ac3",
-    "state": "NEITHER",
-    "story": "0x263"
-  },
-  "0x27b": {
+  "0x293": {
     "impediments": "asd",
     "resolved": false
   },
-  "0x27c": {
+  "0x294": {
     "person": "0x5f",
-    "task": "0x268",
+    "task": "0x26f",
     "endDateTime": {
       "date": {
         "year": 2015,
@@ -7108,9 +7457,9 @@
       }
     }
   },
-  "0x27d": {
+  "0x295": {
     "person": "0x5f",
-    "task": "0x268",
+    "task": "0x26f",
     "endDateTime": {
       "date": {
         "year": 2015,
@@ -7143,9 +7492,9 @@
       }
     }
   },
-  "0x27e": {
+  "0x296": {
     "person": "0x3",
-    "task": "0x268",
+    "task": "0x26f",
     "endDateTime": {
       "date": {
         "year": 2015,
@@ -7178,13 +7527,48 @@
       }
     }
   },
-  "0x27f": {
+  "0x297": {
     "impediments": "ewq",
     "resolved": false
   },
-  "0x280": {
+  "0x298": {
+    "shortName": "UX 2",
+    "longName": "UX 2",
+    "description": "",
+    "creator": "0x3",
+    "project": "0x2",
+    "backlog": "0x258",
+    "priority": 6,
+    "estimate": 3,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [
+      "0x2a2"
+    ],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x299": {
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
+    "description": "",
+    "priority": -2147483648,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x273"
+  },
+  "0x29a": {
     "person": "0x1f",
-    "task": "0x276",
+    "task": "0x27d",
     "endDateTime": {
       "date": {
         "year": 2015,
@@ -7216,6 +7600,236 @@
         "nano": 944000000
       }
     }
+  },
+  "0x29b": {
+    "shortName": "Tasks without a Story",
+    "longName": "Tasks without a Story",
+    "description": "",
+    "priority": -2147483648,
+    "estimate": 1,
+    "scale": "FIBONACCI",
+    "acceptanceCriteria": [],
+    "dependencies": [],
+    "isReady": true,
+    "tasks": [],
+    "taskHours": 0.0,
+    "inSprint": true,
+    "sprint": "0x280"
+  },
+  "0x29c": {
+    "person": "0x5f",
+    "task": "0x28d",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 24,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 14400,
+      "nanos": 0
+    },
+    "comment": "Logged effort for json",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 24,
+        "second": 39,
+        "nano": 126000000
+      }
+    }
+  },
+  "0x29d": {
+    "person": "0x132",
+    "task": "0x28e",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 16
+      },
+      "time": {
+        "hour": 23,
+        "minute": 24,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 28800,
+      "nanos": 0
+    },
+    "comment": "Logged effort for json",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 25,
+        "second": 14,
+        "nano": 200000000
+      }
+    }
+  },
+  "0x29e": {
+    "person": "0x145",
+    "task": "0x28f",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 21
+      },
+      "time": {
+        "hour": 23,
+        "minute": 25,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 32400,
+      "nanos": 0
+    },
+    "comment": "Logged effort for json",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 25,
+        "second": 58,
+        "nano": 841000000
+      }
+    }
+  },
+  "0x29f": {
+    "person": "0x145",
+    "task": "0x28f",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 29
+      },
+      "time": {
+        "hour": 23,
+        "minute": 27,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 19800,
+      "nanos": 0
+    },
+    "comment": "Almost done",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 27,
+        "second": 54,
+        "nano": 121000000
+      }
+    }
+  },
+  "0x2a0": {
+    "person": "0xdf",
+    "task": "0x28f",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 28,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 18000,
+      "nanos": 0
+    },
+    "comment": "Logged effort for json",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 28,
+        "second": 52,
+        "nano": 499000000
+      }
+    }
+  },
+  "0x2a1": {
+    "person": "0xdf",
+    "task": "0x291",
+    "endDateTime": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 10
+      },
+      "time": {
+        "hour": 23,
+        "minute": 27,
+        "second": 0,
+        "nano": 0
+      }
+    },
+    "duration": {
+      "seconds": 25200,
+      "nanos": 0
+    },
+    "comment": "Logged effort for json",
+    "logTimeStamp": {
+      "date": {
+        "year": 2015,
+        "month": 9,
+        "day": 25
+      },
+      "time": {
+        "hour": 23,
+        "minute": 27,
+        "second": 14,
+        "nano": 865000000
+      }
+    }
+  },
+  "0x2a2": {
+    "criteria": "stuff is there",
+    "state": "NEITHER",
+    "story": "0x298"
   },
   "VERSION": "5.0"
 }

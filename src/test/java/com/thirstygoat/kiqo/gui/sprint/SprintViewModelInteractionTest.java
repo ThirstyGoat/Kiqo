@@ -85,7 +85,7 @@ public class SprintViewModelInteractionTest {
         Assert.assertTrue("Command should not be null if all fields are valid",
                 command != null);
         Assert.assertTrue("Command should be of type CreatSprintCommand",
-                        command.getClass().equals(CreateSprintCommand.class));
+                        command.getClass().equals(CompoundCommand.class));
         command.execute();
     }
 
