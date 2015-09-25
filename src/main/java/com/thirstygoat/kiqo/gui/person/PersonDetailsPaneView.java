@@ -45,7 +45,7 @@ public class PersonDetailsPaneView implements FxmlView<PersonDetailsPaneViewMode
         FxUtils.initGoatLabel(emailLabel, viewModel, viewModel.emailProperty(), viewModel.emailValidation());
         FxUtils.initGoatLabel(phoneLabel, viewModel, viewModel.phoneNumberProperty(), viewModel.phoneNumberValidation());
         FxUtils.initGoatLabel(departmentLabel, viewModel, viewModel.departmentProperty(), viewModel.departmentValidation());
-        FxUtils.initListViewFilteredListBiControl(skillsLabel, viewModel, viewModel.skills(), viewModel.eligibleSkills());
+        FxUtils.initFilteredListBiControl(skillsLabel, viewModel, viewModel.skills(), viewModel.eligibleSkills());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
     }
 }

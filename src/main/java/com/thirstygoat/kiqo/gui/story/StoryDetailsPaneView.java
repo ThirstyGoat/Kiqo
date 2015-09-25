@@ -142,7 +142,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     });
                 });
             });
-            FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
+            FxUtils.initFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
                     viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             totalHoursLabel.textProperty().unbind();
