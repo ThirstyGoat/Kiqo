@@ -69,17 +69,6 @@ public class AllocationsTableViewController implements Initializable {
                         .editAllocation(allocationsTableView.getSelectionModel().getSelectedItem(), type,
                                         itemProperty.get()));
 
-        BooleanProperty teamsAndProjectsExistProperty = new SimpleBooleanProperty();
-        teamsAndProjectsExistProperty.bind(Bindings.createBooleanBinding(() -> {
-            if (mainController.selectedOrganisationProperty.get() != null) {
-                if (mainController.selectedOrganisationProperty.get().getTeams().size() > 0 && mainController.selectedOrganisationProperty.get().getProjects().size() > 0) {
-                    return true;
-                }
-            }
-            return false;
-        }, mainController.selectedOrganisationProperty().get().getProjects(), mainController.selectedOrganisationProperty.get().getProjects(), mainController.selectedOrganisationProperty.get().getProjects()));
-        allocateTeamButton.disableProperty().bind(teamsAndProjectsExistProperty.not());
-
         //also needs to be bound to make sure that the table view is still focused too
         // at the moment it the delete button remains on if the tableview loses focus
         deleteAllocationButton.disableProperty().bind(
