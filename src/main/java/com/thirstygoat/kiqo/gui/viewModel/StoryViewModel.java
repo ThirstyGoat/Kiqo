@@ -34,7 +34,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator projectValidator;
     private FunctionBasedValidator priorityValidator;
     private ObservableRuleBasedValidator backlogValidator;
-    private FunctionBasedValidator scaleValidator;
+    private ObservableRuleBasedValidator scaleValidator;
     private CompositeValidator allValidator;
     private BooleanProperty creatorEditable = new SimpleBooleanProperty();
 
@@ -127,9 +127,14 @@ public class StoryViewModel extends ModelViewModel<Story> {
             ValidationMessage.error("Priority must be an integer between "
                 + Story.MIN_PRIORITY + " and " + Story.MAX_PRIORITY));
 
-        scaleValidator = new FunctionBasedValidator<>(scaleProperty(),
-            Utilities.emptinessPredicate(),
-            ValidationMessage.error("Estimation scale must not be empty"));
+        scaleValidator = new ObservableRuleBasedValidator();
+        scaleValidator.addRule(Bindings.createBooleanBinding(() -> {
+            if (backlogProperty().get() == null) {
+                return true;
+            } else {
+                return backlogProperty().get().scaleProperty().get().equals(scaleProperty().get());
+            }
+        }, backlogProperty(), scaleProperty()), ValidationMessage.error("Story and backlog must have the same scale"));
 
         allValidator = new CompositeValidator();
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
