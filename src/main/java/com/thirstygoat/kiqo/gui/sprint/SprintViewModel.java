@@ -469,4 +469,8 @@ public class SprintViewModel implements ViewModel {
     public void changesBinding() {
         // TODO
     }
+
+    public ReadOnlyBooleanProperty dirtyProperty() {
+        return sprintWrapper.dirtyProperty();
+    }
 }
