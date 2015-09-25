@@ -9,6 +9,7 @@ import com.thirstygoat.kiqo.command.delete.DeleteTaskCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AcceptanceCriteriaListCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
+import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
 import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
 import com.thirstygoat.kiqo.model.*;
@@ -32,6 +33,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
@@ -65,7 +67,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @FXML
     private Label storyEstimateSliderLabel;
     @FXML
-    private Label storyScaleLabel;
+    private GoatLabelComboBox<Scale> storyScaleLabel;
     @FXML
     private ListView<AcceptanceCriteria> acListView;
     @FXML
@@ -143,8 +145,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
                     viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
-            storyScaleLabel.textProperty().unbind();
-            storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
             totalHoursLabel.textProperty().unbind();
 
             totalHoursLabel.textProperty().bind(Bindings.createStringBinding(() -> {
@@ -337,6 +337,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
+        FxUtils.initGoatLabel(storyScaleLabel, viewModel, Scale.values(), viewModel.scaleProperty(), StringConverters.scaleStringConverter(), viewModel.scaleValidation());
 
         creatorLabel.textProperty().bindBidirectional(viewModel.creatorProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()));
 

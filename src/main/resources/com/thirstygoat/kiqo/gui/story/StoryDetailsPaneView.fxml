@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import org.controlsfx.control.SegmentedButton?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelComboBox?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView">
     <children>
         <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
@@ -83,7 +84,7 @@
                                     <Label styleClass="pane-type-indicator" text="Estimation Scale" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
                                     </Label>
-                                    <Label fx:id="storyScaleLabel" text="" wrapText="true" />
+                                    <GoatLabelComboBox fx:id="storyScaleLabel" />
 
                                     <Label styleClass="pane-type-indicator" text="Estimate">
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>

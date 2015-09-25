@@ -169,7 +169,7 @@ public final class FxUtils {
     /**
      * Configures a GoatLabel for a Property&lt;Number&gt;.
      * @param goatLabel control
-     * @param editable viewModel
+     * @param viewModel viewModel
      * @param property property to be displayed/edited
      * @param validationStatus status of the Validator for this field
      */
@@ -212,15 +212,30 @@ public final class FxUtils {
         goatLabel.getEditField().valueProperty().bindBidirectional(objectProperty);
         goatLabel.getEditField().setConverter(stringConverter);
     }
-    
+
     /**
-     * Configures a GoatLabelDatePicker for an ObjectProperty&lt;LocalDate&gt;.
+     * Configures a GoatLabelComboBox for an ObjectProperty using a StringConverter
      * @param goatLabel control
      * @param editable viewModel
-     * @param objectProperty property to be displayed (assumes this is bound to stringProperty)
-     * @param stringProperty property to be edited (assumes this is bound to objectProperty)
-     * @param validationStatus status of the Validator for this field
+     * @param items list of options in ComboBox
+     * @param objectProperty property to be displayed/edited
+     * @param stringConverter converter to translate the value of objectProperty between an Object and a String
+     * @param validationStatus validation to be performed on the goat label
      */
+    public static <T> void initGoatLabel(GoatLabelComboBox<T> goatLabel, Editable editable,
+                                         T[] items, ObjectProperty<T> objectProperty, StringConverter<T> stringConverter, ValidationStatus validationStatus) {
+        initGoatLabel(goatLabel, editable, items, objectProperty, stringConverter);
+        goatLabel.validationStatus().set(validationStatus);
+    }
+
+        /**
+         * Configures a GoatLabelDatePicker for an ObjectProperty&lt;LocalDate&gt;.
+         * @param goatLabel control
+         * @param editable viewModel
+         * @param objectProperty property to be displayed (assumes this is bound to stringProperty)
+         * @param stringProperty property to be edited (assumes this is bound to objectProperty)
+         * @param validationStatus status of the Validator for this field
+         */
     public static <T> void initGoatLabel(GoatLabelDatePicker goatLabel, Editable editable,
                                           ObjectProperty<LocalDate> objectProperty, StringProperty stringProperty, ValidationStatus validationStatus) {
         initGoatLabelActions(goatLabel, editable);
@@ -232,10 +247,9 @@ public final class FxUtils {
     /**
      * Configures a GoatLabelFilteredListSelectionView for a ListProperty.
      * @param goatLabel control
-     * @param editable viewModel
-     * @param targetList list of selected elements
-     * @param sourceList list of eligible (unselected) elements
-     * @param validationStatus status of the Validator for this field
+     * @param viewModel viewModel
+     * @param selectedItems list of selected elements
+     * @param allItems list of eligible (unselected) elements
      */
     public static <T extends Item> void initGoatLabel(
     			GoatLabelFilteredListSelectionView<T> goatLabel,
