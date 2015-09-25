@@ -67,7 +67,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
         teamMembersProperty().addListener((ListChangeListener.Change<? extends Person> change) -> {
         	change.next();
         	List<? extends Person> removed = change.getRemoved();
-        	devTeamProperty().removeAll();
+        	devTeamProperty().removeAll(removed);
         	if (removed.contains(productOwnerProperty().get())) {
         		productOwnerProperty().set(null);
         	}
