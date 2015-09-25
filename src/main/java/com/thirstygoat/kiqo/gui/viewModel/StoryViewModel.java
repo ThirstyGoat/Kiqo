@@ -41,7 +41,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
     	ListProperty<Story> storiesInBacklog = new SimpleListProperty<>();
     	storiesInBacklog.bind(Bindings.createObjectBinding(() -> {
     		if (backlogProperty().get() != null) {
-    			return backlogProperty().get().observableStories();
+    			return backlogProperty().get().getStories();
 	        } else {
 	        	return FXCollections.observableArrayList();
 	        }
@@ -257,7 +257,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
             if (!projectProperty().get().equals(modelWrapper.get().getProject())) {
                 if (modelWrapper.get().getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().observableStories(), projectProperty().get().getUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().getStories(), projectProperty().get().getUnallocatedStories()));
                 } else {
                     changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().getUnallocatedStories(), projectProperty().get().getUnallocatedStories()));
                 }

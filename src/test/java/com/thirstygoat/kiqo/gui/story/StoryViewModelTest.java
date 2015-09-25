@@ -200,12 +200,12 @@ public class StoryViewModelTest {
     public void testDependencyList() {
         // Add some stories to the backlog that story1 is in
         Story a, b, c, d;
-        story1.getBacklog().observableStories().addAll(Arrays.asList(
+        story1.getBacklog().getStories().addAll(Arrays.asList(
                         a = new Story("A", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null),
                         b = new Story("B", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null)));
 
         Backlog backlog2 = new Backlog();
-        backlog2.observableStories().addAll(Arrays.asList(
+        backlog2.getStories().addAll(Arrays.asList(
                         c = new Story("C", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null),
                         d = new Story("D", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null)));
 

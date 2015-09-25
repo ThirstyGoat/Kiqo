@@ -128,8 +128,8 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void existingBacklog_existingStoriesLoadTest() {
-        backlog.observableStories().add(unreadyStory);
-        backlog.observableStories().add(readyStory);
+        backlog.getStories().add(unreadyStory);
+        backlog.getStories().add(readyStory);
         viewModel.load(backlog, organisation);
         Assert.assertTrue("ViewModel stories property should contain two items",
                 viewModel.stories().size() == 2);
@@ -137,7 +137,7 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void existingBacklog_storyChangeCommandTest() {
-        backlog.observableStories().add(readyStory);
+        backlog.getStories().add(readyStory);
 
         viewModel.load(backlog, organisation);
         Assert.assertTrue(viewModel.stories().contains(readyStory));
