@@ -35,6 +35,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator allValidator;
+    private BooleanProperty creatorEditable = new SimpleBooleanProperty();
 
     public StoryViewModel() {
     	ListProperty<Story> storiesInBacklog = new SimpleListProperty<>();
@@ -125,6 +126,16 @@ public class StoryViewModel extends ModelViewModel<Story> {
     }
 
     @Override
+    public void load(Story story, Organisation organisation) {
+        super.load(story, organisation);
+        if (story == null) {
+            this.creatorEditable.set(true);
+        } else {
+            this.creatorEditable.set(false);
+        }
+    }
+
+    @Override
     protected Supplier<Story> modelSupplier() {
         return Story::new;
     }
@@ -186,14 +197,6 @@ public class StoryViewModel extends ModelViewModel<Story> {
     }
 
     public BooleanProperty getCreatorEditable () {
-        BooleanProperty creatorEditable = new SimpleBooleanProperty();
-        creatorEditable.bind(Bindings.createBooleanBinding(() -> {
-            if (shortNameProperty().get() != "") {
-                return true;
-            } else {
-                return false;
-            }
-        }, shortNameProperty()));
         return creatorEditable;
     }
     
