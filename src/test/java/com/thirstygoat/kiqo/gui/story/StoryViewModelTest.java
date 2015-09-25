@@ -189,10 +189,10 @@ public class StoryViewModelTest {
         Project project = new Project("shortName", "longName");
         Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false, null);
 
-        Assert.assertTrue("Creator field should be editable by default.", storyViewModel.getCreatorEditable().get());
+        Assert.assertFalse("Creator field should be editable by default.", storyViewModel.getCreatorEditable().get());
 
         storyViewModel.load(story, organisation);
-        Assert.assertTrue("Creator field should be editable for a new story.",
+        Assert.assertFalse("Creator field should be editable for a new story.",
                         storyViewModel.getCreatorEditable().get());
     }
 
