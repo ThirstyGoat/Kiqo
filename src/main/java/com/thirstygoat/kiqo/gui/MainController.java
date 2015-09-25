@@ -1039,7 +1039,7 @@ public class MainController implements Initializable {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainController.class.getClassLoader().getResource("forms/allocation.fxml"));
