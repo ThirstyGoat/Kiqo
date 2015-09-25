@@ -11,8 +11,6 @@ import com.thirstygoat.kiqo.util.StringConverters;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
-import de.saxsys.mvvmfx.utils.validation.visualization.ValidationVisualizer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +24,6 @@ import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -91,6 +88,13 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 //        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
+
+        Platform.runLater(() -> {
+            setPrompts();
+            setValidationSupport();
+            longNameTextField.requestFocus();
+            creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
+        });
         
         Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(creatorTextField, viewModel.creatorSupplier());
@@ -100,6 +104,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
             setPrompts();
             setValidationSupport();
             longNameTextField.requestFocus();
+            creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         });
 //        setStoryCycleHyperLinkInfo();
 //        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));

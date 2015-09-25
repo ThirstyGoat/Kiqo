@@ -50,6 +50,8 @@
       <items>
         <CheckMenuItem mnemonicParsing="false" selected="true" text="List" fx:id="listToggleCheckMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
+          <MenuItem mnemonicParsing="false" text="Close Selected Tab" fx:id="closeSelectedTabMenuItem" onAction="#closeSelectedTab" />
+        <SeparatorMenuItem mnemonicParsing="false" />
         <CheckMenuItem fx:id="toolBarToggleCheckMenuItem" mnemonicParsing="false" selected="false" text="Toolbar" />
         <SeparatorMenuItem mnemonicParsing="false" />
         <RadioMenuItem mnemonicParsing="false" selected="true" text="Project" onAction="#projectsTab" fx:id="listShowProjectsMenuItem">

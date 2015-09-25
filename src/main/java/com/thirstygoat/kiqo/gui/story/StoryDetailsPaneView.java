@@ -57,7 +57,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @FXML
     private GoatLabelTextField descriptionLabel;
     @FXML
-    private GoatLabelTextField creatorLabel;
+    private Label creatorLabel;
     @FXML
     private FilteredListBiControl<ListView<Story>, Story> dependenciesLabel;
     @FXML
@@ -337,11 +337,9 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
-        FxUtils.initGoatLabel(creatorLabel, viewModel, viewModel.creatorProperty(),
-                        StringConverters.personStringConverter(viewModel.organisationProperty()),
-                        viewModel.creatorValidation());
 
-        FxUtils.setTextFieldSuggester(creatorLabel.getEditField(), viewModel.creatorSupplier());
+        creatorLabel.textProperty().bindBidirectional(viewModel.creatorProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()));
+
         FxUtils.initGoatLabel(priorityLabel, viewModel, viewModel.priorityProperty(), viewModel.priorityValidation());
     }
 

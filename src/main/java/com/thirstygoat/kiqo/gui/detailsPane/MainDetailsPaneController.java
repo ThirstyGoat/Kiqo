@@ -29,6 +29,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
@@ -54,13 +57,20 @@ public class MainDetailsPaneController implements Initializable {
 
     private OptimizedDetailsPane optimizedDetailsPane;
 
-    private Map<Item, Tab> tabMap = new HashMap<>();
+    private Map<Item, Tab> itemTabMap = new HashMap<>();
+    private Map<Tab, Item> tabItemMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         optimizedDetailsPane = new OptimizedDetailsPane();
         tabPane.visibleProperty().bind(Bindings.isNotEmpty(tabPane.getTabs()));
         infoPane.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
+
+
+        // Set focused item property, to always be set to the currently viewing tab
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            MainController.focusedItemProperty.set(tabItemMap.get(newValue));
+        });
     }
 
     private Node getDetailsPane(Item item) {
@@ -87,10 +97,10 @@ public class MainDetailsPaneController implements Initializable {
     public void showDetailsPane(Item item) {
         if (item == null) {
             // do nothing for now
-        } else if (tabMap.containsKey(item)) {
+        } else if (itemTabMap.containsKey(item)) {
             // Then we have a reference to the tab object
             // We check to make sure the tab hasn't been closed before showing it
-            Tab chosenTab = tabMap.get(item);
+            Tab chosenTab = itemTabMap.get(item);
 
             if (tabPane.getTabs().contains(chosenTab)) {
                 tabPane.getSelectionModel().select(chosenTab);
@@ -113,7 +123,8 @@ public class MainDetailsPaneController implements Initializable {
             contentNode.getStyleClass().add("details-pane-tab");
 
             // Add the tab to the map, so we can easily show it if necessary
-            tabMap.put(item, tab);
+            itemTabMap.put(item, tab);
+            tabItemMap.put(tab, item);
 
             // Add the tab to the TabPane, and select it
             tabPane.getTabs().add(tab);
@@ -124,6 +135,7 @@ public class MainDetailsPaneController implements Initializable {
     private ContextMenu generateContextMenu(Item item, Tab tab) {
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem closeTabMenuItem = new MenuItem("Close Tab");
+//        closeTabMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN));
         MenuItem closeAllMenuItem = new MenuItem("Close All Tabs");
         MenuItem closeOthersMenuItem = new MenuItem("Close Other Tabs");
 
@@ -221,8 +233,8 @@ public class MainDetailsPaneController implements Initializable {
         if (item == null)
             return;
 
-        if (tabMap.containsKey(item)) {
-            Tab tab = tabMap.get(item);
+        if (itemTabMap.containsKey(item)) {
+            Tab tab = itemTabMap.get(item);
 
             if (tab.getTabPane() != null)
                 tab.getTabPane().getTabs().remove(tab);
@@ -230,6 +242,13 @@ public class MainDetailsPaneController implements Initializable {
     }
 
     public void closeAllTabs() {
-        tabMap.keySet().forEach(this::closeTab);
+        itemTabMap.keySet().forEach(this::closeTab);
+    }
+
+    /**
+     * Closes the currently selected tab in the main tab view
+     */
+    public void closeSelectedTab() {
+        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
     }
 }

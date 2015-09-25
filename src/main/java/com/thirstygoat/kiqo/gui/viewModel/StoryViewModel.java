@@ -12,9 +12,8 @@ import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.logging.Level;
  */
 public class StoryViewModel extends ModelViewModel<Story> {
 	private final ListProperty<Story> eligibleDependencies;
-    private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
     private ObservableRuleBasedValidator shortNameValidator;
     private FunctionBasedValidator longNameValidator;
     private FunctionBasedValidator descriptionValidator;
@@ -37,6 +35,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator allValidator;
+    private BooleanProperty creatorEditable = new SimpleBooleanProperty();
 
     public StoryViewModel() {
     	ListProperty<Story> storiesInBacklog = new SimpleListProperty<>();
@@ -124,6 +123,16 @@ public class StoryViewModel extends ModelViewModel<Story> {
         allValidator = new CompositeValidator();
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
+    }
+
+    @Override
+    public void load(Story story, Organisation organisation) {
+        super.load(story, organisation);
+        if (story == null) {
+            this.creatorEditable.set(true);
+        } else {
+            this.creatorEditable.set(false);
+        }
     }
 
     @Override
