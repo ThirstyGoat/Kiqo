@@ -17,18 +17,18 @@ public class CreateStoryCommand extends CreateCommand {
     public void addToModel() {
         // Check to see if story is supposed to be in backlog
         if (story.getBacklog() == null) {
-            story.getProject().observableUnallocatedStories().add(story);
+            story.getProject().getUnallocatedStories().add(story);
         } else {
-            story.getBacklog().observableStories().add(story);
+            story.getBacklog().getStories().add(story);
         }
     }
 
     @Override
     public void removeFromModel() {
         if (story.getBacklog() == null) {
-            story.getProject().observableUnallocatedStories().remove(story);
+            story.getProject().getUnallocatedStories().remove(story);
         } else {
-            story.getBacklog().observableStories().remove(story);
+            story.getBacklog().getStories().remove(story);
         }
     }
 

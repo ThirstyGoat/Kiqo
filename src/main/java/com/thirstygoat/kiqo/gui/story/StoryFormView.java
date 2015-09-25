@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.story;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import org.controlsfx.validation.ValidationSupport;
 
 import com.thirstygoat.kiqo.command.Command;
@@ -30,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.validation.ValidationSupport;
 
 /**
  * Created by Carina Blair on 15/05/2015.
