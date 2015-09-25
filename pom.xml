@@ -193,7 +193,7 @@
               <outfile>target/deploy/${project.artifactId}.exe</outfile>
               <!-- The Linux script links to this filename; if you change it, change both. -->
               <jar>target/${project.artifactId}-${project.version}.jar</jar>
-              <icon>target/deploy/thirsty-goat-glyph.ico</icon>
+              <!-- <icon>target/deploy/thirsty-goat-glyph.ico</icon> -->
               <dontWrapJar>false</dontWrapJar>
               <errTitle>${project.artifactId}: Error</errTitle>
               <jre>
