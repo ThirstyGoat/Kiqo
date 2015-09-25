@@ -53,7 +53,7 @@
 \vspace*{5cm}
 \par\normalfont\fontsize{35}{35}\sffamily\selectfont
 \textbf{Kiqo}
-{\LARGE A less horrible Agilefant}\par % Book title
+{\LARGE Project management for the real world}\par % Book title
 \vspace*{1cm}
 {\Huge User Guide}\par % Author name
 \endgroup
@@ -99,13 +99,12 @@ The main Kiqo workspace is shown in Figure~\ref{fig:mainwindow}.
 \begin{enumerate}
 \item Menu bar / Window title - The window title shows the organisation name. An asterisk next to the organisation name indicates that there are unsaved changes.
 The menu bar contains commands for creating items, saving and loading files, generating reports and more.
-\item Side bar - The sidebar gives an overview of the items in the organisaiton and allows you to select them.
+\item Side bar - The sidebar gives an overview of the items in the organisation and allows you to select them.
 There are three ways of changing the view to show relevant information.
     \begin{itemize}
       \item From the menu bar, use \menu{View > } and select the item.
       \item From clicking the selection tabs shown in Figure~\ref{fig:mainwindow}
-      \item By using the keyboard shortcuts \keys{\ctrl + 1-4}
-    \end{itemize}
+\end{itemize}
     The items shown in the sidebar are automatically sorted in alphabetical order.
 \item Details pane - The details pane displays more information about the selected item.
 \item Status bar - The status bar indicates whether there are any unsaved changes.
@@ -123,7 +122,7 @@ There are three ways of changing the view to show relevant information.
 %----------------------------------------------------------------------------------------
 \chapter{Items}
 \section{Organisation}
-An organisation is the root element of the hierarchy. An organisation contains projects, teams, people, skills, backlogs and stories.
+An organisation is the root element of the hierarchy. An organisation contains projects, teams, backlogs, stories and more.
 A new organisation is automatically loaded when Kiqo is initially opened. An existing organisation can also be loaded
 from a {\tt .json} file. To create a new organisation use \menu{File > New > Organisation}. An organisation can be saved using
 either \menu{File > Save} or \keys{ctrl + S}.
@@ -139,7 +138,7 @@ either \menu{File > Save} or \keys{ctrl + S}.
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.32]{newproject}
-        \caption{The new project window.\label{newproject}}
+        \caption{The new project form.\label{newproject}}
     \end{figure}
 
 \subsection{Create a Release}
@@ -147,15 +146,14 @@ either \menu{File > Save} or \keys{ctrl + S}.
         \item To create a release use \menu{File > New > Release}.
         \item Use the keyboard shortcut \keys{\ctrl + R}.
     \end{itemize}
-    The release will be added to the project selected in the creation dialog.
-    The releases for a project can be found under the projects releases heading in the tree view.
+
 
 \section{Sprints}
   \begin{itemize}
     \item To create a sprint use \menu{File > New > Sprint}.
     \item Use keyboard shortcut \keys{\ctrl + I}.
   \end{itemize}
-  You must a backlog, release, and team before creating a sprint.
+  You must create a backlog, release, and team before creating a sprint.
   A sprints end date must come before the end date of the release with which it is associated.
 
 \section{People \& Skills}
@@ -170,38 +168,25 @@ There are two important skills which cannot be modified:
 \end{itemize}
 New skills can be created, edited and deleted.
 \begin{itemize}
-  \item Adding a new skill to the Project displays the skill in the Skills list view. If a skill exists, by default the
-  first skill is shown in the details pane, unless another skill in the list is selected.
-  \item Go to the skills selection pane in edit or create person and click the > arrow to add one skill to a person
-  or >> to add all existing skills.
-  \item In the skills selection pane click the < arrow to remove one skill or << to remove all assigned skills.
-\end{itemize}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.32]{skillsSelectionPane}
-  \caption{The skills selection pane.\label{skillsSelectionPane}}
-\end{figure}
+  \item To create a skill use \menu{File > New > Skill}.
+  \item The skill can then be added via the person details details pane or form.
+ \end{itemize}
 
 \section{Teams, Roles \& Allocations}
 \subsection{Team Maintenance (including Roles)}
 \begin{itemize}
   \item Adding a new team to the project displays the team in the Teams list view.
   \item The members of the selected team are displayed in the team details pane.
-  \item In edit or create team, use the person selection pane and click the > arrow to add one person to a team
-  or >> to add all available people.
-  \item In the person selection pane, click the < arrow to remove one person or << to remove all assigned people.
-  \item Use the radio buttons to nominate a Product Owner, Scrum Master and/or Development Team members. Only team members who
+  \item Assign a Product Owner, Scrum Master and/or Developers to a team in its details pane. Only team members who
    possess the relevant skill may be nominated.
 \end{itemize}
 
 \subsection{Project Allocation}
 \begin{itemize}
   \item Teams can be allocated to projects. A team can only be allocated to one project at a time.
-  \item In the project tab a team can be allocated to a project by clicking the 'Allocate Teams'.
-  \item Select a team from the from the dropdown list in create allocation dialog and choose a start and an end date.
-  \item Edit an allocation by clicking on a row and then changing the start or end date with the date picker.
-  \item Delete an allocation by right clicking on its row and selecting 'Delete Allocation'.
+  \item In the project tab a team can be allocated to a project by clicking the \keys{+}.
+  \item Select a team from the from the dropdown list in the allocate teams form and choose a start and an end date.
+  \item Delete an allocation by selecting a row in the allocations table and clicking the \keys{-}.
 \end{itemize}
 \section{Backlogs \& Stories}
 
@@ -217,7 +202,7 @@ New skills can be created, edited and deleted.
 A backlog can show the current states of the stories it contains by toggling the check button located bellow the story table inside the backlog details pane.
 If highlighting has been enabled a colour chip will be displayed on each row of the story table.
 \begin{itemize}
-\item A red chip indiciates that the story has a lower priority than a story that depends on it.
+\item A red chip indicates that the story has a lower priority than a story that depends on it.
 \item A orange chip indicates that the story is ready to be estimated.
 \item A green chip indicates that the story is ready.
 \end{itemize}
@@ -233,36 +218,31 @@ If highlighting has been enabled a colour chip will be displayed on each row of 
 \subsubsection{Estimation}
 Stories can be estimated according to any one of these scales:
 \begin{itemize}
-\item Pseudo-Fibonnaci \textit{Default}
+\item Pseudo-Fibonacci \textit{Default}
 \item T-Shirt Sizes
 \item Dog Breeds
 \end{itemize}
 The estimation scale is the same for all stories in a backlog.
-share its backlog. Stories within a backlog that use a different estimation
-scale will have their scale changed to that of the backlog, and the estimation unset.
+Stories moved into a backlog will have their scale changed to that of the backlog, if it doesn't match.
 
 \subsubsection{Acceptance Criteria}
-Acceptance criteria can be added to a story and be assigned a state of readiness to help the user determine whether the
-story is ready to begin. The readiness can be one of three states (ready/not ready/undetermined).
+Acceptance criteria can be added to a story and can be assigned a state of readiness to represent that the
+story is ready to begin.
 \begin{itemize}
-  \item To create an acceptance criteria, inside the story details pane, press the \menu{+} button under the Acceptance Critera table
+  \item To create an acceptance criterion, inside the story details pane, press the \menu{+} button under the Acceptance Criteria table
   view.
-  \item To change the readiness state of the acceptance critera, a toggle button on the right hand side of the table view
+  \item To change the readiness state of the acceptance criterion, a toggle button on the right hand side of the table view
   can be pressed repeatedly to alter the state.
-  \item To rearrange the list of acceptance critera, click (and hold) within an acceptance critera cell (located within the table view)
-  and drag the cell up or down inside the table view. Once the click has been released the acceptance critera will be
-  dropped at that location and the order of the acceptance criteria will be updated.
+  \item To rearrange the list of acceptance criterion, drag cells up or down inside the table view.
 \end{itemize}
 
 \subsubsection{Tasks}
 Tasks can be added to a story and their status can be changed via the dropdown list.
-The status of a task can be set as one of the following (Not started, In Progress, Pending, Blocked, Ready, Done or Deferred).
+The status of a task can be set as Not Started, In Progress, Verify or Done.
 \begin{itemize}
    \item To create a task, inside the story details pane, press the \menu{+} button under the Tasks table view.
-   \item Each task has a name, status, estimate and a description. The Total Hours for all the tasks in a story is also displayed.
-   \item To rearrange the list of tasks, click (and hold) within a task cell (located within the table view)
-   and drag the cell up or down inside the table view. Once the click has been released the task will be dropped at
-   that location and the order of the tasks will be updated.
+   \item Each task has a name, status, estimate and a description.
+   \item To rearrange the list of tasks, drag the cell up or down inside the table view.
 \end{itemize}
 
 \subsubsection{Readiness}
@@ -274,7 +254,7 @@ A story can be marked as ready when the following criteria are met:
 \end{itemize}
 
 \subsubsection{Dependencies}
-Some stories may depend on the completion of others. This information can be
+Stories may depend on other stories. This information can be
 added in the story form. 
 Not all stories are available to be added as dependencies. Eligible stories must
 meet the following criteria:
@@ -284,7 +264,7 @@ meet the following criteria:
 (cyclic dependencies are chains of dependencies that end with the story where
 they begin)
 \end{itemize}
-
+Stories dependencies can be visualised in the backlog details pane.
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 3
@@ -303,6 +283,9 @@ The report generator gives the user the ability to generate reports in yaml form
   \includegraphics[scale=0.32]{reportForm}
   \caption{Report Generation Form.\label{reportForm}}
 \end{figure}
+
+\section{Edit Selected Item}
+The keyboard shortcuts \keys{\ctrl + E} and \keys{\ctrl + D} will edit and delete the item displayed in the current tab in the details pane.
 
 \section{Undo, Redo, Revert}
 \paragraph{}
@@ -344,7 +327,7 @@ Advanced Search allows the user to limit their search to a narrowed scope, and h
 \item Advanced Search can be opened by selecting \menu{Edit > Advanced Search}
 \item \textit{If the \textbf{Enable RegEx} checkbox is not checked, then the query is evaluated the same as \textbf{Simple Search}, however it looks through all of the searchable fields of each item.}
 \item Search results will appear in the list below, and the will have highlighting where the match was found.
-\item Double clicking on a search result will take you to that item \textit{(Or in the case of Tasks, and Acceptance Criteria, it will take you to the owning story)}
+\item Double clicking on a search result will take you to that item \textit{(Or in the case of Tasks and Acceptance Criteria, it will take you to the owning story)}
 \end{itemize}
 
 \begin{figure}[H]
@@ -391,6 +374,12 @@ When all impediments are resolved then the warning icon will be removed from the
 A task can be blocked by clicking the checkbox in the upper right hand corner of the expanded task card.
 When a task is blocked this will be shown on the scrumboard by a red glow surrounding the card.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{scrumBoard.png}
+  \caption{Scrum Board.\label{scrumBoard}}
+\end{figure}
+
 \subsection{Logging effort}
 
 In order to track a team members work, effort can be logged towards a task.
@@ -405,6 +394,12 @@ There are two ways to log effort towards a task:
 
 The burndown chart provides a visual representation of logged and estimated effort. It is a useful tool for viewing and
 predicted the progress of a sprint. The burndown chart can be saved as an image to include in presentations and reports.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{backlogDependencyVisualisation.png}
+  \caption{Backlog Dependency Visualisation.\label{backlogDependencyVisualisation}}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 5
@@ -429,8 +424,10 @@ predicted the progress of a sprint. The burndown chart can be saved as an image 
     Create New Release & \keys{\ctrl + R} \\
     Create New Team & \keys{\ctrl + T} \\
     Create New Person & \keys{\ctrl + P} \\
+    Create New Backlog & \keys{\ctrl + B} \\
     Create New Skill & \keys{\ctrl + K} \\
     Create New Story & \keys{\ctrl + Y} \\
+    Create New Sprint & \keys{\ctrl + I} \\
     Open Organisation & \keys{\ctrl + O} \\
     Save Organisation & \keys{\ctrl + S} \\
     Save Organisation As & \keys{\ctrl + \shift + S} \\
