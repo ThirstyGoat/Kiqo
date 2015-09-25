@@ -104,6 +104,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 
         storySelectionView.bindAllItems(viewModel.eligibleDependencies());
         storySelectionView.bindSelectedItems(viewModel.dependenciesProperty());
+        viewModel.scaleProperty().bindBidirectional(estimationScaleComboBox.valueProperty());
 
         storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
