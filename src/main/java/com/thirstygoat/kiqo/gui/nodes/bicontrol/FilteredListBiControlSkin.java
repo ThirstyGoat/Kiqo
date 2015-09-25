@@ -1,12 +1,14 @@
 package com.thirstygoat.kiqo.gui.nodes.bicontrol;
 
+import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.Item;
-
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
 /**
@@ -77,6 +79,11 @@ public class FilteredListBiControlSkin<S extends Item>
 	            protected void updateItem(S item, boolean empty) {
 	                if (!empty) {
 	                    textProperty().bind(stringPropertyCallback.call(item));
+                        setOnMouseClicked(e -> {
+                            if (e.getClickCount() == 2) {
+                                MainController.focusedItemProperty.set(item);
+                            }
+                        });
 	                } else {
 	                    textProperty().unbind();
 	                    setText("");
@@ -92,6 +99,7 @@ public class FilteredListBiControlSkin<S extends Item>
 	@Override
 	protected ListView<S> makeDisplayView() {
 	    ListView<S> view = new ListView<S>();
+
 	    view.setPrefHeight(VIEW_HEIGHT);
 	    return view;
 	}
