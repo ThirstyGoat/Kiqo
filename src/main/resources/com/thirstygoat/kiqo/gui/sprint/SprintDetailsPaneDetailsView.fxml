@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.thirstygoat.kiqo.gui.nodes.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
@@ -70,9 +71,15 @@
                         <ListView fx:id="taskListView" prefHeight="200" prefWidth="-1.0"/>
                         <HBox alignment="CENTER_RIGHT" >
                             <children>
-                                <Button fx:id="addTaskButton" text="+" />
-                                <Button fx:id="removeTaskButton" text="-" />
-                                <Button fx:id="editTaskButton" text="Edit" />
+                                <Button fx:id="addTaskButton" >
+									<graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+								</Button>
+                                <Button fx:id="removeTaskButton" >
+									<graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+								</Button>
+                                <Button fx:id="editTaskButton">
+									<graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
+								</Button>
                             </children>
                         </HBox>
 					</children>

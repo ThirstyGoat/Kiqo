@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController">
@@ -23,9 +24,15 @@
       <right>
         <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
           <children>
-            <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="+" />
-            <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false" text="-" />
-            <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false" text="Edit" />
+            <Button fx:id="allocateTeamButton" mnemonicParsing="false">
+              <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon" /></graphic>
+            </Button>
+            <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false">
+              <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon" /></graphic>
+            </Button>
+            <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false">
+              <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="single-icon"></FontAwesomeIconView></graphic>
+            </Button>
           </children>
         </HBox>
       </right>

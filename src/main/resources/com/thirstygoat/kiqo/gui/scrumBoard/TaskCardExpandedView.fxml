@@ -69,8 +69,12 @@
                                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                      <children>
                                          <TextField fx:id="impedimentTextField" promptText="Impediment description..." HBox.hgrow="ALWAYS" />
-                                         <Button fx:id="removeImpedimentButton" mnemonicParsing="false" text="-" />
-                                         <Button fx:id="addImpedimentButton" mnemonicParsing="false" text="+" />
+                                         <Button fx:id="removeImpedimentButton" mnemonicParsing="false" >
+                                             <graphic><FontAwesomeIconView glyphName="MINUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                                         </Button>
+                                         <Button fx:id="addImpedimentButton" mnemonicParsing="false">
+                                             <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="single-icon"></FontAwesomeIconView></graphic>
+                                         </Button>
                                      </children>
                                      <VBox.margin>
                                          <Insets top="10.0" />
