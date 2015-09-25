@@ -130,6 +130,14 @@ public class TeamViewModel extends ModelViewModel<Team> {
         // edit command
         final ArrayList<Command> changes = new ArrayList<>();
         super.addEditCommands.accept(changes);
+        
+        if (productOwnerProperty().get() != modelWrapper.get().getProductOwner()) {
+            changes.add(new EditCommand<>(modelWrapper.get(), "productOwner", productOwnerProperty().get()));
+        }
+
+        if (scrumMasterProperty().get() != modelWrapper.get().getScrumMaster()) {
+            changes.add(new EditCommand<>(modelWrapper.get(), "scrumMaster", scrumMasterProperty().get()));
+        }
 
         if (!(teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())
         		&& modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
@@ -171,13 +179,12 @@ public class TeamViewModel extends ModelViewModel<Team> {
             Person currentScrumMaster = scrumMasterProperty().get();
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has po skill and does not currently have any other role in the team
-            List<Person> eligiblePeople = organisationProperty().get().getPeople().stream()
+            return teamMembersProperty().get().stream()
                     .filter(person -> {
                         return person.observableSkills().contains(poSkill) 
                                 && (currentScrumMaster == null || !person.equals(currentScrumMaster))
                                 && !currentDevTeam.contains(person);
                     }).collect(Collectors.toList());
-            return eligiblePeople;
         };
     }
     
@@ -187,7 +194,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             Person currentProductOwner = productOwnerProperty().get();
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has sm skill and does not currently have any other role in the team
-            return organisationProperty().get().getPeople().stream()
+            return teamMembersProperty().get().stream()
                     .filter(person -> person.observableSkills().contains(smSkill) 
                             && !person.equals(currentProductOwner)
                             && !currentDevTeam.contains(person))
