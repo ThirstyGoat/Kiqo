@@ -5,10 +5,12 @@ import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -138,8 +140,11 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         primaryStage.setMinWidth(1100);
         primaryStage.setMinHeight(650);
+         // center the window
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        primaryStage.setX((bounds.getWidth() - primaryStage.getWidth()) / 2);
+        primaryStage.setY((bounds.getHeight() - primaryStage.getHeight()) / 2);
         Platform.runLater(() -> {
-            // center the window
             primaryStage.setOpacity(1);
         });
         if (file != null && file.exists()) {
