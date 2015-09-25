@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="749.0" fx:controller="com.thirstygoat.kiqo.gui.team.TeamDetailsPaneView">
   <children>
-    <ScrollPane id="ScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <ScrollPane id="ScrollPane" fitToWidth="true" style="-fx-background-color: transparent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
         <VBox mouseTransparent="false" spacing="10.0">
           <children>

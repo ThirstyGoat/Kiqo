@@ -307,9 +307,20 @@ public class SprintViewModel implements ViewModel {
 
         if (sprintProperty.get() == null) {
             // new sprintProperty.get() command
+            List<Command> changes = new ArrayList<>();
+
             final Sprint sprint = new Sprint(goalProperty().get(), longNameProperty().get(),
                     descriptionProperty().getValue(), backlogProperty().get(), releaseProperty().get(), teamProperty().get(), startDateProperty().get(), endDateProperty().get(), stories());
-            command = new CreateSprintCommand(sprint);
+
+            stories().forEach(s -> {
+                if (!s.getInSprint()) {
+                    changes.add(new EditCommand<>(s, "inSprint", true));
+                    changes.add(new EditCommand<>(s, "sprint", sprintProperty.get()));
+                }
+            });
+
+            changes.add(new CreateSprintCommand(sprint));
+            command = new CompoundCommand("Create Sprint", changes);
         } else {
             // edit command
             final ArrayList<Command> changes = new ArrayList<>();
