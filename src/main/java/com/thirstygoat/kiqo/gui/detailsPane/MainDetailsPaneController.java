@@ -165,7 +165,6 @@ public class MainDetailsPaneController implements Initializable {
 
     private Node getProjectDetailsPane(Project project) {
         ViewTuple<ProjectDetailsPaneView, ProjectDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getProjectViewTuple();
-        viewTuple.getViewModel().mainControllerProperty().set(mainController);
         viewTuple.getViewModel().load(project, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }
@@ -178,7 +177,6 @@ public class MainDetailsPaneController implements Initializable {
 
     private Node getTeamDetailsPane(Team team) {
         ViewTuple<TeamDetailsPaneView, TeamDetailsPaneViewModel> viewTuple = optimizedDetailsPane.getTeamViewTuple();
-        viewTuple.getViewModel().mainControllerProperty().set(mainController);
         viewTuple.getViewModel().load(team, mainController.selectedOrganisationProperty.get());
         return viewTuple.getView();
     }

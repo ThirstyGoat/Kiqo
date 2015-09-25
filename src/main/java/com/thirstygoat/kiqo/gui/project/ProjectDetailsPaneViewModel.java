@@ -4,6 +4,8 @@ import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.MainController;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -12,11 +14,16 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class ProjectDetailsPaneViewModel extends ProjectViewModel implements Editable {
     public final String PLACEHOLDER = "No allocations";
+    private ObjectProperty<Project> projectProperty = new SimpleObjectProperty<>();
 
-    private ObjectProperty<MainController> mainControllerProperty = new SimpleObjectProperty<>();
+    @Override
+    public void load(Project project, Organisation organisation) {
+        super.load(project, organisation);
+        projectProperty.set(project);
+    }
 
-    public ObjectProperty<MainController> mainControllerProperty() {
-        return mainControllerProperty;
+    public ObjectProperty<Project> projectProperty() {
+        return projectProperty;
     }
 
     @Override

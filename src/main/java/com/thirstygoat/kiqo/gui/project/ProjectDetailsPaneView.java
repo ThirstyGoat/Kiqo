@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.project;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
@@ -46,12 +47,7 @@ public class ProjectDetailsPaneView implements FxmlView<ProjectDetailsPaneViewMo
 
         // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
         // a listener is setup to set the items only when allocations is not null.
-        viewModel.allocations().addListener((ListChangeListener.Change<? extends Allocation> change) -> {
-            if (viewModel.allocations().get() != null) {
-                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM, viewModel.getWrappedObject());
-                allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
-                allocationsTableViewController.setItems(viewModel.allocations());
-            }
-        });
+        allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM, viewModel.projectProperty());
+        allocationsTableViewController.itemsProperty().bind(viewModel.allocations());
     }
 }
