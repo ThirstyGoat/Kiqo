@@ -21,6 +21,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -126,7 +127,7 @@ public class TaskCard extends VBox implements FxmlView<TaskCardViewModel> {
 
         // open the expanded card
         setOnMouseClicked(event -> {
-            if (!timeTextFlow.isHover()) {
+            if (!timeTextFlow.isHover() && event.getButton() == MouseButton.PRIMARY) {
                 newExpandedCard();
             }
         });

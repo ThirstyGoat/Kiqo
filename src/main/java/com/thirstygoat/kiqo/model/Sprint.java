@@ -91,7 +91,9 @@ public class Sprint extends Item {
             for (Story story : getStories()) {
                 runningTotal += story.spentEffortProperty().get();
             }
+            System.out.println("b: " +runningTotal);
             runningTotal += getTasksWithoutStory().spentEffortProperty().get();
+            System.out.println("A: " +runningTotal);
             return runningTotal;
         }, getStories(), getTasksWithoutStory().getTasks()));
         return totalSpentEffort;

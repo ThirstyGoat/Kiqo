@@ -9,8 +9,7 @@ import com.thirstygoat.kiqo.command.delete.DeleteImpedimentCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
 import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
+import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -19,7 +18,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -150,13 +148,9 @@ public class TaskCardViewModel extends ModelViewModel<Task> implements Editable 
         ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
 
         Function<Task, List<Person>> getEligibleAssignees = task -> {
-            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
-                            .flatMap(release -> release.getSprints().stream())
-                            .filter(sprint -> sprint.getStories().contains(task.getStory()))
-                            .findAny();
 
-            if (sprintTaskBelongsTo.isPresent()) {
-               return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+            if (task.getStory().getInSprint()) {
+               return task.getStory().getSprint().getTeam().getTeamMembers().stream()
                                 .filter(person -> !task.getAssigneesObservable().contains(person))
                                 .collect(Collectors.toList());
             } else {
