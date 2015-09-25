@@ -116,11 +116,13 @@ public class TeamViewModel extends ModelViewModel<Team> {
         final ArrayList<Command> changes = new ArrayList<>();
         super.addEditCommands.accept(changes);
 
-        if (!teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())) {
+        if (!(teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())
+        		&& modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
             changes.add(new EditCommand<>(modelWrapper.get(), "teamMembers", teamMembersProperty().get()));
         }
 
-        if (!devTeamProperty().get().equals(modelWrapper.get().getDevTeam())) {
+        if (!(devTeamProperty().get().containsAll(modelWrapper.get().getDevTeam())
+        		&& modelWrapper.get().getDevTeam().containsAll(devTeamProperty().get()))) {
             changes.add(new EditCommand<>(modelWrapper.get(), "devTeam", devTeamProperty().get()));
         }
 

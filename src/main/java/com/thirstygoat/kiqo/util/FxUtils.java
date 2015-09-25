@@ -239,7 +239,8 @@ public final class FxUtils {
      */
     public static <T extends Item> void initGoatLabel(
     			GoatLabelFilteredListSelectionView<T> goatLabel,
-    			Editable viewModel, ListProperty<T> selectedItems,
+    			Editable viewModel, 
+    			ListProperty<T> selectedItems,
     			ListProperty<T> allItems) {
         initGoatLabelActions(goatLabel, viewModel);
         goatLabel.getEditField().bindSelectedItems(selectedItems);
