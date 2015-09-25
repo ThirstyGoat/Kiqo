@@ -1,10 +1,13 @@
 package com.thirstygoat.kiqo.gui.team;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.*;
 import java.util.function.Supplier;
 
 import org.junit.*;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 
@@ -87,6 +90,7 @@ public class TeamViewModelTest {
         Supplier<List<Person>> supplier = viewModel.productOwnerSupplier();
         Person person = new Person();
         organisation.getPeople().add(person);
+        viewModel.teamMembersProperty().add(person);
         
         Assert.assertFalse("Person without PO skill is ineligible.", supplier.get().contains(person));
 
@@ -103,5 +107,80 @@ public class TeamViewModelTest {
         
         viewModel.productOwnerProperty().set(person);
         Assert.assertTrue("Person already in PO role is eligible.", supplier.get().contains(person));
+    }
+    
+    @Test
+    public void testDevSelection() {
+        Project project = new Project("projectShortName", "projectLongName");
+    	Person po = new Person("PO", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person sm = new Person("SM", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person dev1 = new Person("DEV1", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person dev2 = new Person("DEV2", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person person3 = new Person("PERSON3", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Team team = new Team("teamShortName", "teamDescriptoin", new ArrayList<>());
+        organisation.getProjects().add(project);
+        organisation.getTeams().add(team);
+        organisation.getPeople().add(po);
+        organisation.getPeople().add(sm);
+        organisation.getPeople().add(dev1);
+        organisation.getPeople().add(dev2);
+        organisation.getPeople().add(person3);
+        
+    	viewModel.load(team, organisation);
+    	assertThat(viewModel.eligibleDevs().get()).isEmpty();
+    	viewModel.teamMembersProperty().addAll(po, sm, dev1, dev2, person3);
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	viewModel.productOwnerProperty().set(po);
+    	assertThat(viewModel.eligibleDevs().get()).doesNotContain(po);
+    	viewModel.productOwnerProperty().set(null); // ex-PO should be allowed back into dev
+    	assertThat(viewModel.eligibleDevs().get()).contains(po);
+    	viewModel.productOwnerProperty().set(po); // setup for later tests
+    	
+    	viewModel.scrumMasterProperty().set(sm); // now po and sm are both set
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(dev1, dev2, person3);
+    	
+    	viewModel.devTeamProperty().addAll(dev1, dev2);
+    	 // still eligible when selected
+    	assertThat(viewModel.eligibleDevs().get()).containsExactly(dev1, dev2, person3);
+    }
+    
+    @Test
+    public void testTeamMembersSelection() {
+        Project project = new Project("projectShortName", "projectLongName");
+    	Person po = new Person("PO", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person sm = new Person("SM", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person dev1 = new Person("DEV1", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person dev2 = new Person("DEV2", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Person person3 = new Person("PERSON3", "", "", "", "", "", "", Arrays.asList(organisation.getPoSkill()));
+        Team team = new Team("teamShortName", "teamDescriptoin", new ArrayList<>());
+        organisation.getProjects().add(project);
+        organisation.getTeams().add(team);
+        organisation.getPeople().add(po);
+        organisation.getPeople().add(sm);
+        organisation.getPeople().add(dev1);
+        organisation.getPeople().add(dev2);
+        organisation.getPeople().add(person3);
+        
+        TeamDetailsPaneViewModel detailsPaneViewModel = new TeamDetailsPaneViewModel(); // because commit to model
+        detailsPaneViewModel.load(team, organisation);
+        // all people in organisation are eligible
+    	assertThat(detailsPaneViewModel.eligibleTeamMembers().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	
+    	// regardless of membership in current team
+    	detailsPaneViewModel.teamMembersProperty().addAll(po, sm, dev1, dev2, person3);
+    	assertThat(detailsPaneViewModel.eligibleTeamMembers().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	detailsPaneViewModel.teamMembersProperty().removeAll(po, sm, dev1);
+    	assertThat(detailsPaneViewModel.eligibleTeamMembers().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	
+    	// and adding/removing teamMembers in model has no effect
+    	UndoManager.getUndoManager().doCommand(viewModel.getCommand());
+    	assertThat(detailsPaneViewModel.eligibleTeamMembers().get()).containsExactly(po, sm, dev1, dev2, person3);
+    	
+    	// but... people in a different team in the model are excluded
+    	Team team2 = new Team("another team", "pancakes", new ArrayList<>());
+        organisation.getTeams().add(team2);
+    	team2.observableTeamMembers().add(po);
+    	po.setTeam(team2);
+    	assertThat(detailsPaneViewModel.eligibleTeamMembers().get()).doesNotContain(po);
     }
 }

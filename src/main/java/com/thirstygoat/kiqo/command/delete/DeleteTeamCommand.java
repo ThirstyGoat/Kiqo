@@ -45,7 +45,7 @@ public class DeleteTeamCommand extends DeleteCommand {
      */
     public void addDeletePersonCommands() {
         // Add new delete people commands
-        for (Person person : team.getTeamMembers()) {
+        for (Person person : team.observableTeamMembers()) {
             try {
                 deletePersonCommands.add(new DeletePersonCommand(person, organisation));
             } catch (InvalidPersonDeletionException e) {
@@ -63,7 +63,7 @@ public class DeleteTeamCommand extends DeleteCommand {
             deletePersonCommands.forEach(Command::execute);
         } else {
             // If we aren't deleting the team members, at the very least, we have to set their teams to null
-            for (Person person : team.getTeamMembers()) {
+            for (Person person : team.observableTeamMembers()) {
                 person.setTeam(null);
             }
         }
@@ -80,7 +80,7 @@ public class DeleteTeamCommand extends DeleteCommand {
             deletePersonCommands.forEach(Command::undo);
         } else {
             // If the team members weren't deleted, we need to update their team to be this team now
-            for (Person person : team.getTeamMembers()) {
+            for (Person person : team.observableTeamMembers()) {
                 person.setTeam(team);
             }
         }

@@ -47,8 +47,8 @@ public class DeleteTeamCommandTest {
         teamNoMembers = new Team("team2", "has no members", new ArrayList<>());
 
         // Populate team members
-        teamWithMembers.getTeamMembers().add(person1);
-        teamWithMembers.getTeamMembers().add(person2);
+        teamWithMembers.observableTeamMembers().add(person1);
+        teamWithMembers.observableTeamMembers().add(person2);
 
         // Add teams to project
         organisation.getTeams().add(teamWithMembers);

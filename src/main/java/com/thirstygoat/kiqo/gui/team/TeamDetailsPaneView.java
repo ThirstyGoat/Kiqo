@@ -45,17 +45,10 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
         FxUtils.setTextFieldSuggester(scrumMasterLabel.getEditField(), viewModel.scrumMasterSupplier());
         
         FxUtils.initGoatLabel(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.eligibleDevs());
-        FxUtils.initListViewFilteredListBiControl(teamMemberList, viewModel, viewModel.teamMembersProperty(),
+        FxUtils.initFilteredListBiControl(teamMemberList, viewModel, viewModel.teamMembersProperty(),
                         viewModel.eligibleTeamMembers());
 
-        // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
-        // a listener is setup to set the items only when allocations is not null.
-        viewModel.allocations().addListener((ListChangeListener.Change<? extends Allocation> change) -> {
-            if (viewModel.allocations().get() != null) {
-                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT, viewModel.getWrappedObject());
-                allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
-                allocationsTableViewController.setItems(viewModel.allocations());
-            }
-        });
+        allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT, viewModel.teamProperty());
+        allocationsTableViewController.itemsProperty().bind(viewModel.allocations());
     }
 }

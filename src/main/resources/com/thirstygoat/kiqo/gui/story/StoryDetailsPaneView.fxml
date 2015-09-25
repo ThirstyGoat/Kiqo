@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.ListViewFilteredListBiControl?>
+<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl?>
 <?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -74,7 +74,7 @@
                                     <Label styleClass="pane-type-indicator" text="Depends on" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
                                     </Label>
-                                    <ListViewFilteredListBiControl fx:id="dependenciesLabel" />
+                                    <FilteredListBiControl fx:id="dependenciesLabel" />
 
                                     <Label styleClass="pane-type-indicator" text="Total Spent Hours" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>

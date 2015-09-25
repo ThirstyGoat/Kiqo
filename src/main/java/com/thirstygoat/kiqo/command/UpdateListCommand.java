@@ -22,18 +22,20 @@ public final class UpdateListCommand<T> extends Command {
     
     @Override
     public void execute() {
-        observableList.setAll(newContents);
+    	observableList.clear();
+        observableList.addAll(newContents);
     }
 
     @Override
     public void undo() {
-        observableList.setAll(oldContents);
+    	observableList.clear();
+        observableList.addAll(oldContents);
     }
 
     @Override
     public String toString() {
         // TODO implement properly
-        return "<Edit ";
+        return "<Edit " + type + ">";
     }
 
     @Override

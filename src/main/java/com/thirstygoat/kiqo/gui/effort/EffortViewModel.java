@@ -43,7 +43,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
     private ObjectProperty<LocalDate> endDateProperty = new SimpleObjectProperty<>();
     private ObjectProperty<LocalTime> endTimeProperty = new SimpleObjectProperty<>(LocalTime.now());
     private StringProperty endDateStringProperty;
-    private ObjectProperty<Task> task = new SimpleObjectProperty();
+    private ObjectProperty<Task> task = new SimpleObjectProperty<>();
 
 
     public EffortViewModel(Task task) {
@@ -238,11 +238,32 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         return allValidator.getValidationStatus();
     }
 
+    public ListProperty<Person> teamMembers() {
+        ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
+        Function<Task, List<Person>> getEligibleAssignees = task -> {
+            if (task.getStory().getInSprint()) {
+                return task.getStory().getSprint().getTeam().observableTeamMembers().stream()
+                        .collect(Collectors.toList());
+            } else {
+                return new ArrayList<>();
+            }
+        };
+
+        taskProperty().addListener((observable, oldValue, newValue) -> {
+            eligableAssignees.clear();
+            eligableAssignees.addAll(getEligibleAssignees.apply(newValue));
+        });
+        eligableAssignees.clear();
+        eligableAssignees.addAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
+
+        return eligableAssignees;
+    }
+
     public ListProperty<Person> eligibleAssignees() {
         ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
         Function<Task, List<Person>> getEligibleAssignees = task -> {
             if (task.getStory().getInSprint()) {
-                return task.getStory().getSprint().getTeam().getTeamMembers().stream()
+                return task.getStory().getSprint().getTeam().observableTeamMembers().stream()
                         .filter(person -> !task.getAssigneesObservable().contains(person))
                         .collect(Collectors.toList());
             } else {
@@ -251,9 +272,11 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         };
 
         taskProperty().addListener((observable, oldValue, newValue) -> {
-            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        	eligableAssignees.clear();
+            eligableAssignees.addAll(getEligibleAssignees.apply(newValue));
         });
-        eligableAssignees.setAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
+        eligableAssignees.clear();
+        eligableAssignees.addAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
 
         return eligableAssignees;
     }

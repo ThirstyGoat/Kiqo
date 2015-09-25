@@ -33,7 +33,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.util.StringConverter;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SegmentedButton;
 
@@ -142,7 +141,7 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     });
                 });
             });
-            FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
+            FxUtils.initFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
                     viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             totalHoursLabel.textProperty().unbind();
@@ -341,7 +340,9 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
 
         creatorLabel.textProperty().bindBidirectional(viewModel.creatorProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()));
 
+        FxUtils.restrictToNumericInput(Story.MIN_PRIORITY, Story.MAX_PRIORITY,priorityLabel.getEditField().textProperty());
         FxUtils.initGoatLabel(priorityLabel, viewModel, viewModel.priorityProperty(), viewModel.priorityValidation());
+
     }
 
     private void initSlider() {

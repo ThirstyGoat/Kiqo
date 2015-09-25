@@ -41,7 +41,7 @@ public class DeletePersonCommand extends DeleteCommand {
             if (team.getScrumMaster() == person) {
                 isScrumMaster = true;
             }
-            if (team.getDevTeam().contains(person)) {
+            if (team.observableDevTeam().contains(person)) {
                 inDevTeam = true;
             }
         }
@@ -64,11 +64,11 @@ public class DeletePersonCommand extends DeleteCommand {
                 team.setScrumMaster(null);
             }
             if (inDevTeam) {
-                team.getDevTeam().remove(person);
+                team.observableDevTeam().remove(person);
             }
 
             // Remove person from Team Members
-            team.getTeamMembers().remove(person);
+            team.observableTeamMembers().remove(person);
         }
 
         // We keep track of the position in the list that the person was in, so they can be added back to the same
@@ -87,7 +87,7 @@ public class DeletePersonCommand extends DeleteCommand {
 
         if (team != null) {
             // Add person to Team Members
-            team.getTeamMembers().add(person);
+            team.observableTeamMembers().add(person);
 
             if (isProductOwner) {
                 team.setProductOwner(person);
@@ -96,7 +96,7 @@ public class DeletePersonCommand extends DeleteCommand {
                 team.setScrumMaster(person);
             }
             if (inDevTeam) {
-                team.getDevTeam().add(person);
+                team.observableDevTeam().add(person);
             }
         }
     }

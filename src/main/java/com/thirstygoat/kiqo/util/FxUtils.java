@@ -148,7 +148,7 @@ public final class FxUtils {
      */
     private static <T> void bindProperty(GoatLabel<? extends TextInputControl> goatLabel, Property<T> property,
             StringConverter<T> stringConverter) {
-        goatLabel.displayTextProperty().bindBidirectional(property, stringConverter);
+        goatLabel.displayTextProperty().bind(Bindings.createStringBinding(() -> stringConverter.toString(property.getValue()), property));
         goatLabel.getEditField().textProperty().bindBidirectional(property, stringConverter);
     }
 
@@ -262,28 +262,15 @@ public final class FxUtils {
         goatLabel.getEditField().setStringPropertyCallback(Item::shortNameProperty);
         goatLabel.displayTextProperty().bind(Utilities.commaSeparatedValuesBinding(selectedItems));
     }
-    
-    public static <T extends Item> void initLabelFilteredListBiControl(
-	    		FilteredListBiControl<Label, T> listBiControl,
-	            Editable viewModel, 
-	            ListProperty<T> selectedItems,
-	            ListProperty<T> allItems) {
-    	listBiControl.selectedItems().bindBidirectional(selectedItems);
-	    listBiControl.allItems().bind(allItems);
-	    LabelFilteredListBiControlSkin<T> skin = new LabelFilteredListBiControlSkin<T>(
-	    		listBiControl,
-	            viewModel::commitEdit, viewModel::cancelEdit,
-	            Item::shortNameProperty);
-	    listBiControl.setSkin(skin);
-	}
 
-	public static <T extends Item> void initListViewFilteredListBiControl(FilteredListBiControl<ListView<T>, T> listBiControl,
-                                                      Editable viewModel,
-                                                      ListProperty<T> selectedItems,
-                                                      ListProperty<T> allItems) {
-        listBiControl.selectedItems().bindBidirectional(selectedItems);
+	public static <T extends Item> void initFilteredListBiControl(
+			FilteredListBiControl<ListView<T>, T> listBiControl,
+			Editable viewModel,
+			ListProperty<T> selectedItems,
+			ListProperty<T> allItems) {
+    	listBiControl.selectedItems().bindBidirectional(selectedItems);
         listBiControl.allItems().bind(allItems);
-        ListViewFilteredListBiControlSkin<T> skin = new ListViewFilteredListBiControlSkin<T>(
+        FilteredListBiControlSkin<T> skin = new FilteredListBiControlSkin<>(
         		listBiControl,
                 viewModel::commitEdit, viewModel::cancelEdit,
                 Item::shortNameProperty);

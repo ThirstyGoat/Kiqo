@@ -237,9 +237,9 @@ public class MainController implements Initializable {
 
         CheckBox checkbox = new CheckBox("Also delete the person belonging to this team");
 
-        if (team.getTeamMembers().size() > 0) {
+        if (team.observableTeamMembers().size() > 0) {
             String deleteMessage = "Are you sure you want to delete the team: " + team.getShortName() +
-                    "?\nMembers: " + Utilities.concatenateItemsList(team.getTeamMembers(), 5);
+                    "?\nMembers: " + Utilities.concatenateItemsList(team.observableTeamMembers(), 5);
             node.getChildren().add(new Label(deleteMessage));
             if (command.canDeleteTeamMembers()) {
                 node.getChildren().add(checkbox);

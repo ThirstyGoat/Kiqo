@@ -47,7 +47,7 @@
             <Label text="Team Members" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <ListViewFilteredListBiControl fx:id="teamMemberList" />
+	        <FilteredListBiControl fx:id="teamMemberList" />
 	        <Label text="Allocations" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
