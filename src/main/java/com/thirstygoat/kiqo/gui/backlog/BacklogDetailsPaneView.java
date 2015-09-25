@@ -179,7 +179,7 @@ public class BacklogDetailsPaneView implements FxmlView<BacklogDetailsPaneViewMo
     }
 
     /**
-     * Draws
+     * Draws the dependency graph
      */
     private void visualiseDependencies() {
         visualisationPane.getChildren().clear();
