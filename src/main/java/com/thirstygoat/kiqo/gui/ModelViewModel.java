@@ -58,7 +58,7 @@ public abstract class ModelViewModel<T extends BoundProperties> implements ViewM
     }
 
     /**
-     * Maybe don't use this. Added to fix issues #117 and #118.
+     * @deprecated Maybe don't use this. Added to fix issues #117 and #118.
      * @return
      */
     @Deprecated
