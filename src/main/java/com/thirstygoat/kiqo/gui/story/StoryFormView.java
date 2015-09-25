@@ -73,7 +73,6 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         descriptionTextField.textProperty().bindBidirectional(viewModel.descriptionProperty());
         creatorTextField.textProperty().bindBidirectional(viewModel.creatorProperty(),
                 StringConverters.personStringConverter(viewModel.organisationProperty()));
-        creatorTextField.disableProperty().bind(viewModel.getCreatorEditable());
         projectTextField.textProperty().bindBidirectional(viewModel.projectProperty(),
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty(),
@@ -89,6 +88,13 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 //        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
+
+        Platform.runLater(() -> {
+            setPrompts();
+            setValidationSupport();
+            longNameTextField.requestFocus();
+            creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
+        });
         
         Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
         FxUtils.setTextFieldSuggester(creatorTextField, viewModel.creatorSupplier());
@@ -98,6 +104,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
             setPrompts();
             setValidationSupport();
             longNameTextField.requestFocus();
+            creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         });
 //        setStoryCycleHyperLinkInfo();
 //        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
