@@ -13,9 +13,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,7 +24,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.validation.ValidationSupport;
 
@@ -84,6 +81,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     @InjectViewModel
     private StoryFormViewModel viewModel;
 
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         shortNameTextField.textProperty().bindBidirectional(viewModel.shortNameProperty());
@@ -95,9 +93,20 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
                 StringConverters.projectStringConverter(viewModel.organisationProperty()));
         backlogTextField.textProperty().bindBidirectional(viewModel.backlogProperty(),
                 StringConverters.backlogStringConverterProject(viewModel.projectProperty()));
-        priorityTextField.textProperty().bindBidirectional(viewModel.priorityProperty(),
-                new NumberStringConverter());
+
+
         FxUtils.restrictToNumericInput(Story.MIN_PRIORITY, Story.MAX_PRIORITY, priorityTextField.textProperty());
+        priorityTextField.textProperty().setValue(Integer.toString(viewModel.priorityProperty().get()));
+        priorityTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            int p = 0;
+            try {
+                p = Integer.parseInt(newValue);
+            } catch (Exception e) {
+            }
+            viewModel.priorityProperty().setValue(p);
+
+        });
+
 
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();
