@@ -1,25 +1,22 @@
 package com.thirstygoat.kiqo.gui.story;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
-import org.controlsfx.validation.ValidationSupport;
-
 import com.thirstygoat.kiqo.command.Command;
-import com.thirstygoat.kiqo.gui.*;
-import com.thirstygoat.kiqo.model.*;
-import com.thirstygoat.kiqo.util.*;
-
-import de.saxsys.mvvmfx.*;
+import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
+import com.thirstygoat.kiqo.gui.FormButtonHandler;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
+import com.thirstygoat.kiqo.model.Scale;
+import com.thirstygoat.kiqo.model.Story;
+import com.thirstygoat.kiqo.util.FxUtils;
+import com.thirstygoat.kiqo.util.StringConverters;
+import com.thirstygoat.kiqo.util.Utilities;
+import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
-import javafx.beans.property.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.fxml.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +28,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.validation.ValidationSupport;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Carina Blair on 15/05/2015.
@@ -179,7 +180,7 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         validationVisualizer.initVisualization(viewModel.projectValidation(), projectTextField, true);
         validationVisualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
         validationVisualizer.initVisualization(viewModel.backlogValidation(), backlogTextField, true);
-        validationVisualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
+        validationVisualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox, true);
     }
 
     private void setStoryCycleHyperLinkInfo() {
