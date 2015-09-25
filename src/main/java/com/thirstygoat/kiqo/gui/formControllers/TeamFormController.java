@@ -167,13 +167,13 @@ public class TeamFormController extends FormController<Team> {
                 changes.add(new EditCommand<>(team, "scrumMaster", scrumMaster));
             }
 
-            if (!(devTeam.containsAll(team.getDevTeam()) && team.getDevTeam().containsAll(devTeam))) {
+            if (!(devTeam.containsAll(team.observableDevTeam()) && team.observableDevTeam().containsAll(devTeam))) {
                 changes.add(new EditCommand<>(team, "devTeam", devTeam));
             }
 
             final ArrayList<Person> newMembers = new ArrayList<>(teamMembers);
-            newMembers.removeAll(team.getTeamMembers());
-            final ArrayList<Person> oldMembers = new ArrayList<>(team.getTeamMembers());
+            newMembers.removeAll(team.observableTeamMembers());
+            final ArrayList<Person> oldMembers = new ArrayList<>(team.observableTeamMembers());
             oldMembers.removeAll(teamMembers);
 
             // Loop through all the new members and add a command to set their team
@@ -277,7 +277,7 @@ public class TeamFormController extends FormController<Team> {
             } else if (scrumMaster == person || (team != null && team.getScrumMaster() == person)) {
                 radioSm.setSelected(true);
             } else if ((devTeam != null && devTeam.contains(person)) ||
-                    (team != null && team.getDevTeam() != null && team.getDevTeam().contains(person))) {
+                    (team != null && team.observableDevTeam() != null && team.observableDevTeam().contains(person))) {
                 radioDev.setSelected(true);
             } else {
                 radioOther.setSelected(true);
@@ -388,12 +388,12 @@ public class TeamFormController extends FormController<Team> {
             // Populate fields with existing data
             shortNameTextField.setText(team.getShortName());
             descriptionTextField.setText(team.getDescription());
-            selectedTeamMembers.addAll(team.getTeamMembers());
+            selectedTeamMembers.addAll(team.observableTeamMembers());
             okButton.setText("Done");
 
             productOwner = team.getProductOwner();
             scrumMaster = team.getScrumMaster();
-            devTeam.addAll(team.getDevTeam().stream().collect(Collectors.toList()));
+            devTeam.addAll(team.observableDevTeam().stream().collect(Collectors.toList()));
         } else {
             okButton.setText("Create Team");
         }

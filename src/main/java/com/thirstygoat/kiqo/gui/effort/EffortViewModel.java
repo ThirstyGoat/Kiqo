@@ -242,7 +242,7 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
         Function<Task, List<Person>> getEligibleAssignees = task -> {
             if (task.getStory().getInSprint()) {
-                return task.getStory().getSprint().getTeam().getTeamMembers().stream()
+                return task.getStory().getSprint().getTeam().observableTeamMembers().stream()
                         .filter(person -> !task.getAssigneesObservable().contains(person))
                         .collect(Collectors.toList());
             } else {

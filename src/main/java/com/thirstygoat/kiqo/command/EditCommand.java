@@ -59,6 +59,9 @@ public class EditCommand<ModelObjectType, FieldType> extends Command {
             EditCommand.LOGGER.log(Level.SEVERE, "Can't read old value", e);
         }
         editField(this.newVal);
+        System.out.println("subject " + subject.toString());
+        System.out.println("oldVal " + oldVal);
+        System.out.println("newVal " + newVal);
     }
 
     @Override

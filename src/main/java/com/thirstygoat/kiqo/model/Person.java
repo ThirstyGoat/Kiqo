@@ -1,10 +1,12 @@
 package com.thirstygoat.kiqo.model;
 
 import com.thirstygoat.kiqo.search.SearchableField;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+
+import javafx.beans.Observable;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class Person extends Item {
     private final StringProperty phoneNumber;
     private final StringProperty department;
     private final ObservableList<Skill> skills;
-    private Team team;
+    private final ObjectProperty<Team> team;
 
     /**
      * No-args constructor for JavaBeans(TM) compliance. Use at your own risk.
@@ -36,6 +38,7 @@ public class Person extends Item {
         phoneNumber = new SimpleStringProperty();
         department = new SimpleStringProperty();
         skills = FXCollections.observableArrayList(Item.getWatchStrategy());
+        team = new SimpleObjectProperty<>();
     }
 
     /**
@@ -62,6 +65,7 @@ public class Person extends Item {
         this.department = new SimpleStringProperty(department);
         this.skills = FXCollections.observableArrayList(Item.getWatchStrategy());
         this.skills.addAll(skills);
+        this.team = new SimpleObjectProperty<>();
     }
 
     /**
@@ -121,6 +125,10 @@ public class Person extends Item {
     public ObservableList<Skill> observableSkills() {
         return skills;
     }
+    
+    public ObjectProperty<Team> teamProperty() {
+        return team;
+    }
 
     /**
      * To string method for a person. Will return the fields that are not set to null
@@ -136,7 +144,7 @@ public class Person extends Item {
         stringBuilder.append(", emailAddress='" + getEmailAddress() + "\'");
         stringBuilder.append(", phoneNumber='" + getPhoneNumber() + "\'");
         stringBuilder.append(", department='" + getDepartment() + "\'");
-        stringBuilder.append(", team='" + ((team == null) ? "null" : team.getShortName()) + "'}");
+        stringBuilder.append(", team='" + ((team.get() == null) ? "null" : team.get().getShortName()) + "'}");
         stringBuilder.append(", skills='" + skills + "'}");
         return stringBuilder.toString();
     }
@@ -212,10 +220,10 @@ public class Person extends Item {
     }
 
     public Team getTeam() {
-        return team;
+        return team.get();
     }
 
     public void setTeam(Team team) {
-        this.team = team;
+        this.team.set(team);
     }
 }
