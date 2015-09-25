@@ -18,6 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Simple dialog class that enables custom button labels.
  */
@@ -47,10 +50,11 @@ public final class GoatDialog {
         GoatDialog.message.setText(messageText);
 
         final int buttonSpacing = 10;
-        int i = 0;
-        for (final String button : buttons) {
+        for (int counter=buttons.length - 1; counter >= 0;counter--) {
+            String button = buttons[counter];
             final Button newButton = new Button(button);
-            if (i == 0) {
+            newButton.getStyleClass().addAll("form-button", "form-button-blue");
+            if (counter == buttons.length - 1) {
                 newButton.setDefaultButton(true);
             }
             GoatDialog.hBox.getChildren().add(newButton);
@@ -60,7 +64,6 @@ public final class GoatDialog {
                 selectedProperty[0] = button;
                 GoatDialog.stage.close();
             });
-            i++;
         }
 
         GoatDialog.stage.setTitle(title);
@@ -93,10 +96,11 @@ public final class GoatDialog {
         vBox.getChildren().add(customNode);
 
         final int buttonSpacing = 10;
-        int i = 0;
-        for (final String button : buttons) {
+        for (int counter=buttons.length - 1; counter >= 0;counter--) {
+            String button = buttons[counter];
             final Button newButton = new Button(button);
-            if (i == 0) {
+            newButton.getStyleClass().addAll("form-button", "form-button-blue");
+            if (counter == buttons.length - 1) {
                 newButton.setDefaultButton(true);
             }
             GoatDialog.hBox.getChildren().add(newButton);
@@ -106,7 +110,6 @@ public final class GoatDialog {
                 selectedProperty[0] = button;
                 GoatDialog.stage.close();
             });
-            i++;
         }
 
         GoatDialog.stage.setTitle(title);
@@ -144,7 +147,6 @@ public final class GoatDialog {
         vBox.setPadding(vBoxPadding);
         VBox.setMargin(GoatDialog.message, vBoxMargin);
         GoatDialog.hBox.setAlignment(Pos.CENTER_RIGHT);
-        GoatDialog.hBox.setStyle("-fx-background-color: #eee");
         GoatDialog.hBox.setPadding(hBoxPadding);
         rowConstraints2.setPrefHeight(prefRowHeight2);
         rowConstraints1.setVgrow(Priority.ALWAYS);
@@ -156,9 +158,14 @@ public final class GoatDialog {
         gridPane.add(GoatDialog.hBox, 0, 1);
         stackPane.getChildren().add(gridPane);
         stackPane.setPrefWidth(500);
-        GoatDialog.stage.setScene(new Scene(stackPane));
+        stackPane.getStyleClass().add("form");
+        stackPane.getStyleClass().add("dialog-popup");
+        Scene scene = new Scene(stackPane);
+
+        scene.getStylesheets().add("css/styles.css");
+        GoatDialog.stage.setScene(scene);
         GoatDialog.stage.setResizable(false);
-        GoatDialog.stage.initStyle(StageStyle.DECORATED);
+        GoatDialog.stage.initStyle(StageStyle.UNDECORATED);
         GoatDialog.stage.initOwner(owner);
         GoatDialog.stage.initModality(Modality.APPLICATION_MODAL);
     }
@@ -179,6 +186,7 @@ public final class GoatDialog {
 
         final int buttonSpacing = 10;
         final Button newButton = new Button("OK");
+        newButton.getStyleClass().addAll("form-button", "form-button-blue");
         newButton.setDefaultButton(true);
         GoatDialog.hBox.getChildren().add(newButton);
         HBox.setMargin(newButton, new Insets(0, 0, 0, buttonSpacing));
