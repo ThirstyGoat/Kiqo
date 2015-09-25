@@ -55,6 +55,7 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
     }
 
     public void draw() {
+        System.out.println("Draw");
         updateDays();
         drawTargetLine();
         drawLines();
@@ -140,18 +141,20 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
                 efforts.addAll(task.getLoggedEffort().stream().collect(Collectors.toList()));
             }
         }
+        sprintProperty().get().getTasksWithoutStory().getTasks().forEach(t -> t.getLoggedEffort().forEach(efforts::add));
         return efforts;
     }
 
 
     private Float getTotalEstimate() {
-        Float totalEstimate = 0f;
+        final Float[] totalEstimate = {0f};
         for (Story story : sprintProperty().get().getStories()) {
             for (Task task : story.getTasks()) {
-                totalEstimate += task.getEstimate();
+                totalEstimate[0] += task.getEstimate();
             }
         }
-        return totalEstimate;
+        sprintProperty().get().getTasksWithoutStory().getTasks().forEach(t -> totalEstimate[0] += t.getEstimate());
+        return totalEstimate[0];
     }
 
 }
