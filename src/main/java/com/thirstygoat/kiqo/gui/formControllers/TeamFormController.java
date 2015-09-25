@@ -349,7 +349,8 @@ public class TeamFormController extends FormController<Team> {
 
     private void populatePeopleListView() {
         // Can't already be in a different team
-        eligiblePeople.setAll(organisation.getPeople().stream()
+    	eligiblePeople.clear();
+        eligiblePeople.addAll(organisation.getPeople().stream()
         		.filter(person -> person.getTeam() == null || person.getTeam().equals(team))
         		.collect(Collectors.toList()));
 

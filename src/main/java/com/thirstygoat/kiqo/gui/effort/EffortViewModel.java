@@ -251,9 +251,11 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
         };
 
         taskProperty().addListener((observable, oldValue, newValue) -> {
-            eligableAssignees.setAll(getEligibleAssignees.apply(newValue));
+        	eligableAssignees.clear();
+            eligableAssignees.addAll(getEligibleAssignees.apply(newValue));
         });
-        eligableAssignees.setAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
+        eligableAssignees.clear();
+        eligableAssignees.addAll(taskProperty().get() != null ? getEligibleAssignees.apply(taskProperty().get()) : new ArrayList<>());
 
         return eligableAssignees;
     }
