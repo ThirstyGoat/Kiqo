@@ -200,7 +200,6 @@ public class EffortLoggingPopover extends PopOver {
         dateTimeHbox.setSpacing(3);
         main.setSpacing(10);
         main.setPrefWidth(320);
-        main.setStyle("-fx-border-color: greenyellow");
 
     }
 
