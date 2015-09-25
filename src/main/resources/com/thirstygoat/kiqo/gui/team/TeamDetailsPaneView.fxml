@@ -27,7 +27,7 @@
 				            <Label text="Product Owner" styleClass="field-label" >
 					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 					        </Label>
-					        <GoatLabelTextField fx:id="productOwnerLabel" />
+					        <GoatLabelTextField fx:id="productOwnerLabel" defaultText="Add a PO"/>
 				        </children>
 			        </VBox>
 			        <VBox spacing="10" >
@@ -35,7 +35,7 @@
 					        <Label text="Scrum Master" styleClass="field-label" >
 					            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 					        </Label>
-					        <GoatLabelTextField fx:id="scrumMasterLabel" />
+					        <GoatLabelTextField fx:id="scrumMasterLabel" defaultText="Add an SM"/>
 					    </children>
 			        </VBox>
 		        </children>
