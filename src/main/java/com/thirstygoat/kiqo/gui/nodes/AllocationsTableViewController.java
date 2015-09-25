@@ -1,6 +1,7 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
 import com.thirstygoat.kiqo.command.EditCommand;
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.delete.DeleteAllocationCommand;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
@@ -11,6 +12,8 @@ import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -57,12 +60,26 @@ public class AllocationsTableViewController implements Initializable {
     @FXML
     private Hyperlink highlightHyperLink;
 
-    public void init(FirstColumnType type, Item item) {
+    public void init(FirstColumnType type, ObjectProperty<? extends Item> itemProperty) {
+        setMainController(UndoManager.getUndoManager().getMainController());
         this.type = type;
-        allocateTeamButton.setOnAction(event -> mainController.allocateTeams(type, item));
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams(type, itemProperty.get()));
         deleteAllocationButton.setOnAction(event -> deleteAllocation());
         editAllocationButton.setOnAction(event -> mainController
-                        .editAllocation(allocationsTableView.getSelectionModel().getSelectedItem(), type, item));
+                        .editAllocation(allocationsTableView.getSelectionModel().getSelectedItem(), type,
+                                        itemProperty.get()));
+
+        BooleanProperty teamsAndProjectsExistProperty = new SimpleBooleanProperty();
+        teamsAndProjectsExistProperty.bind(Bindings.createBooleanBinding(() -> {
+            if (mainController.selectedOrganisationProperty.get() != null) {
+                if (mainController.selectedOrganisationProperty.get().getTeams().size() > 0 && mainController.selectedOrganisationProperty.get().getProjects().size() > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }, mainController.selectedOrganisationProperty().get().getProjects(), mainController.selectedOrganisationProperty.get().getProjects(), mainController.selectedOrganisationProperty.get().getProjects()));
+        allocateTeamButton.disableProperty().bind(teamsAndProjectsExistProperty.not());
+
         //also needs to be bound to make sure that the table view is still focused too
         // at the moment it the delete button remains on if the tableview loses focus
         deleteAllocationButton.disableProperty().bind(
@@ -94,7 +111,8 @@ public class AllocationsTableViewController implements Initializable {
         endDateTableColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
 
         // cellFactory is NOT the same as cellValueFactory
-        teamTableColumn.setCellFactory(param -> new AllocationListCell(mainController.selectedOrganisationProperty, this));
+        teamTableColumn.setCellFactory(
+                        param -> new AllocationListCell(mainController.selectedOrganisationProperty, this));
 
         startDateTableColumn.setCellFactory(param -> {
             final AllocationDatePickerCell startDateCellFactory = new AllocationDatePickerCell();
@@ -110,12 +128,14 @@ public class AllocationsTableViewController implements Initializable {
 
 
         startDateTableColumn.setOnEditCommit(event -> {
-            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command =
+                            new EditCommand<>(event.getRowValue(), "startDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
         endDateTableColumn.setOnEditCommit(event -> {
-            final EditCommand<Allocation, LocalDate> command = new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
+            final EditCommand<Allocation, LocalDate> command =
+                            new EditCommand<>(event.getRowValue(), "endDate", event.getNewValue());
             mainController.doCommand(command);
         });
 
@@ -123,13 +143,14 @@ public class AllocationsTableViewController implements Initializable {
          * Initialises double click on a project or team in the allocation table, to easily navigate to their relevant details pane.
          */
         teamTableColumn.setCellFactory(param -> {
-            AllocationListCell allocationListCell = new AllocationListCell(mainController.selectedOrganisationProperty, this);
+            AllocationListCell allocationListCell =
+                            new AllocationListCell(mainController.selectedOrganisationProperty, this);
             allocationListCell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                if (event.getClickCount() > 1 ) {
-                    Allocation allocation = (Allocation)allocationListCell.getTableRow().getItem();
-                    if (type.equals(FirstColumnType.PROJECT)){
+                if (event.getClickCount() > 1) {
+                    Allocation allocation = (Allocation) allocationListCell.getTableRow().getItem();
+                    if (type.equals(FirstColumnType.PROJECT)) {
                         MainController.focusedItemProperty.set(allocation.getProject());
-                    } else if(type.equals(FirstColumnType.TEAM)) {
+                    } else if (type.equals(FirstColumnType.TEAM)) {
                         MainController.focusedItemProperty.set(allocation.getTeam());
                     }
                 }
@@ -177,7 +198,7 @@ public class AllocationsTableViewController implements Initializable {
     private void setButtonDisabled() {
         final boolean areProjects = mainController.selectedOrganisationProperty().getValue().getProjects().size() > 0;
         final boolean areTeams = mainController.selectedOrganisationProperty().getValue().getTeams().size() > 0;
-        allocateTeamButton.setDisable(!(areProjects && areTeams));
+        //allocateTeamButton.setDisable(!(areProjects && areTeams));
     }
 
     public void setMainController(MainController mainController) {
@@ -282,6 +303,10 @@ public class AllocationsTableViewController implements Initializable {
 
     public BooleanProperty checkBoxSelectedProperty() {
         return highlightCheckBox.selectedProperty();
+    }
+
+    public ObjectProperty<ObservableList<Allocation>> itemsProperty() {
+        return allocationsTableView.itemsProperty();
     }
 
     public enum  FirstColumnType {

@@ -23,7 +23,7 @@
       <right>
         <HBox alignment="BOTTOM_RIGHT" spacing="5.0">
           <children>
-            <Button fx:id="allocateTeamButton" disable="true" mnemonicParsing="false" text="+" />
+            <Button fx:id="allocateTeamButton" mnemonicParsing="false" text="+" />
             <Button fx:id="deleteAllocationButton" disable="true" mnemonicParsing="false" text="-" />
             <Button fx:id="editAllocationButton" disable="true" mnemonicParsing="false" text="Edit" />
           </children>
