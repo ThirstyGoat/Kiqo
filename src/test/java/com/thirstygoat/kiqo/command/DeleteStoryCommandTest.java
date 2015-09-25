@@ -20,7 +20,7 @@ public class DeleteStoryCommandTest {
     public void setup() {
         project = new Project("", "");
         story = new Story("story1", "Story One", "descr", person, project, backlog, 9, Scale.FIBONACCI, 0, false, false, null);
-        project.observableUnallocatedStories().add(story);
+        project.getUnallocatedStories().add(story);
         command = new DeleteStoryCommand(story);
     }
 

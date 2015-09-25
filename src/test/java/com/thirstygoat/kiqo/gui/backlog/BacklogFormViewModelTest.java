@@ -42,8 +42,8 @@ public class BacklogFormViewModelTest {
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(unreadyStory);
-        project.observableUnallocatedStories().add(readyStory);
+        project.getUnallocatedStories().add(unreadyStory);
+        project.getUnallocatedStories().add(readyStory);
 
         viewModel.setExitStrategy(() -> {}); // not running in a JavaFX thread so no special exit action needed
     }

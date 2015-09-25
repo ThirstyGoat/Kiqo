@@ -48,8 +48,8 @@ public class StoryViewModelTest {
         project.observableReleases().add(release);
         story1 = new Story("story1", "longName", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         story2 = new Story("story2", "longName", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(story1);
-        project.observableUnallocatedStories().add(story2);
+        project.getUnallocatedStories().add(story1);
+        project.getUnallocatedStories().add(story2);
         skill1 = new Skill("skill1", "");
         skill2 = new Skill("skill2", "");
         organisation.getSkills().add(skill1);

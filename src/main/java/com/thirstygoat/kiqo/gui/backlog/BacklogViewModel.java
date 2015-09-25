@@ -38,14 +38,18 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
 	private ListProperty<Story> eligibleStories;
 
     public BacklogViewModel() {
-    	eligibleStories = new SimpleListProperty<>();
+    	eligibleStories = new SimpleListProperty<>(FXCollections.observableArrayList());
     	eligibleStories.bind(Bindings.createObjectBinding(() -> {
         	if (projectProperty().get() != null) {
-        		return projectProperty().get().observableUnallocatedStories();
+        		List<Story> list = new ArrayList<>();
+        		list.addAll(projectProperty().get().getUnallocatedStories()); // not in any backlog in model
+        		list.addAll(modelWrapper.get().observableStories()); // in THIS backlog in model
+        		list.addAll(stories()); // in THIS backlog in viewModel
+        		return list.stream().distinct().collect(GoatCollectors.toObservableList());
         	} else {
         		return FXCollections.observableArrayList();
         	}
-        }, projectProperty()));
+        }, projectProperty(), stories()));
         
         attachValidators();
     }
@@ -116,21 +120,6 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @return A collections of valid stories that can belong to this backlog.
-     */
-    protected Supplier<ObservableList<Story>> storySupplier() {
-        return () -> {
-            if (projectProperty().get() == null) {
-                return FXCollections.observableArrayList();
-            } else {
-                return projectProperty().get().getUnallocatedStories()
-                        .stream().filter(story -> (!stories().contains(story)))
-                        .collect(GoatCollectors.toObservableList());
-            }
-        };
-    }
-
     @Override
     public Command getCommand() {
         final Command command;
@@ -165,7 +154,7 @@ public class BacklogViewModel extends ModelViewModel<Backlog> {
                     changes.add(new EditCommand<>(story, "estimate", 0));
                     changes.add(new EditCommand<>(story, "scale", scaleProperty().get()));
                 }
-                changes.add(new MoveItemCommand<>(story, projectProperty().get().observableUnallocatedStories(),
+                changes.add(new MoveItemCommand<>(story, projectProperty().get().getUnallocatedStories(),
                         modelWrapper.get().observableStories()));
                 changes.add(new EditCommand<>(story, "backlog", modelWrapper.get()));
             }

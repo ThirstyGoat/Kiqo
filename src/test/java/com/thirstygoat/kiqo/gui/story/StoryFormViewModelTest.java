@@ -46,8 +46,8 @@ public class StoryFormViewModelTest {
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(unreadyStory);
-        project.observableUnallocatedStories().add(readyStory);
+        project.getUnallocatedStories().add(unreadyStory);
+        project.getUnallocatedStories().add(readyStory);
     }
 
     /**
@@ -91,7 +91,7 @@ public class StoryFormViewModelTest {
     public void existingStory_testChangeProject() {
         Story duplicateShortName = new Story();
         duplicateShortName.setShortName(readyStory.getShortName());
-        secondProject.observableUnallocatedStories().add(duplicateShortName);
+        secondProject.getUnallocatedStories().add(duplicateShortName);
 
         viewModel.load(readyStory, organisation);
         viewModel.projectProperty().set(secondProject);

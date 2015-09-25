@@ -1,5 +1,6 @@
 package com.thirstygoat.kiqo.gui.story;
 
+<<<<<<< Upstream, based on origin/master
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.gui.DelayedValidationVisualizer;
 import com.thirstygoat.kiqo.gui.FormButtonHandler;
@@ -21,10 +22,36 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import org.controlsfx.validation.ValidationSupport;
-
+=======
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.controlsfx.control.PopOver;
+>>>>>>> b199b0a GoatFilteredListView in BacklogForm is done.
+import org.controlsfx.validation.ValidationSupport;
+
+<<<<<<< Upstream, based on origin/master
+import java.net.URL;
+import java.util.ResourceBundle;
+=======
+import com.thirstygoat.kiqo.command.Command;
+import com.thirstygoat.kiqo.gui.*;
+import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.*;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.fxml.*;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.util.converter.NumberStringConverter;
+>>>>>>> b199b0a GoatFilteredListView in BacklogForm is done.
 
 /**
  * Created by Carina Blair on 15/05/2015.
@@ -54,8 +81,9 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
     private TextField priorityTextField;
     @FXML
     private ComboBox<Scale> estimationScaleComboBox;
-    @FXML
-    private GoatFilteredListSelectionView<Story> storySelectionView;
+    //TODO omitted for syntactic correctness (backlog can't be set in this form anyway, so stories are tricky to find)
+//    @FXML 
+//    private GoatFilteredListSelectionView<Story> storySelectionView;
     @FXML
     private Button okButton;
     @FXML
@@ -81,11 +109,10 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         estimationScaleComboBox.setItems(FXCollections.observableArrayList(Scale.values()));
         estimationScaleComboBox.getSelectionModel().selectFirst();
 
-//        storySelectionView.setHeader(new Label("Depends on:"));
-//        storySelectionView.targetItemsProperty().bindBidirectional(viewModel.dependenciesProperty());
-//        storySelectionView.sourceItemsProperty().bind(viewModel.eligibleDependencies());
-
-//        storySelectionView.setStringPropertyCallback(story -> story.shortNameProperty());
+//        storySelectionView.setHeader(new Label("Depends on:")); TODO
+//        storySelectionView.bindSelectedItems(viewModel.dependenciesProperty());
+//        storySelectionView.bindAllItems(viewModel.eligibleDependencies());
+//        storySelectionView.setStringPropertyCallback(Story::shortNameProperty);
 
         okButton.disableProperty().bind(viewModel.allValidation().validProperty().not());
 
@@ -106,8 +133,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
             longNameTextField.requestFocus();
             creatorTextField.disableProperty().bind(viewModel.getCreatorEditable().not());
         });
-//        setStoryCycleHyperLinkInfo();
-//        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty()));
+//        setStoryCycleHyperLinkInfo(); TODO
+//        storySelectionView.disableProperty().bind(Bindings.isNull(viewModel.backlogProperty())); TODO
     }
 
     private void setPrompts() {
@@ -130,8 +157,8 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
         validationVisualizer.initVisualization(viewModel.priorityValidation(), priorityTextField, true);
         validationVisualizer.initVisualization(viewModel.scaleValidation(), estimationScaleComboBox);
     }
-//
-//    private void setStoryCycleHyperLinkInfo() {
+
+//    private void setStoryCycleHyperLinkInfo() { TODO
 //        Label label = new Label();
 //        label.setText("Only the stories that will not create a dependency loop are shown");
 //        label.setPadding(new Insets(10, 10, 10, 10));
@@ -147,10 +174,6 @@ public class StoryFormView implements FxmlView<StoryFormViewModel>, Initializabl
 //            }
 //        });
 //    }
-
-    private void setupStoriesList() {
-        storySelectionView.setHeader(new Label("Depends on:"));
-    }
 
     public void setExitStrategy(Runnable exitStrategy) {
         formButtonHandler = new FormButtonHandler(viewModel::getCommand, exitStrategy);

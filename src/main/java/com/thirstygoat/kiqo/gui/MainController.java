@@ -394,7 +394,7 @@ public class MainController implements Initializable {
                 // move all stories in backlog to stoies for project
                 for (final Story story : backlog.getStories()) {
                     final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
-                            backlog.getProject().observableUnallocatedStories());
+                            backlog.getProject().getUnallocatedStories());
                     changes.add(command);
                 }
             }

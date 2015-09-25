@@ -257,9 +257,9 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
             if (!projectProperty().get().equals(modelWrapper.get().getProject())) {
                 if (modelWrapper.get().getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().observableStories(), projectProperty().get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().observableStories(), projectProperty().get().getUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().observableUnallocatedStories(), projectProperty().get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().getUnallocatedStories(), projectProperty().get().getUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
                 changes.add(new EditCommand<>(modelWrapper.get(), "backlog", null));

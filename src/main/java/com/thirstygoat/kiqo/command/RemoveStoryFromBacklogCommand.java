@@ -16,7 +16,7 @@ public class RemoveStoryFromBacklogCommand extends Command {
     public RemoveStoryFromBacklogCommand(Story story, Backlog backlog) {
         List<Command> commands = new ArrayList<>();
         commands.add(new MoveItemCommand<>(story, backlog.observableStories(),
-                backlog.projectProperty().get().observableUnallocatedStories()));
+                backlog.projectProperty().get().getUnallocatedStories()));
         commands.add(new EditCommand<>(story, "backlog", null));
         if (story.getIsReady()) {
             commands.add(new EditCommand<>(story, "isReady", false));
