@@ -356,7 +356,11 @@ Advanced Search allows the user to limit their search to a narrowed scope, and h
 %----------------------------------------------------------------------------------------
 %	CHAPTER 4
 %----------------------------------------------------------------------------------------
-\chapter{Sprints}
+\chapter{Scrumboard}
+
+The scrumboard is a visual workspace which makes it possible for team members to keep track of stories in a sprint.
+Stories are displayed ranked in priority order and can be dragged vertically to change priority. Stories can also
+be expanded and shrunken by clicking the story card.
 
 \section{Story Completeness Visualisation}
 \begin{itemize}
@@ -370,6 +374,37 @@ Advanced Search allows the user to limit their search to a narrowed scope, and h
   \includegraphics[scale=0.32]{storyVisualisation}
   \caption{Story Completeness Visualisation.\label{storyVisualisation}}
 \end{figure}
+
+\section{Tasks}
+
+Tasks are shown in task cards on the scrumboard. The top left of the task card displays the total ammount of effort logged towards the task and the effort that has been estimated for the task.
+
+Clicking on a task expands the card to show more details.
+Tasks can also be dragged across the board to change their status. 
+
+\subsection{Impediments and blocks}
+
+If a task is impeded a triangular warning icon will be displayed on the task card. 
+The status of impediments can be modified from the exapanded task card view.
+When all impediments are resolved then the warning icon will be removed from the task card.
+
+A task can be blocked by clicking the checkbox in the upper right hand corner of the expanded task card.
+When a task is blocked this will be shown on the scrumboard by a red glow surrounding the card.
+
+\subsection{Logging effort}
+
+In order to track a team members work, effort can be logged towards a task.
+There are two ways to log effort towards a task:
+
+\begin{enumerate}
+\item By clicking the top right of a task card.
+\item From the expanded task card view, clicking the \keys{logging} button in the top right.
+\end{enumerate}
+
+\subsection{Burndown chart}
+
+The burndown chart provides a visual representation of logged and estimated effort. It is a useful tool for viewing and
+predicted the progress of a sprint. The burndown chart can be saved as an image to include in presentations and reports.
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 5
