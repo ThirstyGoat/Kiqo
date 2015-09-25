@@ -148,7 +148,7 @@ public final class FxUtils {
      */
     private static <T> void bindProperty(GoatLabel<? extends TextInputControl> goatLabel, Property<T> property,
             StringConverter<T> stringConverter) {
-        goatLabel.displayTextProperty().bindBidirectional(property, stringConverter);
+        goatLabel.displayTextProperty().bind(Bindings.createStringBinding(() -> stringConverter.toString(property.getValue()), property));
         goatLabel.getEditField().textProperty().bindBidirectional(property, stringConverter);
     }
 

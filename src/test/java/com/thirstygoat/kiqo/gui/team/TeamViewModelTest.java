@@ -90,6 +90,7 @@ public class TeamViewModelTest {
         Supplier<List<Person>> supplier = viewModel.productOwnerSupplier();
         Person person = new Person();
         organisation.getPeople().add(person);
+        viewModel.teamMembersProperty().add(person);
         
         Assert.assertFalse("Person without PO skill is ineligible.", supplier.get().contains(person));
 
