@@ -54,7 +54,7 @@
             <Label text="Skills" styleClass="field-label" >
 	            <VBox.margin><Insets bottom="-8"/></VBox.margin>
 	        </Label>
-	        <FilteredListBiControl fx:id="skillsLabel" />
+	        <ListViewFilteredListBiControl fx:id="skillsLabel" />
           </children>
         </VBox>
       </content>

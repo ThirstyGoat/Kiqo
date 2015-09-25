@@ -56,6 +56,15 @@ public abstract class ModelViewModel<T extends BoundProperties> implements ViewM
     public void reload() {
         modelWrapper.reload();
     }
+
+    /**
+     * @deprecated Maybe don't use this. Added to fix issues #117 and #118.
+     * @return
+     */
+    @Deprecated
+    public T getWrappedObject() {
+        return modelWrapper.get();
+    }
     
     public ObjectProperty<Organisation> organisationProperty() {
         return organisationProperty;

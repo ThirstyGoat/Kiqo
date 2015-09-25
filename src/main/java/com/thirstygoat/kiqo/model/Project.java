@@ -176,10 +176,6 @@ public class Project extends Item {
         return releases;
     }
 
-    public ObservableList<Story> observableUnallocatedStories() {
-        return unallocatedStories;
-    }
-
     public ObservableList<Backlog> observableBacklogs() {
         return backlogs;
     }
@@ -201,13 +197,11 @@ public class Project extends Item {
     /**
      * @return list of unallocatedStories associated with this project
      */
-    public List<Story> getUnallocatedStories() {
-        final List<Story> stories = new ArrayList<>();
-        stories.addAll(this.unallocatedStories);
-        return stories;
-    }
+    public ObservableList<Story> getUnallocatedStories() {
+	    return unallocatedStories;
+	}
 
-    /**
+	/**
      * @param unallocatedStories list of unallocatedStories associated with this project
      */
     public void setUnallocatedStories(final List<Story> unallocatedStories) {

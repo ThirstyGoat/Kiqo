@@ -3,6 +3,7 @@ package com.thirstygoat.kiqo.gui.project;
 import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.model.Allocation;
 import com.thirstygoat.kiqo.util.FxUtils;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -41,13 +42,13 @@ public class ProjectDetailsPaneView implements FxmlView<ProjectDetailsPaneViewMo
                 viewModel.shortNameValidation());
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(), "Add a description...");
+                viewModel.descriptionValidation());
 
         // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
         // a listener is setup to set the items only when allocations is not null.
-        viewModel.allocations().addListener((ListChangeListener) change -> {
+        viewModel.allocations().addListener((ListChangeListener.Change<? extends Allocation> change) -> {
             if (viewModel.allocations().get() != null) {
-                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM);
+                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.TEAM, viewModel.getWrappedObject());
                 allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
                 allocationsTableViewController.setItems(viewModel.allocations());
             }

@@ -48,8 +48,8 @@ public class StoryViewModelTest {
         project.observableReleases().add(release);
         story1 = new Story("story1", "longName", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         story2 = new Story("story2", "longName", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(story1);
-        project.observableUnallocatedStories().add(story2);
+        project.getUnallocatedStories().add(story1);
+        project.getUnallocatedStories().add(story2);
         skill1 = new Skill("skill1", "");
         skill2 = new Skill("skill2", "");
         organisation.getSkills().add(skill1);
@@ -189,10 +189,10 @@ public class StoryViewModelTest {
         Project project = new Project("shortName", "longName");
         Story story = new Story("shortName", "longName", "description", creator, project, null, 0, Scale.FIBONACCI, 0, false, false, null);
 
-        Assert.assertTrue("Creator field should be editable by default.", storyViewModel.getCreatorEditable().get());
+        Assert.assertFalse("Creator field should be editable by default.", storyViewModel.getCreatorEditable().get());
 
         storyViewModel.load(story, organisation);
-        Assert.assertTrue("Creator field should be editable for a new story.",
+        Assert.assertFalse("Creator field should be editable for a new story.",
                         storyViewModel.getCreatorEditable().get());
     }
 
@@ -200,12 +200,12 @@ public class StoryViewModelTest {
     public void testDependencyList() {
         // Add some stories to the backlog that story1 is in
         Story a, b, c, d;
-        story1.getBacklog().observableStories().addAll(Arrays.asList(
+        story1.getBacklog().getStories().addAll(Arrays.asList(
                         a = new Story("A", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null),
                         b = new Story("B", "", "", person, project, backlog, 0, Scale.FIBONACCI, 0, false, false, null)));
 
         Backlog backlog2 = new Backlog();
-        backlog2.observableStories().addAll(Arrays.asList(
+        backlog2.getStories().addAll(Arrays.asList(
                         c = new Story("C", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null),
                         d = new Story("D", "", "", person, project, backlog2, 0, Scale.FIBONACCI, 0, false, false, null)));
 

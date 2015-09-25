@@ -190,6 +190,10 @@ public class UndoManager {
         return undoStack.peek();
     }
 
+    public MainController getMainController() {
+        return mainController;
+    }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }

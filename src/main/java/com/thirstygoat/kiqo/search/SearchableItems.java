@@ -70,7 +70,7 @@ public class SearchableItems {
             case STORIES:
                 ObservableList<Searchable> stories = FXCollections.observableArrayList();
                 for (Project project : getOrganisation().getProjects()) {
-                    stories.addAll(project.observableUnallocatedStories());
+                    stories.addAll(project.getUnallocatedStories());
                     for (Backlog backlog: project.observableBacklogs())
                         backlog.getStories().forEach(stories::addAll);
                 }

@@ -24,7 +24,7 @@ public class CreateBacklogCommand extends CreateCommand {
         }
 
         // Remove all stories from unallocated stories in Project
-        backlog.getProject().observableUnallocatedStories().removeAll(backlog.getStories());
+        backlog.getProject().getUnallocatedStories().removeAll(backlog.getStories());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CreateBacklogCommand extends CreateCommand {
             story.setBacklog(null);
         }
 
-        backlog.getProject().observableUnallocatedStories().addAll(backlog.getStories());
+        backlog.getProject().getUnallocatedStories().addAll(backlog.getStories());
     }
 
     @Override

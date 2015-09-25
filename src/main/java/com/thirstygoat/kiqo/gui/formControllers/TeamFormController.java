@@ -10,7 +10,7 @@ import com.thirstygoat.kiqo.model.Person;
 import com.thirstygoat.kiqo.model.Team;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -25,6 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -43,8 +45,9 @@ public class TeamFormController extends FormController<Team> {
 
     private static final Logger LOGGER = Logger.getLogger(TeamFormController.class.getName());
     private final ArrayList<Person> devTeam = new ArrayList<>();
-    private final ObservableList<Person> targetPeople = FXCollections.observableArrayList();
-    private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
+    private final ListProperty<Person> selectedTeamMembers = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Person> eligiblePeople = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private final ArrayList<RadioButton> poRadioButtons = new ArrayList<>();
     private final ArrayList<RadioButton> smRadioButtons = new ArrayList<>();
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
@@ -68,22 +71,12 @@ public class TeamFormController extends FormController<Team> {
     @FXML
     private Button cancelButton;
 
-    private static void setCellFactory(ListView<Person> listView) {
-        listView.setCellFactory(view -> new ListCell<Person>() {
-            @Override
-            public void updateItem(Person person, boolean empty) {
-                super.updateItem(person, empty);
-                if (person != null) {
-                    setText(person.getShortName());
-                } else {
-                    setText(null);
-                }
-            }
-        });
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        peopleListSelectionView.bindAllItems(eligiblePeople);
+        peopleListSelectionView.bindSelectedItems(selectedTeamMembers);
+        peopleListSelectionView.setStringPropertyCallback(Person::shortNameProperty);
+        
         setButtonHandlers();
         Utilities.initShortNameLengthLimiter(shortNameTextField.textProperty());
         setPrompts();
@@ -144,7 +137,7 @@ public class TeamFormController extends FormController<Team> {
 
     private void setCommand() {
         final ArrayList<Person> teamMembers = new ArrayList<>();
-        teamMembers.addAll(targetPeople);
+        teamMembers.addAll(selectedTeamMembers);
         if (team == null) {
             // create command
             team = new Team(shortNameTextField.getText(), descriptionTextField.getText(), teamMembers);
@@ -227,12 +220,10 @@ public class TeamFormController extends FormController<Team> {
 
         // Set the custom cell factory for the skills lists
         // Thank GoatListSelectionView for this fabulous method
-
-//        TeamFormController.setCellFactory(peopleListSelectionView.getSourceListView());
         peopleListSelectionView.setTargetCellGraphicFactory(getTargetCell());
 
         // Set change listener on target list view
-        targetPeople.addListener((ListChangeListener<Person>) c -> {
+        selectedTeamMembers.addListener((ListChangeListener<Person>) c -> {
             c.next();
             for (final Person person : c.getRemoved()) {
                 // Remove person from role of PO/SM/DevTeam if applicable
@@ -250,7 +241,7 @@ public class TeamFormController extends FormController<Team> {
         });
     }
 
-    private javafx.util.Callback<Person, Node> getTargetCell() {
+    private Callback<Person, Node> getTargetCell() {
         return person -> {
             final BorderPane borderPane = new BorderPane();
             final HBox hbox = new HBox();
@@ -273,10 +264,10 @@ public class TeamFormController extends FormController<Team> {
 
             // Disable PO/SM Radio Buttons if the person doesn't have
             // the skill
-            if (!person.getSkills().contains(organisation.getPoSkill())) {
+            if (!person.observableSkills().contains(organisation.getPoSkill())) {
                 radioPo.setDisable(true);
             }
-            if (!person.getSkills().contains(organisation.getSmSkill())) {
+            if (!person.observableSkills().contains(organisation.getSmSkill())) {
                 radioSm.setDisable(true);
             }
 
@@ -357,31 +348,25 @@ public class TeamFormController extends FormController<Team> {
     }
 
     private void populatePeopleListView() {
-        // all people observableList = project.getPeople();
-        final ObservableList<Person> sourcePeople = FXCollections.observableArrayList();
-        sourcePeople.addAll(organisation.getPeople());
-
-        // Remove all people from sourcePeople that are currently in a team
-        organisation.getPeople().stream().filter(person -> person.getTeam() != null).forEach(sourcePeople::remove);
+        // Can't already be in a different team
+        eligiblePeople.setAll(organisation.getPeople().stream()
+        		.filter(person -> person.getTeam() == null || person.getTeam().equals(team))
+        		.collect(Collectors.toList()));
 
         organisation.getPeople().addListener((ListChangeListener<Person>) c -> {
             c.next();
-            // We remove people from the sourcePeople that were removed from the project.
+            // We remove people from the sourcePeople that were removed.
             // Note that this shouldn't actually be possible since undo/redo should be disabled
-            sourcePeople.removeAll(c.getRemoved());
-            targetPeople.removeAll(c.getRemoved());
+            eligiblePeople.removeAll(c.getRemoved());
+            selectedTeamMembers.removeAll(c.getRemoved());
             for (final Person person : c.getAddedSubList()) {
                 if (person.getTeam() == team) {
-                    targetPeople.add(person);
+                    selectedTeamMembers.add(person);
                 } else {
-                    sourcePeople.add(person);
+                    eligiblePeople.add(person);
                 }
             }
         });
-
-        peopleListSelectionView.setSourceItems(sourcePeople);
-        peopleListSelectionView.setTargetItems(targetPeople);
-        peopleListSelectionView.setStringPropertyCallback(person -> person.shortNameProperty());
     }
 
 
@@ -403,7 +388,7 @@ public class TeamFormController extends FormController<Team> {
             // Populate fields with existing data
             shortNameTextField.setText(team.getShortName());
             descriptionTextField.setText(team.getDescription());
-            targetPeople.addAll(team.getTeamMembers());
+            selectedTeamMembers.addAll(team.getTeamMembers());
             okButton.setText("Done");
 
             productOwner = team.getProductOwner();

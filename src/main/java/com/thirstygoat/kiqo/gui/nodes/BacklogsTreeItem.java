@@ -21,7 +21,7 @@ public class BacklogsTreeItem extends GoatTreeItem<Backlog> {
     @Override
     protected TreeItem<Item> createTreeItem(final Item item) {
         final GoatTreeItem<Item> treeItem = new GoatTreeItem<>(item, selectionModel, Utilities.LEXICAL_COMPARATOR);
-        treeItem.setItems(((Backlog) item).observableStories());
+        treeItem.setItems(((Backlog) item).getStories());
         return treeItem;
     }
 }

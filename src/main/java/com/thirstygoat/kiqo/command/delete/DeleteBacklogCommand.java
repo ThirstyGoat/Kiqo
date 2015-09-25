@@ -47,7 +47,7 @@ public class DeleteBacklogCommand extends DeleteCommand {
 
         // delete each story member
         for (final Story story : stories.values()) {
-            backlog.observableStories().remove(story);
+            backlog.getStories().remove(story);
         }
 
         // delete the backlog
@@ -66,7 +66,7 @@ public class DeleteBacklogCommand extends DeleteCommand {
         // if we deleted the stories put them back, otherwise they will be moved back with moveItemCommands in MC
         if(deleteStories) {
             for (final Map.Entry<Integer, Story> entry : stories.entrySet()) {
-                backlog.observableStories().add(entry.getKey(), entry.getValue());
+                backlog.getStories().add(entry.getKey(), entry.getValue());
             }
         }
         project.observableBacklogs().add(index, backlog);

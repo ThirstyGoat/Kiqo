@@ -1,18 +1,14 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.command.CompoundCommand;
 import com.thirstygoat.kiqo.command.EditCommand;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.Allocation;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.model.Skill;
-import com.thirstygoat.kiqo.model.Team;
+import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.GoatCollectors;
 import com.thirstygoat.kiqo.util.Utilities;
 
@@ -23,11 +19,8 @@ import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.*;
+import javafx.collections.*;
 
 public class TeamViewModel extends ModelViewModel<Team> {
 
@@ -38,21 +31,50 @@ public class TeamViewModel extends ModelViewModel<Team> {
     private ObservableRuleBasedValidator teamMembersValidator;
     private ObservableRuleBasedValidator devTeamValidator;
     private CompositeValidator allValidator;
-	private final ObjectBinding<ObservableList<Person>> eligibleTeamMembers;
+	private final ListProperty<Person> eligibleTeamMembers;
+	private final ListProperty<Person> eligibleDevs;
 
     public TeamViewModel() {
         createValidators();
         
-        eligibleTeamMembers = Bindings.createObjectBinding(() -> {
-	    		if (organisationProperty().get() != null) {
-			    	return organisationProperty().get().getPeople().stream()
-			            .filter(person -> person.getTeam() == null)// || !teamMembersProperty().get().contains(person))
-			            .collect(GoatCollectors.toObservableList());
-	    		} else {
-	    			return FXCollections.observableArrayList();
-	    		}
-			}, 
-			organisationProperty());
+        ListProperty<Person> peopleInOrganisation = new SimpleListProperty<>(FXCollections.observableArrayList());
+        peopleInOrganisation.bind(Bindings.createObjectBinding(() -> {
+        	if (organisationProperty().get() != null) {
+        		return organisationProperty().get().getPeople();
+        	} else {
+        		return FXCollections.observableArrayList();
+        	}
+        }, organisationProperty()));
+        
+        eligibleTeamMembers = new SimpleListProperty<>();
+        eligibleTeamMembers.bind(Bindings.createObjectBinding(() -> {
+    		return peopleInOrganisation.stream()
+		            .filter(person -> person.getTeam() == null // no team in model (not ticked)
+		            		|| person.getTeam() == modelWrapper.get() // this team in model (unticked)
+		            		|| teamMembersProperty().contains(person)) // this team in viewModel (ticked)
+		            .collect(GoatCollectors.toObservableList());
+		}, peopleInOrganisation, teamMembersProperty()));
+
+        eligibleDevs = new SimpleListProperty<>();
+        eligibleDevs.bind(Bindings.createObjectBinding(() -> {
+			return teamMembersProperty().get().stream() // is in team
+		            .filter(person -> 
+		            	!person.equals(productOwnerProperty().get())
+		            	&& !person.equals(scrumMasterProperty().get()))
+		            .collect(GoatCollectors.toObservableList());
+		}, teamMembersProperty(), productOwnerProperty(), scrumMasterProperty()));
+        
+        teamMembersProperty().addListener((ListChangeListener.Change<? extends Person> change) -> {
+        	change.next();
+        	List<? extends Person> removed = change.getRemoved();
+        	devTeamProperty().removeAll(removed);
+        	if (removed.contains(productOwnerProperty().get())) {
+        		productOwnerProperty().set(null);
+        	}
+        	if (removed.contains(scrumMasterProperty().get())) {
+        		scrumMasterProperty().set(null);
+        	}
+        });
     }
 
     @Override
@@ -95,12 +117,12 @@ public class TeamViewModel extends ModelViewModel<Team> {
         super.addEditCommands.accept(changes);
 
         if (!(teamMembersProperty().get().containsAll(modelWrapper.get().getTeamMembers())
-                        && modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
+        		&& modelWrapper.get().getTeamMembers().containsAll(teamMembersProperty().get()))) {
             changes.add(new EditCommand<>(modelWrapper.get(), "teamMembers", teamMembersProperty().get()));
         }
 
         if (!(devTeamProperty().get().containsAll(modelWrapper.get().getDevTeam())
-                        && modelWrapper.get().getDevTeam().containsAll(devTeamProperty().get()))) {
+        		&& modelWrapper.get().getDevTeam().containsAll(devTeamProperty().get()))) {
             changes.add(new EditCommand<>(modelWrapper.get(), "devTeam", devTeamProperty().get()));
         }
 
@@ -130,7 +152,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             // person has po skill and does not currently have any other role in the team
             List<Person> eligiblePeople = organisationProperty().get().getPeople().stream()
                     .filter(person -> {
-                        return person.getSkills().contains(poSkill) 
+                        return person.observableSkills().contains(poSkill) 
                                 && (currentScrumMaster == null || !person.equals(currentScrumMaster))
                                 && !currentDevTeam.contains(person);
                     }).collect(Collectors.toList());
@@ -145,7 +167,7 @@ public class TeamViewModel extends ModelViewModel<Team> {
             List<Person> currentDevTeam = devTeamProperty().get();
             // person has sm skill and does not currently have any other role in the team
             return organisationProperty().get().getPeople().stream()
-                    .filter(person -> person.getSkills().contains(smSkill) 
+                    .filter(person -> person.observableSkills().contains(smSkill) 
                             && !person.equals(currentProductOwner)
                             && !currentDevTeam.contains(person))
                     .collect(Collectors.toList());
@@ -208,13 +230,11 @@ public class TeamViewModel extends ModelViewModel<Team> {
         return allValidator.getValidationStatus();
     }
 
-    protected ObjectBinding<ObservableList<Person>> eligibleTeamMembers() {
+    protected ListProperty<Person> eligibleTeamMembers() {
 	    return eligibleTeamMembers;
 	}
-	
-	@Override
-	public void reload() {
-		super.reload();
-		eligibleTeamMembers.invalidate();
-	}
+    
+    protected ListProperty<Person> eligibleDevs() {
+        return eligibleDevs;
+    }
 }

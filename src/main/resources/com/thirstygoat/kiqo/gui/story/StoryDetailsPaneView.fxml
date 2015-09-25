@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl?>
-<?import com.thirstygoat.kiqo.gui.nodes.*?>
+<?import com.thirstygoat.kiqo.gui.nodes.bicontrol.ListViewFilteredListBiControl?>
+<?import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
@@ -48,7 +48,7 @@
                                     <Label styleClass="pane-type-indicator" text="Creator" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
                                     </Label>
-                                    <GoatLabelTextField fx:id="creatorLabel"  />
+                                    <Label fx:id="creatorLabel"  />
 
                                     <Label styleClass="pane-type-indicator" text="Priority" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
@@ -73,7 +73,7 @@
                                     <Label styleClass="pane-type-indicator" text="Depends on" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>
                                     </Label>
-                                    <FilteredListBiControl fx:id="dependenciesLabel" />
+                                    <ListViewFilteredListBiControl fx:id="dependenciesLabel" />
 
                                     <Label styleClass="pane-type-indicator" text="Total Spent Hours" >
                                         <VBox.margin><Insets bottom="-8"/></VBox.margin>

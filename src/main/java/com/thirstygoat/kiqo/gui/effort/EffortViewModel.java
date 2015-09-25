@@ -6,7 +6,10 @@ import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.command.create.CreateEffortCommand;
 import com.thirstygoat.kiqo.gui.Editable;
 import com.thirstygoat.kiqo.gui.ModelViewModel;
-import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.model.Effort;
+import com.thirstygoat.kiqo.model.Organisation;
+import com.thirstygoat.kiqo.model.Person;
+import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
@@ -20,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -238,15 +240,9 @@ public class EffortViewModel extends ModelViewModel<Effort> implements Editable 
 
     public ListProperty<Person> eligibleAssignees() {
         ListProperty<Person> eligableAssignees = new SimpleListProperty<>(FXCollections.observableArrayList());
-
         Function<Task, List<Person>> getEligibleAssignees = task -> {
-            Optional<Sprint> sprintTaskBelongsTo = task.getStory().getBacklog().getProject().getReleases().stream()
-                    .flatMap(release -> release.getSprints().stream())
-                    .filter(sprint -> sprint.getStories().contains(task.getStory()))
-                    .findAny();
-
-            if (sprintTaskBelongsTo.isPresent()) {
-                return sprintTaskBelongsTo.get().getTeam().getTeamMembers().stream()
+            if (task.getStory().getInSprint()) {
+                return task.getStory().getSprint().getTeam().getTeamMembers().stream()
                         .filter(person -> !task.getAssigneesObservable().contains(person))
                         .collect(Collectors.toList());
             } else {

@@ -107,7 +107,6 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         initEffortLogging();
 
         FxUtils.initGoatLabel(assignedPeopleLabel, viewModel, viewModel.assignees(), viewModel.eligibleAssignees());
-        assignedPeopleLabel.getEditField().setStringPropertyCallback(Person::shortNameProperty);
         assignedPeopleLabel.getEditField().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
         assignedPeopleLabel.getDisplayLabel().maxWidthProperty().set(mainAnchorPane.prefWidthProperty().get() - 50);
 
@@ -140,11 +139,11 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
         loggedEffortListView.itemsProperty().bind(viewModel.loggedEffort());
         loggedEffortListView.setCellFactory((lv) -> new EffortListCell());
 
-        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
-        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation());
-        FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(),
-                viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
+//        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+//        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
+//                viewModel.descriptionValidation());
+//        FxUtils.initGoatLabel(estimatedHoursLabel, viewModel, viewModel.estimateProperty(),
+//                viewModel.estimateValidation());  //TODO fix the parsing error when "-" is typed into the box
         blockedCheckBox.selectedProperty().bindBidirectional(viewModel.blockedProperty());
         blockedCheckBox.setOnAction(event -> viewModel.commitEdit());
 
@@ -186,6 +185,7 @@ public class TaskCardExpandedView implements FxmlView<TaskCardViewModel>, Initia
     }
 
     private void initSegmentedButton() {
+        detailsToggleButton.setSelected(true);
         segmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 segmentedButton.getToggleGroup().selectToggle(oldValue);

@@ -4,6 +4,7 @@ import com.thirstygoat.kiqo.gui.SideBarController;
 import com.thirstygoat.kiqo.gui.ToolBarController;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -68,6 +69,8 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     private RadioMenuItem listShowSkillsMenuItem;
     @FXML
+    private MenuItem closeSelectedTabMenuItem;
+    @FXML
     private ToggleGroup selectedTab;
     @FXML
     private MenuItem quitMenuItem;
@@ -98,6 +101,8 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         toolBarToggleCheckMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             toolBarController.setVisible(newValue);
         });
+        // Make tool bar visible by default
+        toolBarToggleCheckMenuItem.selectedProperty().set(true);
         viewModel.selectedTab().addListener((observable, oldValue, newValue) -> {
             if (newValue == SideBarController.TabOption.PROJECTS) {
                 selectedTab.selectToggle(listShowProjectsMenuItem);
@@ -122,6 +127,7 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
         saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
         openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         listToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_DOWN));
+        closeSelectedTabMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN));
         toolBarToggleCheckMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.SLASH, KeyCombination.SHORTCUT_DOWN));
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
         redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
@@ -282,5 +288,10 @@ public class MenuBarView implements FxmlView<MenuBarViewModel> {
     @FXML
     public void about() {
         viewModel.aboutAction();
+    }
+
+    @FXML
+    private void closeSelectedTab(ActionEvent actionEvent) {
+        viewModel.getMainController().getDetailsPaneController().closeSelectedTab();
     }
 }

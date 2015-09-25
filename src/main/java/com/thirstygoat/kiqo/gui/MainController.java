@@ -16,6 +16,7 @@ import com.thirstygoat.kiqo.gui.detailsPane.MainDetailsPaneController;
 import com.thirstygoat.kiqo.gui.formControllers.*;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarView;
 import com.thirstygoat.kiqo.gui.menuBar.MenuBarViewModel;
+import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
 import com.thirstygoat.kiqo.gui.project.ProjectFormView;
 import com.thirstygoat.kiqo.gui.project.ProjectFormViewModel;
@@ -82,7 +83,6 @@ public class MainController implements Initializable {
     private static Stage primaryStage;
     public final SimpleObjectProperty<Organisation> selectedOrganisationProperty = new SimpleObjectProperty<>();
     private final UndoManager undoManager = UndoManager.getUndoManager();
-    private final BooleanProperty mainToolbarVisible = new SimpleBooleanProperty(true);
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -100,7 +100,6 @@ public class MainController implements Initializable {
     @FXML
     private VBox menuBar;
     @FXML
-    private ToolBarController toolBarController;
     private ViewTuple<MenuBarView, MenuBarViewModel> menuBarViewTuple;
     private double dividerPosition;
 
@@ -117,10 +116,6 @@ public class MainController implements Initializable {
 
         setStageTitleProperty();
         setSearchShortcut();
-    }
-
-    public BooleanProperty mainToolbarVisibleProperty() {
-        return mainToolbarVisible;
     }
 
     public ReadOnlyBooleanProperty changesSavedProperty() {
@@ -397,8 +392,8 @@ public class MainController implements Initializable {
                 changes.add(new DeleteBacklogCommand(backlog));
                 // move all stories in backlog to stoies for project
                 for (final Story story : backlog.getStories()) {
-                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.observableStories(),
-                            backlog.getProject().observableUnallocatedStories());
+                    final MoveItemCommand<Story> command = new MoveItemCommand<>(story, backlog.getStories(),
+                            backlog.getProject().getUnallocatedStories());
                     changes.add(command);
                 }
             }
@@ -610,15 +605,15 @@ public class MainController implements Initializable {
             }
         }
 
-    public void allocateTeams() {
+    public void allocateTeams(AllocationsTableViewController.FirstColumnType type, Item item) {
         if (selectedOrganisationProperty.get() != null) {
-            allocationDialog(null);
+            allocationDialog(null, type, item);
         }
     }
 
-    public void editAllocation(Allocation allocation) {
+    public void editAllocation(Allocation allocation, AllocationsTableViewController.FirstColumnType type, Item item) {
         if (selectedOrganisationProperty.get() != null) {
-            allocationDialog(allocation);
+            allocationDialog(allocation, type, item);
         }
     }
 
@@ -787,14 +782,13 @@ public class MainController implements Initializable {
 
             reportFormController.setStage(stage);
             reportFormController.setOrganisation(selectedOrganisationProperty.get());
-//            reportFormController.loadProject(project);
 
             stage.showAndWait();
             if (reportFormController.isValid()) {
-                if (!reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
-                    saveStatusReport(reportFormController.getTargetList());
-                } else {
+                if (reportFormController.getLevel().equals(ReportFormController.Level.ORGANISATION)) {
                     saveStatusReport(null);
+                } else {
+                    saveStatusReport(reportFormController.selectedItems());
                 }
             }
         });
@@ -939,7 +933,7 @@ public class MainController implements Initializable {
      *
      * @param t must not be null
      */
-    private <T> void dialog(T t) {
+    public <T> void dialog(T t) {
         dialog(t, t.getClass().getSimpleName());
     }
 
@@ -1041,7 +1035,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void allocationDialog(Allocation allocation) {
+    private void allocationDialog(Allocation allocation, AllocationsTableViewController.FirstColumnType type, Item item) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
             stage.initOwner(primaryStage);
@@ -1063,11 +1057,11 @@ public class MainController implements Initializable {
             allocationFormController.setStage(stage);
             allocationFormController.setOrganisation(selectedOrganisationProperty.get());
 
-            if (focusedItemProperty.getValue().getClass().equals(Team.class)) {
+            if (type.equals(AllocationsTableViewController.FirstColumnType.PROJECT)) {
                 allocationFormController.setProject(null);
-                allocationFormController.setTeam((Team) focusedItemProperty.getValue());
-            } else if (focusedItemProperty.getValue().getClass().equals(Project.class)) {
-                allocationFormController.setProject((Project) focusedItemProperty.getValue());
+                allocationFormController.setTeam((Team) item);
+            } else if (type.equals(AllocationsTableViewController.FirstColumnType.TEAM)) {
+                allocationFormController.setProject((Project) item);
                 allocationFormController.setTeam(null);
             }
 
@@ -1083,8 +1077,6 @@ public class MainController implements Initializable {
     private void acceptanceCriteriaDialog(AcceptanceCriteria acceptanceCriteria) {
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
-            stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);
             final FXMLLoader loader = new FXMLLoader();
@@ -1118,7 +1110,6 @@ public class MainController implements Initializable {
         final Story finalStory = story;
         Platform.runLater(() -> {
             final Stage stage = new Stage();
-            stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(false);

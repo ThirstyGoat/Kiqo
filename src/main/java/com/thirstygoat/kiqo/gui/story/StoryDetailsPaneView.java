@@ -42,8 +42,8 @@ import java.util.*;
 
 public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>, Initializable {
 
-    public static AcceptanceCriteria draggingAC;
-    public static Task draggingTask;
+    public AcceptanceCriteria draggingAC;
+    public Task draggingTask;
     private MainController mainController;
     private ObjectProperty<Story> story = new SimpleObjectProperty<>();
     private Map<State, Image> images;
@@ -57,9 +57,9 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
     @FXML
     private GoatLabelTextField descriptionLabel;
     @FXML
-    private GoatLabelTextField creatorLabel;
+    private Label creatorLabel;
     @FXML
-    private FilteredListBiControl<Story> dependenciesLabel;
+    private FilteredListBiControl<ListView<Story>, Story> dependenciesLabel;
     @FXML
     private GoatLabelTextField priorityLabel;
     @FXML
@@ -123,8 +123,6 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     showNode(acAndTaskVbox);
                 }
             }
-
-
         });
 
         if (story != null) {
@@ -142,8 +140,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
                     });
                 });
             });
-            FxUtils.initGoatLabel(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
-                            viewModel.eligibleDependencies());
+            FxUtils.initListViewFilteredListBiControl(dependenciesLabel, viewModel, viewModel.dependenciesProperty(),
+                    viewModel.eligibleDependencies());
             // need to unbind in case the selected story has changed and therefore we won't try and bind to a bound property
             storyScaleLabel.textProperty().unbind();
             storyScaleLabel.textProperty().bind(story.scaleProperty().asString());
@@ -182,8 +180,8 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
             isReadyCheckBox.selectedProperty().removeListener(isReadyListener);
         }
 
-        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images));
-        taskListView.setCellFactory(TaskListCell::new);
+        acListView.setCellFactory(param -> new AcceptanceCriteriaListCell(acListView, images, this));
+        taskListView.setCellFactory(param -> new TaskListCell(taskListView, this));
 
         removeACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editACButton.disableProperty().bind(Bindings.size(acListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
@@ -339,11 +337,9 @@ public class StoryDetailsPaneView implements FxmlView<StoryDetailsPaneViewModel>
         FxUtils.initGoatLabel(longNameLabel, viewModel, viewModel.longNameProperty(), viewModel.longNameValidation());
         FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
-        FxUtils.initGoatLabel(creatorLabel, viewModel, viewModel.creatorProperty(),
-                        StringConverters.personStringConverter(viewModel.organisationProperty()),
-                        viewModel.creatorValidation());
 
-        FxUtils.setTextFieldSuggester(creatorLabel.getEditField(), viewModel.creatorSupplier());
+        creatorLabel.textProperty().bindBidirectional(viewModel.creatorProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()));
+
         FxUtils.initGoatLabel(priorityLabel, viewModel, viewModel.priorityProperty(), viewModel.priorityValidation());
     }
 

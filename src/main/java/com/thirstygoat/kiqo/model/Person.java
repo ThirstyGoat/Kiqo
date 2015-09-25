@@ -199,7 +199,7 @@ public class Person extends Item {
     }
 
     public List<Skill> getSkills() {
-        // temp fix to allow undo add skill to person
+        // fix to allow undo add skill to person
         final ArrayList<Skill> skills1 = new ArrayList<>();
         skills1.addAll(skills);
         return skills1;

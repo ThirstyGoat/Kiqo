@@ -66,11 +66,11 @@ public class BacklogDetailsPaneViewModelTest {
         Assert.assertTrue("Stories should be empty initially",
                 viewModel.stories().isEmpty());
 
-        backlog.observableStories().add(unreadyStory);
+        backlog.getStories().add(unreadyStory);
         Assert.assertTrue("Story was added to model, so details pane should have updated",
                 viewModel.stories().contains(unreadyStory));
 
-        backlog.observableStories().remove(unreadyStory);
+        backlog.getStories().remove(unreadyStory);
         Assert.assertTrue("Story was removed from model, so details pane should have updated",
                 viewModel.stories().isEmpty());
     }

@@ -12,10 +12,8 @@ import com.thirstygoat.kiqo.util.Utilities;
 import de.saxsys.mvvmfx.utils.validation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +26,7 @@ import java.util.logging.Level;
  * Created by samschofield on 16/07/15.
  */
 public class StoryViewModel extends ModelViewModel<Story> {
-	private final ObjectBinding<ObservableList<Story>> eligibleDependencies;
-    private BooleanProperty creatorEditable = new SimpleBooleanProperty(true);
+	private final ListProperty<Story> eligibleDependencies;
     private ObservableRuleBasedValidator shortNameValidator;
     private FunctionBasedValidator longNameValidator;
     private FunctionBasedValidator descriptionValidator;
@@ -38,21 +35,28 @@ public class StoryViewModel extends ModelViewModel<Story> {
     private FunctionBasedValidator priorityValidator;
     private FunctionBasedValidator scaleValidator;
     private CompositeValidator allValidator;
+    private BooleanProperty creatorEditable = new SimpleBooleanProperty();
 
     public StoryViewModel() {
-    	eligibleDependencies = Bindings.createObjectBinding(() -> { 
-	    		if (backlogProperty().get() == null) {
-		            return FXCollections.observableArrayList();
-		        } else {
-		            return backlogProperty().get().getStories().stream()
-		                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
-		                    .collect(GoatCollectors.toObservableList());
-		        }
-	    	}, projectProperty(), backlogProperty());
+    	ListProperty<Story> storiesInBacklog = new SimpleListProperty<>();
+    	storiesInBacklog.bind(Bindings.createObjectBinding(() -> {
+    		if (backlogProperty().get() != null) {
+    			return backlogProperty().get().getStories();
+	        } else {
+	        	return FXCollections.observableArrayList();
+	        }
+    	}, backlogProperty()));
+    
+    	eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
+    	eligibleDependencies.bind(Bindings.createObjectBinding(() -> { 
+	    		return storiesInBacklog.stream()
+	                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
+	                    .collect(GoatCollectors.toObservableList());
+	    	}, dependenciesProperty(), storiesInBacklog));
     	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {
-                List<Story> stories = new ArrayList();
+                List<Story> stories = new ArrayList<>();
                 if (projectProperty().get() != null) {
                     stories.addAll(projectProperty().get().getUnallocatedStories());
                     for (Backlog backlog : projectProperty().get().getBacklogs()) {
@@ -120,11 +124,15 @@ public class StoryViewModel extends ModelViewModel<Story> {
         allValidator.addValidators(shortNameValidator, longNameValidator, descriptionValidator, creatorValidator,
                 projectValidator, priorityValidator, scaleValidator);
     }
-    
+
     @Override
-	public void reload() {
-    	super.reload();
-    	eligibleDependencies.invalidate();
+    public void load(Story story, Organisation organisation) {
+        super.load(story, organisation);
+        if (story == null) {
+            this.creatorEditable.set(true);
+        } else {
+            this.creatorEditable.set(false);
+        }
     }
 
     @Override
@@ -184,7 +192,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
     /** Other Fields **/
 
-    public ObjectBinding<ObservableList<Story>> eligibleDependencies() {
+    public ListProperty<Story> eligibleDependencies() {
         return eligibleDependencies;
     }
 
@@ -249,9 +257,9 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
             if (!projectProperty().get().equals(modelWrapper.get().getProject())) {
                 if (modelWrapper.get().getBacklog() != null) {
-                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().observableStories(), projectProperty().get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getBacklog().getStories(), projectProperty().get().getUnallocatedStories()));
                 } else {
-                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().observableUnallocatedStories(), projectProperty().get().observableUnallocatedStories()));
+                    changes.add(new MoveItemCommand<>(modelWrapper.get(), modelWrapper.get().getProject().getUnallocatedStories(), projectProperty().get().getUnallocatedStories()));
                 }
                 // If story is changing projects, then it shouldn't be in any backlog
                 changes.add(new EditCommand<>(modelWrapper.get(), "backlog", null));

@@ -1,19 +1,17 @@
 package com.thirstygoat.kiqo.gui.team;
 
-import com.thirstygoat.kiqo.gui.nodes.AllocationsTableViewController;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
-import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
-import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
-import com.thirstygoat.kiqo.model.Person;
-import com.thirstygoat.kiqo.util.FxUtils;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.collections.ListChangeListener;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.thirstygoat.kiqo.gui.nodes.*;
+import com.thirstygoat.kiqo.gui.nodes.bicontrol.FilteredListBiControl;
+import com.thirstygoat.kiqo.model.*;
+import com.thirstygoat.kiqo.util.*;
+
+import de.saxsys.mvvmfx.*;
+import javafx.collections.ListChangeListener;
+import javafx.fxml.*;
+import javafx.scene.control.ListView;
 
 
 public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, Initializable {
@@ -22,30 +20,41 @@ public class TeamDetailsPaneView implements FxmlView<TeamDetailsPaneViewModel>, 
     @FXML
     private GoatLabelTextArea descriptionLabel;
     @FXML
-    private FilteredListBiControl<Person> teamMemberList;
+    private GoatLabelTextField productOwnerLabel;
+    @FXML
+    private GoatLabelTextField scrumMasterLabel;
+    @FXML
+    private GoatLabelFilteredListSelectionView<Person> devTeamLabel;
+    @FXML
+    private FilteredListBiControl<ListView<Person>, Person> teamMemberList;
     @FXML
     private AllocationsTableViewController allocationsTableViewController;
 
     @InjectViewModel
-    private TeamDetailsPaneViewModel teamViewModel;
+    private TeamDetailsPaneViewModel viewModel;
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initialize(URL location, ResourceBundle resources) {
-        FxUtils.initGoatLabel(shortNameLabel, teamViewModel, teamViewModel.shortNameProperty(),
-                        teamViewModel.shortNameValidation());
-        FxUtils.initGoatLabel(descriptionLabel, teamViewModel, teamViewModel.descriptionProperty(),
-                        teamViewModel.descriptionValidation(), "Add a description...");
-        FxUtils.initGoatLabel(teamMemberList, teamViewModel, teamViewModel.teamMembersProperty(),
-                        teamViewModel.eligibleTeamMembers());
+        FxUtils.initGoatLabel(shortNameLabel, viewModel, viewModel.shortNameProperty(), viewModel.shortNameValidation());
+        FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(), viewModel.descriptionValidation());
+        
+        FxUtils.initGoatLabel(productOwnerLabel, viewModel, viewModel.productOwnerProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()), viewModel.productOwnerValidation());
+        FxUtils.setTextFieldSuggester(productOwnerLabel.getEditField(), viewModel.productOwnerSupplier());
+        
+        FxUtils.initGoatLabel(scrumMasterLabel, viewModel, viewModel.scrumMasterProperty(), StringConverters.personStringConverter(viewModel.organisationProperty()), viewModel.scrumMasterValidation());
+        FxUtils.setTextFieldSuggester(scrumMasterLabel.getEditField(), viewModel.scrumMasterSupplier());
+        
+        FxUtils.initGoatLabel(devTeamLabel, viewModel, viewModel.devTeamProperty(), viewModel.eligibleDevs());
+        FxUtils.initListViewFilteredListBiControl(teamMemberList, viewModel, viewModel.teamMembersProperty(),
+                        viewModel.eligibleTeamMembers());
 
         // Using the traditional controller for the allocations table, allocations might be null initially. Therefore,
         // a listener is setup to set the items only when allocations is not null.
-        teamViewModel.allocations().addListener((ListChangeListener) change -> {
-            if (teamViewModel.allocations().get() != null) {
-                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT);
-                allocationsTableViewController.setMainController(teamViewModel.mainControllerProperty().get());
-                allocationsTableViewController.setItems(teamViewModel.allocations());
+        viewModel.allocations().addListener((ListChangeListener.Change<? extends Allocation> change) -> {
+            if (viewModel.allocations().get() != null) {
+                allocationsTableViewController.init(AllocationsTableViewController.FirstColumnType.PROJECT, viewModel.getWrappedObject());
+                allocationsTableViewController.setMainController(viewModel.mainControllerProperty().get());
+                allocationsTableViewController.setItems(viewModel.allocations());
             }
         });
     }

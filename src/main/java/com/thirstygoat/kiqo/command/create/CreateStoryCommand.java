@@ -16,12 +16,12 @@ public class CreateStoryCommand extends CreateCommand {
 
     @Override
     public void addToModel() {
-        story.getProject().observableUnallocatedStories().add(story);
+        story.getProject().getUnallocatedStories().add(story);
     }
 
     @Override
     public void removeFromModel() {
-        story.getProject().observableUnallocatedStories().remove(story);
+        story.getProject().getUnallocatedStories().remove(story);
     }
 
     @Override

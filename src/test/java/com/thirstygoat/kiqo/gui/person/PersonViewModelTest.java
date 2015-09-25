@@ -13,7 +13,7 @@ import org.junit.rules.ExpectedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import static org.assertj.core.api.Assertions.*;
 /**
  * Created by leroy on 21/09/15.
  */
@@ -48,8 +48,8 @@ public class PersonViewModelTest {
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", person, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         readyStory = new Story("readyStory", "", "", person, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(unreadyStory);
-        project.observableUnallocatedStories().add(readyStory);
+        project.getUnallocatedStories().add(unreadyStory);
+        project.getUnallocatedStories().add(readyStory);
         skill1 = new Skill("skill1", "");
         skill2 = new Skill("skill2", "");
         organisation.getSkills().add(skill1);
@@ -60,7 +60,7 @@ public class PersonViewModelTest {
      * Populate a PersonViewModel's fields with valid data.
      * @param viewModel
      */
-    public void populateFields(PersonViewModel viewModel) {
+    private void populateFields(PersonViewModel viewModel) {
         viewModel.shortNameProperty().set("personShortName");
         viewModel.longNameProperty().set("personLongName");
     }
@@ -107,7 +107,7 @@ public class PersonViewModelTest {
         viewModel.skills().add(skill1);
         UndoManager.getUndoManager().doCommand(viewModel.getCommand());
 
-        Assert.assertTrue("story should contain a skill", person.getSkills().contains(skill1));
+        Assert.assertTrue("story should contain a skill", person.observableSkills().contains(skill1));
     }
 
     @Test
@@ -126,16 +126,30 @@ public class PersonViewModelTest {
         // Add skill to Model via ViewModel
         viewModel.skills().add(skill1);
         UndoManager.getUndoManager().doCommand(viewModel.getCommand());
-        Assert.assertEquals(true, person.getSkills().contains(skill1));
+        Assert.assertEquals(true, person.observableSkills().contains(skill1));
 
         // Remove skill using undo command. Should update both the Model and ViewModel
         UndoManager.getUndoManager().undoCommand();
-        Assert.assertEquals(false, person.getSkills().contains(skill1));
+        Assert.assertEquals(false, person.observableSkills().contains(skill1));
         Assert.assertEquals(false, viewModel.skills().contains(skill1));
 
         // Reinstate skill using redo command. Should update both the Model and ViewModel
         UndoManager.getUndoManager().redoCommand();
-        Assert.assertEquals(true, person.getSkills().contains(skill1));
+        Assert.assertEquals(true, person.observableSkills().contains(skill1));
         Assert.assertEquals(true, viewModel.skills().contains(skill1));
+    }
+    
+    @Test
+    public void eligibleSkillsTest() {
+    	assertThat(viewModel.eligibleSkills()).isEmpty();
+    	
+    	viewModel.load(person, organisation);
+    	assertThat(viewModel.organisationProperty().get()).isNotNull(); // just in case
+    	assertThat(viewModel.eligibleSkills()).hasSameElementsAs(organisation.getSkills());
+    	
+    	// add new skill to organisation
+    	final Skill skill3 = new Skill("skill3", "desc");
+		organisation.getSkills().add(skill3);
+    	assertThat(viewModel.eligibleSkills()).contains(skill3);
     }
 }

@@ -47,8 +47,8 @@ public class SprintViewModelInteractionTest {
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        backlog.observableStories().add(readyStory);
-        backlog.observableStories().add(unreadyStory);
+        backlog.getStories().add(readyStory);
+        backlog.getStories().add(unreadyStory);
         sprint = new Sprint("sprintGoal", "sprintLongName", "sprintDescription", backlog, release, team,
                 LocalDate.now().minusDays(11), LocalDate.now().minusDays(5), new ArrayList<>());
     }

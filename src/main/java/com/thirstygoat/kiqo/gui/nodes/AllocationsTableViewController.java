@@ -6,6 +6,7 @@ import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.AllocationDatePickerCell;
 import com.thirstygoat.kiqo.gui.customCells.AllocationListCell;
 import com.thirstygoat.kiqo.model.Allocation;
+import com.thirstygoat.kiqo.model.Item;
 import com.thirstygoat.kiqo.model.Project;
 import com.thirstygoat.kiqo.model.Team;
 import javafx.beans.binding.Bindings;
@@ -56,15 +57,18 @@ public class AllocationsTableViewController implements Initializable {
     @FXML
     private Hyperlink highlightHyperLink;
 
-    public void init(FirstColumnType type) {
+    public void init(FirstColumnType type, Item item) {
         this.type = type;
-        allocateTeamButton.setOnAction(event -> mainController.allocateTeams());
+        allocateTeamButton.setOnAction(event -> mainController.allocateTeams(type, item));
         deleteAllocationButton.setOnAction(event -> deleteAllocation());
-        editAllocationButton.setOnAction(event -> mainController.editAllocation(allocationsTableView.getSelectionModel().getSelectedItem()));
+        editAllocationButton.setOnAction(event -> mainController
+                        .editAllocation(allocationsTableView.getSelectionModel().getSelectedItem(), type, item));
         //also needs to be bound to make sure that the table view is still focused too
         // at the moment it the delete button remains on if the tableview loses focus
-        deleteAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
-        editAllocationButton.disableProperty().bind(Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
+        deleteAllocationButton.disableProperty().bind(
+                        Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
+        editAllocationButton.disableProperty().bind(
+                        Bindings.isNull(allocationsTableView.getSelectionModel().selectedItemProperty()));
         initializeTable();
         setHyperlink();
     }
@@ -282,5 +286,9 @@ public class AllocationsTableViewController implements Initializable {
 
     public enum  FirstColumnType {
         PROJECT, TEAM
+    }
+
+    public FirstColumnType getType() {
+        return type;
     }
 }

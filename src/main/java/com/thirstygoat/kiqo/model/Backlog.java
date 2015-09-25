@@ -75,20 +75,14 @@ public class Backlog extends Item {
     public void setScale(Scale scale) {
         this.scale.set(scale);
     }
-
-    public List<Story> getStories() {
-        List<Story> stories1 = new ArrayList<>();
-        stories1.addAll(stories);
-        return stories1;
+    
+    public ObservableList<Story> getStories() {
+        return stories;
     }
 
     public void setStories(List<Story> stories) {
         this.stories.clear();
         this.stories.addAll(stories);
-    }
-
-    public ObservableList<Story> observableStories() {
-        return stories;
     }
 
     @Override

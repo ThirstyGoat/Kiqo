@@ -12,7 +12,7 @@
 			<content>
 				<VBox mouseTransparent="false" spacing="10.0"  >
 					<children>
-						<GoatLabelTextArea fx:id="descriptionLabel" />
+						<GoatLabelTextArea fx:id="descriptionLabel" defaultText="Add a description..." />
 						<Label text="Team" styleClass="field-label">
 							<VBox.margin><Insets bottom="-8" /></VBox.margin>
 						</Label>

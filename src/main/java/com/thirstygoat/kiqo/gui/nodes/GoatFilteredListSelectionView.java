@@ -1,22 +1,20 @@
 package com.thirstygoat.kiqo.gui.nodes;
 
+import java.util.Comparator;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.controlsfx.control.SegmentedButton;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
-import org.controlsfx.control.SegmentedButton;
-
-import java.util.regex.Pattern;
 
 /**
  * NB: This doesn't actually act like a ListView, beware.
@@ -24,11 +22,15 @@ import java.util.regex.Pattern;
  * @param <T> type of list elements
  */
 public class GoatFilteredListSelectionView<T> extends ListView<T> {
-    private VBox mainView;
     private final GoatFilteredListSelectionViewSkin<T> skin;
-    private final ListProperty<T> sourceItems;
-    private final ListProperty<T> targetItems;
-    private final ObservableList<T> allItems;
+    
+    /** All items regardless of their state (availability, filtering or selectedness). */
+    private final ListProperty<T> allItems;
+    /** Selected items (i.e. those shown in DisplayMode.SELECTED with no filter). */
+    private final ListProperty<T> selectedItems;
+    /** Items available to be filtered (depends on DisplayMode). */
+    private final ListProperty<T> availableItems;
+    
     private ObjectProperty<Callback<T, Node>> targetCellGraphicFactory = new SimpleObjectProperty<>();
     private ObjectProperty<Callback<T, Node>> sourceCellGraphicFactory = new SimpleObjectProperty<>();
     private TextField textField;
@@ -36,7 +38,7 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
     private SegmentedButton showingSegmentedButton;
     private ObjectProperty<Node> header = new SimpleObjectProperty<>();
     private ObjectProperty<Node> footer = new SimpleObjectProperty<>();
-    private ObjectProperty<SHOWING> showing = new SimpleObjectProperty<>();
+    private ObjectProperty<DisplayMode> showing = new SimpleObjectProperty<>();
     private Callback<T, StringProperty> stringPropertyCallback;
     private BooleanProperty focusedProperty = new SimpleBooleanProperty();
 
@@ -45,44 +47,42 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         setFocusTraversable(false);
         
         stringPropertyCallback = t -> new SimpleStringProperty(t != null ? t.toString() : "");
-        skin = new GoatFilteredListSelectionViewSkin<T>(this) {
-            {
-                mainView = getMainView();
-                textField = getTextField();
-                listView = getListView();
-            }
-        };
+        skin = new GoatFilteredListSelectionViewSkin<T>(this);
 
         setSkin(skin);
-        mainView = new VBox();
+        textField = skin.getTextField();
+        listView = skin.getListView();
 
-        sourceItems = new SimpleListProperty<>(FXCollections.observableArrayList());
-        targetItems = new SimpleListProperty<>(FXCollections.observableArrayList());
-        allItems = FXCollections.observableArrayList();
+        allItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+        selectedItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+        availableItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    	ObservableList<T> items = FXCollections.observableArrayList();
+        availableItems.bind(Bindings.createObjectBinding(() -> {
+        	items.clear();
+        	items.addAll(allItems);
+        	items.removeAll(selectedItems);
+        	return items;
+        }, allItems, selectedItems));
 
         createSkin();
         setDefaultCellFactory();
+        this.setStyle("-fx-background-color: transparent");
         bindShownItems();
 
-        allItems.addListener((ListChangeListener<T>) c -> {
-            String value = textField.getText();
-            textField.setText(value + " ");
-            textField.setText(value);
+        availableItems.addListener((ListChangeListener<T>) c -> {
+            refilter();
         });
 
         ListChangeListener<T> refresh = c -> {
-            SHOWING initial = showing.get();
-            showing.set(SHOWING.Unselected);
-            showing.set(SHOWING.Selected);
+            DisplayMode initial = showing.get();
+            showing.set(DisplayMode.UNSELECTED);
+            showing.set(DisplayMode.SELECTED);
             showing.set(initial);
         };
 
-        sourceItems.addListener(refresh);
-        targetItems.addListener(refresh);
-    }
-
-    public Node getFooter() {
-        return footer.get();
+        allItems.addListener(refresh);
+        selectedItems.addListener(refresh);
     }
 
     public void setFooter(Node footer) {
@@ -123,9 +123,9 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
             ObservableList<T> shownItems = FXCollections.observableArrayList();
 
             String regex = Pattern.quote(newValue.toLowerCase());
-            allItems.forEach(t -> {
+            availableItems.forEach(t -> {
                 if (stringPropertyCallback.call(t).get().toLowerCase().matches(".*" + regex + ".*")) {
-                    shownItems.add(t);
+                	shownItems.add(t);
                 }
             });
             listView.setItems(shownItems);
@@ -137,32 +137,19 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         Platform.runLater(textField::requestFocus);
     }
 
+    @Deprecated
     public ObservableList<T> getTargetItems() {
-        return targetItems.get();
+        return selectedItems.get();
     }
 
+    @Deprecated
     public void setTargetItems(ObservableList<T> targetItems) {
-        allItems.removeAll(getTargetItems());
-        allItems.addAll(targetItems);
         targetItemsProperty().set(targetItems);
     }
 
+    @Deprecated
     public ListProperty<T> targetItemsProperty() {
-        return targetItems;
-    }
-
-    public ObservableList<T> getSourceItems() {
-        return sourceItems.get();
-    }
-
-    public void setSourceItems(ObservableList<T> sourceItems) {
-        allItems.removeAll(getSourceItems());
-        allItems.addAll(sourceItems);
-        sourceItemsProperty().set(sourceItems);
-    }
-
-    public ListProperty<T> sourceItemsProperty() {
-        return sourceItems;
+        return selectedItems;
     }
 
     /**
@@ -176,12 +163,12 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
 
         listView = new ListView<>();
         listView.getStyleClass().add("filtered-list-view");
-        listView.setItems(allItems);
+        listView.setItems(availableItems);
 
         VBox.setVgrow(listView, Priority.ALWAYS);
-        ToggleButton allToggleButton = new ToggleButton(SHOWING.All.toString());
-        ToggleButton selectedToggleButton = new ToggleButton(SHOWING.Selected.toString());
-        ToggleButton unSelectedToggleButton = new ToggleButton(SHOWING.Unselected.toString());
+        ToggleButton allToggleButton = new ToggleButton(DisplayMode.ALL.toString());
+        ToggleButton selectedToggleButton = new ToggleButton(DisplayMode.SELECTED.toString());
+        ToggleButton unSelectedToggleButton = new ToggleButton(DisplayMode.UNSELECTED.toString());
         showingSegmentedButton = new SegmentedButton(allToggleButton, selectedToggleButton, unSelectedToggleButton);
 
         HBox headerContainer = new HBox();
@@ -190,17 +177,18 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         footerContainer.setPadding(new Insets(5, 0, 0, 0));
         footerContainer.setLeft(showingSegmentedButton);
 
+        Pane mainView = skin.getMainView();
         mainView.getChildren().addAll(headerContainer, textField, listView, footerContainer);
         getChildren().add(mainView);
 
         showingSegmentedButton.setStyle("-fx-font-size: 11px");
         showingSegmentedButton.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == allToggleButton) {
-                showing.set(SHOWING.All);
+                showing.set(DisplayMode.ALL);
             } else if (newValue == selectedToggleButton) {
-                showing.set(SHOWING.Selected);
+                showing.set(DisplayMode.SELECTED);
             } else if (newValue == unSelectedToggleButton) {
-                showing.set(SHOWING.Unselected);
+                showing.set(DisplayMode.UNSELECTED);
             } else {
                 oldValue.setSelected(true);
             }
@@ -208,21 +196,16 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         allToggleButton.setSelected(true);
 
 //         Set up binding so that allItems contains only items depending on the showingSegmentedButton
+        Comparator<T> comparator = (i1, i2) -> stringPropertyCallback.call(i1).get().compareTo(stringPropertyCallback.call(i2).get());
         showing.addListener((observable, oldValue, newValue) -> {
-            allItems.clear();
-            if (newValue == SHOWING.All) {
-                allItems.addAll(targetItems.get());
-                allItems.addAll(sourceItems.get());
-            } else if (newValue == SHOWING.Selected) {
-                allItems.addAll(targetItems.get());
-            } else if (newValue == SHOWING.Unselected) {
-                allItems.addAll(sourceItems);
+            availableItems.clear();
+            if (newValue == DisplayMode.ALL) {
+				availableItems.setAll(allItems.stream().sorted(comparator).collect(Collectors.toList()));
+            } else if (newValue == DisplayMode.SELECTED) {
+                availableItems.setAll(selectedItems.stream().sorted(comparator).collect(Collectors.toList()));
+            } else if (newValue == DisplayMode.UNSELECTED) {
+                availableItems.setAll(allItems.stream().filter(item -> !selectedItems.contains(item)).sorted(comparator).collect(Collectors.toList()));
             }
-            allItems.sort((i1, i2) -> stringPropertyCallback.call(i1).get().compareTo(stringPropertyCallback.call(i2).get()));
-            // Trigger refresh of shown items by firing change event on the filter text field
-            String value = textField.getText();
-            textField.setText(value + " ");
-            textField.setText(value);
         });
 
         headerProperty().addListener((observable, oldValue, newValue) -> {
@@ -245,6 +228,15 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         });
     }
 
+    /**
+     * Trigger refresh of shown items by firing change event on the filter text field.
+     */
+	private void refilter() {
+		String value = textField.getText();
+		textField.setText(value + " ");
+		textField.setText(value);
+	}
+
     private void setDefaultCellFactory() {
         Callback<T, Node> defaultCellFactory = t -> {
             Label label = new Label();
@@ -266,12 +258,10 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
 
                     checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                         if (newValue) {
-                            // If the item is now checked, we have to add it to the target items, remove from source
-                            getSourceItems().remove(item);
-                            getTargetItems().add(item);
+                            // If the item is now checked, we have to add it to the target items
+                            selectedItems.add(item);
                         } else {
-                            getTargetItems().remove(item);
-                            getSourceItems().add(item);
+                            selectedItems.remove(item);
                         }
                     });
 
@@ -344,9 +334,28 @@ public class GoatFilteredListSelectionView<T> extends ListView<T> {
         return textField;
     }
 
-    private enum SHOWING {
-        All,
-        Selected,
-        Unselected
-    }
+    public void bindSelectedItems(ListProperty<T> selectedItems) {
+		this.selectedItems.bindBidirectional(selectedItems);
+	}
+	
+	public void bindAllItems(ListProperty<T> allItems) {
+		this.allItems.bind(allItems);
+	}
+
+	private enum DisplayMode {
+	    ALL("All"),
+	    SELECTED("Selected"),
+	    UNSELECTED("Unselected");
+		
+		private String label;
+		
+		DisplayMode(String label) {
+			this.label = label;
+		}
+		
+		@Override
+		public String toString() {
+			return label;
+		}
+	}
 }

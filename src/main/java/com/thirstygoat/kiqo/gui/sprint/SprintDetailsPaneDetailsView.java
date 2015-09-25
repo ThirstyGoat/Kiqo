@@ -1,11 +1,13 @@
 package com.thirstygoat.kiqo.gui.sprint;
 
+import com.thirstygoat.kiqo.command.UndoManager;
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.customCells.StoryTableCell;
 import com.thirstygoat.kiqo.gui.customCells.TaskListCell;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelDatePicker;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextArea;
 import com.thirstygoat.kiqo.gui.nodes.GoatLabelTextField;
+import com.thirstygoat.kiqo.gui.story.StoryDetailsPaneView;
 import com.thirstygoat.kiqo.model.Story;
 import com.thirstygoat.kiqo.model.Task;
 import com.thirstygoat.kiqo.util.FxUtils;
@@ -64,20 +66,26 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         FxUtils.initGoatLabel(startDateLabel, viewModel, viewModel.startDateProperty(),
                 viewModel.startDateStringProperty(), viewModel.startDateValidation());
         FxUtils.initGoatLabel(endDateLabel, viewModel, viewModel.endDateProperty(), viewModel.endDateStringProperty(),
-                viewModel.endDateValidation());
+                        viewModel.endDateValidation());
         FxUtils.initGoatLabel(releaseLabel, viewModel, viewModel.releaseProperty(),
-                StringConverters.releaseStringConverter(viewModel.organisationProperty()), viewModel.releaseValidation());
+                        StringConverters.releaseStringConverter(viewModel.organisationProperty()),
+                        viewModel.releaseValidation());
         FxUtils.setTextFieldSuggester(releaseLabel.getEditField(), viewModel.releasesSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation(), "Add a description...");
+                        viewModel.descriptionValidation());
         FxUtils.initGoatLabel(teamLabel, viewModel, viewModel.teamProperty(),
-                StringConverters.teamStringConverter(viewModel.organisationProperty()), viewModel.teamValidation());
+                        StringConverters.teamStringConverter(viewModel.organisationProperty()),
+                        viewModel.teamValidation());
         FxUtils.setTextFieldSuggester(teamLabel.getEditField(), viewModel.teamsSupplier());
         FxUtils.initGoatLabel(backlogLabel, viewModel, viewModel.backlogProperty(),
-                StringConverters.backlogStringConverter(viewModel.organisationProperty()), viewModel.backlogValidation());
+                        StringConverters.backlogStringConverter(viewModel.organisationProperty()),
+                        viewModel.backlogValidation());
         FxUtils.setTextFieldSuggester(backlogLabel.getEditField(), viewModel.backlogsSupplier());
         FxUtils.initGoatLabel(descriptionLabel, viewModel, viewModel.descriptionProperty(),
-                viewModel.descriptionValidation());
+                        viewModel.descriptionValidation());
+
+        releaseLabel.getEditButton().setOnAction(
+                        e -> UndoManager.getUndoManager().getMainController().dialog(viewModel.sprintProperty().get()));
 
         storyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         storyTableView.itemsProperty().bind(viewModel.stories());
@@ -108,14 +116,14 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
             totalTaskHoursLabel.textProperty().bind(Bindings.createStringBinding(
                     taskHoursCallable, viewModel.tasksWithoutStoryProperty().get().observableTasks()
             ));
-
         });
 
-
-        taskListView.setCellFactory(TaskListCell::new);
+        // A StoryDetailsPaneView is constructed here, since the TaskListCell requires one.
+        // The use of it is for storage of the fields relating to the currently
+        StoryDetailsPaneView taskCellView = new StoryDetailsPaneView();
+        taskListView.setCellFactory(param -> new TaskListCell(taskListView, taskCellView));
         removeTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isEqualTo(0));
         editTaskButton.disableProperty().bind(Bindings.size(taskListView.getSelectionModel().getSelectedItems()).isNotEqualTo(1));
-
 
         addTaskButton.setOnAction(event -> viewModel.createTask());
         removeTaskButton.setOnAction(event -> viewModel.deleteTasks(taskListView.getSelectionModel().getSelectedItems()));
@@ -124,7 +132,6 @@ public class SprintDetailsPaneDetailsView implements FxmlView<SprintDetailsPaneD
         viewModel.tasksWithoutStoryProperty().addListener((observable, oldValue, newValue) ->{
             taskListView.setItems(newValue.observableTasks());
         });
-
     }
 
     public SprintDetailsPaneDetailsViewModel getViewModel() {

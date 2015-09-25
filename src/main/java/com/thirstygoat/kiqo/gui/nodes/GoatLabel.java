@@ -43,7 +43,13 @@ public abstract class GoatLabel<C extends Control> extends Control {
 
     protected abstract GoatLabelSkin<C> initSkin();
 
-    public abstract C getEditField();
+    public final C getEditField() {
+    	return editField;
+    }
+
+    public Label getDisplayLabel() {
+        return displayLabel;
+    }
 
     protected abstract void populateEditField();
 
@@ -163,5 +169,9 @@ public abstract class GoatLabel<C extends Control> extends Control {
 
     public double getCustomMaxHeight() {
         return customMaxHeight;
+    }
+
+    public Button getEditButton() {
+        return editButton;
     }
 }

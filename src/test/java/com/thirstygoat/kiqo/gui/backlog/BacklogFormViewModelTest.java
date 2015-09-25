@@ -42,8 +42,8 @@ public class BacklogFormViewModelTest {
         project.observableReleases().add(release);
         unreadyStory = new Story("unreadyStory", "", "", po, project, backlog, 666, Scale.FIBONACCI, 333, false, false, null);
         readyStory = new Story("readyStory", "", "", po, project, backlog, 420, Scale.FIBONACCI, 42, true, false, null);
-        project.observableUnallocatedStories().add(unreadyStory);
-        project.observableUnallocatedStories().add(readyStory);
+        project.getUnallocatedStories().add(unreadyStory);
+        project.getUnallocatedStories().add(readyStory);
 
         viewModel.setExitStrategy(() -> {}); // not running in a JavaFX thread so no special exit action needed
     }
@@ -128,8 +128,8 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void existingBacklog_existingStoriesLoadTest() {
-        backlog.observableStories().add(unreadyStory);
-        backlog.observableStories().add(readyStory);
+        backlog.getStories().add(unreadyStory);
+        backlog.getStories().add(readyStory);
         viewModel.load(backlog, organisation);
         Assert.assertTrue("ViewModel stories property should contain two items",
                 viewModel.stories().size() == 2);
@@ -137,7 +137,7 @@ public class BacklogFormViewModelTest {
 
     @Test
     public void existingBacklog_storyChangeCommandTest() {
-        backlog.observableStories().add(readyStory);
+        backlog.getStories().add(readyStory);
 
         viewModel.load(backlog, organisation);
         Assert.assertTrue(viewModel.stories().contains(readyStory));

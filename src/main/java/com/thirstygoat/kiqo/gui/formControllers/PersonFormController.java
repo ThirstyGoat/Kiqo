@@ -9,7 +9,7 @@ import com.thirstygoat.kiqo.gui.nodes.GoatFilteredListSelectionView;
 import com.thirstygoat.kiqo.model.*;
 import com.thirstygoat.kiqo.util.Utilities;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,7 +30,8 @@ import java.util.function.Predicate;
  * Created by james on 20/03/15.
  */
 public class PersonFormController extends FormController<Person> {
-    private final ObservableList<Skill> targetSkills = FXCollections.observableArrayList();
+    private final ListProperty<Skill> selectedSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Skill> sourceSkills = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ValidationSupport validationSupport = new ValidationSupport();
     private Stage stage;
     private Organisation organisation;
@@ -67,6 +68,10 @@ public class PersonFormController extends FormController<Person> {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        skillsSelectionView.bindAllItems(sourceSkills);
+        skillsSelectionView.bindSelectedItems(selectedSkills);
+        skillsSelectionView.setStringPropertyCallback(skill -> skill.shortNameProperty());
+        
         setPrompts();
         setButtonHandlers();
         Utilities.initShortNameSuggester(longNameTextField.textProperty(), shortNameTextField.textProperty());
@@ -109,18 +114,10 @@ public class PersonFormController extends FormController<Person> {
     }
 
     private void setSkillsListSelectionViewData() {
-        final ObservableList<Skill> sourceSkills = FXCollections.observableArrayList();
-
         sourceSkills.addAll(organisation.getSkills());
         if (person != null) {
-            sourceSkills.removeAll(person.getSkills());
-            targetSkills.addAll(person.getSkills());
+            selectedSkills.addAll(person.getSkills());
         }
-
-        skillsSelectionView.setSourceItems(sourceSkills);
-        skillsSelectionView.setTargetItems(targetSkills);
-        skillsSelectionView.setStringPropertyCallback(skill -> skill.shortNameProperty());
-
     }
 
     /**
@@ -131,7 +128,7 @@ public class PersonFormController extends FormController<Person> {
     public void populateFields(final Person person) {
         this.person = person;
 
-        setSkillsListSelectionViewData();
+        setSkillsListSelectionViewData(); //TODO
 
         if (person != null) {
             // We are editing an existing Person
@@ -183,7 +180,7 @@ public class PersonFormController extends FormController<Person> {
 
     private void setCommand() {
         final ArrayList<Skill> skills = new ArrayList<>();
-        skills.addAll(targetSkills);
+        skills.addAll(selectedSkills); // TODO 
 
         if (person == null) {
             final Person p = new Person(shortNameTextField.getText(), longNameTextField.getText(),
@@ -216,7 +213,7 @@ public class PersonFormController extends FormController<Person> {
             }
 
 
-            if (!(skills.containsAll(person.getSkills())
+            if (!(skills.containsAll(person.getSkills()) // TODO
                     && person.getSkills().containsAll(skills))) {
                 changes.add(new EditCommand<>(person, "skills", skills));
             }
@@ -242,7 +239,7 @@ public class PersonFormController extends FormController<Person> {
 
             ArrayList<Skill> removedSkills = new ArrayList<>();
             removedSkills.addAll(person.getSkills());
-            removedSkills.removeAll(skillsSelectionView.getTargetItems());
+            removedSkills.removeAll(selectedSkills);
 
             if (removedSkills.contains(poSkill)) {
                 // Then they are trying to remove the PO skill

@@ -1,10 +1,9 @@
 package com.thirstygoat.kiqo.util;
 
 import com.thirstygoat.kiqo.model.*;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -121,6 +120,13 @@ public final class Utilities {
 
         return result;
     }
+    
+    public static StringBinding commaSeparatedValuesBinding(ListProperty<? extends Item> list) {
+    	return Bindings.createStringBinding(() -> {
+    		return Utilities.commaSeparatedValues(list);
+    	}, list);
+    }
+        
 
     /**
      * Convenience method for checking short name uniqueness across multiple collections
