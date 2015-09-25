@@ -32,11 +32,16 @@
     </repository>
   </repositories>
   <dependencies>
-      <dependency>
+    <dependency>
           <groupId>org.python</groupId>
           <artifactId>jython-standalone</artifactId>
           <version>2.7.0</version>
       </dependency>
+    <!--<dependency>-->
+      <!--<groupId>net.sf.mavenjython</groupId>-->
+      <!--<artifactId>jython-compile-maven-plugin</artifactId>-->
+      <!--<version>1.2</version>-->
+    <!--</dependency>-->
       <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
@@ -167,6 +172,24 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.sf.mavenjython</groupId>
+        <artifactId>jython-compile-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jython</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <libraries>
+            <param>nose</param>
+          </libraries>
+        </configuration>
       </plugin>
       <plugin>
         <!-- Packaging for Mac OS -->
