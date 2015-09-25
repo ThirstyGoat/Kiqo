@@ -51,9 +51,9 @@ public class StoryViewModel extends ModelViewModel<Story> {
     	eligibleDependencies = new SimpleListProperty<>(FXCollections.observableArrayList());
     	eligibleDependencies.bind(Bindings.createObjectBinding(() -> { 
 	    		return storiesInBacklog.stream()
-	                    .filter(story -> !dependenciesProperty().contains(story) && !createsCycle(story))
+	                    .filter(story -> !createsCycle(story))
 	                    .collect(GoatCollectors.toObservableList());
-	    	}, dependenciesProperty(), storiesInBacklog));
+	    	}, storiesInBacklog));
     	
         shortNameValidator = new ObservableRuleBasedValidator();
         BooleanBinding uniqueName = Bindings.createBooleanBinding(() -> {

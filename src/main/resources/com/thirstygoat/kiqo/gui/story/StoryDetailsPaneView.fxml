@@ -176,7 +176,6 @@
                         </AnchorPane>
                     </children>
                 </VBox>
-
             </content>
         </ScrollPane>
     </children>
