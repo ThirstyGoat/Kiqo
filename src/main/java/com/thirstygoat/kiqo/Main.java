@@ -144,11 +144,12 @@ public class Main extends Application {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setX((bounds.getWidth() - primaryStage.getWidth()) / 2);
         primaryStage.setY((bounds.getHeight() - primaryStage.getHeight()) / 2);
-        Platform.runLater(() -> {
-            primaryStage.setOpacity(1);
-        });
+
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
         }
+        Platform.runLater(() -> {
+            primaryStage.setOpacity(1);
+        });
     }
 }
