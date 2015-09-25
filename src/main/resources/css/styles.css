@@ -429,6 +429,11 @@
     -fx-padding: 7 15
 }
 
+.dialog-popup {
+    -fx-font-family: "Roboto";
+    -fx-text-fill: dimgray;
+}
+
 .form .form-button:disabled {
     -fx-opacity: 0.5;
 }
@@ -437,7 +442,7 @@
     -fx-opacity: 0.5
 }
 
-.form .form-button:default {
+.form .form-button:default, .form .form-button-blue {
     -fx-background-color: #2196f3
 }
 
@@ -522,7 +527,6 @@
 
 .blocked-button * {
 }
-
 
 /************ CHART STUFF ************/
 
