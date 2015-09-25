@@ -131,22 +131,19 @@ public class Main extends Application {
             event.consume();
         });
 
+        primaryStage.setOpacity(0);
         primaryStage.setScene(scene);
         primaryStage.show();
         mainController = loader.getController();
         mainController.setPrimaryStage(primaryStage);
         primaryStage.setMinWidth(1100);
         primaryStage.setMinHeight(650);
+        Platform.runLater(() -> {
+            // center the window
+            primaryStage.setOpacity(1);
+        });
         if (file != null && file.exists()) {
             mainController.openOrganisation(file);
-            Platform.runLater(() -> {
-                MainController.focusedItemProperty
-                                .set(mainController.selectedOrganisationProperty().get().getProjects().get(0)
-                                                .getReleases().get(0).getSprints().get(0));
-                mainController.getDetailsPaneController().showDetailsPane(
-                                mainController.selectedOrganisationProperty().get().getProjects().get(0).getReleases()
-                                                .get(0).getSprints().get(0));
-            });
         }
     }
 }
