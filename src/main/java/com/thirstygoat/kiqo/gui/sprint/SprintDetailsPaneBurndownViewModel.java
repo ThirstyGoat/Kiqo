@@ -55,7 +55,6 @@ public class SprintDetailsPaneBurndownViewModel extends SprintViewModel implemen
     }
 
     public void draw() {
-        System.out.println("Draw");
         updateDays();
         drawTargetLine();
         drawLines();
