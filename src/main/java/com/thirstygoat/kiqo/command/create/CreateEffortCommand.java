@@ -1,28 +1,28 @@
 package com.thirstygoat.kiqo.command.create;
 
+import com.thirstygoat.kiqo.command.Command;
 import com.thirstygoat.kiqo.model.Effort;
 import com.thirstygoat.kiqo.model.Task;
 
 /**
  * Created by james on 17/09/15.
  */
-public class CreateEffortCommand extends CreateCommand {
+public class CreateEffortCommand extends Command {
     final private Effort effort;
     final private Task task;
 
     public CreateEffortCommand(final Effort effort, final Task task) {
-        super(effort);
         this.effort = effort;
         this.task = task;
     }
 
     @Override
-    protected void addToModel() {
+    public void execute() {
         task.getObservableLoggedEffort().add(effort);
     }
 
     @Override
-    protected void removeFromModel() {
+    public void undo() {
         task.getObservableLoggedEffort().remove(effort);
     }
 

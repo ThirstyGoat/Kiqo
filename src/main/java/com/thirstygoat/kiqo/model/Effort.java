@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by leroy on 17/09/15.
  */
-public class Effort implements BoundProperties, Searchable {
+public class Effort implements BoundProperties {
     private final ObjectProperty<Person> person;
     private final ObjectProperty<Task> task;
     private final ObjectProperty<LocalDateTime> endDateTime;
@@ -144,7 +144,7 @@ public class Effort implements BoundProperties, Searchable {
         this.comment.set(comment);
     }
 
-    @Override
+//    @Override
     public List<SearchableField> getSearchableStrings() {
         List<SearchableField> searchStrings = new ArrayList<>();
         return searchStrings;
