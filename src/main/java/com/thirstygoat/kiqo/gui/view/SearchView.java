@@ -1,9 +1,9 @@
 package com.thirstygoat.kiqo.gui.view;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
+import com.thirstygoat.kiqo.demo.Demo;
 import com.thirstygoat.kiqo.gui.MainController;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -55,6 +55,9 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
                     } else {
                         classes.add("gag");
                     }
+                } else if (viewModel.queryProperty().get().equals("demo 2015")) {
+                    Demo demo = new Demo();
+                    demo.init();
                 }
                 event.consume();
                 viewModel.buttonAction(searchResultsListView.getSelectionModel().getSelectedItem());
@@ -99,9 +102,12 @@ public class SearchView implements FxmlView<SearchViewModel>, Initializable {
 
         viewModel.getResults().addListener((ListChangeListener<? super SearchResult>) c -> {
             if (viewModel.getResults().size() > 0) {
-                searchResultsListView.setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 10);
-                searchResultsListView.getScene().getWindow().setHeight(
-                        Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())*30 + 63);
+                searchResultsListView
+                                .setPrefHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size())
+                                                * 30 + 10);
+                searchResultsListView.getScene().getWindow()
+                                .setHeight(Integer.min(MAX_RESULTS_BEFORE_SCROLLBAR, viewModel.getResults().size()) * 30
+                                                + 63);
             } else {
                 searchResultsListView.getScene().getWindow().setHeight(61);
             }

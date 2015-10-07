@@ -2,6 +2,7 @@ package com.thirstygoat.kiqo;
 
 import com.thirstygoat.kiqo.gui.MainController;
 import com.thirstygoat.kiqo.gui.nodes.GoatDialog;
+import com.thirstygoat.kiqo.model.Person;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.logging.*;
 
 /**
