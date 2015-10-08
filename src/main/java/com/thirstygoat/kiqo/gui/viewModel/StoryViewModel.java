@@ -267,7 +267,7 @@ public class StoryViewModel extends ModelViewModel<Story> {
 
         if (!allValidation().isValid()) {
             LOGGER.log(Level.WARNING, "Fields are invalid, no command will be returned.");
-            return null;
+//            return null;
         } else if (!modelWrapper.isDirty()) {
             LOGGER.log(Level.WARNING, "Nothing changed. No command will be returned");
             return null;

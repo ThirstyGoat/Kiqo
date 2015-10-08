@@ -12,43 +12,48 @@
     <children>
         <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <LineChart fx:id="burndownChart" >
-                    <padding>
-                        <Insets right="20" />
-                    </padding>
-                    <xAxis>
-                        <DateAxis fx:id="xAxis" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis fx:id="yAxis" label="Effort (Hours)" tickUnit="1" />
-                    </yAxis>
-                </LineChart>
-                <VBox alignment="CENTER" >
+                <VBox fx:id="burndownVBox">
                     <children>
-                        <HBox alignment="CENTER" HBox.hgrow="NEVER" spacing="10" >
+                        <LineChart fx:id="burndownChart" >
+                            <padding>
+                                <Insets right="20" />
+                            </padding>
+                            <xAxis>
+                                <DateAxis fx:id="xAxis" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="yAxis" label="Effort (Hours)" tickUnit="1" />
+                            </yAxis>
+                        </LineChart>
+                        <VBox alignment="CENTER" >
                             <children>
-                                <HBox alignment="CENTER" spacing="5">
+                                <HBox alignment="CENTER" HBox.hgrow="NEVER" spacing="10" >
                                     <children>
-                                        <Rectangle styleClass="chart-symbol-reference" fill="transparent" height="10" width="10"/>
-                                        <Label text="Reference Velocity" />
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" spacing="5">
-                                    <children>
-                                        <Rectangle styleClass="chart-symbol-effort-remaining" fill="transparent" height="10" width="10"/>
-                                        <Label text="Effort Remaining" />
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" spacing="5">
-                                    <children>
-                                        <Rectangle styleClass="chart-symbol-spent-effort" fill="transparent" height="10" width="10"/>
-                                        <Label text="Spent Effort" />
+                                        <HBox alignment="CENTER" spacing="5">
+                                            <children>
+                                                <Rectangle styleClass="chart-symbol-reference" fill="transparent" height="10" width="10"/>
+                                                <Label text="Reference Velocity" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" spacing="5">
+                                            <children>
+                                                <Rectangle styleClass="chart-symbol-effort-remaining" fill="transparent" height="10" width="10"/>
+                                                <Label text="Effort Remaining" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" spacing="5">
+                                            <children>
+                                                <Rectangle styleClass="chart-symbol-spent-effort" fill="transparent" height="10" width="10"/>
+                                                <Label text="Spent Effort" />
+                                            </children>
+                                        </HBox>
                                     </children>
                                 </HBox>
                             </children>
-                        </HBox>
+                        </VBox>
                     </children>
                 </VBox>
+
                 <Hyperlink fx:id="exportHyperlink" text="Export Image" styleClass="export-hyperlink">
                     <padding>
                         <Insets top="10"/>

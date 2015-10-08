@@ -104,7 +104,10 @@ public class PersistenceManager {
                 } else if (versionStr.equals("5.0")){
                     organisation.getProjects().forEach(project -> project.getReleases()
                                     .forEach(release -> release.getSprints()
-                                    .forEach(sprint -> sprint.getStories().forEach(story -> story.setSprint(sprint)))));
+                                    .forEach(sprint -> sprint.getStories().forEach(story -> {
+                                        story.setSprint(sprint);
+                                        story.setInSprint(true);
+                                    }))));
                 }
             }
         }

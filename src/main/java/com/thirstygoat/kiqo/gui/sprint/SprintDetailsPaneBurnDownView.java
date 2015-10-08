@@ -13,6 +13,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -37,6 +38,8 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
     private DateAxis xAxis;
     @FXML
     private NumberAxis yAxis;
+    @FXML
+    private VBox burndownVBox;
 
     private XYChart.Series<LocalDate, Number> targetLineSeries = new XYChart.Series<>();
     private XYChart.Series<LocalDate, Number> loggedHoursSeries = new XYChart.Series<>();
@@ -62,7 +65,7 @@ public class SprintDetailsPaneBurnDownView implements FxmlView<SprintDetailsPane
         yAxis.setMinorTickVisible(false);
 
         exportHyperlink.setOnAction(event -> {
-            burndownChart.snapshot(snapshotResult -> {
+            burndownVBox.snapshot(snapshotResult -> {
                 WritableImage image = snapshotResult.getImage();
                 // https://community.oracle.com/thread/2450090?tstart=0
                 final FileChooser fileChooser = new FileChooser();
