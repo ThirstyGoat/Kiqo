@@ -27,9 +27,10 @@ public class TreeMouseEventDispatcher implements EventDispatcher {
 
                 if (!event.isConsumed()) {
                     mainController.showDetailsPane(item);
+                    event.consume();
                 }
 
-                event.consume();
+                return event;
             }
         }
         return originalDispatcher.dispatchEvent(event, tail);

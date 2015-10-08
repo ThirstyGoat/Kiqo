@@ -68,6 +68,12 @@ public class StoryCompletenessVisualiser extends HBox  {
         inProgress.setPrefWidth(widthPerEstimate * totalInProgressTasksEstimate.get());
         verify.setPrefWidth(widthPerEstimate * totalVerifyTasksEstimate.get());
         done.setPrefWidth(widthPerEstimate * totalDoneTasksEstimate.get());
+
+
+
+        if (widthPerEstimate == 0.0 && !doneTasks.isEmpty()) {
+            done.setPrefWidth(getWidth());
+        }
     }
 
     private float calculateSizePerEstimate() {
@@ -77,7 +83,7 @@ public class StoryCompletenessVisualiser extends HBox  {
                 + totalDoneTasksEstimate.get();
 
         if (totalEstimates == 0) {
-            return 0;
+            return 0.0f;
         }
         return (float) (getWidth() / totalEstimates);
     }

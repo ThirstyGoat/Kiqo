@@ -8,6 +8,7 @@ import com.thirstygoat.kiqo.util.TreeMouseEventDispatcher;
 import com.thirstygoat.kiqo.util.Utilities;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -164,9 +165,15 @@ public class SideBarController implements Initializable {
         final GoatTreeItem<Project> root = new ProjectsTreeItem(projectTreeView.getSelectionModel());
         projectTreeView.setRoot(root);
         projectTreeView.setShowRoot(false);
-        root.setExpanded(true);
 
         root.setItems(mainController.selectedOrganisationProperty().get().getProjects());
+
+        root.setExpanded(true);
+        root.getChildren().forEach(child -> child.setExpanded(false));
+        if (!root.getChildren().isEmpty()) {
+            root.getChildren().get(0).setExpanded(true);
+        }
+
         peopleListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getPeople()));
         teamsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getTeams()));
         skillsListView.setItems(Utilities.createSortedList(mainController.selectedOrganisationProperty.get().getSkills()));
@@ -203,7 +210,6 @@ public class SideBarController implements Initializable {
                 itemClass == Release.class || itemClass == TreeNodeHeading.class) {
             tabViewPane.getSelectionModel().select(projectTab);
             projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));
-            projectTreeView.scrollTo(projectTreeView.getSelectionModel().getSelectedIndex());
         } else if (itemClass == Team.class) {
             tabViewPane.getSelectionModel().select(teamsTab);
             teamsListView.getSelectionModel().select((Team)newValue);
@@ -219,7 +225,6 @@ public class SideBarController implements Initializable {
         } else if (itemClass == Sprint.class) {
             tabViewPane.getSelectionModel().select(projectTab);
             projectTreeView.getSelectionModel().select(getTreeViewItem(newValue, projectTreeView.getRoot()));
-            projectTreeView.scrollTo(projectTreeView.getSelectionModel().getSelectedIndex());
         }
     }
 
